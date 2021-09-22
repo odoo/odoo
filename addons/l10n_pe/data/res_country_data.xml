@@ -32,7 +32,7 @@
     <record id="base.pe" model="res.country">
         <field name="enforce_cities" eval="1" />
         <field name="address_view_id" ref="pe_partner_address_form" />
-        <field name="address_format" eval="'%(street)s\n%(city)s\n%(state_name)s\n%(country_name)s'"/>
+        <field name="address_format" eval="'%(street)s\n%(zip)s%(city)s\n%(state_name)s\n%(country_name)s'"/>
         <field name="street_format" eval="'%(street_name)s %(street_number)s, %(street_number2)s'"/>
     </record>
 </odoo>

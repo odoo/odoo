@@ -3,7 +3,7 @@
 from odoo.tests import common
 
 
-class TestProductCommon(common.SavepointCase):
+class TestProductCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -102,7 +102,7 @@ class TestProductCommon(common.SavepointCase):
             'uom_po_id': cls.uom_unit.id})
 
 
-class TestAttributesCommon(common.SavepointCase):
+class TestAttributesCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):

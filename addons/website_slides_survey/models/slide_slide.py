@@ -20,25 +20,19 @@ class SlidePartnerRelation(models.Model):
         for record in self:
             record.survey_scoring_success = record in succeeded_slide_partners
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super(SlidePartnerRelation, self).create(vals_list)
-        completed = res.filtered('survey_scoring_success')
-        if completed:
-            completed.write({'completed': True})
-        return res
-
-    def _write(self, vals):
-        res = super(SlidePartnerRelation, self)._write(vals)
-        if vals.get('survey_scoring_success'):
-            self.sudo().write({'completed': True})
-        return res
-
+    def _compute_field_value(self, field):
+        super()._compute_field_value(field)
+        if field.name == 'survey_scoring_success':
+            self.filtered('survey_scoring_success').write({
+                'completed': True
+            })
 
 class Slide(models.Model):
     _inherit = 'slide.slide'
 
-    slide_type = fields.Selection(selection_add=[('certification', 'Certification')])
+    slide_type = fields.Selection(selection_add=[
+        ('certification', 'Certification')
+    ], ondelete={'certification': 'set default'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
 

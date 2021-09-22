@@ -17,8 +17,5 @@ class AccountInvoiceReport(models.Model):
     def _select(self):
         return super()._select() + ", contact_partner.state_id as l10n_ar_state_id, move.date"
 
-    def _group_by(self):
-        return super()._group_by() + ", contact_partner.state_id, move.date"
-
     def _from(self):
         return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"

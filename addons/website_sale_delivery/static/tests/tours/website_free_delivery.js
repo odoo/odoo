@@ -2,6 +2,7 @@ odoo.define('website_sale_delivery.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('check_free_delivery', {
         test: true,
@@ -17,6 +18,7 @@ tour.register('check_free_delivery', {
             content: "click on add to cart",
             trigger: '#product_details #add_to_cart',
         },
+            tourUtils.goToCart(),
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',
@@ -35,8 +37,12 @@ tour.register('check_free_delivery', {
             run: function () {}, // it's a check
         },
         {
+            content: "Select `Wire Transfer` payment method",
+            trigger: '#payment_method label:contains("Wire Transfer")',
+        },
+        {
             content: "Click on Pay Now",
-            trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+            trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
         },
         {
             content: "Confirmation page should be shown",

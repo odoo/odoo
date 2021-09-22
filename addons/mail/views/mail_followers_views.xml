@@ -12,7 +12,6 @@
                     <field name="res_model"/>
                     <field name="res_id" widget="integer"/>
                     <field name="partner_id"/>
-                    <field name="channel_id"/>
                 </tree>
             </field>
         </record>
@@ -27,7 +26,6 @@
                             <group>
                                 <field name="res_model"/>
                                 <field name="partner_id"/>
-                                <field name="channel_id"/>
                             </group>
                             <group>
                                 <field name="res_id" widget="integer"/>
@@ -44,14 +42,6 @@
             <field name="res_model">mail.followers</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!-- Add followers related menu entries in Settings/Email -->
-        <menuitem name="Followers"
-            id="menu_email_followers"
-            parent="mail.mail_menu_technical"
-            action="action_view_followers"
-            sequence="21"
-            groups="base.group_no_one"/>
 
     </data>
 </odoo>

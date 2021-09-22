@@ -1,5 +1,4 @@
 iframe.wysiwyg_iframe.o_fullscreen {
-    position: fixed !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
@@ -17,7 +16,57 @@ iframe.wysiwyg_iframe.o_fullscreen {
 body.o_in_iframe {
     background-color: $o-view-background-color;
 
+    .o_editable {
+        position: relative;
+    }
+
+    .note-editable {
+        border: none;
+    }
+
+    #oe_snippets {
+        top: 0;
+    }
+
+    .iframe-editor-wrapper {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+
+    .iframe-utils-zone {
+        display: flex;
+    }
+
     .note-statusbar {
         display: none;
     }
+
+    #oe_snippets .email_designer_top_actions {
+        display: flex;
+        margin: auto 9px auto auto;
+
+        .btn {
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            background-color: #337ab7;
+            border: 1px solid #2e6da4;
+            border-radius: 4px;
+            padding: 0;
+            margin-left: 5px;
+        }
+
+        .o_fullscreen_btn img {
+            margin: auto;
+        }
+    }
+    textarea.o_codeview {
+        width: 100%;
+        height: 100%;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 5px;
+        outline: none;
+        resize: none;
+    }
+
 }

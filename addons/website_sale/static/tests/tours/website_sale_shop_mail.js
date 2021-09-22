@@ -3,6 +3,7 @@ odoo.define('website_sale.tour_shop_mail', function (require) {
 
 var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
+const tourUtils = require('website_sale.tour_utils');
 
 require('web.dom_ready');
 
@@ -47,6 +48,7 @@ tour.register('shop_mail', {
         content: "click add to cart",
         trigger: '#product_details #add_to_cart',
     },
+        tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, go to backend",
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
@@ -81,7 +83,7 @@ tour.register('shop_mail', {
     },
     {
         content: "wait mail to be sent, and go see it",
-        trigger: '.o_thread_message_content:contains("Your"):contains("order")',
+        trigger: '.o_Message_content:contains("Your"):contains("order")',
         run: function () {
             window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
         },
@@ -93,7 +95,7 @@ tour.register('shop_mail', {
     {
         content: "check it's the correct email, and the URL is correct too",
         trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Your"):contains("order")',
-        extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="http://my-test-domain.com"]',
+        extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="https://my-test-domain.com"]',
     },
 ]);
 });

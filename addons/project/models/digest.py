@@ -20,10 +20,11 @@ class Digest(models.Model):
                 ('stage_id.fold', '=', False),
                 ('create_date', '>=', start),
                 ('create_date', '<', end),
-                ('company_id', '=', company.id)
+                ('company_id', '=', company.id),
+                ('display_project_id', '!=', False),
             ])
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_project_task_opened'] = 'project.open_view_project_all&menu_id=%s' % self.env.ref('project.menu_main_pm').id
         return res

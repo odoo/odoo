@@ -17,7 +17,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_product_variant"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Sell variants of a product using attributes (size, color, etc.)
                                 </div>
@@ -127,7 +127,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_product_pricelist"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/products_prices/prices/pricing.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/products_prices/prices/pricing.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Set multiple prices per product, automated discounts, etc.
                                 </div>
@@ -153,7 +153,7 @@
                                     Let your customers log in to see their documents
                                 </div>
                                 <div class="mt8">
-                                    <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
+                                    <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
                                 </div>
                             </div>
                         </div>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_sign"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online signature to confirm orders
@@ -192,7 +192,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="portal_confirmation_pay"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="mr-2 fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/get_paid_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an online payment to confirm orders
@@ -209,8 +209,8 @@
                                     Automatic email sent after the customer has signed or paid online
                                 </div>
                                 <div class="row mt16">
-                                    <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
-                                    <field name="confirmation_template_id" class="oe_inline"/>
+                                    <label for="confirmation_mail_template_id" class="col-lg-4 o_light_label"/>
+                                    <field name="confirmation_mail_template_id" class="oe_inline"/>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="group_sale_delivery_address"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/send_quotations/different_addresses.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/different_addresses.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Select specific invoice and delivery addresses
                                 </div>
@@ -382,7 +382,7 @@
                              title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_right_pane">
                                 <label for="default_invoice_policy"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/invoicing/invoicing_policy.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/invoicing/invoicing_policy.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Quantities to invoice from sales orders
                                 </div>
@@ -405,8 +405,8 @@
                                     Generate the invoice automatically when the online payment is confirmed
                                 </div>
                                 <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
-                                    <label for="template_id" class="o_light_label"/>
-                                    <field name="template_id" class="oe_inline" options="{'no_create': True}"/>
+                                    <label for="invoice_mail_template_id" class="o_light_label"/>
+                                    <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -414,12 +414,12 @@
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Down Payments</span>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Product used for down payments
                                 </div>
                                 <div class="text-muted">
-                                    <field name="deposit_default_product_id"/>
+                                    <field name="deposit_default_product_id" context="{'default_type': 'service'}"/>
                                 </div>
                             </div>
                         </div>
@@ -432,7 +432,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_sale_amazon"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Import Amazon orders and sync deliveries
                                 </div>
@@ -455,7 +455,7 @@
         <field name="view_id" ref="res_config_settings_view_form"/>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
-        <field name="context">{'module' : 'sale_management'}</field>
+        <field name="context">{'module' : 'sale_management', 'bin_size': False}</field>
     </record>
 
     <menuitem id="menu_sale_general_settings"

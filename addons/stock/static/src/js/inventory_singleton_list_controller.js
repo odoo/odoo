@@ -7,20 +7,29 @@ var InventoryReportListController = require('stock.InventoryReportListController
 var _t = core._t;
 
 /**
- * The purpose of this override is to avoid to have two or more similar records
- * in the list view.
+ * The purpose of this override has 2 purposes:
  *
- * It's used in quant list view, a list editable where when you create a new
- * line about a quant who already exists, we want to update the existing one
- * instead of create a new one, and then we don't want to have two similar line
- * in the list view, so we refresh it.
+ * 1. Avoid having two or more similar records in the list view.
+ *    It is expected to be used in quant list views, when the list is editable
+ *    and allows new line creation. Checks for whether newly created quant
+ *    already exists and if it does => update the existing quant instead of the
+ *    newly created one, and then we refresh the view to avoid having 2 similar lines.
+ *
+ * 2. Support Inventory Adjustments (i.e. inventory counts) view.
+ *    Specifically adds necessary buttons (or hides them when appropriate) and
+ *    autosaving logic to prevent button actions before edits are saved.
  */
 
 var SingletonListController = InventoryReportListController.extend({
+
+    // -------------------------------------------------------------------------
+    // Private
+    // -------------------------------------------------------------------------
+
     /**
      * @override
-     * @return {Promise} rejected when update the list because we don't want
-     * anymore to select a cell who maybe doesn't exist anymore.
+     * @return {Promise} rejected when updating the list because we don't want
+     * to select a cell that might not exist anymore.
      */
     _confirmSave: function (id) {
         var newRecord = this.model.localData[id];
@@ -51,15 +60,40 @@ var SingletonListController = InventoryReportListController.extend({
         var similarRecords = findSimilarRecords(handle);
 
         if (similarRecords.length > 1) {
-            var notification = _t("You tried to create a record who already exists."+
-            "<br/>This last one has been modified instead.");
-            this.do_notify(_t("This record already exists."), notification);
+            var notification = _t("You have tried to create a record which already exists. " +
+            "The existing record has been modified instead.");
+            this.displayNotification({ title: _t("This record already exists."), message: notification });
             this.reload();
             return Promise.reject();
         }
         else {
             return this._super.apply(this, arguments);
         }
+    },
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onButtonClicked: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        return self.saveRecord(ev.data.record.id, {
+            stayInEdit: true,
+        }).then(function () {
+            // we need to re-get the record to make sure we have changes made
+            // by the basic model, such as the new res_id, if the record is
+            // new.
+            var record = self.model.get(ev.data.record.id);
+            return self._callButtonAction(ev.data.attrs, record);
+        }).then(function () {
+            self._enableButtons();
+        }).guardedCatch(this._enableButtons.bind(this));
     },
 });
 

@@ -8,8 +8,8 @@ class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
     child_all_count = fields.Integer(
-        'Indirect Surbordinates Count',
-        compute='_compute_subordinates', store=False,
+        'Indirect Subordinates Count',
+        compute='_compute_subordinates', recursive=True, store=False,
         compute_sudo=True)
 
     def _get_subordinates(self, parents=None):

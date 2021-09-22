@@ -3,6 +3,7 @@
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
+
 class KarmaRank(models.Model):
     _name = 'gamification.karma.rank'
     _description = 'Rank based on karma'
@@ -14,13 +15,22 @@ class KarmaRank(models.Model):
     description_motivational = fields.Html(
         string='Motivational', translate=html_translate, sanitize_attributes=False,
         help="Motivational phrase to reach this rank")
-    karma_min = fields.Integer(string='Required Karma', required=True, default=1,
+    karma_min = fields.Integer(
+        string='Required Karma', required=True, default=1,
         help='Minimum karma needed to reach this rank')
     user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
+    rank_users_count = fields.Integer("# Users", compute="_compute_rank_users_count")
 
     _sql_constraints = [
         ('karma_min_check', "CHECK( karma_min > 0 )", 'The required karma has to be above 0.')
     ]
+
+    @api.depends('user_ids')
+    def _compute_rank_users_count(self):
+        requests_data = self.env['res.users'].read_group([('rank_id', '!=', False)], ['rank_id'], ['rank_id'])
+        requests_mapped_data = dict((data['rank_id'][0], data['rank_id_count']) for data in requests_data)
+        for rank in self:
+            rank.rank_users_count = requests_mapped_data.get(rank.id, 0)
 
     @api.model_create_multi
     def create(self, values_list):

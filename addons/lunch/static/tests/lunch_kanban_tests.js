@@ -4,7 +4,7 @@ odoo.define('lunch.lunchKanbanTests', function (require) {
 const LunchKanbanView = require('lunch.LunchKanbanView');
 
 const testUtils = require('web.test_utils');
-const {createLunchKanbanView, mockLunchRPC} = require('lunch.test_utils');
+const {createLunchView, mockLunchRPC} = require('lunch.test_utils');
 
 QUnit.module('Views');
 
@@ -37,12 +37,6 @@ QUnit.module('LunchKanbanView', {
                 fields: {},
                 records: [],
             },
-            'ir.model.data': {
-                fields: {},
-                xmlid_to_res_id() {
-                    return Promise.resolve(PORTAL_GROUP_ID);
-                },
-            },
             'lunch.location': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
@@ -68,6 +62,7 @@ QUnit.module('LunchKanbanView', {
             username: "Marc Demo",
             wallet: 36.5,
             is_manager: false,
+            group_portal_id: PORTAL_GROUP_ID,
             currency: {
                 symbol: "\u20ac",
                 position: "after"
@@ -78,6 +73,7 @@ QUnit.module('LunchKanbanView', {
             username: "Mitchell Admin",
             wallet: 47.6,
             is_manager: true,
+            group_portal_id: PORTAL_GROUP_ID,
             currency: {
                 symbol: "\u20ac",
                 position: "after"
@@ -89,7 +85,7 @@ QUnit.module('LunchKanbanView', {
     QUnit.test('basic rendering', async function (assert) {
         assert.expect(7);
 
-        const kanban = await createLunchKanbanView({
+        const kanban = await createLunchView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -116,14 +112,14 @@ QUnit.module('LunchKanbanView', {
             "should have 2 columns");
         assert.containsOnce(kanban, '.o_content > div.o_search_panel',
             "should have a 'lunch filters' column");
-        assert.containsOnce(kanban, '.o_content > .o_lunch_kanban',
-            "should have a 'kanban lunch wrapper' column");
-        assert.containsOnce(kanban, '.o_lunch_kanban > .o_kanban_view',
+        assert.containsOnce(kanban, '.o_content > .o_lunch_content',
+            "should have a 'lunch wrapper' column");
+        assert.containsOnce(kanban, '.o_lunch_content > .o_kanban_view',
             "should have a 'classical kanban view' column");
         assert.hasClass(kanban.$('.o_kanban_view'), 'o_lunch_kanban_view',
             "should have classname 'o_lunch_kanban_view'");
-        assert.containsOnce(kanban, '.o_lunch_kanban > span > .o_lunch_kanban_banner',
-            "should have a 'lunch kanban' banner");
+        assert.containsOnce(kanban, '.o_lunch_content > span > .o_lunch_banner',
+            "should have a 'lunch' banner");
 
         kanban.destroy();
     });
@@ -133,7 +129,7 @@ QUnit.module('LunchKanbanView', {
 
         const self = this;
         let infosProm = Promise.resolve();
-        const kanban = await createLunchKanbanView({
+        const kanban = await createLunchView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -175,12 +171,12 @@ QUnit.module('LunchKanbanView', {
         kanban.destroy();
     });
 
-    QUnit.module('LunchKanbanWidget', function () {
+    QUnit.module('LunchWidget', function () {
 
         QUnit.test('empty cart', async function (assert) {
             assert.expect(3);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -212,11 +208,12 @@ QUnit.module('LunchKanbanView', {
         });
 
         QUnit.test('search panel domain location', async function (assert) {
-            assert.expect(10);
-            const locationId = this.data['lunch.location'].records[0].id;
+            assert.expect(18);
+            let expectedLocation = 1;
+            let locationId = this.data['lunch.location'].records[0].id;
             const regularInfos = _.extend({}, this.regularInfos);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -233,39 +230,56 @@ QUnit.module('LunchKanbanView', {
                     assert.step(route);
 
                     if (route.startsWith('/lunch')) {
+                        if (route === '/lunch/user_location_set') {
+                            locationId = args.location_id;
+                            return Promise.resolve(true);
+                        }
                         return mockLunchRPC({
                             infos: regularInfos,
                             userLocation: locationId,
                         }).apply(this, arguments);
                     }
                     if (args.method === 'search_panel_select_multi_range') {
-                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [locationId]]],
+                        assert.deepEqual(args.kwargs.search_domain, [["is_available_at", "in", [expectedLocation]]],
                             'The initial domain of the search panel must contain the user location');
                     }
                     if (route === '/web/dataset/search_read') {
-                        assert.deepEqual(args.domain, [["is_available_at", "in", [locationId]]],
+                        assert.deepEqual(args.domain, [["is_available_at", "in", [expectedLocation]]],
                             'The domain for fetching actual data should be correct');
                     }
                     return this._super.apply(this, arguments);
-                }
+                },
             });
+
+            expectedLocation = 2;
+            await testUtils.fields.many2one.clickOpenDropdown('locations');
+            await testUtils.fields.many2one.clickItem('locations', "Office 2");
+
             assert.verifySteps([
+                // Initial state
                 '/lunch/user_location_get',
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
-            ])
+                // Click m2o
+                '/web/dataset/call_kw/lunch.location/name_search',
+                // Click new location
+                '/lunch/user_location_set',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/call_kw/product/search_panel_select_multi_range',
+                '/web/dataset/search_read',
+                '/lunch/infos',
+            ]);
 
             kanban.destroy();
         });
 
         QUnit.test('search panel domain location false: fetch products in all locations', async function (assert) {
-            assert.expect(10);
+            assert.expect(9);
             const regularInfos = _.extend({}, this.regularInfos);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -304,7 +318,6 @@ QUnit.module('LunchKanbanView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
             ])
 
             kanban.destroy();
@@ -313,7 +326,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('non-empty cart', async function (assert) {
             assert.expect(17);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -395,7 +408,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('ordered cart', async function (assert) {
             assert.expect(15);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -471,7 +484,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('confirmed cart', async function (assert) {
             assert.expect(15);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -547,7 +560,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('regular user', async function (assert) {
             assert.expect(11);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -606,7 +619,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('manager user', async function (assert) {
             assert.expect(12);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -670,7 +683,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('add a product', async function (assert) {
             assert.expect(1);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -712,7 +725,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('add product quantity', async function (assert) {
             assert.expect(3);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: Object.assign({}, this.data, {
@@ -764,7 +777,7 @@ QUnit.module('LunchKanbanView', {
         QUnit.test('remove product quantity', async function (assert) {
             assert.expect(3);
 
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: Object.assign({}, this.data, {
@@ -817,7 +830,7 @@ QUnit.module('LunchKanbanView', {
             assert.expect(1);
 
             const self = this;
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -863,7 +876,7 @@ QUnit.module('LunchKanbanView', {
             assert.expect(1);
 
             const self = this;
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,
@@ -909,7 +922,7 @@ QUnit.module('LunchKanbanView', {
             assert.expect(5);
 
             const self = this;
-            const kanban = await createLunchKanbanView({
+            const kanban = await createLunchView({
                 View: LunchKanbanView,
                 model: 'product',
                 data: this.data,

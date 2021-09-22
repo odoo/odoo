@@ -10,6 +10,14 @@
         <field name='l10n_pe_vat_code'>4</field>
     </record>
 
+    <record model='l10n_latam.identification.type' id='it_RUC'>
+        <field name='name'>RUC</field>
+        <field name='description'>Taxpayer Identification Number</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='is_vat' eval='True'/>
+        <field name='l10n_pe_vat_code'>6</field>
+        <field name='sequence'>10</field>
+    </record>
     <record model='l10n_latam.identification.type' id='it_DNI'>
         <field name='name'>DNI</field>
         <field name='description'>National Identity Document</field>
@@ -56,5 +64,18 @@
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>E</field>
         <field name='sequence'>125</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_PTP'>
+        <field name='name'>PTP</field>
+        <field name='description'>Temporary Residence Permit</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>F</field>
+        <field name='sequence'>130</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_SP'>
+        <field name='name'>Safe Passage</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>G</field>
+        <field name='sequence'>135</field>
     </record>
 </odoo>

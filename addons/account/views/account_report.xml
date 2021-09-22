@@ -2,17 +2,19 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report
-            id="account_invoices"
-            model="account.move"
-            string="Invoices"
-            report_type="qweb-pdf"
-            name="account.report_invoice_with_payments"
-            file="account.report_invoice_with_payments"
-            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
-            print_report_name="(object._get_report_base_filename())"
-            groups="account.group_account_invoice,account.group_account_readonly"
-        />
+        <record id="account_invoices" model="ir.actions.report">
+            <field name="name">Invoices</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_invoice_with_payments</field>
+            <field name="report_file">account.report_invoice_with_payments</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),
+ (4, ref('account.group_account_readonly'))]"/>
+        </record>
 
         <record id="action_account_original_vendor_bill" model="ir.actions.report">
             <field name="name">Original Bills</field>
@@ -26,54 +28,55 @@
             <field name="binding_view_types">list</field>
         </record>
 
-        <report
-            id="account_invoices_without_payment"
-            model="account.move"
-            string="Invoices without Payment"
-            report_type="qweb-pdf"
-            name="account.report_invoice"
-            file="account.report_invoice"
-            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
-            print_report_name="(object._get_report_base_filename())"
-        />
+        <record id="account_invoices_without_payment" model="ir.actions.report">
+            <field name="name">Invoices without Payment</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_invoice</field>
+            <field name="report_file">account.report_invoice</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="action_report_journal"
-            model="account.common.journal.report"
-            string="Journals Audit"
-            report_type="qweb-pdf"
-            name="account.report_journal"
-            file="account.report_journal"
-            />
+        <record id="action_report_journal" model="ir.actions.report">
+            <field name="name">Journals Audit</field>
+            <field name="model">account.common.journal.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_journal</field>
+            <field name="report_file">account.report_journal</field>
+            <field name="binding_model_id" ref="model_account_common_journal_report"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="action_report_payment_receipt"
-            model="account.payment"
-            string="Payment Receipt"
-            report_type="qweb-pdf"
-            name="account.report_payment_receipt"
-            file="account.report_payment_receipt"
-            menu="True"
-        />
+        <record id="action_report_payment_receipt" model="ir.actions.report">
+            <field name="name">Payment Receipt</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_payment_receipt</field>
+            <field name="report_file">account.report_payment_receipt</field>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="action_report_account_statement"
-            model="account.bank.statement"
-            string="Statement"
-            name="account.report_statement"
-            file="account.report_statement"
-            report_type="qweb-pdf"
-        />
+        <record id="action_report_account_statement" model="ir.actions.report">
+            <field name="name">Statement</field>
+            <field name="model">account.bank.statement</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_statement</field>
+            <field name="report_file">account.report_statement</field>
+            <field name="binding_model_id" ref="model_account_bank_statement"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="action_report_account_hash_integrity"
-            model="res.company"
-            string="Hash integrity result PDF"
-            report_type="qweb-pdf"
-            name="account.report_hash_integrity"
-            file="account.report_hash_integrity"
-            menu="False"
-        />
+        <record id="action_report_account_hash_integrity" model="ir.actions.report">
+            <field name="name">Hash integrity result PDF</field>
+            <field name="model">res.company</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_hash_integrity</field>
+            <field name="report_file">account.report_hash_integrity</field>
+        </record>
 
     </data>
 </odoo>

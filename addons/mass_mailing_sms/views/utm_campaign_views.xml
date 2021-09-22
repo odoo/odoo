@@ -47,7 +47,7 @@
             <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="action_redirect_to_mailing_sms" type="object"
                     t-attf-class="oe_mailings #{record.mailing_sms_count.raw_value === 0 ? 'text-muted' : ''}">
-                    <t t-raw="record.mailing_sms_count.raw_value"/> SMS
+                    <t t-out="record.mailing_sms_count.raw_value"/> SMS
                 </a>
             </xpath>
         </field>

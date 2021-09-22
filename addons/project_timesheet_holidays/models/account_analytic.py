@@ -9,8 +9,9 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
+    global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_leave(self):
         if any(line.holiday_id for line in self):
-            raise UserError(_('You cannot delete timesheet lines attached to a leaves. Please cancel the leaves instead.'))
-        return super(AccountAnalyticLine, self).unlink()
+            raise UserError(_('You cannot delete timesheets linked to time off. Please, cancel the time off instead.'))

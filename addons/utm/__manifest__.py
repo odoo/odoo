@@ -7,11 +7,10 @@
     'description': """
 Enable management of UTM trackers: campaign, medium, source.
 """,
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['base', 'web'],
     'data': [
         'data/utm_data.xml',
-        'views/assets.xml',
         'views/utm_campaign_views.xml',
         'views/utm_views.xml',
         'security/ir.model.access.csv',
@@ -20,4 +19,10 @@ Enable management of UTM trackers: campaign, medium, source.
         'data/utm_demo.xml',
     ],
     'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            'utm/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

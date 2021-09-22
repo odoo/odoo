@@ -10,10 +10,13 @@
     'data': [
         'views/pos_config_views.xml',
         'views/pos_payment_method_views.xml',
-        'views/point_of_sale_assets.xml',
     ],
     'depends': ['point_of_sale'],
-    'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
-    'license': 'OEEL-1',
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_adyen/static/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

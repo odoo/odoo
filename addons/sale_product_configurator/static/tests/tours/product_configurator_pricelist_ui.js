@@ -8,7 +8,7 @@ tour.register('sale_product_configurator_pricelist_tour', {
     test: true,
 },
 [
-tour.STEPS.SHOW_APPS_MENU_ITEM,
+tour.stepUtils.showAppsMenuItem(),
 {
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
@@ -31,10 +31,10 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
 }, {
     content: "search the pricelist",
     trigger: 'div[name="pricelist_id"] input',
-    run: 'text Public Pricelist'
+    run: 'text Custom pricelist (TEST)'
 }, {
     content: "select the pricelist",
-    trigger: 'ul.ui-autocomplete > li > a:contains(Public Pricelist)',
+    trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
 }, {
     trigger: "a:contains('Add a product')"
 }, {
@@ -62,22 +62,19 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
     trigger: 'span.oe_currency_value:contains("600.00")',
     run: function () {} // check price (pricelist has discount for 2)
 }, {
-    content: "click add",
-    trigger: '.o_sale_product_configurator_add:not(.disabled)'
-}, {
     content: "check we are on the add modal",
     trigger: '.td-product_name:contains("Customizable Desk (TEST) (Steel, White)")',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     content: "add conference chair",
     trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Conference Chair))',
+    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))',
     run: 'click'
 }, {
     content: "add chair floor protection",
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Chair floor protection))',
+    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))',
     run: 'click'
 }, {
     content: "verify configurator final price", // tax excluded
@@ -85,11 +82,11 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
 }, {
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     content: "verify SO final price excluded",
-    trigger: 'span[name="amount_untaxed"]:contains("1,257.00")',
+    trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',
 }, {
     content: "verify SO final price included",
     trigger: 'span[name="amount_total"]:contains("1,437.00")',

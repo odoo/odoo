@@ -1,11 +1,12 @@
-odoo.define('mail.systray.ActivityMenu', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var session = require('web.session');
-var SystrayMenu = require('web.SystrayMenu');
-var Widget = require('web.Widget');
-var QWeb = core.qweb;
+import { qweb as QWeb } from 'web.core';
+import session  from 'web.session';
+import SystrayMenu from 'web.SystrayMenu';
+import Widget from 'web.Widget';
+import Time from 'web.time';
+
+const { Component } = owl;
 
 /**
  * Menu item appended in the systray part of the navbar, redirects to the next
@@ -18,10 +19,11 @@ var ActivityMenu = Widget.extend({
         'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
+        'hide.bs.dropdown': '_onActivityMenuHide',
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
-        this.call('mail_service', 'getMailBus').on('activity_updated', this, this._updateCounter);
+        Component.env.bus.on('activity_updated', this, this._updateCounter);
         this._updateCounter();
         this._updateActivityPreview();
         return this._super();
@@ -60,6 +62,16 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
+     * Return views to display when coming from systray depending on the model.
+     *
+     * @private
+     * @param {string} model
+     * @returns {Array[]} output the list of views to display.
+     */
+    _getViewsList(model) {
+        return [[false, 'kanban'], [false, 'list'], [false, 'form']];
+    },
+    /**
      * Update(render) activity system tray view on activity updation.
      * @private
      */
@@ -67,7 +79,8 @@ var ActivityMenu = Widget.extend({
         var self = this;
         self._getActivityData().then(function (){
             self._$activitiesPreview.html(QWeb.render('mail.systray.ActivityMenu.Previews', {
-                widget: self
+                widget: self,
+                Time: Time
             }));
         });
     },
@@ -115,14 +128,16 @@ var ActivityMenu = Widget.extend({
             if (targetAction.data('domain')) {
                 domain = domain.concat(targetAction.data('domain'))
             }
-            
+
             this.do_action({
                 type: 'ir.actions.act_window',
                 name: targetAction.data('model_name'),
-                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
+                views: [[false, 'activity'], [false, 'kanban'], [false, 'list'], [false, 'form']],
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
                 domain: domain,
+            }, {
+                clear_breadcrumbs: true,
             });
         }
     },
@@ -145,32 +160,39 @@ var ActivityMenu = Widget.extend({
         // Necessary because activity_ids of mail.activity.mixin has auto_join
         // So, duplicates are faking the count and "Load more" doesn't show up
         context['force_search_count'] = 1;
-        
+
         var domain = [['activity_ids.user_id', '=', session.uid]]
         if (data.domain) {
             domain = domain.concat(data.domain)
         }
-        
+
         this.do_action({
             type: 'ir.actions.act_window',
             name: data.model_name,
             res_model:  data.res_model,
-            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+            views: this._getViewsList(data.res_model),
             search_view_id: [false],
             domain: domain,
             context:context,
+        }, {
+            clear_breadcrumbs: true,
         });
     },
     /**
      * @private
      */
     _onActivityMenuShow: function () {
+        document.body.classList.add('modal-open');
          this._updateActivityPreview();
+    },
+    /**
+     * @private
+     */
+    _onActivityMenuHide: function () {
+        document.body.classList.remove('modal-open');
     },
 });
 
 SystrayMenu.Items.push(ActivityMenu);
 
-return ActivityMenu;
-
-});
+export default ActivityMenu;

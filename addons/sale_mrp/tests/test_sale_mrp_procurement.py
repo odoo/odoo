@@ -10,6 +10,7 @@ from odoo.tools import mute_logger
 class TestSaleMrpProcurement(TransactionCase):
 
     def test_sale_mrp(self):
+        self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
         # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
         # I define product category Mobile Products Sellable.
@@ -73,20 +74,20 @@ class TestSaleMrpProcurement(TransactionCase):
         to avoid generating multiple deliveries
         to the customer location
         """
-
+        self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
-        self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
-        warehouse_form = Form(self.env['stock.warehouse'])
-        warehouse_form.name = 'Test Warehouse'
-        warehouse_form.code = 'TWH'
-        self.warehouse = warehouse_form.save()
+        self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
+        self.warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
 
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product = product_form.save()
@@ -96,7 +97,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Stick'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -105,7 +106,7 @@ class TestSaleMrpProcurement(TransactionCase):
         # Create manifactured product which uses another manifactured
         product_form = Form(self.env['product.product'])
         product_form.name = 'Arrow'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.route_ids.clear()
         product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
@@ -114,7 +115,7 @@ class TestSaleMrpProcurement(TransactionCase):
         ## Create raw product for manufactured product
         product_form = Form(self.env['product.product'])
         product_form.name = 'Raw Iron'
-        product_form.type = 'product'
+        product_form.detailed_type = 'product'
         product_form.uom_id = self.uom_unit
         product_form.uom_po_id = self.uom_unit
         self.raw_product_2 = product_form.save()

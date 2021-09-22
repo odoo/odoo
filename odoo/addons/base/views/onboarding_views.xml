@@ -7,7 +7,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">Remove Configuration Tips</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-label="Close">&amp;times;</span>
+                            <span aria-label="Close">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -33,7 +33,7 @@
                         <i class="fa fa-times" title="Close the onboarding panel" />
                     </a>
                     <div class="o_onboarding_steps">
-                        <t t-raw="0" />
+                        <t t-out="0" />
                     </div>
                     <div t-att-class="'o_onboarding_completed_message text-center' + (' o_onboarding_steps_done' if state.get('onboarding_state') in ('done', 'just_done') else '') + (' o_onboarding_steps_just_done' if state.get('onboarding_state') == 'just_done' else '')">
                         <i class="fa fa-check text-success mr8" />
@@ -152,8 +152,8 @@
             <xpath expr="//group[@name='social_media']" position="replace" />
             <form position="inside">
                 <footer position="replace">
-                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" />
-                    <button special="cancel" string="Cancel" />
+                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="z" string="Cancel" />
                 </footer>
             </form>
         </field>

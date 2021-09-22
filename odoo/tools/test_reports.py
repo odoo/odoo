@@ -35,7 +35,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     if not report_id:
         raise Exception("Required report does not exist: %s" % rname)
 
-    res_data, res_format = report_id.render(ids, data=data)
+    res_data, res_format = report_id._render(ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)
@@ -74,7 +74,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 wiz_data=None, wiz_buttons=None,
                 context=None, our_module=None):
-    """Take an ir.action.act_window and follow it until a report is produced
+    """Take an ir.actions.act_window and follow it until a report is produced
 
         :param action_id: the integer id of an action, or a reference to xml id
                 of the act_window (can search [our_module.]+xml_id
@@ -121,7 +121,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         act_model, act_id = action._name, action.id
     else:
         assert isinstance(action_id, int)
-        act_model = 'ir.action.act_window'     # assume that
+        act_model = 'ir.actions.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id
 

@@ -17,19 +17,19 @@ class SnailmailLetterMissingRequiredFields(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        rec = super(SnailmailLetterMissingRequiredFields, self).default_get(fields)
-        letter_id = self.env['snailmail.letter'].browse(self.env.context.get('letter_id'))
-        rec.update({
-            'partner_id': letter_id.partner_id.id,
-            'letter_id': letter_id.id,
-            'street': letter_id.street,
-            'street2': letter_id.street2,
-            'zip': letter_id.zip,
-            'city': letter_id.city,
-            'state_id': letter_id.state_id.id,
-            'country_id': letter_id.country_id.id,
-        })
-        return rec
+        defaults = super(SnailmailLetterMissingRequiredFields, self).default_get(fields)
+        if defaults.get('letter_id'):
+            letter = self.env['snailmail.letter'].browse(defaults.get('letter_id'))
+            defaults.update({
+                'partner_id': letter.partner_id.id,
+                'street': letter.street,
+                'street2': letter.street2,
+                'zip': letter.zip,
+                'city': letter.city,
+                'state_id': letter.state_id.id,
+                'country_id': letter.country_id.id,
+            })
+        return defaults
 
     def update_address_cancel(self):
         self.letter_id.cancel()

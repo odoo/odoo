@@ -21,7 +21,7 @@ class MailThread(models.AbstractModel):
         res = {}
         if self.ids:
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
-                                 RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                                 RIGHT JOIN mail_notification rel
                                  ON rel.mail_message_id = msg.id AND rel.notification_type = 'sms' AND rel.notification_status in ('exception')
                                  WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
@@ -53,13 +53,15 @@ class MailThread(models.AbstractModel):
         """
         partners = self.env['res.partner']
         for fname in self._sms_get_partner_fields():
-            partners |= self.mapped(fname)
+            partners = partners.union(*self.mapped(fname))  # ensure ordering
         return partners
 
     def _sms_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
-        return ['mobile']
+        if 'mobile' in self:
+            return ['mobile']
+        return []
 
     def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
         """" Get SMS recipient information on current record set. This method
@@ -129,7 +131,12 @@ class MailThread(models.AbstractModel):
                     'field_store': fname,
                 }
             else:
-                value, fname = next(((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value), (0, False))
+                # did not find any sanitized number -> take first set value as fallback;
+                # if none, just assign False to the first available number field
+                value, fname = next(
+                    ((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value),
+                    (False, tocheck_fields[0] if tocheck_fields else False)
+                )
                 result[record.id] = {
                     'partner': self.env['res.partner'],
                     'sanitized': False,
@@ -180,8 +187,7 @@ class MailThread(models.AbstractModel):
         if not template and template_xmlid:
             template = self.env.ref(template_xmlid, raise_if_not_found=False)
         if template:
-            template_w_lang = template._get_context_lang_per_id(self.ids)[self.id]
-            body = template._render_template(template_w_lang.body, self._name, self.ids)[self.id]
+            body = template._render_field('body', self.ids, compute_lang=True)[self.id]
         else:
             body = self.env['sms.template']._render_template(template_fallback, self._name, self.ids)[self.id]
         return self._message_sms(body, partner_ids=partner_ids, **kwargs)
@@ -211,11 +217,15 @@ class MailThread(models.AbstractModel):
                 sms_pid_to_number[info_partner_ids[0]] = info_number
             if info_partner_ids:
                 partner_ids = info_partner_ids + (partner_ids or [])
-            if info_number and not info_partner_ids:
-                sms_numbers = [info_number] + (sms_numbers or [])
+            if not info_partner_ids:
+                if info_number:
+                    sms_numbers = [info_number] + (sms_numbers or [])
+                    # will send a falsy notification allowing to fix it through SMS wizards
+                elif not sms_numbers:
+                    sms_numbers = [False]
 
         if subtype_id is False:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
             body=plaintext2html(html2plaintext(body)), partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
@@ -261,7 +271,7 @@ class MailThread(models.AbstractModel):
         }
 
         # notify from computed recipients_data (followers, specific recipients)
-        partners_data = [r for r in recipients_data['partners'] if r['notif'] == 'sms']
+        partners_data = [r for r in recipients_data if r['notif'] == 'sms']
         partner_ids = [r['id'] for r in partners_data]
         if partner_ids:
             for partner in self.env['res.partner'].sudo().browse(partner_ids):
@@ -280,9 +290,14 @@ class MailThread(models.AbstractModel):
             tocreate_numbers = [
                 value['sanitized'] or original
                 for original, value in sanitized.items()
-                if value['code'] != 'empty'
             ]
-            sms_create_vals += [dict(sms_base_vals, partner_id=False, number=n) for n in tocreate_numbers]
+            sms_create_vals += [dict(
+                sms_base_vals,
+                partner_id=False,
+                number=n,
+                state='outgoing' if n else 'error',
+                failure_type='' if n else 'sms_number_missing',
+            ) for n in tocreate_numbers]
 
         # create sms and notification
         existing_pids, existing_numbers = [], []
@@ -309,7 +324,8 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id': sms.id,
                 'is_read': True,  # discard Inbox notification
-                'notification_status': 'ready',
+                'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
+                'failure_type': '' if sms.state == 'outgoing' else sms.failure_type,
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
@@ -328,6 +344,6 @@ class MailThread(models.AbstractModel):
                         })
 
         if sms_all and not put_in_queue:
-            sms_all.send(auto_commit=False, raise_exception=False)
+            sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
 
         return True

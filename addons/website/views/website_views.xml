@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Menu items -->
-        <menuitem name="Website"
-            id="menu_website_configuration"
-            sequence="9"
-            groups="base.group_user"
-            web_icon="website,static/description/icon.png"/>
-
+        <!-- ====== Actions ====================================================
+        ==================================================================== -->
         <record id="action_website_add_features" model="ir.actions.act_window">
             <field name="name">Apps</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website')}"/>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
+        <record id="action_show_viewhierarchy" model="ir.actions.act_window">
+            <field name="name">Show View Hierarchy</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="view_mode">qweb</field>
+        </record>
 
-        <!-- website views -->
+        <!-- ====== website views ==============================================
+        ==================================================================== -->
         <record id="view_website_form" model="ir.ui.view">
             <field name="name">website.form</field>
             <field name="model">website</field>
@@ -38,8 +39,8 @@
                         </div>
                         <div name="other">
                             <group name="other">
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                                <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="default_lang_id" options="{'no_open': True, 'no_create': True}" groups="base.group_no_one"/>
                             </group>
                         </div>
                         <notebook>
@@ -56,18 +57,6 @@
             </field>
         </record>
 
-        <record id="view_arch_only" model="ir.ui.view">
-            <field name="name">website.ir_ui_view.arch_only</field>
-            <field name="model">ir.ui.view</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <field name="arch"/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="view_website_form_view_themes_modal" model="ir.ui.view">
             <field name="name">website.modal.form</field>
             <field name="model">website</field>
@@ -76,11 +65,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fa-paint-brush"/>
-                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                        <button name="create_and_redirect_configurator" type="object" string="Create" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
                 <xpath expr="//notebook" position="replace"/>
+                <xpath expr="//div[@name='logo']" position="replace"/>
             </field>
         </record>
 
@@ -89,6 +79,7 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <tree string="Websites">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="domain"/>
                     <field name="country_group_ids" widget="many2many_tags"/>
@@ -108,7 +99,8 @@
         </record>
 
 
-        <!-- website.page views -->
+        <!-- ====== website.page views =========================================
+        ==================================================================== -->
         <record id="website_pages_form_view" model="ir.ui.view">
             <field name="name">website.page.form</field>
             <field name="model">website.page</field>
@@ -127,6 +119,8 @@
                                 <field name="website_indexed"/>
                                 <field name="is_published"/>
                                 <field name="date_publish"/>
+                                <field name="cache_time" groups="base.group_no_one"/>
+                                <field name="cache_key_expr" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <label for="menu_ids" string="Related Menu Items"/>
@@ -140,12 +134,12 @@
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages" default_order="name">
+                <tree string="Website Pages" default_order="name" multi_edit="1">
                     <field name="name"/>
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="is_published" string="Page Published"/>
+                    <field name="is_published" string="Is Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
@@ -177,7 +171,8 @@
             <field name="target">current</field>
         </record>
 
-        <!-- website.menu views -->
+        <!-- ====== website.menu views =========================================
+        ==================================================================== -->
         <record id="website_menus_form_view" model="ir.ui.view">
             <field name="name">website.menu.form</field>
             <field name="model">website.menu</field>
@@ -219,7 +214,7 @@
             <field name="model">website.menu</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Website menu" editable="bottom">
+                <tree string="Website menu">
                     <field name="sequence" widget="handle"/>
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="name"/>
@@ -241,9 +236,9 @@
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <group string="Group By">
-                        <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
-                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                        <filter string="Name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="Website"  name="group_by_website_id" domain="[]" context="{'group_by':'website_id'}"/>
                     </group>
                 </search>
             </field>
@@ -253,28 +248,31 @@
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_my_websites':1}</field>
+            <field name="context">{'search_default_group_by_website_id':1}</field>
             <field name="view_id" ref="menu_tree"/>
             <field name="target">current</field>
         </record>
 
-        <!-- ir.ui.view views -->
+        <!-- ====== ir.ui.view views ============================================
+        ==================================================================== -->
         <record model="ir.ui.view" id="view_view_form_extend">
             <field name="model">ir.ui.view</field>
-
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="inherit_id" position="attributes">
                     <attribute name="context">{'display_website': True}</attribute>
                 </field>
-                <field name="type" position="after">
+                <field name="model" position="before">
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                    <field name="key"/>
+                    <label for="key"/>
+                    <div class='o_row'>
+                        <field name="key"/>
+                        <button title="Show site map" attrs="{'invisible': [('type', '!=', 'qweb')]}" name="website.action_show_viewhierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
+                    </div>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                     <field name="visibility" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
-                    <field name="visibility_group" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" />
-                    <field name="visibility_password" attrs="{'invisible': [('visibility', '!=', 'password')]}" />
+                    <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')]}" password="True" string="Visibility Password" />
                 </field>
                 <sheet position="before">
                     <header>
@@ -284,11 +282,16 @@
                 </sheet>
             </field>
         </record>
+
         <record id="view_view_tree_inherit_website" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="inherit_id" ref="base.view_view_tree"/>
             <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="decoration-muted">not active</attribute>
+                </tree>
                 <field name="name" position="after">
+                    <field name="active" invisible="1"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                 </field>
                 <field name="xml_id" position="before">
@@ -297,7 +300,105 @@
             </field>
         </record>
 
-        <!-- Dashboard -->
+        <record id="view_view_qweb" model="ir.ui.view">
+            <field name="name">View Hierarchy</field>
+            <field name="type">qweb</field>
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <qweb js_class="view_hierarchy">
+                    <nav class="o_tree_nav navbar justify-content-start w-100 fixed-top bg-white shadow">
+                        <div class="dropdown ml-2 border border-info rounded">
+                            <a href="#" role="button" class="btn dropdown-toggle text-info" data-toggle="dropdown">
+                                All Websites
+                            </a>
+                            <div class="dropdown-menu o_website_filter">
+                                <a href="#" class="dropdown-item active" data-website_name="*">All Websites</a>
+                            </div>
+                        </div>
+                        <div class="ml-2 custom-control custom-switch">
+                            <input id="o_show_inactive" class="custom-control-input" type="checkbox"/>
+                            <label class="custom-control-label" for="o_show_inactive">Show inactive views</label>
+                        </div>
+                        <div class="o_search input-group ml-auto col-8 col-sm-6 col-md-4 col-xl-3" role="search">
+                            <input type="search" name="search" class="form-control border-info" placeholder="Name, id or key"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-info" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <t t-set="view" t-value="env['ir.ui.view'].browse(context['active_id']).with_context(active_test=False)"/>
+                    <t t-set="requested_view" t-value="view"/>
+                    <t t-set="view" t-value="view._get_top_level_view()"/>
+                    <div class="o_tree_container ml-2" t-att-data-requested-view-id="requested_view.id">
+                        <t t-set="sibling_views" t-value="view.search([('key', '=', view.key)]) - view"/>
+                        <div t-if="sibling_views" class="alert alert-info m-1 p-1">
+                            Multiple tree exists for this view
+                            <a t-foreach="sibling_views" t-as="sibling_view" href="#" class="o_load_hierarchy" t-att-data-view_id="sibling_view.id">
+                                <i class="fa fa-arrow-right mr-1"/>
+                                <t t-esc="sibling_view.with_context(display_website=True, display_key=True).display_name"/>
+                            </a>
+                        </div>
+                        <t t-call="website.report_viewhierarchy_children"/>
+                    </div>
+                </qweb>
+            </field>
+        </record>
+        <template id="report_viewhierarchy_children">
+            <t t-set="classes_for_search" t-value="'d-flex align-items-center'"/>
+            <p t-attf-class="o_tree_entry mb-0 #{'text-muted font-weight-normal' if not view.active else ''} #{view.inherit_children_ids and 'o_has_child' or ''} #{classes_for_search}">
+                <i t-if="view.inherit_children_ids" class="js_fold o_fold_icon fa fa-minus-square-o mr-1"/>
+                <i t-if="view.arch_updated" class="fa fa-pencil-square mr-1 o_text_pink" title="This view arch has been modified"/>
+                <span class="js_fold">
+                    <t t-esc="view.name"/> (<span class="font-weight-bold" t-esc="view.key"/>)
+                    <span class="o_text_orange" t-if="view.website_id" t-esc="' [%s]' % view.website_id.name"/>
+                 </span>
+                <a type="action" data-model="ir.ui.view" t-att-data-res-id="view.id">
+                    <i class="fa fa-eye ml-2 text-muted" title="Go to View"/>
+                </a>
+                <a href="#" class="o_show_diff" t-att-data-view_id="view.id">
+                    <i class="fa fa-files-o ml-2 text-muted" title="Show Arch Diff"/>
+                </a>
+            </p>
+            <ul t-if="view.inherit_children_ids">
+                <t t-foreach="view.inherit_children_ids" t-as="child">
+                    <li t-att-class="not child.active and 'o_is_inactive d-none'"
+                        t-att-data-website_name="child.website_id.name" t-att-data-key="child.key"
+                        t-att-data-id="child.id" t-att-data-name="child.name">
+                        <t t-call="website.report_viewhierarchy_children">
+                            <t t-set="view" t-value="child"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </template>
+
+        <record id="reset_view_arch_wizard_view" model="ir.ui.view">
+            <field name="model">reset.view.arch.wizard</field>
+            <field name="inherit_id" ref="base.reset_view_arch_wizard_view"/>
+            <field name="arch" type="xml">
+                <field name="compare_view_id" position="attributes">
+                    <attribute name="context">{'display_website': True}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_arch_only" model="ir.ui.view">
+            <field name="name">website.ir_ui_view.arch_only</field>
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="arch"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ====== Dashboard ==================================================
+        ==================================================================== -->
         <record id="backend_dashboard" model="ir.actions.client">
             <field name="name">Analytics</field>
             <field name="tag">backend_dashboard</field>
@@ -308,15 +409,19 @@
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
             <field name="code">action = model.action_dashboard_redirect()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record id="ir_actions_server_website_google_analytics" model="ir.actions.server">
-            <field name="name">Website: Dashboard</field>
+            <field name="name">Website: Analytics</field>
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
-            <field name="code">action = model.env.ref('website.backend_dashboard').read()[0]</field>
+            <field name="code">action = model.env.ref('website.backend_dashboard').sudo().read()[0]</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
+        <!-- ====== Themes =====================================================
+        ==================================================================== -->
         <!-- Custom module kanban : install button (even if already installed) which -->
         <!-- redirects to website after (fake or not) installation + live preview button -->
         <record model="ir.ui.view" id="theme_view_kanban">
@@ -324,7 +429,7 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <kanban create="false" class="o_theme_kanban" default_order="state,sequence,name" js_class="theme_preview_kanban">
-                    <field name="icon"/>
+                    <field name="summary"/>
                     <field name="name"/>
                     <field name="state"/>
                     <field name="url"/>
@@ -336,7 +441,7 @@
                         <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
                             <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
-                            <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
+                            <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
                             <div class="o_theme_preview_top bg-white mb4">
                                 <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
@@ -350,18 +455,13 @@
                                     <hr t-if="record.url.value"/>
                                     <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
                                 </div>
-                                <i states="installed" t-if="record.is_installed_on_current_website.raw_value"
-                                    class="fa fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
-                                    style="top: 0; right: 0;"
-                                    role="img" aria-label="Installed" title="Installed"/>
                             </div>
                             <div class="o_theme_preview_bottom clearfix">
-                                <h5 t-if="record.display_name.value" class="text-uppercase float-left">
-                                    <img class="float-left mr4"  t-att-src="record.icon.value" height="16" width="16" alt="Theme preview"/>
-                                    <b><t t-esc="record.display_name.value.replace(('Theme'), '').replace(('theme'), '')"/></b>
+                                <h5 t-if="record.summary.value" class="text-uppercase float-left">
+                                    <b><t t-esc="record.summary.value.split(',')[0]"/></b>
                                 </h5>
-                                <h6 t-if="record.category_id.value" class="text-muted float-right">
-                                    <b><t t-esc="record.category_id.value"/></b>
+                                <h6 t-if="record.display_name.value" class="text-muted float-right">
+                                    <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
                                 </h6>
                             </div>
                         </div>
@@ -407,7 +507,7 @@
         </record>
 
         <record id="theme_install_kanban_action" model="ir.actions.act_window">
-            <field name="name">Choose a theme for your website</field>
+            <field name="name">Pick a Theme</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="website.theme_view_kanban" />
@@ -417,39 +517,26 @@
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('website.theme_view_kanban')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('website.theme_view_form_preview')})]"/>
             <field name="search_view_id" ref="theme_view_search"/>
-            <field name="domain" eval="[
-                ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
-                '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
-            ]"/>
+            <field name="domain" model="ir.module.module" eval="obj().get_themes_domain()"/>
         </record>
 
-        <record id="theme_install_act_url" model="ir.actions.act_url">
-            <field name="name">Website</field>
-            <field name="url">/web?reload#action=website.theme_install_kanban_action</field>
-            <field name="target">self</field>
-        </record>
-
-        <record id="theme_install_todo" model="ir.actions.todo">
-            <field name="action_id" ref="theme_install_act_url"/>
-            <field name="sequence">0</field>
-        </record>
-
-        <!-- ONBOARDING -->
-        <template id="onboarding_website_theme_step">
-            <t t-call="base.onboarding_step">
-                <t t-set="title">Website Theme</t>
-                <t t-set="description">Select a theme for your website.</t>
-                <t t-set="btn_text">Let's start!</t>
-                <t t-set="method" t-value="'action_open_website_theme_selector'" />
-                <t t-set="model" t-value="'res.company'" />
-                <t t-set="done" t-value="company.website_theme_onboarding_done" />
-            </t>
-        </template>
+        <!-- ====== Menu Items =================================================
+        ==================================================================== -->
+        <menuitem name="Website"
+            id="menu_website_configuration"
+            sequence="95"
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
 
         <menuitem id="menu_dashboard"
             name="Dashboard"
             sequence="1"
             parent="website.menu_website_configuration"/>
+
+        <!-- Force empty action, to ease upgrade -->
+        <record id="menu_dashboard" model="ir.ui.menu">
+            <field name="action" eval="False"/>
+        </record>
 
         <menuitem id="menu_website_dashboard" parent="menu_dashboard"
             sequence="10" name="eCommerce Dashboard"
@@ -459,5 +546,17 @@
             sequence="20" name="Analytics"
             action="website.ir_actions_server_website_google_analytics"/>
 
+        <!-- Configurator actions -->
+        <record id="start_configurator_act_url" model="ir.actions.act_url">
+            <field name="name">Website Configurator</field>
+            <field name="url">/website/configurator</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="website_configurator_todo" model="ir.actions.todo">
+            <field name="name">Start Website Configurator</field>
+            <field name="action_id" ref="start_configurator_act_url"/>
+            <field name="sequence">0</field>
+        </record>
     </data>
 </odoo>

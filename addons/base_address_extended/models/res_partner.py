@@ -35,7 +35,7 @@ class Partner(models.Model):
                 field_name = re_match.group()[2:-2]
                 field_pos = re_match.start()
                 if field_name not in street_fields:
-                    raise UserError(_("Unrecognized field %s in street format.") % field_name)
+                    raise UserError(_("Unrecognized field %s in street format.", field_name))
                 if not previous_field:
                     # first iteration: add heading chars in street_format
                     if partner[field_name]:
@@ -93,10 +93,18 @@ class Partner(models.Model):
             if separator and field_name:
                 #maxsplit set to 1 to unpack only the first element and let the rest untouched
                 tmp = street_raw.split(separator, 1)
+                if previous_greedy in vals:
+                    # attach part before space to preceding greedy field
+                    append_previous, sep, tmp[0] = tmp[0].rpartition(' ')
+                    street_raw = separator.join(tmp)
+                    vals[previous_greedy] += sep + append_previous
                 if len(tmp) == 2:
                     field_value, street_raw = tmp
                     vals[field_name] = field_value
             if field_value or not field_name:
+                previous_greedy = None
+                if field_name == 'street_name' and separator == ' ':
+                    previous_greedy = field_name
                 # select next field to find (first pass OR field found)
                 # [2:-2] is used to remove the extra chars '%(' and ')s'
                 field_name = re_match.group()[2:-2]
@@ -104,7 +112,7 @@ class Partner(models.Model):
                 # value not found: keep looking for the same field
                 pass
             if field_name not in street_fields:
-                raise UserError(_("Unrecognized field %s in street format.") % field_name)
+                raise UserError(_("Unrecognized field %s in street format.", field_name))
             previous_pos = re_match.end()
 
         # last field value is what remains in street_raw minus trailing chars in street_format

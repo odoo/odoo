@@ -5,53 +5,51 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-from functools import wraps
-import babel
-import babel.dates
-from contextlib import contextmanager
-import datetime
-import math
-import subprocess
-import io
-import os
-
+import cProfile
 import collections
-import passlib.utils
+import datetime
+import hmac as hmac_lib
+import hashlib
+import io
+import itertools
+import os
 import pickle as pickle_
-import pytz
 import re
 import socket
+import subprocess
 import sys
 import threading
 import time
+import traceback
 import types
 import unicodedata
-import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
-from itertools import islice, groupby as itergroupby, repeat
-from lxml import etree
-
-from .which import which
-import traceback
+from collections import OrderedDict
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+from contextlib import contextmanager
+from difflib import HtmlDiff
+from functools import wraps
+from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
-try:
-    # pylint: disable=bad-python3-import
-    import cProfile
-except ImportError:
-    import profile as cProfile
-
-
-from .config import config
-from .cache import *
-from .parse_version import parse_version
-from . import pycompat
+import babel
+import babel.dates
+import markupsafe
+import passlib.utils
+import pytz
+import werkzeug.utils
+from lxml import etree
 
 import odoo
+import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from . import pycompat
+from .cache import *
+from .config import config
+from .parse_version import parse_version
+from .which import which
 
 _logger = logging.getLogger(__name__)
 
@@ -139,126 +137,74 @@ def exec_pg_command_pipe(name, *args):
 #----------------------------------------------------------
 # File paths
 #----------------------------------------------------------
-#file_path_root = os.getcwd()
-#file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons', pathinfo=False):
-    """Open a file from the OpenERP root, using a subdir folder.
+def file_path(file_path, filter_ext=('',)):
+    """Verify that a file exists under a known `addons_path` directory and return its full path.
 
-    Example::
+    Examples::
 
-    >>> file_open('hr/report/timesheer.xsl')
-    >>> file_open('addons/hr/report/timesheet.xsl')
+    >>> file_path('hr')
+    >>> file_path('hr/static/description/icon.png')
+    >>> file_path('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
 
-    @param name name of the file
-    @param mode file open mode
-    @param subdir subdirectory
-    @param pathinfo if True returns tuple (fileobject, filepath)
-
-    @return fileobject if pathinfo is False else (fileobject, filepath)
+    :param str file_path: absolute file path, or relative path within any `addons_path` directory
+    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :return: the absolute path to the file
+    :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
+    :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    import odoo.modules as addons
-    adps = odoo.addons.__path__
-    rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    root_path = os.path.abspath(config['root_path'])
+    addons_paths = odoo.addons.__path__ + [root_path]
+    is_abs = os.path.isabs(file_path)
+    normalized_path = os.path.normpath(os.path.normcase(file_path))
 
-    basename = name
+    if filter_ext and not normalized_path.lower().endswith(filter_ext):
+        raise ValueError("Unsupported file: " + file_path)
 
-    if os.path.isabs(name):
-        # It is an absolute path
-        # Is it below 'addons_path' or 'root_path'?
-        name = os.path.normcase(os.path.normpath(name))
-        for root in adps + [rtp]:
-            root = os.path.normcase(os.path.normpath(root)) + os.sep
-            if name.startswith(root):
-                base = root.rstrip(os.sep)
-                name = name[len(base) + 1:]
-                break
-        else:
-            # It is outside the OpenERP root: skip zipfile lookup.
-            base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
+    # ignore leading 'addons/' if present, it's the final component of root_path, but
+    # may sometimes be included in relative paths
+    if normalized_path.startswith('addons' + os.sep):
+        normalized_path = normalized_path[7:]
 
-    if name.replace(os.sep, '/').startswith('addons/'):
-        subdir = 'addons'
-        name2 = name[7:]
-    elif subdir:
-        name = os.path.join(subdir, name)
-        if name.replace(os.sep, '/').startswith('addons/'):
-            subdir = 'addons'
-            name2 = name[7:]
-        else:
-            name2 = name
+    for addons_dir in addons_paths:
+        # final path sep required to avoid partial match
+        parent_path = os.path.normpath(os.path.normcase(addons_dir)) + os.sep
+        fpath = (normalized_path if is_abs else
+                 os.path.normpath(os.path.normcase(os.path.join(parent_path, normalized_path))))
+        if fpath.startswith(parent_path) and os.path.exists(fpath):
+            return fpath
 
-    # First, try to locate in addons_path
-    if subdir:
-        for adp in adps:
-            try:
-                return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo, basename=basename)
-            except IOError:
-                pass
+    raise FileNotFoundError("File not found: " + file_path)
 
-    # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
+def file_open(name, mode="r", filter_ext=None):
+    """Open a file from within the addons_path directories, as an absolute or relative path.
 
+    Examples::
 
-def _fileopen(path, mode, basedir, pathinfo, basename=None):
-    name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
+    >>> file_open('hr/static/description/icon.png')
+    >>> file_open('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
+    >>> with file_open('/opt/odoo/addons/hr/static/description/icon.png', 'rb') as f:
+    ...     contents = f.read()
 
-    import odoo.modules as addons
-    paths = odoo.addons.__path__ + [config['root_path']]
-    for addons_path in paths:
-        addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
-        if name.startswith(addons_path):
-            break
-    else:
-        raise ValueError("Unknown path: %s" % name)
-
-    if basename is None:
-        basename = name
-    # Give higher priority to module directories, which is
-    # a more common case than zipped modules.
-    if os.path.isfile(name):
-        if 'b' in mode:
-            fo = open(name, mode)
-        else:
-            fo = io.open(name, mode, encoding='utf-8')
-        if pathinfo:
-            return fo, name
-        return fo
-
-    # Support for loading modules in zipped form.
-    # This will not work for zipped modules that are sitting
-    # outside of known addons paths.
-    head = os.path.normpath(path)
-    zipname = False
-    while os.sep in head:
-        head, tail = os.path.split(head)
-        if not tail:
-            break
-        if zipname:
-            zipname = os.path.join(tail, zipname)
-        else:
-            zipname = tail
-        zpath = os.path.join(basedir, head + '.zip')
-        if zipfile.is_zipfile(zpath):
-            zfile = zipfile.ZipFile(zpath)
-            try:
-                fo = io.BytesIO()
-                fo.write(zfile.read(os.path.join(
-                    os.path.basename(head), zipname).replace(
-                        os.sep, '/')))
-                fo.seek(0)
-                if pathinfo:
-                    return fo, name
-                return fo
-            except Exception:
-                pass
-    # Not found
-    if name.endswith('.rml'):
-        raise IOError('Report %r does not exist or has been deleted' % basename)
-    raise IOError('File not found: %s' % basename)
-
+    :param name: absolute or relative path to a file located inside an addon
+    :param mode: file open mode, as for `open()`
+    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :return: file object, as returned by `open()`
+    :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
+    :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
+    """
+    path = file_path(name, filter_ext=filter_ext)
+    if os.path.isfile(path):
+        if 'b' not in mode:
+            # Force encoding for text mode, as system locale could affect default encoding,
+            # even with the latest Python 3 versions.
+            # Note: This is not covered by a unit test, due to the platform dependency.
+            #       For testing purposes you should be able to force a non-UTF8 encoding with:
+            #         `sudo locale-gen fr_FR; LC_ALL=fr_FR.iso8859-1 python3 ...'
+            # See also PEP-540, although we can't rely on that at the moment.
+            return open(path, mode, encoding="utf-8")
+        return open(path, mode)
+    raise FileNotFoundError("Not a file: " + name)
 
 #----------------------------------------------------------
 # iterables
@@ -751,6 +697,13 @@ def attrgetter(*items):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
 
+def discardattr(obj, key):
+    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
+    try:
+        delattr(obj, key)
+    except AttributeError:
+        pass
+
 # ---------------------------------------------
 # String management
 # ---------------------------------------------
@@ -760,6 +713,8 @@ def remove_accents(input_str):
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
     meaning of input_str and work only for some cases"""
+    if not input_str:
+        return input_str
     input_str = ustr(input_str)
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
@@ -985,42 +940,56 @@ def clean_context(context):
     """ This function take a dictionary and remove each entry with its key starting with 'default_' """
     return {k: v for k, v in context.items() if not k.startswith('default_')}
 
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
+    __slots__ = ()
+
     def __delitem__(self, key):
         raise NotImplementedError("'__delitem__' not supported on frozendict")
+
     def __setitem__(self, key, val):
         raise NotImplementedError("'__setitem__' not supported on frozendict")
+
     def clear(self):
         raise NotImplementedError("'clear' not supported on frozendict")
+
     def pop(self, key, default=None):
         raise NotImplementedError("'pop' not supported on frozendict")
+
     def popitem(self):
         raise NotImplementedError("'popitem' not supported on frozendict")
+
     def setdefault(self, key, default=None):
         raise NotImplementedError("'setdefault' not supported on frozendict")
+
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+
     def __hash__(self):
         return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
-class Collector(Mapping):
-    """ A mapping from keys to lists. This is essentially a space optimization
-        for ``defaultdict(list)``.
+
+class Collector(dict):
+    """ A mapping from keys to tuples.  This implements a relation, and can be
+        seen as a space optimization for ``defaultdict(tuple)``.
     """
-    __slots__ = ['_map']
-    def __init__(self):
-        self._map = {}
-    def add(self, key, val):
-        vals = self._map.setdefault(key, [])
-        if val not in vals:
-            vals.append(val)
+    __slots__ = ()
+
     def __getitem__(self, key):
-        return self._map.get(key, ())
-    def __iter__(self):
-        return iter(self._map)
-    def __len__(self):
-        return len(self._map)
+        return self.get(key, ())
+
+    def __setitem__(self, key, val):
+        val = tuple(val)
+        if val:
+            super().__setitem__(key, val)
+        else:
+            super().pop(key, None)
+
+    def add(self, key, val):
+        vals = self[key]
+        if val not in vals:
+            self[key] = vals + (val,)
 
 
 class StackMap(MutableMapping):
@@ -1067,18 +1036,34 @@ class StackMap(MutableMapping):
 class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
+
     def __init__(self, elems=()):
-        self._map = OrderedDict((elem, None) for elem in elems)
+        self._map = dict.fromkeys(elems)
+
     def __contains__(self, elem):
         return elem in self._map
+
     def __iter__(self):
         return iter(self._map)
+
     def __len__(self):
         return len(self._map)
+
     def add(self, elem):
         self._map[elem] = None
+
     def discard(self, elem):
         self._map.pop(elem, None)
+
+    def update(self, elems):
+        self._map.update(zip(elems, itertools.repeat(None)))
+
+    def difference_update(self, elems):
+        for elem in elems:
+            self.discard(elem)
+
+    def __repr__(self):
+        return f'{type(self).__name__}({list(self)!r})'
 
 
 class LastOrderedSet(OrderedSet):
@@ -1088,54 +1073,74 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.add(self, elem)
 
 
-class GroupCalls:
-    """ A collection of callbacks with support for aggregated arguments.  Upon
-    call, every registered function is called once with positional arguments.
-    When registering a function, a tuple of positional arguments is returned, so
-    that the caller can modify the arguments in place.  This allows to
-    accumulate some data to process once::
+class Callbacks:
+    """ A simple queue of callback functions.  Upon run, every function is
+    called (in addition order), and the queue is emptied.
 
-        callbacks = GroupCalls()
+        callbacks = Callbacks()
 
-        # register print (by default with a list)
-        [args] = callbacks.register(print, list)
-        args.append(42)
+        # add foo
+        def foo():
+            print("foo")
 
-        # add an element to the list to print
-        [args] = callbacks.register(print, list)
-        args.append(43)
+        callbacks.add(foo)
 
-        # print "[42, 43]"
-        callbacks()
+        # add bar
+        callbacks.add
+        def bar():
+            print("bar")
+
+        # add foo again
+        callbacks.add(foo)
+
+        # call foo(), bar(), foo(), then clear the callback queue
+        callbacks.run()
+
+    The queue also provides a ``data`` dictionary, that may be freely used to
+    store anything, but is mostly aimed at aggregating data for callbacks.  The
+    dictionary is automatically cleared by ``run()`` once all callback functions
+    have been called.
+
+        # register foo to process aggregated data
+        @callbacks.add
+        def foo():
+            print(sum(callbacks.data['foo']))
+
+        callbacks.data.setdefault('foo', []).append(1)
+        ...
+        callbacks.data.setdefault('foo', []).append(2)
+        ...
+        callbacks.data.setdefault('foo', []).append(3)
+
+        # call foo(), which prints 6
+        callbacks.run()
+
+    Given the global nature of ``data``, the keys should identify in a unique
+    way the data being stored.  It is recommended to use strings with a
+    structure like ``"{module}.{feature}"``.
     """
+    __slots__ = ['_funcs', 'data']
+
     def __init__(self):
-        self._func_args = {}            # {func: args}
+        self._funcs = collections.deque()
+        self.data = {}
 
-    def __call__(self):
-        """ Call all the registered functions (in first addition order) with
-        their respective arguments.  Only recurrent functions remain registered
-        after the call.
-        """
-        func_args = self._func_args
-        while func_args:
-            func = next(iter(func_args))
-            args = func_args.pop(func)
-            func(*args)
+    def add(self, func):
+        """ Add the given function. """
+        self._funcs.append(func)
 
-    def add(self, func, *types):
-        """ Register the given function, and return the tuple of positional
-        arguments to call the function with.  If the function is not registered
-        yet, the list of arguments is made up by invoking the given types.
+    def run(self):
+        """ Call all the functions (in addition order), then clear associated data.
         """
-        try:
-            return self._func_args[func]
-        except KeyError:
-            args = self._func_args[func] = [type_() for type_ in types]
-            return args
+        while self._funcs:
+            func = self._funcs.popleft()
+            func()
+        self.clear()
 
     def clear(self):
-        """ Remove all callbacks from self. """
-        self._func_args.clear()
+        """ Remove all callbacks and data from self. """
+        self._funcs.clear()
+        self.data.clear()
 
 
 class IterableGenerator:
@@ -1205,14 +1210,7 @@ def ignore(*exc):
     except exc:
         pass
 
-# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0'):
-    def html_escape(text):
-        return werkzeug.utils.escape(text, quote=True)
-else:
-    def html_escape(text):
-        return werkzeug.utils.escape(text)
-
+html_escape = markupsafe.escape
 
 def get_lang(env, lang_code=False):
     """
@@ -1223,10 +1221,23 @@ def get_lang(env, lang_code=False):
     :return res.lang: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
-    for code in [lang_code, env.context.get('lang'), env.user.company_id.partner_id.lang, langs[0]]:
-        if code in langs:
-            return env['res.lang']._lang_get(code)
+    lang = langs[0]
+    if lang_code and lang_code in langs:
+        lang = lang_code
+    elif env.context.get('lang') in langs:
+        lang = env.context.get('lang')
+    elif env.user.company_id.partner_id.lang in langs:
+        lang = env.user.company_id.partner_id.lang
+    return env['res.lang']._lang_get(lang)
 
+def babel_locale_parse(lang_code):
+    try:
+        return babel.Locale.parse(lang_code)
+    except:
+        try:
+            return babel.Locale.default()
+        except:
+            return babel.Locale.parse("en_US")
 
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
@@ -1286,7 +1297,7 @@ def format_date(env, value, lang_code=False, date_format=False):
             value = odoo.fields.Datetime.from_string(value)
 
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
@@ -1305,7 +1316,7 @@ def parse_date(env, value, lang_code=False):
         :rtype: datetime.date
     '''
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     try:
         return babel.dates.parse_date(value, locale=locale)
     except:
@@ -1337,7 +1348,7 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
 
     lang = get_lang(env, lang_code)
 
-    locale = babel.Locale.parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
+    locale = babel_locale_parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
     if not dt_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
@@ -1357,7 +1368,8 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
 
         :param value: the time to format
         :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
-        :param format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern
+        :param tz: name of the timezone  in which the given datetime should be localized
+        :param time_format: one of “full”, “long”, “medium”, or “short”, or a custom time pattern
         :param lang_code: ISO
 
         :rtype str
@@ -1365,20 +1377,73 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     if not value:
         return ''
 
+    if isinstance(value, datetime.time):
+        localized_datetime = value
+    else:
+        if isinstance(value, str):
+            value = odoo.fields.Datetime.from_string(value)
+        tz_name = tz or env.user.tz or 'UTC'
+        utc_datetime = pytz.utc.localize(value, is_dst=False)
+        try:
+            context_tz = pytz.timezone(tz_name)
+            localized_datetime = utc_datetime.astimezone(context_tz)
+        except Exception:
+            localized_datetime = utc_datetime
+
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
-    return babel.dates.format_time(value, format=time_format, locale=locale)
+    return babel.dates.format_time(localized_datetime, format=time_format, locale=locale)
 
 
 def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
     if not lang_code:
         langs = [code for code, _ in env['res.lang'].get_installed()]
         lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
-    locale = babel.Locale.parse(lang_code)
+    locale = babel_locale_parse(lang_code)
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
+
+
+def format_decimalized_number(number, decimal=1):
+    """Format a number to display to nearest metrics unit next to it.
+
+    Do not display digits if all visible digits are null.
+    Do not display units higher then "Tera" because most of people don't know what
+    a "Yotta" is.
+
+    >>> format_decimalized_number(123_456.789)
+    123.5k
+    >>> format_decimalized_number(123_000.789)
+    123k
+    >>> format_decimalized_number(-123_456.789)
+    -123.5k
+    >>> format_decimalized_number(0.789)
+    0.8
+    """
+    for unit in ['', 'k', 'M', 'G']:
+        if abs(number) < 1000.0:
+            return "%g%s" % (round(number, decimal), unit)
+        number /= 1000.0
+    return "%g%s" % (round(number, decimal), 'T')
+
+
+def format_decimalized_amount(amount, currency=None):
+    """Format a amount to display the currency and also display the metric unit of the amount.
+
+    >>> format_decimalized_amount(123_456.789, res.currency("$"))
+    $123.5k
+    """
+    formated_amount = format_decimalized_number(amount)
+
+    if not currency:
+        return formated_amount
+
+    if currency.position == 'before':
+        return "%s%s" % (currency.symbol or '', formated_amount)
+
+    return "%s %s" % (formated_amount, currency.symbol or '')
 
 
 def format_amount(env, amount, currency, lang_code=False):
@@ -1439,26 +1504,6 @@ pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), enc
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
 
-def wrap_module(module, attr_list):
-    """Helper for wrapping a package/module to expose selected attributes
-
-       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
-       :param iterable attr_list: a global list of attributes to expose, usually the top-level
-            attributes and their own main attributes. No support for hiding attributes in case
-            of name collision at different levels.
-    """
-    attr_list = set(attr_list)
-    class WrappedModule(object):
-        def __getattr__(self, attrib):
-            if attrib in attr_list:
-                target = getattr(module, attrib)
-                if isinstance(target, types.ModuleType):
-                    return wrap_module(target, attr_list)
-                return target
-            raise AttributeError(attrib)
-    # module and attr_list are in the closure
-    return WrappedModule()
-
 
 class DotDict(dict):
     """Helper for dot.notation access to dictionary attributes
@@ -1470,3 +1515,88 @@ class DotDict(dict):
     def __getattr__(self, attrib):
         val = self.get(attrib)
         return DotDict(val) if type(val) is dict else val
+
+
+def get_diff(data_from, data_to, custom_style=False):
+    """
+    Return, in an HTML table, the diff between two texts.
+
+    :param tuple data_from: tuple(text, name), name will be used as table header
+    :param tuple data_to: tuple(text, name), name will be used as table header
+    :param tuple custom_style: string, style css including <style> tag.
+    :return: a string containing the diff in an HTML table format.
+    """
+    def handle_style(html_diff, custom_style):
+        """ The HtmlDiff lib will add some useful classes on the DOM to
+        identify elements. Simply append to those classes some BS4 ones.
+        For the table to fit the modal width, some custom style is needed.
+        """
+        to_append = {
+            'diff_header': 'bg-600 text-center align-top px-2',
+            'diff_next': 'd-none',
+            'diff_add': 'bg-success',
+            'diff_chg': 'bg-warning',
+            'diff_sub': 'bg-danger',
+        }
+        for old, new in to_append.items():
+            html_diff = html_diff.replace(old, "%s %s" % (old, new))
+        html_diff = html_diff.replace('nowrap', '')
+        html_diff += custom_style or '''
+            <style>
+                table.diff { width: 100%; }
+                table.diff th.diff_header { width: 50%; }
+                table.diff td.diff_header { white-space: nowrap; }
+                table.diff td { word-break: break-all; }
+            </style>
+        '''
+        return html_diff
+
+    diff = HtmlDiff(tabsize=2).make_table(
+        data_from[0].splitlines(),
+        data_to[0].splitlines(),
+        data_from[1],
+        data_to[1],
+        context=True,  # Show only diff lines, not all the code
+        numlines=3,
+    )
+    return handle_style(diff, custom_style)
+
+
+def traverse_containers(val, type_):
+    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    from odoo.models import BaseModel
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes, BaseModel)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from traverse_containers(k, type_)
+            yield from traverse_containers(v, type_)
+    elif isinstance(val, collections.abc.Sequence):
+        for v in val:
+            yield from traverse_containers(v, type_)
+
+
+def hmac(env, scope, message, hash_function=hashlib.sha256):
+    """Compute HMAC with `database.secret` config parameter as key.
+
+    :param env: sudo environment to use for retrieving config parameter
+    :param message: message to authenticate
+    :param scope: scope of the authentication, to have different signature for the same
+        message in different usage
+    :param hash_function: hash function to use for HMAC (default: SHA-256)
+    """
+    if not scope:
+        raise ValueError('Non-empty scope required')
+
+    secret = env['ir.config_parameter'].get_param('database.secret')
+    message = repr((scope, message))
+    return hmac_lib.new(
+        secret.encode(),
+        message.encode(),
+        hash_function,
+    ).hexdigest()

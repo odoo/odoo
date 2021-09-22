@@ -19,8 +19,11 @@ certification flow including purchase, certification, failure and success.
     'demo': [
         'data/product_demo.xml',
     ],
-    'data': [
-        'views/assets.xml',
-    ],
     'installable': True,
+    'assets': {
+        'web.assets_tests': [
+            'test_website_slides_full/tests/tours/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

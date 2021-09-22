@@ -14,25 +14,41 @@ class EventTemplateTicket(models.Model):
     def _default_product_id(self):
         return self.env.ref('event_sale.product_product_event', raise_if_not_found=False)
 
+    description = fields.Text(compute='_compute_description', readonly=False, store=True)
     # product
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True, domain=[("event_ok", "=", True)],
-        default=_default_product_id)
-    price = fields.Float(string='Price', digits='Product Price')
-    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
+        'product.product', string='Product', required=True,
+        domain=[("detailed_type", "=", "event")], default=_default_product_id)
+    price = fields.Float(
+        string='Price', compute='_compute_price',
+        digits='Product Price', readonly=False, store=True)
+    price_reduce = fields.Float(
+        string="Price Reduce", compute="_compute_price_reduce",
+        compute_sudo=True, digits='Product Price')
 
     @api.depends('product_id')
-    def _compute_price_reduce(self):
-        for record in self:
-            product = record.product_id
-            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
-            record.price_reduce = (1.0 - discount) * record.price
+    def _compute_price(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.lst_price:
+                ticket.price = ticket.product_id.lst_price or 0
+            elif not ticket.price:
+                ticket.price = 0
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        self.price = self.product_id.list_price or 0
-        if not self.description and self.product_id.description_sale:
-            self.description = self.product_id.description_sale
+    @api.depends('product_id')
+    def _compute_description(self):
+        for ticket in self:
+            if ticket.product_id and ticket.product_id.description_sale:
+                ticket.description = ticket.product_id.description_sale
+            # initialize, i.e for embedded tree views
+            if not ticket.description:
+                ticket.description = False
+
+    @api.depends('product_id', 'price')
+    def _compute_price_reduce(self):
+        for ticket in self:
+            product = ticket.product_id
+            discount = (product.lst_price - product.price) / product.lst_price if product.lst_price else 0.0
+            ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):
         if column_name != "product_id":
@@ -56,8 +72,6 @@ class EventTemplateTicket(models.Model):
                 'list_price': 0,
                 'standard_price': 0,
                 'type': 'service',
-                'default_code': 'EVENT_REG',
-                'type': 'service',
             }).id
             self.env['ir.model.data'].create({
                 'name': 'product_product_event',
@@ -78,16 +92,19 @@ class EventTemplateTicket(models.Model):
 
 class EventTicket(models.Model):
     _inherit = 'event.event.ticket'
+    _order = "event_id, price"
 
     # product
-    price_reduce_taxinc = fields.Float(string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc')
+    price_reduce_taxinc = fields.Float(
+        string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc',
+        compute_sudo=True)
 
     def _compute_price_reduce_taxinc(self):
-        for record in self:
+        for event in self:
             # sudo necessary here since the field is most probably accessed through the website
-            tax_ids = record.sudo().product_id.taxes_id.filtered(lambda r: r.company_id == record.event_id.company_id)
-            taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
-            record.price_reduce_taxinc = taxes['total_included']
+            tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
+            taxes = tax_ids.compute_all(event.price_reduce, event.event_id.company_id.currency_id, 1.0, product=event.product_id)
+            event.price_reduce_taxinc = taxes['total_included']
 
     @api.depends('product_id.active')
     def _compute_sale_available(self):

@@ -15,9 +15,11 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
     module_mrp_workorder = fields.Boolean("Work Orders")
     module_quality_control = fields.Boolean("Quality")
+    module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     module_mrp_subcontracting = fields.Boolean("Subcontracting")
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')
+    group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):
@@ -34,5 +36,13 @@ class ResConfigSettings(models.TransientModel):
         # group_mrp_routings
         if self.group_mrp_routings:
             self.module_mrp_workorder = True
-        elif not self.env['ir.module.module'].search([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')]):
+        else:
             self.module_mrp_workorder = False
+
+    @api.onchange('group_unlocked_by_default')
+    def _onchange_group_unlocked_by_default(self):
+        """ When changing this setting, we want existing MOs to automatically update to match setting. """
+        if self.group_unlocked_by_default:
+            self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', True)]).is_locked = False
+        else:
+            self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', False)]).is_locked = True

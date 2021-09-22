@@ -1,11 +1,10 @@
-odoo.define('mrp.MrpDocumentsKanbanRecord', function (require) {
-"use strict";
+/** @odoo-module **/
 
 /**
  * This file defines the KanbanRecord for the MRP Documents Kanban view.
  */
 
-const KanbanRecord = require('web.KanbanRecord');
+import KanbanRecord from 'web.KanbanRecord';
 
 const MrpDocumentsKanbanRecord = KanbanRecord.extend({
     events: Object.assign({}, KanbanRecord.prototype.events, {
@@ -45,6 +44,4 @@ const MrpDocumentsKanbanRecord = KanbanRecord.extend({
     },
 });
 
-return MrpDocumentsKanbanRecord;
-
-});
+export default MrpDocumentsKanbanRecord;

@@ -1,0 +1,227 @@
+<template>
+
+<t t-name="KanbanView.buttons">
+    <div>
+        <button t-if="!noCreate" type="button" t-attf-class="btn #{btnClass} o-kanban-button-new" title="Create record" accesskey="c">
+            <t t-esc="create_text || _t('Create')"/>
+        </button>
+    </div>
+</t>
+
+<t t-name="KanbanView.Group">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id"
+        role="feed" t-attf-aria-labelledby="kanban_header_#{widget.id or widget.db_id}">
+        <div class="o_kanban_header">
+            <div class="o_kanban_header_title">
+                <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
+                <span class="o_kanban_config dropdown">
+                    <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
+                        <t t-if="widget.grouped_by_m2o">
+                            <a t-if="widget.editable and widget.id" role="menuitem" class="dropdown-item o_column_edit" href="#">Edit Stage</a>
+                            <a t-if="widget.deletable and widget.id" role="menuitem" class="dropdown-item o_column_delete" href="#">Delete</a>
+                        </t>
+                        <t t-if="widget.has_active_field and widget.archivable and !widget.grouped_by_m2m">
+                            <a role="menuitem" href="#" class="dropdown-item o_column_archive_records">Archive All</a>
+                            <a role="menuitem" href="#" class="dropdown-item o_column_unarchive_records">Unarchive All</a>
+                        </t>
+                    </div>
+                </span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
+            </div>
+        </div>
+        <div t-if="widget.loadMoreCount > 0" class="o_kanban_load_more">
+            <t t-call="KanbanView.LoadMore"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.LoadMore">
+    <a href="#">Load more... (<t t-esc="widget.loadMoreCount"/> remaining)</a>
+</t>
+
+<t t-name="KanbanView.ColumnQuickCreate">
+    <div class="o_column_quick_create">
+        <div class="o_quick_create_folded">
+            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
+            <span class="o_kanban_title">Add a Column</span>
+        </div>
+        <div class="o_quick_create_unfolded">
+            <div class="o_kanban_header">
+                <div class="input-group">
+                    <input type="text" class="form-control o_input" placeholder="Column title"/>
+                    <span class="input-group-append">
+                        <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+                    </span>
+                </div>
+                <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
+                <t t-if="widget.examples &amp;&amp; !widget.isMobile">
+                    <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
+                </t>
+            </div>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.RecordQuickCreate.buttons">
+    <div class="d-flex">
+        <button class="btn btn-primary o_kanban_add mr-1 text-truncate">Add</button>
+        <button class="btn btn-primary o_kanban_edit mr-1 text-truncate">Edit</button>
+        <button class="btn btn-secondary o_kanban_cancel ml-auto">
+            <i class="fa fa-trash"/>
+        </button>
+    </div>
+</t>
+
+<t t-name="KanbanColorPicker">
+    <t t-foreach="colors" t-as="color">
+        <li>
+            <a role="menuitem"
+               href="#"
+               t-att-data-color="color_index"
+               t-attf-class="oe_kanban_color_#{color_index}"
+               t-att-title="color"
+               t-att-aria-label="color"/>
+        </li>
+    </t>
+</t>
+
+<t t-name="GraphCustomTooltip">
+    <table>
+        <tbody>
+            <tr>
+                <td class="legend-color-guide">
+                    <div t-attf-style="background-color: #{color};"></div>
+                </td>
+                <td class="key"><t t-esc="key" /></td>
+                <td class="value"><t t-esc="value" /></td>
+            </tr>
+        </tbody>
+    </table>
+</t>
+
+<t t-name="KanbanView.ColumnProgressBar">
+    <div class="o_kanban_counter">
+        <div class="o_kanban_counter_progress progress">
+            <t t-foreach="widget.colors" t-as="color">
+                <t t-set="count" t-value="widget.subgroupCounts and widget.subgroupCounts[color] or 0"/>
+                <div t-attf-class="progress-bar transition-off bg-#{color_value}#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' progress-bar-animated progress-bar-striped' : ''}"
+                    t-att-data-filter="color"
+                    t-attf-data-original-title="#{count} #{color}"
+                    aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="count*100" role="progressbar"
+                    t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
+            </t>
+        </div>
+        <div class="o_kanban_counter_side" t-att-title="widget.sumFieldLabel || ''"><b><t t-esc="widget.totalCounterValue || 0"/></b></div>
+    </div>
+</t>
+
+<t t-name="KanbanView.SetCoverModal">
+    <div t-if="attachmentIds.length" class="o_kanban_cover_container bg-100">
+        <t t-foreach="attachmentIds" t-as="attachment">
+            <div t-attf-class="o_kanban_cover_image position-relative d-inline-block m-2 bg-white #{coverId === attachment.id ? ' o_selected' : ''}">
+                <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" class="m-auto mw-100" alt="Attachment"/>
+            </div>
+        </t>
+    </div>
+    <div t-else="">There is no available image to be set as cover.</div>
+    <span class="d-none">
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.imageUploadID" />
+            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+            <input type="hidden" name="model" t-att-value="widget.modelName" />
+            <input type="hidden" name="id" t-att-value="widget.id" />
+        </t>
+    </span>
+</t>
+
+<!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
+<div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
+    <div class="o_kanban_examples_dialog_nav">
+        <ul class="nav nav-pills flex-column">
+            <t t-foreach="examples" t-as="example">
+                <li class="nav-item">
+                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-att-data-example-index="example_index" t-attf-href="#example_#{example_index}" t-attf-class="nav-link#{example_index == 0 and ' active' or ''}"> <t t-esc="example.name"/> </a>
+                </li>
+            </t>
+        </ul>
+    </div>
+    <div class="o_kanban_examples_dialog_content">
+        <div class="tab-content">
+            <t t-foreach="examples" t-as="example">
+                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane #{example_index == 0 and 'active in' or ''}">
+                    <div t-if="example.description" class="o_kanban_examples_description">
+                        <t t-out="example.description"/>
+                    </div>
+                    <div class="o_kanban_examples">
+                        <t t-foreach="example.columns" t-as="column">
+                            <div class="o_kanban_examples_group">
+                                <h6><b><t t-esc="column"/></b></h6>
+                                <t t-foreach="_.random(1,4)">
+                                    <t t-call="KanbanView.ExamplesDialog.RecordGhost"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+</div>
+<t t-name="KanbanView.ExamplesDialog.RecordGhost">
+    <div class="o_kanban_examples_ghost">
+        <div class="o_ghost_content"/>
+        <div class="o_ghost_content o_ghost_tag"/>
+            <t t-if="example.bullets and _.random(0, 5) > 3">
+                <t t-out="_.sample(example.bullets)"/>
+            </t>
+        <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+    </div>
+</t>
+
+<!-- Kanban Example Background -->
+<t t-name="KanbanView.ExamplesBackground">
+    <div class="o_kanban_example_background_container">
+        <div class="o_kanban_example_background">
+            <div class="o_kanban_examples">
+                <t t-foreach="ghostColumns" t-as="column">
+                    <div class="o_kanban_examples_group">
+                        <h6><b><t t-esc="column"/></b></h6>
+                        <t t-foreach="_.random(2,6)">
+                            <t t-call="KanbanView.ExamplesBackground.RecordGhost"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+<t t-name="KanbanView.ExamplesBackground.RecordGhost">
+    <div class="o_kanban_examples_ghost">
+        <div class="o_ghost_content"/>
+        <div class="o_ghost_content o_ghost_tag"/>
+        <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+    </div>
+</t>
+
+<!-- Mobile templates -->
+<t t-name="KanbanView.MobileTabs">
+    <div class="o_kanban_mobile_tabs_container">
+        <div class="o_kanban_mobile_tabs">
+            <t t-foreach="data" t-as="group">
+                <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+                    <span class="o_column_title"><t t-esc="group.value"/></span>
+                </div>
+            </t>
+            <div class="o_kanban_mobile_add_column" t-if="quickCreateEnabled">
+                <i class="fa fa-plus " role="img" aria-label="Add column" title="Add column"/>
+            </div>
+        </div>
+    </div>
+</t>
+</template>

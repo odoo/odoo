@@ -15,19 +15,6 @@
         </xpath>
     </template>
 
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
-      <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
-        <link rel="stylesheet" type="text/scss" href="/website_sale_delivery/static/src/scss/website_sale_delivery.scss"/>
-      </xpath>
-    </template>
-
-    <template id="assets_tests" name="Website Sale Delivery Assets Tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_sale_delivery/static/tests/tours/website_free_delivery.js"></script>
-        </xpath>
-    </template>
-
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name"/>
@@ -36,7 +23,7 @@
           <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class">
             <t t-esc="delivery.rate_shipment(website_sale_order)['price'] if delivery.free_over else delivery.fixed_price"
                t-options='{"widget": "monetary",
-                           "from_currency": delivery.product_id.company_id.currency_id or website_sale_order.company_id.currency_id,
+                           "from_currency": website_sale_order.currency_id if delivery.free_over else delivery.product_id.company_id.currency_id or website_sale_order.company_id.currency_id,
                            "display_currency": website_sale_order.currency_id}'/>
           </span>
           <span t-else="" t-att-class="badge_class">Free</span>
@@ -49,7 +36,7 @@
         </t>
     </template>
 
-    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
+    <template id="payment_delivery_shipping_method" name="Delivery Shipping method" inherit_id="website_sale.address_on_payment">
         <xpath expr="//div[@id='shipping_and_billing']" position="inside">
             <t t-set="delivery_nb" t-value="deliveries and len(deliveries)"/>
             <div t-if="delivery_nb == 1" id="delivery_carrier" class="mt4">
@@ -59,6 +46,9 @@
                 </t>
             </div>
         </xpath>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
             <div t-if="deliveries" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>

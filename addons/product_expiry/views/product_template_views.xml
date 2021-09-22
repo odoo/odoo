@@ -8,7 +8,7 @@
                 <group name="traceability" position="inside">
                     <field name="use_expiration_date" attrs="{'invisible': [('tracking', '=','none')]}"/>
                 </group>
-                <group name="group_lots_and_weight" position="after">
+                <group name="stock_property" position="after">
                     <group string="Dates" name="expiry_and_lots" groups="stock.group_production_lot"
                         attrs="{'invisible': ['|', ('tracking', '=','none'), ('use_expiration_date', '=', False)]}">
                         <label for="expiration_time"/>

@@ -3,6 +3,27 @@ odoo.define('website_crm.tour', function(require) {
 
     var tour = require('web_tour.tour');
 
+    tour.register('website_crm_pre_tour', {
+        test: true,
+        url: '/contactus?enable_editor=1',
+    }, [{
+        content: "Select contact form",
+        trigger: "section.s_website_form",
+    }, {
+        content: "Open action select",
+        trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
+    }, {
+        content: "Select 'Create an Opportunity' as form action",
+        trigger: "we-select we-button:contains('Create an Opportunity')",
+    }, {
+        content: "Save the settings",
+        trigger: "button[data-action=save]",
+    }, {
+        content: "Ensure form model has changed and page reload is done after save",
+        trigger: "section.s_website_form form[data-model_name='crm.lead']",
+        extra_trigger: "a[data-action=edit]",
+    }]);
+
     tour.register('website_crm_tour', {
         test: true,
         url: '/contactus',
@@ -35,7 +56,26 @@ odoo.define('website_crm.tour', function(require) {
         trigger: ".s_website_form_send"
     }, {
         content: "Check we were redirected to the success page",
-        trigger: "#wrap:has(h1:contains('Thanks')):has(div.alert-success)"
+        trigger: "#wrap:has(h1:contains('Thank You!'))"
+    }]);
+
+    tour.register('website_crm_catch_logged_partner_info_tour', {
+        test: true,
+        url: '/contactus',
+    }, [{
+        content: "Complete Subject",
+        trigger: "input[name=name]",
+        run: "text Useless subject"
+    }, {
+        content: "Complete Subject",
+        trigger: "textarea[name=description]",
+        run: "text ### TOUR DATA PREFILL ###"
+    }, {
+        content: "Send the form",
+        trigger: ".s_website_form_send"
+    }, {
+        content: "Check we were redirected to the success page",
+        trigger: "#wrap:has(h1:contains('Thank You!'))"
     }]);
 
     return {};

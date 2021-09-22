@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged
 
 
-class TestSaleService(TestCommonSaleTimesheetNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleService(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleService, cls).setUpClass()
-        # set up
-        cls.setUpEmployees()
-        cls.setUpServiceProducts()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
         })
 
     def test_sale_service(self):
@@ -90,6 +89,9 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
 
+        # delete timesheets before deleting the task, so as to trigger the error
+        # about linked sales order lines and not the one about linked timesheets
+        task.timesheet_ids.unlink()
         # not possible to delete a task linked to a SOL
         with self.assertRaises(ValidationError):
             task.unlink()
@@ -164,7 +166,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # invoice SO, and validate invoice
         invoice = self.sale_order._create_invoices()[0]
-        invoice.post()
+        invoice.action_post()
 
         # make task non billable
         task_serv2.write({'sale_line_id': False})
@@ -244,7 +246,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertTrue(so_line1.project_id, "SO confirmation should create a project and link it to SOL")
         self.assertEqual(self.sale_order.tasks_count, 1, "The SO should have only one task")
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
-        self.assertFalse(so_line1.task_id.user_id, "The created task should be unassigned")
+        self.assertFalse(so_line1.task_id.user_ids, "The created task should be unassigned")
         self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
 
         so_line1.write({'product_uom_qty': 20})
@@ -529,14 +531,14 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'name': '%s: substask1' % (task.name,)
         })
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line than its mother")
-        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line than its project")
-        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line than its project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line as its mother")
+        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line as its project")
+        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line as its project")
 
         # moving subtask in another project
-        subtask.write({'project_id': self.project_global.id})
+        subtask.write({'display_project_id': self.project_global.id})
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line as its mother, even when changing project")
         self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project)
 
         # changing the SO line of the mother task
@@ -590,12 +592,67 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # copy the project
         project_copy = project.copy()
-        self.assertFalse(project_copy.sale_line_id, "Duplicatinga project should erase its Sale line")
-        self.assertFalse(project_copy.sale_order_id, "Duplicatinga project should erase its Sale order")
-        self.assertEqual(project_copy.billable_type, 'no', "Duplicatinga project should reset its billable type to none billable")
+        self.assertFalse(project_copy.sale_line_id, "Duplicating project should erase its Sale line")
+        self.assertFalse(project_copy.sale_order_id, "Duplicating project should erase its Sale order")
         self.assertEqual(len(project.tasks), len(project_copy.tasks), "Copied project must have the same number of tasks")
         self.assertFalse(project_copy.tasks.mapped('sale_line_id'), "The tasks of the duplicated project should not have a Sale Line set.")
 
         # copy the task
         task_copy = task.copy()
-        self.assertFalse(task_copy.sale_line_id, "Duplicatinga task should not keep its Sale line")
+        self.assertEqual(task_copy.sale_line_id, task.sale_line_id, "Duplicating task should keep its Sale line")
+
+    def test_remaining_hours_prepaid_services(self):
+        """ Test if the remaining hours is correctly computed
+
+            Test Case:
+            =========
+            1) Check the remaining hours in the SOL containing a prepaid service product,
+            2) Create task in project with pricing type is equal to "task rate" and has the customer in the SO
+                and check if the remaining hours is equal to the remaining hours in the SOL,
+            3) Create timesheet in the task for this SOL and check if the remaining hours correctly decrease,
+            4) Change the SOL in the task and see if the remaining hours is correctly recomputed.
+            5) Create without storing the timesheet to check if remaining hours in SOL does not change.
+        """
+        # 1) Check the remaining hours in the SOL containing a prepaid service product
+        prepaid_service_sol = self.so.order_line.filtered(lambda sol: sol.product_id.service_policy == 'ordered_timesheet')
+        self.assertEqual(len(prepaid_service_sol), 1, "It should only have one SOL with prepaid service product in this SO.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, prepaid_service_sol.product_uom_qty - prepaid_service_sol.qty_delivered, "The remaining hours of this SOL should be equal to the ordered quantity minus the delivered quantity.")
+
+        # 2) Create task in project with pricing type is equal to "task rate" and has the customer in the SO
+        # and check if the remaining hours is equal to the remaining hours in the SOL,
+        task = self.env['project.task'].create({
+            'name': 'Test task',
+            'project_id': self.project_task_rate.id,
+        })
+        self.assertEqual(task.partner_id, self.project_task_rate.partner_id)
+        self.assertEqual(task.partner_id, self.so.partner_id)
+        self.assertEqual(task.remaining_hours_so, prepaid_service_sol.remaining_hours)
+
+        # 3) Create timesheet in the task for this SOL and check if the remaining hours correctly decrease
+        self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': self.project_task_rate.id,
+            'task_id': task.id,
+            'unit_amount': 1,
+        })
+        self.assertEqual(task.remaining_hours_so, 1, "Before the creation of a timesheet, the remaining hours was 2 hours, when we timesheet 1 hour, the remaining hours should be equal to 1 hour.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, task.remaining_hours_so, "The remaining hours on the SOL should also be equal to 1 hour.")
+
+        # 4) Change the SOL in the task and see if the remaining hours is correctly recomputed.
+        task.update({
+            'sale_line_id': self.so.order_line[0].id,
+        })
+        self.assertEqual(task.remaining_hours_so, False, "Since the SOL doesn't contain a prepaid service product, the remaining_hours_so should be equal to False.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, 2, "Since the timesheet on task has the same SOL than the one in the task, the remaining_hours should increase of 1 hour to be equal to 2 hours.")
+
+        # 5) Create without storing the timesheet to check if remaining hours in SOL does not change
+        timesheet = self.env['account.analytic.line'].new({
+            'name': 'Test Timesheet',
+            'project_id': self.project_task_rate.id,
+            'task_id': task.id,
+            'unit_amount': 1,
+            'so_line': prepaid_service_sol.id,
+            'is_so_line_edited': True,
+        })
+        self.assertEqual(timesheet.so_line, prepaid_service_sol, "The SOL should be the same than one containing the prepaid service product.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")

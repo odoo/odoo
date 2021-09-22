@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <template id="assets_frontend" inherit_id="web.assets_frontend" name="OAuth Providers Assets">
-            <xpath expr="//link[last()]" position="after">
-                <link rel="stylesheet" type="text/scss" href="/auth_oauth/static/src/scss/auth_oauth.scss"/>
-            </xpath>
-        </template>
-
         <template id="providers" name="OAuth Providers">
             <t t-if="len(providers) &gt; 0">
                 <em t-attf-class="d-block text-center text-muted small my-#{len(providers) if len(providers) &lt; 3 else 3}">- or -</em>

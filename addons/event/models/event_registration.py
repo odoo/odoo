@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
-
-from dateutil.relativedelta import relativedelta
 
 
 class EventRegistration(models.Model):
@@ -16,26 +15,32 @@ class EventRegistration(models.Model):
     _order = 'id desc'
 
     # event
-    origin = fields.Char(
-        string='Source Document', readonly=True,
-        help="Reference of the document that created the registration, for example a sales order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Event Ticket', readonly=True,
+        'event.event.ticket', string='Event Ticket', readonly=True, ondelete='restrict',
         states={'draft': [('readonly', False)]})
+    active = fields.Boolean(default=True)
+    # utm informations
+    utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
+    utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
+    utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
     partner_id = fields.Many2one(
-        'res.partner', string='Contact',
+        'res.partner', string='Booked by',
         states={'done': [('readonly', True)]})
-    name = fields.Char(string='Attendee Name', index=True, required=True, tracking=True)
-    email = fields.Char(string='Email')
-    phone = fields.Char(string='Phone')
-    mobile = fields.Char(string='Mobile')
+    name = fields.Char(
+        string='Attendee Name', index=True,
+        compute='_compute_name', readonly=False, store=True, tracking=10)
+    email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
+    phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
+    mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
-    date_closed = fields.Datetime(string='Attended Date', readonly=True)
+    date_closed = fields.Datetime(
+        string='Attended Date', compute='_compute_date_closed',
+        readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     company_id = fields.Many2one(
@@ -46,16 +51,75 @@ class EventRegistration(models.Model):
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=True)
 
-    @api.onchange('event_id')
-    def _onchange_event_id(self):
-        # We reset the ticket when keeping it would lead to an inconstitent state.
-        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
-            self.event_ticket_id = None
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """ Keep an explicit onchange on partner_id. Rationale : if user explicitly
+        changes the partner in interface, he want to update the whole customer
+        information. If partner_id is updated in code (e.g. updating your personal
+        information after having registered in website_event_sale) fields with a
+        value should not be reset as we don't know which one is the right one.
+
+        In other words
+          * computed fields based on partner_id should only update missing
+            information. Indeed automated code cannot decide which information
+            is more accurate;
+          * interface should allow to update all customer related information
+            at once. We consider event users really want to update all fields
+            related to the partner;
+        """
+        for registration in self:
+            if registration.partner_id:
+                registration.update(registration._synchronize_partner_values(registration.partner_id))
+
+    @api.depends('partner_id')
+    def _compute_name(self):
+        for registration in self:
+            if not registration.name and registration.partner_id:
+                registration.name = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['name']
+                ).get('name') or False
+
+    @api.depends('partner_id')
+    def _compute_email(self):
+        for registration in self:
+            if not registration.email and registration.partner_id:
+                registration.email = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['email']
+                ).get('email') or False
+
+    @api.depends('partner_id')
+    def _compute_phone(self):
+        for registration in self:
+            if not registration.phone and registration.partner_id:
+                registration.phone = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['phone']
+                ).get('phone') or False
+
+    @api.depends('partner_id')
+    def _compute_mobile(self):
+        for registration in self:
+            if not registration.mobile and registration.partner_id:
+                registration.mobile = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['mobile']
+                ).get('mobile') or False
+
+    @api.depends('state')
+    def _compute_date_closed(self):
+        for registration in self:
+            if not registration.date_closed:
+                if registration.state == 'done':
+                    registration.date_closed = fields.Datetime.now()
+                else:
+                    registration.date_closed = False
 
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         for registration in self:
-            if registration.event_id.seats_availability == 'limited' and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
+            if registration.event_id.seats_limited and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
                 raise ValidationError(_('No more seats available for this event.'))
 
     @api.constrains('event_ticket_id', 'state')
@@ -64,50 +128,55 @@ class EventRegistration(models.Model):
             if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
                 raise ValidationError(_('No more available seats for this ticket'))
 
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
-        if self.partner_id:
-            self.update(self._synchronize_partner_values(self.partner_id))
+    @api.constrains('event_id', 'event_ticket_id')
+    def _check_event_ticket(self):
+        if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
+            raise ValidationError(_('Invalid event / ticket choice'))
+
+    def _synchronize_partner_values(self, partner, fnames=None):
+        if fnames is None:
+            fnames = ['name', 'email', 'phone', 'mobile']
+        if partner:
+            contact_id = partner.address_get().get('contact', False)
+            if contact_id:
+                contact = self.env['res.partner'].browse(contact_id)
+                return dict((fname, contact[fname]) for fname in fnames if contact[fname])
+        return {}
 
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        # update missing pieces of information from partner
-        if vals.get('partner_id'):
-            partner_vals = self._synchronize_partner_values(
-                self.env['res.partner'].browse(vals['partner_id'])
-            )
-            vals = dict(partner_vals, **vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        registrations = super(EventRegistration, self).create(vals_list)
 
-        registration = super(EventRegistration, self).create(vals)
-        if registration._check_auto_confirmation():
-            registration.sudo().action_confirm()
+        # auto_confirm if possible; if not automatically confirmed, call mail schedulers in case
+        # some were created already open
+        if registrations._check_auto_confirmation():
+            registrations.sudo().action_confirm()
+        elif not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
+            registrations._update_mail_schedulers()
 
-        return registration
+        return registrations
 
     def write(self, vals):
-        if vals.get('state') == 'done' and 'date_closed' not in vals:
-            vals['date_closed'] = fields.Datetime.now()
+        pre_draft = self.env['event.registration']
+        if vals.get('state') == 'open':
+            pre_draft = self.filtered(lambda registration: registration.state == 'draft')
 
         ret = super(EventRegistration, self).write(vals)
 
-        # update missing pieces of information from partner
-        if vals.get('partner_id'):
-            partner_vals = self._synchronize_partner_values(
-                self.env['res.partner'].browse(vals['partner_id'])
-            )
-            for registration in self:
-                partner_info = dict((key, val) for key, val in partner_vals.items() if not registration[key])
-                if partner_info:
-                    registration.write(partner_info)
-
-        if vals.get('state') == 'open':
-            # auto-trigger after_sub (on subscribe) mail schedulers, if needed
-            onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
-            onsubscribe_schedulers.execute()
+        if vals.get('state') == 'open' and not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
+            pre_draft._update_mail_schedulers()
 
         return ret
 
@@ -134,17 +203,9 @@ class EventRegistration(models.Model):
 
     def _check_auto_confirmation(self):
         if any(not registration.event_id.auto_confirm or
-               (not registration.event_id.seats_available and registration.event_id.seats_availability == 'limited') for registration in self):
+               (not registration.event_id.seats_available and registration.event_id.seats_limited) for registration in self):
             return False
         return True
-
-    def _synchronize_partner_values(self, partner):
-        if partner:
-            contact_id = partner.address_get().get('contact', False)
-            if contact_id:
-                contact = self.env['res.partner'].browse(contact_id)
-                return dict((fname, contact[fname]) for fname in ['name', 'email', 'phone', 'mobile'] if contact[fname])
-        return {}
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
@@ -162,6 +223,56 @@ class EventRegistration(models.Model):
 
     def action_cancel(self):
         self.write({'state': 'cancel'})
+
+    def action_send_badge_email(self):
+        """ Open a window to compose an email, with the template - 'event_badge'
+            message loaded by default
+        """
+        self.ensure_one()
+        template = self.env.ref('event.event_registration_mail_template_badge')
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        ctx = dict(
+            default_model='event.registration',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode='comment',
+            custom_layout="mail.mail_notification_light",
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def _update_mail_schedulers(self):
+        """ Update schedulers to set them as running again, and cron to be called
+        as soon as possible. """
+        open_registrations = self.filtered(lambda registration: registration.state == 'open')
+        if not open_registrations:
+            return
+
+        onsubscribe_schedulers = self.env['event.mail'].sudo().search([
+            ('event_id', 'in', open_registrations.event_id.ids),
+            ('interval_type', '=', 'after_sub')
+        ])
+        if not onsubscribe_schedulers:
+            return
+
+        onsubscribe_schedulers.update({'mail_done': False})
+        # we could simply call _create_missing_mail_registrations and let cron do their job
+        # but it currently leads to several delays. We therefore call execute until
+        # cron triggers are correctly used
+        onsubscribe_schedulers.execute()
+
+    # ------------------------------------------------------------
+    # MAILING / GATEWAY
+    # ------------------------------------------------------------
 
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()
@@ -203,31 +314,9 @@ class EventRegistration(models.Model):
                 ]).write({'partner_id': new_partner.id})
         return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
 
-    def action_send_badge_email(self):
-        """ Open a window to compose an email, with the template - 'event_badge'
-            message loaded by default
-        """
-        self.ensure_one()
-        template = self.env.ref('event.event_registration_mail_template_badge')
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
-        ctx = dict(
-            default_model='event.registration',
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            custom_layout="mail.mail_notification_light",
-        )
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': ctx,
-        }
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
 
     def get_date_range_str(self):
         self.ensure_one()
@@ -245,14 +334,16 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on ') + format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium')
+            return _('on %(date)s', date=format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium'))
 
     def _get_registration_summary(self):
         self.ensure_one()
         return {
             'id': self.id,
+            'name': self.name,
             'partner_id': self.partner_id.id,
             'ticket_name': self.event_ticket_id.name or _('None'),
-            'name': self.name,
-            'event_name': self.event_id.name,
+            'event_id': self.event_id.id,
+            'event_display_name': self.event_id.display_name,
+            'company_name': self.event_id.company_id and self.event_id.company_id.name or False,
         }

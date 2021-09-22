@@ -19,6 +19,10 @@ class Partner(models.Model):
             self.city = self.city_id.name
             self.zip = self.city_id.zipcode
             self.state_id = self.city_id.state_id
+        elif self._origin:
+            self.city = False
+            self.zip = False
+            self.state_id = False
 
     @api.model
     def _fields_view_get_address(self, arch):
@@ -31,7 +35,6 @@ class Partner(models.Model):
         replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name="parent_id" invisible="1"/>
                 <field name='city' placeholder="%(placeholder)s" class="o_address_city"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ['', False ])],

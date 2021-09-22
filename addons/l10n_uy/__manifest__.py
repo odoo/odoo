@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Uruguay - Chart of Accounts',
+    'name': 'Uruguay - Accounting',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 General Chart of Accounts.
 ==========================
@@ -23,4 +23,8 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

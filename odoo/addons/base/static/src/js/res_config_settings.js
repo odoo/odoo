@@ -7,6 +7,7 @@ var FormView = require('web.FormView');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var view_registry = require('web.view_registry');
+const Dialog = require('web.Dialog');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -45,6 +46,17 @@ var BaseSettingRenderer = FormRenderer.extend({
         this.searchInput.focus();
     },
 
+    /**
+     * @override
+     */
+    displayTranslationAlert: function () {
+        // Translation alerts are disabled for res.config.settings:
+        // those are designed to warn user to translate field he just changed, but
+        // * in res.config.settings almost all fields marked as changed (because
+        //   it's not a usual record and all values are set via default_get)
+        // * page is reloaded after saving, so those alerts would be visible
+        //   only for short time after clicking Save
+    },
     /**
      * initialize modules list.
      * remove module that restricted in groups
@@ -178,7 +190,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('.o_setting_box').removeClass('o_hidden');
             module.settingView.find('h2').removeClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').addClass('mt16');
+            module.settingView.find('.o_settings_container').addClass('mt16').removeClass('mb-0');
         });
         this.activeTab.removeClass('o_hidden').addClass('selected');
         this.activeView.removeClass('o_hidden');
@@ -221,7 +233,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('.o_setting_box').addClass('o_hidden');
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').removeClass('mt16');
+            module.settingView.find('.o_settings_container').removeClass('mt16').addClass('mb-0');
             var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
@@ -273,6 +285,10 @@ var BaseSettingController = FormController.extend({
         this._super.apply(this, arguments);
         this.disableAutofocus = true;
         this.renderer.activeSettingTab = this.initialState.context.module;
+        // discardingDef is used to ensure that we don't ask twice the user if
+        // he wants to discard changes, when 'canBeDiscarded' is called several
+        // times "in parallel"
+        this.discardingDef = null;
     },
     /**
      * Settings view should always be in edit mode, so we have to override
@@ -282,6 +298,100 @@ var BaseSettingController = FormController.extend({
      */
     willRestore: function () {
         this.mode = 'edit';
+    },
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    canBeRemoved: function () {
+        return this.discardChanges(undefined, {
+            noAbandon: true,
+            readonlyIfRealDiscard: true,
+        });
+    },
+    /**
+     * @override
+     * @param {string} recordId
+     * @returns {Promise}
+     */
+    canBeDiscarded: function (recordId) {
+        if (this.discardingDef) {
+            return this.discardingDef;
+        }
+        if (!this.isDirty(recordId)) {
+            return Promise.resolve(false);
+        }
+        const message = _t('Would you like to save your changes?');
+        this.discardingDef = new Promise((resolve, reject) => {
+            const reset = () => {
+                // enable buttons if user first save which fails because of required field missed
+                // and then cancel confirmation dialog
+                this._enableButtons();
+                this.discardingDef = null;
+            };
+            const cancel = () => {
+                reject();
+                reset();
+            };
+            const dialog = Dialog.confirm(this, message, {
+                title: _t('Unsaved changes'),
+                buttons: [{
+                    text: _t('Save'),
+                    classes: 'btn-primary',
+                    click: async () => {
+                        this._disableButtons();
+                        try {
+                            // _onButtonClicked always saves the record even if
+                            // it's discarded. Here we need to save before
+                            // triggering the changes on the server.
+                            await this.saveRecord(recordId, {
+                                stayInEdit: true,
+                            });
+                            const record = this.model.get(recordId);
+                            this.trigger_up('execute_action', {
+                                action_data: {
+                                    context: record.getContext({
+                                        additionalContext: {},
+                                    }),
+                                    name: "execute",
+                                    type: "object",
+                                },
+                                env: {
+                                    context: record.getContext(),
+                                    currentID: record.data.id,
+                                    model: record.model,
+                                    resIDs: record.res_ids,
+                                },
+                                on_success() {
+                                    resolve(false);
+                                    dialog.close();
+                                },
+                                on_fail() {
+                                    cancel();
+                                    dialog.close();
+                                },
+                            });
+                        } catch (e) {
+                            cancel();
+                            dialog.close();
+                        }
+                    },
+                }, {
+                    text: _t('Discard'),
+                    close: true,
+                    click: () => {
+                        resolve(true);
+                        reset();
+                    },
+                }, {
+                    text: _t('Stay Here'),
+                    close: true,
+                    click: cancel,
+                }],
+            });
+            dialog.on('closed', this.discardingDef, cancel);
+        });
+        return this.discardingDef;
     },
 
     //--------------------------------------------------------------------------
@@ -297,27 +407,33 @@ var BaseSettingController = FormController.extend({
             var recordID = ev.data.recordID;
             var _super = this._super;
             var args = arguments;
-            this._discardChanges(recordID).then(function () {
+            this._discardChanges(recordID, { noAbandon: true }).then(function () {
                 _super.apply(self, args);
             });
         } else {
             this._super.apply(this, arguments);
         }
     },
+    /**
+     * @override
+     * @private
+     */
+    _onBeforeUnload: function () {
+        // We should not save when leaving Odoo in the settings
+    },
 
 });
 
-var BaseSettingsModel = BasicModel.extend({
-    /**
-     * @override
-     */
-    save: function (recordID) {
-        var self = this;
-        return this._super.apply(this, arguments).then(function (result) {
-            // we remove here the res_id, because the record should still be
-            // considered new.  We want the web client to always perform a
-            // default_get to fetch the settings anew.
-            delete self.localData[recordID].res_id;
+const BaseSettingsModel = BasicModel.extend({
+    save(recordID, options) {
+        const savePoint = options && options.savePoint;
+        return this._super.apply(this, arguments).then(result => {
+            if (!savePoint && this.localData[recordID].model === 'res.config.settings') {
+                // we remove here the res_id, because the record should still be
+                // considered new.  We want the web client to always perform a
+                // onchange to fetch the settings anew.
+                delete this.localData[recordID].res_id;
+            }
             return result;
         });
     },

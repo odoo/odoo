@@ -117,7 +117,7 @@ class Node(object):
 
     Node acts as a per-module singleton. A node is constructed via
     Graph.add_module() or Graph.add_modules(). Some of its fields are from
-    ir_module_module (setted by Graph.update_from_db()).
+    ir_module_module (set by Graph.update_from_db()).
 
     """
     def __new__(cls, name, graph, info):

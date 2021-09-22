@@ -8,8 +8,6 @@ var _t = core._t;
 
 var PortalComposer = portalComposer.PortalComposer;
 
-var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db rating range (1-10)
-
 /**
  * PortalComposer
  *
@@ -31,14 +29,14 @@ PortalComposer.include({
 
         // apply ratio to default rating value
         if (options.default_rating_value) {
-            options.default_rating_value = parseFloat(options.default_rating_value) / STAR_RATING_RATIO;
+            options.default_rating_value = parseFloat(options.default_rating_value);
         }
 
         // default options
         this.options = _.defaults(this.options, {
             'default_message': false,
             'default_message_id': false,
-            'default_rating_value': false,
+            'default_rating_value': 0.0,
             'force_submit_url': false,
         });
         // star input widget
@@ -66,7 +64,7 @@ PortalComposer.include({
 
             // set the default value to trigger the display of star widget and update the hidden input value.
             self.set("star_value", self.options.default_rating_value); 
-            self.$input.val(self.options.default_rating_value * STAR_RATING_RATIO);
+            self.$input.val(self.options.default_rating_value);
         });
     },
 
@@ -74,6 +72,16 @@ PortalComposer.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @private
+     */
+    _prepareMessageData: function () {
+        return Object.assign(this._super(...arguments) || {}, {
+            'message_id': this.options.default_message_id,
+            'rating_value': this.$input.val()
+        });
+    },
     /**
      * @private
      */
@@ -97,7 +105,7 @@ PortalComposer.include({
         var index = this.$('.stars i').index(ev.currentTarget);
         this.set("star_value", index + 1);
         this.user_click = true;
-        this.$input.val(this.get("star_value") * STAR_RATING_RATIO);
+        this.$input.val(this.get("star_value"));
     },
     /**
      * @private
@@ -122,6 +130,24 @@ PortalComposer.include({
             this.set("star_value", parseInt(this.$input.val()));
         }
         this.user_click = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _onSubmitButtonClick: function (ev) {
+        return this._super(...arguments).then((result) => {
+            const $modal = this.$el.closest('#ratingpopupcomposer');
+            $modal.on('hidden.bs.modal', () => {
+              this.trigger_up('reload_rating_popup_composer', result);
+            });
+            $modal.modal('hide');
+        });
     },
 });
 });

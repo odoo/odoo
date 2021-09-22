@@ -24,7 +24,7 @@ def existing_tables(cr, tablenames):
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
@@ -43,16 +43,29 @@ def table_kind(cr, tablename):
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
-def create_model_table(cr, tablename, comment=None):
+def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    cr.execute('CREATE TABLE "{}" (id SERIAL NOT NULL, PRIMARY KEY(id))'.format(tablename))
+    colspecs = ['id SERIAL NOT NULL'] + [
+        '"{}" {}'.format(columnname, columntype)
+        for columnname, columntype, columncomment in columns
+    ]
+    cr.execute('CREATE TABLE "{}" ({}, PRIMARY KEY(id))'.format(tablename, ", ".join(colspecs)))
+
+    queries, params = [], []
     if comment:
-        cr.execute('COMMENT ON TABLE "{}" IS %s'.format(tablename), (comment,))
+        queries.append('COMMENT ON TABLE "{}" IS %s'.format(tablename))
+        params.append(comment)
+    for columnname, columntype, columncomment in columns:
+        queries.append('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname))
+        params.append(columncomment)
+    if queries:
+        cr.execute("; ".join(queries), params)
+
     _schema.debug("Table %r: created", tablename)
 
 def table_columns(cr, tablename):
@@ -159,6 +172,25 @@ def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
                   tablename1, columnname1, tablename2, columnname2, ondelete)
     return True
 
+def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
+    cr.execute(
+        """
+            SELECT fk.conname as name
+            FROM pg_constraint AS fk
+            JOIN pg_class AS c1 ON fk.conrelid = c1.oid
+            JOIN pg_class AS c2 ON fk.confrelid = c2.oid
+            JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
+            JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            WHERE fk.contype = 'f'
+            AND c1.relname = %s
+            AND a1.attname = %s
+            AND c2.relname = %s
+            AND a2.attname = %s
+            AND fk.confdeltype = %s
+        """, [tablename1, columnname1, tablename2, columnname2, _CONFDELTYPES[ondelete.upper()]]
+    )
+    return [r[0] for r in cr.fetchall()]
+
 def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
     """ Update the foreign keys between tables to match the given one, and
         return ``True`` if the given foreign key has been recreated.
@@ -240,3 +272,27 @@ def reverse_order(order):
         direction = 'asc' if item[1:] == ['desc'] else 'desc'
         items.append('%s %s' % (item[0], direction))
     return ', '.join(items)
+
+
+def increment_field_skiplock(record, field):
+    """
+        Increment 'friendly' the [field] of the current [record](s)
+        If record is locked, we just skip the update.
+        It doesn't invalidate the cache since the update is not critical.
+
+        :rtype: bool - if field has been incremented or not
+    """
+    if not record:
+        return False
+
+    assert record._fields[field].type == 'integer'
+
+    cr = record._cr
+    query = """
+        UPDATE {table} SET {field} = {field} + 1 WHERE id IN (
+            SELECT id from {table} WHERE id in %(ids)s FOR UPDATE SKIP LOCKED
+        ) RETURNING id
+    """.format(table=record._table, field=field)
+    cr.execute(query, {'ids': tuple(record.ids)})
+
+    return bool(cr.fetchone())

@@ -56,9 +56,9 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="Badge Name"/>
+                            <field name="name" placeholder="e.g. Problem Solver"/>
                         </h1>
                     </div>
                     <group>
@@ -144,11 +144,11 @@
                                     <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
                                     <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                 </div>
-                                <div t-if="record.description.value" class="o_kanban_badge_description">
-                                    <em><field name="description"/></em>
+                                <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description">
+                                    <em t-out="record.description.value"/>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                            <img class="oe_kanban_avatar o_image_24_cover" t-att-src="kanban_image('res.users', 'image_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
+                                            <img class="oe_kanban_avatar o_image_24_cover" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
                                         </t>
                                     </div>
                                 </div>

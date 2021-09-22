@@ -8,17 +8,14 @@
 
     <data>
         <record id="digest_tip_project_0" model="digest.tip">
-            <field name="sequence">6</field>
+            <field name="name">Tip: Customize tasks and stages according to the project</field>
+            <field name="sequence">1200</field>
             <field name="group_id" ref="project.group_project_manager"/>
             <field name="tip_description" type="html">
 <div>
-    <strong style="font-size: 16px;">Try the mail gateway</strong>
-    <div style="font-size: 14px;">
-        New tasks can be generated from incoming emails. You just need to set email aliases on your projects.<br/>
-        <div style="text-align:center;margin-top:5px;margin-bottom:2px;">
-            <a href="/web#action=project.open_view_project_all_config" style="background-color:#56b3b5;padding:2px;color:#FFFFFF;font-weight:bold;text-decoration:none;">Set Email Aliases</a>
-        </div>
-    </div>
+    <p class="tip_title">Tip: Customize tasks and stages according to the project</p>
+    <p class="tip_content">Customize how tasks are named according to the project and create tailor made status messages for each step of the workflow. It helps to document your workflow: what should be done at which step.</p>
+    <img src="/project/static/src/img/project-custom-tasks.gif" class="illustration_border" />
 </div>
             </field>
         </record>

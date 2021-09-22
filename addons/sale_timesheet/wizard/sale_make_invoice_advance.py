@@ -16,18 +16,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
         product_ids = order_lines.mapped('product_id').filtered(lambda p: p._is_delivered_timesheet())
         return bool(product_ids)
 
-    date_invoice_timesheet = fields.Date(
-        string='Invoice Timesheets Up To This Date',
-        default=fields.Date.context_today,
-        required=False,
-        help="Only timesheets not yet invoiced (and validated, if applicable) up to this date included will be invoiced. If no date is indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
+    date_start_invoice_timesheet = fields.Date(
+        string='Start Date',
+        help="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
+    date_end_invoice_timesheet = fields.Date(
+        string='End Date',
+        help="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
     invoicing_timesheet_enabled = fields.Boolean(default=_default_invoicing_timesheet_enabled)
 
     def create_invoices(self):
         """ Override method from sale/wizard/sale_make_invoice_advance.py
 
             When the user want to invoice the timesheets to the SO
-            up to a specific date then we need to recompute the
+            up to a specific period then we need to recompute the
             qty_to_invoice for each product_id in sale.order.line,
             before creating the invoice.
         """
@@ -36,10 +37,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         )
 
         if self.advance_payment_method == 'delivered' and self.invoicing_timesheet_enabled:
-            if self.date_invoice_timesheet:
-                sale_orders.mapped('order_line')._recompute_qty_to_invoice(self.date_invoice_timesheet)
+            if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
+                sale_orders.mapped('order_line')._recompute_qty_to_invoice(self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
-            sale_orders._create_invoices(final=self.deduct_down_payments, date=self.date_invoice_timesheet)
+            sale_orders._create_invoices(final=self.deduct_down_payments, start_date=self.date_start_invoice_timesheet, end_date=self.date_end_invoice_timesheet)
 
             if self._context.get('open_invoices', False):
                 return sale_orders.action_view_invoice()

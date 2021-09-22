@@ -1,7 +1,9 @@
 odoo.define('point_of_sale.BarcodeReader', function (require) {
 "use strict";
 
+var concurrency = require('web.concurrency');
 var core = require('web.core');
+var Mutex = concurrency.Mutex;
 
 // this module interfaces with the barcode reader. It assumes the barcode reader
 // is set-up to act like  a keyboard. Use connect() and disconnect() to activate
@@ -15,8 +17,10 @@ var BarcodeReader = core.Class.extend({
     ],
 
     init: function (attributes) {
+        this.mutex = new Mutex();
         this.pos = attributes.pos;
-        this.action_callback = {};
+        this.action_callbacks = {};
+        this.exclusive_callbacks = {};
         this.proxy = attributes.proxy;
         this.remote_scanning = false;
         this.remote_active = 0;
@@ -26,27 +30,15 @@ var BarcodeReader = core.Class.extend({
         this.action_callback_stack = [];
 
         core.bus.on('barcode_scanned', this, function (barcode) {
-            this.scan(barcode);
+            // use mutex to make sure scans are done one after the other
+            this.mutex.exec(async () => {
+                await this.scan(barcode);
+            });
         });
     },
 
     set_barcode_parser: function (barcode_parser) {
         this.barcode_parser = barcode_parser;
-    },
-
-    save_callbacks: function () {
-        var callbacks = {};
-        for (var name in this.action_callback) {
-            callbacks[name] = this.action_callback[name];
-        }
-        this.action_callback_stack.push(callbacks);
-    },
-
-    restore_callbacks: function () {
-        if (this.action_callback_stack.length) {
-            var callbacks = this.action_callback_stack.pop();
-            this.action_callback = callbacks;
-        }
     },
 
     // when a barcode is scanned and parsed, the callback corresponding
@@ -59,35 +51,79 @@ var BarcodeReader = core.Class.extend({
     //
     // possible actions include :
     // 'product' | 'cashier' | 'client' | 'discount'
-    set_action_callback: function (action, callback) {
-        if (arguments.length == 2) {
-            this.action_callback[action] = callback;
+    set_action_callback: function (name, callback) {
+        if (this.action_callbacks[name]) {
+            this.action_callbacks[name].add(callback);
         } else {
-            var actions = arguments[0];
-            for (var action in actions) {
-                this.set_action_callback(action,actions[action]);
+            this.action_callbacks[name] = new Set([callback]);
+        }
+    },
+
+    remove_action_callback: function(name, callback) {
+        if (!callback) {
+            delete this.action_callbacks[name];
+            return;
+        }
+        const callbacks = this.action_callbacks[name];
+        if (callbacks) {
+            callbacks.delete(callback);
+            if (callbacks.size === 0) {
+                delete this.action_callbacks[name];
             }
         }
     },
 
-    //remove all action callbacks
-    reset_action_callbacks: function () {
-        for (var action in this.action_callback) {
-            this.action_callback[action] = undefined;
+    /**
+     * Allow setting of exclusive callbacks. If there are exclusive callbacks,
+     * these callbacks are called neglecting the regular callbacks. This is
+     * useful for rendered Components that wants to take exclusive access
+     * to the barcode reader.
+     *
+     * @param {String} name
+     * @param {Function} callback function that takes parsed barcode
+     */
+    set_exclusive_callback: function (name, callback) {
+        if (this.exclusive_callbacks[name]) {
+            this.exclusive_callbacks[name].add(callback);
+        } else {
+            this.exclusive_callbacks[name] = new Set([callback]);
         }
     },
 
-    scan: function (code) {
-        if (!code) {
+    remove_exclusive_callback: function (name, callback) {
+        if (!callback) {
+            delete this.exclusive_callbacks[name];
             return;
         }
-        var parsed_result = this.barcode_parser.parse_barcode(code);
-        if (this.action_callback[parsed_result.type]) {
-            this.action_callback[parsed_result.type](parsed_result);
-        } else if (this.action_callback.error) {
-            this.action_callback.error(parsed_result);
-        } else {
-            console.warn("Ignored Barcode Scan:", parsed_result);
+        const callbacks = this.exclusive_callbacks[name];
+        if (callbacks) {
+            callbacks.delete(callback);
+            if (callbacks.size === 0) {
+                delete this.exclusive_callbacks[name];
+            }
+        }
+    },
+
+    scan: async function (code) {
+        if (!code) return;
+
+        const callbacks = Object.keys(this.exclusive_callbacks).length
+            ? this.exclusive_callbacks
+            : this.action_callbacks;
+        let parsed_results = this.barcode_parser.parse_barcode(code);
+        if (! Array.isArray(parsed_results)) {
+            parsed_results = [parsed_results];
+        }
+        for (const parsed_result of parsed_results) {
+            if (callbacks[parsed_result.type]) {
+                for (const cb of callbacks[parsed_result.type]) {
+                    await cb(parsed_result);
+                }
+            } else if (callbacks.error) {
+                [...callbacks.error].map(cb => cb(parsed_result));
+            } else {
+                console.warn('Ignored Barcode Scan:', parsed_result);
+            }
         }
     },
 
@@ -116,7 +152,7 @@ var BarcodeReader = core.Class.extend({
                         self.remote_active = 0;
                         return;
                     }
-                    setTimeout(waitforbarcode,5000);
+                    waitforbarcode();
                 });
         }
         waitforbarcode();

@@ -1,7 +1,7 @@
 Odoo Notes
 ----------
 
-Organize yourself with efficient <a href="https://www.odoo.com/page/notes">todo lists and notes</a>.
+Organize yourself with efficient <a href="https://www.odoo.com/app/notes">todo lists and notes</a>.
 From personal tasks to collaborative meeting minutes, increase your user's
 productivity by giving them the tools to prioritize their work, share their
 ideas and collaborate on documents.
@@ -52,7 +52,7 @@ Write down your ideas in pads, keep your notes at your finger tips, attach relat
 Collaborative Meeting Minutes
 -----------------------------
 
-### Real-time sharing and edition of notes
+### Real-time sharing and editing of notes
 
 The real time collaborative writings on notes makes it the perfect tool to collaborate on meeting minutes. Attendees will be able to contribute to the minutes, attach important documents or discuss on the related thread.
 

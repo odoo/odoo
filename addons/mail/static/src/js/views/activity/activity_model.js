@@ -1,8 +1,7 @@
-odoo.define('mail.ActivityModel', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const BasicModel = require('web.BasicModel');
-const session = require('web.session');
+import BasicModel from 'web.BasicModel';
+import session from 'web.session';
 
 const ActivityModel = BasicModel.extend({
 
@@ -18,7 +17,7 @@ const ActivityModel = BasicModel.extend({
      *
      * @override
      */
-    get: function () {
+    __get: function () {
         var result = this._super.apply(this, arguments);
         if (result && result.model === this.modelName && result.type === 'list') {
             _.extend(result, this.additionalData, {getKanbanActivityData: this.getKanbanActivityData});
@@ -63,7 +62,7 @@ const ActivityModel = BasicModel.extend({
      * @override
      * @param {Array[]} params.domain
      */
-    load: function (params) {
+    __load: function (params) {
         this.originalDomain = _.extend([], params.domain);
         params.domain.push(['activity_ids', '!=', false]);
         this.domain = params.domain;
@@ -78,7 +77,7 @@ const ActivityModel = BasicModel.extend({
      * @override
      * @param {Array[]} [params.domain]
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         if (params && 'domain' in params) {
             this.originalDomain = _.extend([], params.domain);
             params.domain.push(['activity_ids', '!=', false]);
@@ -119,6 +118,4 @@ const ActivityModel = BasicModel.extend({
     },
 });
 
-return ActivityModel;
-
-});
+export default ActivityModel;

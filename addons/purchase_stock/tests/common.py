@@ -25,6 +25,7 @@ class PurchaseTestCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super(PurchaseTestCommon, cls).setUpClass()
+        cls.env.ref('stock.route_warehouse0_mto').active = True
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id
@@ -34,6 +35,13 @@ class PurchaseTestCommon(TestStockCommon):
             'type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]})
+
+        cls.t_shirt = cls.env['product.product'].create({
+            'name': 'T-shirt',
+            'description': 'Internal Notes',
+            'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
+            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]
+        })
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({

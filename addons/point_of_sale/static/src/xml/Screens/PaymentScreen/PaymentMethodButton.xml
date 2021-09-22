@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PaymentMethodButton" owl="1">
+        <div class="button paymentmethod"
+             t-on-click="trigger('new-payment-line', props.paymentMethod)">
+            <div class="payment-name">
+                <t t-esc="props.paymentMethod.name" />
+            </div>
+        </div>
+    </t>
+
+</templates>

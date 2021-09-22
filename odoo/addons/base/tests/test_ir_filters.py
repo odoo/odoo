@@ -222,7 +222,7 @@ class TestGlobalDefaults(FiltersCase):
         )
 
         Filters = self.env['ir.filters'].with_user(self.USER_ID)
-        with self.assertRaises(exceptions.Warning):
+        with self.assertRaises(exceptions.UserError):
             Filters.create_or_replace({
                 'name': 'c',
                 'model_id': 'ir.filters',
@@ -242,7 +242,7 @@ class TestGlobalDefaults(FiltersCase):
         )
 
         Filters = self.env['ir.filters'].with_user(self.USER_ID)
-        with self.assertRaises(exceptions.Warning):
+        with self.assertRaises(exceptions.UserError):
             Filters.create_or_replace({
                 'name': 'a',
                 'model_id': 'ir.filters',
@@ -325,6 +325,6 @@ class TestAllFilters(TransactionCase):
                     domain=filter_._get_eval_domain(),
                     fields=[field.split(':')[0] for field in (groupby or [])],
                     groupby=groupby,
-                    order=ast.literal_eval(filter_.sort),
+                    order=','.join(ast.literal_eval(filter_.sort)),
                     context=context,
                 )

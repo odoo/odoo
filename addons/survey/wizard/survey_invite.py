@@ -15,6 +15,7 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 class SurveyInvite(models.TransientModel):
     _name = 'survey.invite'
+    _inherit = 'mail.composer.mixin'
     _description = 'Survey Invitation Wizard'
 
     @api.model
@@ -28,14 +29,9 @@ class SurveyInvite(models.TransientModel):
         return self.env.user.partner_id
 
     # composer content
-    subject = fields.Char('Subject')
-    body = fields.Html('Contents', default='', sanitize_style=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template', index=True,
-        domain="[('model', '=', 'survey.user_input')]")
     # origin
     email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
     author_id = fields.Many2one(
@@ -102,9 +98,13 @@ class SurveyInvite(models.TransientModel):
 
     @api.depends('survey_id.access_token')
     def _compute_survey_start_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for invite in self:
-            invite.survey_start_url = werkzeug.urls.url_join(base_url, invite.survey_id.get_start_url()) if invite.survey_id else False
+            invite.survey_start_url = werkzeug.urls.url_join(invite.survey_id.get_base_url(), invite.survey_id.get_start_url()) if invite.survey_id else False
+
+    # Overrides of mail.composer.mixin
+    @api.depends('survey_id')  # fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        self.render_model = 'survey.user_input'
 
     @api.onchange('emails')
     def _onchange_emails(self):
@@ -133,26 +133,21 @@ class SurveyInvite(models.TransientModel):
                     ('id', 'in', self.partner_ids.ids)
                 ])
                 if invalid_partners:
-                    raise UserError(
-                        _('The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.' %
-                            (','.join(invalid_partners.mapped('name')))))
+                    raise UserError(_(
+                        'The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.',
+                        ', '.join(invalid_partners.mapped('name'))
+                    ))
 
-    @api.onchange('template_id')
-    def _onchange_template_id(self):
-        """ UPDATE ME """
-        if self.template_id:
-            self.subject = self.template_id.subject
-            self.body = self.template_id.body_html
-
-    @api.model
-    def create(self, values):
-        if values.get('template_id') and not (values.get('body') or values.get('subject')):
-            template = self.env['mail.template'].browse(values['template_id'])
-            if not values.get('subject'):
-                values['subject'] = template.subject
-            if not values.get('body'):
-                values['body'] = template.body_html
-        return super(SurveyInvite, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('template_id') and not (values.get('body') or values.get('subject')):
+                template = self.env['mail.template'].browse(values['template_id'])
+                if not values.get('subject'):
+                    values['subject'] = template.subject
+                if not values.get('body'):
+                    values['body'] = template.body_html
+        return super().create(vals_list)
 
     # ------------------------------------------------------
     # Wizard validation and send
@@ -199,8 +194,8 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
-        subject = self.env['mail.template']._render_template(self.subject, 'survey.user_input', answer.id, post_process=True)
-        body = self.env['mail.template']._render_template(self.body, 'survey.user_input', answer.id, post_process=True)
+        subject = self._render_field('subject', answer.ids, options={'render_safe': True})[answer.id]
+        body = self._render_field('body', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
             'email_from': self.email_from,
@@ -230,8 +225,8 @@ class SurveyInvite(models.TransientModel):
                     'model_description': self.env['ir.model']._get('survey.survey').display_name,
                     'company': self.env.company,
                 }
-                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                mail_values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
         return self.env['mail.mail'].sudo().create(mail_values)
 
@@ -248,7 +243,8 @@ class SurveyInvite(models.TransientModel):
             partner = False
             email_normalized = tools.email_normalize(email)
             if email_normalized:
-                partner = Partner.search([('email_normalized', '=', email_normalized)])
+                limit = None if self.survey_users_login_required else 1
+                partner = Partner.search([('email_normalized', '=', email_normalized)], limit=limit)
             if partner:
                 valid_partners |= partner
             else:

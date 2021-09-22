@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TipScreen" owl="1">
+        <div class="tip-screen screen">
+            <div class="pos-receipt-container"/>
+            <div class="screen-content">
+                <div class="top-content">
+                    <span class="button back" t-on-click="showScreen('FloorScreen')">
+                        <i class="fa fa-angle-double-left"></i>
+                        <span> </span>
+                        <span>Back</span>
+                    </span>
+                    <span class="button" t-if="env.pos.proxy.printer" t-on-click="printTipReceipt()">
+                        <i class="fa fa-print"></i>
+                        <span> </span>
+                        <span>Reprint receipts</span>
+                    </span>
+                    <div class="top-content-center">
+                        <h1>Add a tip</h1>
+                    </div>
+                    <div class="button highlight next" t-on-click="validateTip">
+                        Settle <i class="fa fa-angle-double-right"></i>
+                    </div>
+                </div>
+                <div class="tip-options">
+                    <div class="total-amount">
+                        <t t-esc="overallAmountStr" />
+                    </div>
+                    <div class="tip-amount-options">
+                        <div class="percentage-amounts">
+                            <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
+                                <div class="button" t-on-click="state.inputTipAmount = tip.amount.toFixed(2)">
+                                    <div class="percentage">
+                                        <t t-esc="tip.percentage"></t>
+                                    </div>
+                                    <div class="amount">
+                                        <t t-esc="env.pos.format_currency(tip.amount)" />
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="no-tip" t-on-click="state.inputTipAmount = '0'">
+                            <div class="button">No Tip</div>
+                        </div>
+                        <div class="custom-amount-form">
+                            <div class="item label">Amount</div>
+                            <div class="item input">
+                                <input type="text" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount" />
+                                <div class="currency">
+                                    <t t-esc="env.pos.getCurrencySymbol()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

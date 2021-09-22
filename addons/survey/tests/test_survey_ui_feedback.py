@@ -13,7 +13,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         self.survey_feedback = self.env['survey.survey'].create({
             'title': 'User Feedback Form',
             'access_token': 'b137640d-14d4-4748-9ef6-344caaaaaae',
-            'state': 'open',
             'access_mode': 'public',
             'users_can_go_back': True,
             'questions_layout': 'page_per_section',
@@ -25,7 +24,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'sequence': 1,
                     'question_type': False,
                     'is_page': True,
-                    'description': """<p>This section is about general informations about you. Answering them helps qualifying your answers.</p>""",
+                    'description': """<p>This section is about general information about you. Answering them helps qualifying your answers.</p>""",
                 }), (0, 0, {
                     'title': 'Where do you live ?',
                     'sequence': 2,

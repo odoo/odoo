@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindowManager" owl="1">
+        <div class="o_ChatWindowManager">
+            <t t-if="messaging and messaging.chatWindowManager">
+                <!-- Note: DOM elements are ordered from left to right -->
+                <t t-if="messaging.chatWindowManager.hasHiddenChatWindows">
+                    <ChatWindowHiddenMenu class="o_ChatWindowManager_hiddenMenu"/>
+                </t>
+                <t t-foreach="messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
+                    <ChatWindow
+                        chatWindowLocalId="chatWindow.localId"
+                        hasCloseAsBackButton="messaging.device.isMobile"
+                        isExpandable="!messaging.device.isMobile and !!chatWindow.thread"
+                        isFullscreen="messaging.device.isMobile"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

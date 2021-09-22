@@ -10,15 +10,33 @@
         <div class="o_wslides_fs_main d-flex flex-column font-weight-light"
             t-att-data-channel-id="slide.channel_id.id"
             t-att-data-channel-enroll="slide.channel_id.enroll"
-            t-att-data-signup-allowed="signup_allowed">
+            t-att-data-signup-allowed="signup_allowed"
+            t-att-data-session-answers="session_answers">
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
                     <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
-                    <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url + '?active_tab=review'" title="Reviews" t-if="slide.channel_id.allow_comment">
-                        <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
+                    <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
+                        <t t-call="portal_rating.rating_stars_static_popup_composer">
+                            <t t-set="rating_avg" t-value="rating_avg"/>
+                            <t t-set="rating_total" t-value="rating_count"/>
+                            <t t-set="object" t-value="channel"/>
+                            <t t-set="token" t-value="channel.access_token"/>
+                            <t t-set="hash" t-value="message_post_hash"/>
+                            <t t-set="pid" t-value="message_post_pid"/>
+                            <t t-set="default_message" t-value="last_message"/>
+                            <t t-set="default_message_id" t-value="last_message_id"/>
+                            <t t-set="default_rating_value" t-value="last_rating_value"/>
+                            <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
+                            <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                            <t t-set="disable_composer" t-value="not channel.can_review"/>
+                            <t t-set="_link_btn_classes" t-value="'d-inline-block text-white font-weight-light shadow-none'"/>
+                            <t t-set="icon" t-value="'fa fa-pencil'"/>
+                            <t t-set="_text_classes" t-value="'d-none d-md-inline-block'"/>
+                            <t t-set="hide_rating_avg" t-value="True"/>
+                        </t>
                     </a>
                     <a class="o_wslides_fs_share d-flex align-items-center px-3" href="#" title="Share">
                         <i class="fa fa-share-alt"/><span class="d-none d-md-inline-block ml-1">Share</span>
@@ -97,8 +115,8 @@
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
                     t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
-                    t-att-data-readonly="not is_member"
-                    >
+                    t-att-data-is-member="is_member"
+                    t-att-data-session-answers="session_answers">
                     <span class="ml-3">
                         <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fa fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
                         <i t-if="not slide_completed and is_member" class="fa fa-circle-thin fa-fw" t-att-data-slide-id="slide.id"/>
@@ -112,8 +130,9 @@
                         </a>
                         <span t-else="" class="d-block pt-1" href="#">
                             <div class="d-flex ">
+                                <t t-set="icon_class" t-value="'mr-2 text-600'"/>
                                 <t t-call="website_slides.slide_icon"/>
-                                <div class="o_wslides_fs_slide_name  text-muted" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
                             </div>
                         </span>
                         <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
@@ -121,7 +140,7 @@
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
-                                <span t-else="" class="o_wslides_fs_slide_link text-muted">
+                                <span t-else="" class="o_wslides_fs_slide_link text-600">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </span>
                             </li>
@@ -147,11 +166,12 @@
                                 t-att-data-has-question="1 if slide.question_ids else 0"
                                 t-att-data-is-quiz="1"
                                 t-att-data-completed="1 if slide_completed else 0"
-                                t-att-data-readonly="not is_member">
+                                t-att-data-is-member="is_member"
+                                t-att-data-session-answers="session_answers">
                                 <a t-if="can_access" class="o_wslides_fs_slide_quiz" href="#" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
                                 </a>
-                                <span t-else="" class="text-muted">
+                                <span t-else="" class="text-600">
                                     <i class="fa fa-flag-checkered text-warning mr-2"/>Quiz
                                 </span>
                             </li>

@@ -21,7 +21,7 @@ var SnailmailAccountNotificationManager =  AbstractService.extend({
             var model = notif[0][1];
             var type = notif[1].type;
             if (model === 'res.partner' && type === 'snailmail_invalid_address') {
-                self.do_warn(notif[1].title,  notif[1].message);
+                self.displayNotification({ title: notif[1].title, message: notif[1].message, type: 'danger' });
             }
         });
     }

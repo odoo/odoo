@@ -5,10 +5,10 @@
     <template id="survey_page_print" name="Survey: print page">
         <t t-call="survey.layout">
             <t t-set="survey_form_readonly" t-value="true"/>
+            <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="o_survey_print container">
-                    <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-                    <div class='jumbotron mt32'>
+                    <div class='py-5 mt32'>
                         <h1><span t-field='survey.title'/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         <t t-if="review" t-call="survey.survey_button_retake"/>
@@ -16,12 +16,16 @@
                     <div role="form">
                         <fieldset disabled="disabled">
                             <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                                <hr t-if="question.is_page and question != survey.page_ids[0]" />
-                                <div t-if="question.is_page" class="o_page_header">
-                                    <h1 t-field='question.title' />
-                                    <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
-                                </div>
-                                <t t-if="not question.is_page and not answer or (question in answer.predefined_question_ids)" >
+                                <t t-if="question.is_page and
+                                            (any(q in questions_to_display for q in question.question_ids)
+                                            or not is_html_empty(question.description))">
+                                    <hr t-if="question != survey.page_ids[0]" />
+                                    <div class="o_page_header">
+                                        <h1 t-field='question.title' />
+                                        <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
+                                    </div>
+                                </t>
+                                <t t-if="not question.is_page and not answer or (question in answer.predefined_question_ids &amp; questions_to_display)" >
                                     <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
                                     <div class="js_question-wrapper" t-att-id="question.id">
                                         <h2>
@@ -47,6 +51,19 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- simple template with no assets, to show title on the certification preview -->
+    <template id="certification_preview">
+        <html>
+            <head>
+                <title t-esc="'%s Preview' % page_title"/>
+                <link rel="shortcut icon" href="/web/static/img/favicon.ico" type="image/x-icon"/>
+            </head>
+            <body style="margin:0;">
+                <iframe type="application/pdf" t-att-src="preview_url" frameBorder="0" width="100%" height="100%"/>
+            </body>
+        </html>
     </template>
 </data>
 </odoo>

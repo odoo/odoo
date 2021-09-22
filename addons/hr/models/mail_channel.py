@@ -11,17 +11,18 @@ class Channel(models.Model):
         'hr.department', string='HR Departments',
         help='Automatically subscribe members of those departments to the channel.')
 
-    def _subscribe_users(self):
+    def _subscribe_users_automatically_get_members(self):
         """ Auto-subscribe members of a department to a channel """
-        super(Channel, self)._subscribe_users()
-        for mail_channel in self:
-            if mail_channel.subscription_department_ids:
-                mail_channel.write(
-                    {'channel_partner_ids':
-                        [(4, partner_id) for partner_id in mail_channel.mapped('subscription_department_ids.member_ids.user_id.partner_id').ids]})
+        new_members = super(Channel, self)._subscribe_users_automatically_get_members()
+        for channel in self:
+            new_members[channel.id] = list(
+                set(new_members[channel.id]) |
+                set((channel.subscription_department_ids.member_ids.user_id.partner_id - channel.channel_partner_ids).ids)
+            )
+        return new_members
 
     def write(self, vals):
         res = super(Channel, self).write(vals)
         if vals.get('subscription_department_ids'):
-            self._subscribe_users()
+            self._subscribe_users_automatically()
         return res

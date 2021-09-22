@@ -28,11 +28,13 @@ class pos_session(models.Model):
         date_today = datetime.utcnow()
         session_start = Datetime.from_string(self.start_at)
         if not date_today - timedelta(hours=24) <= session_start:
-            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
+            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.", self.name))
         return True
 
     def open_frontend_cb(self):
-        for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
+        sessions_to_check = self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable())
+        sessions_to_check.filtered(lambda s: s.state == 'opening_control').start_at = fields.Datetime.now()
+        for session in sessions_to_check:
             session._check_session_timing()
         return super(pos_session, self).open_frontend_cb()
 
@@ -120,12 +122,16 @@ class pos_order(models.Model):
                 res |= super(pos_order, order).write(vals_hashing)
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_pos_so(self):
         for order in self:
             if order.company_id._is_accounting_unalterable():
-                raise UserError(_("According to French law, you cannot delet a point of sale order."))
-        return super(pos_order, self).unlink()
+                raise UserError(_("According to French law, you cannot delete a point of sale order."))
 
+    def _export_for_ui(self, order):
+        res = super()._export_for_ui(order)
+        res['l10n_fr_hash'] = order.l10n_fr_hash
+        return res
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"

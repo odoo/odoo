@@ -52,10 +52,11 @@ class BadgeUser(models.Model):
 
         return True
 
-    @api.model
-    def create(self, vals):
-        self.env['gamification.badge'].browse(vals['badge_id']).check_granting()
-        return super(BadgeUser, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self.env['gamification.badge'].browse(vals['badge_id']).check_granting()
+        return super().create(vals_list)
 
 
 class GamificationBadge(models.Model):
@@ -73,7 +74,7 @@ class GamificationBadge(models.Model):
 
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
-    description = fields.Text('Description', translate=True)
+    description = fields.Html('Description', translate=True)
     level = fields.Selection([
         ('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
         string='Forum Badge Level', default='bronze')
@@ -137,20 +138,35 @@ class GamificationBadge(models.Model):
             the total number of time this badge was granted
             the total number of users this badge was granted to
         """
-        self.env.cr.execute("""
-            SELECT badge_id, count(user_id) as granted_count,
-                count(distinct(user_id)) as granted_users_count,
-                array_agg(distinct(user_id)) as unique_owner_ids
-            FROM gamification_badge_user
-            WHERE badge_id in %s
-            GROUP BY badge_id
-            """, [tuple(self.ids)])
-
         defaults = {
             'granted_count': 0,
             'granted_users_count': 0,
             'unique_owner_ids': [],
         }
+        if not self.ids:
+            self.update(defaults)
+            return
+
+        Users = self.env["res.users"]
+        query = Users._where_calc([])
+        Users._apply_ir_rules(query)
+        badge_alias = query.join("res_users", "id", "gamification_badge_user", "user_id", "badges")
+
+        tables, where_clauses, where_params = query.get_sql()
+
+        self.env.cr.execute(
+            f"""
+              SELECT {badge_alias}.badge_id, count(res_users.id) as stat_count,
+                     count(distinct(res_users.id)) as stat_count_distinct,
+                     array_agg(distinct(res_users.id)) as unique_owner_ids
+                FROM {tables}
+               WHERE {where_clauses}
+                 AND {badge_alias}.badge_id IN %s
+            GROUP BY {badge_alias}.badge_id
+            """,
+            [*where_params, tuple(self.ids)]
+        )
+
         mapping = {
             badge_id: {
                 'granted_count': count,

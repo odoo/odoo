@@ -6,23 +6,49 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
+                    <div groups="account.group_account_manager"
+                         class="alert alert-info mb-0"
+                         role="alert"
+                         attrs="{'invisible': [('foreign_vat_header_mode', '=', False)]}">
+
+                        <div attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'templates_found')]}">
+                            Click
+                            <button
+                                string="here"
+                                type="object"
+                                name="action_create_foreign_taxes"
+                                class="oe_link"
+                                style="padding: 0; vertical-align: baseline;"/>
+                            to create the taxes for this country.
+                        </div>
+
+                        <span attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}">
+                            No tax template found for this country. Please install the corresponding localization module.
+                        </span>
+                    </div>
+
                     <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
+                            <field name="states_count" invisible="1"/>
+                            <field name="company_country_id" invisible="1"/>
+                            <field name="foreign_vat_header_mode" invisible="1"/>
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="auto_apply"/>
-                            <field name="states_count" invisible="1"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
-                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="foreign_vat"/>
+                            <field name="country_id"
+                                attrs="{'required': [('foreign_vat', '!=', False)]}"
+                                options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
-                                attrs="{'invisible': ['|', '|', ('auto_apply', '!=', True), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                                attrs="{'invisible': ['|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
                             <label for="zip_from" string="Zip Range"
                                 attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
                             <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
@@ -39,13 +65,27 @@
                         <group>
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
-                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
+                                    <field name="tax_src_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                                        ]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
+
+                                    <field name="tax_dest_id"
+                                        domain="[
+                                            ('type_tax_use', '!=', 'none'),
+                                            ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
+                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                        context="{'append_type_to_tax_name': True}"
+                                    />
                                 </tree>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
-                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
                                     </group>
                                 </form>
                             </field>
@@ -93,21 +133,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="partner_view_short_extra">
-            <field name="name">partner.short.view.account</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_short_form" />
-            <field name="priority" eval="20"/>
-            <field name="arch" type="xml">
-                <field name="email" position="after">
-                    <field name="company_id" invisible="1"/>
-                    <field name="property_payment_term_id" widget="selection"/>
-                    <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
-                </field>
-            </field>
-        </record>
-
-
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
@@ -120,6 +145,7 @@
                         context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
+                                <field name="currency_id" invisible="1"/>
                                 <field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </span>
                             <span class="o_stat_text">Invoiced</span>
@@ -132,7 +158,7 @@
                         <separator string="Warning on the Invoice" colspan="4"/>
                         <field name="invoice_warn" nolabel="1" />
                         <field name="invoice_warn_msg" colspan="3" nolabel="1"
-                                attrs="{'required':[('invoice_warn', '!=', False), ('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
+                            attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
                     </group>
                 </page>
             </field>
@@ -149,11 +175,6 @@
               </p>
             </field>
         </record>
-
-        <menuitem
-            action="action_account_fiscal_position_form"
-            id="menu_action_account_fiscal_position_form"
-            parent="account_invoicing_menu" sequence="3"/>
 
         <!--
         Partners Extension
@@ -204,10 +225,10 @@
                     </group>
                 </xpath>
                 <group name="sale" position="inside">
-                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field string="Payment Terms" name="property_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
                 </group>
                 <group name="purchase" position="inside">
-                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
                 </group>
             </field>
         </record>

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    code = fields.Selection(selection_add=[('mrp_operation', 'Manufacturing')])
+    code = fields.Selection(selection_add=[
+        ('mrp_operation', 'Manufacturing')
+    ], ondelete={'mrp_operation': 'cascade'})
     count_mo_todo = fields.Integer(string="Number of Manufacturing Orders to Process",
         compute='_get_mo_count')
     count_mo_waiting = fields.Integer(string="Number of Manufacturing Orders Waiting",
@@ -29,7 +31,7 @@ class StockPickingType(models.Model):
             return
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
-            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'planned', 'progress'))],
+            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress', 'to_close')), ('is_planned', '=', True)],
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:
@@ -50,6 +52,13 @@ class StockPickingType(models.Model):
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+
+    has_kits = fields.Boolean(compute='_compute_has_kits')
+
+    @api.depends('move_lines')
+    def _compute_has_kits(self):
+        for picking in self:
+            picking.has_kits = any(picking.move_lines.mapped('bom_line_id'))
 
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)

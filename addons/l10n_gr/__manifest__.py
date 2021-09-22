@@ -7,7 +7,7 @@
     'name': 'Greece - Accounting',
     'author': 'P. Christeas, OpenERP SA.',
     'website': 'http://openerp.hellug.gr/',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Greece.
 ==================================================================
@@ -28,4 +28,8 @@ Greek accounting chart and localization.
               'data/account_tax_data.xml',
               'data/account_chart_template_configure_data.xml'
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

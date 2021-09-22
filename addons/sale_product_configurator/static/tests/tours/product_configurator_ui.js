@@ -9,7 +9,7 @@ var tour = require('web_tour.tour');
 tour.register('sale_product_configurator_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     edition: 'community'
 }, {
@@ -35,10 +35,10 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
-    trigger: '.configurator_container span:contains("Steel")',
+    trigger: '.main_product span:contains("Steel")',
     run: function () {},
 }, {
-    trigger: '.configurator_container span:contains("Aluminium")',
+    trigger: '.main_product span:contains("Aluminium")',
     run: 'click'
 }, {
     trigger: 'span.oe_currency_value:contains("800.40")',
@@ -46,26 +46,24 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'input[data-value_name="Black"]'
 }, {
-    trigger: '.o_sale_product_configurator_add.disabled'
+    trigger: '.btn-primary.disabled',
+    extra_trigger: '.show .modal-footer'
 }, {
     trigger: 'input[data-value_name="White"]'
 }, {
-    trigger: '.o_sale_product_configurator_add:not(.disabled)'
+    trigger: '.btn-primary:not(.disabled)',
+    extra_trigger: '.show .modal-footer'
 }, {
-    trigger: 'span:contains("Aluminium")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: 'click'
-}, {
-    trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Conference Chair))',
+    trigger: 'span:contains("Aluminium"):eq(1)',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Chair floor protection))',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     id: "quotation_product_selected",
     run: 'click'
 },
@@ -86,7 +84,7 @@ tour.register('sale_product_configurator_tour', {
     in_modal: false,
     run: function (){}
 }, {
-    trigger: '.o_readonly_modifier[name=amount_total]:contains("0.00")',
+    trigger: 'span[name=amount_total]:contains("0.00")',
     in_modal: false,
     run: function (){}
 }

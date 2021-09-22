@@ -18,7 +18,7 @@ class TestConflictMarkers(lint_case.LintCase):
 
         with open(fullpath_name, 'rb') as f:
             content = f.read()
-            self.assertFalse(any([m in content for m in MARKERS]), 'Conflict markers found in %s' % fullpath_name)
+            self.assertFalse(any(m in content for m in MARKERS), 'Conflict markers found in %s' % fullpath_name)
 
     def test_conflict_markers(self):
         """ Test that there are no conflict markers left in Odoo files """
@@ -31,6 +31,8 @@ class TestConflictMarkers(lint_case.LintCase):
 
         for p in paths:
             for dp, _, file_names in os.walk(p):
+                if 'node_modules' in dp:
+                    continue
                 for fn in file_names:
                     if fn.endswith(EXTENSIONS):
                         self.check_file(os.path.join(dp, fn))

@@ -1,12 +1,11 @@
 odoo.define('hr_timesheet.timesheet_uom', function (require) {
 'use strict';
 
+const { registry } = require("@web/core/registry");
 const basicFields = require('web.basic_fields');
 const fieldUtils = require('web.field_utils');
 
 const fieldRegistry = require('web.field_registry');
-
-const Timer = require('timer.Timer');
 
 // We need the field registry to be populated, as we bind the
 // timesheet_uom widget on existing field widgets.
@@ -14,15 +13,24 @@ require('web._field_registry');
 
 const session = require('web.session');
 
+const TimesheetUOMMultiCompanyMixin = {
+    init: function(parent, name, record, options) {
+        this._super(parent, name, record, options);
+        const currentCompanyId = session.user_context.allowed_company_ids[0];
+        const currentCompany = session.user_companies.allowed_companies[currentCompanyId];
+        this.currentCompanyTimesheetUOMFactor = currentCompany.timesheet_uom_factor || 1;
+    }
+};
+
 /**
  * Extend the float factor widget to set default value for timesheet
  * use case. The 'factor' is forced to be the UoM timesheet
  * conversion from the session info.
  **/
-const FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
+const FieldTimesheetFactor = basicFields.FieldFloatFactor.extend(TimesheetUOMMultiCompanyMixin).extend({
     formatType: 'float_factor',
     /**
-     * Override init to tweak options depending on the session_info
+     * Override init to tweak options depending on the session info
      *
      * @constructor
      * @override
@@ -31,10 +39,8 @@ const FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
         this._super(parent, name, record, options);
 
         // force factor in format and parse options
-        if (session.timesheet_uom_factor) {
-            this.nodeOptions.factor = session.timesheet_uom_factor;
-            this.parseOptions.factor = session.timesheet_uom_factor;
-        }
+        this.nodeOptions.factor = this.currentCompanyTimesheetUOMFactor;
+        this.parseOptions.factor = this.currentCompanyTimesheetUOMFactor;
     },
 });
 
@@ -45,10 +51,10 @@ const FieldTimesheetFactor = basicFields.FieldFloatFactor.extend({
  * native widget, and the 'factor' is forced to be the UoM timesheet
  * conversion.
  **/
-const FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
+const FieldTimesheetToggle = basicFields.FieldFloatToggle.extend(TimesheetUOMMultiCompanyMixin).extend({
     formatType: 'float_factor',
     /**
-     * Override init to tweak options depending on the session_info
+     * Override init to tweak options depending on the session info
      *
      * @constructor
      * @override
@@ -68,118 +74,117 @@ const FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
         if (!hasRange) {
             this.nodeOptions.range = [0.00, 1.00, 0.50];
         }
-        this.nodeOptions.factor = session.timesheet_uom_factor;
+        this.nodeOptions.factor = this.currentCompanyTimesheetUOMFactor;
     },
 });
 
 
 /**
- * Extend float time widget to add the using of a timer for duration
- * (unit_amount) field.
+ * Extend float time widget
  */
-const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
+const FieldTimesheetTime = basicFields.FieldFloatTime.extend(TimesheetUOMMultiCompanyMixin).extend({
     init: function () {
         this._super.apply(this, arguments);
-
-        if (session.timesheet_uom_factor) {
-            this.nodeOptions.factor = session.timesheet_uom_factor;
-            this.parseOptions.factor = session.timesheet_uom_factor;
-        }
-    },
-    _render: async function () {
-        this._super.apply(this, arguments);
-
-        // Check if the timer_start exists and it's not false
-        // In other word, when user clicks on play button, this button
-        // launches the "action_timer_start".
-        if (this.recordData.timer_start && !this.recordData.timer_pause) {
-            const time = await this._rpc({
-                model: 'timer.timer',
-                method: 'get_server_time',
-                args: []
-            });
-            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, time);
-            return this._startTimeCounter();
-        } else if (this.mode === "edit") {
-            return this._renderEdit();
-        } else if (this.mode === 'readonly') {
-            return this._renderReadonly();
-        }
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-        clearTimeout(this.timer);
-    },
-    _startTimeCounter: function () {
-        if (this.time) {
-            this.timer = setInterval(() => {
-                this.time.addSecond();
-                this.$el.text(this.time.toString());
-                this.$el.addClass('font-weight-bold text-danger');
-            }, 1000);
-        } else {
-            clearTimeout(this.timer);
-            this.$el.removeClass('font-weight-bold text-danger');
-        }
-    },
+        this.nodeOptions.factor = this.currentCompanyTimesheetUOMFactor;
+        this.parseOptions.factor = this.currentCompanyTimesheetUOMFactor;
+    }
 });
 
+const timesheetUomService = {
+    dependencies: ["legacy_session"],
+    start() {
+        const timesheetUomInfo = {
+            widget: null,
+            factor: 1,
+        };
+        if (session.user_context &&
+            session.user_context.allowed_company_ids &&
+            session.user_context.allowed_company_ids.length) {
+            const currentCompanyId = session.user_context.allowed_company_ids[0];
+            const currentCompany = session.user_companies.allowed_companies[currentCompanyId];
+            const currentCompanyTimesheetUOMId = currentCompany.timesheet_uom_id || false;
+            timesheetUomInfo.factor = currentCompany.timesheet_uom_factor || 1;
+            if (currentCompanyTimesheetUOMId) {
+                timesheetUomInfo.widget = session.uom_ids[currentCompanyTimesheetUOMId].timesheet_widget;
+            }
+        }
 
-/**
- * Binding depending on Company Preference
- *
- * determine wich widget will be the timesheet one.
- * Simply match the 'timesheet_uom' widget key with the correct
- * implementation (float_time, float_toggle, ...). The default
- * value will be 'float_factor'.
-**/
-const widgetName = 'timesheet_uom' in session ?
-         session.timesheet_uom.timesheet_widget : 'float_factor';
+        /**
+         * Binding depending on Company Preference
+         *
+         * determine wich widget will be the timesheet one.
+         * Simply match the 'timesheet_uom' widget key with the correct
+         * implementation (float_time, float_toggle, ...). The default
+         * value will be 'float_factor'.
+         **/
+        const widgetName = timesheetUomInfo.widget || 'float_factor';
 
-let FieldTimesheetUom = null;
+        let FieldTimesheetUom = null;
 
-if (widgetName === 'float_toggle') {
-    FieldTimesheetUom = FieldTimesheetToggle;
-} else if (widgetName === 'float_time') {
-    FieldTimesheetUom = FieldTimesheetTime;
-} else {
-    FieldTimesheetUom = (
-            fieldRegistry.get(widgetName) &&
-            fieldRegistry.get(widgetName).extend({})
-        ) || FieldTimesheetFactor;
-}
+        if (widgetName === 'float_toggle') {
+            FieldTimesheetUom = FieldTimesheetToggle;
+        } else if (widgetName === 'float_time') {
+            FieldTimesheetUom = FieldTimesheetTime;
+        } else {
+            FieldTimesheetUom = (
+                fieldRegistry.get(widgetName) &&
+                fieldRegistry.get(widgetName).extend({ })
+            ) || FieldTimesheetFactor;
+        }
+        fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
-fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
+        // widget timesheet_uom_no_toggle is the same as timesheet_uom but without toggle.
+        // We can modify easly huge amount of days.
+        let FieldTimesheetUomWithoutToggle = null;
+        if (widgetName === 'float_toggle') {
+            FieldTimesheetUomWithoutToggle = FieldTimesheetFactor;
+        } else {
+            FieldTimesheetUomWithoutToggle = FieldTimesheetTime;
+        }
+        fieldRegistry.add('timesheet_uom_no_toggle', FieldTimesheetUomWithoutToggle);
 
 
-// bind the formatter and parser method, and tweak the options
-const _tweak_options = function(options) {
-    if (!_.contains(options, 'factor')) {
-        options.factor = session.timesheet_uom_factor;
-    }
-    return options;
+        // bind the formatter and parser method, and tweak the options
+        const _tweak_options = (options) => {
+            if (!_.contains(options, 'factor')) {
+                options.factor = timesheetUomInfo.factor;
+            }
+            return options;
+        };
+
+        fieldUtils.format.timesheet_uom = function(value, field, options) {
+            options = _tweak_options(options || { });
+            const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+            return formatter(value, field, options);
+        };
+
+        fieldUtils.parse.timesheet_uom = function(value, field, options) {
+            options = _tweak_options(options || { });
+            const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+            return parser(value, field, options);
+        };
+
+        fieldUtils.format.timesheet_uom_no_toggle = function(value, field, options) {
+            options = _tweak_options(options || { });
+            const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+            return formatter(value, field, options);
+        };
+
+        fieldUtils.parse.timesheet_uom_no_toggle = function(value, field, options) {
+            options = _tweak_options(options || { });
+            const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+            return parser(value, field, options);
+        };
+        return timesheetUomInfo;
+    },
 };
-
-fieldUtils.format.timesheet_uom = function(value, field, options) {
-    options = _tweak_options(options || {});
-    const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
-    return formatter(value, field, options);
-};
-
-fieldUtils.parse.timesheet_uom = function(value, field, options) {
-    options = _tweak_options(options || {});
-    const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
-    return parser(value, field, options);
-};
+registry.category("services").add("timesheet_uom", timesheetUomService);
 
 return {
-    FieldTimesheetUom,
     FieldTimesheetFactor,
     FieldTimesheetTime,
-    FieldTimesheetToggle
+    FieldTimesheetToggle,
+    timesheetUomService,
 };
 
 });

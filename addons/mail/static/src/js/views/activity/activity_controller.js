@@ -1,11 +1,11 @@
-odoo.define('mail.ActivityController', function (require) {
-"use strict";
+/** @odoo-module **/
 
-require('mail.Activity');
-var BasicController = require('web.BasicController');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var ViewDialogs = require('web.view_dialogs');
+import '@mail/js/activity';
+
+import BasicController from 'web.BasicController';
+import core from 'web.core';
+import field_registry from 'web.field_registry';
+import ViewDialogs from 'web.view_dialogs';
 
 var KanbanActivity = field_registry.get('kanban_activity');
 var _t = core._t;
@@ -32,14 +32,20 @@ var ActivityController = BasicController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.searchViewId = params.searchViewId;
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Overridden to remove the pager as it makes no sense in this view.
      *
      * @override
      */
-    renderPager: function () {
-        return Promise.resolve();
+    _getPagingInfo: function () {
+        return null;
     },
 
     //--------------------------------------------------------------------------
@@ -54,6 +60,7 @@ var ActivityController = BasicController.extend({
         var state = this.model.get(this.handle);
         new ViewDialogs.SelectCreateDialog(this, {
             res_model: state.model,
+            searchViewId: this.searchViewId,
             domain: this.model.originalDomain,
             title: _.str.sprintf(_t("Search: %s"), this.title),
             no_create: !this.activeActions.create,
@@ -114,6 +121,4 @@ var ActivityController = BasicController.extend({
     },
 });
 
-return ActivityController;
-
-});
+export default ActivityController;

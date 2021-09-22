@@ -1,16 +1,12 @@
-odoo.define('website.navbar', function (require) {
-'use strict';
+/** @odoo-module alias=website.navbar */
 
-var core = require('web.core');
-var dom = require('web.dom');
-var publicWidget = require('web.public.widget');
-var concurrency = require('web.concurrency');
-var Widget = require('web.Widget');
-var websiteRootData = require('website.root');
+import core from 'web.core';
+import dom from 'web.dom';
+import publicWidget from 'web.public.widget';
+import concurrency from 'web.concurrency';
+import Widget from 'web.Widget';
 
-var qweb = core.qweb;
-
-var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
+import { registry } from "@web/core/registry";
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
@@ -18,7 +14,8 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
         'click [data-action]': '_onActionMenuClick',
         'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
-        'mouseover #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
+        'mouseenter #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsHovered',
+        'show.bs.dropdown #oe_applications:not(:has(.dropdown-item))': '_onOeApplicationsShow',
     }),
     custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
         'action_demand': '_onActionDemand',
@@ -79,7 +76,7 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * @override
      */
     _getRegistry: function () {
-        return websiteNavbarRegistry;
+        return registry.category("website_navbar_widgets");
     },
     /**
      * Searches for the automatic widget {@see RootWidget} which can handle that
@@ -125,6 +122,25 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
     },
     /**
      * @private
+     * @returns {Promise}
+     */
+    async _loadAppMenus() {
+        if (!this._loadAppMenusProm) {
+            this._loadAppMenusProm = this._rpc({
+                model: 'ir.ui.menu',
+                method: 'load_menus_root',
+                args: [],
+            });
+            const result = await this._loadAppMenusProm;
+            const menus = core.qweb.render('website.oe_applications_menu', {
+                'menu_data': result,
+            });
+            this.$('#oe_applications .dropdown-menu').html(menus);
+        }
+        return this._loadAppMenusProm;
+    },
+    /**
+     * @private
      */
     _whenReadyForActions: function () {
         return Promise.all(this._widgetDefs);
@@ -139,19 +155,20 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * available menus and insert it in DOM.
      *
      * @private
-     * @param {Event} ev
      */
-    _onOeApplicationsHovered: function (ev) {
-        var self = this;
-        this._rpc({
-            model: 'ir.ui.menu',
-            method: 'load_menus_root',
-            args: [],
-        }).then(function (result) {
-            self.$('#oe_applications .dropdown-menu').html(
-                $(qweb.render('website.oe_applications_menu', {menu_data: result}))
-            );
-        });
+    _onOeApplicationsHovered: function () {
+        this._loadAppMenus();
+    },
+    /**
+     * Called when the backend applications menu is opening -> fetch the
+     * available menus and insert it in DOM. Needed on top of hovering as the
+     * dropdown could be opened via keyboard (or the user could just already
+     * be over the dropdown when the JS is fully loaded).
+     *
+     * @private
+     */
+    _onOeApplicationsShow: function () {
+        this._loadAppMenus();
     },
     /**
      * Called when an action menu is clicked -> searches for the automatic
@@ -161,12 +178,8 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * @param {Event} ev
      */
     _onActionMenuClick: function (ev) {
-        var $button = $(ev.currentTarget);
-        $button.prop('disabled', true);
-        var always = function () {
-            $button.prop('disabled', false);
-        };
-        this._handleAction($button.data('action')).then(always).guardedCatch(always);
+        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        this._handleAction($(ev.currentTarget).data('action')).then(restore).guardedCatch(restore);
     },
     /**
      * Called when an action is asked to be executed from a child widget ->
@@ -267,11 +280,12 @@ var WebsiteNavbarActionWidget = Widget.extend({
     },
 });
 
-websiteRootData.websiteRootRegistry.add(WebsiteNavbar, '#oe_main_menu_navbar');
+registry.category("public_root_widgets").add("WebsiteNavbar", {
+    Widget: WebsiteNavbar,
+    selector: '#oe_main_menu_navbar',
+});
 
-return {
+export default {
     WebsiteNavbar: WebsiteNavbar,
-    websiteNavbarRegistry: websiteNavbarRegistry,
     WebsiteNavbarActionWidget: WebsiteNavbarActionWidget,
 };
-});

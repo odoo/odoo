@@ -1,9 +1,8 @@
-odoo.define('mrp.controllerMixin', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { _t, qweb } = require('web.core');
-const fileUploadMixin = require('web.fileUploadMixin');
-const DocumentViewer = require('mrp.MrpDocumentViewer');
+import { _t, qweb } from 'web.core';
+import fileUploadMixin from 'web.fileUploadMixin';
+import DocumentViewer from '@mrp/js/mrp_documents_document_viewer';
 
 const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
     events: {
@@ -30,8 +29,10 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
      * @param {jQueryElement} $node
      */
     renderButtons($node) {
-        this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
-        this.$buttons.appendTo($node);
+        if (this.is_action_enabled('edit')) {
+            this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
+            this.$buttons.appendTo($node);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -112,15 +113,13 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
         const result = xhr.status === 200
             ? JSON.parse(xhr.response)
             : {
-                error: _.str.sprintf(_t("status code: %s </br> message: %s"), xhr.status, xhr.response)
+                error: _.str.sprintf(_t("status code: %s, message: %s"), xhr.status, xhr.response)
             };
         if (result.error) {
-            this.do_notify(_t("Error"), result.error, true);
+            this.displayNotification({ title: _t("Error"), message: result.error, sticky: true });
         }
         fileUploadMixin._onUploadLoad.apply(this, arguments);
     },
 });
 
-return MrpDocumentsControllerMixin;
-
-});
+export default MrpDocumentsControllerMixin;

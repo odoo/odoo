@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project_update_default_description" inherit_id="project.project_update_default_description">
+        <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+        <xpath expr="//div[@name='milestone']" position="before">
+<br/>
+<div t-if="project.allow_billable and 'data' in services and len(services['data']) > 0">
+<h3><b><u>Sold</u></b></h3>
+<table class="table table-bordered">
+<tbody>
+<thead>
+<td>Service</td>
+<td>Sold</td>
+<td>Effective</td>
+<td>Remaining</td>
+</thead>
+<tr t-foreach="services['data']" t-as="service">
+<td><t t-esc="service['name']"/></td>
+<td><t t-esc="service['sold_value']"/> <t t-esc="service['uom']"/></td>
+<td><t t-esc="service['effective_value']"/> <t t-esc="service['uom']"/></td>
+<td><t t-esc="service['remaining_value']"/> <t t-esc="service['uom']"/></td>
+</tr>
+<tfoot>
+<td>Total</td>
+<td><t t-esc="services['total_sold']"/> Hours</td>
+<td><t t-esc="services['total_effective']"/> Hours</td>
+<td><t t-esc="services['total_remaining']"/> Hours</td>
+</tfoot>
+</tbody>
+</table>
+</div>        
+        
+<div name="profitability" t-if="profitability">
+<t t-if="project.analytic_account_id and project.allow_billable and user.has_group('project.group_project_manager')" name="costs">
+<h3><b><u>Profitability</u></b></h3>
+The cost of the project is now at <t t-esc="profitability['costs']"/>, for a revenue of <t t-esc="profitability['revenues']"/>, leading to a
+<span>
+<font t-if="profitability['margin'] &gt; 0"  style="color: rgb(0, 128, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<font t-elif="profitability['margin'] &lt; 0" style="color: rgb(128, 0, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<t t-else="" t-esc="profitability['margin_formatted']"/>
+</span> margin (<t t-esc="profitability['margin_percentage']"/>%).
+</t>
+</div>
+        </xpath>
+    </template>
+
+</odoo>

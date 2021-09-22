@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 
@@ -18,4 +16,4 @@ class LinkTracker(http.Controller):
             country_code=country_code
         )
         redirect_url = request.env['link.tracker'].get_url_from_code(code)
-        return werkzeug.utils.redirect(redirect_url or '', 301)
+        return request.redirect(redirect_url or '', code=301, local=False)

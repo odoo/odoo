@@ -29,6 +29,13 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
+    @api.model
+    def _default_note_url(self):
+        website = self.env['website'].get_current_website()
+        if website:
+            return website.get_base_url()
+        return super()._default_note_url()
+
     @api.depends('order_line')
     def _compute_website_order_line(self):
         for order in self:
@@ -38,7 +45,7 @@ class SaleOrder(models.Model):
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
-            order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
+            order.only_services = all(l.product_id.type == 'service' for l in order.website_order_line)
 
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
@@ -55,15 +62,19 @@ class SaleOrder(models.Model):
                 order.is_abandoned_cart = False
 
     def _search_abandoned_cart(self, operator, value):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
-        abandoned_domain = expression.normalize_domain([
-            ('date_order', '<=', abandoned_datetime),
-            ('website_id', '!=', False),
+        website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
+        deadlines = [[
+            '&', '&',
+            ('website_id', '=', website_id['id']),
+            ('date_order', '<=', fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
+            ('partner_id', '!=', website_id['partner_id'][0])
+        ] for website_id in website_ids]
+        abandoned_domain = [
             ('state', '=', 'draft'),
-            ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
-        ])
+        ]
+        abandoned_domain.extend(expression.OR(deadlines))
+        abandoned_domain = expression.normalize_domain(abandoned_domain)
         # is_abandoned domain possibilities
         if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
             return abandoned_domain
@@ -91,7 +102,7 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line'].sudo().search(domain)
 
-    def _website_product_id_change(self, order_id, product_id, qty=0):
+    def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -109,6 +120,11 @@ class SaleOrder(models.Model):
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
             pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(product.id)
+                if order_line:
+                    price = self.env['account.tax']._fix_tax_included_price_company(price, product.taxes_id, order_line[0].tax_id, self.company_id)
+                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
             if pu != 0:
                 if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
@@ -148,12 +164,12 @@ class SaleOrder(models.Model):
 
         try:
             if add_qty:
-                add_qty = float(add_qty)
+                add_qty = int(add_qty)
         except ValueError:
             add_qty = 1
         try:
             if set_qty:
-                set_qty = float(set_qty)
+                set_qty = int(set_qty)
         except ValueError:
             set_qty = 0
         quantity = 0
@@ -185,7 +201,7 @@ class SaleOrder(models.Model):
 
             product_id = product.id
 
-            values = self._website_product_id_change(self.id, product_id, qty=1)
+            values = self._website_product_id_change(self.id, product_id, qty=1, **kwargs)
 
             # add no_variant attributes that were not received
             for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
@@ -244,23 +260,17 @@ class SaleOrder(models.Model):
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
-            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
+            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity, **kwargs)
+            order = self.sudo().browse(self.id)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                order = self.sudo().browse(self.id)
                 product_context.update({
                     'partner': order.partner_id,
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
-                product = product_with_context.browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                    order_line._get_display_price(product),
-                    order_line.product_id.taxes_id,
-                    order_line.tax_id,
-                    self.company_id
-                )
+            product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
+            product = product_with_context.browse(product_id)
 
             order_line.write(values)
 
@@ -290,8 +300,7 @@ class SaleOrder(models.Model):
             accessory_products = self.env['product.product']
             for line in order.website_order_line.filtered(lambda l: l.product_id):
                 combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
-                accessory_products |= line.product_id.accessory_product_ids.filtered(lambda product:
-                    product.website_published and
+                accessory_products |= line.product_id.product_tmpl_id._get_website_accessory_product().filtered(lambda product:
                     product not in products and
                     product._is_variant_possible(parent_combination=combination) and
                     (product.company_id == line.company_id or not product.company_id)
@@ -349,6 +358,13 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
+                order._send_order_confirmation_mail()
+        return res
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -361,9 +377,9 @@ class SaleOrderLine(models.Model):
     def get_sale_order_line_multiline_description_sale(self, product):
         description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
         if self.linked_line_id:
-            description += "\n" + _("Option for: %s") % self.linked_line_id.product_id.display_name
+            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
         if self.option_line_ids:
-            description += "\n" + '\n'.join([_("Option: %s") % option_line.product_id.display_name for option_line in self.option_line_ids])
+            description += "\n" + '\n'.join([_("Option: %s", option_line.product_id.display_name) for option_line in self.option_line_ids])
         return description
 
     @api.depends('product_id.display_name')

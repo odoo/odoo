@@ -24,7 +24,6 @@ class ChooseDestinationLocation(models.TransientModel):
             destination.filtered_location = destination.move_line_ids.mapped('location_dest_id')
 
     def action_done(self):
-        # set the same location on each move line and pass again in _put_in_pack
-        for line in self.move_line_ids:
-            line.location_dest_id = self.location_dest_id
-        return self.picking_id.put_in_pack()
+        # set the same location on each move line and pass again in action_put_in_pack
+        self.move_line_ids.location_dest_id = self.location_dest_id
+        return self.picking_id.action_put_in_pack()

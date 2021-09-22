@@ -16,6 +16,8 @@ class lazy_property(object):
         get it again.
     """
     def __init__(self, fget):
+        assert not fget.__name__.startswith('__'),\
+            "lazy_property does not support mangled names"
         self.fget = fget
 
     def __get__(self, obj, cls):
@@ -242,14 +244,3 @@ class lazy(object):
     def __aenter__(self): return self._value.__aenter__()
     def __aexit__(self, exc_type, exc_value, traceback):
         return self._value.__aexit__(exc_type, exc_value, traceback)
-
-
-# patch serialization of lazy
-def default(self, o):
-    if isinstance(o, lazy):
-        return o._value
-    return json_encoder_default(self, o)
-
-
-json_encoder_default = JSONEncoder.default
-JSONEncoder.default = default

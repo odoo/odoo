@@ -28993,9 +28993,10 @@ function (_Annotation2) {
     data.readOnly = _this3.hasFieldFlag(_util.AnnotationFieldFlag.READONLY);
 
     if (data.fieldType === 'Sig') {
-      data.fieldValue = null;
+      // Odoo: display digital signature even if verification not implemented https://github.com/mozilla/pdf.js/issues/4743
+      //data.fieldValue = null;
 
-      _this3.setFlags(_util.AnnotationFlag.HIDDEN);
+      //_this3.setFlags(_util.AnnotationFlag.HIDDEN);
     }
 
     return _this3;
@@ -32675,7 +32676,8 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
     },
     getBaseFontMetrics: function PartialEvaluator_getBaseFontMetrics(name) {
       var defaultWidth = 0;
-      var widths = [];
+      // Odoo: backport mozilla/pdf.js@8805614a03c for courier font bug with chrome 92
+      var widths = Object.create(null);
       var monospace = false;
       var stdFontMap = (0, _standard_fonts.getStdFontMap)();
       var lookupName = stdFontMap[name] || name;

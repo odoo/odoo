@@ -1,50 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_tests" name="Website Sale Coupon Assets Tests" inherit_id="web.assets_tests">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale_coupon/static/tests/tours/website_sale_coupon.js"></script>
-    </xpath>
-</template>
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
-    <xpath expr="//td[hasclass('td-img')]/span" position="replace">
-        <t t-if="line.is_reward_line and line.sudo().product_id.image_128">
-            <span>
-                <img t-att-src="image_data_uri(line.sudo().product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
-            </span>
-        </t>
-        <t t-else="">
-            <t>$0</t>
-        </t>
-    </xpath>
-    <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
-        <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
-    </xpath>
-    <xpath expr="//table[@id='cart_products']/tbody//tr//td[hasclass('td-product_name')]//div" position="attributes">
-    <!-- Can't xpath "//table[@id='cart_products']/tbody//tr" since optional_product already xpath that one.
-         There will be the same xpath attribute class on the same element. Last installed module will only be taken into account -->
-        <attribute name="t-att-class">'reward_product' if line.is_reward_line else None</attribute>
-    </xpath>
-    <xpath expr="//td[hasclass('td-qty')]/div" position="after">
-        <t t-if="line.is_reward_line">
-            <span class="js_quantity text-muted" t-esc="int(line.product_uom_qty)"/>
-        </t>
-    </xpath>
     <xpath expr="//del" position="attributes">
         <attribute name="t-if">not line.is_reward_line</attribute>
     </xpath>
 </template>
-<template id="cart_popover" inherit_id="website_sale.cart_popover" name="Cart Popover">
-    <xpath expr="//div[hasclass('cart_line')]/div[1]/span" position="replace">
-        <t t-if="line.is_reward_line and line.sudo().product_id.image_128">
-            <span>
-                <img t-att-src="image_data_uri(line.sudo().product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
-            </span>
+<template id="layout" inherit_id="website.layout">
+    <body position="inside">
+        <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
+        <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
+        <t t-if="coupon_error and pending_coupon_code">
+            <div class="d-none coupon-message coupon-error-message">
+                <span class="coupon-message-title">Could not apply the promo code: <t t-out="pending_coupon_code"/></span>
+                <span class="coupon-message-content" t-out="coupon_error"/>
+            </div>
         </t>
-        <t t-else="">
-            <t>$0</t>
-        </t>
-    </xpath>
+        <t t-set="notify_coupon" t-value="request.params.get('notify_coupon')"/>
+        <div t-if="notify_coupon" class="d-none coupon-message coupon-info-message">
+            <span class="coupon-message-content">The following promo code was applied on your order: <t t-out="notify_coupon"/></span>
+        </div>
+    </body>
 </template>
 <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
     <xpath expr="//form[@name='coupon_code']" position="after">

@@ -2,7 +2,7 @@
 
 {
     'name': 'Lunch',
-    'sequence': 120,
+    'sequence': 300,
     'version': '1.0',
     'depends': ['mail'],
     'category': 'Human Resources/Lunch',
@@ -34,12 +34,43 @@ If you want to save your employees' time and avoid them to always have coins in 
         'views/lunch_supplier_views.xml',
         'views/res_config_settings.xml',
         'views/lunch_views.xml',
+        'data/mail_template_data.xml',
         'data/lunch_data.xml',
-        'data/ir_cron_data.xml'
     ],
     'demo': ['data/lunch_demo.xml'],
-    'qweb': ['static/src/xml/lunch_kanban.xml', ],
     'installable': True,
     'application': True,
     'certificate': '001292377792581874189',
+    'assets': {
+        'web.assets_backend': [
+            'lunch/static/src/scss/lunch_view.scss',
+            'lunch/static/src/scss/lunch_kanban.scss',
+            'lunch/static/src/scss/lunch_list.scss',
+            'lunch/static/src/js/lunch_controller_common.js',
+            'lunch/static/src/js/lunch_widget.js',
+            'lunch/static/src/js/lunch_mobile.js',
+            'lunch/static/src/js/lunch_payment_dialog.js',
+            'lunch/static/src/js/lunch_kanban_view.js',
+            'lunch/static/src/js/lunch_kanban_controller.js',
+            'lunch/static/src/js/lunch_kanban_renderer.js',
+            'lunch/static/src/js/lunch_kanban_record.js',
+            'lunch/static/src/js/lunch_model_extension.js',
+            'lunch/static/src/js/lunch_list_view.js',
+            'lunch/static/src/js/lunch_list_controller.js',
+            'lunch/static/src/js/lunch_list_renderer.js',
+        ],
+        'web.qunit_suite_tests': [
+            'lunch/static/tests/lunch_test_utils.js',
+            'lunch/static/tests/lunch_kanban_tests.js',
+            'lunch/static/tests/lunch_list_tests.js',
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'lunch/static/tests/lunch_test_utils.js',
+            'lunch/static/tests/lunch_kanban_mobile_tests.js',
+        ],
+        'web.assets_qweb': [
+            'lunch/static/src/xml/lunch_templates.xml',
+        ],
+    },
+    'license': 'LGPL-3',
 }

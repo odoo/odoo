@@ -1,5 +1,11 @@
-from odoo import models, fields, api
-from odoo.exceptions import AccessDenied
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import re
+import werkzeug
+
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessDenied, ValidationError
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -72,6 +78,28 @@ class WebsiteRewrite(models.Model):
     def _onchange_route_id(self):
         self.url_from = self.route_id.path
         self.url_to = self.route_id.path
+
+    @api.constrains('url_to', 'url_from', 'redirect_type')
+    def _check_url_to(self):
+        for rewrite in self:
+            if rewrite.redirect_type == '308':
+                if not rewrite.url_to:
+                    raise ValidationError(_('"URL to" can not be empty.'))
+                elif not rewrite.url_to.startswith('/'):
+                    raise ValidationError(_('"URL to" must start with a leading slash.'))
+                for param in re.findall('/<.*?>', rewrite.url_from):
+                    if param not in rewrite.url_to:
+                        raise ValidationError(_('"URL to" must contain parameter %s used in "URL from".') % param)
+                for param in re.findall('/<.*?>', rewrite.url_to):
+                    if param not in rewrite.url_from:
+                        raise ValidationError(_('"URL to" cannot contain parameter %s which is not used in "URL from".') % param)
+                try:
+                    converters = self.env['ir.http']._get_converters()
+                    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+                    rule = werkzeug.routing.Rule(rewrite.url_to)
+                    routing_map.add(rule)
+                except ValueError as e:
+                    raise ValidationError(_('"URL to" is invalid: %s') % e)
 
     def name_get(self):
         result = []

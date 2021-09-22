@@ -18,24 +18,23 @@ class SaleOrder(models.Model):
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
-    def _action_confirm(self):
-        res = super(SaleOrder, self)._action_confirm()
-        for so in self:
-            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
-            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
-        return res
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            if any(so.order_line.filtered(lambda line: line.event_id)):
+            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+            if any(line.event_ok for line in so.order_line):
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
-                    .for_xml_id('event_sale', 'action_sale_order_event_registration')
+                    ._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
 
+    def action_cancel(self):
+        self.order_line._cancel_associated_registrations()
+        return super(SaleOrder, self).action_cancel()
+
     def action_view_attendee_list(self):
-        action = self.env.ref('event.event_registration_action_tree').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
         action['domain'] = [('sale_order_id', 'in', self.ids)]
         return action
 
@@ -52,6 +51,10 @@ class SaleOrder(models.Model):
         for sale_order in self:
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
+    def unlink(self):
+        self.order_line._unlink_associated_registrations()
+        return super(SaleOrder, self).unlink()
+
 
 class SaleOrderLine(models.Model):
 
@@ -63,7 +66,12 @@ class SaleOrderLine(models.Model):
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket',
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
-    event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
+    event_ok = fields.Boolean(compute='_compute_event_ok')
+
+    @api.depends('product_id.detailed_type')
+    def _compute_event_ok(self):
+        for record in self:
+            record.event_ok = record.product_id.detailed_type == 'event'
 
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
@@ -76,9 +84,10 @@ class SaleOrderLine(models.Model):
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
-        Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
-        for so_line in self.filtered('event_id'):
+        RegistrationSudo = self.env['event.registration'].sudo()
+        registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
+        registrations_vals = []
+        for so_line in self.filtered('event_ok'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
@@ -88,12 +97,17 @@ class SaleOrderLine(models.Model):
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                registration_vals = {}
-                if registration_data:
-                    registration_vals = registration_data.pop()
+                values = {
+                    'sale_order_line_id': so_line.id,
+                    'sale_order_id': so_line.order_id.id
+                }
                 # TDE CHECK: auto confirmation
-                registration_vals['sale_order_line_id'] = so_line.id
-                Registration.create(registration_vals)
+                if registration_data:
+                    values.update(registration_data.pop())
+                registrations_vals.append(values)
+
+        if registrations_vals:
+            RegistrationSudo.create(registrations_vals)
         return True
 
     @api.onchange('product_id')
@@ -119,6 +133,16 @@ class SaleOrderLine(models.Model):
         # we call this to force update the default name
         self.product_id_change()
 
+    def unlink(self):
+        self._unlink_associated_registrations()
+        return super(SaleOrderLine, self).unlink()
+
+    def _cancel_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).action_cancel()
+
+    def _unlink_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
+
     def get_sale_order_line_multiline_description_sale(self, product):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
@@ -136,11 +160,6 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            company = self.event_id.company_id or self.env.company.id
-            currency = company.currency_id
-            return currency._convert(
-                self.event_ticket_id.price, self.order_id.currency_id,
-                self.order_id.company_id or self.env.company.id,
-                self.order_id.date_order or fields.Date.today())
+            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
         else:
             return super()._get_display_price(product)

@@ -1,20 +1,16 @@
-odoo.define('sms.sms_widget', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var basicFields = require('web.basic_fields');
-var core = require('web.core');
-var fieldRegistry = require('web.field_registry');
-
-var FieldText = basicFields.FieldText;
-
-var _t = core._t;
+import { _t } from 'web.core';
+import fieldRegistry from 'web.field_registry';
+import FieldTextEmojis from '@mail/js/field_text_emojis';
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldText.extend({
+var SmsWidget = FieldTextEmojis.extend({
     className: 'o_field_text',
+    enableEmojis: false,
     /**
      * @constructor
      */
@@ -23,6 +19,17 @@ var SmsWidget = FieldText.extend({
         this.nbrChar = 0;
         this.nbrSMS = 0;
         this.encoding = 'GSM7';
+        this.enableEmojis = !!this.nodeOptions.enable_emojis;
+    },
+
+    /**
+     * @override
+     *"This will add the emoji dropdown to a target field (controlled by the "enableEmojis" attribute)
+     */
+    on_attach_callback: function () {
+        if (this.enableEmojis) {
+            this._super.apply(this, arguments);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -141,6 +148,19 @@ var SmsWidget = FieldText.extend({
      * @override
      * @private
      */
+    _onBlur: function () {
+        var content = this._getValue();
+        if( !content.trim().length && content.length > 0) {
+            this.displayNotification({ title: _t("Your SMS Text Message must include at least one non-whitespace character"), type: 'danger' });
+            this.$input.val(content.trim());
+            this._updateSMSInfo();
+        }
+    },
+
+    /**
+     * @override
+     * @private
+     */
     _onChange: function () {
         this._super.apply(this, arguments);
         this._updateSMSInfo();
@@ -158,5 +178,4 @@ var SmsWidget = FieldText.extend({
 
 fieldRegistry.add('sms_widget', SmsWidget);
 
-return SmsWidget;
-});
+export default SmsWidget;

@@ -1,7 +1,7 @@
 Sales Management Made Easy
 --------------------------
 
-From quotes to invoices, in just a few clicks with the Odoo <a href="https://www.odoo.com/page/crm">Sales Management</a>.
+From quotes to invoices, in just a few clicks with the Odoo <a href="https://www.odoo.com/app/crm">Sales Management</a>.
 
 Drive your sales operations from quotes to invoices with all the information
 you need, easily accessible. Keep track of long term contracts, automate

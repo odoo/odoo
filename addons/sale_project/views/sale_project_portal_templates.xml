@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list">
+        <xpath expr="//t[@t-call='portal.portal_table']//thead/tr/th[@name='project_portal_assignees']" position="before">
+            <th t-if="groupby == 'sale_order'">
+                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for sale order:</em>
+                <span t-if="tasks[0].sudo().sale_order_id" class="text-truncate" t-field="tasks[0].sudo().sale_order_id"/>
+                <span t-else="">None</span>
+            </th>
+            <th t-if="groupby == 'sale_line'">
+                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for sale order item:</em>
+                <span t-if="tasks[0].sudo().sale_line_id" class="text-truncate" t-field="tasks[0].sudo().sale_line_id"/>
+                <span t-else="">None</span>
+            </th>
+        </xpath>
+    </template>
+
+</odoo>

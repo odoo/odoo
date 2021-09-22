@@ -2,6 +2,7 @@ odoo.define('website_sale.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('shop_buy_product', {
     test: true,
@@ -35,8 +36,9 @@ tour.register('shop_buy_product', {
             id: 'add_cart_step',
             content: "click on add to cart",
             extra_trigger: 'label:contains(Steel) input:propChecked',
-            trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
+            trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
+            tourUtils.goToCart(),
         {
             content: "add suggested",
             extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',
@@ -71,21 +73,21 @@ tour.register('shop_buy_product', {
             content: "Pay Now",
             //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
             extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-            trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+            trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
         },
         {
             content: "finish",
-            trigger: '.oe_website_sale:contains("Please make a payment to:")',
+            trigger: '.oe_website_sale:contains("Please use the following transfer details")',
             // Leave /shop/confirmation to prevent RPC loop to /shop/payment/get_status.
             // The RPC could be handled in python while the tour is killed (and the session), leading to crashes
             run: function () {
-                window.location.href = '/aboutus'; // Redirect in JS to avoid the RPC loop (20x1sec)
+                window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)
             },
             timeout: 30000,
         },
         {
             content: "wait page loaded",
-            trigger: 'h3:contains("Great products for great people")',
+            trigger: 'h1:contains("Contact us")',
             run: function () {}, // it's a check
         },
     ]

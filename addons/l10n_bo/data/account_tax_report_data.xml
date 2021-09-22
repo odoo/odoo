@@ -3,6 +3,7 @@
 
     <record id="tax_report" model="account.tax.report">
         <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.bo"/>
     </record>
 
 	<record id="tax_report_impuesto_25" model="account.tax.report.line">

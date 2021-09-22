@@ -99,7 +99,7 @@
                   Click to add a new analytic account group.
               </p>
               <p>
-                  This allows to classify your analytic accounts.
+                  This allows you to classify your analytic accounts.
               </p>
             </field>
         </record>
@@ -127,7 +127,7 @@
         <record model="ir.actions.act_window" id="account_analytic_line_action">
             <field name="context">{'search_default_group_date': 1, 'default_account_id': active_id}</field>
             <field name="domain">[('account_id','=', active_id)]</field>
-            <field name="name">Costs &amp; Revenues</field>
+            <field name="name">Gross Margin</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
@@ -157,12 +157,18 @@
                 <form string="Analytic Account">
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d"
-                            icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
+                            <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d" icon="fa-usd">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Gross Margin</span>
+                                    <span class="o_stat_value">
+                                        <field name="balance" widget='monetary'/>
+                                    </span>
+                                </div>
+                            </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name"/>
                             <h1>
                                 <field name="name" class="oe_inline" placeholder="e.g. Project XYZ"/>
                             </h1>
@@ -171,8 +177,8 @@
                         <group name="main">
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="code"/>
                                 <field name="partner_id"/>
+                                <field name="code"/>
                             </group>
                             <group>
                                 <field name="group_id"/>
@@ -182,8 +188,8 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -316,11 +322,12 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="account_id"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids"/>
                     <filter string="Date" name="date" date="date"/>
                     <group string="Group By..." expand="0" name="groupby">
                         <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
                         <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                        <filter string="Category" name='category' context="{'group_by': 'category'}"/>
                     </group>
                 </search>
             </field>
@@ -330,8 +337,8 @@
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <graph string="Analytic Entries">
-                    <field name="account_id" type="row"/>
+                <graph string="Analytic Entries" sample="1">
+                    <field name="account_id"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>
                 </graph>
@@ -342,7 +349,7 @@
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <pivot string="Analytic Entries" >
+                <pivot string="Analytic Entries" sample="1">
                     <field name="account_id" type="row"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>

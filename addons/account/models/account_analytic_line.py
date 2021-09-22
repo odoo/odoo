@@ -7,6 +7,9 @@ from odoo.exceptions import UserError
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
 
+    invoice_count = fields.Integer("Invoice Count", compute='_compute_invoice_count')
+    vendor_bill_count = fields.Integer("Vendor Bill Count", compute='_compute_vendor_bill_count')
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         analytic_accounts = self.filtered('company_id')
@@ -26,6 +29,55 @@ class AccountAnalyticAccount(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't set a different company on your analytic account since there are some journal items linked to it."))
 
+    @api.depends('line_ids')
+    def _compute_invoice_count(self):
+        sale_types = self.env['account.move'].get_sale_types()
+        domain = [
+            ('move_id.state', '=', 'posted'),
+            ('move_id.move_type', 'in', sale_types),
+            ('analytic_account_id', 'in', self.ids)
+        ]
+        groups = self.env['account.move.line'].read_group(domain, ['move_id:count_distinct'], ['analytic_account_id'])
+        moves_count_mapping = dict((g['analytic_account_id'][0], g['move_id']) for g in groups)
+        for account in self:
+            account.invoice_count = moves_count_mapping.get(account.id, 0)
+
+    @api.depends('line_ids')
+    def _compute_vendor_bill_count(self):
+        purchase_types = self.env['account.move'].get_purchase_types()
+        domain = [
+            ('move_id.state', '=', 'posted'),
+            ('move_id.move_type', 'in', purchase_types),
+            ('analytic_account_id', 'in', self.ids)
+        ]
+        groups = self.env['account.move.line'].read_group(domain, ['move_id:count_distinct'], ['analytic_account_id'])
+        moves_count_mapping = dict((g['analytic_account_id'][0], g['move_id']) for g in groups)
+        for account in self:
+            account.vendor_bill_count = moves_count_mapping.get(account.id, 0)
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_sale_types())],
+            "context": {"create": False},
+            "name": "Customer Invoices",
+            'view_mode': 'tree,form',
+        }
+        return result
+
+    def action_view_vendor_bill(self):
+        self.ensure_one()
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_purchase_types())],
+            "context": {"create": False},
+            "name": "Vendor Bills",
+            'view_mode': 'tree,form',
+        }
+        return result
 
 class AccountAnalyticTag(models.Model):
     _inherit = 'account.analytic.tag'
@@ -55,13 +107,14 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
 
-    product_id = fields.Many2one('product.product', string='Product', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    product_id = fields.Many2one('product.product', string='Product', check_company=True)
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
-                                         related='move_id.account_id', store=True, domain=[('deprecated', '=', False)],
+                                         related='move_id.account_id', store=True, domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
                                          compute_sudo=True)
-    move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True)
+    move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True, check_company=True)
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
+    category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
@@ -85,9 +138,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        context = (self._context or {})
-        header = False
-        if context.get('account_id', False):
-            analytic_account = self.env['account.analytic.account'].search([('id', '=', context['account_id'])], limit=1)
-            header = _('Entries: ') + (analytic_account.name or '')
-        return header
+        if self.env.context.get('account_id'):
+            return _(
+                "Entries: %(account)s",
+                account=self.env['account.analytic.account'].browse(self.env.context['account_id']).name
+            )
+        return super().view_header_get(view_id, view_type)

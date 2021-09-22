@@ -14,7 +14,7 @@ class BarcodeRule(models.Model):
 
     type = fields.Selection(selection_add=[
         ('credit', 'Credit Card')
-    ])
+    ], ondelete={'credit': 'set default'})
 
 
 class PosMercuryConfiguration(models.Model):
@@ -76,12 +76,3 @@ class PosOrder(models.Model):
         })
 
         return fields
-
-
-class AutoVacuum(models.AbstractModel):
-    _inherit = 'ir.autovacuum'
-
-    @api.model
-    def power_on(self, *args, **kwargs):
-        self.env['pos_mercury.mercury_transaction'].cleanup_old_tokens()
-        return super(AutoVacuum, self).power_on(*args, **kwargs)

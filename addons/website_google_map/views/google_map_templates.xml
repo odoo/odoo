@@ -11,7 +11,7 @@
     </head>
     <body t-att-data-partner-url="partner_url or None">
         <script>
-            var odoo_partner_data = <t t-raw="partner_data"/>;
+            var odoo_partner_data = <t t-out="partner_data"/>;
         </script>
         <div id="odoo-google-map"></div>
         <t t-if="google_maps_api_key">

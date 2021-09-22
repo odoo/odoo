@@ -12,8 +12,6 @@ class AccountJournal(models.Model):
         " If not set means that will be used to register accounting entries not related to invoicing legal documents."
         " For Example: Receipts, Tax Payments, Register journal entries")
     l10n_latam_company_use_documents = fields.Boolean(compute='_compute_l10n_latam_company_use_documents')
-    l10n_latam_country_code = fields.Char(
-        related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
     @api.depends('company_id')
     def _compute_l10n_latam_company_use_documents(self):
@@ -28,7 +26,7 @@ class AccountJournal(models.Model):
     @api.constrains('l10n_latam_use_documents')
     def check_use_document(self):
         for rec in self:
-            if rec.env['account.move'].search([('journal_id', '=', rec.id), ('state', '!=', 'draft')], limit=1):
+            if rec.env['account.move'].search([('journal_id', '=', rec.id), ('posted_before', '=', True)], limit=1):
                 raise ValidationError(_(
                     'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'))
 

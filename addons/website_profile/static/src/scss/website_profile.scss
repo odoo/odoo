@@ -117,8 +117,8 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         }
 
         #gradient {
-          --o-pc-color-stop-1: lighten(theme-color('primary'), 10%);
-          --o-pc-color-stop-2: theme-color('primary');
+            --o-pc-color-stop-1: #{lighten(theme-color('primary'), 10%)};
+            --o-pc-color-stop-2: #{theme-color('primary')};
         }
     }
 
@@ -248,4 +248,9 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 // Tools
 .o_wprofile_pointer {
     cursor: pointer;
+}
+
+// Own profile border
+.o_wprofile_border_focus {
+    border-left: 4px solid theme-color('secondary');
 }

@@ -9,11 +9,16 @@
     'description': """
 Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module (available in Odoo Enterprise) in order to build the form.
     """,
-    'depends': ['website_form', 'project'],
+    'depends': ['website', 'project'],
     'data': [
         'data/website_form_project_data.xml',
-        'views/website_form_project_assets.xml',
-    ],
+        ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'website.assets_editor': [
+            'website_form_project/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

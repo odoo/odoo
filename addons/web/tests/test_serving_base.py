@@ -51,9 +51,9 @@ class TestStaticInheritanceCommon(BaseCase):
     def setUp(self):
         super(TestStaticInheritanceCommon, self).setUp()
         # output is "manifest_glob" return
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
+            ('module_2_file_1', 'module_2', 'bundle_1'),
         ]
 
         self.template_files = {
@@ -111,18 +111,18 @@ class TestStaticInheritanceCommon(BaseCase):
 
     # Private methods
     def _get_module_names(self):
-        return ','.join([glob[2] for glob in self.modules])
+        return ','.join([asset_path[1] for asset_path in self.asset_paths])
 
     def _set_patchers(self):
-        def _patched_for_manifest_glob(*args, **kwargs):
+        def _patched_for_get_asset_paths(*args, **kwargs):
             # Ordered by module
-            return self.modules
+            return self.asset_paths
 
         def _patch_for_read_addon_file(*args, **kwargs):
             return self.template_files[args[1]]
 
         self.patchers = [
-            patch.object(HomeStaticTemplateHelpers, '_manifest_glob', _patched_for_manifest_glob),
+            patch.object(HomeStaticTemplateHelpers, '_get_asset_paths', _patched_for_get_asset_paths),
             patch.object(HomeStaticTemplateHelpers, '_read_addon_file', _patch_for_read_addon_file),
         ]
 
@@ -145,7 +145,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </form>
                 <t t-name="template_1_2">
                     <div>And I grew strong</div>
-                    <!-- Modified by anonymous_template_2 from module_2 -->
                     <div>And I learned how to get along</div>
                 </t>
                 <form t-name="template_2_1" random-attr="gloria">
@@ -178,8 +177,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             '''
         }
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
@@ -218,8 +217,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </templates>
             '''
         }
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
@@ -243,9 +242,9 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_static_inheritance_in_same_module(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_1_file_2', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
+            ('module_1_file_2', 'module_1', 'bundle_1'),
         ]
 
         self.template_files = {
@@ -286,8 +285,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_static_inheritance_in_same_file(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
 
         self.template_files = {
@@ -323,8 +322,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_static_inherit_extended_template(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b'''
@@ -351,7 +350,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             <templates>
                 <form t-name="template_1_1">
                     <div>At first I was afraid</div>
-                    <!-- Modified by template_1_2 from module_1 -->
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
                 </form>
@@ -367,10 +365,10 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_sibling_extension(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
-            ('module_3_file_1', None, 'module_3'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
+            ('module_2_file_1', 'module_2', 'bundle_1'),
+            ('module_3_file_1', 'module_3', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b'''
@@ -408,9 +406,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             <templates>
                 <form t-name="template_1_1">
                     <div>I am a man of constant sorrow</div>
-                    <!-- Modified by template_2_1 from module_2 -->
                     <div>In constant sorrow all through his days</div>
-                    <!-- Modified by template_3_1 from module_3 -->
                     <div>Oh Brother !</div>
                     <div>I've seen trouble all my days</div>
                 </form>
@@ -420,7 +416,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_static_misordered_modules(self):
-        self.modules.reverse()
+        self.asset_paths.reverse()
         with self.assertRaises(ValueError) as ve:
             HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
 
@@ -454,8 +450,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         """
         Replacing a template's meta definition in place doesn't keep the original attrs of the template
         """
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -476,7 +472,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div overriden-attr="overriden" t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->And I grew strong
+                    And I grew strong
                 </div>
             </templates>
         """
@@ -484,8 +480,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_replace_in_debug_mode2(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -510,7 +506,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     And I grew strong
                     <p>And I learned how to get along</p>
                     And so you're back
@@ -525,8 +520,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         becomes outside of the template
         This doesn't mean anything in terms of the business of template inheritance
         But it is in the XPATH specs"""
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -551,7 +546,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     And I grew strong
                     <p>And I learned how to get along</p>
                 </div>
@@ -565,8 +559,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         """
         Root node IS targeted by //NODE_TAG in xpath
         """
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -590,7 +584,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     Form replacer
                 </div>
             </templates>
@@ -603,8 +596,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         Root node IS targeted by //NODE_TAG in xpath
         """
         self.maxDiff = None
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -642,8 +635,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         The inheriting template has got both its own defining attrs
         and new ones if one is to replace its defining root node
         """
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -680,8 +673,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_replace_in_nodebug_mode1(self):
         """Comments already in the arch are ignored"""
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -717,8 +710,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_inherit_from_dotted_tname_1(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -754,8 +747,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_inherit_from_dotted_tname_2(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -791,8 +784,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_inherit_from_dotted_tname_2bis(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -828,8 +821,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_inherit_from_dotted_tname_2ter(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -865,9 +858,9 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         self.assertXMLEqual(contents, expected)
 
     def test_inherit_from_dotted_tname_3(self):
-        self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
+        self.asset_paths = [
+            ('module_1_file_1', 'module_1', 'bundle_1'),
+            ('module_2_file_1', 'module_2', 'bundle_1'),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -916,14 +909,14 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         nMod modules
         each module: has nFilesPerModule files, each of which contains nTemplatePerFile templates
         """
-        self.modules = []
+        self.asset_paths = []
         self.template_files = {}
         number_templates = 0
         for m in range(nMod):
             for f in range(nFilePerMod):
                 mname = 'mod_%s' % m
                 fname = 'mod_%s_file_%s' % (m, f)
-                self.modules.append((fname, None, mname))
+                self.asset_paths.append((fname, mname, 'bundle_1'))
 
                 _file = '<templates id="template" xml:space="preserve">'
 
@@ -982,7 +975,7 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         after = datetime.now()
         delta2500 = after - before
-        _logger.log(25, 'Static Templates Inheritance: 2500 templates treated in %s seconds' % delta2500.total_seconds())
+        _logger.runbot('Static Templates Inheritance: 2500 templates treated in %s seconds' % delta2500.total_seconds())
 
         whole_tree = etree.fromstring(contents)
         self.assertEqual(len(whole_tree), nMod * nFilePerMod * nTemplatePerFile)
@@ -997,6 +990,6 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         delta25000 = after - before
 
         time_ratio = delta25000.total_seconds() / delta2500.total_seconds()
-        _logger.log(25, 'Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
-        _logger.log(25, 'Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
-        self.assertLessEqual(time_ratio, 10)
+        _logger.runbot('Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
+        _logger.runbot('Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
+        self.assertLessEqual(time_ratio, 12)

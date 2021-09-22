@@ -6,7 +6,7 @@ from odoo.tests import common, Form
 from odoo.tools.float_utils import float_round, float_compare
 
 
-class TestBom(common.TransactionCase):
+class TestBomPrice(common.TransactionCase):
 
     def _create_product(self, name, price):
         return self.Product.create({
@@ -16,11 +16,9 @@ class TestBom(common.TransactionCase):
         })
 
     def setUp(self):
-        super(TestBom, self).setUp()
+        super(TestBomPrice, self).setUp()
         self.Product = self.env['product.product']
         self.Bom = self.env['mrp.bom']
-        self.Routing = self.env['mrp.routing']
-        self.operation = self.env['mrp.routing.workcenter']
 
         # Products.
         self.dining_table = self._create_product('Dining Table', 1000)
@@ -117,37 +115,57 @@ class TestBom(common.TransactionCase):
         workcenter_from1.costs_hour = 100
         workcenter_1 = workcenter_from1.save()
 
-        routing_form1 = Form(self.Routing)
-        routing_form1.name = 'Assembly Furniture'
-        routing_1 = routing_form1.save()
+        self.bom_1.write({
+            'operation_ids': [
+                (0, 0, {
+                    'name': 'Cutting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 20,
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Drilling',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 25,
+                    'sequence': 2,
+                }),
+                (0, 0, {
+                    'name': 'Fitting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 30,
+                    'sequence': 3,
+                }),
+            ],
+        }),
+        self.bom_2.write({
+            'operation_ids': [
+                (0, 0, {
+                    'name': 'Cutting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 20,
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Drilling',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 25,
+                    'sequence': 2,
+                }),
+                (0, 0, {
+                    'name': 'Fitting',
+                    'workcenter_id': workcenter_1.id,
+                    'time_mode': 'manual',
+                    'time_cycle_manual': 30,
+                    'sequence': 3,
+                }),
+            ],
+        }),
 
-        operation_1 = self.operation.create({
-            'name': 'Cutting',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 20,
-            'batch': 'no',
-            'sequence': 1,
-        })
-        operation_2 = self.operation.create({
-            'name': 'Drilling',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 25,
-            'batch': 'no',
-            'sequence': 2,
-        })
-        operation_3 = self.operation.create({
-            'name': 'Fitting',
-            'workcenter_id': workcenter_1.id,
-            'routing_id': routing_1.id,
-            'time_mode': 'manual',
-            'time_cycle_manual': 30,
-            'batch': 'no',
-            'sequence': 3,
-        })
 
         # -----------------------------------------------------------------
         # Dinning Table Operation Cost(1 Unit)
@@ -160,7 +178,6 @@ class TestBom(common.TransactionCase):
         # Operation Cost  1 unit = 125
         # -----------------------------------------------------------------
 
-        self.bom_1.routing_id = routing_1.id
 
         # --------------------------------------------------------------------------
         # Table Head Operation Cost (1 Dozen)
@@ -173,7 +190,6 @@ class TestBom(common.TransactionCase):
         # Operation Cost 1 dozen (125 per dozen) and 10.42 for 1 Unit
         # --------------------------------------------------------------------------
 
-        self.bom_2.routing_id = routing_1.id
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
@@ -182,3 +198,42 @@ class TestBom(common.TransactionCase):
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
         self.assertEqual(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
+
+    def test_02_compute_byproduct_price(self):
+        """Test BoM cost when byproducts with cost share"""
+        # byproduct
+        scrap_wood = self._create_product('Scrap Wood', 30)
+
+        # different byproduct line uoms => 20 total units with a total of 75% of cost share
+        self.bom_1.write({
+            'byproduct_ids': [
+                (0, 0, {
+                    'product_id': scrap_wood.id,
+                    'product_uom_id': self.unit.id,
+                    'product_qty': 8,
+                    'bom_id': self.bom_1.id,
+                    'cost_share': 25,
+                }),
+                (0, 0, {
+                    'product_id': scrap_wood.id,
+                    'product_uom_id': self.dozen.id,
+                    'product_qty': 1,
+                    'bom_id': self.bom_1.id,
+                    'cost_share': 50,
+                }),
+            ],
+        }),
+
+        # Cost Breakdown.
+        # -------------------------------------------------------------------------------
+        # Total Cost of BoM = 550 [718.75 if components of Table Head considered] (for 1 Unit)
+        # Dining Table 1 Unit = 1 - (25 + 50) / 100 * 550 = 0.25 * 550 = 137.5
+        # Scrap Wood 1 Unit = (25 + 50) / 100 * 550 / (8 units + 12 units) = 20.625
+        # -------------------------------------------------------------------------------
+
+        self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
+        self.assertEqual(scrap_wood.standard_price, 30, "Initial price of the By-Product should be 30")
+        self.dining_table.button_bom_cost()
+        self.assertEqual(self.dining_table.standard_price, 137.5, "After computing price from BoM price should be 137.5")
+        scrap_wood.button_bom_cost()
+        self.assertEqual(scrap_wood.standard_price, 20.63, "After computing price from BoM price should be 20.63")

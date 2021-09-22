@@ -4,9 +4,9 @@
         <field name="name">stock_report_view_graph</field>
         <field name="model">report.stock.quantity</field>
         <field name="arch" type="xml">
-            <graph string="report_stock_quantity_graph" type="line">
+            <graph string="report_stock_quantity_graph" type="line" sample="1" disable_linking="1">
                     <field name="date" interval="day"/>
-                    <field name="product_id" type="row"/>
+                    <field name="product_id"/>
                     <field name="product_qty" type="measure"/>
             </graph>
         </field>
@@ -25,9 +25,8 @@
                     <filter string="Forecasted Stock" name="filter_forecast" domain="[('state', '=', 'forecast')]"/>
                     <filter string="Forecasted Receipts" name="filter_in" domain="[('state', '=', 'in')]"/>
                     <filter string="Forecasted Deliveries" name="filter_out" domain="[('state', '=', 'out')]"/>
-                    <filter string="Date" name="filter_date" date="date"/>
                     <separator/>
-                    <filter string="Warehouse is set" name="below_warehouse" domain="[('warehouse_id', '!=', False)]"/>
+                    <filter string="Date" name="filter_date" date="date"/>
                 </group>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date:day'}"/>
@@ -42,7 +41,6 @@
         <field name="view_mode">graph</field>
         <field name="context">{
             'search_default_filter_forecast': 1,
-            'search_default_below_warehouse': 1,
             'graph_groupbys': ['date:day', 'state',  'product_id'],
         }</field>
     </record>
@@ -53,7 +51,6 @@
         <field name="view_mode">graph</field>
         <field name="context">{
             'search_default_filter_forecast': 1,
-            'search_default_below_warehouse': 1,
             'graph_groupbys': ['date:day', 'state', 'product_id'],
         }</field>
     </record>

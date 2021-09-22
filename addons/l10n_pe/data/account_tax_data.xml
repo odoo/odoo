@@ -7,39 +7,49 @@
     <record id="tax_group_igv" model="account.tax.group">
         <field name="name">IGV</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_ivap" model="account.tax.group">
         <field name="name">IVAP</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_isc" model="account.tax.group">
         <field name="name">ISC</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_exp" model="account.tax.group">
         <field name="name">EXP</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_gra" model="account.tax.group">
         <field name="name">GRA</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_exo" model="account.tax.group">
         <field name="name">EXO</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_ina" model="account.tax.group">
         <field name="name">INA</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_other" model="account.tax.group">
         <field name="name">OTROS</field>
         <field name="sequence">0</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
     <record id="tax_group_det" model="account.tax.group">
         <field name="name">DET</field>
         <field name="sequence">100</field>
+        <field name="country_id" ref="base.pe"/>
     </record>
+    
     <!-- VAT for sales -->
     <record id="sale_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
@@ -192,7 +202,7 @@
         <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">0% Free</field>
         <field name="description">GRA</field>
-        <field name="l10n_pe_edi_tax_code">9997</field>
+        <field name="l10n_pe_edi_tax_code">9996</field>
         <field name="l10n_pe_edi_unece_category">E</field>
         <field name="amount">0.0</field>
         <field name="type_tax_use">sale</field>
@@ -376,7 +386,7 @@
         <field name="chart_template_id" ref="pe_chart_template"/>
         <field name="name">0% Free</field>
         <field name="description">GRA</field>
-        <field name="l10n_pe_edi_tax_code">9997</field>
+        <field name="l10n_pe_edi_tax_code">9996</field>
         <field name="l10n_pe_edi_unece_category">E</field>
         <field name="amount">0.0</field>
         <field name="type_tax_use">purchase</field>
@@ -408,5 +418,41 @@
             }),
         ]"/>
     </record>
+    <record id="sale_tax_exp" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0% EXP</field>
+        <field name="description">EXP</field>
+        <field name="l10n_pe_edi_tax_code">9995</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_exp"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'base',
+            }),
 
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 0,
+                'repartition_type': 'tax',
+                'account_id': ref('chart40111'),
+            }),
+        ]"/>
+    </record>
 </odoo>

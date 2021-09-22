@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
-
+import re
 
 from odoo import api, fields, models, _
+from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import AccessError
+from odoo.tools import escape_psql
+from odoo.tools.json import scriptsafe as json_safe
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,7 @@ class SeoMetadata(models.AbstractModel):
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
+    seo_name = fields.Char("Seo name", translate=True)
 
     def _compute_is_seo_optimized(self):
         for record in self:
@@ -42,10 +45,8 @@ class SeoMetadata(models.AbstractModel):
         title = (request.website or company).name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
-        if request.website.social_default_image:
-            img = request.website.image_url(request.website, 'social_default_image')
-        else:
-            img = request.website.image_url(company, 'logo')
+        img_field = 'social_default_image' if request.website.has_social_default_image else 'logo'
+        img = request.website.image_url(request.website, img_field)
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
@@ -103,16 +104,31 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
     _name = 'website.cover_properties.mixin'
     _description = 'Cover Properties Website Mixin'
 
-    cover_properties = fields.Text('Cover Properties', default=lambda s: json.dumps(s._default_cover_properties()))
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json_safe.dumps(s._default_cover_properties()))
 
     def _default_cover_properties(self):
         return {
-            "background_color_class": "bg-secondary",
+            "background_color_class": "o_cc3",
             "background-image": "none",
             "opacity": "0.2",
             "resize_class": "o_half_screen_height",
         }
 
+    def _get_background(self, height=None, width=None):
+        self.ensure_one()
+        properties = json_safe.loads(self.cover_properties)
+        img = properties.get('background-image', "none")
+
+        if img.startswith('url(/web/image/'):
+            suffix = ""
+            if height is not None:
+                suffix += "&height=%s" % height
+            if width is not None:
+                suffix += "&width=%s" % width
+            if suffix:
+                suffix = '?' not in img and "?%s" % suffix or suffix
+                img = img[:-1] + suffix + ')'
+        return img
 
 class WebsiteMultiMixin(models.AbstractModel):
 
@@ -124,12 +140,13 @@ class WebsiteMultiMixin(models.AbstractModel):
         string="Website",
         ondelete="restrict",
         help="Restrict publishing to this website.",
+        index=True,
     )
 
     def can_access_from_current_website(self, website_id=False):
         can_access = True
         for record in self:
-            if (website_id or record.website_id.id) not in (False, request.website.id):
+            if (website_id or record.website_id.id) not in (False, request.env['website'].get_current_website().id):
                 can_access = False
                 continue
         return can_access
@@ -141,10 +158,11 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published())
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
+    @api.depends_context('lang')
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
@@ -169,13 +187,13 @@ class WebsitePublishedMixin(models.AbstractModel):
         is_publish_modified = any(
             [set(v.keys()) & {'is_published', 'website_published'} for v in vals_list]
         )
-        if is_publish_modified and not all(record.can_publish for record in records):
+        if is_publish_modified and any(not record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
     def write(self, values):
-        if 'is_published' in values and not all(record.can_publish for record in self):
+        if 'is_published' in values and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
         return super(WebsitePublishedMixin, self).write(values)
@@ -237,3 +255,85 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
         else:  # should be in the backend, return things that are published anywhere
             return is_published
+
+
+class WebsiteSearchableMixin(models.AbstractModel):
+    """Mixin to be inherited by all models that need to searchable through website"""
+    _name = 'website.searchable.mixin'
+    _description = 'Website Searchable Mixin'
+
+    @api.model
+    def _search_build_domain(self, domain_list, search, fields, extra=None):
+        """
+        Builds a search domain AND-combining a base domain with partial matches of each term in
+        the search expression in any of the fields.
+
+        :param domain_list: base domain list combined in the search expression
+        :param search: search expression string
+        :param fields: list of field names to match the terms of the search expression with
+        :param extra: function that returns an additional subdomain for a search term
+
+        :return: domain limited to the matches of the search expression
+        """
+        domains = domain_list.copy()
+        if search:
+            for search_term in search.split(' '):
+                subdomains = [[(field, 'ilike', escape_psql(search_term))] for field in fields]
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                domains.append(expression.OR(subdomains))
+        return expression.AND(domains)
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """
+        Returns indications on how to perform the searches
+
+        :param website: website within which the search is done
+        :param order: order in which the results are to be returned
+        :param options: search options
+
+        :return: search detail as expected in elements of the result of website._search_get_details()
+            These elements contain the following fields:
+            - model: name of the searched model
+            - base_domain: list of domains within which to perform the search
+            - search_fields: fields within which the search term must be found
+            - fetch_fields: fields from which data must be fetched
+            - mapping: mapping from the results towards the structure used in rendering templates.
+                The mapping is a dict that associates the rendering name of each field
+                to a dict containing the 'name' of the field in the results list and the 'type'
+                that must be used for rendering the value
+            - icon: name of the icon to use if there is no image
+
+        This method must be implemented by all models that inherit this mixin.
+        """
+        raise NotImplementedError()
+
+    @api.model
+    def _search_fetch(self, search_detail, search, limit, order):
+        fields = search_detail['search_fields']
+        base_domain = search_detail['base_domain']
+        domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
+        model = self.sudo() if search_detail.get('requires_sudo') else self
+        results = model.search(
+            domain,
+            limit=limit,
+            order=search_detail.get('order', order)
+        )
+        count = model.search_count(domain)
+        return results, count
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = self.read(fetch_fields)[:limit]
+        for result in results_data:
+            result['_fa'] = icon
+            result['_mapping'] = mapping
+        html_fields = [config['name'] for config in mapping.values() if config.get('html')]
+        if html_fields:
+            for result, data in zip(self, results_data):
+                for html_field in html_fields:
+                    if data[html_field]:
+                        text = text_from_html(data[html_field])
+                        text = re.sub('\\s+', ' ', text).strip()
+                        data[html_field] = text
+        return results_data

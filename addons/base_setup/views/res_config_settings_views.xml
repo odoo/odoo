@@ -12,6 +12,11 @@
                         <div id="invite_users">
                             <h2>Users</h2>
                             <div class="row mt16 o_settings_container" name="users_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box" id="invite_users_setting">
+                                    <div class="o_setting_right_pane">
+                                        <widget name='res_config_invite_users'/>
+                                    </div>
+                                </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="active_user_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="fa fa-lg fa-users" aria-label="Number of active users"/>
@@ -22,45 +27,9 @@
                                         <span class='o_form_label' attrs="{'invisible':[('active_user_count', '&lt;=', '1')]}">
                                             Active Users
                                         </span>
-                                        <a href="https://www.odoo.com/documentation/user/13.0/general/odoo_basics/add_user.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/general/odoo_basics/users.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                         <br/>
                                         <button name="%(base.action_res_users)d" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
-
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="invite_users_setting">
-                                    <div class="o_setting_right_pane">
-                                        <widget name='res_config_invite_users'/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="companies">
-                            <h2>Companies</h2>
-                            <div class="row mt16 o_settings_container" name="companies_setting_container">
-                                <div class="col-12 col-lg-6 o_setting_box" id="company_details_settings">
-                                    <div class="o_setting_right_pane">
-                                        <field name="company_name" class="font-weight-bold"/>
-                                        <br/>
-                                        <field name="company_informations" class="text-muted" style="width: 90%;"/>
-                                        <br/>
-                                        <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
-                                    <div class="o_setting_right_pane">
-                                        <field name='company_count' class="w-auto pl-1 font-weight-bold"/>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
-                                            Company
-                                        </span>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
-                                            Companies
-                                        </span>
-                                        <br/>
-                                        <div class="mt8">
-                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -80,9 +49,11 @@
                                             <span class='o_form_label' attrs="{'invisible':[('language_count', '&lt;=', '1')]}">
                                                 Languages
                                             </span>
-                                            <a href="https://www.odoo.com/documentation/user/13.0/general/odoo_basics/choose_language.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
                                         </div>
                                         <div class="mt8">
+                                            <button name="%(base.action_view_base_language_install)d" icon="fa-arrow-right" type="action" string="Add Language" class="btn-link"/>
+                                        </div>
+                                        <div class="mt8" groups="base.group_no_one">
                                             <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
                                         </div>
                                     </div>
@@ -90,25 +61,19 @@
                             </div>
                         </div>
 
-                        <div id="business_documents">
-                            <h2>Business Documents</h2>
-                            <div class="row mt16 o_settings_container" name="business_documents_setting_container">
-                                <div class="col-12 col-lg-6 o_setting_box" id="paper_format_setting">
+                        <div id="companies">
+                            <h2>Companies</h2>
+                            <div class="row mt16 o_settings_container" name="companies_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box" id="company_details_settings">
+                                    <field name="company_id" invisible="1"/>
                                     <div class="o_setting_right_pane">
-                                        <span class="o_form_label">Format</span>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                        <div class="text-muted">
-                                            Set the paper format of printed documents
-                                        </div>
-                                        <div class="content-group">
-                                            <div class="mt16 row">
-                                                <label for="paperformat_id" string="Format" class="col-3 col-lg-3 o_light_label"/>
-                                                <field name="paperformat_id" class="oe_inline" required="1"/>
-                                            </div>
-                                        </div>
+                                        <field name="company_name" class="font-weight-bold"/>
+                                        <br/>
+                                        <field name="company_informations" class="text-muted" style="width: 90%;"/>
+                                        <br/>
+                                        <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
                                     </div>
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="document_layout_setting">
+                                    <br/>
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Document Layout</span>
                                         <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
@@ -121,21 +86,48 @@
                                                 <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                             </div>
                                             <div class="mt8">
-                                                <button name="%(base.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                                <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
                                                 <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
+                                    <div class="o_setting_right_pane">
+                                        <field name='company_count' class="w-auto pl-1 font-weight-bold"/>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
+                                            Company
+                                        </span>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
+                                            Companies
+                                        </span>
+                                        <br/>
+                                        <div class="mt8">
+                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div id="inter_company" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
+                                        <field name="company_id" invisible="1"/>
+                                        <div class="o_setting_left_pane">
+                                            <field name="module_account_inter_company_rules" widget="upgrade_boolean"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label string="Inter-Company Transactions" for="module_account_inter_company_rules"/>
+                                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                            <div class="text-muted">
+                                                Automatically generate counterpart documents for orders/invoices between companies
+                                            </div>
+                                            <div class="content-group" attrs="{'invisible': [('module_account_inter_company_rules','=',False)]}" id="inter_companies_rules">
+                                                <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div id="statistics">
-                            <h2>Statistics</h2>
-                            <div class='row mt16 o_settings_container' id='statistics_div'>
-                            </div>
-                        </div>
+                        <div id="emails"/>
 
                         <div id="contacts_settings">
                             <h2>Contacts</h2>
@@ -144,8 +136,7 @@
                                         <div class="o_setting_right_pane" id="sms_settings">
                                             <div class="o_form_label">
                                             Send SMS
-                                            <a href="https://www.odoo.com/documentation/user/13.0/sms_marketing/overview/integrations_and_template.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
-                                            <a href="https://www.odoo.com/documentation/user/13.0/sms_marketing/pricing/pricing_and_faq.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                            <a href="https://www.odoo.com/documentation/14.0/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" title="Documentation" class="ml-1 o_doc_link" target="_blank"></a>
                                             </div>
                                             <div class="text-muted">
                                                 Send texts to your contacts
@@ -165,8 +156,8 @@
                                 </div>
                         </div>
                     </div>
-                    <div id="emails"/>
-                    <h2>Users</h2>
+
+                    <h2>Permissions</h2>
                     <div class="row mt16 o_settings_container" id="user_default_rights">
                         <div class="col-12 col-lg-6 o_setting_box"  title="By default, new users get highest access rights for all installed apps." id="access_rights">
                             <div class="o_setting_left_pane">
@@ -184,13 +175,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             groups="base.group_system">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="fa-arrow-right" class="btn-link"/>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one" id="allow_import">
                             <div class="o_setting_left_pane">
                                 <field name="module_base_import" />
                             </div>
                             <div class="o_setting_right_pane">
                                 <label string="Import &amp; Export" for="module_base_import"/>
-                                <a href="https://www.odoo.com/documentation/user/13.0/general/base_import/import_faq.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/general/base_import/import_faq.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
                                     Allow users to import data from CSV/XLS/XLSX/ODS files
                                 </div>
@@ -208,29 +206,36 @@
                             </div>
                         </div>
                         </div>
-                        <div id="multi_company" groups="base.group_multi_company">
-                            <field name="company_id" invisible="1"/>
-                            <h2>Multi-Company</h2>
-                            <div class="row mt16 o_settings_container" name="multicompany_setting_container">
-                                <div class="col-12 col-lg-6 o_setting_box" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company." id="inter_company">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_account_inter_company_rules" widget="upgrade_boolean"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label string="Inter-Company Transactions" for="module_account_inter_company_rules"/>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                        <div class="text-muted">
-                                            Automatically generate counterpart documents for orders/invoices between companies
-                                        </div>
-                                        <div class="content-group" attrs="{'invisible': [('module_account_inter_company_rules','=',False)]}" id="inter_companies_rules">
-                                            <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
-                                        </div>
+
+                        <h2>Integrations</h2>
+                        <div class="row mt16 o_settings_container" name="integration">
+                            <div class="col-12 col-lg-6 o_setting_box" id="mail_pluggin_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mail_plugin" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Mail Plugin" for="module_mail_plugin"/>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/sales/crm/optimize/outlook_extension.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Integrate with mail client plugins
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <h2>Integrations</h2>
-                        <div class="row mt16 o_settings_container" name="integration">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sync_google_calendar_setting">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_microsoft_calendar" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Outlook Calendar" for="module_microsoft_calendar"/>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/general/calendars/outlook/outlook_calendar.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Synchronize your calendar with Outlook
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_microsoft_calendar', '=', False)]}" id="msg_module_microsoft_calendar">
+                                        <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="external_pads_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_pad"/>
@@ -251,7 +256,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Google Calendar" for="module_google_calendar"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/crm/optimize/google_calendar_credentials.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/general/calendars/google/google_calendar_credentials.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Synchronize your calendar with Google Calendar
                                     </div>
@@ -274,6 +279,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="product_get_pic_setting"/>
                             <div class="col-12 col-lg-6 o_setting_box" id="google_spreadsheet_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_google_spreadsheet" />
@@ -308,25 +314,11 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="auth_ldap_right_pane">
                                     <label string="LDAP Authentication" for="module_auth_ldap"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/general/auth/ldap.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/general/auth/ldap.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                        Use LDAP credentials to log in
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('module_auth_ldap','=',False)]}" id="auth_ldap_warning">
-                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="gengo">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_base_gengo"/>
-                                </div>
-                                <div class="o_setting_right_pane" name="base_gengo_right_pane">
-                                    <label string="Gengo Translations" for="module_base_gengo"/>
-                                    <div class="text-muted">
-                                       Translate your website with Gengo
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('module_base_gengo','=',False)]}" name="base_gengo_warning">
                                         <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                     </div>
                                 </div>
@@ -337,7 +329,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" id="web_unsplash_settings">
                                     <label for="module_web_unsplash"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/general/unsplash/unsplash_access_key.html" title="Documentation" class="o_doc_link fa fa-lg fa-book" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/general/unsplash/unsplash_access_key.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Find free high-resolution images from Unsplash
                                     </div>
@@ -360,7 +352,33 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="recaptcha">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_google_recaptcha"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="website_recaptcha_settings">
+                                    <label for="module_google_recaptcha"/>
+                                    <div class="text-muted">
+                                        Protect your forms from spam and abuse.
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_google_recaptcha', '=', False)]}" id="recaptcha_warning">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up reCaptcha.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <h2 groups="base.group_no_one">Performance</h2>
+                        <div groups="base.group_no_one" class="row mt16 o_settings_container" name="performance">
+                            <div class="col-12 col-lg-6 o_setting_box" id="profiling_enabled_until">
+                            <label for="profiling_enabled_until"/>
+                            <field name="profiling_enabled_until"/>
+                            <div class="text-muted">
+                                Enable the profiling tool. Profiling may impact performance while being active.
+                            </div>
+                            </div>
+                        </div>
+
                         <widget name='res_config_dev_tool'/>
                         <div id='about'>
                             <h2>About</h2>
@@ -395,7 +413,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'general_settings'}</field>
+            <field name="context">{'module' : 'general_settings', 'bin_size': False}</field>
         </record>
 
         <menuitem

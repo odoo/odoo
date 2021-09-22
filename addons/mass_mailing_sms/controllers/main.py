@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.http import request
@@ -30,7 +28,7 @@ class MailingSMSController(http.Controller):
     def blacklist_page(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return werkzeug.utils.redirect('/web')
+            return request.redirect('/web')
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
             'trace_code': trace_code,
@@ -40,21 +38,21 @@ class MailingSMSController(http.Controller):
     def blacklist_number(self, mailing_id, trace_code, **post):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
-            return werkzeug.utils.redirect('/web')
+            return request.redirect('/web')
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False) if request.session.get('geoip') else None
-        trace = check_res['trace']
-        mailing_list_ids = trace.mass_mailing_id.contact_list_ids
-
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
         sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], country_code, None)[sms_number]
         tocheck_number = sanitize_res['sanitized'] or sms_number
 
+        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1]
+        mailing_list_ids = trace.mass_mailing_id.contact_list_ids
+
         # compute opt-out / blacklist information
         lists_optout = request.env['mailing.list'].sudo()
         lists_optin = request.env['mailing.list'].sudo()
         unsubscribe_error = False
-        if tocheck_number and trace.sms_number == tocheck_number:
+        if tocheck_number and trace:
             if mailing_list_ids:
                 subscriptions = request.env['mailing.contact.subscription'].sudo().search([
                     ('list_id', 'in', mailing_list_ids.ids),
@@ -72,8 +70,8 @@ class MailingSMSController(http.Controller):
                 ('list_id', 'not in', mailing_list_ids.ids),
                 ('opt_out', '=', False),
             ]).mapped('list_id')
-        elif tocheck_number and trace.sms_number != tocheck_number:
-            unsubscribe_error = _('Number %s not found' % tocheck_number)
+        elif tocheck_number:
+            unsubscribe_error = _('Number %s not found', tocheck_number)
         else:
             unsubscribe_error = sanitize_res['msg']
 
@@ -102,4 +100,4 @@ class MailingSMSController(http.Controller):
             country_code=country_code,
             mailing_trace_id=trace_id
         )
-        return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
+        return request.redirect(request.env['link.tracker'].get_url_from_code(code), code=301, local=False)

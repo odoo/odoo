@@ -10,11 +10,11 @@
 {
     'name': 'Honduras - Accounting',
     'version': '0.2',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Honduras.
 ====================================================================
-    
+
 Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
 moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
@@ -28,4 +28,8 @@ and the Lempira currency.""",
         'data/account_data.xml',
         'data/account_chart_template_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

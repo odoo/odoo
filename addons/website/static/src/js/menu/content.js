@@ -1,14 +1,15 @@
-odoo.define('website.contentMenu', function (require) {
-'use strict';
+/** @odoo-module alias=website.contentMenu */
 
-var Class = require('web.Class');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var time = require('web.time');
-var weWidgets = require('wysiwyg.widgets');
-var websiteNavbarData = require('website.navbar');
-var websiteRootData = require('website.root');
-var Widget = require('web.Widget');
+import Class from 'web.Class';
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import time from 'web.time';
+import weWidgets from 'wysiwyg.widgets';
+import websiteNavbarData from 'website.navbar';
+import Widget from 'web.Widget';
+import { Markup } from 'web.utils';
+
+import { registry } from "@web/core/registry";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -22,7 +23,10 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         'keyup input#page_name': '_onNameChanged',
         'keyup input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
+        'click input#visibility_password': '_onPasswordClicked',
+        'change input#visibility_password': '_onPasswordChanged',
         'change select#visibility': '_onVisibilityChanged',
+        'error.datetimepicker': '_onDateTimePickerError',
     }),
 
     /**
@@ -93,6 +97,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             args: [this.page_id],
         }).then(function (page) {
             page.url = _.str.startsWith(page.url, '/') ? page.url.substring(1) : page.url;
+            page.hasSingleGroup = page.group_id !== undefined;
             self.page = page;
         }));
 
@@ -113,9 +118,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             this.$('.show_visibility_password').addClass('d-none');
         }
         if (this.page.visibility !== 'restricted_group') {
-            this.$('.show_visibility_group').addClass('d-none');
+            this.$('.show_group_id').addClass('d-none');
         }
-        this.autocompleteWithGroups(this.$('#visibility_group'));
+        this.autocompleteWithGroups(this.$('#group_id'));
 
         defs.push(this._getPageDependencies(this.page_id)
         .then(function (dependencies) {
@@ -162,7 +167,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                   }));
 
         var datepickersOptions = {
-            minDate: moment({y: 1900}),
+            minDate: moment({ y: 1000 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             icons : {
@@ -234,10 +239,21 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             visibility: this.$('#visibility').val(),
-            visibility_password: this.$('#visibility').val() === 'password' ? this.$('#visibility_password').val() : false,
-            visibility_group: this.$('#visibility').val() === 'restricted_group' ? this.$('#visibility_group').data('group-id') : false,
             date_publish: datePublish,
         };
+        if (this.page.hasSingleGroup && this.$('#visibility').val() === 'restricted_group') {
+            params['group_id'] = this.$('#group_id').data('group-id');
+        }
+        if (this.$('#visibility').val() === 'password') {
+            var field_pwd = $('#visibility_password');
+            if (!field_pwd.get(0).reportValidity()) {
+                return;
+            }
+            if (field_pwd.data('dirty')) {
+                params['visibility_pwd'] = field_pwd.val();
+            }
+        }
+
         this._rpc({
             model: 'website.page',
             method: 'save_page_info',
@@ -407,15 +423,33 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onVisibilityChanged: function (ev) {
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
-        this.$('.show_visibility_group').toggleClass('d-none', ev.target.value !== 'restricted_group');
+        this.$('.show_group_id').toggleClass('d-none', ev.target.value !== 'restricted_group');
+        this.$('#visibility_password').attr('required', ev.target.value === 'password');
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     *
+     * @private
+     */
+    _onDateTimePickerError: function (ev) {
+        return false;
+    },
+    /**
+     * @private
+     */
+    _onPasswordClicked: function (ev) {
+        ev.target.value = '';
+        this._onPasswordChanged();
+    },
+    /**
+     * @private
+     */
+    _onPasswordChanged: function () {
+        this.$('#visibility_password').data('dirty', 1);
     },
 });
 
 var MenuEntryDialog = weWidgets.LinkDialog.extend({
-    xmlDependencies: weWidgets.LinkDialog.prototype.xmlDependencies.concat(
-        ['/website/static/src/xml/website.contentMenu.xml']
-    ),
-
     /**
      * @constructor
      */
@@ -424,16 +458,34 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             title: _t("Add a menu item"),
         }, options || {}), editable, _.extend({
             needLabel: true,
-            text: data.name || '',
+            content: data.name || '',
             isNewWindow: data.new_window,
         }, data || {}));
+
+        this.linkWidget.xmlDependencies = this.linkWidget.xmlDependencies.concat(['/website/static/src/xml/website.contentMenu.xml']);
+
+        const oldSave = this.linkWidget.save;
+        /**
+         * @override
+         */
+        this.linkWidget.save = () => {
+            var $e = this.$('#o_link_dialog_label_input');
+            if (!$e.val() || !$e[0].checkValidity()) {
+                $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                $e.focus();
+                return;
+            }
+            oldSave.bind(this.linkWidget)();
+        };
 
         this.menuType = data.menuType;
     },
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        const res = await this._super(...arguments);
+
         // Remove style related elements
         this.$('.o_link_dialog_preview').remove();
         this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
@@ -450,24 +502,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             $url.closest('.form-group').addClass('d-none');
         }
 
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    save: function () {
-        var $e = this.$('#o_link_dialog_label_input');
-        if (!$e.val() || !$e[0].checkValidity()) {
-            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            $e.focus();
-            return;
-        }
-        return this._super.apply(this, arguments);
+        return res;
     },
 });
 
@@ -485,7 +520,8 @@ var SelectEditMenuDialog = weWidgets.Dialog.extend({
         var self = this;
         self.roots = [{id: null, name: _t("Top Menu")}];
         $('[data-content_menu_id]').each(function () {
-            self.roots.push({id: $(this).data('content_menu_id'), name: $(this).attr('name')});
+            // Remove name fallback in master
+            self.roots.push({id: $(this).data('content_menu_id'), name: $(this).attr('name') || $(this).data('menu_name')});
         });
         this._super(parent, _.extend({}, {
             title: _t("Select a Menu"),
@@ -656,7 +692,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             var newMenu = {
                 'fields': {
                     'id': _.uniqueId('new-'),
-                    'name': link.text,
+                    'name': _.unescape(link.content),
                     'url': link.url,
                     'new_window': link.isNewWindow,
                     'is_mega_menu': menuType === 'mega',
@@ -702,7 +738,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             }, menu.fields));
             dialog.on('save', this, link => {
                 _.extend(menu.fields, {
-                    'name': link.text,
+                    'name': _.unescape(link.content),
                     'url': link.url,
                     'new_window': link.isNewWindow,
                 });
@@ -768,6 +804,12 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         header_color: function (value) {
             $('#wrapwrap > header').removeClass(this.value)
                                    .addClass(value);
+        },
+        header_visible: function (value) {
+            $('#wrapwrap > header').toggleClass('d-none o_snippet_invisible', !value);
+        },
+        footer_visible: function (value) {
+            $('#wrapwrap > footer').toggleClass('d-none o_snippet_invisible', !value);
         },
     },
 
@@ -1013,35 +1055,24 @@ var PageManagement = Widget.extend({
  *                  It will affect redirect after page deletion: reload or '/'
  */
 // TODO: This function should be integrated in a widget in the future
-function _deletePage(pageId, fromPageManagement) {
-    var self = this;
-    new Promise(function (resolve, reject) {
-        // Search the page dependencies
-        self._getPageDependencies(pageId)
-        .then(function (dependencies) {
-            // Inform the user about those dependencies and ask him confirmation
-            return new Promise(function (confirmResolve, confirmReject) {
-                Dialog.safeConfirm(self, "", {
-                    title: _t("Delete Page"),
-                    $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
-                    confirm_callback: confirmResolve,
-                    cancel_callback: resolve,
-                });
-            });
-        }).then(function () {
-            // Delete the page if the user confirmed
-            return self._rpc({
-                model: 'website.page',
-                method: 'unlink',
-                args: [pageId],
-            });
-        }).then(function () {
+async function _deletePage(pageId, fromPageManagement) {
+    const dependencies = await this._getPageDependencies(pageId);
+    for (const locs of Object.values(dependencies)) {
+        for (const loc of locs) {
+            loc.text = Markup(loc.text);
+        }
+    }
+    Dialog.safeConfirm(this, "", {
+        title: _t("Delete Page"),
+        $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
+        async confirm_callback() {
+            await this._rpc({model: 'website.page', method: 'unlink', args: [pageId]});
             if (fromPageManagement) {
                 window.location.reload(true);
             } else {
                 window.location.href = '/';
             }
-        }, reject);
+        }
     });
 }
 /**
@@ -1072,14 +1103,19 @@ function _clonePage(pageId) {
     });
 }
 
-websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
-websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
+registry.category("website_navbar_widgets").add("ContentMenu", {
+    Widget: ContentMenu,
+    selector: '#content-menu',
+});
+registry.category("public_root_widgets").add("PageManagement", {
+    Widget: PageManagement,
+    selector: '#list_website_pages',
+});
 
-return {
+export default {
     PagePropertiesDialog: PagePropertiesDialog,
     ContentMenu: ContentMenu,
     EditMenuDialog: EditMenuDialog,
     MenuEntryDialog: MenuEntryDialog,
     SelectEditMenuDialog: SelectEditMenuDialog,
 };
-});

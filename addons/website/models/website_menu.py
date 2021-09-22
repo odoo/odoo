@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug.exceptions
+
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
@@ -25,8 +27,7 @@ class Menu(models.Model):
         for menu in self:
             if menu.is_mega_menu:
                 if not menu.mega_menu_content:
-                    default_content = self.env['ir.ui.view'].render_template('website.s_mega_menu_multi_menus')
-                    menu.mega_menu_content = default_content.decode()
+                    menu.mega_menu_content = self.env['ir.ui.view']._render_template('website.s_mega_menu_multi_menus')
             else:
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False
@@ -39,12 +40,12 @@ class Menu(models.Model):
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
-    mega_menu_content = fields.Html(translate=html_translate, sanitize=False)
+    mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
     def name_get(self):
@@ -68,6 +69,7 @@ class Menu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
+        self.clear_caches()
         # Only used when creating website_data.xml default menu
         if vals.get('url') == '/default-main-menu':
             return super(Menu, self).create(vals)
@@ -91,7 +93,14 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
+    def write(self, values):
+        res = super().write(values)
+        if 'website_id' in values or 'group_ids' in values or 'sequence' in values:
+            self.clear_caches()
+        return res
+
     def unlink(self):
+        self.clear_caches()
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
@@ -105,7 +114,7 @@ class Menu(models.Model):
             visible = True
             if menu.page_id and not menu.user_has_groups('base.group_user') and \
                 (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id.handle_visibility(do_raise=False) and
+                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
                  menu.page_id.view_id.visibility != "password")):
                 visible = False
             menu.is_visible = visible
@@ -158,7 +167,7 @@ class Menu(models.Model):
                     menu['id'] = new_id
                 if menu['parent_id'] == old_id:
                     menu['parent_id'] = new_id
-        to_delete = data['to_delete']
+        to_delete = data.get('to_delete')
         if to_delete:
             self.browse(to_delete).unlink()
         for menu in data['data']:
@@ -185,7 +194,12 @@ class Menu(models.Model):
                     menu['page_id'] = page.id
                     menu['url'] = page.url
                 elif menu_id.page_id:
-                    menu_id.page_id.write({'url': menu['url']})
+                    try:
+                        # a page shouldn't have the same url as a controller
+                        self.env['ir.http']._match(menu['url'])
+                        menu_id.page_id = None
+                    except werkzeug.exceptions.NotFound:
+                        menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)
 
         return True

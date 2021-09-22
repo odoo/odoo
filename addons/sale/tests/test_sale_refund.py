@@ -1,61 +1,58 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .test_sale_common import TestCommonSaleNoChart
-from odoo.tests import Form
+from .common import TestSaleCommon
+from odoo.tests import Form, tagged
 
 
-class TestSaleToInvoice(TestCommonSaleNoChart):
+@tagged('post_install', '-at_install')
+class TestSaleToInvoice(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleToInvoice, cls).setUpClass()
-
-        cls.setUpClassicProducts()
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Create the SO with four order lines
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
-            'pricelist_id': cls.pricelist_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
         cls.sol_prod_order = SaleOrderLine.create({
-            'name': cls.product_order.name,
-            'product_id': cls.product_order.id,
+            'name': cls.company_data['product_order_no'].name,
+            'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_order.uom_id.id,
-            'price_unit': cls.product_order.list_price,
+            'product_uom': cls.company_data['product_order_no'].uom_id.id,
+            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = SaleOrderLine.create({
-            'name': cls.service_deliver.name,
-            'product_id': cls.service_deliver.id,
+            'name': cls.company_data['product_service_delivery'].name,
+            'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 4,
-            'product_uom': cls.service_deliver.uom_id.id,
-            'price_unit': cls.service_deliver.list_price,
+            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
+            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = SaleOrderLine.create({
-            'name': cls.service_order.name,
-            'product_id': cls.service_order.id,
+            'name': cls.company_data['product_service_order'].name,
+            'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 3,
-            'product_uom': cls.service_order.uom_id.id,
-            'price_unit': cls.service_order.list_price,
+            'product_uom': cls.company_data['product_service_order'].uom_id.id,
+            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_prod_deliver = SaleOrderLine.create({
-            'name': cls.product_deliver.name,
-            'product_id': cls.product_deliver.id,
+            'name': cls.company_data['product_delivery_no'].name,
+            'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_deliver.uom_id.id,
-            'price_unit': cls.product_deliver.list_price,
+            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
+            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -68,7 +65,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'active_model': 'sale.order',
             'active_ids': [cls.sale_order.id],
             'active_id': cls.sale_order.id,
-            'default_journal_id': cls.journal_sale.id,
+            'default_journal_id': cls.company_data['default_journal_sale'].id,
         }).create({
             'advance_payment_method': 'delivered'
         })
@@ -78,7 +75,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
     def test_refund_create(self):
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -103,6 +100,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'refund',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test create',
+            'journal_id': self.invoice.journal_id.id,
         })
         credit_note_wizard.reverse_moves()
         invoice_refund = self.sale_order.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]  # the first invoice, its refund, and the new invoice
@@ -138,7 +136,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                     self.assertEqual(len(line.invoice_lines), 2, "The line 'ordered service' is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
 
         # Validate the refund
-        invoice_refund.post()
+        invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
             if line.product_id.invoice_policy == 'delivery':
@@ -172,7 +170,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 line_form.quantity = 4
 
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -194,6 +192,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': self.invoice.ids, 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'cancel',
             'reason': 'reason test cancel',
+            'journal_id': self.invoice.journal_id.id,
         })
         invoice_refund = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
 
@@ -231,7 +230,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 line_form.quantity = 2
 
         # Validate invoice
-        self.invoice.post()
+        self.invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -256,6 +255,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'modify',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test modify',
+            'journal_id': self.invoice.journal_id.id,
         })
         invoice_refund = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
 
@@ -298,7 +298,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         invoice_refund = move_form.save()
 
         # Validate the refund
-        invoice_refund.post()
+        invoice_refund.action_post()
 
         for line in self.sale_order.order_line:
             if line.product_id.invoice_policy == 'delivery':

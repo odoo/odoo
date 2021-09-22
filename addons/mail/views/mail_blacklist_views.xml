@@ -16,17 +16,27 @@
         <field name="model">mail.blacklist</field>
         <field name="arch" type="xml">
             <form string="Add Email Blacklist" duplicate="false" edit="false">
+                <header>
+                    <button name="mail_action_blacklist_remove" string="Unblacklist"
+                        type="object" class="oe_highlight" context="{'default_email': email}"
+                        attrs="{'invisible': ['|', ('active', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_add" string="Blacklist"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('active', '=', True), ('email', '=', False)]}"/>
+                </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="email"/>
-                            <field name="active" widget="boolean_toggle"/>
+                            <field name="active" readonly="1"/>
+                            <br/>
                         </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -44,24 +54,17 @@
     </record>
 
     <record id="mail_blacklist_action" model="ir.actions.act_window">
-        <field name="name">Blacklist</field>
+        <field name="name">Blacklisted Email Addresses</field>
         <field name="res_model">mail.blacklist</field>
         <field name="view_id" ref="mail_blacklist_view_tree"/>
         <field name="search_view_id" ref="mail_blacklist_view_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Add an email address in the blacklist
+            Add an email address to the blacklist
           </p><p>
-            Email addresses that are blacklisted means that the recipient won't receive mass mailing anymore.
+            Email addresses that are blacklisted won't receive Email mailings anymore.
         </p>
         </field>
     </record>
-
-    <!-- Technical Menu -->
-    <menuitem id="mail_blacklist_menu"
-        name="Email Blacklist"
-        action="mail_blacklist_action"
-        parent="mail.mail_menu_technical"
-        sequence="22"/>
 
 </odoo>

@@ -18,15 +18,16 @@ odoo.define('account.hierarchy.selection', function (require) {
             if (!self.hierarchy_groups) {
                 prom = this._rpc({
                     model: 'account.account.type',
-                    method: 'read',
-                    args: [
-                        _.filter(_.map(this.values, v => v[0]), v => typeof v == 'number'),
-                        ['internal_group'],
-                    ],
+                    method: 'search_read',
+                    kwargs: {
+                        domain: [],
+                        fields: ['id', 'internal_group', 'display_name'],
+                    },
                 }).then(function(arg) {
+                    self.values = _.map(arg, v => [v['id'], v['display_name']])
                     self.hierarchy_groups = [
                         {
-                            'name': _('Balance Sheet'),
+                            'name': _t('Balance Sheet'),
                             'children': [
                                 {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
                                 {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},

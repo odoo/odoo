@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 import odoo.tests
+import unittest
 
+class BaseTestUi(odoo.tests.HttpCase):
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+    def main_flow_tour(self):
+        # Enable Make to Order
+        self.env.ref('stock.route_warehouse0_mto').active = True
 
-    def test_01_main_flow_tour(self):
         # Define minimal accounting data to run without CoA
         a_expense = self.env['account.account'].create({
             'code': 'X2120',
@@ -37,34 +40,48 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         Property = self.env['ir.property']
-        Property.set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
-        Property.set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
-        Property.set_default('property_account_position_id', 'res.partner', False, self.env.company)
-        Property.set_default('property_account_expense_categ_id', 'product.category', a_expense, self.env.company)
-        Property.set_default('property_account_income_categ_id', 'product.category', a_sale, self.env.company)
+        Property._set_default('property_account_receivable_id', 'res.partner', a_recv, self.env.company)
+        Property._set_default('property_account_payable_id', 'res.partner', a_pay, self.env.company)
+        Property._set_default('property_account_position_id', 'res.partner', False, self.env.company)
+        Property._set_default('property_account_expense_categ_id', 'product.category', a_expense, self.env.company)
+        Property._set_default('property_account_income_categ_id', 'product.category', a_sale, self.env.company)
 
         self.expenses_journal = self.env['account.journal'].create({
             'name': 'Vendor Bills - Test',
             'code': 'TEXJ',
             'type': 'purchase',
-            'default_credit_account_id': a_expense.id,
-            'default_debit_account_id': a_expense.id,
             'refund_sequence': True,
         })
         self.bank_journal = self.env['account.journal'].create({
             'name': 'Bank - Test',
             'code': 'TBNK',
             'type': 'bank',
-            'default_credit_account_id': bnk.id,
-            'default_debit_account_id': bnk.id,
+            'default_account_id': bnk.id,
         })
         self.sales_journal = self.env['account.journal'].create({
             'name': 'Customer Invoices - Test',
             'code': 'TINV',
             'type': 'sale',
-            'default_credit_account_id': a_sale.id,
-            'default_debit_account_id': a_sale.id,
+            'default_account_id': a_sale.id,
             'refund_sequence': True,
         })
 
         self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUi(BaseTestUi):
+
+    def test_01_main_flow_tour(self):
+        self.main_flow_tour()
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestUiMobile(BaseTestUi):
+
+    browser_size = '375x667'
+
+    def test_01_main_flow_tour_mobile(self):
+
+        if odoo.release.version_info[-1] == 'e':
+            self.main_flow_tour()
+        else:
+            raise unittest.SkipTest("Mobile testing not needed in community")

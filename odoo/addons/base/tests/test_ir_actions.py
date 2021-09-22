@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common
+from odoo import Command
 
 
 class TestServerActionsBase(common.TransactionCase):
@@ -33,6 +35,7 @@ class TestServerActionsBase(common.TransactionCase):
         # Model data
         Model = self.env['ir.model']
         Fields = self.env['ir.model.fields']
+        self.comment_html = '<p>MyComment</p>'
         self.res_partner_model = Model.search([('model', '=', 'res.partner')])
         self.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
         self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
@@ -50,8 +53,9 @@ class TestServerActionsBase(common.TransactionCase):
         self.action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
             'model_id': self.res_partner_model.id,
+            'model_name': 'res.partner',
             'state': 'code',
-            'code': 'record.write({"comment": "MyComment"})',
+            'code': 'record.write({"comment": "%s"})' % self.comment_html,
         })
 
 
@@ -59,7 +63,7 @@ class TestServerActions(TestServerActionsBase):
 
     def test_00_action(self):
         self.action.with_context(self.context).run()
-        self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: invalid condition check')
+        self.assertEqual(self.test_partner.comment, self.comment_html, 'ir_actions_server: invalid condition check')
         self.test_partner.write({'comment': False})
 
         # Do: create contextual action
@@ -88,9 +92,9 @@ class TestServerActions(TestServerActionsBase):
             'state': 'object_create',
             'crud_model_id': self.res_country_model.id,
             'link_field_id': False,
-            'fields_lines': [(5,),
-                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'}),
-                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'evaluation_type': 'equation'})],
+            'fields_lines': [Command.clear(),
+                             Command.create({'col1': self.res_country_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'}),
+                             Command.create({'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'evaluation_type': 'equation'})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -108,8 +112,8 @@ class TestServerActions(TestServerActionsBase):
             'state': 'object_create',
             'crud_model_id': self.action.model_id.id,
             'link_field_id': self.res_partner_parent_field.id,
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name}),
-                             (0, 0, {'col1': self.res_partner_city_field.id, 'value': _city})],
+            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name}),
+                             Command.create({'col1': self.res_partner_city_field.id, 'value': _city})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -128,7 +132,7 @@ class TestServerActions(TestServerActionsBase):
             'state': 'object_create',
             'crud_model_id': self.action.model_id.id,
             'link_field_id': self.res_partner_children_field.id,
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name})],
+            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -145,7 +149,7 @@ class TestServerActions(TestServerActionsBase):
             'state': 'object_create',
             'crud_model_id': self.res_partner_category_model.id,
             'link_field_id': self.res_partner_category_field.id,
-            'fields_lines': [(0, 0, {'col1': self.res_partner_category_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'})],
+            'fields_lines': [Command.create({'col1': self.res_partner_category_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -160,7 +164,7 @@ class TestServerActions(TestServerActionsBase):
         # Do: update partner name
         self.action.write({
             'state': 'object_write',
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name})],
+            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -185,8 +189,8 @@ class TestServerActions(TestServerActionsBase):
             'model_id': self.res_partner_model.id,
             'crud_model_id': self.res_partner_model.id,
             'state': 'object_create',
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': 'RaoulettePoiluchette'}),
-                             (0, 0, {'col1': self.res_partner_city_field.id, 'value': 'TestingCity'})],
+            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': 'RaoulettePoiluchette'}),
+                             Command.create({'col1': self.res_partner_city_field.id, 'value': 'TestingCity'})],
         })
         action3 = self.action.create({
             'name': 'Subaction3',
@@ -197,7 +201,7 @@ class TestServerActions(TestServerActionsBase):
         })
         self.action.write({
             'state': 'multi',
-            'child_ids': [(6, 0, [action1.id, action2.id, action3.id])],
+            'child_ids': [Command.set([action1.id, action2.id, action3.id])],
         })
 
         # Do: run the action
@@ -213,7 +217,7 @@ class TestServerActions(TestServerActionsBase):
         # Test loops
         with self.assertRaises(ValidationError):
             self.action.write({
-                'child_ids': [(6, 0, [self.action.id])]
+                'child_ids': [Command.set([self.action.id])]
             })
 
     def test_50_groups(self):
@@ -231,7 +235,7 @@ class TestServerActions(TestServerActionsBase):
         self.action.write({
             'model_id': self.res_country_model.id,
             'binding_model_id': self.res_country_model.id,
-            'groups_id': [(4, group0.id, 0)],
+            'groups_id': [Command.link(group0.id)],
             'code': 'record.write({"vat_label": "VatFromTest"})',
         })
 
@@ -244,15 +248,71 @@ class TestServerActions(TestServerActionsBase):
         self.assertFalse(self.test_country.vat_label)
 
         # add group to the user, and test again
-        self.env.user.write({'groups_id': [(4, group0.id)]})
+        self.env.user.write({'groups_id': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read())
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
 
+    def test_60_sort(self):
+        """ check the actions sorted by sequence """
+        Actions = self.env['ir.actions.actions']
 
+        # Do: update model
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+        })
+        self.action2 = self.action.copy({'name': 'TestAction2', 'sequence': 1})
+
+        # Test: action returned by sequence
+        bindings = Actions.get_bindings('res.country')
+        self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
+        self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
+
+    def test_70_copy_action(self):
+        # first check that the base case (reset state) works normally
+        r = self.env['ir.actions.todo'].create({
+            'action_id': self.action.id,
+            'state': 'done',
+        })
+        self.assertEqual(r.state, 'done')
+        self.assertEqual(
+            r.copy().state, 'open',
+            "by default state should be reset by copy"
+        )
+
+        # then check that on server action we've changed that
+        self.assertEqual(
+            self.action.copy().state, 'code',
+            "copying a server action should not reset the state"
+        )
+
+    def test_80_permission(self):
+        self.action.write({
+            'state': 'code',
+            'code': """record.write({'date': datetime.date.today()})""",
+        })
+
+        user_demo = self.env.ref("base.user_demo")
+        self_demo = self.action.with_user(user_demo.id)
+
+        # can write on contact partner
+        self.test_partner.type = "contact"
+        self.test_partner.with_user(user_demo.id).check_access_rule("write")
+
+        self_demo.with_context(self.context).run()
+        self.assertEqual(self.test_partner.date, date.today())
+
+        # but can not write on private address
+        self.test_partner.type = "private"
+        with self.assertRaises(AccessError):
+            self.test_partner.with_user(user_demo.id).check_access_rule("write")
+        # nor execute a server action on it
+        with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
+            self_demo.with_context(self.context).run()
 
 
 class TestCustomFields(common.TransactionCase):
@@ -261,17 +321,16 @@ class TestCustomFields(common.TransactionCase):
 
     def setUp(self):
         # check that the registry is properly reset
-        registry = odoo.registry()
-        fnames = set(registry[self.MODEL]._fields)
+        fnames = set(self.registry[self.MODEL]._fields)
+
         @self.addCleanup
         def check_registry():
-            assert set(registry[self.MODEL]._fields) == fnames
+            assert set(self.registry[self.MODEL]._fields) == fnames
 
-        super(TestCustomFields, self).setUp()
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_caches)
 
-        # use a test cursor instead of a real cursor
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        super().setUp()
 
     def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """
@@ -422,6 +481,51 @@ class TestCustomFields(common.TransactionCase):
 
         self.assertTrue(custom_binary.attachment)
 
+    def test_related_field(self):
+        """ create a custom related field, and check filled values """
+        #
+        # Add a custom field equivalent to the following definition:
+        #
+        # class Partner(models.Model)
+        #     _inherit = 'res.partner'
+        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
+        #
+
+        # pick N=100 records in comodel
+        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
+        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
+
+        # create records in model, with N distinct values for the related field
+        partners = self.env['res.partner'].create([
+            {'name': country.code, 'country_id': country.id} for country in countries
+        ])
+        partners.flush()
+
+        # determine how many queries it takes to create a non-computed field
+        query_count = self.cr.sql_log_count
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'x_oh_box',
+            'field_description': 'x_oh_box',
+            'ttype': 'char',
+        })
+        query_count = self.cr.sql_log_count - query_count
+
+        # create the related field, and assert it only takes 1 extra query
+        with self.assertQueryCount(query_count + 1):
+            self.env['ir.model.fields'].create({
+                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'name': 'x_oh_boy',
+                'field_description': 'x_oh_boy',
+                'ttype': 'char',
+                'related': 'country_id.code',
+                'store': True,
+            })
+
+        # check the computed values
+        for partner in partners:
+            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
+
     def test_selection(self):
         """ custom selection field """
         Model = self.env[self.MODEL]
@@ -432,8 +536,8 @@ class TestCustomFields(common.TransactionCase):
             'field_description': "Custom Selection",
             'ttype': 'selection',
             'selection_ids': [
-                (0, 0, {'value': 'foo', 'name': 'Foo', 'sequence': 0}),
-                (0, 0, {'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+                Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
             ],
         })
 

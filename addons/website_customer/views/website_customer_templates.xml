@@ -30,14 +30,15 @@
                             </form>
                         </div>
 
-                        <div class="row">
+                        <div>
 
                     <p t-if="not partners">No result found</p>
                     <t t-foreach="partners" t-as="partner">
                         <div class="media mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
-                               t-field="partner.image_128"
-                               t-options='{"widget": "image", "class": "mr-3 o_image_128_max"}'
+                               t-field="partner.avatar_128"
+                               class="d-block mr-3 text-center o_width_128"
+                               t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
                             ></a>
                             <div class="media-body" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
@@ -89,7 +90,7 @@
 
 <template id="opt_industry_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Industry" priority="20">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
-        <h3>References by Sectors of Activity</h3>
+        <h3>References by Industries</h3>
         <ul class="nav nav-pills flex-column mt16 mb32">
             <t t-foreach="industries" t-as="industry_dict">
                 <t t-if="industry_dict['industry_id']">
@@ -138,6 +139,12 @@
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
             </li>
         </ul>
+    </xpath>
+</template>
+
+<template id="contact_edit_options" inherit_id="website.user_navbar" name="Edit Customer Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'res.partner'" t-set="action" t-value="'contacts.action_contacts'"/>
     </xpath>
 </template>
 
@@ -197,8 +204,9 @@
             </a>
         </h4>
         <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
-                t-field="partner.assigned_partner_id.image_128"
-                t-options='{"widget": "image", "class": "d-block mx-auto"}'
+                t-field="partner.assigned_partner_id.avatar_128"
+                class="d-block"
+                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
              />
         </div>
         <address class="text-left">
@@ -213,12 +221,12 @@
 </template>
 
 <template id="references_block" name="Partner References Block">
-        <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
+        <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
             <h3 id="references">References</h3>
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3 o_image_128_max"}'/>
+                    <span t-field="reference.avatar_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">

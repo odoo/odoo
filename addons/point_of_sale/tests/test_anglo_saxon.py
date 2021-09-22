@@ -51,11 +51,9 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.cash_journal = self.env['account.journal'].create({'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
         self.sale_journal = self.env['account.journal'].create({'name': 'SALE journal', 'type': 'sale', 'code': 'INV00'})
         self.pos_config.invoice_journal_id = self.sale_journal
-        self.pos_config.journal_ids = [self.cash_journal.id]
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash Test',
-            'is_cash_count': True,
-            'cash_journal_id': self.cash_journal.id,
+            'journal_id': self.cash_journal.id,
             'receivable_account_id': self.account.id,
         })
         self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
@@ -137,13 +135,13 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'product_id': self.product.id,
             'inventory_quantity': 5.0,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         self.product.standard_price = 1.0
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product.id,
             'inventory_quantity': 10.0,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.quantity_svl, 10)
 

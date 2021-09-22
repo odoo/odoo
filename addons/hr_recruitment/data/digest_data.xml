@@ -8,16 +8,19 @@
 
     <data>
         <record id="digest_tip_hr_recruitment_0" model="digest.tip">
-            <field name="sequence">4</field>
-            <field name="group_id" ref="hr_recruitment.group_hr_recruitment_user"/>
+            <field name="name">Tip: Let candidates apply by email</field>
+            <field name="sequence">1300</field>
+            <field name="group_id" ref="hr_recruitment.group_hr_recruitment_manager" />
             <field name="tip_description" type="html">
 <div>
-    <strong style="font-size: 16px;">Try the mail gateway</strong>
-    <div style="font-size: 14px;">New applicants can be generated from incoming emails. You just need to set email aliases in configuration of job positions.<br/>
-        <div style="text-align:center;margin-top:5px;margin-bottom:2px;">
-            <a href="/web#action=hr_recruitment.action_hr_job_config" style="background-color:#56b3b5;padding:2px;color:#FFFFFF;font-weight:bold;text-decoration:none;">Set Email Aliases</a>
-        </div>
-    </div>
+    <p class="tip_title">Tip: Let candidates apply by email</p>
+    <p class="tip_content">
+        By setting an alias to a job position, emails sent to this address create applications automatically. You can even use multiple trackers to get statistics according to the source of the application: LinkedIn, Monster, Indeed, etc.
+        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)
+        % if record and record.alias_domain
+        <a href="mailto:${record.alias_id.display_name}" target="_blank" style="color: #875a7b; text-decoration: none;">Try sending an email</a>
+        % endif
+    </p>
 </div>
             </field>
         </record>

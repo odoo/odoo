@@ -135,6 +135,7 @@ def encode(s):
     assert isinstance(s, str)
     return s
 
+
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
@@ -143,14 +144,29 @@ TRANSLATED_ELEMENTS = {
     'sup', 'time', 'u', 'var', 'wbr', 'text',
 }
 
-# which attributes must be translated
-TRANSLATED_ATTRS = {
-    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
+# Which attributes must be translated. This is a dict, where the value indicates
+# a condition for a node to have the attribute translatable.
+TRANSLATED_ATTRS = dict.fromkeys({
+    'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label',
-}
+    'value_label', 'data-tooltip',
+}, lambda e: True)
 
-TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
+def translate_attrib_value(node):
+    # check if the value attribute of a node must be translated
+    classes = node.attrib.get('class', '').split(' ')
+    return (
+        (node.tag == 'input' and node.attrib.get('type', 'text') == 'text')
+        and 'datetimepicker-input' not in classes
+        or (node.tag == 'input' and node.attrib.get('type') == 'hidden')
+        and 'o_translatable_input_hidden' in classes
+    )
+
+TRANSLATED_ATTRS.update(
+    value=translate_attrib_value,
+    text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
+    **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
+)
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
@@ -165,123 +181,93 @@ def translate_xml_node(node, callback, parse, serialize):
     """
 
     def nonspace(text):
-        return bool(text) and len(re.sub(r'\W+', '', text)) > 1
+        """ Return whether ``text`` is a string with non-space characters. """
+        return bool(text) and not text.isspace()
 
-    def concat(text1, text2):
-        return text2 if text1 is None else text1 + (text2 or "")
+    def translatable(node):
+        """ Return whether the given node can be translated as a whole. """
+        return (
+            node.tag in TRANSLATED_ELEMENTS
+            and not any(key.startswith("t-") for key in node.attrib)
+            and all(translatable(child) for child in node)
+        )
 
-    def append_content(node, source):
-        """ Append the content of ``source`` node to ``node``. """
-        if len(node):
-            node[-1].tail = concat(node[-1].tail, source.text)
-        else:
-            node.text = concat(node.text, source.text)
-        for child in source:
-            node.append(child)
-
-    def translate_text(text):
-        """ Return the translation of ``text`` (the term to translate is without
-            surrounding spaces), or a falsy value if no translation applies.
+    def hastext(node, pos=0):
+        """ Return whether the given node contains some text to translate at the
+            given child node position.  The text may be before the child node,
+            inside it, or after it.
         """
-        term = text.strip()
-        trans = term and callback(term)
-        return trans and text.replace(term, trans)
-
-    def translate_content(node):
-        """ Return ``node`` with its content translated inline. """
-        # serialize the node that contains the stuff to translate
-        text = serialize(node)
-        # retrieve the node's content and translate it
-        match = node_pattern.match(text)
-        trans = translate_text(match.group(1))
-        if trans:
-            # replace the content, and convert it back to an XML node
-            text = text[:match.start(1)] + trans + text[match.end(1):]
-            try:
-                node = parse(text)
-            except etree.ParseError:
-                # fallback: escape the translation as text
-                node = etree.Element(node.tag, node.attrib, node.nsmap)
-                node.text = trans
-        return node
+        return (
+            # there is some text before node[pos]
+            nonspace(node[pos-1].tail if pos else node.text)
+            or (
+                pos < len(node)
+                and translatable(node[pos])
+                and (
+                    any(  # attribute to translate
+                        val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node[pos])
+                        for key, val in node[pos].attrib.items()
+                    )
+                    # node[pos] contains some text to translate
+                    or hastext(node[pos])
+                    # node[pos] has no text, but there is some text after it
+                    or hastext(node, pos + 1)
+                )
+            )
+        )
 
     def process(node):
-        """ If ``node`` can be translated inline, return ``(has_text, node)``,
-            where ``has_text`` is a boolean that tells whether ``node`` contains
-            some actual text to translate. Otherwise return ``(None, result)``,
-            where ``result`` is the translation of ``node`` except for its tail.
-        """
+        """ Translate the given node. """
         if (
-            isinstance(node, SKIPPED_ELEMENT_TYPES) or
-            node.tag in SKIPPED_ELEMENTS or
-            node.get('t-translation', "").strip() == "off" or
-            node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS or
-            node.getparent() is None and avoid_pattern.match(node.text or "")
+            isinstance(node, SKIPPED_ELEMENT_TYPES)
+            or node.tag in SKIPPED_ELEMENTS
+            or node.get('t-translation', "").strip() == "off"
+            or node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS
+            or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
-            return (None, node)
+            return
 
-        # make an element like node that will contain the result
-        result = etree.Element(node.tag, node.attrib, node.nsmap)
+        pos = 0
+        while True:
+            # check for some text to translate at the given position
+            if hastext(node, pos):
+                # move all translatable children nodes from the given position
+                # into a <div> element
+                div = etree.Element('div')
+                div.text = (node[pos-1].tail if pos else node.text) or ''
+                while pos < len(node) and translatable(node[pos]):
+                    div.append(node[pos])
 
-        # use a "todo" node to translate content by parts
-        todo = etree.Element('div', nsmap=node.nsmap)
-        if avoid_pattern.match(node.text or ""):
-            result.text = node.text
-        else:
-            todo.text = node.text
-        todo_has_text = nonspace(todo.text)
+                # translate the content of the <div> element as a whole
+                content = serialize(div)[5:-6]
+                original = content.strip()
+                translated = callback(original)
+                if translated:
+                    result = content.replace(original, translated)
+                    div = parse_html(f"<div>{result}</div>")
+                    if pos:
+                        node[pos-1].tail = div.text
+                    else:
+                        node.text = div.text
 
-        # process children recursively
-        for child in node:
-            child_has_text, child = process(child)
-            if child_has_text is None:
-                # translate the content of todo and append it to result
-                append_content(result, translate_content(todo) if todo_has_text else todo)
-                # add translated child to result
-                result.append(child)
-                # move child's untranslated tail to todo
-                todo = etree.Element('div', nsmap=node.nsmap)
-                todo.text, child.tail = child.tail, None
-                todo_has_text = nonspace(todo.text)
-            else:
-                # child is translatable inline; add it to todo
-                todo.append(child)
-                todo_has_text = todo_has_text or child_has_text
+                # move the content of the <div> element back inside node
+                while len(div) > 0:
+                    node.insert(pos, div[0])
+                    pos += 1
 
-        # determine whether node is translatable inline
-        if (
-            node.tag in TRANSLATED_ELEMENTS and
-            not (result.text or len(result)) and
-            not any(name.startswith("t-") for name in node.attrib)
-        ):
-            # complete result and return it
-            append_content(result, todo)
-            result.tail = node.tail
-            has_text = (
-                todo_has_text or nonspace(result.text) or nonspace(result.tail)
-                or any((key in TRANSLATED_ATTRS and val) for key, val in result.attrib.items())
-            )
-            return (has_text, result)
+            if pos >= len(node):
+                break
 
-        # translate the content of todo and append it to result
-        append_content(result, translate_content(todo) if todo_has_text else todo)
+            # node[pos] is not translatable as a whole, process it recursively
+            process(node[pos])
+            pos += 1
 
-        # translate the required attributes
-        for name, value in result.attrib.items():
-            if name in TRANSLATED_ATTRS:
-                result.set(name, translate_text(value) or value)
+        # translate the attributes of the node
+        for key, val in node.attrib.items():
+            if val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
+                node.set(key, callback(val.strip()) or val)
 
-        # add the untranslated tail to result
-        result.tail = node.tail
-
-        return (None, result)
-
-    has_text, node = process(node)
-    if has_text is True:
-        # translate the node as a whole
-        wrapped = etree.Element('div')
-        wrapped.append(node)
-        return translate_content(wrapped)[0]
+    process(node)
 
     return node
 
@@ -443,8 +429,18 @@ class GettextAlias(object):
                     lang = env['res.users'].context_get()['lang']
         return lang
 
-    def __call__(self, source):
-        return self._get_translation(source)
+    def __call__(self, source, *args, **kwargs):
+        translation = self._get_translation(source)
+        assert not (args and kwargs)
+        if args or kwargs:
+            try:
+                return translation % (args or kwargs)
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = source % (args or kwargs)
+                _logger.exception('Bad translation %r for string %r', bad, source)
+        return translation
 
     def _get_translation(self, source):
         res = source
@@ -477,7 +473,7 @@ class GettextAlias(object):
         finally:
             if cr and is_new_cr:
                 cr.close()
-        return res
+        return res or ''
 
 
 @functools.total_ordering
@@ -498,14 +494,25 @@ class _lt:
     works as expected (unlike the classic GettextAlias implementation).
     """
 
-    __slots__ = ['_source']
-    def __init__(self, source):
+    __slots__ = ['_source', '_args']
+    def __init__(self, source, *args, **kwargs):
         self._source = source
+        assert not (args and kwargs)
+        self._args = args or kwargs
 
     def __str__(self):
         # Call _._get_translation() like _() does, so that we have the same number
         # of stack frames calling _get_translation()
-        return _._get_translation(self._source)
+        translation = _._get_translation(self._source)
+        if self._args:
+            try:
+                return translation % self._args
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = self._source % self._args
+                _logger.exception('Bad translation %r for string %r', bad, self._source)
+        return translation
 
     def __eq__(self, other):
         """ Prevent using equal operators
@@ -517,6 +524,22 @@ class _lt:
 
     def __lt__(self, other):
         raise NotImplementedError()
+
+    def __add__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return _._get_translation(self._source) + other
+        elif isinstance(other, _lt):
+            return _._get_translation(self._source) + _._get_translation(other._source)
+        return NotImplemented
+
+    def __radd__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return other + _._get_translation(self._source)
+        return NotImplemented
 
 _ = GettextAlias()
 
@@ -545,17 +568,35 @@ def TranslationFileReader(source, fileformat='po'):
     if fileformat == 'po':
         return PoFileReader(source)
     _logger.info('Bad file format: %s', fileformat)
-    raise Exception(_('Bad file format: %s') % fileformat)
+    raise Exception(_('Bad file format: %s', fileformat))
 
 class CSVFileReader:
     def __init__(self, source):
-        self.source = pycompat.csv_reader(source, quotechar='"', delimiter=',')
-        # read the first line of the file (it contains columns titles)
-        self.fields = next(self.source)
+        _reader = codecs.getreader('utf-8')
+        self.source = csv.DictReader(_reader(source), quotechar='"', delimiter=',')
+        self.prev_code_src = ""
 
     def __iter__(self):
         for entry in self.source:
-            yield zip(self.fields, entry)
+
+            # determine <module>.<imd_name> from res_id
+            if entry["res_id"] and entry["res_id"].isnumeric():
+                # res_id is an id or line number
+                entry["res_id"] = int(entry["res_id"])
+            elif not entry.get("imd_name"):
+                # res_id is an external id and must follow <module>.<name>
+                entry["module"], entry["imd_name"] = entry["res_id"].split(".")
+                entry["res_id"] = None
+            if entry["type"] == "model" or entry["type"] == "model_terms":
+                entry["imd_model"] = entry["name"].partition(',')[0]
+
+            if entry["type"] == "code":
+                if entry["src"] == self.prev_code_src:
+                    # skip entry due to unicity constrain on code translations
+                    continue
+                self.prev_code_src = entry["src"]
+
+            yield entry
 
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
@@ -602,7 +643,7 @@ class PoFileReader:
             translation = entry.msgstr
             found_code_occurrence = False
             for occurrence, line_number in entry.occurrences:
-                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([\w-]+)', occurrence)
+                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([^ ]+)', occurrence)
                 if match:
                     type, model_name, field_name, module, xmlid = match.groups()
                     yield {
@@ -842,10 +883,20 @@ def _extract_translatable_qweb_terms(element, callback):
                 and "t-js" not in el.attrib
                 and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and el.get("t-translation", '').strip() != "off"):
+
             _push(callback, el.text, el.sourceline)
-            for att in ('title', 'alt', 'label', 'placeholder'):
-                if att in el.attrib:
-                    _push(callback, el.attrib[att], el.sourceline)
+            # Do not export terms contained on the Component directive of OWL
+            # attributes in this context are most of the time variables,
+            # not real HTML attributes.
+            # Node tags starting with a capital letter are considered OWL Components
+            # and a widespread convention and good practice for DOM tags is to write
+            # them all lower case.
+            # https://www.w3schools.com/html/html5_syntax.asp
+            # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
+            if not el.tag[0].isupper() and 't-component' not in el.attrib:
+                for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
+                    if att in el.attrib:
+                        _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
@@ -928,7 +979,7 @@ class TranslationModuleReader:
             return
         self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id))
 
-    def _get_translatable_records(self, records):
+    def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
 
         A record is considered as untranslatable if:
@@ -939,19 +990,20 @@ class TranslationModuleReader:
 
         :param records: a list of namedtuple ImdInfo belonging to the same model
         """
-        model = next(iter(records)).model
+        model = next(iter(imd_records)).model
         if model not in self.env:
             _logger.error("Unable to find object %r", model)
-            return self.browse()
+            return self.env["_unknown"].browse()
 
         if not self.env[model]._translate:
             return self.env[model].browse()
 
-        res_ids = [r.res_id for r in records]
+        res_ids = [r.res_id for r in imd_records]
         records = self.env[model].browse(res_ids).exists()
         if len(records) < len(res_ids):
-            missing_ids = set(records.ids) - set(res_ids)
-            _logger.warning("Unable to find objects %r with id %d", model, ', '.join(missing_ids))
+            missing_ids = set(res_ids) - set(records.ids)
+            missing_records = [f"{r.module}.{r.name}" for r in imd_records if r.res_id in missing_ids]
+            _logger.warning("Unable to find records of type %r with external ids %s", model, ', '.join(missing_records))
             if not records:
                 return records
 
@@ -1004,7 +1056,8 @@ class TranslationModuleReader:
                 continue
 
             for record in records:
-                xml_name = "%s.%s" % (imd_per_id[record.id].module, imd_per_id[record.id].name)
+                module = imd_per_id[record.id].module
+                xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
                 for field_name, field in record._fields.items():
                     if field.translate:
                         name = model + "," + field_name
@@ -1082,17 +1135,17 @@ class TranslationModuleReader:
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root,
                                               extract_keywords={'_': None, '_lt': None})
-                # Javascript source files in the static/src/js directory, rest is ignored (libs)
-                if fnmatch.fnmatch(root, '*/static/src/js*'):
+                if fnmatch.fnmatch(root, '*/static/src*'):
+                    # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT],
                                                   extract_keywords={'_t': None, '_lt': None})
-                # QWeb template files
-                if fnmatch.fnmatch(root, '*/static/src/xml*'):
+                    # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT])
+
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break

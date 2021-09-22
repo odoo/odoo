@@ -12,7 +12,7 @@
                         <form role="form" t-att-id="id">
                             <div class="form-group row mb0">
                                 <label for="page-name" class="col-md-3 col-form-label">
-                                    <t t-esc="field_name"/>:
+                                    <t t-esc="field_name"/>
                                 </label>
                                 <div class="col-md-9">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
@@ -23,8 +23,8 @@
                         </form>
                     </main>
                     <footer class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-continue">Continue</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-continue"><t t-esc="btn_primary_title"/></button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel"><t t-esc="btn_secondary_title"/></button>
                     </footer>
                 </div>
             </div>
@@ -44,10 +44,10 @@
                     <ul>
                         <li t-foreach="type_value" t-as="error">
                             <a t-if="!_.contains(['', '#', false], error.link)" t-att-href="error.link">
-                                <t t-raw="error.text"/>
+                                <t t-out="error.text"/>
                             </a>
                             <t t-else="">
-                                <t t-raw="error.text"/>
+                                <t t-out="error.text"/>
                             </t>
                         </li>
                     </ul>
@@ -98,4 +98,8 @@
             </a>
         </t>
     </t>
+
+    <div t-name="website.fullscreen_indication" class="o_fullscreen_indication">
+        <p>Press <span>esc</span> to exit full screen</p>
+    </div>
 </templates>

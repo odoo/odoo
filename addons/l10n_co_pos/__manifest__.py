@@ -3,19 +3,25 @@
 
 {
     'name': 'Colombian - Point of Sale',
+    'icon': '/l10n_co/static/description/icon.png',
     'version': '1.0',
     'description': """Colombian - Point of Sale""",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Point of Sale',
     'auto_install': True,
     'depends': [
         'l10n_co',
         'point_of_sale'
     ],
     'data': [
-        'views/templates.xml',
         'views/views.xml'
     ],
-    'qweb': [
-        'static/src/xml/pos.xml'
-    ],
+    'assets': {
+        'point_of_sale.assets': [
+            'l10n_co_pos/static/src/js/**/*',
+        ],
+        'web.assets_qweb': [
+            'l10n_co_pos/static/src/xml/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

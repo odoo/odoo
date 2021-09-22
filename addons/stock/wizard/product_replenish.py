@@ -49,7 +49,7 @@ class ProductReplenish(models.TransientModel):
             res['product_uom_id'] = product_tmpl_id.uom_id.id
         if 'company_id' in fields:
             res['company_id'] = company.id
-        if 'warehouse_id' in fields:
+        if 'warehouse_id' in fields and 'warehouse_id' not in res:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             res['warehouse_id'] = warehouse.id
         if 'date_planned' in fields:
@@ -76,9 +76,7 @@ class ProductReplenish(models.TransientModel):
             raise UserError(error)
 
     def _prepare_run_values(self):
-        replenishment = self.env['procurement.group'].create({
-            'partner_id': self.product_id.with_company(self.company_id).responsible_id.partner_id.id,
-        })
+        replenishment = self.env['procurement.group'].create({})
 
         values = {
             'warehouse_id': self.warehouse_id,

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 from odoo.addons.survey.tests import common
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
 
 
@@ -290,7 +292,7 @@ class TestAccess(common.TestSurveyCommon):
     @users('survey_manager')
     def test_access_answers_survey_manager(self):
         admin = self.env.ref('base.user_admin')
-        with self.with_user(admin):
+        with self.with_user(admin.login):
             survey_other = self.env['survey.survey'].create({'title': 'Other'})
             self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_other.id})
             question_other = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_other.id})
@@ -322,3 +324,38 @@ class TestAccess(common.TestSurveyCommon):
 
         # Unlink: always
         (answer_own | answer_other | self.answer_0).unlink()
+
+
+@tagged('post_install')
+class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
+    def test_survey_start_short(self):
+        # avoid name clash with existing data
+        surveys = self.env['survey.survey'].search([
+            ('session_state', 'in', ['ready', 'in_progress'])
+        ])
+        self.survey.write({
+            'session_state': 'ready',
+            'session_code': '123456',
+            'session_start_time': datetime.datetime.now(),
+            'access_mode': 'public',
+            'users_login_required': False,
+        })
+
+        # right short access token
+        response = self.url_open(f'/s/123456')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('The session will begin automatically when the host starts', response.text)
+
+        # `like` operator injection
+        response = self.url_open(f'/s/______')
+        self.assertFalse(self.survey.title in response.text)
+
+        # right short token, but closed survey
+        self.survey.action_archive()
+        response = self.url_open(f'/s/123456')
+        self.assertFalse(self.survey.title in response.text)
+
+        # right short token, but wrong `session_state`
+        self.survey.write({'session_state': False, 'active': True})
+        response = self.url_open(f'/s/123456')
+        self.assertFalse(self.survey.title in response.text)

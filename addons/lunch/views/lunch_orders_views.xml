@@ -31,18 +31,25 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <tree string="Order lines Tree" create="false" edit="false" decoration-muted="state == 'cancelled'" class="o_lunch_list">
+                <header>
+                    <button name="action_confirm" type="object" string="Receive"/>
+                </header>
                 <field name='date'/>
-                <field name='supplier_id' invisible='1'/>
+                <field name='supplier_id'/>
                 <field name='product_id'/>
                 <field name="display_toppings" class="o_text_overflow"/>
                 <field name='note' class="o_text_overflow"/>
                 <field name='user_id'/>
+                <field name="lunch_location_id"/>
                 <field name="currency_id" invisible="1"/>
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
+                <field name="display_reorder_button" invisible="1"/>
+                <button name="action_reorder" string="Re-order" type="object" icon="fa-history" attrs="{'invisible': [('display_reorder_button', '=', False)]}" groups="lunch.group_lunch_user"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_reset" string="Reset" type="object" icon="fa-undo" attrs="{'invisible': [('state', '!=', 'cancelled')]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -57,7 +64,8 @@
                 <field name="state"/>
                 <field name="user_id"/>
                 <field name="date"/>
-                <field name="price"/>
+                <field name="company_id"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -91,7 +99,9 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
+                                    <span class="float-right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -105,7 +115,7 @@
         <field name="name">lunch.order.pivot</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <pivot>
+            <pivot sample="1">
                 <field name="date" type="col"/>
                 <field name="supplier_id" type="row"/>
             </pivot>
@@ -116,8 +126,8 @@
         <field name="name">lunch.order.graph</field>
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
-            <graph>
-                <field name="product_id" type="col"/>
+            <graph sample="1">
+                <field name="product_id"/>
             </graph>
         </field>
     </record>
@@ -127,7 +137,7 @@
         <field name="res_model">lunch.order</field>
         <field name="view_mode">tree,kanban,pivot</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
-        <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1}</field>
+        <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1, 'show_reorder_button': True}</field>
         <field name="help" type="html">
         <p class="o_view_nocontent_empty_folder">
             No previous order found
@@ -148,10 +158,6 @@
             Nothing to order today
           </p><p>
             Here you can see today's orders grouped by vendors.
-          </p><p>
-            Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-            Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-            Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
           </p>
         </field>
     </record>
@@ -180,6 +186,7 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <form>
+                <field name="company_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="quantity" invisible="1"/>
                 <field name="product_id" invisible="1"/>
@@ -187,14 +194,14 @@
                 <field name="available_toppings_1" invisible="1"/>
                 <field name="available_toppings_2" invisible="1"/>
                 <field name="available_toppings_3" invisible="1"/>
-                <field name="edit" invisible="1"/>
+                <field name="supplier_id" invisible="1"/>
                 <div class="d-flex">
                     <div class="flex-grow-0 pr-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
                     </div>
                     <div class="flex-grow-1 pr-5">
                         <h2><field name="name"/></h2>
-                        <h3 class="pt-3"><field name="price" widget="monetary"/></h3>
+                        <h3 class="pt-3"><field name="price"/></h3>
                     </div>
                 </div>
                 <div class="o_lunch_wizard">
@@ -203,7 +210,7 @@
                             <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 1), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -211,7 +218,7 @@
                             <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 2), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -219,7 +226,7 @@
                             <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -235,14 +242,14 @@
                             <label for="note" class="font-weight-bold" />
                         </div>
                         <div class="col-10">
-                            <field name="note" nolabel="1" placeholder="Informations, allergens, ..." />
+                            <field name="note" nolabel="1" placeholder="Information, allergens, ..." />
                         </div>
                     </div>
                 </div>
                 <footer>
-                    <button string="Save" special="save" class="oe_highlight" attrs="{'invisible': [('edit', '=', False)]}"/>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" attrs="{'invisible': [('edit', '=', True)]}"/>
-                    <button string="Discard" special="cancel"/>
+                    <button string="Save" special="save" data-hotkey="v" class="oe_highlight" invisible="not context.get('active_id', False)"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False)" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

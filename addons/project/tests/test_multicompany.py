@@ -2,11 +2,10 @@
 
 from contextlib import contextmanager
 
-from odoo.tests.common import SavepointCase, Form
+from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError
 
-
-class TestMultiCompanyCommon(SavepointCase):
+class TestMultiCompanyCommon(TransactionCase):
 
     @classmethod
     def setUpMultiCompany(cls):
@@ -117,7 +116,6 @@ class TestMultiCompanyCommon(SavepointCase):
             context = dict(self.env.context, allowed_company_ids=old_companies)
             self.env = self.env(context=context)
 
-
 class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     @classmethod
@@ -181,12 +179,12 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         Task = cls.env['project.task'].with_context({'mail_create_nolog': True, 'tracking_disable': True})
         cls.task_1 = Task.create({
             'name': 'Task 1 in Project A',
-            'user_id': cls.user_employee_company_a.id,
+            'user_ids': cls.user_employee_company_a,
             'project_id': cls.project_company_a.id
         })
         cls.task_2 = Task.create({
             'name': 'Task 2 in Project B',
-            'user_id': cls.user_employee_company_b.id,
+            'user_ids': cls.user_employee_company_b,
             'project_id': cls.project_company_b.id
         })
 
@@ -252,13 +250,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
                 # create subtask, set parent; the onchange will set the correct company and subtask project
-                with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+                with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_parent_id': self.task_1.id, 'default_project_id': self.project_company_b.id})) as task_form:
                     task_form.name = 'Test Subtask in company B'
-                    task_form.parent_id = self.task_1
-                    task_form.project_id = self.project_company_b
-
                 task = task_form.save()
-
                 self.assertEqual(task.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
 
                 # set parent on existing orphan task; the onchange will set the correct company and subtask project
@@ -272,7 +266,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     def test_cross_subtask_project(self):
         # set up default subtask project
-        self.project_company_a.write({'allow_subtasks': True, 'subtask_project_id': self.project_company_b.id})
+        self.project_company_a.write({'allow_subtasks': True})
 
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
@@ -282,17 +276,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                 task = task_form.save()
 
-                self.assertEqual(task.project_id, self.task_1.project_id.subtask_project_id, "The default project of a subtask should be the default subtask project of the project from the mother task")
-                self.assertEqual(task.company_id, task.project_id.subtask_project_id.company_id, "The company of the orphan subtask should be the one from its project.")
+                self.assertEqual(task.project_id, self.task_1.project_id, "The default project of a subtask should be the default subtask project of the project from the mother task")
+                self.assertEqual(task.company_id, task.project_id.company_id, "The company of the orphan subtask should be the one from its project.")
                 self.assertEqual(self.task_1.child_ids.ids, [task.id])
-
-                # trying to access the subtask in a company not allowed should raise an error
-                with self.assertRaises(UserError):
-                    self.task_1.with_context(allowed_company_ids=[self.company_a.id]).action_subtask()
-
-                # trying to access the parent task in a company not allowed should raise an error
-                with self.assertRaises(UserError):
-                    task.with_context(allowed_company_ids=[self.company_b.id]).action_open_parent_task()
 
         with self.sudo('employee-a'):
             with self.assertRaises(AccessError):

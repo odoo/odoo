@@ -16,22 +16,25 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
+    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    department_id = fields.Many2one('hr.department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
-    job_id = fields.Many2one('hr.job', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
+    department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
+    job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
-        help="Start date of the contract.")
+        help="Start date of the contract.", index=True)
     date_end = fields.Date('End Date', tracking=True,
         help="End date of the contract (if it's a fixed-term contract).")
     trial_date_end = fields.Date('End of Trial Period',
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Working Schedule',
-        default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
+        'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
+        default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
-    advantages = fields.Text('Advantages')
-    notes = fields.Text('Notes')
+    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
+    notes = fields.Html('Notes')
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Running'),
@@ -39,7 +42,12 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states', copy=False,
        tracking=True, help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
+        default=lambda self: self.env.company, required=True)
+    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    country_code = fields.Char(related='company_country_id.code', readonly=True)
+    contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")
+
     """
         kanban_state:
             * draft + green = "Incoming" state (will be set as Open once the contract has started)
@@ -68,14 +76,30 @@ class Contract(models.Model):
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
+    @api.depends('employee_id')
+    def _compute_employee_contract(self):
+        for contract in self.filtered('employee_id'):
+            contract.job_id = contract.employee_id.job_id
+            contract.department_id = contract.employee_id.department_id
+            contract.resource_calendar_id = contract.employee_id.resource_calendar_id
+            contract.company_id = contract.employee_id.company_id
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        if self.employee_id:
-            self.job_id = self.employee_id.job_id
-            self.department_id = self.employee_id.department_id
-            self.resource_calendar_id = self.employee_id.resource_calendar_id
-            self.company_id = self.employee_id.company_id
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            structure_types = self.env['hr.payroll.structure.type'].search([
+                '|',
+                ('country_id', '=', self.company_id.country_id.id),
+                ('country_id', '=', False)])
+            if structure_types:
+                self.structure_type_id = structure_types[0]
+            elif self.structure_type_id not in structure_types:
+                self.structure_type_id = False
+
+    @api.onchange('structure_type_id')
+    def _onchange_structure_type_id(self):
+        if self.structure_type_id.default_resource_calendar_id:
+            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
@@ -84,6 +108,7 @@ class Contract(models.Model):
             domain = [
                 ('id', '!=', contract.id),
                 ('employee_id', '=', contract.employee_id.id),
+                ('company_id', '=', contract.company_id.id),
                 '|',
                     ('state', 'in', ['open', 'close']),
                     '&',
@@ -100,12 +125,21 @@ class Contract(models.Model):
 
             domain = expression.AND([domain, start_domain, end_domain])
             if self.search_count(domain):
-                raise ValidationError(_('An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts)'))
+                raise ValidationError(
+                    _(
+                        'An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n\nEmployee: %(employee_name)s',
+                        employee_name=contract.employee_id.name
+                    )
+                )
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
-        if self.filtered(lambda c: c.date_end and c.date_start > c.date_end):
-            raise ValidationError(_('Contract start date must be earlier than contract end date.'))
+        for contract in self:
+            if contract.date_end and contract.date_start > contract.date_end:
+                raise ValidationError(_(
+                    'Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s).',
+                    contract=contract.name, start=contract.date_start, end=contract.date_end,
+                ))
 
     @api.model
     def update_state(self):
@@ -123,7 +157,7 @@ class Contract(models.Model):
         for contract in contracts:
             contract.activity_schedule(
                 'mail.mail_activity_data_todo', contract.date_end,
-                _("The contract of %s is about to expire.") % contract.employee_id.name,
+                _("The contract of %s is about to expire.", contract.employee_id.name),
                 user_id=contract.hr_responsible_id.id or self.env.uid)
 
         contracts.write({'kanban_state': 'blocked'})
@@ -166,6 +200,18 @@ class Contract(models.Model):
         for contract in self:
             contract.employee_id.sudo().write({'contract_id': contract.id})
 
+    @api.depends('wage')
+    def _compute_contract_wage(self):
+        for contract in self:
+            contract.contract_wage = contract._get_contract_wage()
+
+    def _get_contract_wage(self):
+        self.ensure_one()
+        return self[self._get_contract_wage_field()]
+
+    def _get_contract_wage_field(self):
+        return 'wage'
+
     def write(self, vals):
         res = super(Contract, self).write(vals)
         if vals.get('state') == 'open':
@@ -201,3 +247,12 @@ class Contract(models.Model):
         elif 'state' in init_values and self.state == 'close':
             return self.env.ref('hr_contract.mt_contract_close')
         return super(Contract, self)._track_subtype(init_values)
+
+    def action_open_contract_form(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hr.contract",
+            "views": [[False, "form"]],
+            "res_id": self.id,
+        }

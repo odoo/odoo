@@ -1,12 +1,9 @@
-odoo.define('note.systray.ActivityMenu', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ActivityMenu = require('mail.systray.ActivityMenu');
+import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
-var core = require('web.core');
-var datepicker = require('web.datepicker');
-
-var _t = core._t;
+import { _t } from 'web.core';
+import datepicker from 'web.datepicker';
 
 ActivityMenu.include({
     events: _.extend({}, ActivityMenu.prototype.events, {
@@ -68,17 +65,7 @@ ActivityMenu.include({
     _onActivityFilterClick: function (ev) {
         var $el = $(ev.currentTarget);
         if (!$el.hasClass("o_note")) {
-            var data = _.extend({}, $el.data(), $(ev.target).data());
-            if (data.res_model === "note.note" && data.filter === "my") {
-                this.do_action({
-                    type: 'ir.actions.act_window',
-                    name: data.model_name,
-                    res_model:  data.res_model,
-                    views: [[false, 'kanban'], [false, 'form'], [false, 'list']]
-                });
-            } else {
-                this._super.apply(this, arguments);
-            }
+            this._super.apply(this, arguments);
         }
     },
     /**
@@ -143,5 +130,4 @@ ActivityMenu.include({
             this._saveNote();
         }
     },
-});
 });

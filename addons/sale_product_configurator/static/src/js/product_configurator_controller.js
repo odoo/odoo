@@ -52,6 +52,9 @@ var ProductConfiguratorFormController = FormController.extend({
         if (this.renderer.state.context.configuratorMode === 'options') {
             this.$el.closest('.modal').addClass('d-none');
         }
+
+        const renderSecondOnly = this.renderer.state.context.configuratorMode !== 'edit';
+        this.$el.closest('.o_dialog_container').toggleClass('d-none', renderSecondOnly);
     },
 
     //--------------------------------------------------------------------------
@@ -112,6 +115,8 @@ var ProductConfiguratorFormController = FormController.extend({
      */
     _configureProduct: function (productTemplateId) {
         var self = this;
+        var initialProduct = this.initialState.data.product_template_id;
+        var changed = initialProduct && initialProduct.data.id !== productTemplateId;
         var data = this.renderer.state.data;
         return this._rpc({
             route: '/sale_product_configurator/configure',
@@ -119,10 +124,10 @@ var ProductConfiguratorFormController = FormController.extend({
                 product_template_id: productTemplateId,
                 pricelist_id: this.renderer.pricelistId,
                 add_qty: data.quantity,
-                product_template_attribute_value_ids: this._getAttributeValueIds(
+                product_template_attribute_value_ids: changed ? [] : this._getAttributeValueIds(
                     data.product_template_attribute_value_ids
                 ),
-                product_no_variant_attribute_value_ids: this._getAttributeValueIds(
+                product_no_variant_attribute_value_ids: changed ? [] : this._getAttributeValueIds(
                     data.product_no_variant_attribute_value_ids
                 )
             }
@@ -235,7 +240,9 @@ var ProductConfiguratorFormController = FormController.extend({
      */
     _onModalConfirm: function () {
         this._wasConfirmed = true;
-        this._addProducts(this.optionalProductsModal.getSelectedProducts());
+        this.optionalProductsModal.getAndCreateSelectedProducts().then((products) => {
+            this._addProducts(products);
+        });
     },
 
     /**
@@ -245,9 +252,9 @@ var ProductConfiguratorFormController = FormController.extend({
      * @private
      */
     _onModalClose: function () {
-        if (this.renderer.state.context.configuratorMode === 'options'
+        if (['options', 'add'].includes(this.renderer.state.context.configuratorMode)
             && this._wasConfirmed !== true) {
-              this.do_action({type: 'ir.actions.act_window_close'});
+            this.do_action({type: 'ir.actions.act_window_close'});
         }
     },
 

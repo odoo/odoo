@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
+from dateutil.relativedelta import relativedelta
 
 
 class ProductTemplate(models.Model):
@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
         ('receive', 'On received quantities'),
     ], string="Control Policy", help="On ordered quantities: Control bills based on ordered quantities.\n"
         "On received quantities: Control bills based on received quantities.", default="receive")
-    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
+    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
     def _compute_purchased_product_qty(self):
@@ -39,12 +39,11 @@ class ProductTemplate(models.Model):
         return res
 
     def action_view_po(self):
-        action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'qty_ordered',
-            'search_default_orders': 1,
-            'time_ranges': {'field': 'date_approve', 'range': 'last_365_days'}
+            'search_default_later_than_a_year_ago': True
         }
         return action
 
@@ -56,13 +55,12 @@ class ProductProduct(models.Model):
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased')
 
     def _compute_purchased_product_qty(self):
-        date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
+        date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
         domain = [
-            ('state', 'in', ['purchase', 'done']),
+            ('order_id.state', 'in', ['purchase', 'done']),
             ('product_id', 'in', self.ids),
-            ('date_order', '>', date_from)
+            ('order_id.date_approve', '>=', date_from)
         ]
-        PurchaseOrderLines = self.env['purchase.order.line'].search(domain)
         order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
         for product in self:
@@ -72,12 +70,11 @@ class ProductProduct(models.Model):
             product.purchased_product_qty = float_round(purchased_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
     def action_view_po(self):
-        action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_order_report_all")
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
         action['context'] = {
-            'search_default_last_year_purchase': 1,
-            'search_default_status': 1, 'search_default_order_month': 1,
-            'graph_measure': 'qty_ordered'
+            'graph_measure': 'qty_ordered',
+            'search_default_later_than_a_year_ago': True
         }
         return action
 
@@ -97,3 +94,9 @@ class ProductSupplierinfo(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         self.currency_id = self.name.property_purchase_currency_id.id or self.env.company.currency_id.id
+
+
+class ProductPackaging(models.Model):
+    _inherit = 'product.packaging'
+
+    purchase = fields.Boolean("Purchase", default=True, help="If true, the packaging can be used for purchase orders")

@@ -6,10 +6,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount_total']" position="after">
+            <xpath expr="//field[@name='tax_totals_json']" position="after">
                 <label for="margin" groups="base.group_user"/>
                 <div class="text-nowrap" groups="base.group_user">
                     <field name="margin" class="oe_inline"/>
+                    <field name="amount_untaxed" invisible="1"/>
                     <span class="oe_inline" attrs="{'invisible': [('amount_untaxed', '=', 0)]}">
                         (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
                     </span>
@@ -41,6 +42,17 @@
                     attrs="{'invisible': [('price_subtotal', '=', 0)]}"
                     optional="hide" widget="percentage"/>
             </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_margin_sale_order_pivot">
+        <field name="name">sale.order.margin.view.pivot</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_pivot"/>
+        <field name="arch" type="xml">
+            <pivot position="inside">
+                <field name="margin_percent" invisible="1"/>
+            </pivot>
         </field>
     </record>
 

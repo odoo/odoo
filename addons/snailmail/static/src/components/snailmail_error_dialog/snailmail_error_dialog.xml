@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="snailmail.SnailmailErrorDialog" owl="1">
+        <Dialog contentClass="'o_SnailmailErrorDialog'" title="title" size="'medium'" t-ref="dialog">
+            <t t-if="message and notification">
+                <t t-if="notification.failure_type === 'sn_credit'">
+                    <p class="o_SnailmailErrorDialog_contentCredit">
+                        The letter could not be sent due to insufficient credits on your IAP account.
+                    </p>
+                    <t t-if="messaging.snailmail_credits_url">
+                        <div class="text-right">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url" target="_blank">
+                                <i class="fa fa-arrow-right"/> Buy credits
+                            </a>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="notification.failure_type === 'sn_trial'">
+                    <p class="o_SnailmailErrorDialog_contentTrial">
+                        You need credits on your IAP account to send a letter.
+                    </p>
+                    <t t-if="messaging.snailmail_credits_url_trial">
+                        <div class="text-right">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url_trial">
+                                <i class="fa fa-arrow-right"/> Buy credits
+                            </a>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="notification.failure_type === 'sn_price'">
+                    <p class="o_SnailmailErrorDialog_contentPrice">
+                        The country to which you want to send the letter is not supported by our service.
+                    </p>
+                </t>
+                <t t-elif="notification.failure_type === 'sn_error'">
+                    <p class="o_SnailmailErrorDialog_contentError">
+                        An unknown error occurred. Please contact our <a href="https://www.odoo.com/help" target="new">support</a> for further assistance.
+                    </p>
+                </t>
+
+                <t t-set-slot="buttons">
+                    <t t-if="hasCreditsError">
+                        <button class="o_SnailmailErrorDialog_resendLetterButton btn btn-primary" t-on-click="_onClickResendLetter">Re-send letter</button>
+                    </t>
+                    <button class="o_SnailmailErrorDialog_cancelLetterButton btn"
+                        t-att-class="{
+                            'btn-primary': !hasCreditsError,
+                            'btn-secondary': hasCreditsError,
+                        }"
+                        t-on-click="_onClickCancelLetter"
+                    >
+                        Cancel letter
+                    </button>
+                    <button class="o_SnailmailErrorDialog_closeButton btn btn-secondary" t-on-click="_onClickClose">Close</button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -5,7 +5,7 @@
 {
     'name': 'South Africa - Accounting',
     'version': '1.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================
@@ -24,4 +24,8 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
         'data/account_chart_template_post_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

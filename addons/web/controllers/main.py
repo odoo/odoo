@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.messages.pofile
 import base64
 import copy
 import datetime
 import functools
-import glob
 import hashlib
 import io
 import itertools
-import jinja2
 import json
 import logging
 import operator
@@ -18,30 +15,31 @@ import os
 import re
 import sys
 import tempfile
-import time
+import unicodedata
+from collections import OrderedDict, defaultdict
 
+import babel.messages.pofile
+import jinja2
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from collections import OrderedDict, defaultdict, Counter
-from werkzeug.urls import url_encode, url_decode, iri_to_uri
 from lxml import etree
-import unicodedata
-
+from markupsafe import Markup
+from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
-from odoo.api import call_kw, Environment
-from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
+from odoo.api import call_kw
+from odoo.modules import get_resource_path, module
+from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open
-from odoo.tools.safe_eval import safe_eval
-from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
+from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
+from odoo.tools.safe_eval import safe_eval, time
+from odoo import http
+from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -103,6 +101,7 @@ db_list = http.db_list
 
 db_monodb = http.db_monodb
 
+def clean(name): return name.replace('\x3c', '')
 def serialize_exception(f):
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -119,17 +118,9 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
 
-def redirect_with_hash(*args, **kw):
-    """
-        .. deprecated:: 8.0
-
-        Use the ``http.redirect_with_hash()`` function instead.
-    """
-    return http.redirect_with_hash(*args, **kw)
-
 def abort_and_redirect(url):
     r = request.httprequest
-    response = werkzeug.utils.redirect(url, 302)
+    response = request.redirect(url, 302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
@@ -161,7 +152,7 @@ def ensure_db(redirect='/web/database/selector'):
             query_string = iri_to_uri(r.query_string)
             url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
-        abort_and_redirect(url_redirect)
+        abort_and_redirect(url_redirect.to_url())
 
     # if db not provided, use the session one
     if not db and request.session.db and http.db_filter([request.session.db]):
@@ -174,7 +165,7 @@ def ensure_db(redirect='/web/database/selector'):
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
     if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+        werkzeug.exceptions.abort(request.redirect(redirect, 303))
 
     # always switch the session to the computed db
     if db != request.session.db:
@@ -183,83 +174,9 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed(environment):
-    # Candidates module the current heuristic is the /static dir
-    loadable = list(http.addons_manifest)
-
-    # Retrieve database installed modules
-    # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = environment['ir.module.module']
-    domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = OrderedDict(
-        (module.name, module.dependencies_id.mapped('name'))
-        for module in Modules.search(domain)
-    )
-
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
-
-def module_installed_bypass_session(dbname):
-    try:
-        registry = odoo.registry(dbname)
-        with registry.cursor() as cr:
-            return module_installed(
-                environment=Environment(cr, odoo.SUPERUSER_ID, {}))
-    except Exception:
-        pass
-    return {}
-
-def module_boot(db=None):
-    server_wide_modules = odoo.conf.server_wide_modules or []
-    serverside = ['base', 'web']
-    dbside = []
-    for i in server_wide_modules:
-        if i in http.addons_manifest and i not in serverside:
-            serverside.append(i)
-    monodb = db or db_monodb()
-    if monodb:
-        dbside = module_installed_bypass_session(monodb)
-        dbside = [i for i in dbside if i not in serverside]
-    addons = serverside + dbside
-    return addons
-
-
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
-
-def manifest_glob(extension, addons=None, db=None, include_remotes=False):
-    if addons is None:
-        addons = module_boot(db=db)
-
-    r = []
-    for addon in addons:
-        manifest = http.addons_manifest.get(addon, None)
-        if not manifest:
-            continue
-        # ensure does not ends with /
-        addons_path = os.path.join(manifest['addons_path'], '')[:-1]
-        globlist = manifest.get(extension, [])
-        for pattern in globlist:
-            if pattern.startswith(('http://', 'https://', '//')):
-                if include_remotes:
-                    r.append((None, pattern, addon))
-            else:
-                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):]), addon))
-    return r
-
-
-def manifest_list(extension, mods=None, db=None, debug=None):
-    """ list resources to load specifying either:
-    mods: a comma separated string listing modules
-    db: a database name (return all installed modules in that database)
-    """
-    if debug is not None:
-        _logger.warning("odoo.addons.web.main.manifest_list(): debug parameter is deprecated")
-    mods = mods.split(',')
-    files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    return [wp for _fp, wp, addon in files]
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
@@ -297,21 +214,58 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
+def _get_login_redirect_url(uid, redirect=None):
+    """ Decide if user requires a specific post-login redirect, e.g. for 2FA, or if they are
+    fully logged and can proceed to the requested URL
+    """
+    if request.session.uid: # fully logged
+        return redirect or '/web'
+
+    # partial session (MFA)
+    url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
+    if not redirect:
+        return url
+
+    parsed = werkzeug.urls.url_parse(url)
+    qs = parsed.decode_query()
+    qs['redirect'] = redirect
+    return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+
 def login_and_redirect(db, login, key, redirect_url='/web'):
-    request.session.authenticate(db, login, key)
+    uid = request.session.authenticate(db, login, key)
+    redirect_url = _get_login_redirect_url(uid, redirect_url)
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
-    redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect = request.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
 
-def clean_action(action):
-    action.setdefault('flags', {})
+def clean_action(action, env):
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
-    return action
+        action = fix_view_modes(action)
+
+    # When returning an action, keep only relevant fields/properties
+    readable_fields = env[action['type']]._get_readable_fields()
+    action_type_fields = env[action['type']]._fields.keys()
+
+    cleaned_action = {
+        field: value
+        for field, value in action.items()
+        # keep allowed fields and custom properties fields
+        if field in readable_fields or field not in action_type_fields
+    }
+
+    # Warn about custom properties fields, because use is discouraged
+    action_name = action.get('name') or action
+    custom_properties = action.keys() - readable_fields - action_type_fields
+    if custom_properties:
+        _logger.warning("Action %r contains custom properties %s. Passing them "
+            "via the `params` or `context` properties is recommended instead",
+            action_name, ', '.join(map(repr, custom_properties)))
+
+    return cleaned_action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -514,7 +468,9 @@ class HomeStaticTemplateHelpers(object):
                 parent_tree = copy.deepcopy(self.template_dict[parent_addon][parent_name])
 
                 xpaths = list(template_tree)
-                if self.debug and inherit_mode == self.EXTENSION_MODE:
+                # owl chokes on comments, disable debug comments for now
+                # pylint: disable=W0125
+                if False: # self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
                 elif inherit_mode == self.PRIMARY_MODE:
@@ -547,18 +503,13 @@ class HomeStaticTemplateHelpers(object):
             if re.match(COMMENT_PATTERN, comment.text.strip()):
                 comment.getparent().remove(comment)
 
-    def _manifest_glob(self):
-        '''Proxy for manifest_glob
-        Usefull to make 'self' testable'''
-        return manifest_glob('qweb', self.addons, self.db)
-
     def _read_addon_file(self, file_path):
         """Reads the content of a file given by file_path
         Usefull to make 'self' testable
         :param str file_path:
         :returns: str
         """
-        with open(file_path, 'rb') as fp:
+        with file_open(file_path, 'rb') as fp:
             contents = fp.read()
         return contents
 
@@ -584,7 +535,7 @@ class HomeStaticTemplateHelpers(object):
                     xml = self._compute_xml_tree(addon, fname, contents)
 
                     if root is None:
-                        root = etree.Element(xml.tag)
+                        root = etree.Element('templates')
 
         for addon in self.template_dict.values():
             for template in addon.values():
@@ -592,23 +543,35 @@ class HomeStaticTemplateHelpers(object):
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
-    def _get_qweb_templates(self):
+    def _get_asset_paths(self, bundle):
+        """Proxy for ir_asset._get_asset_paths
+        Useful to make 'self' testable.
+        """
+        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle=bundle, xml=True)
+
+    def _get_qweb_templates(self, bundle):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
         """
-        files = OrderedDict([(addon, list()) for addon in self.addons])
-        [files[f[2]].append(f[0]) for f in self._manifest_glob()]
-        content, checksum = self._concat_xml(files)
+        xml_paths = defaultdict(list)
+
+        # group paths by module, keeping them in order
+        for path, addon, _ in self._get_asset_paths(bundle):
+            addon_paths = xml_paths[addon]
+            if path not in addon_paths:
+                addon_paths.append(path)
+
+        content, checksum = self._concat_xml(xml_paths)
         return content, checksum
 
     @classmethod
-    def get_qweb_templates_checksum(cls, addons, db=None, debug=False):
-        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates()[1]
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates(bundle)[1]
 
     @classmethod
-    def get_qweb_templates(cls, addons, db=None, debug=False):
-        return cls(addons, db, debug=debug)._get_qweb_templates()[0]
+    def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, debug=debug)._get_qweb_templates(bundle)[0]
 
 
 class GroupsTreeNode:
@@ -660,6 +623,8 @@ class GroupsTreeNode:
         """ Return field names of exported field having a group operator """
         aggregated_field_names = []
         for field_name in self._export_field_names:
+            if field_name == '.id':
+                field_name = 'id'
             if '/' in field_name:
                 # Currently no support of aggregated value for nested record fields
                 # e.g. line_ids/analytic_line_ids/amount
@@ -771,11 +736,11 @@ class ExportXlsxWriter:
                 # fails note that you can't export
                 cell_value = pycompat.to_text(cell_value)
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % self.field_names[column])
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
-                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % self.worksheet.xls_strmax
+                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.", self.worksheet.xls_strmax)
             else:
                 cell_value = cell_value.replace("\r", " ")
         elif isinstance(cell_value, datetime.datetime):
@@ -815,9 +780,25 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
+        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
+
+            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
+            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
+            # Float fields may not be displayed properly because of float
+            # representation issue with non stored fields or with values
+            # that, even stored, cannot be rounded properly and it is not
+            # acceptable to display useless digits (i.e. monetary)
+            #
+            # non stored field ->  we force 2 digits
+            # stored monetary -> we force max digits of installed currencies
+            if isinstance(aggregated_value, float):
+                if field.get('type') == 'monetary':
+                    aggregated_value = float_repr(aggregated_value, decimal_places)
+                elif not field.get('store'):
+                    aggregated_value = float_repr(aggregated_value, 2)
             self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
@@ -829,16 +810,16 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params, keep_hash=True)
+        return request.redirect_query('/web', query=request.params)
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
         if not request.session.uid:
-            return werkzeug.utils.redirect('/web/login', 303)
+            return request.redirect('/web/login', 303)
         if kw.get('redirect'):
-            return werkzeug.utils.redirect(kw.get('redirect'), 303)
+            return request.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
         try:
@@ -847,7 +828,7 @@ class Home(http.Controller):
             response.headers['X-Frame-Options'] = 'DENY'
             return response
         except AccessError:
-            return werkzeug.utils.redirect('/web/login?error=access')
+            return request.redirect('/web/login?error=access')
 
     @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
     def web_load_menus(self, unique):
@@ -856,7 +837,7 @@ class Home(http.Controller):
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
         :return: the menus (including the images in Base64)
         """
-        menus = request.env["ir.ui.menu"].load_menus(request.session.debug)
+        menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because
@@ -867,14 +848,14 @@ class Home(http.Controller):
         return response
 
     def _login_redirect(self, uid, redirect=None):
-        return redirect if redirect else '/web'
+        return _get_login_redirect_url(uid, redirect)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
-            return http.redirect_with_hash(redirect)
+            return request.redirect(redirect)
 
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
@@ -890,7 +871,7 @@ class Home(http.Controller):
             try:
                 uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
                 request.params['login_success'] = True
-                return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
+                return request.redirect(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 request.uid = old_uid
                 if e.args == odoo.exceptions.AccessDenied().args:
@@ -899,7 +880,7 @@ class Home(http.Controller):
                     values['error'] = e.args[0]
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
-                values['error'] = _('Only employee can access this database. Please contact the administrator.')
+                values['error'] = _('Only employees can access this database. Please contact the administrator.')
 
         if 'login' not in values and request.session.get('auth_login'):
             values['login'] = request.session.get('auth_login')
@@ -916,20 +897,23 @@ class Home(http.Controller):
         uid = request.env.user.id
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
-            request.env['res.users']._invalidate_session_cache()
+            # invalidate session token cache as we've changed the uid
+            request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
-        return http.local_redirect(self._login_redirect(uid), keep_hash=True)
+        return request.redirect(self._login_redirect(uid))
+
+    @http.route('/web/health', type='http', auth='none', save_session=False)
+    def health(self):
+        data = json.dumps({
+            'status': 'pass',
+        })
+        headers = [('Content-Type', 'application/json'),
+                   ('Cache-Control', 'no-store')]
+        return request.make_response(data, headers)
+
 
 class WebClient(http.Controller):
-
-    @http.route('/web/webclient/csslist', type='json', auth="none")
-    def csslist(self, mods=None):
-        return manifest_list('css', mods=mods)
-
-    @http.route('/web/webclient/jslist', type='json', auth="none")
-    def jslist(self, mods=None):
-        return manifest_list('js', mods=mods)
 
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
@@ -954,8 +938,12 @@ class WebClient(http.Controller):
         ])
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
-    def qweb(self, unique, mods=None, db=None):
-        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
+    def qweb(self, unique, mods=None, db=None, bundle=None):
+
+        if not request.db and mods is None:
+            mods = odoo.conf.server_wide_modules or []
+
+        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug, bundle=bundle)
 
         return request.make_response(content, [
                 ('Content-Type', 'text/xml'),
@@ -963,7 +951,7 @@ class WebClient(http.Controller):
             ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
-    def bootstrap_translations(self, mods):
+    def bootstrap_translations(self, mods=None):
         """ Load local translations from *.po files, as a temporary solution
             until we have established a valid session. This is meant only
             for translating the login page and db management chrome, using
@@ -975,9 +963,15 @@ class WebClient(http.Controller):
         request.session._fix_lang(context)
         lang = context['lang'].split('_')[0]
 
+        if mods is None:
+            mods = odoo.conf.server_wide_modules or []
+            if request.db:
+                mods = request.env.registry._init_modules | set(mods)
+
         translations_per_module = {}
         for addon_name in mods:
-            if http.addons_manifest[addon_name].get('bootstrap'):
+            manifest = http.addons_manifest.get(addon_name)
+            if manifest and manifest.get('bootstrap'):
                 addons_path = http.addons_manifest[addon_name]['addons_path']
                 f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
                 if not os.path.exists(f_name):
@@ -1001,6 +995,9 @@ class WebClient(http.Controller):
 
         if mods:
             mods = mods.split(',')
+        elif mods is None:
+            mods = list(request.env.registry._init_modules) + (odoo.conf.server_wide_modules or [])
+
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
@@ -1069,7 +1066,7 @@ class Database(http.Controller):
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
-        return env.get_template("database_manager.html").render(d)
+        return Markup(env.get_template("database_manager.html").render(d))
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
@@ -1083,6 +1080,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
@@ -1090,35 +1090,44 @@ class Database(http.Controller):
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
             request.session.authenticate(name, post['login'], password)
-            return http.local_redirect('/web/')
+            return request.redirect('/web')
         except Exception as e:
             error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             request._cr = None  # duplicating a database leads to an unusable cursor
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             dispatch_rpc('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             odoo.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1137,13 +1146,16 @@ class Database(http.Controller):
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             data_file = None
             db.check_super(master_pwd)
             with tempfile.NamedTemporaryFile(delete=False) as data_file:
                 backup_file.save(data_file)
             db.restore_db(name, data_file.name, str2bool(copy))
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1155,7 +1167,7 @@ class Database(http.Controller):
     def change_password(self, master_pwd, master_pwd_new):
         try:
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1188,21 +1200,21 @@ class Session(http.Controller):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
             {f['name']: f['value'] for f in fields})
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':_('You cannot leave any password empty.'),'title': _('Change Password')}
+            return {'error': _('You cannot leave any password empty.')}
         if new_password != confirm_password:
-            return {'error': _('The new password and its confirmation must be identical.'),'title': _('Change Password')}
+            return {'error': _('The new password and its confirmation must be identical.')}
 
         msg = _("Error, password not changed !")
         try:
             if request.env['res.users'].change_password(old_password, new_password):
-                return {'new_password':new_password}
-        except UserError as e:
-            msg = e.name
+                return {'new_password': new_password}
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
-        return {'title': _('Change Password'), 'error': msg}
+        except UserError as e:
+            msg = e.args[0]
+        return {'error': msg}
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
@@ -1214,7 +1226,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed(environment=request.env(user=odoo.SUPERUSER_ID))
+        return list(request.env.registry._init_modules | set([module.current_test] if module.current_test else []))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
@@ -1266,7 +1278,7 @@ class Session(http.Controller):
     @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
-        return werkzeug.utils.redirect(redirect, 303)
+        return request.redirect(redirect, 303)
 
 
 class DataSet(http.Controller):
@@ -1321,7 +1333,7 @@ class DataSet(http.Controller):
     def call_button(self, model, method, args, kwargs):
         action = self._call_kw(model, method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(action)
+            return clean_action(action, env=request.env)
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
@@ -1364,48 +1376,32 @@ class View(http.Controller):
 
 class Binary(http.Controller):
 
-    @staticmethod
-    def placeholder(image='placeholder.png'):
-        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'src', 'img', image]
-        with tools.file_open(get_resource_path(*image_path), 'rb') as fd:
-            return fd.read()
-
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
         '/web/content/<int:id>',
         '/web/content/<int:id>/<string:filename>',
-        '/web/content/<int:id>-<string:unique>',
-        '/web/content/<int:id>-<string:unique>/<string:filename>',
-        '/web/content/<int:id>-<string:unique>/<path:extra>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
 
-        status, headers, content = request.env['ir.http'].binary_content(
-            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token)
+        return request.env['ir.http']._get_content_common(xmlid=xmlid, model=model, res_id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
 
-        if status != 200:
-            return request.env['ir.http']._response_by_status(status, headers, content)
-        else:
-            content_base64 = base64.b64decode(content)
-            headers.append(('Content-Length', len(content_base64)))
-            response = request.make_response(content_base64, headers)
-        if token:
-            response.set_cookie('fileToken', token)
-        return response
+    @http.route(['/web/assets/debug/<string:filename>',
+        '/web/assets/debug/<path:extra>/<string:filename>',
+        '/web/assets/<int:id>/<string:filename>',
+        '/web/assets/<int:id>-<string:unique>/<string:filename>',
+        '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
+    def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
+        id = id or request.env['ir.attachment'].sudo().search_read(
+            [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
+             fields=['id'], limit=1)[0]['id']
 
-    @http.route(['/web/partner_image',
-        '/web/partner_image/<int:rec_id>',
-        '/web/partner_image/<int:rec_id>/<string:field>',
-        '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
-    def content_image_partner(self, rec_id, field='image_128', model='res.partner', **kwargs):
-        # other kwargs are ignored on purpose
-        return self._content_image(id=rec_id, model='res.partner', field=field,
-            placeholder='user_placeholder.jpg')
+        return request.env['ir.http']._get_content_common(xmlid=None, model='ir.attachment', res_id=id, field='datas', unique=unique, filename=filename,
+            filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
@@ -1429,57 +1425,10 @@ class Binary(http.Controller):
                       download=None, width=0, height=0, crop=False, access_token=None,
                       **kwargs):
         # other kwargs are ignored on purpose
-        return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
+        return request.env['ir.http']._content_image(xmlid=xmlid, model=model, res_id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
             download=download, width=width, height=height, crop=crop,
             quality=int(kwargs.get('quality', 0)), access_token=access_token)
-
-    def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       filename_field='name', unique=None, filename=None, mimetype=None,
-                       download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       placeholder=None, **kwargs):
-        status, headers, image_base64 = request.env['ir.http'].binary_content(
-            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', access_token=access_token)
-
-        return Binary._content_image_get_response(
-            status, headers, image_base64, model=model, id=id, field=field, download=download,
-            width=width, height=height, crop=crop, quality=quality,
-            placeholder=placeholder)
-
-    @staticmethod
-    def _content_image_get_response(
-            status, headers, image_base64, model='ir.attachment', id=None,
-            field='datas', download=None, width=0, height=0, crop=False,
-            quality=0, placeholder='placeholder.png'):
-        if status in [301, 304] or (status != 200 and download):
-            return request.env['ir.http']._response_by_status(status, headers, image_base64)
-        if not image_base64:
-            if placeholder is None and model in request.env:
-                # Try to browse the record in case a specific placeholder
-                # is supposed to be used. (eg: Unassigned users on a task)
-                record = request.env[model].browse(int(id)) if id else request.env[model]
-                placeholder_filename = record._get_placeholder_filename(field=field)
-                placeholder_content = Binary.placeholder(image=placeholder_filename)
-            else:
-                placeholder_content = Binary.placeholder()
-            # Since we set a placeholder for any missing image, the status must be 200. In case one
-            # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
-            # troubles.
-            status = 200
-            image_base64 = base64.b64encode(placeholder_content)
-
-            if not (width or height):
-                width, height = odoo.tools.image_guess_size_from_field_name(field)
-
-        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
-
-        content = base64.b64decode(image_base64)
-        headers = http.set_safe_image_headers(headers, content)
-        response = request.make_response(content, headers)
-        response.status_code = status
-        return response
 
     # backward compatibility
     @http.route(['/web/binary/image'], type='http', auth="public")
@@ -1488,8 +1437,7 @@ class Binary(http.Controller):
         height = None
         if resize:
             width, height = resize.split(",")
-        return self.content_image(model=model, id=id, field=field, width=width, height=height)
-
+        return request.env['ir.http']._content_image(model=model, res_id=id, field=field, width=width, height=height)
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception
@@ -1502,10 +1450,10 @@ class Binary(http.Controller):
         try:
             data = ufile.read()
             args = [len(data), ufile.filename,
-                    ufile.content_type, base64.b64encode(data)]
+                    ufile.content_type, pycompat.to_text(base64.b64encode(data))]
         except Exception as e:
             args = [False, str(e)]
-        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
+        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
@@ -1538,12 +1486,12 @@ class Binary(http.Controller):
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
             else:
                 args.append({
-                    'filename': filename,
+                    'filename': clean(filename),
                     'mimetype': ufile.content_type,
                     'id': attachment.id,
                     'size': attachment.file_size
                 })
-        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
+        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route([
         '/web/binary/company_logo',
@@ -1553,7 +1501,7 @@ class Binary(http.Controller):
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo'
         imgext = '.png'
-        placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
+        placeholder = functools.partial(get_resource_path, 'web', 'static', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1610,27 +1558,18 @@ class Binary(http.Controller):
         :return: base64 encoded fonts
         :rtype: list
         """
-
-
+        supported_exts = ('.ttf', '.otf', '.woff', '.woff2')
         fonts = []
+        fonts_directory = file_path(os.path.join('web', 'static', 'fonts', 'sign'))
         if fontname:
-            module_path = get_module_path('web')
-            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
-            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
-            if fonts_folder_path and module_resource_path:
-                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
-                module_resource_path = os.path.normpath(module_resource_path)
-                if module_resource_path.startswith(fonts_folder_path):
-                    with file_open(module_resource_path, 'rb') as font_file:
-                        font = base64.b64encode(font_file.read())
-                        fonts.append(font)
+            font_path = os.path.join(fonts_directory, fontname)
+            with file_open(font_path, 'rb', filter_ext=supported_exts) as font_file:
+                font = base64.b64encode(font_file.read())
+                fonts.append(font)
         else:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
-            font_filenames = sorted(os.listdir(fonts_directory))
-
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(supported_exts)])
             for filename in font_filenames:
-                font_file = open(os.path.join(fonts_directory, filename), 'rb')
+                font_file = file_open(os.path.join(fonts_directory, filename), 'rb', filter_ext=supported_exts)
                 font = base64.b64encode(font_file.read())
                 fonts.append(font)
         return fonts
@@ -1651,7 +1590,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.browse([action_id]).read(['type'])
+        base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
@@ -1660,15 +1599,16 @@ class Action(http.Controller):
             if additional_context:
                 ctx.update(additional_context)
             request.context = ctx
-            action = request.env[action_type].browse([action_id]).read()
+            action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
-                value = clean_action(action[0])
+                value = clean_action(action[0], env=request.env)
         return value
 
     @http.route('/web/action/run', type='json', auth="user")
     def run(self, action_id):
-        result = request.env['ir.actions.server'].browse([action_id]).run()
-        return clean_action(result) if result else False
+        action = request.env['ir.actions.server'].browse([action_id])
+        result = action.run()
+        return clean_action(result, env=action.env) if result else False
 
 class Export(http.Controller):
 
@@ -1697,7 +1637,7 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name
+                rec_name = request.env[model]._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -1821,11 +1761,19 @@ class ExportFormat(object):
         """ Provides the format's content type """
         raise NotImplementedError()
 
-    def filename(self, base):
-        """ Creates a valid filename for the format (with extension) from the
-         provided base name (exension-less)
-        """
+    @property
+    def extension(self):
         raise NotImplementedError()
+
+    def filename(self, base):
+        """ Creates a filename *without extension* for the item / format of
+        model ``base``.
+        """
+        if base not in request.env:
+            return base
+
+        model_description = request.env['ir.model']._get(base).name
+        return f"{model_description} ({base})"
 
     def from_data(self, fields, rows):
         """ Conversion method from Odoo's export data to whatever the
@@ -1841,10 +1789,14 @@ class ExportFormat(object):
     def from_group_data(self, fields, groups):
         raise NotImplementedError()
 
-    def base(self, data, token):
+    def base(self, data):
         params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
+
+        Model = request.env[model].with_context(**params.get('context', {}))
+        if not Model._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
 
         field_names = [f['name'] for f in fields]
         if import_compat:
@@ -1852,12 +1804,11 @@ class ExportFormat(object):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
-            groups_data = Model.read_group(domain, field_names, groupby, lazy=False)
+            groups_data = Model.read_group(domain, [x if x != '.id' else 'id' for x in field_names], groupby, lazy=False)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
@@ -1870,30 +1821,31 @@ class ExportFormat(object):
             Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
-            if not Model._is_an_ordinary_table():
-                fields = [field for field in fields if field['name'] != 'id']
-
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
+
+        # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,
             headers=[('Content-Disposition',
-                            content_disposition(self.filename(model))),
+                            content_disposition(
+                                osutil.clean_filename(self.filename(model) + self.extension))),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': token})
+        )
 
 class CSVExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/csv', type='http', auth="user")
     @serialize_exception
-    def index(self, data, token):
-        return self.base(data, token)
+    def index(self, data):
+        return self.base(data)
 
     @property
     def content_type(self):
         return 'text/csv;charset=utf8'
 
-    def filename(self, base):
-        return base + '.csv'
+    @property
+    def extension(self):
+        return '.csv'
 
     def from_group_data(self, fields, groups):
         raise UserError(_("Exporting grouped data to csv is not supported."))
@@ -1920,15 +1872,16 @@ class ExcelExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/xlsx', type='http', auth="user")
     @serialize_exception
-    def index(self, data, token):
-        return self.base(data, token)
+    def index(self, data):
+        return self.base(data)
 
     @property
     def content_type(self):
         return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-    def filename(self, base):
-        return base + '.xlsx'
+    @property
+    def extension(self):
+        return '.xlsx'
 
     def from_group_data(self, fields, groups):
         with GroupExportXlsxWriter(fields, groups.count) as xlsx_writer:
@@ -1942,6 +1895,8 @@ class ExcelExport(ExportFormat, http.Controller):
         with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
             for row_index, row in enumerate(rows):
                 for cell_index, cell_value in enumerate(row):
+                    if isinstance(cell_value, (list, tuple)):
+                        cell_value = pycompat.to_text(cell_value)
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value
@@ -1965,21 +1920,17 @@ class ReportController(http.Controller):
         if data.get('options'):
             data.update(json.loads(data.pop('options')))
         if data.get('context'):
-            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
-                del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
-            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
+            html = report.with_context(context)._render_qweb_html(docids, data=data)[0]
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
+            pdf = report.with_context(context)._render_qweb_pdf(docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         elif converter == 'text':
-            text = report.with_context(context).render_qweb_text(docids, data=data)[0]
+            text = report.with_context(context)._render_qweb_text(docids, data=data)[0]
             texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
             return request.make_response(text, headers=texthttpheaders)
         else:
@@ -1989,7 +1940,7 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
         """Contoller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -2003,26 +1954,31 @@ class ReportController(http.Controller):
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
         margins on left and right.
+        :param mask: The mask code to be used when rendering this QR-code.
+                     Masks allow adding elements on top of the generated image,
+                     such as the Swiss cross in the center of QR-bill codes.
         """
         try:
             barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet)
+                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, token, context=None):
+    def report_download(self, data, context=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
         :param data: a javascript array JSON.stringified containg report internal url ([0]) and
         type [1]
-        :returns: Response with a filetoken cookie and an attachment header
+        :returns: Response with an attachment header
+
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
+        reportname = '???'
         try:
             if type in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type == 'qweb-pdf' else 'text'
@@ -2056,11 +2012,11 @@ class ReportController(http.Controller):
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
                         filename = "%s.%s" % (report_name, extension)
                 response.headers.add('Content-Disposition', content_disposition(filename))
-                response.set_cookie('fileToken', token)
                 return response
             else:
                 return
         except Exception as e:
+            _logger.exception("Error while generating report %s", reportname)
             se = _serialize_exception(e)
             error = {
                 'code': 200,

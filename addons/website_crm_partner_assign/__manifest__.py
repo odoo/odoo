@@ -12,19 +12,20 @@ This module allows to publish your resellers/partners on your website and to for
 
 **Publish a partner**
 
-To publish a partner, set a *Level* in their contact form (in the Partner Assignation section) and click the *Publish* button.
+To publish a partner, set a *Level* in their contact form (in the Partner Assignment section) and click the *Publish* button.
 
 **Forward leads**
 
 Forwarding leads can be done for one or several leads at a time. The action is available in the *Assigned Partner* section of the lead/opportunity form view and in the *Action* menu of the list view.
 
-The automatic assignation is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.
+The automatic assignment is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.
 
     """,
     'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'portal'],
     'data': [
-        'data/crm_partner_assign_data.xml',
+        'data/crm_tag_data.xml',
+        'data/mail_template_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',
@@ -38,6 +39,11 @@ The automatic assignation is figured from the weight of partner levels and the g
         'data/crm_lead_demo.xml',
         'data/res_partner_grade_demo.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_crm_partner_assign/static/src/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

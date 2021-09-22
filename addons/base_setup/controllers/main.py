@@ -40,11 +40,14 @@ class BaseSetup(http.Controller):
             LIMIT 10
         """)
         pending_users = cr.fetchall()
+        action_pending_users = request.env['res.users'].browse(
+            [uid for (uid, login) in pending_users])._action_show()
 
         return {
             'active_users': active_count,
             'pending_count': pending_count,
             'pending_users': pending_users,
+            'action_pending_users': action_pending_users,
         }
 
     @http.route('/base_setup/demo_active', type='json', auth='user')

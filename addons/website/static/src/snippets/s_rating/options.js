@@ -46,7 +46,7 @@ options.registry.Rating = options.Class.extend({
             this._saving = false;
             dialog.on('save', this, function (attachments) {
                 this._saving = true;
-                const customClass = 'fa fa-fw ' + attachments.className;
+                const customClass = 'fa ' + attachments.className;
                 const $activeIcons = this.$target.find('.s_rating_active_icons > i');
                 const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
                 const $icons = params.customActiveIcon === 'true' ? $activeIcons : $inactiveIcons;
@@ -140,8 +140,8 @@ options.registry.Rating = options.Class.extend({
             'fa-square': 'fa-square-o',
             'fa-heart': 'fa-heart-o'
         };
-        const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : 'fa fa-fw ' + this.iconType;
-        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fa fa-fw ' + icons[this.iconType];
+        const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : 'fa ' + this.iconType;
+        const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fa ' + icons[this.iconType];
         const $activeIcons = this.$target.find('.s_rating_active_icons > i');
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
         $activeIcons.removeClass().addClass(faClassActiveIcons);

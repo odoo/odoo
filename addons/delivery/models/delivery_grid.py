@@ -14,13 +14,13 @@ class PriceRule(models.Model):
     @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
     def _compute_name(self):
         for rule in self:
-            name = 'if %s %s %s then' % (rule.variable, rule.operator, rule.max_value)
+            name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
             if rule.list_base_price and not rule.list_price:
-                name = '%s fixed price %s' % (name, rule.list_base_price)
+                name = '%s fixed price %.02f' % (name, rule.list_base_price)
             elif rule.list_price and not rule.list_base_price:
-                name = '%s %s times %s' % (name, rule.list_price, rule.variable_factor)
+                name = '%s %.02f times %s' % (name, rule.list_price, rule.variable_factor)
             else:
-                name = '%s fixed price %s plus %s times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
+                name = '%s fixed price %.02f plus %.02f times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
@@ -38,7 +38,11 @@ class PriceRule(models.Model):
 class ProviderGrid(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('base_on_rule', 'Based on Rules')])
+    delivery_type = fields.Selection(selection_add=[
+        ('base_on_rule', 'Based on Rules'),
+        ], ondelete={'base_on_rule': lambda recs: recs.write({
+            'delivery_type': 'fixed', 'fixed_price': 0,
+        })})
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
 
     def base_on_rule_rate_shipment(self, order):
@@ -54,7 +58,7 @@ class ProviderGrid(models.Model):
         except UserError as e:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': e.name,
+                    'error_message': e.args[0],
                     'warning_message': False}
         if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
             price_unit = order.company_id.currency_id._convert(
@@ -89,10 +93,23 @@ class ProviderGrid(models.Model):
 
         return self._get_price_from_picking(total, weight, volume, quantity)
 
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
+
     def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:

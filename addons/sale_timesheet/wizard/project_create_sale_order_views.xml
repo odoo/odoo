@@ -12,21 +12,9 @@
                         <field name="company_id" invisible="1"/>
                         <field name="partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                     </group>
-                    <group>
-                        <field name="billable_type" widget="radio"/>
-                    </group>
                 </group>
-                <group attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}">
-                    <group>
-                        <field name="product_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'required': [('billable_type', '=', 'project_rate')]}"/>
-                    </group>
-                    <group>
-                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'required': [('billable_type', '=', 'project_rate')]}"/>
-                        <field name="currency_id" invisible="1"/>
-                    </group>
-                </group>
-                <group attrs="{'invisible': [('billable_type', '=', 'project_rate')]}">
-                    <field name="line_ids" nolabel="1" attrs="{'required': [('billable_type', '=', 'employee_rate')]}">
+                <group>
+                    <field name="line_ids" nolabel="1">
                         <tree editable="bottom">
                             <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}"/>
                             <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
@@ -35,9 +23,12 @@
                         </tree>
                     </field>
                 </group>
+                <group attrs="{'invisible': [('info_invoice', '=', False)]}">
+                    <field name="info_invoice" nolabel="1"/>
+                </group>
                 <footer>
-                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
-                    <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
+                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="z" type="object" class="btn btn-secondary oe_inline"/>
                 </footer>
             </form>
         </field>

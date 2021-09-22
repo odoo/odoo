@@ -11,7 +11,7 @@
                 <field name="name"/>
                 <field name="description"/>
                 <field name="seats_max"/>
-                <field name="seats_availability"/>
+                <field name="seats_limited"/>
             </tree>
         </field>
 	</record>
@@ -26,7 +26,7 @@
                 <group>
                     <field name="name"/>
                     <field name="description"/>
-                    <field name="seats_availability"/>
+                    <field name="seats_limited"/>
                     <field name="seats_max"/>
                 </group>
             </sheet>
@@ -71,12 +71,12 @@
         <field name="arch" type="xml">
             <tree string="Tickets" editable="bottom">
                 <field name="name"/>
-                <field name="description"/>
-                <field name="start_sale_date"/>
-                <field name="end_sale_date"/>
-                <field name="seats_max" width="105px" string="Maximum"/>
-                <field name="seats_reserved" width="105px" string="Reserved"/>
-                <field name="seats_unconfirmed" width="110px" string="Unconfirmed"/>
+                <field name="description" optional="hide"/>
+                <field name="start_sale_datetime" optional="show"/>
+                <field name="end_sale_datetime" optional="show"/>
+                <field name="seats_max" sum="Total" width="105px" string="Maximum"/>
+                <field name="seats_reserved" sum="Total" width="105px" string="Confirmed"/>
+                <field name="seats_unconfirmed" sum="Total" width="110px" string="Unconfirmed"/>
             </tree>
         </field>
     </record>
@@ -92,8 +92,8 @@
                         <group>
                             <field name="name"/>
                             <field name="description"/>
-                            <field name="start_sale_date"/>
-                            <field name="end_sale_date"/>
+                            <field name="start_sale_datetime"/>
+                            <field name="end_sale_datetime"/>
                         </group><group>
                             <field name="seats_max"/>
                             <field name="seats_reserved"/>
@@ -156,16 +156,16 @@
             <form string="Event's Ticket">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" placeholder="Event Name"/></h1>
+                        <label for="name" string="Ticket Type"/>
+                        <h1><field name="name" placeholder="e.g. VIP Ticket"/></h1>
                     </div>
                     <group>
                         <group>
                             <field name="event_id"/>
-                            <field name="seats_availability"/>
+                            <field name="seats_limited"/>
                             <field name="seats_available"/>
-                            <field name="start_sale_date"/>
-                            <field name="end_sale_date"/>
+                            <field name="start_sale_datetime"/>
+                            <field name="end_sale_datetime"/>
                         </group>
                         <group>
                             <field name="seats_max"/>

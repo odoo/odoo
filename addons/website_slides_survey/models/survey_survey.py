@@ -27,7 +27,7 @@ class Survey(models.Model):
     # ---------------------------------------------------------
 
     def action_survey_view_slide_channels(self):
-        action = self.env.ref('website_slides.slide_channel_action_overview').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_action_overview")
         action['display_name'] = _("Courses")
         if self.slide_channel_count == 1:
             action.update({'views': [(False, 'form')],

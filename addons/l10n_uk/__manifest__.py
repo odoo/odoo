@@ -6,7 +6,7 @@
 {
     'name': 'UK - Accounting',
     'version': '1.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:
 =================================================================================================
@@ -15,7 +15,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     - InfoLogic UK counties listing
     - a few other adaptations""",
     'author': 'SmartMode LTD',
-    'website': 'https://www.odoo.com/page/accounting',
+    'website': 'https://www.odoo.com/app/accounting',
     'depends': [
         'account',
         'base_iban',
@@ -30,5 +30,9 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
     ],
-    'demo' : ['demo/l10n_uk_demo.xml'],
+    'demo': [
+        'demo/l10n_uk_demo.xml',
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

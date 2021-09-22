@@ -4,6 +4,7 @@
 {
     'name': 'Skills Management',
     'category': 'Human Resources/Employees',
+    'sequence': 270,
     'version': '1.0',
     'summary': 'Manage skills, knowledge and resumé of your employees',
     'description':
@@ -18,7 +19,6 @@ This module introduces skills and resumé management for employees.
         'security/ir.model.access.csv',
         'security/hr_skills_security.xml',
         'views/hr_views.xml',
-        'views/hr_templates.xml',
         'data/hr_resume_data.xml',
     ],
     'demo': [
@@ -26,10 +26,19 @@ This module introduces skills and resumé management for employees.
         'data/hr.employee.skill.csv',
         'data/hr.resume.line.csv',
     ],
-    'qweb': [
-        'static/src/xml/resume_templates.xml',
-        'static/src/xml/skills_templates.xml',
-    ],
     'installable': True,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'hr_skills/static/src/css/hr_skills.scss',
+            'hr_skills/static/src/js/resume_widget.js',
+        ],
+        'web.qunit_suite_tests': [
+            'hr_skills/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'hr_skills/static/src/xml/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

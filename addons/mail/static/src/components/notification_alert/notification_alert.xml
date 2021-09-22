@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NotificationAlert" owl="1">
+        <div class="o_NotificationAlert">
+            <t t-if="messaging">
+                <center t-if="isNotificationBlocked" class="o_notification_alert alert alert-primary">
+                    Odoo Push notifications have been blocked. Go to your browser settings to allow them.
+                </center>
+            </t>
+        </div>
+    </t>
+
+</templates>

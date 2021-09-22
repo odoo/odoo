@@ -15,11 +15,6 @@ class AccountChartTemplate(models.Model):
                     journal['l10n_in_gstin_partner_id'] = company.partner_id.id
                 if journal['code'] == 'INV':
                     journal['name'] = _('Tax Invoices')
-
-            res += [
-                {'type': 'sale', 'name': _('Retail Invoices'), 'code': 'RETINV', 'company_id': company.id, 'show_on_dashboard': True, 'l10n_in_gstin_partner_id': company.partner_id.id},
-                {'type': 'sale', 'name': _('Export Invoices'), 'code': 'EXPINV', 'company_id': company.id, 'show_on_dashboard': True, 'l10n_in_import_export': True, 'l10n_in_gstin_partner_id': company.partner_id.id}
-            ]
         return res
 
 class AccountTaxTemplate(models.Model):

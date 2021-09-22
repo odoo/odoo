@@ -8,16 +8,15 @@
         display: none;
     }
     .close {
+        z-index: $zindex-modal;
         @include o-position-absolute(0, 0);
-        font-size: $font-size-sm;
-        width: 2 * $font-size-sm;
-        height: 2 * $font-size-sm;
+        width: $font-size-lg * 2;
+        height: $font-size-lg * 2;
+        line-height: $font-size-lg * 2;
+        margin: 0;
         padding: 0;
-        margin: (-$font-size-sm) (-$font-size-sm) 0 0;
-        opacity: 1;
-        background-color: $white;
-        z-index: 1;
-        border-radius: $font-size-sm;
+        @include o-bg-color(color-yiq(o-color('primary')), o-color('primary'), $with-extras: false);
         box-shadow: $box-shadow-sm;
+        opacity: 1;
     }
 }

@@ -4,7 +4,9 @@ var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;
 var qweb = core.qweb;
+const {Markup} = require('web.utils');
 var fieldRegistry = require('web.field_registry');
+var {format} = require('web.field_utils');
 require('account.section_and_note_backend');
 
 var SectionAndNoteFieldOne2Many = fieldRegistry.get('section_and_note_one2many');
@@ -71,12 +73,8 @@ SectionAndNoteFieldOne2Many.include({
                 grid_product_tmpl_id: {id: productTemplateId}
             },
             viewType: 'form',
-            onSuccess: function (result) {
-                // result = list of widgets
-                // find one of the SO widget
-                // (not so lines because the grid values are computed on the SO)
-                // and get the grid information from its recordData.
-                var gridInfo = result.find(r => r.recordData.grid).recordData.grid;
+            onSuccess: function () {
+                const gridInfo = self.recordData.grid;
                 self._openMatrixConfigurator(gridInfo, productTemplateId, editedCellAttributes);
             }
         });
@@ -102,6 +100,12 @@ SectionAndNoteFieldOne2Many.include({
                 'product_matrix.matrix', {
                     header: infos.header,
                     rows: infos.matrix,
+                    format({price, currency_id}) {
+                        if (!price) { return ""; }
+                        const sign =  price < 0 ? '-' : '+';
+                        const formatted = format.monetary(Math.abs(price), null, {currency_id});
+                        return Markup`${sign}&nbsp;${formatted}`;
+                    }
                 }
             )),
             buttons: [
@@ -127,6 +131,7 @@ SectionAndNoteFieldOne2Many.include({
         }).open();
 
         MatrixDialog.opened(function () {
+            MatrixDialog.$content.closest('.o_dialog_container').removeClass('d-none');
             if (editedCellAttributes.length > 0) {
                 var str = editedCellAttributes.toString();
                 MatrixDialog.$content.find('.o_matrix_input').filter((k, v) => v.attributes.ptav_ids.nodeValue === str)[0].focus();

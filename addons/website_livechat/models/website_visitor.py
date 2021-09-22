@@ -6,6 +6,7 @@ import json
 
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
+from odoo.http import request
 
 
 class WebsiteVisitor(models.Model):
@@ -31,7 +32,7 @@ class WebsiteVisitor(models.Model):
     def _compute_session_count(self):
         sessions = self.env['mail.channel'].search([('livechat_visitor_id', 'in', self.ids)])
         session_count = dict.fromkeys(self.ids, 0)
-        for session in sessions.filtered(lambda c: c.channel_message_ids):
+        for session in sessions.filtered(lambda c: c.message_ids):
             session_count[session.livechat_visitor_id.id] += 1
         for visitor in self:
             visitor.session_count = session_count.get(visitor.id, 0)
@@ -49,7 +50,7 @@ class WebsiteVisitor(models.Model):
         # check if user is available as operator
         for website in self.mapped('website_id'):
             if not website.channel_id:
-                raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.' % website.name))
+                raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
         self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})
         # Create chat_requests and linked mail_channels
         mail_channel_vals_list = []
@@ -57,13 +58,17 @@ class WebsiteVisitor(models.Model):
             operator = self.env.user
             country = visitor.country_id
             visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
+            channel_partner_to_add = [(4, operator.partner_id.id)]
+            if visitor.partner_id:
+                channel_partner_to_add.append((4, visitor.partner_id.id))
+            else:
+                channel_partner_to_add.append((4, self.env.ref('base.public_partner').id))
             mail_channel_vals_list.append({
-                'channel_partner_ids':  [(4, operator.partner_id.id)],
+                'channel_partner_ids': channel_partner_to_add,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
                 'livechat_operator_id': self.env.user.partner_id.id,
                 'channel_type': 'livechat',
                 'public': 'private',
-                'email_send': False,
                 'country_id': country.id,
                 'anonymous_name': visitor_name,
                 'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),
@@ -73,6 +78,42 @@ class WebsiteVisitor(models.Model):
         if mail_channel_vals_list:
             mail_channels = self.env['mail.channel'].create(mail_channel_vals_list)
             # Open empty chatter to allow the operator to start chatting with the visitor.
-            mail_channels_info = mail_channels.channel_info('channel_minimize')
+            channel_members = self.env['mail.channel.partner'].sudo().search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('channel_id', 'in', mail_channels.ids),
+            ])
+            channel_members.write({
+                'fold_state': 'open',
+                'is_minimized': True,
+            })
+            mail_channels_info = mail_channels.channel_info('send_chat_request')
+            notifications = []
             for mail_channel_info in mail_channels_info:
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info)
+                notifications.append([(self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info])
+            self.env['bus.bus'].sendmany(notifications)
+
+    def _link_to_visitor(self, target, keep_unique=True):
+        """ Copy sessions of the secondary visitors to the main partner visitor. """
+        if target.partner_id:
+            target.mail_channel_ids |= self.mail_channel_ids
+        super(WebsiteVisitor, self)._link_to_visitor(target, keep_unique=keep_unique)
+
+    def _link_to_partner(self, partner, update_values=None):
+        """ Adapt partner in members of related livechats """
+        if partner:
+            self.mail_channel_ids.channel_partner_ids = [
+                (3, self.env.ref('base.public_partner').id),
+                (4, partner.id),
+            ]
+        super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
+
+    def _create_visitor(self):
+        visitor = super(WebsiteVisitor, self)._create_visitor()
+        mail_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
+        if mail_channel_uuid:
+            mail_channel = request.env["mail.channel"].sudo().search([("uuid", "=", mail_channel_uuid)])
+            mail_channel.write({
+                'livechat_visitor_id': visitor.id,
+                'anonymous_name': visitor.display_name
+            })
+        return visitor

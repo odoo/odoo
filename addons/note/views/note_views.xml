@@ -113,16 +113,14 @@
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
-                  <div class="oe_kanban_bottom_right">
-                    <div class="o_kanban_inline_block mr4">
-                        <field name="activity_ids" widget="kanban_activity" />
-                    </div>
+                  <div class="o_kanban_inline_block float-right mr4">
+                    <field name="activity_ids" widget="kanban_activity" />
                   </div>
                 </span>
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right" t-att-data-member_id="follower" alt="Follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'avatar_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>
@@ -143,7 +141,7 @@
           <field name="open"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-          <field name="activity_exception_decoration" widget="activity_exception"/>
+          <field name="activity_ids" widget="list_activity" optional="show"/>
         </tree>
       </field>
     </record>
@@ -159,12 +157,12 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                  <field name="memo" type="html" class="oe_memo"/>
+                  <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false}"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -181,12 +179,12 @@
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <filter invisible="1" string="Late Activities" name="activities_overdue"
-                  domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                  domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>
           <filter invisible="1" string="Today Activities" name="activities_today"
-                  domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                  domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
           <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
             <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
@@ -215,28 +213,24 @@
     <menuitem
       id="menu_note_notes"
       name="Notes"
-      sequence="3"
+      sequence="15"
       action="note.action_note_note"
-      web_icon="note,static/description/icon.png"/>
-
-    <menuitem
-      id="menu_note_configuration"
-      name="Configuration"
-      sequence="100"
-      parent="menu_note_notes"
-      groups="base.group_no_one"/>
-
-    <menuitem
-      id="menu_notes_stage"
-      name="Stages"
-      parent="menu_note_configuration"
-      action="note.action_note_stage"
-      sequence="21"/>
-
-    <menuitem
-      id="notes_tag_menu"
-      parent="menu_note_configuration"
-      action="note_tag_action"
-      sequence="22"/>
+      web_icon="note,static/description/icon.png">
+        <menuitem
+          id="menu_note_configuration"
+          name="Configuration"
+          sequence="100"
+          groups="base.group_no_one">
+            <menuitem
+              id="menu_notes_stage"
+              name="Stages"
+              action="note.action_note_stage"
+              sequence="21"/>
+            <menuitem
+              id="notes_tag_menu"
+              action="note_tag_action"
+              sequence="22"/>
+        </menuitem>
+    </menuitem>
 
 </odoo>

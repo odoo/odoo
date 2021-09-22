@@ -6,10 +6,10 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context" eval="{
-                'search_default_category_id': ref('base.module_category_accounting_localizations'),
-                'searchpanel_default_category_id': ref('base.module_category_accounting_localizations'),
+                'search_default_category_id': ref('base.module_category_accounting_localizations_account_charts'),
+                'searchpanel_default_category_id': ref('base.module_category_accounting_localizations_account_charts'),
             }"/>
-            <field name="search_view_id" ref="base.view_module_filter"/>
+            <field name="search_view_id" ref="view_module_filter_inherit_account"/>
         </record>
 
         <record id="res_config_settings_view_form" model="ir.ui.view">
@@ -19,12 +19,13 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <field name="country_code" invisible="1"/>
                     <div class="app_settings_block" data-string="Invoicing" string="Invoicing" data-key="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                         <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
                         <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                            <div class="col-12 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
@@ -34,11 +35,11 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
-                                            <field name="chart_template_id" widget="selection"/>
+                                            <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
+                                            <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
                                         </div>
                                         <div class="mt8">
-                                            <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
+                                            <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" discard="0" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -92,14 +93,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_l10n_eu_service"/>
+                                    <field name="module_l10n_eu_oss"/>
                                 </div>
-                                <div class="o_setting_right_pane" name="l10n_eu_service_right_pane">
-                                    <label for="module_l10n_eu_service"/>
+                                <div class="o_setting_right_pane" name="l10n_eu_oss_right_pane">
+                                    <label for="module_l10n_eu_oss"/>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Apply right VAT rates for digital products sold in EU
+                                        Apply VAT of the EU country to which goods and services are delivered.
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +123,10 @@
                                             <label for="tax_cash_basis_journal_id" class="col-lg-3 o_light_label"/>
                                             <field name="tax_cash_basis_journal_id"/>
                                         </div>
+                                        <div class="row mt16">
+                                            <label for="account_cash_basis_base_account_id" class="col-lg-3 o_light_label"/>
+                                            <field name="account_cash_basis_base_account_id"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -139,26 +145,10 @@
                                         <div class="row mt16">
                                             <label for="currency_id" class="col-lg-3 o_light_label"/>
                                             <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
+                                            <field name="group_multi_currency" invisible="1"/>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="record_transactions">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_multi_currency"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Multi-Currencies" for="group_multi_currency"/>
-                                    <div class="text-muted">
-                                        Record transactions in foreign currencies
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                         <div class="mt8">
-                                            <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="currency_exchange_journal_id" class="col-lg-3 o_light_label"/>
-                                            <field name="currency_exchange_journal_id"/>
+                                            <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -229,23 +219,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="use_invoice_terms">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_invoice_terms"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_invoice_terms"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                    <div class="text-muted">
-                                        Show standard terms &amp; conditions on invoices/orders
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
-                                        <div class="mt16">
-                                            <field name="invoice_terms" placeholder="Insert your terms &amp; conditions here..."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="get_invoice_warnings">
                                 <div class="o_setting_left_pane">
                                     <field name="group_warning_account"/>
@@ -307,6 +280,39 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="use_invoice_terms">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_invoice_terms"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_invoice_terms"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Add your terms &amp; conditions at the bottom of invoices/orders/quotations
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
+                                        <div class="mt16">
+                                            <field name="terms_type" class="o_light_label" widget="radio"/>
+                                            <div>
+                                                <field name="invoice_terms"
+                                                       attrs="{'invisible': [('terms_type', '=', 'html')]}"
+                                                       class="oe_account_terms mt-5 w-100"
+                                                       placeholder="Insert your terms &amp; conditions here..."/>
+                                            </div>
+                                            <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                                                <button name="action_update_terms" icon="fa-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                            </div>
+                                            <field name="preview_ready" invisible="1"/>
+                                            <div class="mt4 ml-1" attrs="{'invisible': [('preview_ready', '=', False)]}">
+                                                <a class="btn-link" href="/terms" role="button">
+                                                    <i class="fa fa-arrow-right"></i>
+                                                    Preview
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Customer Payments</h2>
                         <div class="row mt16 o_settings_container" id="pay_invoice_online_setting_container">
@@ -321,9 +327,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="account_batch_payment"
-                                groups="account.group_account_user">
+                            <div class="col-12 col-lg-6 o_setting_box" id="account_batch_payment">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                                 </div>
@@ -355,15 +359,15 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box"
                                 id="qr_code_invoices"
-                                title="Add an EPC QR code to your invoices so that your customers can pay instantly with their mobile banking application. EPC QR codes are used by many European banks to process SEPA payments.">
+                                title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application.">
                                 <div class="o_setting_left_pane">
-                                    <field name="qr_code" class="oe_inline" widget="upgrade_boolean"/>
+                                    <field name="qr_code" class="oe_inline"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="qr_code_right_pane">
-                                    <label string="SEPA QR Code" for="qr_code"/>
+                                    <label string="QR Codes" for="qr_code"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
-                                        Add a payment QR code to your invoices
+                                        Add a payment QR-code to your invoices
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +397,7 @@
                                 <div class="o_setting_right_pane" name="show_purchase_receipts_right_pane">
                                     <label for="group_show_purchase_receipts"/>
                                     <div class="text-muted">
-                                        Active to create purchase receipt
+                                        Activate to create purchase receipt
                                     </div>
                                 </div>
                             </div>
@@ -428,32 +432,62 @@
                             </div>
                         </div>
 
-                        <t groups="account.group_account_user">
-                            <h2>Bank &amp; Cash</h2>
-                            <div class="row mt16 o_settings_container" id="bank_cash">
-                                <div class="col-xs-12 col-md-6 o_setting_box">
-                                        <div class="o_setting_left_pane"/>
-                                        <div class="o_setting_right_pane">
-                                            <label for="account_bank_reconciliation_start"/>
-                                            <div class="text-muted">
-                                                The payments which have not been matched with a bank statement will not be shown in bank reconciliation data if they were made before this date
-                                            </div>
-                                            <field name="account_bank_reconciliation_start"/>
-                                        </div>
-                                    </div>
+                        <t groups="account.group_account_user" attrs="{'invisible': [('chart_template_id','=',False)]}">
+                            <h2>Default Accounts</h2>
+                            <div class="row mt16 o_settings_container" id="default_accounts">
                                 <div class="col-12 col-lg-6 o_setting_box"
-                                    id="account_yodlee"
-                                    title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_account_yodlee" widget="upgrade_boolean"/>
-                                    </div>
+                                    attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                                    <div class="o_setting_left_pane"></div>
                                     <div class="o_setting_right_pane">
-                                        <label for="module_account_yodlee" string="Automatic Import"/>
-                                        <div class="text-muted">
-                                            Import your bank statements automatically
+                                        <div class="content-group">
+                                            <div>
+                                                <span class="o_form_label">Post Exchange difference entries in:</span>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="currency_exchange_journal_id" class="col-lg-4 o_light_label" string="Journal" />
+                                                <field name="currency_exchange_journal_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="income_currency_exchange_account_id" class="col-lg-4 o_light_label"/>
+                                                <field name="income_currency_exchange_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="expense_currency_exchange_account_id" class="col-lg-4 o_light_label"/>
+                                                <field name="expense_currency_exchange_account_id"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_left_panel"></div>
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">The following default accounts are used with certain features.</span>
+                                        <div class="content-group">
+                                            <div class="row mt8">
+                                                <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="account_journal_suspense_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="account_journal_payment_debit_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="account_journal_payment_debit_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="account_journal_payment_credit_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="account_journal_payment_credit_account_id"/>
+                                            </div>
+                                            <div class="row mt8">
+                                                <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
+                                                <field name="transfer_account_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t groups="account.group_account_user">
+                            <h2>Bank &amp; Cash</h2>
+                            <div class="row mt16 o_settings_container" id="bank_cash">
                                 <div class="col-12 col-lg-6 o_setting_box"
                                     id="import_bank_statements_csv"
                                     title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
@@ -504,6 +538,26 @@
                                 </div>
                             </div>
                         </t>
+
+                        <t groups="account.group_account_user">
+                            <h2>Accounting Import</h2>
+                            <div class="row mt16 o_settings_container" id="accounting_import">
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="l10n_fr_fec_import"
+                                    title="This adds a menu item in the Accounting Configuration menu to import FEC files.">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_l10n_fr_fec_import" widget="upgrade_boolean"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="module_l10n_fr_fec_import" string="FEC Import"/>
+                                        <div class="text-muted">
+                                            Import your accounting data from FEC
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
                         <t groups="account.group_account_user">
                             <h2>Fiscal Periods</h2>
                             <div class="row mt16 o_settings_container" id="accounting_reports">
@@ -584,10 +638,8 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'account'}</field>
+            <field name="context">{'module' : 'account', 'bin_size': False}</field>
         </record>
 
-        <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
-            sequence="0" action="action_account_config" groups="base.group_system"/>
     </data>
 </odoo>

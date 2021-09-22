@@ -7,6 +7,7 @@
     'description': '',
     'version': '1.0',
     'category': 'Marketing/Email Marketing',
+    'sequence': 245,
     'depends': [
         'portal',
         'mass_mailing',
@@ -33,4 +34,5 @@
         'data/mailing_demo.xml',
     ],
     'application': True,
+    'license': 'LGPL-3',
 }

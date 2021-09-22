@@ -182,6 +182,7 @@ class report_paperformat(models.Model):
         ], 'Orientation', default='Landscape')
     header_line = fields.Boolean('Display a header line', default=False)
     header_spacing = fields.Integer('Header spacing', default=35)
+    disable_shrinking = fields.Boolean('Disable smart shrinking')
     dpi = fields.Integer('Output DPI', required=True, default=90)
     report_ids = fields.One2many('ir.actions.report', 'paperformat_id', 'Associated reports', help="Explicitly associated reports")
     print_page_width = fields.Float('Print page width (mm)', compute='_compute_print_page_size')

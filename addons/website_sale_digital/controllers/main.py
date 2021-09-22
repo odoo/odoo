@@ -5,24 +5,10 @@ import base64
 import io
 import os
 import mimetypes
-from werkzeug.utils import redirect
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.sale.controllers.portal import CustomerPortal
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-
-
-class WebsiteSaleDigitalConfirmation(WebsiteSale):
-    @http.route([
-        '/shop/confirmation',
-    ], type='http', auth="public", website=True)
-    def payment_confirmation(self, **post):
-        response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
-        order_lines = response.qcontext['order'].order_line
-        digital_content = any(x.product_id.type == 'digital' for x in order_lines)
-        response.qcontext.update(digital=digital_content)
-        return response
 
 
 class WebsiteSaleDigital(CustomerPortal):
@@ -36,7 +22,7 @@ class WebsiteSaleDigital(CustomerPortal):
         if not 'sale_order' in response.qcontext:
             return response
         order = response.qcontext['sale_order']
-        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.payment_state', '=', 'paid')])
+        invoiced_lines = request.env['account.move.line'].sudo().search([('move_id', 'in', order.invoice_ids.ids), ('move_id.payment_state', 'in', ['paid', 'in_payment'])])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
         if not order.amount_total:
             # in that case, we should add all download links to the products
@@ -79,7 +65,7 @@ class WebsiteSaleDigital(CustomerPortal):
         if attachment:
             attachment = attachment[0]
         else:
-            return redirect(self.orders_page)
+            return request.redirect(self.orders_page)
 
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
@@ -88,21 +74,21 @@ class WebsiteSaleDigital(CustomerPortal):
 
         if res_model == 'product.product':
             if res_id not in purchased_products:
-                return redirect(self.orders_page)
+                return request.redirect(self.orders_page)
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
             template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
-                return redirect(self.orders_page)
+                return request.redirect(self.orders_page)
 
         else:
-            return redirect(self.orders_page)
+            return request.redirect(self.orders_page)
 
         # The client has bought the product, otherwise it would have been blocked by now
         if attachment["type"] == "url":
             if attachment["url"]:
-                return redirect(attachment["url"])
+                return request.redirect(attachment["url"])
             else:
                 return request.not_found()
         elif attachment["datas"]:

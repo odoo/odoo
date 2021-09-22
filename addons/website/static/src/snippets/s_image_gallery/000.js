@@ -7,8 +7,9 @@ var publicWidget = require('web.public.widget');
 var qweb = core.qweb;
 
 const GalleryWidget = publicWidget.Widget.extend({
-    selector: '.o_gallery:not(.o_slideshow)',
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
+
+    selector: '.s_image_gallery:not(.o_slideshow)',
+    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     events: {
         'click img': '_onClickImg',
     },
@@ -28,11 +29,7 @@ const GalleryWidget = publicWidget.Widget.extend({
         var self = this;
         var $cur = $(ev.currentTarget);
 
-        var urls = [];
-        var idx = undefined;
-        var milliseconds = undefined;
-        var params = undefined;
-        var $images = $cur.closest('.o_gallery').find('img');
+        var $images = $cur.closest('.s_image_gallery').find('img');
         var size = 0.8;
         var dimensions = {
             min_width: Math.round(window.innerWidth * size * 0.9),
@@ -43,16 +40,12 @@ const GalleryWidget = publicWidget.Widget.extend({
             height: Math.round(window.innerHeight * size)
         };
 
-        $images.each(function () {
-            urls.push($(this).attr('src'));
-        });
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
-        idx = urls.indexOf($img.attr('src'));
 
-        milliseconds = $cur.closest('.o_gallery').data('interval') || false;
+        const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
         var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
-            srcs: urls,
-            index: idx,
+            images: $images.get(),
+            index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
@@ -80,7 +73,7 @@ const GalleryWidget = publicWidget.Widget.extend({
 
 const GallerySliderWidget = publicWidget.Widget.extend({
     selector: '.o_slideshow',
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
+    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     disabledInEditableMode: false,
 
     /**
@@ -93,7 +86,18 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
         var $lis = this.$indicator.find('li[data-slide-to]');
-        var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
+        let indicatorWidth = this.$indicator.width();
+        if (indicatorWidth === 0) {
+            // An ancestor may be hidden so we try to find it and make it
+            // visible just to take the correct width.
+            const $indicatorParent = this.$indicator.parents().not(':visible').last();
+            if (!$indicatorParent[0].style.display) {
+                $indicatorParent[0].style.display = 'block';
+                indicatorWidth = this.$indicator.width();
+                $indicatorParent[0].style.display = '';
+            }
+        }
+        let nbPerPage = Math.floor(indicatorWidth / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
         var realNbPerPage = nbPerPage || 1;
         var nbPages = Math.ceil($lis.length / realNbPerPage);
 
@@ -105,23 +109,23 @@ const GallerySliderWidget = publicWidget.Widget.extend({
             $lis.each(function (i) {
                 $(this).toggleClass('d-none', i < page * nbPerPage || i >= (page + 1) * nbPerPage);
             });
-            if (self.editableMode) { // do not remove DOM in edit mode
-                return;
-            }
             if (page <= 0) {
                 self.$prev.detach();
             } else {
+                self.$prev.removeClass('d-none');
                 self.$prev.prependTo(self.$indicator);
             }
             if (page >= nbPages - 1) {
                 self.$next.detach();
             } else {
+                self.$next.removeClass('d-none');
                 self.$next.appendTo(self.$indicator);
             }
         }
 
         function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
+            const active = $lis.filter('.active');
+            index = active.length ? $lis.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }
@@ -139,7 +143,11 @@ const GallerySliderWidget = publicWidget.Widget.extend({
             page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
             self.$carousel.carousel(page * realNbPerPage);
-            hide();
+            // We dont use hide() before the slide animation in the editor because there is a traceback
+            // TO DO: fix this traceback
+            if (!self.editableMode) {
+                hide();
+            }
         });
         this.$carousel.on('slid.bs.carousel.gallery_slider', update);
 

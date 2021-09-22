@@ -13,7 +13,8 @@
         &.s_table_of_content_vertical_navbar .s_table_of_content_navbar {
             > a.list-group-item-action {
                 background: none;
-                color: rgba($body-color, 0.7);
+                color: inherit;
+                opacity: 0.7;
                 font-weight: $font-weight-normal + 100;
                 padding-left: 3px;
                 transition: padding 0.1s;
@@ -24,15 +25,15 @@
                     content: "";
                 }
                 &:hover {
-                    color: rgba($body-color, 0.9);
+                    opacity: 1;
                 }
                 &:focus {
                     background: none;
                 }
                 &.active {
-                    color: rgba($body-color, 0.9);
                     background: none;
                     padding-left: 8px;
+                    opacity: 1;
 
                     &:before {
                         background-color: theme-color('primary');

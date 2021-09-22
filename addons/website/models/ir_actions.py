@@ -4,6 +4,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
 class ServerAction(models.Model):
@@ -27,7 +28,7 @@ class ServerAction(models.Model):
             action.xml_id = res.get(action.id)
 
     def _compute_website_url(self, website_path, xml_id):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         link = website_path or xml_id or (self.id and '%d' % self.id) or ''
         if base_url and link:
             path = '%s/%s' % ('/website/action', link)
@@ -48,13 +49,14 @@ class ServerAction(models.Model):
         eval_context = super(ServerAction, self)._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
+            eval_context['json'] = json_scriptsafe
         return eval_context
 
     @api.model
-    def run_action_code_multi(self, action, eval_context=None):
+    def _run_action_code_multi(self, eval_context=None):
         """ Override to allow returning response the same way action is already
             returned by the basic server action behavior. Note that response has
             priority over action, avoid using both.
         """
-        res = super(ServerAction, self).run_action_code_multi(action, eval_context)
+        res = super(ServerAction, self)._run_action_code_multi(eval_context)
         return eval_context.get('response', res)

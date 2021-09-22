@@ -8,6 +8,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
+    pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -17,11 +18,36 @@ class AccountMove(models.Model):
             stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return stock_moves
 
-    def _compute_amount(self):
-        super(AccountMove, self)._compute_amount()
-        pos_invoices = self.filtered(lambda i: i.move_type in ['out_invoice', 'out_refund'] and i.pos_order_ids)
-        for invoice in pos_invoices:
-            invoice.payment_state = 'paid'
+
+    def _get_invoiced_lot_values(self):
+        self.ensure_one()
+
+        lot_values = super(AccountMove, self)._get_invoiced_lot_values()
+
+        if self.state == 'draft':
+            return lot_values
+
+        for order in self.pos_order_ids:
+            for line in order.lines:
+                lots = line.pack_lot_ids or False
+                if lots:
+                    for lot in lots:
+                        lot_values.append({
+                            'product_name': lot.product_id.name,
+                            'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
+                            'uom_name': line.product_uom_id.name,
+                            'lot_name': lot.lot_name,
+                        })
+
+        return lot_values
+
+    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+        """Add pos_payment_name field in the reconciled vals to be able to show the payment method in the invoice."""
+        result = super()._get_reconciled_vals(partial, amount, counterpart_line)
+        if counterpart_line.move_id.pos_payment_ids:
+            pos_payment = counterpart_line.move_id.pos_payment_ids
+            result['pos_payment_name'] = pos_payment.payment_method_id.name
+        return result
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

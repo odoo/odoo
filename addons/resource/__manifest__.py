@@ -19,8 +19,13 @@ associated to every resource. It also manages the leaves of every resource.
         'security/ir.model.access.csv',
         'security/resource_security.xml',
         'views/resource_views.xml',
-        'views/resource.xml',
-    ],
+        ],
     'demo': [
     ],
+    'assets': {
+        'web.assets_backend': [
+            'resource/static/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

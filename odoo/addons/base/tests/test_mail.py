@@ -5,12 +5,16 @@
 from unittest.mock import patch
 import email.policy
 import email.message
+import re
 import threading
 
-from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
-    html_sanitize, append_content_to_html, plaintext2html, email_split,
+    is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
+    email_split, email_domain_normalize,
     misc, formataddr,
+    prepend_html_content,
 )
 
 from . import test_mail_examples
@@ -103,10 +107,10 @@ class TestSanitizer(BaseCase):
         not_emails = [
             '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>',
             '<img alt="@github-login" class="avatar" src="/web/image/pi" height="36" width="36">']
-        for email in not_emails:
-            sanitized = html_sanitize(email)
-            left_part = email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
-            self.assertNotIn(misc.html_escape(email), sanitized, 'html_sanitize stripped emails of original html')
+        for not_email in not_emails:
+            sanitized = html_sanitize(not_email)
+            left_part = not_email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
+            self.assertNotIn(misc.html_escape(not_email), sanitized, 'html_sanitize stripped emails of original html')
             self.assertIn(left_part, sanitized)
 
     def test_style_parsing(self):
@@ -192,11 +196,25 @@ class TestSanitizer(BaseCase):
         for ext in test_mail_examples.HOTMAIL_1_OUT:
             self.assertIn(ext, html)
 
+    def test_quote_outlook_html(self):
+        html = html_sanitize(test_mail_examples.QUOTE_OUTLOOK_HTML)
+        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_OUT:
+            self.assertIn(ext, html)
+
     def test_quote_thunderbird_html(self):
         html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_OUT:
+            self.assertIn(ext, html)
+
+    def test_quote_yahoo_html(self):
+        html = html_sanitize(test_mail_examples.QUOTE_YAHOO_HTML)
+        for ext in test_mail_examples.QUOTE_YAHOO_HTML_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.QUOTE_YAHOO_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_basic_text(self):
@@ -312,11 +330,87 @@ class TestHtmlTools(BaseCase):
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
             ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False,
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<p>--<br/>Yours truly</p>\n</html>'),
+            ('<html><body>some <b>content</b></body></html>', '--\nYours & <truly>', True, True, False,
+             '<html><body>some <b>content</b>\n<pre>--\nYours &amp; &lt;truly&gt;</pre>\n</body></html>'),
             ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False,
              '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
         ]
         for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
+
+    def test_is_html_empty(self):
+        void_strings_samples = ['', False, ' ']
+        for content in void_strings_samples:
+            self.assertTrue(is_html_empty(content))
+
+        void_html_samples = [
+            '<p><br></p>', '<p><br> </p>', '<p><br /></p >',
+            '<p style="margin: 4px"></p>',
+            '<div style="margin: 4px"></div>',
+            '<p class="oe_testing"><br></p>',
+            '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" "></font></span><br></p>',
+        ]
+        for content in void_html_samples:
+            self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
+
+        valid_html_samples = [
+            '<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
+            '<div style="margin: 4px"><p>Hello World</p></div>',
+            '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" ">W</font></span><br></p>',
+        ]
+        for content in valid_html_samples:
+            self.assertFalse(is_html_empty(content))
+
+    def test_prepend_html_content(self):
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><span>content</span><div>test</div></body></html>")
+
+        body = "<div>test</div>"
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<span>content</span><div>test</div>")
+
+        body = """
+            <body>
+                <div>test</div>
+            </body>
+        """
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<body><span>content</span><div>test</div></body>")
+
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
 
 
 class TestEmailTools(BaseCase):
@@ -335,6 +429,7 @@ class TestEmailTools(BaseCase):
 
     def test_email_formataddr(self):
         email = 'joe@example.com'
+        email_idna = 'joe@examplé.com'
         cases = [
             # (name, address),          charsets            expected
             (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
@@ -343,20 +438,37 @@ class TestEmailTools(BaseCase):
             (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
             (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
             (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
-            (('', 'joé@example.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need SMTPUTF8 support
-            (('', 'joe@examplé.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need IDNA support
+            (('', email_idna),          ['ascii'],          'joe@xn--exampl-gva.com'),
+            (('', email_idna),          ['utf-8'],          'joe@examplé.com'),
+            (('joé', email_idna),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@xn--exampl-gva.com>'),
+            (('joé', email_idna),       ['utf-8'],          '"joé" <joe@examplé.com>'),
+            (('', 'joé@example.com'),   ['ascii', 'utf-8'], 'joé@example.com'),
         ]
 
         for pair, charsets, expected in cases:
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
-                    if isinstance(expected, str):
-                        self.assertEqual(formataddr(pair, charset), expected)
-                    else:
-                        self.assertRaises(expected, formataddr, pair, charset)
+                    self.assertEqual(formataddr(pair, charset), expected)
+
+    def test_extract_rfc2822_addresses(self):
+        tests = [
+            ('"Admin" <admin@example.com>', ['admin@example.com']),
+            ('"Admin" <admin@example.com>, Demo <demo@test.com>', ['admin@example.com', 'demo@test.com']),
+            ('admin@example.com', ['admin@example.com']),
+            ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
+            ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+        ]
+
+        for (rfc2822_email, expected) in tests:
+            self.assertEqual(extract_rfc2822_addresses(rfc2822_email), expected)
+
+    def test_email_domain_normalize(self):
+        self.assertEqual(email_domain_normalize("Test.Com"), "test.com", "Should have normalized the domain")
+        self.assertEqual(email_domain_normalize("email@test.com"), False, "The domain is not valid, should return False")
+        self.assertEqual(email_domain_normalize(False), False, "The domain is not valid, should return False")
 
 
-class EmailConfigCase(SavepointCase):
+class EmailConfigCase(TransactionCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
@@ -380,25 +492,42 @@ class EmailConfigCase(SavepointCase):
 
 class TestEmailMessage(TransactionCase):
     def test_as_string(self):
-        """Ensure all email sent are bpo-34424 free"""
+        """Ensure all email sent are bpo-34424 and bpo-35805 free"""
+
+        message_truth = (
+            r'From: .+? <joe@example\.com>\r\n'
+            r'To: .+? <joe@example\.com>\r\n'
+            r'Message-Id: <[0-9a-z.-]+@[0-9a-z.-]+>\r\n'
+            r'References: (<[0-9a-z.-]+@[0-9a-z.-]+>\s*)+\r\n'
+            r'\r\n'
+        )
 
         class FakeSMTP:
             """SMTP stub"""
             def __init__(this):
                 this.email_sent = False
+                this.from_filter = 'example.com'
 
-            def sendmail(this, smtp_from, smtp_to_list, message_str):
+            # Python 3 before 3.7.4
+            def sendmail(this, smtp_from, smtp_to_list, message_str,
+                         mail_options=(), rcpt_options=()):
                 this.email_sent = True
-                message_truth = (
-                    r'From: .+? <joe@example\.com>\r\n'
-                    r'To: .+? <joe@example\.com>\r\n'
-                    r'\r\n'
-                )
+                self.assertRegex(message_str, message_truth)
+
+            # Python 3.7.4+
+            def send_message(this, message, smtp_from, smtp_to_list,
+                             mail_options=(), rcpt_options=()):
+                message_str = message.as_string()
+                this.email_sent = True
                 self.assertRegex(message_str, message_truth)
 
         msg = email.message.EmailMessage(policy=email.policy.SMTP)
         msg['From'] = '"Joé Doe" <joe@example.com>'
         msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        # Message-Id & References fields longer than 77 chars (bpo-35805)
+        msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
+        msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
         smtp = FakeSMTP()
         self.patch(threading.currentThread(), 'testing', False)

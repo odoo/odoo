@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 tour.register('purchase_matrix_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
 }, {
     trigger: ".o_list_button_add",
@@ -53,6 +53,7 @@ tour.register('purchase_matrix_tour', {
     run: 'click' // Edit Sales Order.
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
     run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',
@@ -68,7 +69,7 @@ tour.register('purchase_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.000")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 }, {
     trigger: '.o_form_button_edit:contains("Edit")',
@@ -76,7 +77,8 @@ tour.register('purchase_matrix_tour', {
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
-    trigger: "a:contains('Add a product')"
+    trigger: "a:contains('Add a product')",
+    extra_trigger: '.o_form_editable',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: function () {
@@ -101,7 +103,7 @@ tour.register('purchase_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.200")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 ]);

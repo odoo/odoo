@@ -7,10 +7,23 @@ var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
+const registry = require("@web/core/registry");
+const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
+const {
+    toggleFilterMenu,
+    toggleMenuItem,
+    toggleMenuItemOption,
+    toggleComparisonMenu,
+    toggleFavoriteMenu,
+} = require("@web/../tests/search/helpers");
 
-var createActionManager = testUtils.createActionManager;
+const cpHelpers = testUtils.controlPanel;
+const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 var createView = testUtils.createView;
 
+const patchDate = testUtils.mock.patchDate;
+
+let serverData;
 QUnit.module('Dashboard', {
     beforeEach: function () {
         this.data = {
@@ -45,6 +58,8 @@ QUnit.module('Dashboard', {
                 }],
             },
         };
+
+        serverData = { models: this.data };
     },
 });
 
@@ -79,7 +94,7 @@ QUnit.test('dashboard basic rendering', async function (assert) {
         "with a dashboard, the renderer should have the proper css class");
     assert.containsOnce(form, '.o_dashboard .o_view_nocontent',
         "should have a no content helper");
-    assert.strictEqual(form.$('.o_control_panel .breadcrumb-item').text(), "My Dashboard",
+    assert.strictEqual(form.getTitle(), "My Dashboard",
         "should have the correct title");
     form.destroy();
 });
@@ -693,152 +708,156 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', as
     board.destroy();
 });
 
-QUnit.test('save actions to dashboard', async function (assert) {
+QUnit.test("save actions to dashboard", async function (assert) {
     assert.expect(6);
 
-    testUtils.patch(ListController, {
+    testUtils.mock.patch(ListController, {
         getOwnedQueryParams: function () {
             var result = this._super.apply(this, arguments);
             result.context = {
-                'fire': 'on the bayou',
-            }
+                fire: "on the bayou",
+            };
             return result;
-        }
+        },
     });
 
-    this.data['partner'].fields.foo.sortable = true;
+    serverData.models.partner.fields.foo.sortable = true;
 
-    var actionManager = await createActionManager({
-        data: this.data,
-        archs: {
-            'partner,false,list': '<list><field name="foo"/></list>',
-            'partner,false,search': '<search></search>',
-        },
-        mockRPC: function (route, args) {
-            if (route === '/board/add_to_dashboard') {
-                assert.deepEqual(args.context_to_save.group_by, ['foo'],
-                    'The group_by should have been saved');
-                assert.deepEqual(args.context_to_save.orderedBy,
-                    [{
-                        name: 'foo',
+    serverData.views = {
+        "partner,false,list": '<list><field name="foo"/></list>',
+        "partner,false,search": "<search></search>",
+    };
+
+    const mockRPC = (route, args) => {
+        if (route === "/board/add_to_dashboard") {
+            assert.deepEqual(
+                args.context_to_save.group_by,
+                ["foo"],
+                "The group_by should have been saved"
+            );
+            assert.deepEqual(
+                args.context_to_save.orderedBy,
+                [
+                    {
+                        name: "foo",
                         asc: true,
-                    }],
-                    'The orderedBy should have been saved');
-                assert.strictEqual(args.context_to_save.fire, 'on the bayou',
-                    'The context of a controller should be passed and flattened');
-                assert.strictEqual(args.action_id, 1,
-                    "should save the correct action");
-                assert.strictEqual(args.view_mode, 'list',
-                    "should save the correct view type");
-                return Promise.resolve(true);
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
+                    },
+                ],
+                "The orderedBy should have been saved"
+            );
+            assert.strictEqual(
+                args.context_to_save.fire,
+                "on the bayou",
+                "The context of a controller should be passed and flattened"
+            );
+            assert.strictEqual(args.action_id, 1, "should save the correct action");
+            assert.strictEqual(args.view_mode, "list", "should save the correct view type");
+            return Promise.resolve(true);
+        }
+    };
 
-    await actionManager.doAction({
+    const webClient = await createWebClient({ serverData, mockRPC });
+
+    await doAction(webClient, {
         id: 1,
-        res_model: 'partner',
-        type: 'ir.actions.act_window',
-        views: [[false, 'list']],
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
     });
 
-    assert.containsOnce(actionManager, '.o_list_view',
-        "should display the list view");
+    assert.containsOnce(webClient, ".o_list_view", "should display the list view");
 
     // Sort the list
-    await testUtils.dom.click($('.o_column_sortable'));
+    await testUtils.dom.click($(".o_column_sortable"));
 
     // Group It
-    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Group By)'));
-    await testUtils.dom.click($('.o_search_options .o_group_by_menu button'));
-    await testUtils.dom.click($('.o_search_options .o_group_by_menu button.o_apply_group'));
+    await cpHelpers.toggleGroupByMenu(webClient);
+    await cpHelpers.toggleAddCustomGroup(webClient);
+    await cpHelpers.applyGroup(webClient);
 
     // add this action to dashboard
-    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
-    await testUtils.dom.click($('.o_add_to_board.o_menu_header'));
-    testUtils.fields.editInput($('input.o_add_to_board_input'), 'a name');
-    await testUtils.dom.click($('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(webClient);
 
-    testUtils.unpatch(ListController);
+    await testUtils.dom.click($(".o_add_to_board > button"));
+    await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
+    await testUtils.dom.click($(".o_add_to_board div button"));
 
-    actionManager.destroy();
+    testUtils.mock.unpatch(ListController);
 });
 
-QUnit.test('save two searches to dashboard', async function (assert) {
+QUnit.test("save two searches to dashboard", async function (assert) {
     // the second search saved should not be influenced by the first
     assert.expect(2);
 
-    var actionManager = await createActionManager({
-        data: this.data,
-        archs: {
-            'partner,false,list': '<list><field name="foo"/></list>',
-            'partner,false,search': '<search></search>',
-        },
-        mockRPC: function (route, args) {
-            if (route === '/board/add_to_dashboard') {
-                if (filter_count === 0) {
-                    assert.deepEqual(args.domain, [["display_name", "ilike", "a"]],
-                        "the correct domain should be sent");
-                }
-                if (filter_count === 1) {
-                    assert.deepEqual(args.domain, [["display_name", "ilike", "b"]],
-                        "the correct domain should be sent");
-                }
+    serverData.views = {
+        "partner,false,list": '<list><field name="foo"/></list>',
+        "partner,false,search": "<search></search>",
+    };
 
-                filter_count += 1;
-                return Promise.resolve(true);
+    const mockRPC = (route, args) => {
+        if (route === "/board/add_to_dashboard") {
+            if (filter_count === 0) {
+                assert.deepEqual(
+                    args.domain,
+                    [["display_name", "ilike", "a"]],
+                    "the correct domain should be sent"
+                );
             }
-            return this._super.apply(this, arguments);
-        },
-    });
+            if (filter_count === 1) {
+                assert.deepEqual(
+                    args.domain,
+                    [["display_name", "ilike", "b"]],
+                    "the correct domain should be sent"
+                );
+            }
 
-    await actionManager.doAction({
+            filter_count += 1;
+            return Promise.resolve(true);
+        }
+    };
+
+    const webClient = await createWebClient({ serverData, mockRPC });
+
+    await doAction(webClient, {
         id: 1,
-        res_model: 'partner',
-        type: 'ir.actions.act_window',
-        views: [[false, 'list']],
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
     });
 
     var filter_count = 0;
     // Add a first filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('a');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
+    await testUtils.fields.editInput(
+        webClient.el.querySelector(".o_generator_menu_value .o_input"),
+        "a"
+    );
+    await cpHelpers.applyFilter(webClient);
+
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
-        // This handler is on the webClient
-        // But since the test suite doesn't have one
-        // We manually set it here
-        ev.stopPropagation();
-    });
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await cpHelpers.toggleFavoriteMenu(webClient);
+    await testUtils.dom.click($(".o_add_to_board > button"));
+    await testUtils.dom.click($(".o_add_to_board div button"));
+
     // Remove it
-    await testUtils.dom.click(actionManager.$('.o_facet_remove'));
+    await testUtils.dom.click(webClient.el.querySelector(".o_facet_remove"));
 
     // Add the second filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
+    await testUtils.fields.editInput(
+        webClient.el.querySelector(".o_generator_menu_value .o_input"),
+        "b"
+    );
+    await cpHelpers.applyFilter(webClient);
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    $('.o_search_options .dropdown-menu.o_favorites_menu').one('click', function (ev) {
-        // This handler is on the webClient
-        // But since the test suite doesn't have one
-        // We manually set it here
-        ev.stopPropagation();
-    });
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
-
-    actionManager.destroy();
+    await cpHelpers.toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board > button"));
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board div button"));
 });
 
-QUnit.test('save a action domain to dashboard', async function (assert) {
+QUnit.test("save a action domain to dashboard", async function (assert) {
     // View domains are to be added to the dashboard domain
     assert.expect(1);
 
@@ -846,43 +865,43 @@ QUnit.test('save a action domain to dashboard', async function (assert) {
     var filter_domain = ["display_name", "ilike", "b"];
 
     // The filter domain already contains the view domain, but is always added by dashboard..,
-    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain]
+    var expected_domain = ["&", view_domain, "&", view_domain, filter_domain];
 
-    var actionManager = await createActionManager({
-        data: this.data,
-        archs: {
-            'partner,false,list': '<list><field name="foo"/></list>',
-            'partner,false,search': '<search></search>',
-        },
-        mockRPC: function (route, args) {
-            if (route === '/board/add_to_dashboard') {
-                assert.deepEqual(args.domain, expected_domain,
-                    "the correct domain should be sent");
-                return Promise.resolve(true);
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
+    serverData.views = {
+        "partner,false,list": '<list><field name="foo"/></list>',
+        "partner,false,search": "<search></search>",
+    };
 
-    await actionManager.doAction({
+    const mockRPC = (route, args) => {
+        if (route === "/board/add_to_dashboard") {
+            assert.deepEqual(args.domain, expected_domain, "the correct domain should be sent");
+            return Promise.resolve(true);
+        }
+    };
+
+    const webClient = await createWebClient({ serverData, mockRPC });
+
+    await doAction(webClient, {
         id: 1,
-        res_model: 'partner',
-        type: 'ir.actions.act_window',
-        views: [[false, 'list']],
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
         domain: [view_domain],
     });
 
     // Add a filter
-    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
-    actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
-    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await cpHelpers.toggleFilterMenu(webClient);
+    await cpHelpers.toggleAddCustomFilter(webClient);
+    await testUtils.fields.editInput(
+        webClient.el.querySelector(".o_generator_menu_value .o_input"),
+        "b"
+    );
+    await cpHelpers.applyFilter(webClient);
     // Add it to dashboard
-    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
-
-    actionManager.destroy();
+    await cpHelpers.toggleFavoriteMenu(webClient);
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board > button"));
+    // add
+    await testUtils.dom.click(webClient.el.querySelector(".o_add_to_board div button"));
 });
 
 QUnit.test("Views should be loaded in the user's language", async function (assert) {
@@ -1043,4 +1062,125 @@ QUnit.test('click on a cell of pivot view inside dashboard', async function (ass
     form.destroy();
 });
 
+// TODO: The button "Add to my dashboard" is not yet developped on the new control panel search view
+QUnit.skip(
+    "correctly save the time ranges of a reporting view in comparison mode",
+    async function (assert) {
+        assert.expect(1);
+
+        const unpatchDate = patchDate(2020, 6, 1, 11, 0, 0);
+
+        serverData.models.partner.fields.date = {
+            string: "Date",
+            type: "date",
+            sortable: true,
+        };
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,search": '<search><filter name="Date" date="date"/></search>',
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === "/board/add_to_dashboard") {
+                assert.deepEqual(args.context_to_save.comparison, {
+                    comparisonId: "previous_period",
+                    fieldName: "date",
+                    fieldDescription: "Date",
+                    rangeDescription: "July 2020",
+                    range: ["&", ["date", ">=", "2020-07-01"], ["date", "<=", "2020-07-31"]],
+                    comparisonRange: [
+                        "&",
+                        ["date", ">=", "2020-06-01"],
+                        ["date", "<=", "2020-06-30"],
+                    ],
+                    comparisonRangeDescription: "June 2020",
+                });
+                return Promise.resolve(true);
+            }
+        };
+
+        registry.category("services").add("user", makeFakeUserService());
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+
+        // filter on July 2020
+        await toggleFilterMenu(webClient);
+        await toggleMenuItem(webClient, "Date");
+        await toggleMenuItemOption(webClient, "Date", "July");
+
+        // compare July 2020 to June 2020
+        await toggleComparisonMenu(webClient);
+        await toggleMenuItem(webClient, 0);
+
+        // add the view to the dashboard
+        await toggleFavoriteMenu(webClient);
+
+        await testUtils.dom.click($(".o_add_to_board > button"));
+        await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
+        await testUtils.dom.click($(".o_add_to_board div button"));
+
+        unpatchDate();
+    }
+);
+
+QUnit.test('correctly display the time range descriptions of a reporting view in comparison mode', async function (assert) {
+    assert.expect(1);
+
+    this.data.partner.fields.date = { string: 'Date', type: 'date', sortable: true };
+    this.data.partner.records[0].date = '2020-07-15';
+
+    const form = await createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: `<form string="My Dashboard">
+                <board style="2-1">
+                    <column>
+                        <action string="ABC" name="51"></action>
+                    </column>
+                </board>
+            </form>`,
+        archs: {
+            'partner,1,pivot':
+                '<pivot string="Partner"></pivot>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return Promise.resolve();
+            }
+            if (route === '/web/action/load') {
+                return Promise.resolve({
+                    context: JSON.stringify({ comparison: {
+                        comparisonId: "previous_period",
+                        fieldName: "date",
+                        fieldDescription: "Date",
+                        rangeDescription: "July 2020",
+                        range: ["&",["date", ">=", "2020-07-01"], ["date", "<=", "2020-07-31"]],
+                        comparisonRange: ["&", ["date", ">=", "2020-06-01"], ["date", "<=", "2020-06-30"]],
+                        comparisonRangeDescription: "June 2020",
+                    }}),
+                    domain: '[]',
+                    res_model: 'partner',
+                    views: [[1, 'pivot']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.deepEqual(
+        [...form.el.querySelectorAll('div.o_pivot th.o_pivot_origin_row')].map(el => el.innerText),
+        ['June 2020', 'July 2020', 'Variation']
+    );
+
+    form.destroy();
+});
 });

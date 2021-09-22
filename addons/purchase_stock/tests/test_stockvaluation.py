@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -148,76 +148,6 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(self.product1.value_svl, 120)
 
-    def test_change_currency_rate_average_1(self):
-        """ Confirm a purchase order in another currency and create the associated receipt, change
-        the currency rate, validate the receipt and then check that the value of the received goods
-        is set according to the last currency rate.
-        """
-        self.env['res.currency.rate'].search([]).unlink()
-        usd_currency = self.env.ref('base.USD')
-        self.env.company.currency_id = usd_currency.id
-
-        eur_currency = self.env.ref('base.EUR')
-
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-
-        # default currency is USD, create a purchase order in EUR
-        po1 = self.env['purchase.order'].create({
-            'partner_id': self.partner_id.id,
-            'currency_id': eur_currency.id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product1.name,
-                    'product_id': self.product1.id,
-                    'product_qty': 10.0,
-                    'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                }),
-            ],
-        })
-        po1.button_confirm()
-
-        picking1 = po1.picking_ids[0]
-        move1 = picking1.move_lines[0]
-
-        # convert the price unit in the company currency
-        price_unit_usd = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company, fields.Date.today(), round=False)
-
-        # the unit price of the move is the unit price of the purchase order line converted in
-        # the company's currency
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
-
-        # change the rate of the currency
-        self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y-%m-%d'),
-            'rate': 2.0,
-            'currency_id': eur_currency.id,
-            'company_id': po1.company_id.id,
-        })
-        eur_currency._compute_current_rate()
-        price_unit_usd_new_rate = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
-            self.env.company, fields.Date.today(), round=False)
-
-        # the new price_unit is lower than th initial because of the rate's change
-        self.assertLess(price_unit_usd_new_rate, price_unit_usd)
-
-        # the unit price on the stock move is not directly updated
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
-
-        # validate the receipt
-        res_dict = picking1.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process()
-
-        # the unit price of the valuation layer used the latest value
-        self.assertAlmostEqual(move1.stock_valuation_layer_ids.unit_cost, price_unit_usd_new_rate)
-
-        self.assertAlmostEqual(self.product1.value_svl, price_unit_usd_new_rate * 10, delta=0.1)
-
     def test_extra_move_fifo_1(self):
         """ Check that the extra move when over processing a receipt is correctly merged back in
         the original move.
@@ -290,71 +220,145 @@ class TestStockValuation(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestStockValuationWithCOA(AccountTestCommon):
-    def setUp(self):
-        super(TestStockValuationWithCOA, self).setUp()
-        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
-        self.product1 = self.env['product.product'].create({'name': 'Large Desk'})
+class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
-        self.cat = self.env['product.category'].create({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.partner_id = cls.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        cls.product1 = cls.env['product.product'].create({'name': 'Large Desk'})
+
+        cls.cat = cls.env['product.category'].create({
             'name': 'cat',
         })
-        self.product1 = self.env['product.product'].create({
+        cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'product',
-            'categ_id': self.cat.id,
+            'categ_id': cls.cat.id,
         })
-        self.product1_copy = self.env['product.product'].create({
+        cls.product1_copy = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'product',
-            'categ_id': self.cat.id,
+            'categ_id': cls.cat.id,
         })
 
-        Account = self.env['account.account']
-        self.usd_currency = self.env.ref('base.USD')
-        self.eur_currency = self.env.ref('base.EUR')
+        Account = cls.env['account.account']
+        cls.usd_currency = cls.env.ref('base.USD')
+        cls.eur_currency = cls.env.ref('base.EUR')
+        cls.usd_currency.active = True
+        cls.eur_currency.active = True
 
-        self.stock_input_account = Account.create({
+        cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_output_account = Account.create({
+        cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_valuation_account = Account.create({
+        cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.price_diff_account = Account.create({
+        cls.price_diff_account = Account.create({
             'name': 'price diff account',
             'code': 'price diff account',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.stock_journal = self.env['account.journal'].create({
+        cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
             'type': 'general',
         })
-        self.product1.categ_id.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
         })
+
+    def test_change_currency_rate_average_1(self):
+        """ Confirm a purchase order in another currency and create the associated receipt, change
+        the currency rate, validate the receipt and then check that the value of the received goods
+        is set according to the last currency rate.
+        """
+        self.env['res.currency.rate'].search([]).unlink()
+        usd_currency = self.env.ref('base.USD')
+        self.env.company.currency_id = usd_currency.id
+
+        eur_currency = self.env.ref('base.EUR')
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+
+        # default currency is USD, create a purchase order in EUR
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': eur_currency.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking1 = po1.picking_ids[0]
+        move1 = picking1.move_lines[0]
+
+        # convert the price unit in the company currency
+        price_unit_usd = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.company, fields.Date.today(), round=False)
+
+        # the unit price of the move is the unit price of the purchase order line converted in
+        # the company's currency
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
+
+        # change the rate of the currency
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-%m-%d'),
+            'rate': 2.0,
+            'currency_id': eur_currency.id,
+            'company_id': po1.company_id.id,
+        })
+        eur_currency._compute_current_rate()
+        price_unit_usd_new_rate = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.company, fields.Date.today(), round=False)
+
+        # the new price_unit is lower than th initial because of the rate's change
+        self.assertLess(price_unit_usd_new_rate, price_unit_usd)
+
+        # the unit price on the stock move is not directly updated
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd, places=2)
+
+        # validate the receipt
+        res_dict = picking1.button_validate()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        # the unit price of the valuation layer used the latest value
+        self.assertAlmostEqual(move1.stock_valuation_layer_ids.unit_cost, price_unit_usd_new_rate)
+
+        self.assertAlmostEqual(self.product1.value_svl, price_unit_usd_new_rate * 10, delta=0.1)
 
     def test_fifo_anglosaxon_return(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Receive 10@10 ; create the vendor bill
@@ -377,10 +381,11 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt_po1.button_validate()
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po1
         invoice_po1 = move_form.save()
-        invoice_po1.post()
+        invoice_po1.action_post()
 
         # Receive 10@20 ; create the vendor bill
         po2 = self.env['purchase.order'].create({
@@ -402,10 +407,11 @@ class TestStockValuationWithCOA(AccountTestCommon):
         receipt_po2.button_validate()
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po2
         invoice_po2 = move_form.save()
-        invoice_po2.post()
+        invoice_po2.action_post()
 
         # valuation of product1 should be 300
         self.assertEqual(self.product1.value_svl, 300)
@@ -426,12 +432,13 @@ class TestStockValuationWithCOA(AccountTestCommon):
 
         # create a credit note for po2
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
         move_form.purchase_id = po2
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 10
         creditnote_po2 = move_form.save()
-        creditnote_po2.post()
+        creditnote_po2.action_post()
 
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
@@ -441,7 +448,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -461,12 +467,13 @@ class TestStockValuationWithCOA(AccountTestCommon):
 
         # Create an invoice with a different price
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = order.partner_id
         move_form.purchase_id = order
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 15.0
         invoice = move_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
@@ -494,8 +501,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
         })
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.product1.product_tmpl_id.categ_id.valuation = 'real_time'
-
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
 
         # Receive 10@10 ; create the vendor bill
         po1 = self.env['purchase.order'].create({
@@ -536,7 +542,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         # SetUp product
         self.product1.product_tmpl_id.cost_method = 'average'
         self.product1.product_tmpl_id.valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'order'
         self.product1.product_tmpl_id.purchase_method = 'purchase'
 
         self.product1.property_account_creditor_price_difference = self.price_diff_account
@@ -591,7 +596,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
             })]
         })
 
-        inv.post()
+        inv.action_post()
 
         move_lines = inv.line_ids
         self.assertEqual(len(move_lines), 2)
@@ -626,7 +631,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'purchase_method': 'purchase',
             'property_account_creditor_price_difference': self.price_diff_account.id,
         })
-        self.product1.invoice_policy = 'order'
 
         # SetUp product Standard
         # should have bought at 60 USD
@@ -736,7 +740,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         for p in patchers:
             p.stop()
@@ -805,7 +809,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
         })
-        product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -901,7 +904,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         for p in patchers:
             p.stop()
@@ -969,7 +972,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'standard_price': 0,
             'property_account_creditor_price_difference': self.price_diff_account.id
         })
-        product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -1078,7 +1080,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
             ]
         })
 
-        inv.post()
+        inv.action_post()
 
         today = date_delivery1
         backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
@@ -1108,7 +1110,7 @@ class TestStockValuationWithCOA(AccountTestCommon):
             ]
         })
 
-        inv1.post()
+        inv1.action_post()
 
         for p in patchers:
             p.stop()
@@ -1196,7 +1198,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -1216,12 +1217,13 @@ class TestStockValuationWithCOA(AccountTestCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.invoice_date = invoice_form.date
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])
@@ -1243,7 +1245,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -1263,12 +1264,13 @@ class TestStockValuationWithCOA(AccountTestCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.invoice_date = invoice_form.date
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check what was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
@@ -1290,7 +1292,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -1310,12 +1311,13 @@ class TestStockValuationWithCOA(AccountTestCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.invoice_date = invoice_form.date
         invoice_form.purchase_id = order
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0
         invoice = invoice_form.save()
-        invoice.post()
+        invoice.action_post()
 
         # Check if something was posted in the price difference account
         price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id)])

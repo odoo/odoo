@@ -4,14 +4,17 @@
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.addons.stock.models.stock_rule import ProcurementException
+from odoo.tools import OrderedSet
 
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
-    action = fields.Selection(selection_add=[('manufacture', 'Manufacture')])
+    action = fields.Selection(selection_add=[
+        ('manufacture', 'Manufacture')
+    ], ondelete={'manufacture': 'cascade'})
 
     def _get_message_dict(self):
         message_dict = super(StockRule, self)._get_message_dict()
@@ -39,10 +42,7 @@ class StockRule(models.Model):
         productions_values_by_company = defaultdict(list)
         errors = []
         for procurement, rule in procurements:
-            bom = self._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
-            if not bom:
-                msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
-                errors.append((procurement, msg))
+            bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
@@ -51,21 +51,30 @@ class StockRule(models.Model):
 
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].sudo().with_company(company_id).create(productions_values)
+            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
-            productions.filtered(lambda p: p.move_raw_ids).action_confirm()
+            self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
+            productions._create_workorder()
+            productions.action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
                 orderpoint = production.orderpoint_id
-                if orderpoint:
-                    production.message_post_with_view('mail.message_origin_link',
-                                                      values={'self': production, 'origin': orderpoint},
-                                                      subtype_id=self.env.ref('mail.mt_note').id)
-                if origin_production:
-                    production.message_post_with_view('mail.message_origin_link',
-                                                      values={'self': production, 'origin': origin_production},
-                                                      subtype_id=self.env.ref('mail.mt_note').id)
+                if orderpoint and orderpoint.create_uid.id == SUPERUSER_ID and orderpoint.trigger == 'manual':
+                    production.message_post(
+                        body=_('This production order has been created from Replenishment Report.'),
+                        message_type='comment',
+                        subtype_xmlid='mail.mt_note')
+                elif orderpoint:
+                    production.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': production, 'origin': orderpoint},
+                        subtype_id=self.env.ref('mail.mt_note').id)
+                elif origin_production:
+                    production.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': production, 'origin': origin_production},
+                        subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     def _get_custom_move_fields(self):
@@ -76,26 +85,24 @@ class StockRule(models.Model):
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
-        return self.env['mrp.bom']._bom_find(
-            product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
+        return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
-        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
+        date_planned = self._get_date_planned(product_id, company_id, values)
+        date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
         return {
             'origin': origin,
             'product_id': product_id.id,
+            'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_qty,
             'product_uom_id': product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
-            'date_planned_start': date_deadline,
+            'date_planned_start': date_planned,
             'procurement_group_id': False,
-            'delay_alert': self.delay_alert,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': company_id.id,
@@ -111,23 +118,24 @@ class StockRule(models.Model):
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
-    def _get_lead_days(self, product):
+    def _get_lead_days(self, product, **values):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
         """
-        delay, delay_description = super()._get_lead_days(product)
+        delay, delay_description = super()._get_lead_days(product, **values)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
-        if manufacture_delay:
-            delay += manufacture_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        delay += manufacture_delay
+        if not bypass_delay_description:
+            delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
-        if security_delay:
-            delay += security_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Company Manufacture Lead Time'), security_delay, _('day(s)'))
+        delay += security_delay
+        if not bypass_delay_description:
+            delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -139,7 +147,7 @@ class StockRule(models.Model):
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
-    mrp_production_id = fields.One2many('mrp.production', 'procurement_group_id')
+    mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 
     @api.model
     def run(self, procurements, raise_user_error=True):
@@ -147,8 +155,15 @@ class ProcurementGroup(models.Model):
         the original 'run' method with the values of the components of that kit.
         """
         procurements_without_kit = []
+        product_by_company = defaultdict(OrderedSet)
         for procurement in procurements:
-            bom_kit = self.env['mrp.bom']._bom_find(product=procurement.product_id, bom_type='phantom')
+            product_by_company[procurement.company_id].add(procurement.product_id.id)
+        kits_by_company = {
+            company: self.env['mrp.bom']._bom_find(self.env['product.product'].browse(product_ids), company_id=company.id, bom_type='phantom')
+            for company, product_ids in product_by_company.items()
+        }
+        for procurement in procurements:
+            bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
@@ -167,7 +182,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain

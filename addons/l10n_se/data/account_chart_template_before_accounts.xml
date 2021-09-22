@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <record id="l10nse_chart_template" model="account.chart.template">
             <field name="name">Swedish Chart of Account</field>
             <field name="currency_id" ref="base.SEK"/>
@@ -9,6 +9,7 @@
             <field name="transfer_account_code_prefix">194</field>
             <field name="code_digits">4</field>
             <field name="complete_tax_set" eval="True"/>
+            <field name="country_id" ref="base.se"/>
         </record>
     </data>
 </odoo>

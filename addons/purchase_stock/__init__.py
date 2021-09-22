@@ -3,6 +3,8 @@
 
 from . import models
 from . import report
+from . import populate
+from . import wizard
 
 from odoo import api, SUPERUSER_ID
 
@@ -14,5 +16,4 @@ def _create_buy_rules(cr, registry):
     """
     env = api.Environment(cr, SUPERUSER_ID, {})
     warehouse_ids = env['stock.warehouse'].search([('buy_pull_id', '=', False)])
-    for warehouse_id in warehouse_ids:
-        warehouse_id._create_or_update_global_routes_rules()
+    warehouse_ids.write({'buy_to_resupply': True})

@@ -2,8 +2,9 @@ odoo.define('website.s_chart_options', function (require) {
 'use strict';
 
 var core = require('web.core');
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 var options = require('web_editor.snippets.options');
+const weUtils = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -25,7 +26,7 @@ options.registry.InnerChart = options.Class.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'];
+        this.themeArray = ['o-color-1', 'o-color-2', 'o-color-3', 'o-color-4', 'o-color-5'];
         this.style = window.getComputedStyle(document.documentElement);
     },
     /**
@@ -71,8 +72,8 @@ options.registry.InnerChart = options.Class.extend({
         // prevent the columns from becoming too small.
         this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
 
-        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Background Color") : _t("Dataset Background Color");
-        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border Color") : _t("Dataset Border Color");
+        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Color") : _t("Dataset Color");
+        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border") : _t("Dataset Border");
 
         // Dataset/Cell color
         this.tableEl.querySelectorAll('input').forEach(el => el.style.border = '');
@@ -81,7 +82,7 @@ options.registry.InnerChart = options.Class.extend({
             const color = el.dataset.backgroundColor || el.dataset.borderColor;
             if (color) {
                 el.style.border = '2px solid';
-                el.style.borderColor = ColorpickerDialog.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
+                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : weUtils.getCSSVariableValue(color, this.style);
             }
         });
     },
@@ -200,8 +201,9 @@ options.registry.InnerChart = options.Class.extend({
      */
     _makeDeleteButton: function (...classes) {
         const rmbuttonEl = options.buildElement('we-button', null, {
-            classes: ['fa', 'fa-fw', 'fa-minus', ...classes],
+            classes: ['o_we_text_danger', 'o_we_link', 'fa', 'fa-fw', 'fa-minus', ...classes],
         });
+        rmbuttonEl.title = classes.includes('o_we_matrix_remove_col') ? _t("Remove Serie") : _t("Remove Row");
         const newEl = document.createElement('td');
         newEl.appendChild(rmbuttonEl);
         return newEl;
@@ -368,7 +370,7 @@ options.registry.InnerChart = options.Class.extend({
             }
         });
         customColors = customColors.filter((el, i, array) => {
-            return !this.style.getPropertyValue(`--${el}`) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
+            return !weUtils.getCSSVariableValue(el, this.style) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
         });
         ev.data.onSuccess(customColors);
     },

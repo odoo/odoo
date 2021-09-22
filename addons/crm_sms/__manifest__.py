@@ -3,7 +3,7 @@
 
 {
     'name': 'SMS in CRM',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Sales/CRM',
     'summary': 'Add SMS capabilities to CRM',
     'description': "",
@@ -16,4 +16,5 @@
     'installable': True,
     'application': False,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

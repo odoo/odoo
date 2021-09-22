@@ -9,7 +9,7 @@
                 <div class="content-group">
                     <div class="row mt16">
                         <label for="account_check_printing_layout" class="col-lg-4 o_light_label"/>
-                        <field name="account_check_printing_layout"/>
+                        <field name="account_check_printing_layout" required="True"/>
                     </div>
                     <div class="row">
                         <label for="account_check_printing_multi_stub" class="col-lg-4 o_light_label"/>
@@ -23,7 +23,6 @@
                         <label for="account_check_printing_margin_left" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_left"/>
                     </div>
-                    <field name="country_code" invisible="1" />
                     <div class="row" attrs="{'invisible': [('country_code', '!=', 'CA')]}">
                         <label for="account_check_printing_margin_right" class="col-lg-4 o_light_label"/>
                         <field name="account_check_printing_margin_right"/>

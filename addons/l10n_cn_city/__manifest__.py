@@ -5,6 +5,7 @@
 {
     'name': 'China - City Data',
     'version': '1.8',
+    'icon': '/l10n_cn/static/description/icon.png',
     'category': 'Accounting/Localizations',
     'author': 'Jeffery Chen Fan<jeffery9@gmail.com>',
     'description': """
@@ -18,4 +19,5 @@ City Data/城市数据
     'data': [
         'data/res_city_data.xml',
     ],
+    'license': 'LGPL-3',
 }

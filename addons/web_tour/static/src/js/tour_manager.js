@@ -2,20 +2,23 @@ odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
-var RainbowMan = require('web.RainbowMan');
+var TourStepUtils = require('web_tour.TourStepUtils');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
+const {Markup} = require('web.utils');
 
 var _t = core._t;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 
 var get_step_key = utils.get_step_key;
+var get_debugging_key = utils.get_debugging_key;
 var get_running_key = utils.get_running_key;
 var get_running_delay_key = utils.get_running_delay_key;
 var get_first_visible_element = utils.get_first_visible_element;
@@ -23,14 +26,18 @@ var do_before_unload = utils.do_before_unload;
 var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
-    init: function(parent, consumed_tours) {
+    init: function(parent, consumed_tours, disabled = false) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
 
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
-        this.consumed_tours = consumed_tours || [];
+        // remove the tours being debug from the list of consumed tours
+        this.consumed_tours = (consumed_tours || []).filter(tourName => {
+            return !local_storage.getItem(get_debugging_key(tourName));
+        });
+        this.disabled = disabled;
         this.running_tour = local_storage.getItem(get_running_key());
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
@@ -49,8 +56,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
+     * @param {string} [options.fadeout]
+     *        Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear, quickly,
+     *        'medium', 'slow' and 'very_slow' will wait little longer before disappearing, no
+     *        will keep rainbowman on screen until user clicks anywhere outside rainbowman
+     * @param {boolean} [options.sequence=1000]
+     *        priority sequence of the tour (lowest is first, tours with the same
+     *        sequence will be executed in a non deterministic order).
      * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
+     * @param {string|function} [options.rainbowManMessage]
+              text or function returning the text displayed under the rainbowman
+              at the end of the tour.
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
@@ -65,21 +82,24 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
-            name: name,
+            name: options.saveAs || name,
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
+            rainbowManMessage: options.rainbowManMessage,
+            fadeout: options.fadeout || 'medium',
+            sequence: options.sequence || 1000,
             test: options.test,
             wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
-            tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
+            tour.skip_link = Markup`<p><span class="o_skip_tour">${_t('Skip tour')}</span></p>`;
             tour.skip_handler = function (tip) {
                 this._deactivate_tip(tip);
                 this._consume_tour(name);
             };
         }
-        this.tours[name] = tour;
+        this.tours[tour.name] = tour;
     },
     /**
      * Returns a promise which is resolved once the tour can be started. This
@@ -109,14 +129,20 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         });
     },
     _register: function (do_update, tour, name) {
+        const debuggingTour = local_storage.getItem(get_debugging_key(name));
+        if (this.disabled && !this.running_tour && !debuggingTour) {
+            this.consumed_tours.push(name);
+        }
+
         if (tour.ready) return Promise.resolve();
 
-        var tour_is_consumed = _.contains(this.consumed_tours, name);
+        const tour_is_consumed = this._isTourConsumed(name);
 
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
-                return !step.edition || step.edition === this.edition;
+                return (!step.edition || step.edition === this.edition) &&
+                    (step.mobile === undefined || step.mobile === config.device.isMobile);
             }).bind(this));
 
             if (tour_is_consumed || tour.current_step >= tour.steps.length) {
@@ -126,10 +152,34 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             tour.ready = true;
 
-            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
+            if (debuggingTour ||
+                (do_update && (this.running_tour === name ||
+                              (!this.running_tour && !tour.test && !tour_is_consumed)))) {
                 this._to_next_step(name, 0);
             }
         }).bind(this));
+    },
+    /**
+     * Resets the given tour to its initial step, and prevent it from being
+     * marked as consumed at reload.
+     *
+     * @param {string} tourName
+     */
+    reset: function (tourName) {
+        // remove it from the list of consumed tours
+        const index = this.consumed_tours.indexOf(tourName);
+        if (index >= 0) {
+            this.consumed_tours.splice(index, 1);
+        }
+        // mark it as being debugged
+        local_storage.setItem(get_debugging_key(tourName), true);
+        // reset it to the first step
+        const tour = this.tours[tourName];
+        tour.current_step = 0;
+        local_storage.removeItem(get_step_key(tourName));
+        this._to_next_step(tourName, 0);
+        // redirect to its starting point (or /web by default)
+        window.location.href = window.location.origin + (tour.url || '/web');
     },
     run: function (tour_name, step_delay) {
         console.log(_.str.sprintf("Preparing tour %s", tour_name));
@@ -195,12 +245,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
             });
         } else {
-            for (var tourName in this.active_tooltips) {
+            const sortedTooltips = Object.keys(this.active_tooltips).sort(
+                (a, b) => this.tours[a].sequence - this.tours[b].sequence
+            );
+            let visibleTip = false;
+            for (const tourName of sortedTooltips) {
                 var tip = this.active_tooltips[tourName];
-                var activated = this._check_for_tooltip(tip, tourName);
-                if (activated) {
-                    break;
-                }
+                tip.hidden = visibleTip;
+                visibleTip = this._check_for_tooltip(tip, tourName) || visibleTip;
             }
         }
     },
@@ -236,12 +288,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             extra_trigger = get_first_visible_element($extra_trigger).length;
         }
 
+        var $visible_alt_trigger = $();
+        if (tip.alt_trigger) {
+            var $alt_trigger;
+            if (tip.in_modal !== false && this.$modal_displayed.length) {
+                $alt_trigger = this.$modal_displayed.find(tip.alt_trigger);
+            } else {
+                $alt_trigger = get_jquery_element_from_selector(tip.alt_trigger);
+            }
+            $visible_alt_trigger = get_first_visible_element($alt_trigger);
+        }
+
         var triggered = $visible_trigger.length && extra_trigger;
         if (triggered) {
             if (!tip.widget) {
-                this._activate_tip(tip, tour_name, $visible_trigger);
+                this._activate_tip(tip, tour_name, $visible_trigger, $visible_alt_trigger);
             } else {
-                tip.widget.update($visible_trigger);
+                tip.widget.update($visible_trigger, $visible_alt_trigger);
             }
         } else {
             if ($trigger.iframeContainer || ($extra_trigger && $extra_trigger.iframeContainer)) {
@@ -275,12 +338,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         return !!triggered;
     },
-    _activate_tip: function(tip, tour_name, $anchor) {
+    /**
+     * Activates the provided tip for the provided tour, $anchor and $alt_trigger.
+     * $alt_trigger is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
+     * @param {Object} tip
+     * @param {String} tour_name
+     * @param {jQuery} $anchor
+     * @param {jQuery} $alt_trigger
+     * @private
+     */
+    _activate_tip: function(tip, tour_name, $anchor, $alt_trigger) {
         var tour = this.tours[tour_name];
         var tip_info = tip;
         if (tour.skip_link) {
             tip_info = _.extend(_.omit(tip_info, 'content'), {
-                content: tip.content + tour.skip_link,
+                content: Markup`${tip.content}${tour.skip_link}`,
                 event_handlers: [{
                     event: 'click',
                     selector: '.o_skip_tour',
@@ -292,7 +366,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         if (this.running_tour !== tour_name) {
             tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
         }
-        tip.widget.attach_to($anchor).then(this._to_next_running_step.bind(this, tip, tour_name));
+        tip.widget.attach_to($anchor, $alt_trigger).then(this._to_next_running_step.bind(this, tip, tour_name));
     },
     _deactivate_tip: function(tip) {
         if (tip && tip.widget) {
@@ -339,19 +413,36 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.active_tooltips[tour_name] = tour.steps[tour.current_step];
     },
+    /**
+     * @private
+     * @param {string} tourName
+     * @returns {boolean}
+     */
+    _isTourConsumed(tourName) {
+        return this.consumed_tours.includes(tourName);
+    },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
         if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
-            var $rainbow_message = $('<strong>' +
-                                '<b>Good job!</b>' +
-                                ' You went through all steps of this tour.' +
-                                '</strong>');
-            new RainbowMan({message: $rainbow_message}).appendTo(this.$body);
+            let message = this.tours[tour_name].rainbowManMessage;
+            if (message) {
+                message = typeof message === 'function' ? message() : message;
+            } else {
+                message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
+            }
+            const fadeout = this.tours[tour_name].fadeout;
+            core.bus.trigger('show-effect', {
+                type: "rainbowman",
+                message,
+                fadeout,
+                messageIsHtml: true,
+            });
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
+        local_storage.removeItem(get_debugging_key(tour_name));
         if (this.running_tour === tour_name) {
             this._stop_running_tour_timeout();
             local_storage.removeItem(get_running_key());
@@ -425,30 +516,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
         }
     },
-
-    /**
-     * Tour predefined steps
-     */
-    STEPS: {
-        SHOW_APPS_MENU_ITEM: {
-            edition: 'community',
-            trigger: '.o_menu_apps a',
-            auto: true,
-            position: "bottom",
-        },
-
-        TOGGLE_HOME_MENU: {
-            edition: "enterprise",
-            trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click on the <i>Home icon</i> to navigate across apps.'),
-            position: "bottom",
-        },
-
-        WEBSITE_NEW_PAGE: {
-            trigger: "#new-content-menu > a",
-            auto: true,
-            position: "bottom",
-        },
-    },
+    stepUtils: new TourStepUtils(this)
 });
 });

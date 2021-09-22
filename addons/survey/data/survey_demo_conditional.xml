@@ -4,7 +4,7 @@
     <record id="survey_demo_burger_quiz" model="survey.survey">
         <field name="title">Burger Quiz</field>
         <field name="access_token">burger00-quiz-1234-abcd-344ca2tgb31e</field>
-        <field name="state">open</field>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="access_mode">public</field>
         <field name="users_can_go_back" eval="True"/>
         <field name="scoring_type">scoring_with_answers</field>
@@ -126,7 +126,7 @@
     <record id="survey_demo_burger_quiz_p2_q3" model="survey.question">
         <field name="survey_id" ref="survey_demo_burger_quiz"/>
         <field name="sequence">130</field>
-        <field name="title">What is the highest volcano in Europe ?</field>
+        <field name="title">Which is the highest volcano in Europe ?</field>
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>

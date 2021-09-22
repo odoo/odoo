@@ -4,6 +4,7 @@ odoo.define('website_sale_coupon.test', function (require) {
 require("website_sale.tour");
 var tour = require("web_tour.tour");
 var ajax = require('web.ajax');
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('shop_sale_coupon', {
     test: true,
@@ -37,8 +38,9 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to Cart)",
+            trigger: "a:contains(ADD TO CART)",
         },
+            tourUtils.goToCart(2),
         {
             content: "open customize menu",
             extra_trigger: '.oe_website_sale .oe_cart',
@@ -70,13 +72,13 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "check reward product",
-            trigger: '.reward_product:contains("10.0% discount on total amount")',
+            trigger: '.td-product_name:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: '.reward_product:contains("10.0% discount on total amount")',
+            trigger: '.td-product_name:contains("10.0% discount on total amount")',
             run: function () {
                 ajax.jsonRpc('/web/dataset/call', 'call', {
                     model: 'account.tax',
@@ -117,8 +119,9 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to Cart)",
+            trigger: "a:contains(ADD TO CART)",
         },
+            tourUtils.goToCart(3),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
             extra_trigger: '.oe_currency_value:contains("-﻿75.50"):not(#cart_total .oe_currency_value:contains("-﻿75.50"))',
@@ -143,7 +146,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(.reward_product:contains("Free Product - Small Cabinet"))',
+            trigger: '#wrap:has(.td-product_name:contains("Free Product - Small Cabinet"))',
             run: function () {}, // it's a check
         },
         {
@@ -153,7 +156,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(.reward_product:contains("Free Product - Small Cabinet")))',
+            trigger: '#wrap:not(:has(.td-product_name:contains("Free Product - Small Cabinet")))',
             run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */

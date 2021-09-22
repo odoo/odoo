@@ -4,7 +4,6 @@
     <!--=================-->
     <!-- Edition Iframe -->
     <!--=================-->
-
     <t t-name="wysiwyg.iframeContent"><head>
             <meta charset="utf-8"/>
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -14,13 +13,13 @@
                     <link type="text/css" rel="stylesheet" t-att-href="cssLib"/>
                 </t>
                 <t t-foreach="asset.cssContents || []" t-as="cssContent">
-                    <style type="text/css" t-raw="cssContent"/>
+                    <style type="text/css" t-out="cssContent"/>
                 </t>
                 <t t-foreach="asset.jsLibs || []" t-as="jsLib">
                     <script type="text/javascript" t-att-src="jsLib"/>
                 </t>
                 <t t-foreach="asset.jsContents || []" t-as="jsContent" t-if="jsContent.indexOf('inline asset') !== -1">
-                    <script type="text/javascript" t-raw="jsContent"/>
+                    <script type="text/javascript" t-out="jsContent"/>
                 </t>
             </t>
             <script type="text/javascript">
@@ -42,21 +41,13 @@
                 });
             </script>
         </head>
-        <body id="iframe_target" class="o_in_iframe">
-            <div id="web_editor-top-edit"></div>
-            <div id="wrapwrap">
-                <div data-oe-model="model" data-oe-type="html" class="o_editable oe_structure"></div>
-            </div>
+        <body class="o_in_iframe">
+            <div id="iframe_target"/>
             <script type="text/javascript">
                 odoo.define('web_editor.wysiwyg.iniframe', function (require) {
                     'use strict';
-                    var editor = require('web_editor.editor');
-
-                    window._summernoteSlave = $.summernote;
-                    window._summernoteSlave.iframe = true;
-                    window._summernoteSlave.lang = window.top.$.summernote.lang;
                     if (window.top.<t t-esc="updateIframeId"/>) {
-                        window.top.<t t-esc="updateIframeId"/>(editor.Class, <t t-esc="avoidDoubleLoad"/>);
+                        window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
                     }
                 });
             </script>
@@ -107,7 +98,7 @@
     </div>
 
     <t t-name="wysiwyg.widgets.media.search">
-        <div class="input-group ml-auto">
+        <div class="input-group mr-auto">
             <input type="text" class="form-control o_we_search" t-att-placeholder="searchPlaceholder.trim()"/>
             <div class="input-group-append">
                 <div class="input-group-text o_we_search_icon">
@@ -123,7 +114,7 @@
             <t t-call="wysiwyg.widgets.files.submenu"/>
             <div class="form-text o_we_error_text"/>
             <div class="o_we_existing_attachments"/>
-            <div class="mt-4 text-center mx-auto">
+            <div class="mt-4 text-center mx-auto o_we_load_more">
                 <button class="btn btn-primary o_load_more d-none" type="button">Load more...</button>
                 <div class="mt-4 o_load_done_msg d-none">
                     <span><i>All images have been loaded</i></span>
@@ -134,30 +125,30 @@
 
     <t t-name="wysiwyg.widgets.files.submenu">
         <div class="form-inline align-items-center py-4">
+            <t t-call="wysiwyg.widgets.media.search"/>
+            <t t-out="0"/>
+
             <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" t-att-multiple="widget.options.multiImages &amp;&amp; 'multiple'"/>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary o_upload_media_button">
-                    <t t-esc="uploadText"/>
-                </button>
-                <t t-raw="alternateUpload"/>
-            </div>
-
             <div class="input-group align-items-center ml-2">
-                <input type="text" class="form-control o_we_url_input" name="url" t-att-placeholder="urlPlaceholder"/>
+                <input type="text" class="form-control o_we_url_input o_we_horizontal_collapse o_we_transition_ease" name="url" t-att-placeholder="urlPlaceholder"/>
                 <div class="input-group-append align-items-center">
-                    <button type="button" class="btn btn-secondary o_upload_media_url_button" disabled="disabled">
-                        <t t-esc="addText"/>
+                    <button type="button" class="btn btn-secondary o_upload_media_url_button">
+                        <t t-out="addText"/>
                     </button>
-                    <div class="ml-2">
+                    <div class="mx-2">
                         <span class="o_we_url_success text-success d-none fa fa-lg fa-check" title="The URL seems valid."/>
-                        <span class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" t-att-title="urlWarningTitle"/>
+                        <span t-if="urlWarningTitle" class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" t-att-title="urlWarningTitle"/>
                         <span class="o_we_url_error text-danger d-none fa fa-lg fa-times" title="The URL does not seem to work."/>
                     </div>
                 </div>
             </div>
 
-            <t t-call="wysiwyg.widgets.media.search"/>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary o_upload_media_button">
+                    <t t-out="uploadText"/>
+                </button>
+            </div>
         </div>
     </t>
 
@@ -165,15 +156,23 @@
         <t t-call="wysiwyg.widgets.file">
             <t t-set="uploadText">Upload an image</t>
             <t t-set="urlPlaceholder">https://www.odoo.com/logo.png</t>
-            <t t-set="addText">Add image</t>
+            <t t-set="addText">Add URL</t>
             <t t-set="searchPlaceholder">Search an image</t>
-            <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
-            <t t-if="widget.options.showQuickUpload" t-set="alternateUpload">
-                <button class="btn btn-primary o_we_quick_upload" type="button" title="Quick Upload">
-                    <i class="fa fa-fast-forward"/>
-                    <span class="sr-only">Quick Upload</span>
-                </button>
-            </t>
+            <t t-set="urlWarningTitle">Uploaded image's format is not supported. Try with: </t>
+            <t t-set="urlWarningTitle" t-value="urlWarningTitle + widget.IMAGE_EXTENSIONS.join(', ')"/>
+            <div class="d-flex justify-content-start flex-grow-1 ml-2">
+                <div t-attf-class="custom-control custom-switch #{__debug__ and 'd-flex' or 'd-none'} align-items-center mr-2">
+                    <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
+                    <label class="custom-control-label" for="o_we_show_optimized_switch">
+                        Show optimized images
+                    </label>
+                </div>
+                <select class="custom-select o_we_search_select d-none">
+                    <option value="all">All</option>
+                    <option value="database">My Images</option>
+                    <option t-if="widget.options.useMediaLibrary" value="media-library">Illustrations</option>
+                </select>
+            </div>
         </t>
     </t>
 
@@ -183,128 +182,53 @@
             <t t-set="urlPlaceholder">https://www.odoo.com/mydocument</t>
             <t t-set="addText">Add document</t>
             <t t-set="searchPlaceholder">Search a document</t>
-            <t t-set="urlWarningTitle">The URL contains an image. The file will be added in the image section.</t>
         </t>
     </t>
 
-    <t t-name="wysiwyg.widgets.image.optimize">
-        <form class="o_we_image_optimize_dialog">
-            <div class="row">
-                <div class="o_we_config_column col-lg-6">
-                    <div class="form-group">
-                        <label class="o_we_title_label" for="o_we_name_input">
-                            Name
-                            <i class="fa fa-question-circle-o" title="Give a relevant name to your file to optimize search engine results."/>
-                        </label>
-                        <input type="text" class="form-control" id="o_we_name_input" name="filename" aria-describedby="nameHelp" t-att-value="widget.attachment.name" required="required"/>
-                    </div>
-
-                    <small t-if="widget.disableResize" class="form-text text-muted o_we_no_resize">
-                        <span class="fa fa-info-circle"/> Resizing is not supported for images of type <t t-esc="widget.attachment.mimetype"/>.
-                    </small>
-                    <div t-else="1" class="form-group">
-                        <label class="o_we_title_label" for="o_we_name_input">
-                            Size
-                            <i class="fa fa-question-circle-o" title="Reduce the size as much as possible to increase performance."/>
-                        </label>
-                        <div class="form-row align-items-center">
-                            <div class="col">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Width</div>
-                                    </div>
-                                    <input type="number" class="form-control" id="o_we_width" name="width" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_width" t-att-value="widget.defaultWidth"/>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">px</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fa fa-times"/>
-                            </div>
-                            <div class="col">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Height</div>
-                                    </div>
-                                    <input type="number" class="form-control" id="o_we_height" name="height" aria-describedby="sizeHelp" min="1" t-att-max="widget.attachment.image_height" t-att-value="widget.defaultHeight"/>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">px</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-text small text-right">
-                            <i class="fa fa-info-circle text-info"/>
-                            <span>Or choose a preset:</span>
-                            <t t-foreach="widget.suggestedWidths" t-as="suggestedWidth">
-                                <span t-if="suggestedWidth_index > 0">-</span>
-                                <a href="#" class="o_we_width_preset" t-att-data-width="suggestedWidth.width" t-esc="suggestedWidth.text"/>
-                            </t>
-                        </div>
-                    </div>
-
-                    <small t-if="widget.disableQuality" class="form-text text-muted o_we_no_quality">
-                        <span class="fa fa-info-circle"/> Changing the quality is not supported for images of type <t t-esc="widget.attachment.mimetype"/>.
-                    </small>
-                    <div class="form-group" t-else="1">
-                        <t t-if="widget.toggleQuality">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="o_we_optimize_quality" t-att-checked="widget.isExisting ? undefined : 'checked'" aria-describedby="toggleQualityHelp"/>
-                                <label class="custom-control-label" for="o_we_optimize_quality">
-                                    Optimize
-                                    <i class="fa fa-question-circle-o" title="This reduces the quality to increase performance."/>
-                                </label>
-                            </div>
-                        </t>
-                        <t t-else="1">
-                            <label class="o_we_title_label" for="o_we_quality_input">
-                                Quality
-                                <i class="fa fa-question-circle-o" title="Reduce the quality as much as possible to increase performance."/>
-                            </label>
-                            <div class="form-row align-items-center">
-                                <div class="col-sm-10">
-                                    <input type="range" class="custom-range align-middle o_we_quality_range" id="quality_range" name="quality_range" min="1" max="100" step="1" aria-describedby="rangeQualityHelp" t-att-value="widget.defaultQuality"/>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="number" class="form-control" id="o_we_quality_input" name="quality" min="1" max="100" step="1" aria-describedby="rangeQualityHelp" t-att-value="widget.defaultQuality"/>
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-                <div class="o_we_preview_column col-lg-6">
-                    <h4>Preview</h4>
-                    <div class="mw-100 o_we_preview_area">
-                        <img class="img o_we_preview_image" alt="Image Preview"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </t>
-
     <t t-name="wysiwyg.widgets.image.existing.attachments">
-        <div class="o_we_existing_attachments o_we_images">
-            <div t-if="!attachments.length" class="o_nocontent_help">
-                <p class="o_empty_folder_image">No images found.</p>
-                <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
-            </div>
-            <ol t-else="" class="d-flex flex-wrap mx-auto my-0 p-2">
-                <t t-foreach="attachments" t-as="attachment">
+        <div class="o_we_existing_attachments o_we_images d-flex flex-wrap w-100 justify-content-between align-items-stretch my-0">
+            <t t-if="!widget.hasContent()">
+                <div t-if="widget.needle" class="o_nocontent_help">
+                    <p class="o_empty_folder_image">No images found.</p>
+                    <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
+                </div>
+                <div t-else="" class="o_we_search_prompt">
+                    <h2>Get the perfect image by searching in our library of copyright free photos and illustrations.</h2>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-if="['all', 'database'].includes(widget.searchService)" t-foreach="attachments" t-as="attachment">
                     <t t-call="wysiwyg.widgets.image.existing.attachment"/>
                 </t>
-            </ol>
+                <t t-if="['all', 'media-library'].includes(widget.searchService)" t-foreach="libraryMedia" t-as="media">
+                    <t t-call="wysiwyg.widgets.image.library_media"/>
+                </t>
+                <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
+                <t t-foreach="20">
+                    <div class="o_we_attachment_placeholder"/>
+                </t>
+            </t>
         </div>
     </t>
 
     <t t-name="wysiwyg.widgets.image.existing.attachment">
-        <li class="o_existing_attachment_cell position-relative m-2" t-att-data-id="attachment.id">
-            <i t-if="!attachment.url" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
+        <t t-set="isOptimized" t-value="!!attachment.original_id"/>
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none' or ''} align-items-center justify-content-center" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
-            <div t-attf-class="d-flex align-items-center h-100">
-                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.image_src + '?width=256&amp;height=192'" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+            <div class="o_we_media_dialog_img_wrapper">
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.image_src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
-        </li>
+            <span t-if="isOptimized" class="badge badge-success">Optimized</span>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.library_media">
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light align-items-center justify-content-center o_library_media_cell" t-att-data-media-id="media.id">
+            <div class="o_we_media_dialog_img_wrapper">
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{media.thumbnail_url}" t-att-title="media.tooltip or ''" crossorigin="anonymous"/>
+                <a t-if="media.author" class="o_we_media_author" t-att-href="media.author_link" target="_blank" t-esc="media.author"/>
+            </div>
+        </div>
     </t>
 
     <t t-name="wysiwyg.widgets.document.existing.attachments">
@@ -346,6 +270,37 @@
         </div>
     </t>
 
+    <t t-name="wysiwyg.widgets.upload.progressbar">
+        <div t-attf-class="o_we_progressbar js_progressbar_#{fileId}">
+            <div class="d-flex text-info">
+                <span><i class="fa fa-spinner fa-pulse"/></span>
+                <span class="font-italic font-weight-bold text-truncate flex-grow-1 mx-2" t-esc="fileName"/>
+                <span class="text-nowrap" t-esc="fileSize"/>
+            </div>
+            <div class='js_progressbar_txt'>
+                <span class="text-success d-none"><i class='fa fa-check'/> File has been uploaded</span>
+                <span class="text-danger d-none"><i class='fa fa-times float-left m-1'/> <span class="o_we_error_text">File could not be saved</span></span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+            <hr/>
+        </div>
+    </t>
+    <t t-name="wysiwyg.widgets.upload.progress_toast">
+        <div class="o_notification_manager">
+            <div t-attf-class="o_notification bg-info fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="o_notification_body">
+                    <button type="button" class="close o_notification_close"
+                    aria-label="Close">
+                        <span class="d-inline" aria-hidden="true">×</span>
+                    </button>
+                    <div class="mr-auto o_notification_content"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <!-- Icon choosing part of the Media Dialog -->
     <t t-name="wysiwyg.widgets.font-icons">
         <form action="#">
@@ -380,38 +335,46 @@
                     <label class="col-form-label" for="o_video_text">
                         Video code <small>(URL or Embed)</small>
                     </label>
+                    <div class="text-left">
+                        <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                    </div>
                     <textarea class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
                 </div>
-                <div class="text-right">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
-                </div>
                 <div class="o_video_dialog_options d-none mt-4">
-                    <div class="o_yt_option o_vim_option o_dm_option">
+                    <div class="o_youtube_option o_vimeo_option o_dailymotion_option">
                       <label class="o_switch mb0">
                         <input id="o_video_autoplay" type="checkbox"/><span/>
                         <span style="margin-right: 8px;">Autoplay</span>
                         <span class="small text-muted" style="margin-left: auto;">Videos are muted when autoplay is enabled</span>
                       </label>
                     </div>
-                    <div class="o_yt_option o_vim_option">
+                    <div class="o_youtube_option o_vimeo_option">
                         <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
                     </div>
-                    <div class="o_yt_option o_dm_option">
+                    <div class="o_youtube_option o_dailymotion_option">
                         <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
                     </div>
-                    <div class="o_yt_option">
+                    <div class="o_youtube_option">
                         <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
                     </div>
-                    <div class="o_yt_option">
+                    <div class="o_youtube_option">
                         <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
                     </div>
-                    <div class="o_dm_option">
+                    <div class="o_dailymotion_option">
                         <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
                     </div>
-                    <div class="o_dm_option">
+                    <div class="o_dailymotion_option">
                         <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
                     </div>
                 </div>
+                <t t-if="widget._vimeoPreviewIds || widget._youtubePreviewIds">
+                    <span class="font-weight-bold">Suggestions</span>
+                    <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
+                        <t t-foreach="widget._vimeoPreviewIds" t-as="vimeoId">
+                            <div class="o_sample_video w-25 mh-100" t-att-data-vimeo="vimeoId"/>
+                        </t>
+                    </div>
+                </t>
             </div>
             <div class="col-md-6">
                 <div id="video-preview" class="p-3">
@@ -433,10 +396,10 @@
                 <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-md-9">
-                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.content"/>
                     </div>
                 </div>
-                <div class="form-group row o_url_input">
+                <div t-attf-class="form-group row o_url_input#{widget.isButton ? ' d-none' : ''}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
                     <div class="col-md-9">
                         <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
@@ -449,46 +412,46 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3">Size</label>
-                    <div class="col-md-9">
-                        <select name="link_style_size" class="form-control link-style">
-                            <option value="sm">Small</option>
-                            <option value="" selected="selected">Medium</option>
-                            <option value="lg">Large</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-form-label col-md-3">Style</label>
-                    <div class="col-md-9">
-                        <select name="link_style_shape" class="form-control link-style">
-                            <option value="" selected="selected">Default</option>
-                            <option value="outline">Outline</option>
-                            <option value="rounded-circle">Rounded</option>
-                            <option value="outline,rounded-circle">Outline-Rounded</option>
-                            <option value="flat">Flat</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-form-label col-md-3">Color</label>
-                    <div class="col-md-9">
-                        <div class="o_link_dialog_color">
-                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
-                                <span>L</span>
-                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
-                                <i class="fa"/>
-                            </label>
-                            <t t-foreach="['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'primary', 'secondary', 'success', 'info', 'warning', 'danger']" t-as="color">
-                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
-                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
-                                    <i class="fa"/>
+                    <label class="col-form-label col-md-3">Type</label>
+                    <div class="col-md-9 d-flex align-items-center">
+                        <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
+                            <t t-foreach="widget.colorsData" t-as="colorData">
+                                <label role="button" class="m-0 mr-2" t-if="colorData.type !== 'custom'">
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
+                                    <span t-esc="colorData.label"
+                                            t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
                                 </label>
                             </t>
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div id="o_link_dialog_button_opts_collapse" class="collapse">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">Size</label>
+                        <div class="col-md-9">
+                            <select name="link_style_size" class="form-control link-style">
+                                <option value="sm">Small</option>
+                                <option value="" selected="selected">Medium</option>
+                                <option value="lg">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3">Style</label>
+                        <div class="col-md-9">
+                            <select name="link_style_shape" class="form-control link-style">
+                                <option value="" selected="selected">Default</option>
+                                <option value="rounded-circle">Default + Rounded</option>
+                                <option value="outline">Outline</option>
+                                <option value="outline,rounded-circle">Outline + Rounded</option>
+                                <option value="fill">Fill</option>
+                                <option value="fill,rounded-circle">Fill + Rounded</option>
+                                <option value="flat">Flat</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
                     <div class="offset-md-3 col-md-9">
                         <label class="o_switch">
                             <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
@@ -501,7 +464,8 @@
             <div class="col-lg-4 o_link_dialog_preview">
                 <div class="form-group text-center">
                     <label>Preview</label>
-                    <div style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                    <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
+                         style="overflow-x: auto; max-width: 100%; max-height: 200px;">
                         <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
                     </div>
                 </div>
@@ -509,46 +473,217 @@
         </div>
     </div>
 
-    <!-- Crop Image Dialog (allows to crop image on the page) -->
-    <div t-name="wysiwyg.widgets.crop_image" class="o_crop_image_dialog">
-        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center" role="alert">
-            <i class="fa fa-exclamation-triangle fa-2x"/>
-            <h4>This image is an external image</h4>
-            <p>
-                This type of image is not supported for cropping.<br/>
-                If you want to crop it, please first download it from the original source and upload it in Odoo.
-            </p>
+    <!-- Link Edition : Popover -->
+    <div t-name="wysiwyg.widgets.link.edit.tooltip" class="d-flex">
+        <span class="mr-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
+        <div class="w-100">
+            <div class="d-flex">
+                <a href="#" target="_blank" class="o_we_url_link font-weight-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-2 o_we_copy_link text-dark" data-toggle="tooltip" data-placement="top" title="Copy Link">
+                    <i class="fa fa-clone"/>
+                </a>
+                <a href="#" class="mx-2 o_we_edit_link text-dark" data-toggle="tooltip" data-placement="top" title="Edit Link">
+                    <i class="fa fa-edit"/>
+                </a>
+                <a href="#" class="ml-2 o_we_remove_link text-dark" data-toggle="tooltip" data-placement="top" title="Remove Link">
+                    <i class="fa fa-chain-broken"/>
+                </a>
+            </div>
+            <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
         </div>
-        <t t-else="">
-           <div class="o_crop_area">
-                <img class="img img-fluid o_cropper_image" t-att-src="widget.imageData.originalSrc"/>
-           </div>
-           <div class="o_crop_options text-center mt16">
-               <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
-                   <t t-foreach="widget.aspectRatioList" t-as="ratio">
-                       <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
-                       <label t-attf-class="btn btn-secondary#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
-                           <input type="radio" /><t t-esc="ratio[0]"/>
-                       </label>
-                   </t>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></button>
-                   <button type="button" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></button>
-                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></button>
-                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</button>
-               </div>
-           </div>
-       </t>
+    </div>
+    <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
+        <we-row t-attf-class="{{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>⌙ Link Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-input class="o_we_user_value_widget">
+                <we-title class="o_short_title">⌙ </we-title>
+                <div class="o_url_input">
+                    <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row class="o_strip_domain d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper active">
+                <we-title class="o_long_title">⌙ Autoconvert to relative link</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="do_strip_domain" t-att-checked="widget.data.doStripDomain ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+        <we-row>
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Style</we-title>
+                <div class="dropdown">
+                    <button class="dropdown-toggle"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Link Style" aria-expanded="false">
+                        <we-toggler/>
+                    </button>
+                    <we-selection-items class="dropdown-menu" name="link_style_color">
+                        <t t-foreach="widget.colorsData" t-as="colorData">
+                            <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
+                                <t t-esc="colorData.label"/>
+                            </we-button>
+                        </t>
+                    </we-selection-items>
+                    <span class="o_we_dropdown_caret"></span>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-text">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
+                <we-title> ⌙ Text Color</we-title><!-- &emsp; -->
+                <div class="dropdown">
+                    <span data-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_text_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-fill">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
+                <we-title> ⌙ Fill Color</we-title><!-- &emsp; -->
+                <div class="dropdown">
+                    <span data-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_fill_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-border">
+            <we-title> ⌙ Border</we-title><!-- &emsp; -->
+            <div>
+                <we-input class="o_we_user_value_widget" title="Border Width">
+                    <div class="o_custom_border_width_input">
+                        <input name="custom_border_width" type="text" class="text-right" size="2"/>
+                        <span>px</span>
+                    </div>
+                </we-input>
+                <we-select class="o_we_user_value_widget" title="Border Style">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Border Style" aria-expanded="false">
+                            <we-toggler/>
+                        </button>
+                        <we-selection-items class="dropdown-menu" name="link_border_style">
+                            <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+                            <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+                            <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+                        </we-selection-items>
+                    </div>
+                </we-select>
+                <we-select title="Border Color" class="o_we_user_value_widget o_we_so_color_palette">
+                    <div class="dropdown">
+                        <span data-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
+                        <we-selection-items class="dropdown-menu" name="link_border_color"/>
+                    </div>
+                </we-select>
+            </div>
+        </we-row>
+        <we-row class="link-size-row">
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Size</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Size" aria-expanded="false">
+                            <we-toggler>
+                                Medium
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_size" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item" href="#" data-value="sm">
+                                Small
+                            </we-button>
+                            <we-button class="dropdown-item active" href="#" data-value="">
+                                Medium
+                            </we-button>
+                            <we-button class="dropdown-item" href="#" data-value="lg">
+                                Large
+                            </we-button>
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-shape-row">
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Shape</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Shape" aria-expanded="false">
+                            <we-toggler>
+                                Default
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_shape" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item active" data-value="">Default</we-button>
+                            <we-button class="dropdown-item" data-value="rounded-circle">Default + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="outline">Outline</we-button>
+                            <we-button class="dropdown-item" data-value="outline,rounded-circle">Outline + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="fill">Fill</we-button>
+                            <we-button class="dropdown-item" data-value="fill,rounded-circle">Fill + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="flat">Flat</we-button>
+                        </we-selection-items>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+            <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper #{widget.data.isNewWindow ? 'active' : ''}">
+                <we-title class="o_long_title">⌙ Open in new window</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+    </we-customizeblock-option>
+
+    <!-- ImageCropWidget controls (allows to crop images on the page) -->
+    <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">
+        <div class="o_we_cropper_wrapper">
+            <img class="o_we_cropper_img"/>
+            <div class="o_we_crop_buttons text-center mt16 position-absolute o_we_no_overlay" contenteditable="false">
+                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
+                    <t t-foreach="widget.aspectRatios" t-as="ratio">
+                        <t t-set="is_active" t-value="ratio === widget.aspectRatio"/>
+                        <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
+                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                        </label>
+                    </t>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Zoom In" data-action="zoom" data-value="0.1"><i class="fa fa-fw fa-search-plus"/></button>
+                    <button type="button" title="Zoom Out" data-action="zoom" data-value="-0.1"><i class="fa fa-fw fa-search-minus"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Rotate Left" data-action="rotate" data-value="-90"><i class="fa fa-fw fa-rotate-left"/></button>
+                    <button type="button" title="Rotate Right" data-action="rotate" data-value="90"><i class="fa fa-fw fa-rotate-right"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Flip Horizontal" data-action="flip" data-scale-direction="scaleX"><i class="fa fa-fw fa-arrows-h"/></button>
+                    <button type="button" title="Flip Vertical" data-action="flip" data-scale-direction="scaleY"><i class="fa fa-fw fa-arrows-v"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Reset Image" data-action="reset"><i class="fa fa-refresh"/> Reset Image</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Apply" data-action="apply" class="btn btn-primary"><i class="fa fa-check"/> Apply</button>
+                    <button type="button" title="Discard" data-action="discard" class="btn btn-danger"><i class="fa fa-times"/> Discard</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </templates>

@@ -6,12 +6,12 @@
     'name': 'Ukraine - Accounting',
     'author': 'ERP Ukraine',
     'website': 'https://erp.co.ua',
-    'version': '1.3',
+    'version': '1.4',
     'description': """
 Ukraine - Chart of accounts.
 ============================
     """,
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'depends': ['account'],
     'data': [
         'data/account_chart_template.xml',
@@ -21,4 +21,8 @@ Ukraine - Chart of accounts.
         'data/account_tax_template.xml',
         'data/account_chart_template_config.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

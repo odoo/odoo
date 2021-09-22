@@ -4,30 +4,32 @@
 from contextlib import closing
 from datetime import datetime, timedelta
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
-class StockQuant(SavepointCase):
+class StockQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockQuant, cls).setUpClass()
-        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
-        cls.demo_user = Users.create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
-            'email': 'p.p@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
-        })
-        cls.stock_user = Users.create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline2',
-            'email': 'p.p@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
-        })
+        cls.demo_user = mail_new_test_user(
+            cls.env,
+            name='Pauline Poivraisselle',
+            login='pauline',
+            email='p.p@example.com',
+            notification_type='inbox',
+            groups='base.group_user',
+        )
+        cls.stock_user = mail_new_test_user(
+            cls.env,
+            name='Pauline Poivraisselle',
+            login='pauline2',
+            email='p.p@example.com',
+            notification_type='inbox',
+            groups='stock.group_stock_user',
+        )
 
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
@@ -50,6 +52,11 @@ class StockQuant(SavepointCase):
         cls.stock_location = cls.env['stock.location'].create({
             'name': 'stock_location',
             'usage': 'internal',
+        })
+        cls.stock_subloc3 = cls.env['stock.location'].create({
+            'name': 'subloc3',
+            'usage': 'internal',
+            'location_id': cls.stock_location.id
         })
         cls.stock_subloc2 = cls.env['stock.location'].create({
             'name': 'subloc2',
@@ -484,8 +491,8 @@ class StockQuant(SavepointCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
 
     def test_access_rights_1(self):
-        """ Directly update the quant with a user with or without stock access rights sould raise
-        an AccessError.
+        """ Directly update the quant with a user with or without stock access rights should not raise
+        an AccessError only deletion will.
         """
         quant = self.env['stock.quant'].create({
             'product_id': self.product.id,
@@ -505,16 +512,14 @@ class StockQuant(SavepointCase):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1.0,
+        })
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
         with self.assertRaises(AccessError):
-            self.env['stock.quant'].create({
-                'product_id': self.product.id,
-                'location_id': self.stock_location.id,
-                'quantity': 1.0,
-            })
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).unlink()
+            quant.with_user(self.stock_user).unlink()
 
     def test_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
@@ -596,34 +601,6 @@ class StockQuant(SavepointCase):
         # Removal strategy is LIFO, so lot1 should be received as it was received later.
         self.assertEqual(quants[0][0].lot_id.id, lot1.id)
 
-    def test_in_date_4b(self):
-        """ Check for LIFO and max with/without in_date that it handles the LIFO NULLS LAST well
-        """
-        stock_location1 = self.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'location_id': self.stock_location.id
-        })
-        stock_location2 = self.env['stock.location'].create({
-            'name': 'Shelf 2',
-            'location_id': self.stock_location.id
-        })
-        lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
-        self.stock_location.removal_strategy_id = lifo_strategy
-
-        self.env['stock.quant'].create({
-            'product_id': self.product_serial.id,
-            'location_id': stock_location1.id,
-            'quantity': 1.0,
-        })
-
-        in_date_location2 = datetime.now()
-        self.env['stock.quant']._update_available_quantity(self.product_serial, stock_location2, 1.0, in_date=in_date_location2)
-
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
-
-        # Removal strategy is LIFO, so the one with date is the most recent one and should be selected
-        self.assertEqual(quants[0][0].location_id.id, stock_location2.id)
-
     def test_in_date_5(self):
         """ Receive the same lot at different times, once they're in the same location, the quants
         are merged and only the earliest incoming date is kept.
@@ -658,3 +635,55 @@ class StockQuant(SavepointCase):
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
         self.assertEqual(quant.in_date, in_date2)
+
+    def test_closest_removal_strategy_tracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple lot received
+        at different locations for a tracked product.
+        """
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+        in_date = datetime.now()
+        # Add a product from lot1 in stock_location/subloc2
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc2, 1.0, lot_id=lot1, in_date=in_date)
+        # Add a product from lot2 in stock_location/subloc3
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot2, in_date=in_date)
+        # Require one unit of the product
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+
+        # Default removal strategy is 'Closest location', so lot1 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
+        self.assertEqual(quants[0][0].lot_id.id, lot1.id)
+
+    def test_closest_removal_strategy_untracked(self):
+        """ Check that the Closest location strategy correctly applies when you have multiple products received
+        at different locations for untracked products."""
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        self.stock_location.removal_strategy_id = closest_strategy
+        # Add 2 units of product into stock_location/subloc2
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc2.id,
+            'quantity': 2.0,
+        })
+        # Add 3 units of product into stock_location/subloc3
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_subloc3.id,
+            'quantity': 3.0
+        })
+        # Request 3 units of product, with 'Closest location' as removal strategy
+        quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 3)
+
+        # The 2 in stock_location/subloc2 should be taken first, as the location name is smaller alphabetically
+        self.assertEqual(quants[0][0].reserved_quantity, 2)
+        # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
+        self.assertEqual(quants[1][0].reserved_quantity, 1)

@@ -32,7 +32,7 @@ ProductConfiguratorWidget.include({
     _onProductChange: function (productId, dataPointId) {
       var self = this;
       return this._super.apply(this, arguments).then(function (stopPropagation) {
-          if (stopPropagation) {
+          if (stopPropagation || productId === undefined) {
               return Promise.resolve(true);
           } else {
               return self._checkForEvent(productId, dataPointId);
@@ -54,9 +54,9 @@ ProductConfiguratorWidget.include({
         return this._rpc({
             model: 'product.product',
             method: 'read',
-            args: [productId, ['event_ok']],
+            args: [productId, ['detailed_type']],
         }).then(function (result) {
-            if (result && result[0].event_ok) {
+            if (Array.isArray(result) && result.length && result[0].detailed_type === 'event') {
                 self._openEventConfigurator({
                         default_product_id: productId
                     },

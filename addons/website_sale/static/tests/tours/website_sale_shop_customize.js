@@ -2,6 +2,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
     'use strict';
 
     var tour = require("web_tour.tour");
+    const tourUtils = require('website_sale.tour_utils');
 
     tour.register('shop_customize', {
         test: true,
@@ -13,17 +14,17 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: '#customize-menu > a',
             },
             {
-                content: "click on 'Product Attribute's Filters'",
-                trigger: "#customize-menu a:contains(Product Attribute's Filters)",
+                content: "click on 'Attributes & Variants filters'",
+                trigger: "#customize-menu a:contains(Attributes & Variants filters)",
             },
             {
                 content: "select product attribute Steel",
                 extra_trigger: 'body:not(:has(#customize-menu:visible .dropdown-menu:visible))',
-                trigger: 'form.js_attributes label:contains(Steel - Test) input:not(:checked)',
+                trigger: 'form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
             },
             {
                 content: "check the selection",
-                trigger: 'form.js_attributes label:contains(Steel - Test) input:checked',
+                trigger: 'form.js_attributes input:checked + label:contains(Steel - Test)',
                 run: function () {}, // it's a check
             },
             {
@@ -112,13 +113,14 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "click on 'Add to Cart' button",
-                trigger: "a:contains(Add to Cart)",
+                trigger: "a:contains(ADD TO CART)",
             },
             {
                 content: "check quantity",
                 trigger: '.my_cart_quantity:containsExact(1),.o_extra_menu_items .fa-plus',
                 run: function () {}, // it's a check
             },
+                tourUtils.goToCart(),
             {
                 content: "click on shop",
                 trigger: "a:contains(Continue Shopping)",
@@ -130,8 +132,8 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: '#customize-menu > a',
             },
             {
-                content: "remove 'Product Attribute's Filters'",
-                trigger: "#customize-menu a:contains(Product Attribute's Filters):has(input:checked)",
+                content: "remove 'Attributes & Variants filters'",
+                trigger: "#customize-menu a:contains(Attributes & Variants filters):has(input:checked)",
             },
             {
                 content: "finish",

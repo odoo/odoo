@@ -3,7 +3,7 @@ from __future__ import division
 
 from itertools import count, zip_longest
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 class A(models.Model):
     _name = 'test_testing_utilities.a'
@@ -92,7 +92,7 @@ class M2MChange(models.Model):
         for r in self:
             r.write({
                 'm2m': [
-                    (0, False, {'name': str(n)})
+                    Command.create({'name': str(n)})
                     for n, v in zip_longest(range(r.count), r.m2m or [])
                     if v is None
                 ]
@@ -103,6 +103,7 @@ class M2MSub(models.Model):
     _description = 'Testing Utilities Subtraction 2'
 
     name = fields.Char()
+    m2o_ids = fields.Many2many('test_testing_utilities.m2o')
 
 class M2MChange2(models.Model):
     _name = 'test_testing_utilities.f'
@@ -176,7 +177,7 @@ class O2MDefault(models.Model):
 
     def _default_subs(self):
         return [
-            (0, 0, {'v': 5})
+            Command.create({'v': 5})
         ]
     value = fields.Integer(default=1)
     v = fields.Integer()
@@ -280,12 +281,26 @@ class ReqBool(models.Model):
 
     f_bool = fields.Boolean(required=True)
 
+class O2MChangesParent(models.Model):
+    _name = _description = 'o2m_changes_parent'
+
+    name = fields.Char()
+    line_ids = fields.One2many('o2m_changes_children', 'parent_id')
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        for line in self.line_ids:
+            line.line_ids = [Command.delete(l.id) for l in line.line_ids] + [
+                Command.create({'v': 0, 'vv': 0})
+            ]
+
 class O2MChangesChildren(models.Model):
     _name = _description = 'o2m_changes_children'
 
     name = fields.Char()
     v = fields.Integer()
     line_ids = fields.One2many('o2m_changes_children.lines', 'parent_id')
+    parent_id = fields.Many2one('o2m_changes_parent')
 
     @api.onchange('v')
     def _onchange_v(self):

@@ -1,0 +1,90 @@
+// -----------------------------------------------------------------------------
+// Layout
+// -----------------------------------------------------------------------------
+
+.o_VisitorBanner {
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    display: flex;
+    flex: 0 0 auto;
+    padding: map-get($spacers, 4) map-get($spacers, 2);
+}
+
+.o_VisitorBanner_avatar {
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
+    object-fit: cover;
+}
+
+.o_VisitorBanner_avatarContainer {
+    height: $o-mail-thread-avatar-size;
+    width: $o-mail-thread-avatar-size;
+    margin-left: map-get($spacers, 1);
+    margin-right: map-get($spacers, 1);
+    position: relative;
+}
+
+.o_VisitorBanner_country {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_VisitorBanner_history {
+    margin-top: map-get($spacers, 1);
+}
+
+.o_VisitorBanner_historyIcon {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_VisitorBanner_language {
+    margin-inline-end: map-get($spacers, 3);
+}
+
+.o_VisitorBanner_languageIcon {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_VisitorBanner_onlineStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    width: 1.2em;
+    height: 1.2em;
+    line-height: 1.3em;
+    font-size: x-small;
+}
+
+.o_VisitorBanner_sidebar {
+    display: flex;
+    flex: 0 0 $o-mail-message-sidebar-width;
+    justify-content: center;
+    margin-inline-end: map-get($spacers, 2);
+    max-width: $o-mail-message-sidebar-width;
+}
+
+.o_VisitorBanner_visitor {
+    margin-inline-end: map-get($spacers, 3);
+}
+
+.o_VisitorBanner_websiteIcon {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_VisitorBanner {
+    background: $white;
+    border-bottom-color: gray('400');
+}
+
+.o_VisitorBanner_onlineStatusIcon {
+    color: $o-enterprise-primary-color;
+}
+
+.o_VisitorBanner_visitor {
+    font-weight: $font-weight-bold;
+}

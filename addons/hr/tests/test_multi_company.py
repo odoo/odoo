@@ -21,11 +21,15 @@ class TestMultiCompany(TestHrCommon):
             (4, self.company_2.id),
         ]
         self.res_users_hr_officer.company_id = self.company_1.id
+        # flush and invalidate the cache, otherwise a full cache may prevent
+        # access rights to be checked
+        self.employees.flush()
+        self.employees.invalidate_cache()
 
     def test_multi_company_report(self):
         content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_context(
             allowed_company_ids=[self.company_1.id, self.company_2.id]
-        ).render_qweb_pdf(res_ids=self.employees.ids)
+        )._render_qweb_pdf(res_ids=self.employees.ids)
         self.assertIn(b'Bidule', content)
         self.assertIn(b'Machin', content)
 
@@ -33,4 +37,4 @@ class TestMultiCompany(TestHrCommon):
         with self.assertRaises(QWebException):  # CacheMiss followed by AccessError
             content, content_type = self.env.ref('hr.hr_employee_print_badge').with_user(self.res_users_hr_officer).with_company(
                 self.company_1
-            ).render_qweb_pdf(res_ids=self.employees.ids)
+            )._render_qweb_pdf(res_ids=self.employees.ids)

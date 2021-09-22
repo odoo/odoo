@@ -7,7 +7,7 @@
     'name': 'Singapore - Accounting',
     'author': 'Tech Receptives',
     'version': '2.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Singapore accounting chart and localization.
 =======================================================
@@ -30,4 +30,5 @@ This module add, for accounting:
         'views/res_partner_view.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
+    'license': 'LGPL-3',
 }

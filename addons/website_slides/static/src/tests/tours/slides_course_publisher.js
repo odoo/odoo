@@ -1,8 +1,7 @@
-odoo.define('website_slides.tour.slide.course.publisher', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
-var slidesTourTools = require('website_slides.tour.tools');
+import tour from 'web_tour.tour';
+import slidesTourTools from '@website_slides/tests/tours/slides_tour_tools';
 
 /**
  * Global use case:
@@ -19,7 +18,7 @@ tour.register('course_publisher', {
     trigger: 'li.o_new_content_menu a'
 }, {
     content: 'eLearning: click on New Course',
-    trigger: 'a:contains("New Course")'
+    trigger: 'a:contains("Course")'
 }, {
     content: 'eLearning: set name',
     trigger: 'input[name="name"]',
@@ -52,9 +51,6 @@ tour.register('course_publisher', {
     content: 'eLearning: click pâtissière',
     trigger: 'img[title="s_company_team_image_4.png"]',
 }, {
-    content: 'eLearning: validate pâtissière',
-    trigger: 'footer.modal-footer button:contains("Add")',
-}, {
     content: 'eLearning: is the pâtissière set ?',
     trigger: 'img.o_wslides_course_pict',
     run: function () {
@@ -75,6 +71,8 @@ tour.register('course_publisher', {
     run: function () {} // check membership
 }
 ].concat(
+    slidesTourTools.addExistingCourseTag(),
+    slidesTourTools.addNewCourseTag('The Most Awesome Course'),
     slidesTourTools.addSection('Introduction'),
     slidesTourTools.addVideoToSection('Introduction'),
     [{
@@ -93,5 +91,3 @@ tour.register('course_publisher', {
 //     run: 'drag_and_drop div.o_wslides_slides_list_drag a.o_wslides_js_slide_section_add',
 // }]
 ));
-
-});

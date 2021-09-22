@@ -14,13 +14,14 @@
         </field>
     </record>
 
+    <!-- STAGES TREE VIEW + MUTI_EDIT -->
     <record id="crm_stage_tree" model="ir.ui.view">
         <field name="name">crm.stage.tree</field>
         <field name="model">crm.stage</field>
         <field name="arch" type="xml">
-            <tree string="Stages">
+            <tree string="Stages" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="name" readonly="1"/>
                 <field name="is_won"/>
                 <field name="team_id"/>
             </tree>
@@ -35,11 +36,9 @@
             <form string="Stage">
                 <sheet>
                     <div class="oe_title">
-                        <div class="oe_edit_only">
-                            <label for="name"/>
-                        </div>
+                        <label for="name"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Negotiation"/>
                         </h1>
                     </div>
                     <group>
@@ -70,13 +69,5 @@
           </p>
         </field>
     </record>
-
-    <menuitem
-        id="menu_crm_lead_stage_act"
-        name="Stages"
-        sequence="0"
-        action="crm_stage_action"
-        parent="menu_crm_config_lead"
-        groups="base.group_no_one"/>
 
 </odoo>

@@ -17,7 +17,7 @@ class SaleOrderTemplate(models.Model):
 
     name = fields.Char('Quotation Template', required=True)
     sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)
-    note = fields.Text('Terms and conditions', translate=True)
+    note = fields.Html('Terms and conditions', translate=True)
     sale_order_template_option_ids = fields.One2many('sale.order.template.option', 'sale_order_template_id', 'Optional Products', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
@@ -37,7 +37,11 @@ class SaleOrderTemplate(models.Model):
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:
-                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
+                raise ValidationError(_(
+                    "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n Please change the company of your template or remove the products from other companies.",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    template_company=template.company_id.display_name,
+                ))
 
     @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _onchange_template_line_ids(self):
@@ -53,10 +57,8 @@ class SaleOrderTemplate(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
-            template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
-            for template in self:
-                if template_id and template_id == template.id:
-                    raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
+            companies = self.env['res.company'].sudo().search([('sale_order_template_id', 'in', self.ids)])
+            companies.sale_order_template_id = None
         result = super(SaleOrderTemplate, self).write(vals)
         self._update_product_translations()
         return result
@@ -110,9 +112,7 @@ class SaleOrderTemplateLine(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain=[('sale_ok', '=', True)])
-    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    discount = fields.Float('Discount (%)', digits='Discount', default=0.0)
-    product_uom_qty = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    product_uom_qty = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
 
@@ -124,19 +124,13 @@ class SaleOrderTemplateLine(models.Model):
     def _onchange_product_id(self):
         self.ensure_one()
         if self.product_id:
-            self.price_unit = self.product_id.lst_price
             self.product_uom_id = self.product_id.uom_id.id
             self.name = self.product_id.get_product_multiline_description_sale()
-
-    @api.onchange('product_uom_id')
-    def _onchange_product_uom(self):
-        if self.product_id and self.product_uom_id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.product_uom_id)
 
     @api.model
     def create(self, values):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
-            values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
+            values.update(product_id=False, product_uom_qty=0, product_uom_id=False)
         return super(SaleOrderTemplateLine, self).create(values)
 
     def write(self, values):
@@ -150,7 +144,7 @@ class SaleOrderTemplateLine(models.Model):
             "Missing required product and UoM on accountable sale quote line."),
 
         ('non_accountable_fields_null',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom_id IS NULL))",
+            "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",
             "Forbidden product, unit price, quantity, and UoM on non-accountable sale quote line"),
     ]
 
@@ -167,26 +161,13 @@ class SaleOrderTemplateOption(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', domain=[('sale_ok', '=', True)],
         required=True, check_company=True)
-    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    discount = fields.Float('Discount (%)', digits='Discount')
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
-    quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    quantity = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        self.price_unit = self.product_id.list_price
         self.uom_id = self.product_id.uom_id
         self.name = self.product_id.get_product_multiline_description_sale()
-
-    @api.onchange('uom_id')
-    def _onchange_product_uom(self):
-        if not self.product_id:
-            return
-        if not self.uom_id:
-            self.price_unit = 0.0
-            return
-        if self.uom_id.id != self.product_id.uom_id.id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)

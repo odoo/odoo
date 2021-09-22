@@ -9,7 +9,12 @@ class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
-    currency_id = fields.Many2one(related='product_id.currency_id', groups='stock.group_stock_manager')
+    currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')
+    accounting_date = fields.Date(
+        'Accounting Date',
+        help="Date at which the accounting entries will be created"
+             " in case of automated inventory valuation."
+             " If empty, the inventory date will be used.")
 
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
@@ -21,6 +26,7 @@ class StockQuant(models.Model):
         a estimation more than a real value).
         """
         for quant in self:
+            quant.currency_id = quant.company_id.currency_id
             # If the user didn't enter a location yet while enconding a quant.
             if not quant.location_id:
                 quant.value = 0
@@ -35,10 +41,10 @@ class StockQuant(models.Model):
                 if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
                     quant.value = 0.0
                     continue
-                average_cost = quant.product_id.value_svl / quantity
+                average_cost = quant.product_id.with_company(quant.company_id).value_svl / quantity
                 quant.value = quant.quantity * average_cost
             else:
-                quant.value = quant.quantity * quant.product_id.standard_price
+                quant.value = quant.quantity * quant.product_id.with_company(quant.company_id).standard_price
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -53,4 +59,20 @@ class StockQuant(models.Model):
             if group.get('__domain'):
                 quants = self.search(group['__domain'])
                 group['value'] = sum(quant.value for quant in quants)
+        return res
+
+    def _apply_inventory(self):
+        acc_inventories = self.filtered(lambda quant: quant.accounting_date)
+        for inventory in acc_inventories:
+            super(StockQuant, self.with_context(force_period_date=inventory.accounting_date))._apply_inventory()
+            inventory.write({'accounting_date': False})
+        other_inventories = self - acc_inventories
+        if other_inventories:
+            super(StockQuant, other_inventories)._apply_inventory()
+
+    @api.model
+    def _get_inventory_fields_write(self):
+        """ Returns a list of fields user can edit when editing a quant in `inventory_mode`."""
+        res = super()._get_inventory_fields_write()
+        res += ['accounting_date']
         return res

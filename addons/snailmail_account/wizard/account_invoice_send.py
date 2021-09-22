@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models, Command, _
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -11,17 +10,22 @@ class AccountInvoiceSend(models.TransientModel):
     _description = 'Account Invoice Send'
 
     partner_id = fields.Many2one('res.partner', compute='_get_partner', string='Partner')
-    snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by Snailmail (coventional posting delivery service)', default=lambda self: self.env.company.invoice_is_snailmail)
+    snailmail_is_letter = fields.Boolean('Send by Post',
+        help='Allows to send the document by Snailmail (conventional posting delivery service)',
+        default=lambda self: self.env.company.invoice_is_snailmail)
     snailmail_cost = fields.Float(string='Stamp(s)', compute='_compute_snailmail_cost', readonly=True)
     invalid_addresses = fields.Integer('Invalid Addresses Count', compute='_compute_invalid_addresses')
-    invalid_invoice_ids = fields.Many2many('account.move', string='Invalid Addresses', compute='_compute_invalid_addresses')
+    invalid_invoices = fields.Integer('Invalid Invoices Count', compute='_compute_invalid_addresses')
+    invalid_partner_ids = fields.Many2many('res.partner', string='Invalid Addresses', compute='_compute_invalid_addresses')
 
     @api.depends('invoice_ids')
     def _compute_invalid_addresses(self):
         for wizard in self:
             invalid_invoices = wizard.invoice_ids.filtered(lambda i: not self.env['snailmail.letter']._is_valid_address(i.partner_id))
-            wizard.invalid_invoice_ids = invalid_invoices
-            wizard.invalid_addresses = len(invalid_invoices)
+            wizard.invalid_invoices = len(invalid_invoices)
+            invalid_partner_ids = invalid_invoices.partner_id.ids
+            wizard.invalid_addresses = len(invalid_partner_ids)
+            wizard.invalid_partner_ids = [Command.set(invalid_partner_ids)]
 
     @api.depends('invoice_ids')
     def _get_partner(self):
@@ -49,7 +53,7 @@ class AccountInvoiceSend(models.TransientModel):
             })
             letters |= letter
 
-        self.invoice_ids.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+        self.invoice_ids.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})
         if len(self.invoice_ids) == 1:
             letters._snailmail_print()
         else:
@@ -57,9 +61,21 @@ class AccountInvoiceSend(models.TransientModel):
 
     def send_and_print_action(self):
         if self.snailmail_is_letter:
-            if self.invalid_addresses and self.composition_mode == "mass_mail":
-                self.notify_invalid_addresses()
-            self.snailmail_print_action()
+            if self.env['snailmail.confirm.invoice'].show_warning():
+                wizard = self.env['snailmail.confirm.invoice'].create({'model_name': _('Invoice'), 'invoice_send_id': self.id})
+                return wizard.action_open()
+            self._print_action()
+        return self.send_and_print()
+    
+    def _print_action(self):
+        if not self.snailmail_is_letter:
+            return
+
+        if self.invalid_addresses and self.composition_mode == "mass_mail":
+            self.notify_invalid_addresses()
+        self.snailmail_print_action()
+
+    def send_and_print(self):
         res = super(AccountInvoiceSend, self).send_and_print_action()
         return res
 
@@ -68,7 +84,7 @@ class AccountInvoiceSend(models.TransientModel):
         self.env['bus.bus'].sendone(
             (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
             {'type': 'snailmail_invalid_address', 'title': _("Invalid Addresses"),
-            'message': _("%s of the selected invoice(s) had an invalid address and were not sent") % self.invalid_addresses}
+            'message': _("%s of the selected invoice(s) had an invalid address and were not sent", self.invalid_invoices)}
         )
 
     def invalid_addresses_action(self):
@@ -76,6 +92,6 @@ class AccountInvoiceSend(models.TransientModel):
             'name': _('Invalid Addresses'),
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,tree,form',
-            'res_model': 'account.move',
-            'domain': [('id', 'in', self.mapped('invalid_invoice_ids').ids)],
+            'res_model': 'res.partner',
+            'domain': [('id', 'in', self.invalid_partner_ids.ids)],
         }

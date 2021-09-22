@@ -69,6 +69,8 @@ odoo.define('barcodes.barcode_mobile_tests', function () {
             // Rebind keyboard events
             barcodeEvents.stop();
             barcodeEvents.start();
+
+            document.querySelector('input[name=barcode]').remove();
         });
     });
     });

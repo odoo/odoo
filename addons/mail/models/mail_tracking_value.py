@@ -31,6 +31,9 @@ class MailTracking(models.Model):
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
 
+    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
+        help="Used to display the currency when tracking monetary values")
+
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
     tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
@@ -39,7 +42,7 @@ class MailTracking(models.Model):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
             field = model._fields.get(tracking.field.name)
-            tracking.field_groups = field.groups
+            tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence, model_name):

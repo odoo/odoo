@@ -25,6 +25,24 @@ class Assets(models.AbstractModel):
                 word hook). If a key is already in the file's map, its value is
                 overridden.
         """
+        if 'color-palettes-name' in values:
+            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_common')
+            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_common')
+            # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
+            self.make_scss_customization('/website/static/src/scss/options/colors/user_theme_color_palette.scss', {
+                'success': 'null',
+                'info': 'null',
+                'warning': 'null',
+                'danger': 'null',
+            })
+            # Also reset gradients which are in the "website" values palette
+            self.make_scss_customization('/website/static/src/scss/options/user_values.scss', {
+                'menu-gradient': 'null',
+                'header-boxed-gradient': 'null',
+                'footer-gradient': 'null',
+                'copyright-gradient': 'null',
+            })
+
         custom_url = self.make_custom_asset_file_url(url, 'web.assets_common')
         updatedFileContent = self.get_asset_content(custom_url) or self.get_asset_content(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
@@ -50,33 +68,21 @@ class Assets(models.AbstractModel):
         res = super(Assets, self)._get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
-    def _get_custom_view(self, custom_url, op='='):
+    def _get_custom_asset(self, custom_url):
         """
-        See web_editor.Assets._get_custom_view
+        See web_editor.Assets._get_custom_asset
         Extend to only return the views related to the current website.
         """
         website = self.env['website'].get_current_website()
-        res = super(Assets, self)._get_custom_view(custom_url, op=op)
+        res = super(Assets, self)._get_custom_asset(custom_url)
         return res.with_context(website_id=website.id).filter_duplicate()
 
-    def _save_asset_attachment_hook(self):
+    def _save_asset_hook(self):
         """
-        See web_editor.Assets._save_asset_attachment_hook
+        See web_editor.Assets._save_asset_hook
         Extend to add website ID at attachment creation.
         """
-        res = super(Assets, self)._save_asset_attachment_hook()
-
-        website = self.env['website'].get_current_website()
-        if website:
-            res['website_id'] = website.id
-        return res
-
-    def _save_asset_view_hook(self):
-        """
-        See web_editor.Assets._save_asset_view_hook
-        Extend to add website ID at view creation.
-        """
-        res = super(Assets, self)._save_asset_view_hook()
+        res = super(Assets, self)._save_asset_hook()
 
         website = self.env['website'].get_current_website()
         if website:

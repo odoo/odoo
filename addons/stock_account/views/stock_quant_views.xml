@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="currency_id" invisible="1"/>
-                <field name="value"/>
+                <field name="value" optional="hidden"/>
             </xpath>
         </field>
     </record>
@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="after">
                 <field name="currency_id" invisible="1"/>
-                <field name="value"/>
+                <field name="value" optional="hidden"/>
             </xpath>
         </field>
     </record>

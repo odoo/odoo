@@ -1,18 +1,102 @@
-odoo.define('google_calendar.google_calendar', function (require) {
+odoo.define('google_calendar.CalendarView', function (require) {
 "use strict";
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var CalendarRenderer = require('web.CalendarRenderer');
-var CalendarController = require('web.CalendarController');
+const CalendarView = require('@calendar/js/calendar_view')[Symbol.for("default")];
+const CalendarRenderer = require('@calendar/js/calendar_renderer')[Symbol.for("default")].AttendeeCalendarRenderer;
+const CalendarController = require('@calendar/js/calendar_controller')[Symbol.for("default")];
+const CalendarModel = require('@calendar/js/calendar_model')[Symbol.for("default")];
+const viewRegistry = require('web.view_registry');
+const session = require('web.session');
 
 var _t = core._t;
 
-CalendarController.include({
+const GoogleCalendarModel = CalendarModel.include({
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.google_is_sync = true;
+        this.google_pending_sync = false;
+    },
+
+    /**
+     * @override
+     */
+    __get: function () {
+        var result = this._super.apply(this, arguments);
+        result.google_is_sync = this.google_is_sync;
+        return result;
+    },
+
+
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    async _loadCalendar() {
+        const _super = this._super.bind(this);
+        // When the calendar synchronization takes some time, prevents retriggering the sync while navigating the calendar.
+        if (this.google_pending_sync) {
+            return _super(...arguments);
+        }
+        try {
+            await Promise.race([
+                new Promise(resolve => setTimeout(resolve, 1000)),
+                this._syncGoogleCalendar(true)
+            ]);
+        } catch (error) {
+            if (error.event) {
+                error.event.preventDefault();
+            }
+            console.error("Could not synchronize Google events now.", error);
+            this.google_pending_sync = false;
+        }
+        return _super(...arguments);
+    },
+
+    _syncGoogleCalendar(shadow = false) {
+        var self = this;
+        var context = this.getSession().user_context;
+        this.google_pending_sync = true;
+        return this._rpc({
+            route: '/google_calendar/sync_data',
+            params: {
+                model: this.modelName,
+                fromurl: window.location.href,
+            }
+        }, {shadow}).then(function (result) {
+            if (["need_config_from_admin", "need_auth", "sync_stopped"].includes(result.status)) {
+                self.google_is_sync = false;
+            } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
+                self.google_is_sync = true;
+            }
+            self.google_pending_sync = false;
+            return result
+        });
+    },
+
+    archiveRecords: function (ids, model) {
+        return this._rpc({
+                model: model,
+                method: 'action_archive',
+                args: [ids],
+                context: session.user_context,
+            });
+    },
+})
+
+const GoogleCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
-        syncCalendar: '_onSyncCalendar',
+        syncGoogleCalendar: '_onGoogleSyncCalendar',
+        stopGoogleSynchronization: '_onStopGoogleSynchronization',
+        archiveRecord: '_onArchiveRecord',
     }),
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -26,18 +110,10 @@ CalendarController.include({
      * @private
      * @returns {OdooEvent} event
      */
-    _onSyncCalendar: function (event) {
+    _onGoogleSyncCalendar: function (event) {
         var self = this;
-        var context = this.getSession().user_context;
 
-        this._rpc({
-            route: '/google_calendar/sync_data',
-            params: {
-                model: this.modelName,
-                fromurl: window.location.href,
-                local_context: context,
-            }
-        }).then(function (o) {
+        return this._restartGoogleSynchronization().then(() => {return this.model._syncGoogleCalendar();}).then(function (o) {
             if (o.status === "need_auth") {
                 Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
                     confirm_callback: function() {
@@ -60,47 +136,109 @@ CalendarController.include({
                 }
             } else if (o.status === "need_refresh") {
                 self.reload();
-            } else if (o.status === "need_reset") {
-                var confirmText1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
-                var confirmText2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
-                var confirmText3 = _t("Do you want to do this now?");
-                var text = _.str.sprintf(confirmText1 + "\n" + confirmText2 + "\n\n" + confirmText3, o.info.new_name, o.info.old_name);
-                Dialog.confirm(self, text, {
-                    confirm_callback: function() {
-                        self._rpc({
-                                route: '/google_calendar/remove_references',
-                                params: {
-                                    model: self.state.model,
-                                    local_context: context,
-                                },
-                            })
-                            .then(function(o) {
-                                if (o.status === "OK") {
-                                    Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
-                                        title: _t('Event disconnection success'),
-                                    });
-                                } else if (o.status === "KO") {
-                                    Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
-                                        title: _t('Event disconnection error'),
-                                    });
-                                } // else NOP
-                            });
-                    },
-                    title: _t('Accounts'),
-                });
+                return event.data.on_refresh();
             }
         }).then(event.data.on_always, event.data.on_always);
-    }
+    },
+
+    _onStopGoogleSynchronization: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"), {
+            confirm_callback: function() {
+                return self._rpc({
+                    model: 'res.users',
+                    method: 'stop_google_synchronization',
+                    args: [[self.context.uid]],
+                }).then(() => {
+                    self.displayNotification({
+                        title: _t("Success"),
+                        message: _t("The synchronization with Google calendar was successfully stopped."),
+                        type: 'success',
+                    });
+                }).then(event.data.on_confirm);
+            },
+            title: _t('Confirmation'),
+        });
+
+        return event.data.on_always();
+    },
+
+    _restartGoogleSynchronization: function () {
+        return this._rpc({
+            model: 'res.users',
+            method: 'restart_google_synchronization',
+            args: [[this.context.uid]],
+        });
+    },
+
+    _onArchiveRecord: async function (event) {
+        const self = this;
+        if (event.data.event.record.recurrency) {
+            const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
+            event.data = Object.assign({}, event.data, {
+                    'recurrenceUpdate': recurrenceUpdate,
+                });
+                if (recurrenceUpdate === 'self_only') {
+                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+                    self.reload();
+                });
+                } else {
+                    return this._rpc({
+                        model: self.modelName,
+                        method: 'action_mass_archive',
+                        args: [[event.data.id], recurrenceUpdate],
+                    }).then( function () {
+                        self.reload();
+                    });
+                }
+        } else {
+            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+                confirm_callback: function () {
+                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+                        self.reload();
+                    });
+                }
+            });
+        }
+    },
 });
 
-CalendarRenderer.include({
+const GoogleCalendarRenderer = CalendarRenderer.include({
+    custom_events: _.extend({}, CalendarRenderer.prototype.custom_events, {
+        archive_event: '_onArchiveEvent',
+    }),
+
     events: _.extend({}, CalendarRenderer.prototype.events, {
-        'click .o_google_sync_button': '_onSyncCalendar',
+        'click .o_google_sync_pending': '_onGoogleSyncCalendar',
+        'click .o_google_sync_button_configured': '_onStopGoogleSynchronization',
     }),
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _initGooglePillButton: function() {
+        // hide the pending button
+        this.$calendarSyncContainer.find('#google_sync_pending').hide();
+        const switchBadgeClass = elem => elem.toggleClass(['badge-primary', 'badge-danger']);
+        this.$('#google_sync_configured').hover(() => {
+            switchBadgeClass(this.$calendarSyncContainer.find('#google_sync_configured'));
+            this.$calendarSyncContainer.find('#google_check').hide();
+            this.$calendarSyncContainer.find('#google_stop').show();
+        }, () => {
+            switchBadgeClass(this.$calendarSyncContainer.find('#google_sync_configured'));
+            this.$calendarSyncContainer.find('#google_stop').hide();
+            this.$calendarSyncContainer.find('#google_check').show();
+        });
+    },
+
+    _getGoogleButton: function () {
+        this.$calendarSyncContainer.find('#google_sync_pending').show();
+    },
+
+    _getGoogleStopButton: function () {
+        this.$calendarSyncContainer.find('#google_sync_configured').show();
+    },
 
     /**
      * Adds the Sync with Google button in the sidebar
@@ -110,14 +248,15 @@ CalendarRenderer.include({
     _initSidebar: function () {
         var self = this;
         this._super.apply(this, arguments);
-        this.$googleButton = $();
+        this.$googleButton = this.$('#google_sync_pending');
+        this.$googleStopButton = this.$('#google_sync_configured');
         if (this.model === "calendar.event") {
-            this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                .addClass('o_google_sync_button oe_button btn btn-secondary')
-                                .prepend($('<img/>', {
-                                    src: "/google_calendar/static/src/img/calendar_32.png",
-                                }))
-                                .appendTo(self.$sidebar);
+            if (this.state.google_is_sync) {
+                this._initGooglePillButton();
+            } else {
+                // Hide the button needed when the calendar sync is configured
+                self.$googleStopButton.hide();
+            }
         }
     },
 
@@ -130,16 +269,44 @@ CalendarRenderer.include({
      *
      * @private
      */
-    _onSyncCalendar: function () {
+    _onGoogleSyncCalendar: function () {
         var self = this;
         var context = this.getSession().user_context;
         this.$googleButton.prop('disabled', true);
-        this.trigger_up('syncCalendar', {
+        this.trigger_up('syncGoogleCalendar', {
             on_always: function () {
                 self.$googleButton.prop('disabled', false);
             },
+            on_refresh: function () {
+                self._initGooglePillButton();
+            }
         });
     },
+
+    _onStopGoogleSynchronization: function() {
+        var self = this;
+        this.$googleStopButton.prop('disabled', true);
+        this.trigger_up('stopGoogleSynchronization' , {
+            on_confirm: function () {
+                self.$googleStopButton.hide();
+                self.$googleButton.show();
+            },
+            on_always: function() {
+                self.$googleStopButton.prop('disabled', false);
+            }
+        });
+    },
+
+    _onArchiveEvent: function (event) {
+        this._unselectEvent();
+        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10), event: event.target.event.extendedProps});
+    },
 });
+
+return {
+    GoogleCalendarController,
+    GoogleCalendarModel,
+    GoogleCalendarRenderer,
+};
 
 });

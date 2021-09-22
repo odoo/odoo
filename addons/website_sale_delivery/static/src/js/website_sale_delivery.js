@@ -21,10 +21,17 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var $carriers = $('#delivery_carrier input[name="delivery_type"]');
+        var $payButton = $('button[name="o_payment_submit_button"]');
         // Workaround to:
         // - update the amount/error on the label at first rendering
         // - prevent clicking on 'Pay Now' if the shipper rating fails
         if ($carriers.length > 0) {
+            if ($carriers.filter(':checked').length === 0) {
+                $payButton.prop('disabled', true);
+                var disabledReasons = $payButton.data('disabled_reasons') || {};
+                disabledReasons.carrier_selection = true;
+                $payButton.data('disabled_reasons', disabledReasons);
+            }
             $carriers.filter(':checked').click();
         }
 
@@ -51,7 +58,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @param {jQuery} $carrierInput
      */
     _showLoading: function ($carrierInput) {
-        $carrierInput.siblings('.o_wsale_delivery_badge_price').html('<span class="fa fa-spinner fa-spin"/>');
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').empty();
+        $carrierInput.siblings('.o_wsale_delivery_badge_price').append('<span class="fa fa-circle-o-notch fa-spin"/>');
     },
     /**
      * @private
@@ -59,18 +67,20 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _handleCarrierUpdateResult: function (result) {
         this._handleCarrierUpdateResultBadge(result);
-        var $payButton = $('#o_payment_form_pay');
+        var $payButton = $('button[name="o_payment_submit_button"]');
         var $amountDelivery = $('#order_delivery .monetary_field');
         var $amountUntaxed = $('#order_total_untaxed .monetary_field');
         var $amountTax = $('#order_total_taxes .monetary_field');
-        var $amountTotal = $('#order_total .monetary_field');
+        var $amountTotal = $('#order_total .monetary_field, #amount_total_summary.monetary_field');
 
         if (result.status === true) {
             $amountDelivery.html(result.new_amount_delivery);
             $amountUntaxed.html(result.new_amount_untaxed);
             $amountTax.html(result.new_amount_tax);
             $amountTotal.html(result.new_amount_total);
-            $payButton.data('disabled_reasons').carrier_selection = false;
+            var disabledReasons = $payButton.data('disabled_reasons') || {};
+            disabledReasons.carrier_selection = false;
+            $payButton.data('disabled_reasons', disabledReasons);
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
             $amountDelivery.html(result.new_amount_delivery);
@@ -112,10 +122,11 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var $radio = $(ev.currentTarget).find('input[type="radio"]');
         this._showLoading($radio);
         $radio.prop("checked", true);
-        var $payButton = $('#o_payment_form_pay');
+        var $payButton = $('button[name="o_payment_submit_button"]');
         $payButton.prop('disabled', true);
-        $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
-        $payButton.data('disabled_reasons').carrier_selection = true;
+        var disabledReasons = $payButton.data('disabled_reasons') || {};
+        disabledReasons.carrier_selection = true;
+        $payButton.data('disabled_reasons', disabledReasons);
         dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {

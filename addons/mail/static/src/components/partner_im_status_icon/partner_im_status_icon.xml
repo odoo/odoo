@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PartnerImStatusIcon" owl="1">
+        <span class="o_PartnerImStatusIcon fa-stack"
+            t-att-class="{
+                'o-away': partner and partner.im_status === 'away',
+                'o-bot': partner and messaging.partnerRoot === partner,
+                'o-has-open-chat': props.hasOpenChat,
+                'o-offline': partner and partner.im_status === 'offline',
+                'o-online': partner and partner.im_status === 'online',
+            }"
+            t-on-click="_onClick"
+            t-att-data-partner-local-id="partner ? partner.localId : undefined"
+        >
+            <t t-if="partner" name="rootCondition">
+                <t t-if="props.hasBackground">
+                    <i class="o_PartnerImStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
+                    <i class="o_PartnerImStatusIcon_innerBackground fa fa-circle fa-stack-1x"/>
+                </t>
+                <t t-if="partner.im_status === 'online'">
+                    <i class="o_PartnerImStatusIcon_icon o-online fa fa-circle fa-stack-1x" title="Online" role="img" aria-label="User is online"/>
+                </t>
+                <t t-if="partner.im_status === 'away'">
+                    <i class="o_PartnerImStatusIcon_icon o-away fa fa-circle fa-stack-1x" title="Idle" role="img" aria-label="User is idle"/>
+                </t>
+                <t t-if="partner.im_status === 'offline'">
+                    <i class="o_PartnerImStatusIcon_icon o-offline fa fa-circle-o fa-stack-1x" title="Offline" role="img" aria-label="User is offline"/>
+                </t>
+                <t t-if="partner === messaging.partnerRoot">
+                    <i class="o_PartnerImStatusIcon_icon o-bot fa fa-heart fa-stack-1x" title="Bot" role="img" aria-label="User is a bot"/>
+                </t>
+            </t>
+        </span>
+    </t>
+
+</templates>

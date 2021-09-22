@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='wrap']" position="inside">
+        <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
+            <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
+                <t t-foreach="event.sponsor_ids.sorted(lambda sponsor: not sponsor.website_published)" t-as="sponsor">
+                    <t t-set="popover_content">
+                        <div t-field="sponsor.name" class="h5"/>
+                        <div t-if="sponsor.url" class="d-flex align-items-baseline">
+                            <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
+                        </div>
+                    </t>
+                    <a class="o_wevent_sponsor o_wevent_sponsor_card h-100" tabindex="0" role="button"
+                        t-att-data-publish="'on' if sponsor.website_published else 'off'"
+                        t-att-data-content="popover_content"
+                        data-html="true" data-trigger="focus" data-toggle="popover" data-placement="bottom">
+                        <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Common template for sponsor images and 'Unpublished' badge -->
+<template id="event_sponsor_thumb_details">
+    <div class="h-100 shadow-sm p-2">
+        <span t-field="sponsor.image_128"
+            t-options='{"widget": "image", "class": "img img-fluid"}'/>
+        <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+            t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+    </div>
+    <span t-if="not sponsor.website_published"
+        class="d-flex justify-content-center badge badge-danger o_wevent_online_badge_unpublished">Unpublished</span>
+</template>
+
+</odoo>

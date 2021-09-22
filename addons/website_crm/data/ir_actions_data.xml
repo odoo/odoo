@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Contact Form</field>
+            <field name="target">self</field>
+            <field name="url">/contactus</field>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+</odoo>

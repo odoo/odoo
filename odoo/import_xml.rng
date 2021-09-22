@@ -224,23 +224,49 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="menuitem_attrs">
+        <rng:attribute name="id" />
+        <rng:optional><rng:attribute name="name"/></rng:optional>
+        <rng:optional>
+            <rng:attribute name="sequence">
+                <rng:data type="int"/>
+            </rng:attribute>
+        </rng:optional>
+        <rng:optional><rng:attribute name="groups"/></rng:optional>
+        <rng:optional><rng:attribute name="active"/></rng:optional>
+    </rng:define>
+    <rng:define name="submenuitem_contents">
+        <rng:optional>
+            <rng:choice>
+                <rng:attribute name="action"/>
+                <rng:oneOrMore>
+                    <rng:ref name="submenuitem"/>
+                </rng:oneOrMore>
+            </rng:choice>
+        </rng:optional>
+    </rng:define>
     <rng:define name="menuitem">
         <rng:element name="menuitem">
-            <!-- TODO: id should probably be mandatory -->
-            <rng:optional> <rng:attribute name="id" /></rng:optional>
-            <rng:optional> <rng:attribute name="name"/></rng:optional>
-            <rng:optional> <rng:attribute name="parent"/> </rng:optional>
-            <rng:optional> <rng:attribute name="action"/> </rng:optional>
-            <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional> <rng:attribute name="active"/> </rng:optional>
-            <!-- TODO: remove icon stuff -->
-            <rng:optional> <rng:attribute name="icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon_hover"/> </rng:optional>
-            <!-- string doesn't seem used anywhere -->
-            <rng:optional> <rng:attribute name="string"/> </rng:optional>
-            <rng:empty />
+            <rng:ref name="menuitem_attrs"/>
+            <rng:choice>
+                <!-- a root menu can have a web_icon, an action and children -->
+                <rng:group>
+                    <rng:optional><rng:attribute name="web_icon"/></rng:optional>
+                    <rng:optional><rng:attribute name="action"/></rng:optional>
+                    <rng:zeroOrMore><rng:ref name="submenuitem"/></rng:zeroOrMore>
+                </rng:group>
+                <!-- a non-root menu can have a parent and either an action or submenus -->
+                <rng:group>
+                    <rng:attribute name="parent"/>
+                    <rng:ref name="submenuitem_contents"/>
+                </rng:group>
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+    <rng:define name="submenuitem">
+        <rng:element name="menuitem">
+            <rng:ref name="menuitem_attrs"/>
+            <rng:ref name="submenuitem_contents"/>
         </rng:element>
     </rng:define>
 

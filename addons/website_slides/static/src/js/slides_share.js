@@ -1,8 +1,8 @@
-odoo.define('website_slides.slides_share', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-require('website_slides.slides');
+import publicWidget from 'web.public.widget';
+import '@website_slides/js/slides';
+import { _t } from 'web.core';
 
 var ShareMail = publicWidget.Widget.extend({
     events: {
@@ -29,7 +29,7 @@ var ShareMail = publicWidget.Widget.extend({
                     email: input.val(),
                 },
             }).then(function () {
-                self.$el.html($('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>'));
+                self.$el.html($('<div class="alert alert-info" role="alert">' + _t('<strong>Thank you!</strong> Mail has been sent.') + '</div>'));
             });
         } else {
             this.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
@@ -99,5 +99,4 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
             clipboard.destroy();
         })
     },
-});
 });

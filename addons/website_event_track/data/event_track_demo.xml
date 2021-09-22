@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_track1" model="event.track">
+        <field name="name">How to design a new piece of furniture</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location5"/>
+        <field name="duration" eval="1"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage0"/>
+        <field name="kanban_state">blocked</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track2" model="event.track">
+        <field name="name">How to integrate hardware materials in your pieces of furniture</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=2, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location5"/>
+        <field name="duration" eval="0.25"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="kanban_state">done</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track3" model="event.track">
+        <field name="name">Portfolio presentation</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=2, minutes=35)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location5"/>
+        <field name="duration" eval="0.3"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track4" model="event.track">
+        <field name="name">How to develop automated processes</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=3, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location5"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track5" model="event.track">
+        <field name="name">The new way to promote your creations</field>
+        <field name="is_published" eval="False"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location6"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track6" model="event.track">
+        <field name="name">Detailed roadmap of our new products</field>
+        <field name="is_published" eval="False"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=7, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location6"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track7" model="event.track">
+        <field name="name">A technical explanation of how to use computer design apps</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=10, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location6"/>
+        <field name="duration" eval="1"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track8" model="event.track">
+        <field name="name">How to optimize your sales, from leads to sales orders</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location7"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="kanban_state">blocked</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track9" model="event.track">
+        <field name="name">How to improve your quality processes</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=3, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location7"/>
+        <field name="duration" eval="1"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track10" model="event.track">
+        <field name="name">Raising qualitive insights from your customers</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=5, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location7"/>
+        <field name="duration" eval="0.5"/>
+        <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track11" model="event.track">
+        <field name="name">Discover our new design team</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=10, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location7"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track12" model="event.track">
+        <field name="name">Latest trends</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location7"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track13" model="event.track">
+        <field name="name">Advanced reporting</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=2, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location8"/>
+        <field name="duration" eval="0.25"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track14" model="event.track">
+        <field name="name">Partnership programs</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=3, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location8"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track15" model="event.track">
+        <field name="name">How to communicate with your community</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=8, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location8"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track16" model="event.track">
+        <field name="name">How to follow us on the social media</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=12, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location8"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track17" model="event.track">
+        <field name="name">The new marketing strategy</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track18" model="event.track">
+        <field name="name">How to build your marketing strategy within a competitive environment</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track19" model="event.track">
+        <field name="name">Advanced lead management : tips and tricks from the fields</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=3, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track20" model="event.track">
+        <field name="name">New Certification Program</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=3, hours=5, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track21" model="event.track">
+        <field name="name">House of World Cultures</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=4, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track22" model="event.track">
+        <field name="name">Minimal but efficient design</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=4, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track23" model="event.track">
+        <field name="name">Key Success factors selling our furniture</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=4, hours=5, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location9"/>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track24" model="event.track">
+        <field name="name">Design contest (entire day)</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=1, minutes=25)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location10"/>
+        <field name="duration" eval="1.5"/>
+        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track25" model="event.track">
+        <field name="name">Design contest (entire afternoon)</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="location_id" ref="website_event_track.event_track_location10"/>
+        <field name="duration" eval="3.5"/>
+        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track27" model="event.track">
+        <field name="name">My Company global presentation</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=3, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="duration" eval="1"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track28" model="event.track">
+        <field name="name">Status &amp; Strategy</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="duration" eval="0.5"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track29" model="event.track">
+        <field name="name">The new marketing strategy</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="duration" eval="0.25"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track30" model="event.track">
+        <field name="name">Morning break</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="duration" eval="0.25"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_track31" model="event.track">
+        <field name="name">Lunch</field>
+        <field name="is_published" eval="True"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=16, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
+        <field name="duration" eval="1"/>
+        <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Tracks of: "OpenWood: Furniture Collection Online Reveal" -->
+    <!-- DAY 1 -->
+    <record id="event_7_track_1" model="event.track">
+        <field name="name">What This Event Is All About</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 06:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="website_cta" eval="True"/>
+        <field name="website_cta_title">Try Now</field>
+        <field name="website_cta_url">http://www.example.com</field>
+        <field name="website_cta_delay">10</field>
+    </record>
+    <record id="event_7_track_2" model="event.track">
+        <field name="name">First Day Wrapup</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 16:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_28"/>
+    </record>
+    <!-- Location 1 -->
+    <record id="event_7_track_3" model="event.track">
+        <field name="name">Easy Way To Build a Wooden House</field>
+        <field name="color">2</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 08:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">2.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_16"/>
+    </record>
+    <record id="event_7_track_4" model="event.track">
+        <field name="name">Life at Home Around the World: William’s Story</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage4"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 12:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="False"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="website_cta" eval="True"/>
+        <field name="website_cta_title">Try Now</field>
+        <field name="website_cta_url">http://www.example.com</field>
+        <field name="website_cta_delay">10</field>
+    </record>
+    <record id="event_7_track_5" model="event.track">
+        <field name="name">Top 10 Most Expensive Wood in the World</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 14:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+    <!-- Location 2 -->
+    <record id="event_7_track_6" model="event.track">
+        <field name="name">Securing your Lumber during transport</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 08:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_28"/>
+    </record>
+    <record id="event_7_track_7" model="event.track">
+        <field name="name">Woodworking: How I got started!</field>
+        <field name="color">3</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 10:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag2')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_15"/>
+    </record>
+    <record id="event_7_track_8" model="event.track">
+        <field name="name">Dealing with OpenWood Furniture</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 12:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="False"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+    <record id="event_7_track_9" model="event.track">
+        <field name="name">Kitchens for the Future</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 14:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="False"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_4"/>
+    </record>
+    <!-- Location 3 -->
+    <record id="event_7_track_l3_1" model="event.track">
+        <field name="name">Voice from Customer</field>
+        <field name="color">5</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 08:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="False"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_31"/>
+    </record>
+    <record id="event_7_track_l3_2" model="event.track">
+        <field name="name">Who's OpenWood anyway ?</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="website_event_track.event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 13:00:00')"></field>
+        <field name="duration">1.5</field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_18"/>
+    </record>
+
+    <!-- DAY 2 -->
+    <record id="event_7_track_10" model="event.track">
+        <field name="name">Welcome to Day 2</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 06:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_28"/>
+    </record>
+    <record id="event_7_track_11" model="event.track">
+        <field name="name">Day 2 Wrapup</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 16:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_16"/>
+    </record>
+    <!-- Location 1 -->
+    <record id="event_7_track_12" model="event.track">
+        <field name="name">Climate positive</field>
+        <field name="color">3</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 08:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">3</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_15"/>
+    </record>
+    <record id="event_7_track_13" model="event.track">
+        <field name="name">Log House Building</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 12:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_16"/>
+    </record>
+    <record id="event_7_track_14" model="event.track">
+        <field name="name">Building a DIY cabin from the ground up</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 13:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+    <!-- Location 2 -->
+    <record id="event_7_track_15" model="event.track">
+        <field name="name">Logs to lumber</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 08:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_31"/>
+    </record>
+    <record id="event_7_track_16" model="event.track">
+        <field name="name">Pretty. Ugly. Lovely.</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 09:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag2')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_16"/>
+    </record>
+    <record id="event_7_track_17" model="event.track">
+        <field name="name">10 DIY Furniture Ideas For Absolute Beginners</field>
+        <field name="color">7</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="wishlisted_by_default" eval="True"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 12:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_31"/>
+    </record>
+    <record id="event_7_track_18" model="event.track">
+        <field name="name">6 Woodworking tips and tricks for beginners</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 13:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_17"/>
+    </record>
+    <record id="event_7_track_19" model="event.track">
+        <field name="name">DIY Timber Cladding Project</field>
+        <field name="color">7</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 14:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+    <!-- Location 3 -->
+    <record id="event_7_track_l3_10" model="event.track">
+        <field name="name">Live Testimonial</field>
+        <field name="color">5</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="website_event_track.event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="DateTime.now() - timedelta(minutes=30)"></field>
+        <field name="duration">0.75</field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_31"/>
+    </record>
+    <record id="event_7_track_l3_11" model="event.track">
+        <field name="name">Happy with OpenWood</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="website_event_track.event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="DateTime.now() + timedelta(minutes=15)"></field>
+        <field name="duration">0.75</field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+
+    <!-- DAY 3 -->
+    <record id="event_7_track_20" model="event.track">
+        <field name="name">Our Last Day Together !</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 06:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_28"/>
+    </record>
+    <record id="event_7_track_21" model="event.track">
+        <field name="name">Event Wrapup</field>
+        <field name="color">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 15:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1')),
+            (4, ref('website_event_track.event_track_tag2')),
+            (4, ref('website_event_track.event_track_tag3')),
+            (4, ref('website_event_track.event_track_tag13'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+    </record>
+    <!-- Location 1 -->
+    <record id="event_7_track_22" model="event.track">
+        <field name="name">Tools for the Woodworking Beginner</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 08:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag11'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_4"/>
+    </record>
+    <record id="event_7_track_23" model="event.track">
+        <field name="name">Restoring Old Woodworking Tools</field>
+        <field name="color">7</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_1"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 12:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag3')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1.5</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_4"/>
+    </record>
+    <!-- Location 2 -->
+    <record id="event_7_track_24" model="event.track">
+        <field name="name">Old is New</field>
+        <field name="color">4</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_2"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 09:00:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag2'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_17"/>
+    </record>
+    <!-- Location 3 -->
+    <record id="event_7_track_25" model="event.track">
+        <field name="name">Live Testimonials</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage3"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 07:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1')), (4, ref('website_event_track.event_track_tag2')), (4, ref('website_event_track.event_track_tag12'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">3</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_18"/>
+    </record>
+    <record id="event_7_track_26" model="event.track">
+        <field name="name">Less Furniture is More Furniture</field>
+        <field name="color">0</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="stage_id" ref="event_track_stage2"/>
+        <field name="location_id" ref="website_event_track.event_track_location_online_3"/>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 12:30:00')"></field>
+        <field name="tag_ids" eval="[(4, ref('website_event_track.event_track_tag1'))]"/>
+        <field name="is_published" eval="False"/>
+        <field name="duration">0.75</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_17"/>
+    </record>
+
+</odoo>

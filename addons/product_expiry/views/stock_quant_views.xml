@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
-        <record id="view_quant_form_expiry" model="ir.ui.view">
-            <field name="name">stock.quant.inherit.form</field>
-            <field name="model">stock.quant</field>
-            <field name="inherit_id" ref="stock.view_stock_quant_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='lot_id']" position="after" >
-                    <field name="removal_date"/>
-                </xpath>
-            </field>
-        </record>
-
     <record id="view_stock_quant_tree_expiry" model="ir.ui.view">
         <field name="name">stock.quant.inherit.form</field>
         <field name="model">stock.quant</field>
@@ -32,14 +21,10 @@
         <field name="model">stock.quant</field>
         <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
-                <attribute name="decoration-danger">
-                    removal_date &lt; current_date or inventory_quantity &lt; 0
-                </attribute>
-            </xpath>
-            <xpath expr="//field[@name='inventory_quantity']" position="before">
+            <xpath expr="//field[@name='inventory_quantity_auto_apply']" position="before">
+                <field name="use_expiration_date" invisible="1"/>
                 <field name="removal_date" optional="show"
-                    invisible="context.get('hide_removal_date')"/>
+                    invisible="context.get('hide_removal_date')" attrs="{'readonly': ['|', ('tracking', '=', 'none'), ('use_expiration_date', '=', False)]}"/>
             </xpath>
         </field>
     </record>

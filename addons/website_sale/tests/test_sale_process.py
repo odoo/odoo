@@ -35,7 +35,7 @@ class TestUi(HttpCaseWithUserDemo):
             'sequence': 2,
         })
         self.product_product_11_product_template = self.env['product.template'].create({
-            'name': 'Conference Chair (CONFIG)',
+            'name': 'Conference Chair',
             'list_price': 16.50,
             'accessory_product_ids': [(4, product_product_7.id)],
         })
@@ -49,10 +49,8 @@ class TestUi(HttpCaseWithUserDemo):
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
-        self.product_product_11_product_template.optional_product_ids = [(6, 0, [self.product_product_1_product_template.id])]
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
         # Avoid Shipping/Billing address page
         (self.env.ref('base.partner_admin') + self.partner_demo).write({
@@ -101,6 +99,11 @@ class TestUi(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'website_sale_tour')
 
+    def test_05_google_analytics_tracking(self):
+        self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
+        self.start_tour("/shop", 'google_analytics_view_item')
+        self.start_tour("/shop", 'google_analytics_add_to_cart')
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
@@ -111,11 +114,11 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestWebsiteSaleCheckoutAddress, self).setUp()
         self.website = self.env.ref('website.default_website')
-        self.country_id = self.env['res.country'].search([], limit=1).id
+        self.country_id = self.env.ref('base.be').id
         self.WebsiteSaleController = WebsiteSale()
         self.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
-            'city': 'ooo', 'country_id': self.country_id, 'submitted': 1,
+            'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
         }
 
     def _create_so(self, partner_id=None):

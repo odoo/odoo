@@ -19,16 +19,16 @@
                 <form string="Rounding Form">
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name"/>
                             <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <field name="rounding"/>
                             <field name="strategy"/>
                             <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
-                                groups="account.group_account_invoice,account.group_account_readonly"/>
+                                groups="account.group_account_invoice,account.group_account_readonly" domain="[('user_type_id.type', 'not in', ('receivable', 'payable'))]"/>
                             <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
-                                groups="account.group_account_invoice,account.group_account_readonly"/>
+                                groups="account.group_account_invoice,account.group_account_readonly" domain="[('user_type_id.type', 'not in', ('receivable', 'payable'))]"/>
                             <field name="rounding_method"/>
                         </group>
                     </sheet>
@@ -58,8 +58,5 @@
             </field>
         </record>
 
-        <!-- Menu -->
-        <menuitem id="menu_action_rounding_form_view" action="rounding_list_action"
-                  groups="account.group_cash_rounding" parent="account_management_menu" sequence="4"/>
     </data>
 </odoo>

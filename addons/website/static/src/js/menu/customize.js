@@ -6,6 +6,8 @@ var Widget = require('web.Widget');
 var websiteNavbarData = require('website.navbar');
 var WebsiteAceEditor = require('website.ace');
 
+const { registry } = require("@web/core/registry");
+
 var qweb = core.qweb;
 
 var CustomizeMenu = Widget.extend({
@@ -212,8 +214,14 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(CustomizeMenu, '#customize-menu');
-websiteNavbarData.websiteNavbarRegistry.add(AceEditorMenu, '#html_editor');
+registry.category("website_navbar_widgets").add("CustomizeMenu", {
+    Widget: CustomizeMenu,
+    selector: '#customize-menu',
+});
+registry.category("website_navbar_widgets").add("AceEditorMenu", {
+    Widget: AceEditorMenu,
+    selector: '#html_editor',
+});
 
 return CustomizeMenu;
 });

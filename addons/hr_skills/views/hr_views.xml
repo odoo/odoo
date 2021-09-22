@@ -31,9 +31,9 @@
         <field name="arch" type="xml">
             <form string="Resumé">
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only"/>
+                    <label for="name" string="Title"/>
                     <h1>
-                        <field name="name" placeholder="Title" required="True"/>
+                        <field name="name" placeholder="e.g. Odoo Inc." required="True"/>
                     </h1>
                 </div>
                 <group>
@@ -297,9 +297,9 @@
                 <field name="id" invisible="1"/>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name" string="Skill Type"/>
                         <h1>
-                            <field name="name" placeholder="Skill Type" required="True"/>
+                            <field name="name" placeholder="e.g. Languages" required="True"/>
                         </h1>
                     </div>
                     <group string="Skills">

@@ -35,18 +35,20 @@ class WebsiteSaleBackend(WebsiteBackend):
                 order_per_day_ratio=0, order_sold_ratio=0, order_convertion_pctg=0,
             )
         )
+
         results['dashboards']['sales'] = sales_values
 
-        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
+
         if not results['groups']['sale_salesman']:
             return results
 
+        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         # Product-based computation
         sale_report_domain = [
             ('website_id', '=', current_website.id),
             ('state', 'in', ['sale', 'done']),
-            ('date', '>=', date_from),
+            ('date', '>=', datetime_from),
             ('date', '<=', fields.Datetime.now())
         ]
         report_product_lines = request.env['sale.report'].read_group(
@@ -65,7 +67,6 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Sale-based results computation
         sale_order_domain = [
             ('website_id', '=', current_website.id),
-            ('team_id', 'in', request.env['crm.team'].search([('website_ids', '!=', False)]).ids),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
         so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
@@ -80,8 +81,8 @@ class WebsiteSaleBackend(WebsiteBackend):
             domain=[
                 ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to)],
+                ('date', '>=', datetime_from),
+                ('date', '<=', datetime_to)],
             fields=['team_id', 'price_subtotal'],
             groupby=['team_id'],
         )

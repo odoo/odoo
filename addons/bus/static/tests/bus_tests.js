@@ -2,10 +2,15 @@ odoo.define('web.bus_tests', function (require) {
 "use strict";
 
 var BusService = require('bus.BusService');
+var CrossTabBus = require('bus.CrossTab');
 var AbstractStorageService = require('web.AbstractStorageService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
+const LegacyRegistry = require("web.Registry");
+const { ConnectionLostError } = require("@web/core/network/rpc_service");
+const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
+const { createWebClient } =  require('@web/../tests/webclient/helpers');
 
 
 var LocalStorageServiceMock;
@@ -27,7 +32,7 @@ QUnit.module('Bus', {
         var pollPromise = testUtils.makeTestPromise();
 
         var parent = new Widget();
-        testUtils.mock.addMockEnvironment(parent, {
+        await testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -80,6 +85,50 @@ QUnit.module('Bus', {
         parent.destroy();
     });
 
+    QUnit.test('longpolling restarts when connection is lost', async function (assert) {
+        assert.expect(4);
+        const legacyRegistry = new LegacyRegistry();
+        legacyRegistry.add("bus_service", BusService);
+        legacyRegistry.add("local_storage", LocalStorageServiceMock);
+
+        const oldSetTimeout = window.setTimeout;
+        patchWithCleanup(
+            window,
+            {
+                setTimeout: callback => oldSetTimeout(callback, 0)
+            },
+            { pure: true },
+        )
+
+        let busService;
+        let rpcCount = 0;
+        // Using createWebclient to get the compatibility layer between the old services and the new
+        await createWebClient({
+            mockRPC(route) {
+                if (route === '/longpolling/poll') {
+                    rpcCount++;
+                    assert.step(`polling ${rpcCount}`);
+                    if (rpcCount == 1) {
+                        return Promise.reject(new ConnectionLostError());
+                    }
+                    assert.equal(rpcCount, 2, "Should not be called after stopPolling");
+                    busService.stopPolling();
+                    return Promise.reject(new ConnectionLostError());
+                }
+            },
+            legacyParams: { serviceRegistry: legacyRegistry },
+        });
+        busService = owl.Component.env.services.bus_service;
+        busService.startPolling();
+        // Give longpolling bus a tick to try to restart polling
+        await nextTick();
+
+        assert.verifySteps([
+            "polling 1",
+            "polling 2",
+        ]);
+    });
+
     QUnit.test('provide notification ID of 0 by default', async function (assert) {
         // This test is important in order to ensure that we provide the correct
         // sentinel value 0 when we are not aware of the last notification ID
@@ -101,7 +150,7 @@ QUnit.module('Bus', {
 
         var pollPromise = testUtils.makeTestPromise();
         var parent = new Widget();
-        testUtils.mock.addMockEnvironment(parent, {
+        await testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -142,7 +191,7 @@ QUnit.module('Bus', {
         var pollPromiseMaster = testUtils.makeTestPromise();
 
         var parentMaster = new Widget();
-        testUtils.mock.addMockEnvironment(parentMaster, {
+        await testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -173,7 +222,7 @@ QUnit.module('Bus', {
         // slave
         await testUtils.nextTick();
         var parentSlave = new Widget();
-        testUtils.mock.addMockEnvironment(parentSlave, {
+        await testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -220,7 +269,7 @@ QUnit.module('Bus', {
         var pollPromiseMaster = testUtils.makeTestPromise();
 
         var parentMaster = new Widget();
-        testUtils.mock.addMockEnvironment(parentMaster, {
+        await testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -252,7 +301,7 @@ QUnit.module('Bus', {
         await testUtils.nextTick();
         var parentSlave = new Widget();
         var pollPromiseSlave = testUtils.makeTestPromise();
-        testUtils.mock.addMockEnvironment(parentSlave, {
+        await testUtils.mock.addMockEnvironment(parentSlave, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -310,5 +359,81 @@ QUnit.module('Bus', {
         parentMaster.destroy();
         parentSlave.destroy();
     });
+
+    QUnit.test('two tabs calling addChannel simultaneously', async function (assert) {
+        assert.expect(5);
+
+        let id = 1;
+        testUtils.mock.patch(CrossTabBus, {
+            init: function () {
+                this._super.apply(this, arguments);
+                this.__tabId__ = id++;
+            },
+            addChannel: function (channel) {
+                assert.step('Tab ' + this.__tabId__ + ': addChannel ' + channel);
+                this._super.apply(this, arguments);
+            },
+            deleteChannel: function (channel) {
+                assert.step('Tab ' + this.__tabId__ + ': deleteChannel ' + channel);
+                this._super.apply(this, arguments);
+            },
+        });
+
+        let pollPromise;
+        const parentTab1 = new Widget();
+        await testUtils.mock.addMockEnvironment(parentTab1, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route) {
+                if (route === '/longpolling/poll') {
+                    pollPromise = testUtils.makeTestPromise();
+                    pollPromise.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollPromise);
+                    return pollPromise;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        const parentTab2 = new Widget();
+        await testUtils.mock.addMockEnvironment(parentTab2, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route) {
+                if (route === '/longpolling/poll') {
+                    pollPromise = testUtils.makeTestPromise();
+                    pollPromise.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollPromise);
+                    return pollPromise;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        const tab1 = new CrossTabBus(parentTab1);
+        const tab2 = new CrossTabBus(parentTab2);
+
+        tab1.addChannel("alpha");
+        tab2.addChannel("alpha");
+        tab1.addChannel("beta");
+        tab2.addChannel("beta");
+
+        assert.verifySteps([
+            "Tab 1: addChannel alpha",
+            "Tab 2: addChannel alpha",
+            "Tab 1: addChannel beta",
+            "Tab 2: addChannel beta",
+        ]);
+
+        testUtils.mock.unpatch(CrossTabBus);
+        parentTab1.destroy();
+        parentTab2.destroy();
+    });
 });
+
 });

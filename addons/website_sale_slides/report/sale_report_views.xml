@@ -4,8 +4,8 @@
          <field name="name">sale.report.view.graph.slides</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <graph string="eLearning Sales Analysis" type="line">
-                 <field name="date" type="row" interval="day"/>
+             <graph string="eLearning Sales Analysis" type="line" sample="1">
+                 <field name="date" interval="day"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
@@ -19,5 +19,10 @@
         <field name="domain">[("product_id.channel_ids", "!=", False)]</field>
         <field name="context">{'group_by': ['date', 'product_id']}</field>
         <field name="view_id" ref="sale_report_view_graph_slides"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 </odoo>

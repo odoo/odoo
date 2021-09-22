@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
         for line in requisition.line_ids:
             # Compute name
             product_lang = line.product_id.with_context(
-                lang=partner.lang,
+                lang=partner.lang or self.env.user.lang,
                 partner_id=partner.id
             )
             name = product_lang.display_name
@@ -84,7 +84,8 @@ class PurchaseOrder(models.Model):
             if po.requisition_id.type_id.exclusive == 'exclusive':
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
-                po.requisition_id.action_done()
+                if po.state not in ['draft', 'sent', 'to approve']:
+                    po.requisition_id.action_done()
         return res
 
     @api.model
@@ -93,7 +94,7 @@ class PurchaseOrder(models.Model):
         if purchase.requisition_id:
             purchase.message_post_with_view('mail.message_origin_link',
                     values={'self': purchase, 'origin': purchase.requisition_id},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
         return purchase
 
     def write(self, vals):
@@ -101,7 +102,7 @@ class PurchaseOrder(models.Model):
         if vals.get('requisition_id'):
             self.message_post_with_view('mail.message_origin_link',
                     values={'self': self, 'origin': self.requisition_id, 'edit': True},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
         return result
 
 

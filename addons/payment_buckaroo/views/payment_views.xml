@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
-        <record id="acquirer_form_buckaroo" model="ir.ui.view">
-            <field name="name">acquirer.form.buckaroo</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_form"/>
-            <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer"]' position='inside'>
-                    <group attrs="{'invisible': [('provider', '!=', 'buckaroo')]}">
-                        <field name="brq_websitekey" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
-                        <field name="brq_secretkey" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">Buckaroo Acquirer Form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'buckaroo')]}">
+                    <field name="buckaroo_website_key" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
+                    <field name="buckaroo_secret_key" string="Secret Key" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
 
-    </data>
 </odoo>

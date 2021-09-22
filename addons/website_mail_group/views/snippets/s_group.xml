@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_group" name="Discussion Group">
+        <div class="s_group o_mail_group"
+             data-id="0" data-object="mail.group" data-follow="off">
+            <div class="input-group o_mg_subscribe_form">
+                <input class="o_mg_subscribe_email form-control" type="email" name="email" placeholder="your email..."/>
+                <span class="input-group-append">
+                    <button href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
+                </span>
+            </div>
+        </div>
+    </template>
+    <template id="s_group_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js='Group'
+                 data-selector=".s_group"
+                 data-drop-near="p, h1, h2, h3, blockquote, .card">
+                <we-row>
+                    <we-select class="select_discussion_list" data-attribute-name="id" data-no-preview="true">
+                        <!-- 'we-button' added programmatically with DB data -->
+                    </we-select>
+                    <we-button class="fa fa-fw fa-plus" title="Create a public discussion group in your backend"
+                               data-create-group="" data-no-preview="true" data-name="create_mail_group_opt"/>
+                </we-row>
+            </div>
+        </xpath>
+    </template>
+    <record id="website_mail_group.s_group_000_js" model="ir.asset">
+        <field name="name">Group 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website_mail_group/static/src/snippets/s_group/000.js</field>
+    </record>
+</odoo>

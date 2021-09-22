@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.Dropdown" owl="1">
+    <t
+      t-tag="rootTag"
+      class="o_dropdown"
+      t-att-class="{ show: state.open, o_dropdown_item: hasParentDropdown and rootTag === 'li' }"
+      t-on-dropdown-item-selected="onItemSelected"
+    >
+      <button
+        t-if="props.toggler !== 'parent'"
+        t-attf-class="o_dropdown_toggler {{ props.togglerClass || '' }}"
+        t-on-click="onTogglerClick"
+        t-on-mouseenter="onTogglerMouseEnter"
+        t-att-title="props.title"
+        t-att-data-hotkey="props.hotkey"
+        t-ref="togglerRef"
+      >
+        <span class="d-flex align-items-center">
+          <t t-slot="toggler" />
+        </span>
+      </button>
+      <ul t-if="state.open" class="o_dropdown_menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+        <t t-slot="default" />
+      </ul>
+    </t>
+  </t>
+
+</templates>

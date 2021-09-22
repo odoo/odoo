@@ -32,10 +32,11 @@
 
 {
     'name': 'Germany SKR04 - Accounting',
+    'icon': '/l10n_de/static/description/icon.png',
     'version': '3.0',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.
 ==============================================================================
@@ -52,4 +53,8 @@ German accounting chart and localization.
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

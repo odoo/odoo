@@ -15,6 +15,7 @@ class SomeObj(models.Model):
         default=5
     )
     forbidden2 = fields.Integer(groups='test_access_rights.test_group')
+    forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
 class Container(models.Model):
     _name = 'test_access_right.container'

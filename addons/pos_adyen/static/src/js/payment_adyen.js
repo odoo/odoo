@@ -4,6 +4,7 @@ odoo.define('pos_adyen.payment', function (require) {
 var core = require('web.core');
 var rpc = require('web.rpc');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
+const { Gui } = require('point_of_sale.Gui');
 
 var _t = core._t;
 
@@ -27,7 +28,7 @@ var PaymentAdyen = PaymentInterface.extend({
     _reset_state: function () {
         this.was_cancelled = false;
         this.last_diagnosis_service_id = false;
-        this.remaining_polls = 2;
+        this.remaining_polls = 4;
         clearTimeout(this.polling);
     },
 
@@ -37,17 +38,16 @@ var PaymentAdyen = PaymentInterface.extend({
         if (line) {
             line.set_payment_status('retry');
         }
-        this._show_error(_('Could not connect to the Odoo server, please check your internet connection and try again.'));
+        this._show_error(_t('Could not connect to the Odoo server, please check your internet connection and try again.'));
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
 
-    _call_adyen: function (data) {
-        var self = this;
+    _call_adyen: function (data, operation) {
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
-            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key],
+            args: [[this.payment_method.id], data, operation],
         }, {
             // When a payment terminal is disconnected it takes Adyen
             // a while to return an error (~6s). So wait 10 seconds
@@ -112,6 +112,18 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_pay: function () {
         var self = this;
+        var order = this.pos.get_order();
+
+        if (order.selected_paymentline.amount < 0) {
+            this._show_error(_t('Cannot process transactions with negative amount.'));
+            return Promise.resolve();
+        }
+
+        if (order === this.poll_error_order) {
+            delete this.poll_error_order;
+            return self._adyen_handle_response({});
+        }
+
         var data = this._adyen_pay_data();
 
         return this._call_adyen(data).then(function (data) {
@@ -120,6 +132,7 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _adyen_cancel: function (ignore_error) {
+        var self = this;
         var previous_service_id = this.most_recent_service_id;
         var header = _.extend(this._adyen_common_message_header(), {
             'MessageCategory': 'Abort',
@@ -132,7 +145,6 @@ var PaymentAdyen = PaymentInterface.extend({
                     'AbortReason': 'MerchantAbort',
                     'MessageReference': {
                         'MessageCategory': 'Payment',
-                        'SaleID': header.SaleID,
                         'ServiceID': previous_service_id,
                     }
                 },
@@ -143,8 +155,8 @@ var PaymentAdyen = PaymentInterface.extend({
 
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (! ignore_error && data !== true) {
-                self._show_error(_('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
+            if (! ignore_error && data !== "ok") {
+                self._show_error(_t('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
             }
         });
     },
@@ -173,17 +185,18 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'get_latest_adyen_status',
-            args: [this.payment_method.id,
-                   this._adyen_get_sale_id(),
-                   this.payment_method.adyen_terminal_identifier,
-                   this.payment_method.adyen_test_mode,
-                   this.payment_method.adyen_api_key],
+            args: [[this.payment_method.id], this._adyen_get_sale_id()],
         }, {
             timeout: 5000,
             shadow: true,
         }).catch(function (data) {
-            reject();
-            return self._handle_odoo_connection_failure(data);
+            if (self.remaining_polls != 0) {
+                self.remaining_polls--;
+            } else {
+                reject();
+                self.poll_error_order = self.pos.get_order();
+                return self._handle_odoo_connection_failure(data);
+            }
         }).then(function (status) {
             var notification = status.latest_response;
             var last_diagnosis_service_id = status.last_received_diagnosis_id;
@@ -206,6 +219,15 @@ var PaymentAdyen = PaymentInterface.extend({
                     var config = self.pos.config;
                     var payment_response = notification.SaleToPOIResponse.PaymentResponse;
                     var payment_result = payment_response.PaymentResult;
+
+                    var cashier_receipt = payment_response.PaymentReceipt.find(function (receipt) {
+                        return receipt.DocumentQualifier == 'CashierReceipt';
+                    });
+
+                    if (cashier_receipt) {
+                        line.set_cashier_receipt(self._convert_receipt_info(cashier_receipt.OutputContent.OutputText));
+                    }
+
                     var customer_receipt = payment_response.PaymentReceipt.find(function (receipt) {
                         return receipt.DocumentQualifier == 'CustomerReceipt';
                     });
@@ -222,6 +244,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
                     line.transaction_id = additional_response.get('pspReference');
                     line.card_type = additional_response.get('cardType');
+                    line.cardholder_name = additional_response.get('cardHolderName') || '';
                     resolve(true);
                 } else {
                     var message = additional_response.get('message');
@@ -231,7 +254,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     if (message.startsWith('108 ')) {
                         resolve(false);
                     } else {
-                        line.set_payment_status('force_done');
+                        line.set_payment_status('retry');
                         reject();
                     }
                 }
@@ -271,12 +294,6 @@ var PaymentAdyen = PaymentInterface.extend({
         } else {
             line.set_payment_status('waitingCard');
 
-            // This is not great, the payment screen should be
-            // refactored so it calls render_paymentlines whenever a
-            // paymentline changes. This way the call to
-            // set_payment_status would re-render it automatically.
-            this.pos.chrome.gui.current_screen.render_paymentlines();
-
             var self = this;
             var res = new Promise(function (resolve, reject) {
                 // clear previous intervals just in case, otherwise
@@ -301,7 +318,7 @@ var PaymentAdyen = PaymentInterface.extend({
         if (!title) {
             title =  _t('Adyen Error');
         }
-        this.pos.gui.show_popup('error',{
+        Gui.showPopup('ErrorPopup',{
             'title': title,
             'body': msg,
         });

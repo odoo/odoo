@@ -105,7 +105,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                         product_id: productId,
                     },
                 }).then(function () {
-                    var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_wish');
+                    var $navButton = $('header .o_wsale_my_wish').first();
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
@@ -121,12 +121,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _updateWishlistView: function () {
-        if (this.wishlistProductIDs.length > 0) {
-            $('.o_wsale_my_wish').show();
-            $('.my_wish_quantity').text(this.wishlistProductIDs.length);
-        } else {
-            $('.o_wsale_my_wish').hide();
+        const $wishButton = $('.o_wsale_my_wish');
+        if ($wishButton.hasClass('o_wsale_my_wish_hide_empty')) {
+            $wishButton.toggleClass('d-none', !this.wishlistProductIDs.length);
         }
+        $wishButton.find('.my_wish_quantity').text(this.wishlistProductIDs.length);
     },
     /**
      * @private
@@ -157,7 +156,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
-        var $navButton = wSaleUtils.getNavBarButton('.o_wsale_my_cart');
+        var $navButton = $('header .o_wsale_my_cart').first();
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
         $('.o_wsale_my_cart').removeClass('d-none');
@@ -174,12 +173,18 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addToCart: function (productID, qty_id) {
+    _addToCart: function (productID, qty) {
+        const $tr = this.$(`tr[data-product-id="${productID}"]`);
+        const productTrackingInfo = $tr.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = qty;
+            $tr.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
         return this._rpc({
             route: "/shop/cart/update_json",
             params: {
                 product_id: parseInt(productID, 10),
-                add_qty: parseInt(qty_id, 10),
+                add_qty: parseInt(qty, 10),
                 display: false,
             },
         }).then(function (resp) {

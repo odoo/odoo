@@ -11,12 +11,12 @@ import re
 
 import requests
 from lxml import etree
+from random import randint
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, _
-from odoo.modules import get_module_resource
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.osv.expression import get_unaccent_wrapper
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock
@@ -46,8 +46,8 @@ class FormatAddressMixin(models.AbstractModel):
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.company.country_id.address_view_id
-        if address_view_id and not self._context.get('no_address_format'):
+        address_view_id = self.env.company.country_id.address_view_id.sudo()
+        if address_view_id and not self._context.get('no_address_format') and (not address_view_id.model or address_view_id.model == self._name):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
             for address_node in doc.xpath("//div[hasclass('o_address_format')]"):
@@ -72,12 +72,15 @@ class PartnerCategory(models.Model):
     _order = 'name'
     _parent_store = True
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char(string='Tag Name', required=True, translate=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color', default=_get_default_color)
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
 
     @api.constrains('parent_id')
@@ -113,8 +116,7 @@ class PartnerCategory(models.Model):
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(partner_category_ids).with_user(name_get_uid))
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):
@@ -128,7 +130,7 @@ class PartnerTitle(models.Model):
 
 class Partner(models.Model):
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'image.mixin']
+    _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name"
 
@@ -137,21 +139,26 @@ class Partner(models.Model):
 
     @api.model
     def default_get(self, default_fields):
-        """Add the company of the parent as default if we are creating a child partner."""
+        """Add the company of the parent as default if we are creating a child partner.
+        Also take the parent lang by default if any, otherwise, fallback to default DB lang."""
         values = super().default_get(default_fields)
+        parent = self.env["res.partner"]
         if 'parent_id' in default_fields and values.get('parent_id'):
-            values['company_id'] = self.browse(values.get('parent_id')).company_id.id
+            parent = self.browse(values.get('parent_id'))
+            values['company_id'] = parent.company_id.id
+        if 'lang' in default_fields:
+            values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Reference', index=True)
-    lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
+    lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
@@ -162,11 +169,11 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
-    comment = fields.Text(string='Notes')
+    comment = fields.Html(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
@@ -183,14 +190,16 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    # address fields
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
-    partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
-    partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
+    country_code = fields.Char(related='country_id.code', string="Country Code")
+    partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
+    partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
@@ -214,11 +223,13 @@ class Partner(models.Model):
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
-    commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True, index=True)
+    commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
+                                            compute='_compute_commercial_partner', recursive=True,
+                                            store=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
+    barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
@@ -227,15 +238,45 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
 
-    def init(self):
-        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
-        if not self._cr.fetchone():
-            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
+    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
+    def _compute_avatar_1920(self):
+        super()._compute_avatar_1920()
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
+    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company', 'type')
+    def _compute_avatar_1024(self):
+        super()._compute_avatar_1024()
+
+    @api.depends('name', 'user_ids.share', 'image_512', 'is_company', 'type')
+    def _compute_avatar_512(self):
+        super()._compute_avatar_512()
+
+    @api.depends('name', 'user_ids.share', 'image_256', 'is_company', 'type')
+    def _compute_avatar_256(self):
+        super()._compute_avatar_256()
+
+    @api.depends('name', 'user_ids.share', 'image_128', 'is_company', 'type')
+    def _compute_avatar_128(self):
+        super()._compute_avatar_128()
+
+    def _compute_avatar(self, avatar_field, image_field):
+        partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
+        super(Partner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
+        for partner in self - partners_with_internal_user:
+            partner[avatar_field] = partner[image_field] or partner._avatar_get_placeholder()
+
+    def _avatar_get_placeholder_path(self):
+        if self.is_company:
+            return "base/static/img/company_image.png"
+        if self.type == 'delivery':
+            return "base/static/img/truck.png"
+        if self.type == 'invoice':
+            return "base/static/img/money.png"
+        return super()._avatar_get_placeholder_path()
+
+    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
-        diff = dict(show_address=None, show_address_only=None, show_email=None, html_format=None, show_vat=None)
-        names = dict(self.with_context(**diff).name_get())
+        # retrieve name_get() without any fancy feature
+        names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
 
@@ -252,18 +293,27 @@ class Partner(models.Model):
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
-        for partner in self:
+        super_partner = self.env['res.users'].browse(SUPERUSER_ID).partner_id
+        if super_partner in self:
+            super_partner.partner_share = False
+        for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat')
+    @api.depends('vat', 'company_id')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
             partner_id = partner._origin.id
-            domain = [('vat', '=', partner.vat)]
+            #active_test = False because if a partner has been deactivated you still want to raise the error,
+            #so that you can reactivate it instead of creating a new one, which would loose its history.
+            Partner = self.with_context(active_test=False).sudo()
+            domain = [
+                ('vat', '=', partner.vat),
+                ('company_id', 'in', [False, partner.company_id.id]),
+            ]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -305,7 +355,7 @@ class Partner(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         chosen_name = default.get('name') if default else ''
-        new_name = chosen_name or _('%s (copy)') % self.name
+        new_name = chosen_name or _('%s (copy)', self.name)
         default = dict(default or {}, name=new_name)
         return super(Partner, self).copy(default)
 
@@ -333,6 +383,13 @@ class Partner(models.Model):
                     return value.id if isinstance(value, models.BaseModel) else value
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id_for_lang(self):
+        # While creating / updating child contact, take the parent lang by default if any
+        # otherwise, fallback to default context / DB lang
+        if self.parent_id:
+            self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
@@ -375,6 +432,11 @@ class Partner(models.Model):
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
 
+    @api.constrains('barcode')
+    def _check_barcode_unicity(self):
+        if self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
+            raise ValidationError('An other user already has this barcode')
+
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
@@ -385,7 +447,7 @@ class Partner(models.Model):
             elif field.type == 'one2many':
                 raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
             elif field.type == 'many2many':
-                values[fname] = [(6, 0, self[fname].ids)]
+                values[fname] = [Command.set(self[fname].ids)]
             else:
                 values[fname] = self[fname]
         return values
@@ -429,8 +491,9 @@ class Partner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        res = sync_children.write(sync_vals)
         sync_children._compute_commercial_partner()
-        return sync_children.write(sync_vals)
+        return res
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
@@ -476,6 +539,14 @@ class Partner(models.Model):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
 
+    def _clean_website(self, website):
+        url = urls.url_parse(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url.replace(netloc=url.path, path='')
+            website = url.replace(scheme='http').to_url()
+        return website
+
     def write(self, vals):
         if vals.get('active') is False:
             # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
@@ -487,26 +558,38 @@ class Partner(models.Model):
             # This is wrong if the user is not active, as partner.user_ids only returns active users.
             # Hence this temporary hack until the ORM updates inverse fields correctly.
             self.invalidate_cache(['user_ids'], self._ids)
-            for partner in self:
-                if partner.active and partner.user_ids:
-                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
+            if users:
+                if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+                    error_msg = _('You cannot archive contacts linked to an active user.\n'
+                                  'You first need to archive their associated user.\n\n'
+                                  'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
+                    action_error = users._action_show()
+                    raise RedirectWarning(error_msg, action_error, _('Go to users'))
+                else:
+                    raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
+                                            'Ask an administrator to archive their associated user first.\n\n'
+                                            'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
         # if setting the company_id to False (this is compatible with any user
         # company)
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
-        if vals.get('company_id'):
-            company = self.env['res.company'].browse(vals['company_id'])
+        if 'company_id' in vals:
+            company_id = vals['company_id']
             for partner in self:
-                if partner.user_ids:
+                if company_id and partner.user_ids:
+                    company = self.env['res.company'].browse(company_id)
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
                 if partner.child_ids:
-                    partner.child_ids.write({'company_id': company.id})
+                    partner.child_ids.write({'company_id': company_id})
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.su:
@@ -524,6 +607,8 @@ class Partner(models.Model):
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
         for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
         partners = super(Partner, self).create(vals_list)
@@ -533,8 +618,27 @@ class Partner(models.Model):
 
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
+            # Lang: propagate from parent if no value was given
+            if 'lang' not in vals and partner.parent_id:
+                partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
         return partners
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_user(self):
+        users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
+        if not users:
+            return  # no linked user, operation is allowed
+        if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+            error_msg = _('You cannot delete contacts linked to an active user.\n'
+                          'You should rather archive them after archiving their associated user.\n\n'
+                          'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
+            action_error = users._action_show()
+            raise RedirectWarning(error_msg, action_error, _('Go to users'))
+        else:
+            raise ValidationError(_('You cannot delete contacts linked to an active user.\n'
+                                    'Ask an administrator to archive their associated user first.\n\n'
+                                    'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
 
     def _load_records_create(self, vals_list):
         partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
@@ -584,7 +688,7 @@ class Partner(models.Model):
             # Set new company as my parent
             self.write({
                 'parent_id': new_company.id,
-                'child_ids': [(1, partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
+                'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
             })
         return True
 
@@ -629,8 +733,11 @@ class Partner(models.Model):
             name = name + "\n" + partner._display_address(without_company=True)
         name = name.replace('\n\n', '\n')
         name = name.replace('\n\n', '\n')
+        if self._context.get('partner_show_db_id'):
+            name = "%s (%s)" % (name, partner.id)
         if self._context.get('address_inline'):
-            name = name.replace('\n', ', ')
+            splitted_names = name.split("\n")
+            name = ", ".join([n for n in splitted_names if n.strip()])
         if self._context.get('show_email') and partner.email:
             name = "%s <%s>" % (name, partner.email)
         if self._context.get('html_format'):
@@ -646,16 +753,33 @@ class Partner(models.Model):
             res.append((partner.id, name))
         return res
 
-    def _parse_partner_name(self, text, context=None):
-        """ Supported syntax:
-            - 'Raoul <raoul@grosbedon.fr>': will find name and email address
-            - otherwise: default, everything is set as the name """
-        emails = tools.email_split(text.replace(' ', ','))
-        if emails:
-            email = emails[0]
-            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+    def _parse_partner_name(self, text):
+        """ Parse partner name (given by text) in order to find a name and an
+        email. Supported syntax:
+
+          * Raoul <raoul@grosbedon.fr>
+          * "Raoul le Grand" <raoul@grosbedon.fr>
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+
+        Otherwise: default, everything is set as the name. Starting from 13.3
+        returned email will be normalized to have a coherent encoding.
+         """
+        name, email = '', ''
+        split_results = tools.email_split_tuples(text)
+        if split_results:
+            name, email = split_results[0]
+
+        if email and not name:
+            fallback_emails = tools.email_split(text.replace(' ', ','))
+            if fallback_emails:
+                email = fallback_emails[0]
+                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+
+        if email:
+            email = tools.email_normalize(email)
         else:
             name, email = text, ''
+
         return name, email
 
     @api.model
@@ -666,12 +790,19 @@ class Partner(models.Model):
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
+        default_type = self._context.get('default_type')
+        if default_type and default_type not in self._fields['type'].get_values(self.env):
+            context = dict(self._context)
+            context.pop('default_type')
+            self = self.with_context(context)
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
             raise UserError(_("Couldn't create contact without email address!"))
-        if not name and email:
-            name = email
-        partner = self.create({self._rec_name: name or email, 'email': email or self.env.context.get('default_email', False)})
+
+        create_values = {self._rec_name: name or email}
+        if email:  # keep default_email in context
+            create_values['email'] = email
+        partner = self.create(create_values)
         return partner.name_get()[0]
 
     @api.model
@@ -696,7 +827,7 @@ class Partner(models.Model):
         self.flush()
         if args is None:
             args = []
-        order_by_rank = self.env.context.get('res_partner_search_mode') 
+        order_by_rank = self.env.context.get('res_partner_search_mode')
         if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)
@@ -736,37 +867,42 @@ class Partner(models.Model):
                                vat=unaccent('res_partner.vat'),)
 
             where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
+            where_clause_params += [re.sub(r'[^a-zA-Z0-9\-\.]+', '', search_name) or None]  # for vat
             where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
             self.env.cr.execute(query, where_clause_params)
-            partner_ids = [row[0] for row in self.env.cr.fetchall()]
+            return [row[0] for row in self.env.cr.fetchall()]
 
-            if partner_ids:
-                return models.lazy_name_get(self.browse(partner_ids))
-            else:
-                return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
-    def find_or_create(self, email):
+    @api.returns('self', lambda value: value.id)
+    def find_or_create(self, email, assert_valid_email=False):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
-            to create one
+        to create a new one.
 
-            :param str email: email-like string, which should contain at least one email,
-                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
-        assert email, 'an email is required for find_or_create to work'
-        emails = tools.email_split(email)
-        name_emails = tools.email_split_and_format(email)
-        if emails:
-            email = emails[0]
-            name_email = name_emails[0]
-        else:
-            name_email = email
-        partners = self.search([('email', '=ilike', email)], limit=1)
-        return partners.id or self.name_create(name_email)[0]
+        :param str email: email-like string, which should contain at least one email,
+            e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
+        :param boolean assert_valid_email: raise if no valid email is found
+        :return: newly created record
+        """
+        if not email:
+            raise ValueError(_('An email is required for find_or_create to work'))
+
+        parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('A valid email is required for find_or_create to work properly.'))
+
+        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        if partners:
+            return partners
+
+        create_values = {self._rec_name: parsed_name or parsed_email}
+        if parsed_email:  # keep default_email in context
+            create_values['email'] = parsed_email
+        return self.create(create_values)
 
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
@@ -826,11 +962,12 @@ class Partner(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(Partner, self).view_header_get(view_id, view_type)
-        if res: return res
-        if not self._context.get('category_id'):
-            return False
-        return _('Partners: ') + self.env['res.partner.category'].browse(self._context['category_id']).name
+        if self.env.context.get('category_id'):
+            return  _(
+                'Partners: %(category)s',
+                category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
+            )
+        return super().view_header_get(view_id, view_type)
 
     @api.model
     @api.returns('self')
@@ -911,6 +1048,7 @@ class Partner(models.Model):
 
     def _get_country_name(self):
         return self.country_id.name or ''
+
 
 
 class ResPartnerIndustry(models.Model):

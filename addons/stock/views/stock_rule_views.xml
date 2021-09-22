@@ -63,7 +63,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name"/>
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
@@ -91,26 +91,20 @@
                                 <field name="route_id"/>
                                 <field name="warehouse_id" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one"/>
                                 <field name="route_company_id" invisible="1"/>
-                                <field name="company_id" attrs="{'required': [('action', '=', 'push')]}" groups="base.group_multi_company"/>
+                                <field name="company_id" options="{'no_create': True}" attrs="{'required': [('action', '=', 'push')]}" groups="base.group_multi_company"/>
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
                             <group name="propagation_group" string="Propagation" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
                                 <field name="group_propagation_option"/>
                                 <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
                                 <field name="propagate_cancel"/>
+                                <field name="propagate_carrier" groups="base.group_no_one"/>
                                 <field name="propagate_warehouse_id"/>
                             </group>
                             <group string="Options" attrs="{'invisible': [('action', 'not in', ['pull', 'push', 'pull_push'])]}">
                                 <field name="partner_address_id" attrs="{'invisible': [('action', '=', 'push')]}"/>
-                                <field name="delay"/>
-                            </group>
-                            <group name="scheduling_group" string="Scheduling" attrs="{'invisible': [('action', '=', 'push')]}">
-                                <field name="delay_alert"/>
-                                <field name="propagate_date"/>
-                                <label for="propagate_date_minimum_delta" attrs="{'invisible': [('propagate_date', '=', False)]}"/>
-                                <div attrs="{'invisible': [('propagate_date', '=', False)]}">
-                                    <field name="propagate_date_minimum_delta" class="oe_inline"/> days
-                                </div>
+                                <label for="delay"/>
+                                <div><field name="delay" class="oe_inline"/> days</div>
                             </group>
                         </group>
                     </sheet>
@@ -141,7 +135,7 @@
         </record>
 
         <menuitem action="action_rules_form" id="menu_action_rules_form"
-        parent="menu_warehouse_config" sequence="2" groups="stock.group_adv_location"/>
+        parent="menu_warehouse_config" sequence="4" groups="stock.group_adv_location"/>
 
     </data>
 </odoo>

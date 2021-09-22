@@ -3,6 +3,7 @@
 import base64
 import datetime
 import os
+import re
 
 from odoo.tests import common
 from odoo.tools import html_escape as e
@@ -37,7 +38,14 @@ class TestExport(common.TransactionCase):
         def converter(value, options=None, context=None):
             context = context or {}
             record = self.Model.with_context(context).new({name: value})
-            return model.with_context(context).record_to_html(record, name, options or {})
+            # normalise non-newline spaces: some versions of babel use regular
+            # spaces while others use non-break space when formatting timedeltas
+            # to the french locale
+            return re.sub(
+                r'[^\S\n\r]', # no \p{Zs}
+                ' ',
+                model.with_context(context).record_to_html(record, name, options or {})
+            )
         return converter
 
 
@@ -159,6 +167,7 @@ class TestCurrencyExport(TestExport):
 
 
 class TestTextExport(TestBasicExport):
+    maxDiff = None
     def test_text(self):
         converter = self.get_converter('text')
 
@@ -190,7 +199,7 @@ class TestTextExport(TestBasicExport):
         """)
         self.assertEqual(value, """<br>
         fgdkls;hjas;lj &lt;b&gt;fdslkj&lt;/b&gt; d;lasjfa lkdja &lt;a href=http://spam.com&gt;lfks&lt;/a&gt;<br>
-        fldkjsfhs &lt;i style=&quot;color: red&quot;&gt;&lt;a href=&quot;http://spamspam.com&quot;&gt;fldskjh&lt;/a&gt;&lt;/i&gt;<br>
+        fldkjsfhs &lt;i style=&#34;color: red&#34;&gt;&lt;a href=&#34;http://spamspam.com&#34;&gt;fldskjh&lt;/a&gt;&lt;/i&gt;<br>
         """)
 
 
@@ -236,7 +245,7 @@ class TestSelectionExport(TestBasicExport):
     def test_selection(self):
         converter = self.get_converter('selection_str')
         value = converter('C')
-        self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
+        self.assertEqual(value, u"Qu&#39;est-ce qu&#39;il fout ce maudit pancake, tabernacle ?")
 
 
 class TestHTMLExport(TestBasicExport):

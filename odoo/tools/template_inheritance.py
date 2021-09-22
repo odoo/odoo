@@ -6,7 +6,8 @@ import itertools
 import logging
 
 from odoo.tools.translate import _
-from odoo.tools import SKIPPED_ELEMENT_TYPES
+from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
+
 _logger = logging.getLogger(__name__)
 
 
@@ -90,6 +91,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
     architecture) given by an inheriting view.
 
     :param Element source: a parent architecture to modify
+    :param Element specs_tree: a modifying architecture in an inheriting view
+    :param bool inherit_branding:
     :param pre_locate: function that is executed before locating a node.
                         This function receives an arch as argument.
                         This is required by studio to properly handle group_ids.
@@ -107,8 +110,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
         """
         if len(spec):
             raise ValueError(
-                _("Invalid specification for moved nodes: '%s'") %
-                etree.tostring(spec)
+                _("Invalid specification for moved nodes: %r", etree.tostring(spec, encoding='unicode'))
             )
         pre_locate(spec)
         to_extract = locate_node(source, spec)
@@ -117,8 +119,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             return to_extract
         else:
             raise ValueError(
-                _("Element '%s' cannot be located in parent view") %
-                etree.tostring(spec)
+                _("Element %r cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
             )
 
     while len(specs):
@@ -133,44 +134,58 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
         if node is not None:
             pos = spec.get('position', 'inside')
             if pos == 'replace':
-                for loc in spec.xpath(".//*[text()='$0']"):
-                    loc.text = ''
-                    loc.append(copy.deepcopy(node))
-                if node.getparent() is None:
-                    spec_content = None
-                    comment = None
-                    for content in spec:
-                        if content.tag is not etree.Comment:
-                            spec_content = content
-                            break
-                        else:
-                            comment = content
-                    source = copy.deepcopy(spec_content)
-                    # only keep the t-name of a template root node
-                    t_name = node.get('t-name')
-                    if t_name:
-                        source.set('t-name', t_name)
-                    if comment is not None:
-                        text = source.text
-                        source.text = None
-                        comment.tail = text
-                        source.insert(0, comment)
-                else:
-                    replaced_node_tag = None
+                mode = spec.get('mode', 'outer')
+                if mode == "outer":
+                    for loc in spec.xpath(".//*[text()='$0']"):
+                        loc.text = ''
+                        loc.append(copy.deepcopy(node))
+                    if node.getparent() is None:
+                        spec_content = None
+                        comment = None
+                        for content in spec:
+                            if content.tag is not etree.Comment:
+                                spec_content = content
+                                break
+                            else:
+                                comment = content
+                        source = copy.deepcopy(spec_content)
+                        # only keep the t-name of a template root node
+                        t_name = node.get('t-name')
+                        if t_name:
+                            source.set('t-name', t_name)
+                        if comment is not None:
+                            text = source.text
+                            source.text = None
+                            comment.tail = text
+                            source.insert(0, comment)
+                    else:
+                        replaced_node_tag = None
+                        for child in spec:
+                            if child.get('position') == 'move':
+                                child = extract(child)
+                            if inherit_branding and not replaced_node_tag and child.tag is not etree.Comment:
+                                # To make a correct branding, we need to
+                                # - know exactly which node has been replaced
+                                # - store it before anything else has altered the Tree
+                                # Do it exactly here :D
+                                child.set('meta-oe-xpath-replacing', node.tag)
+                                # We just store the replaced node tag on the first
+                                # child of the xpath replacing it
+                                replaced_node_tag = node.tag
+                            node.addprevious(child)
+                        node.getparent().remove(node)
+                elif mode == "inner":
+                    # Replace the entire content of an element
+                    for child in node:
+                        node.remove(child)
+                    node.text = None
+
                     for child in spec:
-                        if child.get('position') == 'move':
-                            child = extract(child)
-                        if inherit_branding and not replaced_node_tag and child.tag is not etree.Comment:
-                            # To make a correct branding, we need to
-                            # - know exactly which node has been replaced
-                            # - store it before anything else has altered the Tree
-                            # Do it exactly here :D
-                            child.set('meta-oe-xpath-replacing', node.tag)
-                            # We just store the replaced node tag on the first
-                            # child of the xpath replacing it
-                            replaced_node_tag = node.tag
-                        node.addprevious(child)
-                    node.getparent().remove(node)
+                        node.append(copy.deepcopy(child))
+                    node.text = spec.text
+
+                else:
+                    raise ValueError(_("Invalid mode attribute:") + " '%s'" % mode)
             elif pos == 'attributes':
                 for child in spec.getiterator('attribute'):
                     attribute = child.get('name')
@@ -225,13 +240,13 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
 
         else:
             attrs = ''.join([
-                ' %s="%s"' % (attr, spec.get(attr))
+                ' %s="%s"' % (attr, html_escape(spec.get(attr)))
                 for attr in spec.attrib
                 if attr != 'position'
             ])
             tag = "<%s%s>" % (spec.tag, attrs)
             raise ValueError(
-                _("Element '%s' cannot be located in parent view") % tag
+                _("Element '%s' cannot be located in parent view", tag)
             )
 
     return source

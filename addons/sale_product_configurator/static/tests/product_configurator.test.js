@@ -82,7 +82,8 @@ QUnit.module('Product Configurator', {
                         type: 'one2many',
                         relation: 'product_custom_attribute_value'
                     },
-                    product_uom_qty: {type: 'integer'}
+                    product_uom_qty: {type: 'integer'},
+                    sequence: {type: 'integer'},
                 }
             },
             product_custom_attribute_value: {
@@ -136,7 +137,7 @@ QUnit.module('Product Configurator', {
             }
         };
     }
-}, function (){
+}, function () {
     QUnit.test('Select a non configurable product template and verify that the product_id is correctly set', async function (assert) {
         assert.expect(2);
 
@@ -225,7 +226,7 @@ QUnit.module('Product Configurator', {
         form.destroy();
     });
 
-    QUnit.test('Select a product in the list and check for template loading', async function (assert){
+    QUnit.test('Select a product in the list and check for template loading', async function (assert) {
         assert.expect(1);
 
         var product_configurator_form = await createView({
@@ -256,6 +257,52 @@ QUnit.module('Product Configurator', {
         await testUtils.dom.click(product_configurator_form.$('.o_input'));
         await testUtils.dom.click($("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter());
         product_configurator_form.destroy();
+    });
+
+    QUnit.test('drag and drop rows containing product_configurator many2one', async function (assert) {
+        assert.expect(4);
+
+        this.data.sale_order.records = [
+            { id: 1, sale_order_line: [1, 2] }
+        ];
+        this.data.sale_order_line.records = [
+            { id: 1, sequence: 5, product_id: 1 },
+            { id: 2, sequence: 15, product_id: 2 },
+        ];
+
+        const form = await createView({
+            View: FormView,
+            model: 'sale_order',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="sale_order_line"/>
+                </form>`,
+            archs: {
+                'sale_order_line,false,list': `
+                    <tree editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="product_id" widget="product_configurator"/>
+                    </tree>`,
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, '.o_data_row', 2);
+        assert.strictEqual(form.$('.o_data_row').text(), 'Customizable Desk (1)Customizable Desk (2)');
+        assert.containsN(form, '.o_data_row .o_row_handle', 2);
+
+        // move first row below second
+        const $firstHandle = form.$('.o_data_row:nth(0) .o_row_handle');
+        const $secondHandle = form.$('.o_data_row:nth(1) .o_row_handle');
+        await testUtils.dom.dragAndDrop($firstHandle, $secondHandle);
+
+        assert.strictEqual(form.$('.o_data_row').text(), 'Customizable Desk (2)Customizable Desk (1)');
+
+        form.destroy();
     });
 });
 

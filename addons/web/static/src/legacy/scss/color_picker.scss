@@ -1,0 +1,64 @@
+.o_field_color_picker {
+    display: flex;
+    float: right;
+    margin-right: 7px;
+    width: 100%;
+    ul {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        @include o-kanban-colorpicker;
+        @include o-kanban-record-color;
+        width: 100%;
+        max-width: unset;
+        margin: 0;
+        padding: 0;
+        > li {
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px gray('300');
+            margin: $o-kanban-inner-hmargin 4px 0 0;
+            > a:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+.o_field_color_picker_preview {
+    @include o-kanban-record-color;
+    margin-right: 7px;
+    > li {
+        display: inline-block;
+        margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
+        border: 1px solid white;
+        box-shadow: 0 0 0 1px gray('300');
+
+        > a {
+            display: block;
+
+            &::after {
+                content: "";
+                display: block;
+                width: 20px;
+                height: 15px;
+            }
+        }
+
+        // No Color
+        a.oe_kanban_color_0 {
+            position: relative;
+            &::before {
+                content: "";
+                @include o-position-absolute(-2px, $left: 10px);
+                display: block;
+                width: 1px;
+                height: 20px;
+                transform: rotate(45deg);
+                background-color: red;
+            }
+            &::after {
+                background-color: white;
+            }
+        }
+    }
+}

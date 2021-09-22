@@ -35,3 +35,12 @@ class TestWebsiteBlogCommon(common.TransactionCase):
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [group_public_id])]
         })
+
+        self.test_blog = self.env['blog.blog'].with_user(self.user_blogmanager).create({
+            'name': 'New Blog',
+        })
+        self.test_blog_post = self.env['blog.post'].with_user(self.user_blogmanager).create({
+            'name': 'New Post',
+            'blog_id': self.test_blog.id,
+            'website_published': True,
+        })

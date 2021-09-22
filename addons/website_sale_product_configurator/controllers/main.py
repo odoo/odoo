@@ -5,16 +5,27 @@ from odoo import http
 from odoo.http import request
 
 from odoo.addons.sale_product_configurator.controllers.main import ProductConfiguratorController
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers import main
+
 
 class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
-    @http.route(['/sale_product_configurator/show_optional_products_website'], type='json', auth="public", methods=['POST'], website=True)
-    def show_optional_products_website(self, product_id, variant_values, **kw):
+    @http.route(['/sale_product_configurator/show_advanced_configurator_website'], type='json', auth="public", methods=['POST'], website=True)
+    def show_advanced_configurator_website(self, product_id, variant_values, **kw):
         """Special route to use website logic in get_combination_info override.
         This route is called in JS by appending _website to the base route.
         """
         kw.pop('pricelist_id')
-        return self.show_optional_products(product_id, variant_values, request.website.get_current_pricelist(), **kw)
+        product = request.env['product.product'].browse(int(product_id))
+        combination = request.env['product.template.attribute.value'].browse(variant_values)
+        has_optional_products = product.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))
+
+        if not has_optional_products and (product.product_variant_count <= 1 or variant_values):
+            # The modal is not shown if there are no optional products and
+            # the main product either has no variants or is already configured
+            return False
+        if variant_values:
+            kw["already_configured"] = True
+        return self.show_advanced_configurator(product_id, variant_values, request.website.get_current_pricelist(), **kw)
 
     @http.route(['/sale_product_configurator/optional_product_items_website'], type='json', auth="public", methods=['POST'], website=True)
     def optional_product_items_website(self, product_id, **kw):
@@ -24,11 +35,12 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         kw.pop('pricelist_id')
         return self.optional_product_items(product_id, request.website.get_current_pricelist(), **kw)
 
-class WebsiteSale(WebsiteSale):
+
+class WebsiteSale(main.WebsiteSale):
     def _prepare_product_values(self, product, category, search, **kwargs):
         values = super(WebsiteSale, self)._prepare_product_values(product, category, search, **kwargs)
 
-        values['optional_product_ids'] = [p.with_context({'active_id': p.id}) for p in product.optional_product_ids]
+        values['optional_product_ids'] = [p.with_context(active_id=p.id) for p in product.optional_product_ids]
         return values
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)

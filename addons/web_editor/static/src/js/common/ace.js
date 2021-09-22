@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+var dom = require('web.dom');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var localStorage = require('web.local_storage');
@@ -121,6 +122,7 @@ var ViewEditor = Widget.extend({
         [
             '/web/static/lib/ace/javascript_highlight_rules.js',
             '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-qweb.js',
             '/web/static/lib/ace/mode-scss.js',
             '/web/static/lib/ace/mode-js.js',
             '/web/static/lib/ace/theme-monokai.js'
@@ -348,7 +350,8 @@ var ViewEditor = Widget.extend({
         type = type || this.currentType;
         var editingSession = new window.ace.EditSession(this.resources[type][resID].arch);
         editingSession.setUseWorker(false);
-        editingSession.setMode('ace/mode/' + (type || this.currentType));
+        let mode = (type || this.currentType);
+        editingSession.setMode('ace/mode/' + (mode === 'xml' ? 'qweb' : mode));
         editingSession.setUndoManager(new window.ace.UndoManager());
         editingSession.on('change', function () {
             _.defer(function () {
@@ -519,7 +522,7 @@ var ViewEditor = Widget.extend({
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
             var resources = type === 'scss' ? this.scss : this.js;
             _.each(data, function (bundleInfos) {
-                _.each(bundleInfos[1], function (info) { info.bundle_xmlid = bundleInfos[0].xmlid; });
+                _.each(bundleInfos[1], function (info) { info.bundle = bundleInfos[0]; });
                 _.extend(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
@@ -547,7 +550,7 @@ var ViewEditor = Widget.extend({
                 route: '/web_editor/reset_asset',
                 params: {
                     url: resID,
-                    bundle_xmlid: resource.bundle_xmlid,
+                    bundle: resource.bundle,
                 },
             });
         }
@@ -564,13 +567,13 @@ var ViewEditor = Widget.extend({
     _saveSCSSorJS: function (session) {
         var self = this;
         var sessionIdEndsWithJS = _.string.endsWith(session.id, '.js');
-        var bundleXmlID = sessionIdEndsWithJS ? this.js[session.id].bundle_xmlid : this.scss[session.id].bundle_xmlid;
+        var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({
             route: '/web_editor/save_asset',
             params: {
                 url: session.id,
-                bundle_xmlid: bundleXmlID,
+                bundle,
                 content: session.text,
                 file_type: fileType,
             },
@@ -628,6 +631,10 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         return Promise.all(defs).guardedCatch(function (results) {
+            // some overrides handle errors themselves
+            if (results === undefined) {
+                return;
+            }
             var error = results[1];
             Dialog.alert(self, '', {
                 title: _t("Server error"),
@@ -801,7 +808,7 @@ var ViewEditor = Widget.extend({
         function _populateList(sortedData, $list, lettersToRemove) {
             _.each(sortedData, function (bundleInfos) {
                 var $optgroup = $('<optgroup/>', {
-                    label: bundleInfos[0].name,
+                    label: bundleInfos[0],
                 }).appendTo($list);
                 _.each(bundleInfos[1], function (dataInfo) {
                     var name = dataInfo.url.substring(_.lastIndexOf(dataInfo.url, '/') + 1, dataInfo.url.length - lettersToRemove);
@@ -911,8 +918,9 @@ var ViewEditor = Widget.extend({
      *
      * @private
      */
-    _onSaveClick: function () {
-        this._saveResources();
+    _onSaveClick: function (ev) {
+        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        this._saveResources().then(restore).guardedCatch(restore);
     },
     /**
      * Called when the user wants to switch from xml to scss or vice-versa ->

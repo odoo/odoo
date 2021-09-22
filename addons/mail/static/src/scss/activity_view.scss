@@ -50,13 +50,13 @@
             @include o-position-absolute($bottom: 0, $right: 0);
 
             &.planned {
-                color: theme-color('success');
+                @extend .text-success;
             }
             &.overdue {
-                color: theme-color('danger');
+                @extend .text-danger;
             }
             &.today {
-                color: theme-color('warning');
+                @extend .text-warning;
             }
         }
     }
@@ -69,8 +69,9 @@
         padding: 8px 8px;
         cursor: pointer;
 
-        > img {
+        .o_m2o_avatar > img, > img {
             width: 32px;
+            height: 32px;
             max-height: 32px;
             margin-right: 16px;
         }
@@ -116,7 +117,7 @@
             padding:5px;
             cursor: pointer;
             &:hover {
-                color: theme-color('success');
+                color: o-text-color('success');
             }
         }
         .o_kanban_counter {

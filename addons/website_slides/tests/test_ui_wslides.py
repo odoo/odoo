@@ -102,7 +102,8 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+            'karma': 1,
+            'groups_id': [(6, 0, self.env.ref('base.group_user').ids)]
         })
 
         self.browser_js(
@@ -115,7 +116,8 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_officer').id)]
+            'karma': 1,
+            'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
         self.browser_js(
@@ -127,12 +129,27 @@ class TestUi(TestUICommon):
     def test_course_member_portal(self):
         user_portal = self.user_portal
         user_portal.flush()
+        user_portal.karma = 1
 
         self.browser_js(
             '/slides',
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_member")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_portal.login)
+
+    def test_full_screen_edition_website_publisher(self):
+        # group_website_designer
+        user_demo = self.env.ref('base.user_demo')
+        user_demo.flush()
+        user_demo.write({
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
+        })
+
+        self.browser_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("full_screen_web_editor")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.full_screen_web_editor.ready',
+            login=user_demo.login)
 
 
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')

@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 tour.register('event_configurator_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     edition: 'community'
 }, {
@@ -20,10 +20,10 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: 'div[name="product_id"] input, div[name="product_template_id"] input',
     run: function (actions) {
-        actions.text('EVENT');
+        actions.text('Event Registration');
     }
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("EVENT")',
+    trigger: 'ul.ui-autocomplete a:contains("Event")',
     run: 'click'
 }, {
     trigger: 'div[name="event_id"] input',
@@ -56,7 +56,7 @@ tour.register('event_configurator_tour', {
     trigger: 'ul.nav a:contains("Order Lines")',
     run: 'click'
 }, {
-    trigger: 'td:contains("EVENT")',
+    trigger: 'td:contains("Event")',
     run: 'click'
 }, {
     trigger: '.o_edit_product_configuration'

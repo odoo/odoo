@@ -22,20 +22,35 @@ have real delivered quantities in sales orders.
         'views/sale_order_views.xml',
         'views/product_views.xml',
         'views/project_task_views.xml',
+        'views/project_update_templates.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_timesheet_templates.xml',
         'views/sale_timesheet_portal_templates.xml',
+        'views/project_sharing_views.xml',
         'report/project_profitability_report_analysis_views.xml',
         'data/sale_timesheet_filters.xml',
         'wizard/project_create_sale_order_views.xml',
         'wizard/project_create_invoice_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
-        'wizard/project_task_create_sale_order_views.xml'
     ],
     'demo': [
         'data/sale_service_demo.xml',
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',
+    'assets': {
+        'web.assets_frontend': [
+            'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
+        ],
+        'web.assets_backend': [
+            'sale_timesheet/static/src/js/so_line_one2many.js',
+        ],
+        'web.assets_tests': [
+            'sale_timesheet/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'sale_timesheet/static/src/xml/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

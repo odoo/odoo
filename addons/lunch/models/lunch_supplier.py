@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
 import pytz
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+from textwrap import dedent
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -13,7 +13,8 @@ from odoo.tools import float_round
 from odoo.addons.base.models.res_partner import _tz_get
 
 
-WEEKDAY_TO_NAME = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
 
 def float_to_time(hours, moment='am', tz=None):
     """ Convert a number of hours into a time object. """
@@ -59,14 +60,15 @@ class LunchSupplier(models.Model):
         ('mail', 'Email'),
     ], 'Send Order By', default='phone')
     automatic_email_time = fields.Float('Order Time', default=12.0, required=True)
+    cron_id = fields.Many2one('ir.cron', ondelete='cascade', required=True, readonly=True)
 
-    recurrency_monday = fields.Boolean('Monday', default=True)
-    recurrency_tuesday = fields.Boolean('Tuesday', default=True)
-    recurrency_wednesday = fields.Boolean('Wednesday', default=True)
-    recurrency_thursday = fields.Boolean('Thursday', default=True)
-    recurrency_friday = fields.Boolean('Friday', default=True)
-    recurrency_saturday = fields.Boolean('Saturday')
-    recurrency_sunday = fields.Boolean('Sunday')
+    mon = fields.Boolean(default=True)
+    tue = fields.Boolean(default=True)
+    wed = fields.Boolean(default=True)
+    thu = fields.Boolean(default=True)
+    fri = fields.Boolean(default=True)
+    sat = fields.Boolean()
+    sun = fields.Boolean()
 
     recurrency_end_date = fields.Date('Until', help="This field is used in order to ")
 
@@ -88,6 +90,25 @@ class LunchSupplier(models.Model):
         ('no_delivery', 'No Delivery')
     ], default='no_delivery')
 
+    topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
+    topping_label_2 = fields.Char('Extra 2 Label', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Extra 3 Label', required=True, default='Extra Label 3')
+    topping_ids_1 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 1)])
+    topping_ids_2 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 2)])
+    topping_ids_3 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 3)])
+    topping_quantity_1 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 1 Quantity', default='0_more', required=True)
+    topping_quantity_2 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 2 Quantity', default='0_more', required=True)
+    topping_quantity_3 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 3 Quantity', default='0_more', required=True)
+
     _sql_constraints = [
         ('automatic_email_time_range',
          'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 12)',
@@ -103,50 +124,143 @@ class LunchSupplier(models.Model):
                 res.append((supplier.id, supplier.name))
         return res
 
-    @api.model
-    def _auto_email_send(self):
-        """
-            This method is called every 20 minutes via a cron.
-            Its job is simply to get all the orders made for each supplier and send an email
-            automatically to the supplier if the supplier is configured for it and we are ready
-            to send it (usually at 11am or so)
-        """
-        records = self.search([('send_by', '=', 'mail')])
+    def _sync_cron(self):
+        for supplier in self:
+            supplier = supplier.with_context(tz=supplier.tz)
 
-        for supplier in records:
-            send_at = datetime.combine(fields.Date.today(),
-                                       float_to_time(supplier.automatic_email_time, supplier.moment, supplier.tz)).astimezone(pytz.UTC).replace(tzinfo=None)
-            if supplier.available_today and fields.Datetime.now() > send_at:
-                lines = self.env['lunch.order'].search([('supplier_id', '=', supplier.id),
-                                                             ('state', '=', 'ordered'), ('date', '=', fields.Date.today())])
+            sendat_tz = pytz.timezone(supplier.tz).localize(datetime.combine(
+                fields.Date.context_today(supplier),
+                float_to_time(supplier.automatic_email_time, supplier.moment)))
+            cron = supplier.cron_id.sudo()
+            lc = cron.lastcall
+            if ((
+                lc and sendat_tz.date() <= fields.Datetime.context_timestamp(supplier, lc).date()
+            ) or (
+                not lc and sendat_tz <= fields.Datetime.context_timestamp(supplier, fields.Datetime.now())
+            )):
+                sendat_tz += timedelta(days=1)
+            sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-                if lines:
-                    order = {
-                        'company_name': lines[0].company_id.name,
-                        'currency_id': lines[0].currency_id.id,
-                        'supplier_id': supplier.partner_id.id,
-                        'supplier_name': supplier.name,
-                        'email_from': supplier.responsible_id.email_formatted,
-                    }
+            cron.active = supplier.active and supplier.send_by == 'mail'
+            cron.name = f"Lunch: send automatic email to {supplier.name}"
+            cron.nextcall = sendat_utc
+            cron.code = dedent(f"""\
+                # This cron is dynamically controlled by {self._description}.
+                # Do NOT modify this cron, modify the related record instead.
+                env['{self._name}'].browse([{supplier.id}])._send_auto_email()""")
 
-                    _lines = [{
-                        'product': line.product_id.name,
-                        'note': line.note,
-                        'quantity': line.quantity,
-                        'price': line.price,
-                        'toppings': line.display_toppings,
-                        'username': line.user_id.name,
-                    } for line in lines]
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            for topping in vals.get('topping_ids_2', []):
+                topping[2].update({'topping_category': 2})
+            for topping in vals.get('topping_ids_3', []):
+                topping[2].update({'topping_category': 3})
+        crons = self.env['ir.cron'].sudo().create([
+            {
+                'user_id': self.env.ref('base.user_root').id,
+                'active': False,
+                'interval_type': 'days',
+                'interval_number': 1,
+                'numbercall': -1,
+                'doall': False,
+                'name': "Lunch: send automatic email",
+                'model_id': self.env['ir.model']._get_id(self._name),
+                'state': 'code',
+                'code': "",
+            }
+            for _ in range(len(vals_list))
+        ])
+        for vals, cron in zip(vals_list, crons):
+            vals['cron_id'] = cron.id
 
-                    order['amount_total'] = sum(line.price for line in lines)
+        suppliers = super().create(vals_list)
+        suppliers._sync_cron()
+        return suppliers
 
-                    self.env.ref('lunch.lunch_order_mail_supplier').with_context(order=order, lines=_lines).send_mail(supplier.id)
+    def write(self, values):
+        for topping in values.get('topping_ids_2', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'topping_category': 2})
+        for topping in values.get('topping_ids_3', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'topping_category': 3})
+        if values.get('company_id'):
+            self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
+        super().write(values)
+        if not CRON_DEPENDS.isdisjoint(values):
+            self._sync_cron()
 
-                    lines.action_confirm()
+    def unlink(self):
+        crons = self.cron_id.sudo()
+        super().unlink()
+        crons.unlink()
 
-    @api.depends('recurrency_end_date', 'recurrency_monday', 'recurrency_tuesday',
-                 'recurrency_wednesday', 'recurrency_thursday', 'recurrency_friday',
-                 'recurrency_saturday', 'recurrency_sunday')
+    def toggle_active(self):
+        """ Archiving related lunch product """
+        res = super().toggle_active()
+        active_suppliers = self.filtered(lambda s: s.active)
+        inactive_suppliers = self - active_suppliers
+        Product = self.env['lunch.product'].with_context(active_test=False)
+        Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
+        Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
+        return res
+
+    def _send_auto_email(self):
+        """ Send an email to the supplier with the order of the day """
+        # Called daily by cron
+        self.ensure_one()
+
+        if not self.available_today:
+            return
+
+        if self.send_by != 'mail':
+            raise ValueError("Cannot send an email to this supplier")
+
+        orders = self.env['lunch.order'].search([
+            ('supplier_id', '=', self.id),
+            ('state', '=', 'ordered'),
+            ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
+        ], order="user_id, name")
+        if not orders:
+            return
+
+        order = {
+            'company_name': orders[0].company_id.name,
+            'currency_id': orders[0].currency_id.id,
+            'supplier_id': self.partner_id.id,
+            'supplier_name': self.name,
+            'email_from': self.responsible_id.email_formatted,
+            'amount_total': sum(order.price for order in orders),
+        }
+
+        sites = orders.mapped('user_id.last_lunch_location_id').sorted(lambda x: x.name)
+        orders_per_site = orders.sorted(lambda x: x.user_id.last_lunch_location_id.id)
+
+        email_orders = [{
+            'product': order.product_id.name,
+            'note': order.note,
+            'quantity': order.quantity,
+            'price': order.price,
+            'toppings': order.display_toppings,
+            'username': order.user_id.name,
+            'site': order.user_id.last_lunch_location_id.name,
+        } for order in orders_per_site]
+
+        email_sites = [{
+            'name': site.name,
+            'address': site.address,
+        } for site in sites]
+
+        self.env.ref('lunch.lunch_order_mail_supplier').with_context(
+            order=order, lines=email_orders, sites=email_sites
+        ).send_mail(self.id)
+
+        orders.action_confirm()
+
+    @api.depends('recurrency_end_date', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):
         now = fields.Datetime.now().replace(tzinfo=pytz.UTC)
 
@@ -156,7 +270,7 @@ class LunchSupplier(models.Model):
             if supplier.recurrency_end_date and now.date() >= supplier.recurrency_end_date:
                 supplier.available_today = False
             else:
-                fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[now.weekday()])
+                fieldname = WEEKDAY_TO_NAME[now.weekday()]
                 supplier.available_today = supplier[fieldname]
 
     def _search_available_today(self, operator, value):
@@ -166,7 +280,7 @@ class LunchSupplier(models.Model):
         searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
 
         now = fields.Datetime.now().replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
-        fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[now.weekday()])
+        fieldname = WEEKDAY_TO_NAME[now.weekday()]
 
         recurrency_domain = expression.OR([
             [('recurrency_end_date', '=', False)],

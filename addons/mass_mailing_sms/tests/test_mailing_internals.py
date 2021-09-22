@@ -3,17 +3,17 @@
 
 from ast import literal_eval
 
-from odoo.addons.mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
 from odoo.tests.common import users
-from odoo.tools import mute_logger
 
 
-class TestMassMailValues(TestMassMailCommon):
+class TestMassMailValues(MassSMSCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMassMailValues, cls).setUpClass()
 
+        cls._create_mailing_list()
         cls.sms_template_partner = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('res.partner').id,
@@ -36,7 +36,7 @@ class TestMassMailValues(TestMassMailCommon):
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
         self.assertEqual(mailing.mailing_model_real, 'res.partner')
         # default for partner: remove blacklisted
-        self.assertEqual(literal_eval(mailing.mailing_domain), [('phone_blacklisted', '=', False)])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('phone_sanitized_blacklisted', '=', False)])
         # update template -> update body
         mailing.write({'sms_template_id': self.sms_template_partner.id})
         self.assertEqual(mailing.body_plaintext, self.sms_template_partner.body)
@@ -54,7 +54,7 @@ class TestMassMailValues(TestMassMailCommon):
         self.assertEqual(mailing.mailing_model_name, 'mailing.list')
         self.assertEqual(mailing.mailing_model_real, 'mailing.contact')
         # default for mailing list: depends upon contact_list_ids
-        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', [])])
         mailing.write({
             'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
         })

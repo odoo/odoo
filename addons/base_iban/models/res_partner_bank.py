@@ -67,15 +67,16 @@ class ResPartnerBank(models.Model):
             raise UserError(_("Cannot compute the BBAN because the account number is not an IBAN."))
         return get_bban_from_iban(self.acc_number)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('acc_number'):
-            try:
-                validate_iban(vals['acc_number'])
-                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
-            except ValidationError:
-                pass
-        return super(ResPartnerBank, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('acc_number'):
+                try:
+                    validate_iban(vals['acc_number'])
+                    vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+                except ValidationError:
+                    pass
+        return super(ResPartnerBank, self).create(vals_list)
 
     def write(self, vals):
         if vals.get('acc_number'):
@@ -114,7 +115,7 @@ _map_iban_template = {
     'br': 'BRkk BBBB BBBB SSSS SCCC CCCC CCCT N',  # Brazil
     'by': 'BYkk BBBB AAAA CCCC CCCC CCCC CCCC',  # Belarus
     'ch': 'CHkk BBBB BCCC CCCC CCCC C',  # Switzerland
-    'cr': 'CRkk BBBC CCCC CCCC CCCC C',  # Costa Rica
+    'cr': 'CRkk BBBC CCCC CCCC CCCC CC',  # Costa Rica
     'cy': 'CYkk BBBS SSSS CCCC CCCC CCCC CCCC',  # Cyprus
     'cz': 'CZkk BBBB SSSS SSCC CCCC CCCC',  # Czech Republic
     'de': 'DEkk BBBB BBBB CCCC CCCC CC',  # Germany

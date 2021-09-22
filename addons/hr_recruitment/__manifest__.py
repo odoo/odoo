@@ -3,12 +3,12 @@
 
 {
     'name': 'Recruitment',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Human Resources/Recruitment',
     'sequence': 90,
     'summary': 'Track your recruitment pipeline',
     'description': "",
-    'website': 'https://www.odoo.com/page/recruitment',
+    'website': 'https://www.odoo.com/app/recruitment',
     'depends': [
         'hr',
         'calendar',
@@ -21,12 +21,13 @@
     'data': [
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
-        'data/hr_recruitment_data.xml',
         'data/digest_data.xml',
-        'data/hr_recruitment_templates.xml',
+        'data/mail_data.xml',
+        'data/mail_template_data.xml',
+        'data/mail_templates.xml',
+        'data/hr_recruitment_data.xml',
         'views/hr_recruitment_views.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_recruitment_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
         'views/mail_activity_views.xml',
@@ -39,4 +40,12 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'hr_recruitment/static/src/scss/hr_job.scss',
+            'hr_recruitment/static/src/js/recruitment.js',
+            'hr_recruitment/static/src/js/tours/hr_recruitment.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

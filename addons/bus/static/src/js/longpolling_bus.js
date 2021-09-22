@@ -75,11 +75,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
     addChannel: function (channel) {
         if (this._channels.indexOf(channel) === -1) {
             this._channels.push(channel);
-            if (this._pollRpc) {
-                this._pollRpc.abort();
-            } else {
-                this.startPolling();
-            }
+            this._restartPolling();
         }
     },
     /**
@@ -191,7 +187,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             self._pollRpc = false;
             // no error popup if request is interrupted or fails for any reason
             result.event.preventDefault();
-            if (result.message && result.message.message === "XmlHttpRequestError abort") {
+            if (result.message === "XmlHttpRequestError abort") {
                 self._poll();
             } else {
                 // random delay to avoid massive longpolling
@@ -254,6 +250,18 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
      */
     _onPresence: function () {
         this._lastPresenceTime = new Date().getTime();
+    },
+    /**
+     * Restart polling.
+     *
+     * @private
+     */
+    _restartPolling() {
+        if (this._pollRpc) {
+            this._pollRpc.abort();
+        } else {
+            this.startPolling();
+        }
     },
 });
 

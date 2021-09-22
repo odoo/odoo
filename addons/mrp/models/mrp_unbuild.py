@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare
+from odoo.osv import expression
 
 
 class MrpUnbuild(models.Model):
@@ -15,7 +16,7 @@ class MrpUnbuild(models.Model):
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('bom_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -41,11 +42,12 @@ class MrpUnbuild(models.Model):
             ('company_id', '=', False)
         ]
 """,
-        required=True, states={'done': [('readonly', True)]}, check_company=True)
+        states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('id', 'in', allowed_mo_ids)]",
+        domain="[('state', '=', 'done'), ('company_id', '=', company_id), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
         states={'done': [('readonly', True)]}, check_company=True)
+    mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
@@ -69,35 +71,16 @@ class MrpUnbuild(models.Model):
         string='Processed Disassembly Lines')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('done', 'Done')], string='Status', default='draft', index=True)
-    allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
-
-    @api.depends('company_id', 'product_id')
-    def _compute_allowed_mo_ids(self):
-        for unbuild in self:
-            if unbuild.product_id:
-                domain = [
-                    ('state', '=', 'done'),
-                    ('product_id', '=', unbuild.product_id.id),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
-            else:
-                domain = [
-                    ('state', 'in', ['done', 'cancel']),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
-            allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
-            if allowed_mos:
-                unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
-            else:
-                unbuild.allowed_mo_ids = False
+        ('done', 'Done')], string='Status', default='draft')
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            self.location_id = warehouse.lot_stock_id
-            self.location_dest_id = warehouse.lot_stock_id
+            if self.location_id.company_id != self.company_id:
+                self.location_id = warehouse.lot_stock_id
+            if self.location_dest_id.company_id != self.company_id:
+                self.location_dest_id = warehouse.lot_stock_id
         else:
             self.location_id = False
             self.location_dest_id = False
@@ -116,13 +99,14 @@ class MrpUnbuild(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.bom_id = self.env['mrp.bom']._bom_find(product=self.product_id, company_id=self.company_id.id)
-            self.product_uom_id = self.product_id.uom_id.id
+            self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
+            self.product_uom_id = self.mo_id.product_id == self.product_id and self.mo_id.product_uom_id.id or self.product_id.uom_id.id
 
     @api.constrains('product_qty')
     def _check_qty(self):
-        if self.product_qty <= 0:
-            raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
+        for unbuild in self:
+            if unbuild.product_qty <= 0:
+                raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model
     def create(self, vals):
@@ -130,10 +114,10 @@ class MrpUnbuild(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
         return super(MrpUnbuild, self).create(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
             raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
-        return super(MrpUnbuild, self).unlink()
 
     def action_unbuild(self):
         self.ensure_one()
@@ -178,10 +162,10 @@ class MrpUnbuild(models.Model):
             if move.has_tracking != 'none':
                 original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
                 original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
-                needed_quantity = move.product_qty
+                needed_quantity = move.product_uom_qty
                 moves_lines = original_move.mapped('move_line_ids')
                 if move in produce_moves and self.lot_id:
-                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.lot_produced_ids)
+                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
                 for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_line.qty_done)
@@ -204,7 +188,12 @@ class MrpUnbuild(models.Model):
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
-
+        if self.mo_id:
+            unbuild_msg = _(
+                "%s %s unbuilt in", self.product_qty, self.product_uom_id.name) + " <a href=# data-oe-model=mrp.unbuild data-oe-id=%d>%s</a>" % (self.id, self.display_name)
+            self.mo_id.message_post(
+                body=unbuild_msg,
+                subtype_id=self.env.ref('mail.mt_note').id)
         return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):
@@ -219,6 +208,8 @@ class MrpUnbuild(models.Model):
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)
                 for byproduct in unbuild.bom_id.byproduct_ids:
+                    if byproduct._skip_byproduct_line(unbuild.product_id):
+                        continue
                     quantity = byproduct.product_qty * factor
                     moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, byproduct_id=byproduct.id)
         return moves
@@ -248,7 +239,7 @@ class MrpUnbuild(models.Model):
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
             'location_id': location_id.id,
-            'warehouse_id': location_dest_id.get_warehouse().id,
+            'warehouse_id': location_dest_id.warehouse_id.id,
             'unbuild_id': self.id,
             'company_id': move.company_id.id,
         })
@@ -257,7 +248,7 @@ class MrpUnbuild(models.Model):
         product_prod_location = product.with_company(self.company_id).property_stock_production
         location_id = bom_line_id and product_prod_location or self.location_id
         location_dest_id = bom_line_id and self.location_dest_id or product_prod_location
-        warehouse = location_dest_id.get_warehouse()
+        warehouse = location_dest_id.warehouse_id
         return self.env['stock.move'].create({
             'name': self.name,
             'date': self.create_date,

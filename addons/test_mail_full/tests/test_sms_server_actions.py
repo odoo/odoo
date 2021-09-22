@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 
 
-class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
+class TestServerAction(TestMailFullCommon, TestMailFullRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -25,6 +25,7 @@ class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_commo
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'state': 'sms',
             'sms_template_id': cls.sms_template.id,
+            'groups_id': cls.env.ref('base.group_user'),
         })
 
     def test_action_sms(self):
@@ -36,8 +37,8 @@ class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_commo
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
-        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], content='Dear %s this is an SMS.' % self.test_record_2.display_name)
 
     def test_action_sms_single(self):
         context = {
@@ -47,7 +48,7 @@ class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_commo
 
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
 
     def test_action_sms_w_log(self):
         self.action.sms_mass_keep_log = True
@@ -59,8 +60,8 @@ class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_commo
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
         self.assertSMSLogged(self.test_record, 'Dear %s this is an SMS.' % self.test_record.display_name)
 
-        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], content='Dear %s this is an SMS.' % self.test_record_2.display_name)
         self.assertSMSLogged(self.test_record_2, 'Dear %s this is an SMS.' % self.test_record_2.display_name)

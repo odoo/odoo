@@ -21,6 +21,7 @@ class SaleReport(models.Model):
     product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
+    qty_to_deliver = fields.Float('Qty To Deliver', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
@@ -58,21 +59,22 @@ class SaleReport(models.Model):
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
-    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        with_ = ("WITH %s" % with_clause) if with_clause else ""
-
+    def _select_sale(self, fields=None):
+        if not fields:
+            fields = {}
         select_ = """
-            min(l.id) as id,
+            coalesce(min(l.id), -s.id) as id,
             l.product_id as product_id,
             t.uom_id as product_uom,
-            sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-            sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
-            sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
-            sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
-            sum(l.price_total / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) as price_total,
-            sum(l.price_subtotal / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) as price_subtotal,
-            sum(l.untaxed_amount_to_invoice / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) as untaxed_amount_to_invoice,
-            sum(l.untaxed_amount_invoiced / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) as untaxed_amount_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_delivered / u.factor * u2.factor) ELSE 0 END as qty_delivered,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END as qty_to_deliver,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END as qty_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END as qty_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_total / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_total,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_subtotal / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_subtotal,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_to_invoice / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_invoiced / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_invoiced,
             count(*) as nbr,
             s.name as name,
             s.date_order as date,
@@ -92,19 +94,21 @@ class SaleReport(models.Model):
             partner.country_id as country_id,
             partner.industry_id as industry_id,
             partner.commercial_partner_id as commercial_partner_id,
-            sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
-            sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as weight,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as volume,
             l.discount as discount,
-            sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)) as discount_amount,
+            CASE WHEN l.product_id IS NOT NULL THEN sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END))ELSE 0 END as discount_amount,
             s.id as order_id
         """
 
         for field in fields.values():
             select_ += field
+        return select_
 
+    def _from_sale(self, from_clause=''):
         from_ = """
                 sale_order_line l
-                      join sale_order s on (l.order_id=s.id)
+                      right outer join sale_order s on (s.id=l.order_id)
                       join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
@@ -113,7 +117,9 @@ class SaleReport(models.Model):
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                 %s
         """ % from_clause
+        return from_
 
+    def _group_by_sale(self, groupby=''):
         groupby_ = """
             l.product_id,
             l.order_id,
@@ -138,8 +144,14 @@ class SaleReport(models.Model):
             l.discount,
             s.id %s
         """ % (groupby)
+        return groupby_
 
-        return '%s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % (with_, select_, from_, groupby_)
+    def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
+        if not fields:
+            fields = {}
+        with_ = ("WITH %s" % with_clause) if with_clause else ""
+        return '%s (SELECT %s FROM %s GROUP BY %s)' % \
+               (with_, self._select_sale(fields), self._from_sale(from_clause), self._group_by_sale(groupby))
 
     def init(self):
         # self._table = sale_report

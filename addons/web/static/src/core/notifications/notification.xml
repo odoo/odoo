@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.NotificationWowl" owl="1">
+        <div t-attf-class="o_notification {{className}}"
+        role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="o_notification_body">
+                <button type="button" class="close o_notification_close"
+                aria-label="Close" t-on-click="trigger('close')">
+                    <span class="d-inline" aria-hidden="true">×</span>
+                </button>
+                <div t-if="props.title" class="font-weight-bold o_notification_title mb-1" t-esc="props.title"/>
+                <div t-if="props.message" class="mr-auto o_notification_content">
+                    <t t-if="props.messageIsHtml" t-raw="props.message"/>
+                    <t t-else="" t-esc="props.message"/>
+                </div>
+                <div t-if="props.buttons.length" class="mt-2 o_notification_buttons">
+                    <button t-foreach="props.buttons" t-as="button" type="button"
+                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-link'}}" t-on-click="button.onClick()">
+                    <t t-if="button.icon">
+                        <i t-if="button.icon.indexOf('fa-') === 0" role="img"
+                        t-att-aria-label="button.name" t-att-title="button.name"
+                        t-attf-class="fa fa-fw o_button_icon {{button.icon}}"/>
+                        <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                    </t>
+                    <span t-esc="button.name"/>
+                </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

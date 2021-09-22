@@ -8,9 +8,16 @@
     'description': "",
     'depends': ['hr', 'fleet'],
     'data': [
+        'security/ir.model.access.csv',
+        'security/hr_fleet_security.xml',
         'views/employee_views.xml',
         'views/fleet_vehicle_views.xml',
-        'wizard/hr_departure_wizard_views.xml'
+        'views/fleet_vehicle_cost_views.xml',
+        'wizard/hr_departure_wizard_views.xml',
+    ],
+    'demo': [
+        'data/hr_fleet_demo.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

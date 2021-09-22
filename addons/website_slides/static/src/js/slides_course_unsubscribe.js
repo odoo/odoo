@@ -1,10 +1,9 @@
-odoo.define('website_slides.unsubscribe_modal', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import publicWidget from 'web.public.widget';
+import utils from 'web.utils';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -13,7 +12,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
     template: 'slides.course.unsubscribe.modal',
     _texts: {
         titleSubscribe: _t("Subscribe"),
-        titleUnsubscribe: _t("Unsubscribe"),
+        titleUnsubscribe: _t("Notifications"),
         titleLeaveCourse: _t("Leave the course")
     },
 
@@ -60,7 +59,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
         if (state === '_subscription') {
             btnList.push({text: _t("Save"), classes: "btn-primary", click: this._onClickSubscriptionSubmit.bind(this)});
             btnList.push({text: _t("Discard"), close: true});
-            btnList.push({text: _t("Leave the course"), classes: "btn-danger ml-auto", click: this._onClickLeaveCourse.bind(this)});
+            btnList.push({text: _t("or Leave the course"), classes: "btn-danger ml-auto", click: this._onClickLeaveCourse.bind(this)});
         } else if (state === '_leave') {
             btnList.push({text: _t("Leave the course"), classes: "btn-danger", click: this._onClickLeaveCourseSubmit.bind(this)});
             btnList.push({text: _t("Discard"), click: this._onClickLeaveCourseCancel.bind(this)});
@@ -105,6 +104,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
 
     _onClickSubscriptionSubmit: function () {
         if (this.isFollower === this.getSubscriptionState()) {
+            this.destroy();
             return;
         }
         this._rpc({
@@ -159,9 +159,7 @@ publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
     },
 });
 
-return {
+export default {
     SlideUnsubscribeDialog: SlideUnsubscribeDialog,
     websiteSlidesUnsubscribe: publicWidget.registry.websiteSlidesUnsubscribe
 };
-
-});

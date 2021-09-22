@@ -9,7 +9,7 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     tour.register('account_render_report', {
         test: true,
         url: '/web',
-    }, [tour.STEPS.SHOW_APPS_MENU_ITEM,
+    }, [tour.stepUtils.showAppsMenuItem(),
     {
         id: 'account_menu_click',
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
@@ -20,7 +20,7 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     }, {
         trigger: '.o_control_panel button:contains("' + _t('Print') + '")',
     }, {
-        trigger: '.o_control_panel div.o_dropdown_menu a:contains("' + _t('Invoices without Payment') + '")',
+        trigger: '.o_control_panel .o_dropdown_menu a:contains("' + _t('Invoices without Payment') + '")',
     }, {
         trigger: 'iframe .o_report_layout_standard h2',
         content: 'Primary color is correct',

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_view_form_inherit_pos_coupon" model="ir.ui.view">
+        <field name="name">res.config.form.inherit.pos.coupon</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pos-coupon']/div[last()]" position="after">
+                <div class="mt8" attrs="{'invisible': [('module_pos_coupon', '=', False)]}">
+                    <button name="%(coupon.coupon_program_action_promo_program)d" icon="fa-arrow-right" type="action" string="Promotion Programs" class="btn-link"/>
+                </div>
+                <div class="mt8" attrs="{'invisible': [('module_pos_coupon', '=', False)]}">
+                    <button name="%(coupon.coupon_program_action_coupon_program)d" icon="fa-arrow-right" type="action" string="Coupon Programs" class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -28,10 +28,13 @@ class StockImmediateTransfer(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if 'immediate_transfer_line_ids' in fields:
-            if self.env.context.get('default_pick_ids'):
-                res['pick_ids'] = self.env.context['default_pick_ids']
-                res['immediate_transfer_line_ids'] = [(0, 0, {'to_immediate': True, 'picking_id': pick_id[1]}) for pick_id in res['pick_ids']]
+        if 'immediate_transfer_line_ids' in fields and res.get('pick_ids'):
+            res['immediate_transfer_line_ids'] = [
+                (0, 0, {'to_immediate': True, 'picking_id': pick_id})
+                for pick_id in res['pick_ids'][0][2]
+            ]
+            # default_get returns x2m values as [(6, 0, ids)]
+            # because of webclient limitations
         return res
 
     def process(self):
@@ -51,9 +54,7 @@ class StockImmediateTransfer(models.TransientModel):
                     picking.action_assign()
                     if picking.state != 'assigned':
                         raise UserError(_("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
-            for move in picking.move_lines.filtered(lambda m: m.state not in ['done', 'cancel']):
-                for move_line in move.move_line_ids:
-                    move_line.qty_done = move_line.product_uom_qty
+            picking.move_lines._set_quantities_to_reservation()
 
         pickings_to_validate = self.env.context.get('button_validate_picking_ids')
         if pickings_to_validate:
@@ -61,4 +62,3 @@ class StockImmediateTransfer(models.TransientModel):
             pickings_to_validate = pickings_to_validate - pickings_not_to_do
             return pickings_to_validate.with_context(skip_immediate=True).button_validate()
         return True
-

@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, Command, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -43,7 +43,7 @@ class ImLivechatChannel(models.Model):
         help="URL to a static page where you client can discuss with the operator of the channel.")
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
-    script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
+    script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
@@ -58,26 +58,25 @@ class ImLivechatChannel(models.Model):
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
 
     def _compute_script_external(self):
-        view = self.env['ir.model.data'].get_object('im_livechat', 'external_loader')
+        view = self.env.ref('im_livechat.external_loader')
         values = {
-            "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             "dbname": self._cr.dbname,
         }
         for record in self:
             values["channel_id"] = record.id
-            record.script_external = view.render(values)
+            values["url"] = record.get_base_url()
+            record.script_external = view._render(values) if record.id else False
 
     def _compute_web_page_link(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
+            record.web_page = "%s/im_livechat/support/%i" % (record.get_base_url(), record.id) if record.id else False
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        channels = self.env['mail.channel'].search([('livechat_channel_id', 'in', self.ids)])
-        channel_count = dict.fromkeys(self.ids, 0)
-        for channel in channels.filtered(lambda c: c.channel_message_ids):
-            channel_count[channel.livechat_channel_id.id] += 1
+        data = self.env['mail.channel'].read_group([
+            ('livechat_channel_id', 'in', self._ids),
+            ('has_message', '=', True)], ['__count'], ['livechat_channel_id'], lazy=False)
+        channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
 
@@ -95,11 +94,11 @@ class ImLivechatChannel(models.Model):
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
-            :returns : the ir.action 'action_view_rating' with the correct domain
+            :returns : the ir.action 'action_view_rating' with the correct context
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'rating_rating_action_view_livechat_rating')
-        action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
+        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_livechat')
+        action['context'] = {'search_default_parent_res_name': self.name}
         return action
 
     # --------------------------
@@ -115,23 +114,22 @@ class ImLivechatChannel(models.Model):
     def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id
-        channel_partner_to_add = [(4, operator_partner_id)]
+        channel_partner_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active:  # valid session user (not public)
-                channel_partner_to_add.append((4, visitor_user.partner_id.id))
+            if visitor_user and visitor_user.active and visitor_user != operator:  # valid session user (not public)
+                channel_partner_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
         return {
-            'channel_partner_ids': channel_partner_to_add,
+            'channel_last_seen_partner_ids': channel_partner_to_add,
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
+            'name': ' '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
-            'email_send': False,
         }
 
     def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
@@ -182,11 +180,10 @@ class ImLivechatChannel(models.Model):
 
         self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
             FROM mail_channel c
-            LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
-            LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
-            WHERE m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
-            AND c.channel_type = 'livechat'
+            LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'mail.channel'
+            WHERE c.channel_type = 'livechat'
             AND c.livechat_operator_id in %s
+            AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id
             ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(operators.mapped('partner_id').ids),))
         active_channels = self.env.cr.dictfetchall()
@@ -222,14 +219,17 @@ class ImLivechatChannel(models.Model):
             "channel_id": self.id,
         }
 
-    def get_livechat_info(self, username='Visitor'):
+    def get_livechat_info(self, username=None):
         self.ensure_one()
 
+        if username is None:
+            username = _('Visitor')
         info = {}
         info['available'] = len(self._get_available_users()) > 0
-        info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
+            info['options']['current_partner_id'] = self.env.user.partner_id.id
             info['options']["default_username"] = username
         return info
 

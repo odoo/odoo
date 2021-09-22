@@ -2,10 +2,10 @@ odoo.define('website_sale_slides.quiz', function (require) {
 "use strict";
 
 var sAnimations = require('website.content.snippets.animation');
-var Quiz = require('website_slides.quiz').Quiz;
+var { Quiz } = require('@website_slides/js/slides_course_quiz');
 
 sAnimations.registry.websiteSlidesQuizNoFullscreen.include({
-    _extractChannelData: function (slideData){
+    _extractChannelData: function (slideData) {
         return _.extend({}, this._super.apply(this, arguments), {
             productId: slideData.productId,
             enroll: slideData.enroll,

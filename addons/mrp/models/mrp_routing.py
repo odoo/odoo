@@ -1,78 +1,58 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-
-
-class MrpRouting(models.Model):
-    """ Specifies routings of work centers """
-    _name = 'mrp.routing'
-    _description = 'Routings'
-
-    name = fields.Char('Routing', required=True)
-    active = fields.Boolean(
-        'Active', default=True,
-        help="If the active field is set to False, it will allow you to hide the routing without removing it.")
-    code = fields.Char(
-        'Reference',
-        copy=False, default=lambda self: _('New'), readonly=True)
-    note = fields.Text('Description')
-    operation_ids = fields.One2many(
-        'mrp.routing.workcenter', 'routing_id', 'Operations',
-        copy=True)
-    company_id = fields.Many2one(
-        'res.company', 'Company', default=lambda self: self.env.company)
-
-    @api.model
-    def create(self, vals):
-        if 'code' not in vals or vals['code'] == _('New'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('mrp.routing') or _('New')
-        return super(MrpRouting, self).create(vals)
+from odoo import api, fields, models, _, tools
 
 
 class MrpRoutingWorkcenter(models.Model):
     _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
-    _order = 'sequence, id'
+    _order = 'bom_id, sequence, id'
     _check_company_auto = True
 
     name = fields.Char('Operation', required=True)
+    active = fields.Boolean(default=True)
     workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True)
     sequence = fields.Integer(
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")
-    routing_id = fields.Many2one(
-        'mrp.routing', 'Parent Routing',
+    bom_id = fields.Many2one(
+        'mrp.bom', 'Bill of Material',
         index=True, ondelete='cascade', required=True,
-        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards "
-        "which alters the execution of the manufacturing order.")
-    note = fields.Text('Description')
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, related='routing_id.company_id', store=True)
-    worksheet = fields.Binary('PDF', help="Upload your PDF file.")
+        help="The Bill of Material this operation is linked to")
+    company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
-        ('pdf', 'PDF'), ('google_slide', 'Google Slide')],
-        string="Work Sheet", default="pdf",
+        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
+        string="Work Sheet", default="text",
         help="Defines if you want to use a PDF or a Google Slide as work sheet."
     )
+    note = fields.Html('Description', help="Text worksheet description")
+    worksheet = fields.Binary('PDF')
     worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([
-        ('auto', 'Compute based on real time'),
+        ('auto', 'Compute based on tracked time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
         default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
+    time_computed_on = fields.Char('Computed on last', compute='_compute_time_computed_on')
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60,
-        help="Time in minutes. Is the time used in manual mode, or the first time supposed in real time when there are not any work orders yet.")
+        help="Time in minutes:"
+        "- In manual mode, time used"
+        "- In automatic mode, supposed first time when there aren't any work orders yet")
     time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
-    batch = fields.Selection([
-        ('no',  'Once all products are processed'),
-        ('yes', 'Once some products are processed')], string='Start Next Operation',
-        default='no', required=True)
-    batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
+    possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
+    bom_product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
+        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        help="BOM Product Variants needed to apply this line.")
+
+    @api.depends('time_mode', 'time_mode_batch')
+    def _compute_time_computed_on(self):
+        for operation in self:
+            operation.time_computed_on = _('%i work orders') % operation.time_mode_batch if operation.time_mode != 'manual' else False
 
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
     def _compute_time_cycle(self):
@@ -80,13 +60,24 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in manual_ops:
             operation.time_cycle = operation.time_cycle_manual
         for operation in self - manual_ops:
-            data = self.env['mrp.workorder'].read_group([
+            data = self.env['mrp.workorder'].search([
                 ('operation_id', '=', operation.id),
-                ('state', '=', 'done')], ['operation_id', 'duration', 'qty_produced'], ['operation_id'],
-                limit=operation.time_mode_batch)
-            count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)
-            if count_data.get(operation.id) and count_data[operation.id][1]:
-                operation.time_cycle = (count_data[operation.id][0] / count_data[operation.id][1]) * (operation.workcenter_id.capacity or 1.0)
+                ('qty_produced', '>', 0),
+                ('state', '=', 'done')],
+                limit=operation.time_mode_batch,
+                order="date_finished desc")
+            # To compute the time_cycle, we can take the total duration of previous operations
+            # but for the quantity, we will take in consideration the qty_produced like if the capacity was 1.
+            # So producing 50 in 00:10 with capacity 2, for the time_cycle, we assume it is 25 in 00:10
+            # When recomputing the expected duration, the capacity is used again to divide the qty to produce
+            # so that if we need 50 with capacity 2, it will compute the expected of 25 which is 00:10
+            total_duration = 0  # Can be 0 since it's not an invalid duration for BoM
+            cycle_number = 0  # Never 0 unless infinite item['workcenter_id'].capacity
+            for item in data:
+                total_duration += item['duration']
+                cycle_number += tools.float_round((item['qty_produced'] / item['workcenter_id'].capacity or 1.0), precision_digits=0, rounding_method='UP')
+            if cycle_number:
+                operation.time_cycle = total_duration / cycle_number
             else:
                 operation.time_cycle = operation.time_cycle_manual
 
@@ -97,3 +88,18 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    def copy_to_bom(self):
+        if 'bom_id' in self.env.context:
+            bom_id = self.env.context.get('bom_id')
+            for operation in self:
+                operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+
+    def _skip_operation_line(self, product):
+        """ Control if a operation should be processed, can be inherited to add
+        custom control.
+        """
+        self.ensure_one()
+        if product._name == 'product.template':
+            return False
+        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)

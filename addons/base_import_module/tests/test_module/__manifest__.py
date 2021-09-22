@@ -13,6 +13,12 @@
     'data': [
         'test.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'test_module/static/src/js/test.js'
+        ]
+    },
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

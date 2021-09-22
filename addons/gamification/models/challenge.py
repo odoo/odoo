@@ -154,18 +154,18 @@ class Challenge(models.Model):
 
         return template.id if template else False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Overwrite the create method to add the user of groups"""
+        for vals in vals_list:
+            if vals.get('user_domain'):
+                users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
-        if vals.get('user_domain'):
-            users = self._get_challenger_users(ustr(vals.get('user_domain')))
+                if not vals.get('user_ids'):
+                    vals['user_ids'] = []
+                vals['user_ids'].extend((4, user.id) for user in users)
 
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
-
-        return super(Challenge, self).create(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('user_domain'):
@@ -207,6 +207,10 @@ class Challenge(models.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
+        # in cron mode, will do intermediate commits
+        # cannot be replaced by a parameter because it is intended to impact side-effects of
+        # write operations
+        self = self.with_context(commit_gamification=commit)
         # start scheduled challenges
         planned_challenges = self.search([
             ('state', '=', 'draft'),
@@ -225,9 +229,7 @@ class Challenge(models.Model):
 
         records = self.browse(ids) if ids else self.search([('state', '=', 'inprogress')])
 
-        # in cron mode, will do intermediate commits
-        # FIXME: replace by parameter
-        return records.with_context(commit_gamification=commit)._update_all()
+        return records._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
@@ -243,19 +245,13 @@ class Challenge(models.Model):
         # exclude goals for users that did not connect since the last update
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
-                        FROM gamification_goal as gg,
-                             gamification_challenge as gc,
-                             res_users as ru,
-                             res_users_log as log
-                       WHERE gg.challenge_id = gc.id
-                         AND gg.user_id = ru.id
-                         AND ru.id = log.create_uid
-                         AND gg.write_date < log.create_date
-                         AND gg.closed IS false
-                         AND gc.id IN %s
+                        FROM gamification_goal as gg
+                        JOIN res_users_log as log ON gg.user_id = log.create_uid
+                       WHERE gg.write_date < log.create_date
+                         AND gg.closed IS NOT TRUE
+                         AND gg.challenge_id IN %s
                          AND (gg.state = 'inprogress'
-                              OR (gg.state = 'reached'
-                                  AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+                              OR (gg.state = 'reached' AND gg.end_date >= %s))
                       GROUP BY gg.id
         """, [tuple(self.ids), yesterday])
 
@@ -266,18 +262,18 @@ class Challenge(models.Model):
 
         for challenge in self:
             if challenge.last_report_date != fields.Date.today():
-                # goals closed but still opened at the last report date
-                closed_goals_to_report = Goals.search([
-                    ('challenge_id', '=', challenge.id),
-                    ('start_date', '>=', challenge.last_report_date),
-                    ('end_date', '<=', challenge.last_report_date)
-                ])
-
                 if challenge.next_report_date and fields.Date.today() >= challenge.next_report_date:
                     challenge.report_progress()
-                elif closed_goals_to_report:
-                    # some goals need a final report
-                    challenge.report_progress(subset_goals=closed_goals_to_report)
+                else:
+                    # goals closed but still opened at the last report date
+                    closed_goals_to_report = Goals.search([
+                        ('challenge_id', '=', challenge.id),
+                        ('start_date', '>=', challenge.last_report_date),
+                        ('end_date', '<=', challenge.last_report_date)
+                    ])
+                    if closed_goals_to_report:
+                        # some goals need a final report
+                        challenge.report_progress(subset_goals=closed_goals_to_report)
 
         self._check_challenge_reward()
         return True
@@ -358,7 +354,7 @@ class Challenge(models.Model):
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge 
+                    # users that used to match the challenge
                     Goals.search([
                         ('challenge_id', '=', challenge.id),
                         ('user_id', 'in', list(user_squating_challenge_ids))
@@ -390,6 +386,9 @@ class Challenge(models.Model):
                     to_update |= Goals.create(values)
 
             to_update.update_goal()
+
+            if self.env.context.get('commit_gamification'):
+                self.env.cr.commit()
 
         return True
 
@@ -446,7 +445,7 @@ class Challenge(models.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
             'completeness': <percentage>,
             'current': <current value>,
         }
@@ -472,7 +471,7 @@ class Challenge(models.Model):
                 ('state', '!=', 'draft'),
             ]
             if restrict_goals:
-                domain.append(('ids', 'in', restrict_goals.ids))
+                domain.append(('id', 'in', restrict_goals.ids))
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:
@@ -551,11 +550,10 @@ class Challenge(models.Model):
 
         challenge = self
 
-        MailTemplates = self.env['mail.template']
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards)._render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            body_html = challenge.report_template_id.with_context(challenge_lines=lines_boards)._render_field('body_html', challenge.ids)[challenge.id]
 
             # send to every follower and participant of the challenge
             challenge.message_post(
@@ -576,10 +574,7 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.with_user(user).with_context(challenge_lines=lines)._render_template(
-                    challenge.report_template_id.body_html,
-                    'gamification.challenge',
-                    challenge.id)
+                body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
                 # notify message only to users, do not post on the challenge
                 challenge.message_notify(
@@ -600,7 +595,7 @@ class Challenge(models.Model):
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge") % user.name)
+        sudoed.message_post(body=_("%s has joined the challenge", user.name))
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
@@ -608,7 +603,7 @@ class Challenge(models.Model):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge") % user.name)
+        sudoed.message_post(body=_("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
 
     def _check_challenge_reward(self, force=False):
@@ -656,11 +651,15 @@ class Challenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.") % challenge.name
+                message_body = _("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
                     user_names = rewarded_users.name_get()
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join(name for (user_id, name) in user_names))
+                    message_body += _(
+                        "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
+                        badge_name=challenge.reward_id.name,
+                        users=", ".join(name for (user_id, name) in user_names)
+                    )
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 

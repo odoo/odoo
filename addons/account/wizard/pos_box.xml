@@ -13,18 +13,11 @@
                     </group>
 
                     <footer>
-                        <button name="run" string="Take Money In/Out" type="object" class="btn-primary"/>
-                        <button class="btn-secondary" special="cancel" string="Cancel" />
+                        <button name="run" string="Take Money In/Out" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button class="btn-secondary" special="cancel" data-hotkey="z" string="Cancel" />
                     </footer>
                 </form>
             </field>
         </record>
-
-        <act_window
-            name="Take Money In/Out"
-            res_model="cash.box.out"
-            view_mode="form"
-            target="new"
-            id="action_cash_box_out" />
     </data>
 </odoo>

@@ -28,7 +28,7 @@
                 color="color"
                 event_limit="5">
                 <!-- Sidebar favorites filters -->
-                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_128"/>
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="avatar_128"/>
                 <field name="state"/>
             </calendar>
         </field>
@@ -42,6 +42,9 @@
                 <header>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,validated,conflict"/>
                 </header>
+                 <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('state', '!=', 'validated')]}">
+                    Note: Validated work entries cannot be modified.
+                </div>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -57,7 +60,7 @@
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <label for="duration" string="Period"/>
-                            <div>
+                            <div class="o_row">
                                 <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
@@ -72,12 +75,13 @@
         <field name="name">hr.work.entry.tree</field>
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1">
+            <tree multi_edit="1" sample="1">
                 <field name="name"/>
                 <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="duration" readonly="1"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning" readonly="1"/>
+                <field name="date_stop" string="End" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -88,8 +92,9 @@
         <field name="arch" type="xml">
             <search string="Search Work Entry">
                 <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="name"/>
-                <filter name="my_work_entries" string="My Entries" domain="[('employee_id.user_id', '=', uid)]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
@@ -98,6 +103,7 @@
                     ('date_start', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
                 <separator/>
@@ -123,7 +129,7 @@
     <record id="hr_work_entry_type_action" model="ir.actions.act_window">
         <field name="name">Work Entry Types</field>
         <field name="res_model">hr.work.entry.type</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
     </record>
 
@@ -134,6 +140,7 @@
             <tree>
                 <field name="name"/>
                 <field name="code"/>
+                <field name="color" widget="color_picker"/>
             </tree>
         </field>
     </record>
@@ -154,8 +161,12 @@
                         <group name="identification">
                             <field name="code"/>
                             <field name="active" invisible="1"/>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
+                    </group>
+                    <group name="other">
+                        <group name="time_off" string="Time Off Options"/>
                     </group>
                 </sheet>
             </form>
@@ -173,7 +184,7 @@
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
                                     <ul class="oe_kanban_colorpicker" data-field="color"/>

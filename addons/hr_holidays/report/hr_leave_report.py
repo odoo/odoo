@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, exceptions, _
+from odoo import api, fields, models, tools, _
 from odoo.osv import expression
 
 
@@ -12,11 +12,12 @@ class LeaveReport(models.Model):
     _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
+    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
-        ('allocation', 'Allocation Request'),
-        ('request', 'Time Off Request')
+        ('allocation', 'Allocation'),
+        ('request', 'Time Off')
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
@@ -35,7 +36,7 @@ class LeaveReport(models.Model):
     ], string='Allocation Mode', readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True)
     date_to = fields.Datetime('End Date', readonly=True)
-    payslip_status = fields.Boolean('Reported in last payslips', readonly=True)
+    company_id = fields.Many2one('res.company', string="Company", readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
@@ -48,7 +49,7 @@ class LeaveReport(models.Model):
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
-                leaves.date_to as date_to, leaves.payslip_status as payslip_status
+                leaves.date_to as date_to, leaves.company_id
                 from (select
                     allocation.employee_id as employee_id,
                     allocation.private_name as name,
@@ -60,8 +61,8 @@ class LeaveReport(models.Model):
                     allocation.holiday_type,
                     null as date_from,
                     null as date_to,
-                    FALSE as payslip_status,
-                    'allocation' as leave_type
+                    'allocation' as leave_type,
+                    allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
                 union all select
                     request.employee_id as employee_id,
@@ -74,29 +75,11 @@ class LeaveReport(models.Model):
                     request.holiday_type,
                     request.date_from as date_from,
                     request.date_to as date_to,
-                    request.payslip_status as payslip_status,
-                    'request' as leave_type
+                    'request' as leave_type,
+                    request.employee_company_id as company_id
                 from hr_leave as request) leaves
             );
         """)
-
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        if 'name' in field_names and 'employee_id' not in field_names:
-            field_names.append('employee_id')
-        super(LeaveReport, self)._read_from_database(field_names, inherited_field_names)
-        if 'name' in field_names:
-            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-                return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
-            for record in self:
-                emp_id = record._cache.get('employee_id', [False])[0]
-                if emp_id != current_employee.id:
-                    try:
-                        record._cache['name']
-                        record._cache['name'] = '*****'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
 
     @api.model
     def action_time_off_analysis(self):
@@ -112,17 +95,13 @@ class LeaveReport(models.Model):
             'name': _('Time Off Analysis'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.report',
-            'view_mode': 'tree,form,pivot',
-            'search_view_id': self.env.ref('hr_holidays.view_hr_holidays_filter_report').id,
+            'view_mode': 'tree,pivot,form',
+            'search_view_id': [self.env.ref('hr_holidays.view_hr_holidays_filter_report').id],
             'domain': domain,
             'context': {
                 'search_default_group_type': True,
-                'search_default_year': True
+                'search_default_year': True,
+                'search_default_validated': True,
+                'search_default_active_employee': True,
             }
         }
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'private_name' in groupby:
-            raise exceptions.UserError(_('Such grouping is not allowed.'))
-        return super(LeaveReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)

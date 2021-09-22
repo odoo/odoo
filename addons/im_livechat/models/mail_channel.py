@@ -3,24 +3,6 @@
 
 from odoo import api, fields, models, _
 
-class ChannelPartner(models.Model):
-    _inherit = 'mail.channel.partner'
-
-    @api.model
-    def unpin_old_livechat_sessions(self):
-        """ Unpin livechat sessions with no activity for at least one day to
-            clean the operator's interface """
-        self.env.cr.execute("""
-            UPDATE mail_channel_partner
-            SET is_pinned = false
-            WHERE id in (
-                SELECT cp.id FROM mail_channel_partner cp
-                INNER JOIN mail_channel c on c.id = cp.channel_id
-                WHERE c.channel_type = 'livechat' AND cp.is_pinned is true AND
-                    cp.write_date < current_timestamp - interval '1 day'
-            )
-        """)
-
 
 class MailChannel(models.Model):
     """ Chat Session
@@ -61,16 +43,16 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat' and channel.public == 'private':
                 notifications.append([channel.uuid, notifications[0][1]])
         if not message.author_id:
-            unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
+            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
                 unpinned_channel_partner.write({'is_pinned': True})
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
         return notifications
 
-    def channel_fetch_message(self, last_id=False, limit=20):
+    def _channel_fetch_message(self, last_id=False, limit=20):
         """ Override to add the context of the livechat username."""
         channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
-        return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
+        return super(MailChannel, channel)._channel_fetch_message(last_id=last_id, limit=limit)
 
     def channel_info(self, extra_info=False):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
@@ -83,20 +65,33 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 # add the operator id
                 if channel.livechat_operator_id:
-                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
-                channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
-                last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
-                if last_msg:
-                    channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
+                channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
         return list(channel_infos_dict.values())
 
-    @api.model
-    def channel_fetch_slot(self):
-        values = super(MailChannel, self).channel_fetch_slot()
-        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
-        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
-        return values
+    def _channel_get_livechat_visitor_info(self):
+        self.ensure_one()
+        # remove active test to ensure public partner is taken into account
+        channel_partner_ids = self.with_context(active_test=False).channel_partner_ids
+        partners = channel_partner_ids - self.livechat_operator_id
+        if not partners:
+            # operator probably testing the livechat with his own user
+            partners = channel_partner_ids
+        first_partner = partners and partners[0]
+        if first_partner and (not first_partner.user_ids or not any(user._is_public() for user in first_partner.user_ids)):
+            # legit non-public partner
+            return {
+                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
+                'id': first_partner.id,
+                'name': first_partner.name,
+            }
+        return {
+            'country': self.country_id.name_get()[0] if self.country_id else False,
+            'id': False,
+            'name': self.anonymous_name or _("Visitor"),
+        }
 
     def _channel_get_livechat_partner_name(self):
         if self.livechat_operator_id in self.channel_partner_ids:
@@ -115,29 +110,27 @@ class MailChannel(models.Model):
             return self.anonymous_name
         return _("Visitor")
 
-    @api.model
-    def remove_empty_livechat_sessions(self):
+    @api.autovacuum
+    def _gc_empty_livechat_sessions(self):
         hours = 1  # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id
             FROM mail_channel C
             WHERE NOT EXISTS (
                 SELECT *
-                FROM mail_message_mail_channel_rel R
-                WHERE R.mail_channel_id = C.id
+                FROM mail_message M
+                WHERE M.res_id = C.id AND m.model = 'mail.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
                 < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
-    def _define_command_history(self):
-        return {
-            'channel_types': ['livechat'],
-            'help': _('See 15 last visited pages')
-        }
+    def _execute_command_help_message_extra(self):
+        msg = super(MailChannel, self)._execute_command_help_message_extra()
+        return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
-    def _execute_command_history(self, **kwargs):
+    def execute_command_history(self, **kwargs):
         notification = []
         notification_values = {
             '_type': 'history_command',
@@ -165,7 +158,7 @@ class MailChannel(models.Model):
         if self.livechat_active:
             self.livechat_active = False
             # avoid useless notification if the channel is empty
-            if not self.channel_message_ids:
+            if not self.message_ids:
                 return
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,
@@ -183,10 +176,10 @@ class MailChannel(models.Model):
             "channel": self,
         }
         template = self.env.ref('im_livechat.livechat_email_template')
-        mail_body = template.render(render_context, engine='ir.qweb', minimal_qcontext=True)
-        mail_body = self.env['mail.thread']._replace_local_links(mail_body)
+        mail_body = template._render(render_context, engine='ir.qweb', minimal_qcontext=True)
+        mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].sudo().create({
-            'subject': _('Conversation with %s') % self.livechat_operator_id.name,
+            'subject': _('Conversation with %s', self.livechat_operator_id.name),
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,

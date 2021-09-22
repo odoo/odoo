@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
@@ -10,6 +12,22 @@ class AccountMove(models.Model):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+
+    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    def _compute_timesheet_total_duration(self):
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            self.timesheet_total_duration = 0
+            return
+        group_data = self.env['account.analytic.line'].read_group([
+            ('timesheet_invoice_id', 'in', self.ids)
+        ], ['timesheet_invoice_id', 'unit_amount'], ['timesheet_invoice_id'])
+        timesheet_unit_amount_dict = defaultdict(float)
+        timesheet_unit_amount_dict.update({data['timesheet_invoice_id'][0]: data['unit_amount'] for data in group_data})
+        for invoice in self:
+            total_time = invoice.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[invoice.id], invoice.timesheet_encode_uom_id)
+            invoice.timesheet_total_duration = round(total_time)
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
@@ -43,21 +61,23 @@ class AccountMove(models.Model):
             }
         }
 
-    def _link_timesheets_to_invoice(self, date=None):
-        """ Search timesheets and link this timesheets to the invoice
+    def _link_timesheets_to_invoice(self, start_date=None, end_date=None):
+        """ Search timesheets from given period and link this timesheets to the invoice
 
             When we create an invoice from a sale order, we need to
             link the timesheets in this sale order to the invoice.
             Then, we can know which timesheets are invoiced in the sale order.
-            :param date: All timesheets on task before or equals this date
-                        in the sale order are invoiced.
+            :param start_date: the start date of the period
+            :param end_date: the end date of the period
         """
         for line in self.filtered(lambda i: i.move_type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
             sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if sale_line_delivery:
                 domain = line._timesheet_domain_get_invoiced_lines(sale_line_delivery)
-                if date:
-                    domain = expression.AND([domain, [('date', '<=', date)]])
+                if start_date:
+                    domain = expression.AND([domain, [('date', '>=', start_date)]])
+                if end_date:
+                    domain = expression.AND([domain, [('date', '<=', end_date)]])
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 

@@ -17,7 +17,7 @@ class MailActivity(models.Model):
 
     def action_create_calendar_event(self):
         self.ensure_one()
-        action = self.env.ref('calendar.action_calendar_event').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_activity_type_id': self.activity_type_id.id,
             'default_res_id': self.env.context.get('default_res_id'),
@@ -34,7 +34,10 @@ class MailActivity(models.Model):
         if feedback:
             for event in events:
                 description = event.description
-                description = '%s\n%s%s' % (description or '', _("Feedback: "), feedback)
+                description = '%s<br />%s' % (
+                    description if not tools.is_html_empty(description) else '',
+                    _('Feedback: %(feedback)s', tools.plaintext2html(feedback)) if feedback else '',
+                )
                 event.write({'description': description})
         return messages, activities
 

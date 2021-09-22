@@ -30,7 +30,7 @@ class ImportModule(Controller):
     @webservice
     def login_upload(self, login, password, db=None, force='', mod_file=None, **kw):
         if db and db != request.db:
-            raise Exception(_("Could not select database '%s'") % db)
+            raise Exception(_("Could not select database '%s'", db))
         uid = request.session.authenticate(request.db, login, password)
         self.check_user(uid)
         force = True if force == '1' else False

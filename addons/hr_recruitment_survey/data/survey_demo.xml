@@ -2,7 +2,7 @@
 <odoo><data noupdate="1">
     <record id="survey_recruitment_form" model="survey.survey">
         <field name="title">Recruitment Form</field>
-        <field name="state">open</field>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="access_mode">token</field>
         <field name="users_can_go_back" eval="True"/>
         <field name="description" type="html">
@@ -39,7 +39,7 @@
     <record id="survey_recruitment_form_p1_q3" model="survey.question">
         <field name="survey_id" ref="survey_recruitment_form"/>
         <field name="sequence">4</field>
-        <field name="title">Did you apply from an employee ?</field>
+        <field name="title">Were you referred by an employee?</field>
         <field name="question_type">char_box</field>
     </record>
 

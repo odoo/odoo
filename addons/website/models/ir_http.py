@@ -4,6 +4,7 @@ import logging
 from lxml import etree
 import os
 import unittest
+import time
 
 import pytz
 import werkzeug
@@ -15,11 +16,12 @@ from functools import partial
 import odoo
 from odoo import api, models
 from odoo import registry, SUPERUSER_ID
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN, OR
-
-from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.osv.expression import FALSE_DOMAIN
+from odoo.addons.http_routing.models import ir_http
+from odoo.addons.http_routing.models.ir_http import _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -74,7 +76,7 @@ class Http(models.AbstractModel):
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
-                kw[arg] = kw[arg].with_user(request.uid)
+                kw[arg] = kw[arg].with_context(slug_matching=True)
         qs = request.httprequest.query_string.decode('utf-8')
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
@@ -132,21 +134,45 @@ class Http(models.AbstractModel):
         if not request.session.uid:
             env = api.Environment(request.cr, SUPERUSER_ID, request.context)
             website = env['website'].get_current_website()
-            if website and website.user_id:
-                request.uid = website.user_id.id
+            request.uid = website and website._get_cached('user_id')
+
         if not request.uid:
             super(Http, cls)._auth_method_public()
 
     @classmethod
     def _register_website_track(cls, response):
-        if getattr(response, 'status_code', 0) != 200 or not hasattr(response, 'qcontext'):
+        if getattr(response, 'status_code', 0) != 200:
             return False
-        main_object = response.qcontext.get('main_object')
-        website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
-        template = response.qcontext.get('response_template')
+
+        template = False
+        if hasattr(response, '_cached_page'):
+            website_page, template = response._cached_page, response._cached_template
+        elif hasattr(response, 'qcontext'):  # classic response
+            main_object = response.qcontext.get('main_object')
+            website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
+            template = response.qcontext.get('response_template')
+
         view = template and request.env['website'].get_template(template)
         if view and view.track:
             request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
+
+        return False
+
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        processing = super()._postprocess_args(arguments, rule)
+        if processing:
+            return processing
+
+        for record in arguments.values():
+            if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
+                try:
+                    if not record.can_access_from_current_website():
+                        return request.env['ir.http']._handle_exception(werkzeug.exceptions.NotFound())
+                except AccessError:
+                    # record.website_id might not be readable as unpublished `event.event` due to ir.rule,
+                    # return 403 instead of using `sudo()` for perfs as this is low level
+                    return request.env['ir.http']._handle_exception(werkzeug.exceptions.Forbidden())
 
     @classmethod
     def _dispatch(cls):
@@ -178,11 +204,12 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
-        # Force website with query string paramater, typically set from website selector in frontend navbar
+        # DEPRECATED for /website/force/<website_id> - remove me in master~saas-14.4
+        # Force website with query string paramater, typically set from website selector in frontend navbar and inside tests
         force_website_id = request.httprequest.args.get('fw')
-        if (force_website_id and request.session.get('force_website_id') != force_website_id and
-                request.env.user.has_group('website.group_multi_website') and
-                request.env.user.has_group('website.group_website_publisher')):
+        if (force_website_id and request.session.get('force_website_id') != force_website_id
+                and request.env.user.has_group('website.group_multi_website')
+                and request.env.user.has_group('website.group_website_publisher')):
             request.env['website']._force_website(request.httprequest.args.get('fw'))
 
         context = {}
@@ -199,8 +226,9 @@ class Http(models.AbstractModel):
         # context (eg: /shop), and it's not going to propagate to the global context of the tab
         # If the company of the website is not in the allowed companies of the user, set the main
         # company of the user.
-        if request.website.company_id in request.env.user.company_ids:
-            context['allowed_company_ids'] = request.website.company_id.ids
+        website_company_id = request.website._get_cached('company_id')
+        if website_company_id in request.env.user.company_ids.ids:
+            context['allowed_company_ids'] = [website_company_id]
         else:
             context['allowed_company_ids'] = request.env.user.company_id.ids
 
@@ -215,20 +243,21 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_frontend_langs(cls):
         if get_request_website():
-            return [code for code, _, _ in request.env['res.lang'].get_available()]
+            return [code for code, *_ in request.env['res.lang'].get_available()]
         else:
             return super()._get_frontend_langs()
 
     @classmethod
     def _get_default_lang(cls):
         if getattr(request, 'website', False):
-            return request.website.default_lang_id
+            return request.env['res.lang'].browse(request.website._get_cached('default_lang_id'))
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
-        domain = super(Http, cls)._get_translation_frontend_modules_domain()
-        return OR([domain, [('name', 'ilike', 'website')]])
+    def _get_translation_frontend_modules_name(cls):
+        mods = super(Http, cls)._get_translation_frontend_modules_name()
+        installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
+        return mods + [mod for mod in installed if mod.startswith('website')]
 
     @classmethod
     def _serve_page(cls):
@@ -236,29 +265,69 @@ class Http(models.AbstractModel):
         page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
         published_domain = page_domain
-        # need to bypass website_published, to apply is_most_specific
-        # filter later if not publisher
-        pages = request.env['website.page'].sudo().search(published_domain, order='website_id')
-        pages = pages.filtered(pages._is_most_specific_page)
+        # specific page first
+        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
 
-        if not request.website.is_publisher():
-            pages = pages.filtered('is_visible')
+        # redirect withtout trailing /
+        if not page and req_page != "/" and req_page.endswith("/"):
+            # mimick `_postprocess_args()` redirect
+            path = request.httprequest.path[:-1]
+            if request.lang != cls._get_default_lang():
+                path = '/' + request.lang.url_code + path
+            if request.httprequest.query_string:
+                path += '?' + request.httprequest.query_string.decode('utf-8')
+            return request.redirect(path, code=301)
 
-        mypage = pages[0] if pages else False
-        _, ext = os.path.splitext(req_page)
-        if mypage:
-            return request.render(mypage.get_view_identifier(), {
-                # 'path': req_page[1:],
+        if page:
+            # prefetch all menus (it will prefetch website.page too)
+            request.website.menu_id
+
+        if page and (request.website.is_publisher() or page.is_visible):
+            need_to_cache = False
+            cache_key = page._get_cache_key(request)
+            if (
+                page.cache_time  # cache > 0
+                and request.httprequest.method == "GET"
+                and request.env.user._is_public()    # only cache for unlogged user
+                and 'nocache' not in request.params  # allow bypass cache / debug
+                and not request.session.debug
+                and len(cache_key) and cache_key[-1] is not None  # nocache via expr
+            ):
+                need_to_cache = True
+                try:
+                    r = page._get_cache_response(cache_key)
+                    if r['time'] + page.cache_time > time.time():
+                        response = odoo.http.Response(r['content'], mimetype=r['contenttype'])
+                        response._cached_template = r['template']
+                        response._cached_page = page
+                        return response
+                except KeyError:
+                    pass
+
+            _, ext = os.path.splitext(req_page)
+            response = request.render(page.view_id.id, {
                 'deletable': True,
-                'main_object': mypage,
+                'main_object': page,
             }, mimetype=_guess_mimetype(ext))
+
+            if need_to_cache and response.status_code == 200:
+                r = response.render()
+                page._set_cache_response(cache_key, {
+                    'content': r,
+                    'contenttype': response.headers['Content-Type'],
+                    'time': time.time(),
+                    'template': getattr(response, 'qcontext', {}).get('response_template')
+                })
+            return response
+        return False
 
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
         domain = [
             ('redirect_type', 'in', ('301', '302')),
-            ('url_from', '=', req_page)
+            # trailing / could have been removed by server_page
+            '|', ('url_from', '=', req_page.rstrip('/')), ('url_from', '=', req_page + '/')
         ]
         domain += request.website.website_domain()
         return request.env['website.rewrite'].sudo().search(domain, limit=1)
@@ -284,7 +353,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
-        if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \
@@ -301,7 +370,7 @@ class Http(models.AbstractModel):
             try:
                 # exception.name might be int, string
                 exception_template = int(exception.name)
-            except:
+            except ValueError:
                 exception_template = exception.name
             view = View._view_obj(exception_template)
             if exception.html and exception.html in view.arch:
@@ -310,8 +379,8 @@ class Http(models.AbstractModel):
                 # There might be 2 cases where the exception code can't be found
                 # in the view, either the error is in a child view or the code
                 # contains branding (<div t-att-data="request.browse('ok')"/>).
-                et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
-                node = et.xpath(exception.path)
+                et = view.with_context(inherit_branding=False)._get_combined_arch()
+                node = et.xpath(exception.path) if exception.path else et
                 line = node is not None and etree.tostring(node[0], encoding='unicode')
                 if line:
                     values['view'] = View._views_get(exception_template).filtered(
@@ -325,7 +394,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_error_html(cls, env, code, values):
         if code in ('page_404', 'protected_403'):
-            return code.split('_')[1], env['ir.ui.view'].render_template('website.%s' % code, values)
+            return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
         return super(Http, cls)._get_error_html(env, code, values)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
@@ -365,16 +434,22 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
+            'geoip_country_code': request.session.get('geoip', {}).get('country_code'),
         })
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({
                 'website_id': request.website.id,
-                'website_company_id': request.website.company_id.id,
+                'website_company_id': request.website._get_cached('company_id'),
             })
         return session_info
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
+
+    def to_url(self, value):
+        if value.env.context.get('slug_matching'):
+            return value.env.context.get('_converter_value', str(value.id))
+        return super().to_url(value)
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].with_user(uid)

@@ -24,6 +24,7 @@ QUnit.module('HR Attendance', {
                     user_id: {string: 'user ID', type: 'integer'},
                     barcode: {string:'barcode', type: 'integer'},
                     hours_today: {string:'Hours today', type: 'float'},
+                    overtime: {string: 'Overtime', type: 'float'},
                 },
                 records: [{
                     id: 1,
@@ -59,7 +60,7 @@ QUnit.module('HR Attendance', {
 
         var $target = $('#qunit-fixture');
         var clientAction = new MyAttendances(null, {});
-        testUtils.mock.addMockEnvironment(clientAction, {
+        await testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
                 uid: 1,
@@ -80,7 +81,7 @@ QUnit.module('HR Attendance', {
         var self = this;
         var rpcCount = 0;
         var clientAction = new KioskMode(null, {});
-        testUtils.mock.addMockEnvironment(clientAction, {
+        await testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
                 uid: 1,
@@ -124,7 +125,7 @@ QUnit.module('HR Attendance', {
                 barcode: barcode,
             };
             var clientAction = new GreetingMessage(null, action);
-            testUtils.mock.addMockEnvironment(clientAction, {
+            await testUtils.mock.addMockEnvironment(clientAction, {
                 data: self.data,
                 session: {
                     uid: 1,
@@ -179,7 +180,7 @@ QUnit.module('HR Attendance', {
         assert.strictEqual(clientActions.length, 3, 'Number of clientActions must = 3.');
         assert.strictEqual(rpcCount, 2, 'RPC call should have been done only twice.');
 
-        _.each(clientActions, function(clientAction) {
+        _.each(clientActions.reverse(), function(clientAction) {
             clientAction.destroy();
         });
     });

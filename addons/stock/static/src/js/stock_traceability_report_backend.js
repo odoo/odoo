@@ -16,7 +16,7 @@ var stock_report_generic = AbstractAction.extend({
     init: function(parent, action) {
         this._super.apply(this, arguments);
         this.actionManager = parent;
-        this.given_context = session.user_context;
+        this.given_context = Object.assign({}, session.user_context);
         this.controller_url = action.context.url;
         if (action.context.context) {
             this.given_context = action.context.context;
@@ -47,37 +47,28 @@ var stock_report_generic = AbstractAction.extend({
             }
         });
     },
-    start: function() {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.set_html();
-        });
+    start: async function() {
+        this.controlPanelProps.cp_content = { $buttons: this.$buttons };
+        await this._super(...arguments);
+        this.set_html();
     },
     // Fetches the html and is previous report.context if any, else create it
-    get_html: function() {
-        var self = this;
-        var defs = [];
-        return this._rpc({
-                model: 'stock.traceability.report',
-                method: 'get_html',
-                args: [self.given_context],
-            })
-            .then(function (result) {
-                self.html = result.html;
-                self.renderButtons();
-                defs.push(self.update_cp());
-                return Promise.all(defs);
-            });
+    get_html: async function() {
+        const { html } = await this._rpc({
+            args: [this.given_context],
+            method: 'get_html',
+            model: 'stock.traceability.report',
+        });
+        this.html = html;
+        this.renderButtons();
     },
     // Updates the control panel and render the elements that have yet to be rendered
     update_cp: function() {
         if (!this.$buttons) {
             this.renderButtons();
         }
-        var status = {
-            cp_content: {$buttons: this.$buttons},
-        };
-        return this.updateControlPanel(status);
+        this.controlPanelProps.cp_content = { $buttons: this.$buttons };
+        return this.updateControlPanel();
     },
     renderButtons: function() {
         var self = this;
@@ -98,7 +89,8 @@ var stock_report_generic = AbstractAction.extend({
                 });
             });
             framework.blockUI();
-            var url_data = self.controller_url.replace('active_id', self.given_context.active_id);
+            var url_data = self.controller_url.replace(':active_id', self.given_context.active_id);
+            url_data = url_data.replace(':active_model', self.given_context.model);
             session.get_file({
                 url: url_data.replace('output_format', 'pdf'),
                 data: {data: JSON.stringify(dict)},
@@ -107,10 +99,6 @@ var stock_report_generic = AbstractAction.extend({
             });
         });
         return this.$buttons;
-    },
-    do_show: function() {
-        this._super();
-        this.update_cp();
     },
 });
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
+        <div class="o_DiscussMobileMailboxSelection">
+            <t t-foreach="orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
+                <button class="o_DiscussMobileMailboxSelection_button btn btn-secondary"
+                    t-att-class="{
+                        'active o-active': discuss.thread === mailbox,
+                    }" t-on-click="_onClick" t-att-data-mailbox-local-id="mailbox.localId" type="button"
+                >
+                    <t t-esc="mailbox.name"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+</templates>

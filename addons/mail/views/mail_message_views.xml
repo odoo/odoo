@@ -40,8 +40,6 @@
                                 <field name="res_id" widget="integer"/>
                                 <field name="record_name"/>
                                 <field name="parent_id"/>
-                                <field name="moderation_status"/>
-                                <field name="moderator_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -52,7 +50,7 @@
                                 <group>
                                     <group>
                                         <field name="reply_to"/>
-                                        <field name="no_auto_thread"/>
+                                        <field name="reply_to_force_new"/>
                                     </group>
                                     <group>
                                         <field name="message_id"/>
@@ -64,7 +62,6 @@
                                 <group>
                                     <group>
                                         <field name="partner_ids" widget="many2many_tags"/>
-                                        <field name="channel_ids" widget="many2many_tags"/>
                                     </group>
                                     <group>
                                         <field name="notified_partner_ids" widget="many2many_tags"/>
@@ -125,13 +122,6 @@
             <field name="search_view_id" ref="view_message_search"/>
         </record>
 
-        <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Messages"
-            id="menu_mail_message"
-            parent="mail.mail_menu_technical"
-            action="action_view_mail_message"
-            sequence="1"/>
-
         <record model="ir.ui.view" id="view_document_file_kanban">
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
@@ -142,7 +132,6 @@
                     <field name="type"/>
                     <field name="create_uid"/>
                     <field name="url"/>
-                    <field name="type"/>
                     <field name="create_date"/>
                     <field name="name"/>
                     <templates>
@@ -184,7 +173,7 @@
                                                 <field name="create_date" widget="date"/>
                                             </time>
                                             <div class="oe_kanban_bottom_right">
-                                                <img t-att-src="kanban_image('res.users', 'image_128', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" class="oe_kanban_avatar"/>
+                                                <field name="create_uid" widget="many2one_avatar_user"/>
                                             </div>
                                         </div>
                                     </div>

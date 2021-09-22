@@ -21,16 +21,18 @@
                                 attrs="{'invisible': ['|' , ('state', 'not in', ['done']), ('stock_valuation_layer_ids', '=', [])]}"/>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Landed Cost"/>
+                            <label for="name" string="Landed Cost"/>
                             <h1>
-                                <field name="name" placeholder="Landed Cost Name"/>
+                                <field name="name"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="allowed_picking_ids" invisible="1"/>
-                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('id', 'in', allowed_picking_ids)]"/>
+                                <field name="target_model" widget="radio" invisible="1"/>
+                                <field name="picking_ids" widget="many2many_tags" 
+                                    options="{'no_create_edit': True}" attrs="{'invisible': [('target_model', '!=', 'picking')]}"
+                                    domain="[('company_id', '=', company_id), ('move_lines.stock_valuation_layer_ids', '!=', False)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
@@ -50,6 +52,7 @@
                                                     domain="[('landed_cost_ok', '=', True)]"
                                                     context="{'default_landed_cost_ok': True}"/>
                                                 <field name="price_unit"/>
+                                                <field name="currency_id" invisible="1"/>
                                             </group>
                                             <group>
                                                 <field name="split_method"/>
@@ -67,10 +70,12 @@
                                         <field name="account_id" options="{'no_create': True}"/>
                                         <field name="split_method"/>
                                         <field name="price_unit"/>
+                                        <field name="currency_id" invisible="1"/>
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="amount_total" widget="monetary"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount_total"/>
                                     <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="oe_right btn-secondary" states='draft'/>
                                 </group>
                             </page>
@@ -83,6 +88,7 @@
                                                 <field name="quantity"/>
                                             </group>
                                             <group>
+                                                <field name="currency_id" invisible="1"/>
                                                 <field name="former_cost"/>
                                                 <field name="additional_landed_cost"/>
                                             </group>
@@ -95,8 +101,8 @@
                                         <field name="volume" readonly="1" optional="hide"/>
                                         <field name="quantity" readonly="1"/>
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="former_cost" readonly="1" widget="monetary"/>
-                                        <field name="final_cost" readonly="1" widget="monetary"/>
+                                        <field name="former_cost" readonly="1"/>
+                                        <field name="final_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
                                     </tree>
                                 </field>
@@ -104,9 +110,9 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -116,11 +122,11 @@
             <field name="name">stock.landed.cost.tree</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <tree string="Landed Costs">
-                    <field name="name"/>
+                <tree string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                    <field name="name" decoration-bf="1"/>
                     <field name="date"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
@@ -191,12 +197,12 @@
                     <filter string="Date" name="date" date="date"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                         <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>

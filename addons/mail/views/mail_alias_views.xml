@@ -27,6 +27,8 @@
                             <field name="alias_parent_model_id"/>
                             <field name="alias_parent_thread_id"/>
                         </group>
+                        <label for="alias_bounced_content" attrs="{'invisible':[('alias_contact', '=', 'everyone')]}"/>
+                        <field name="alias_bounced_content" attrs="{'invisible':[('alias_contact', '=', 'everyone')]}"/>
                     </sheet>
                 </form>
             </field>
@@ -76,12 +78,6 @@
                 }
             </field>
         </record>
-
-        <menuitem id="mail_alias_menu"
-                  parent="base.menu_email"
-                  action="action_view_mail_alias"
-                  sequence="11"
-                  groups="base.group_no_one"/>
 
     </data>
 </odoo>

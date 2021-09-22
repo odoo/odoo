@@ -1,7 +1,6 @@
-odoo.define('im_livechat.ImLivechatChannelFormController', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const FormController = require('web.FormController');
+import FormController from 'web.FormController';
 
 const ImLivechatChannelFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
@@ -22,7 +21,7 @@ const ImLivechatChannelFormController = FormController.extend({
             this.$(`[name="${name}"] .o_field_color`).css('background-color', colorValues[name]);
         }
         const result = await this.model.notifyChanges(this.handle, colorValues);
-        this.renderer.updateState(this.model.get(this.handle), { fieldNames: result });
+        this._updateRendererState(this.model.get(this.handle), { fieldNames: result });
     },
 
     //--------------------------------------------------------------------------
@@ -49,6 +48,4 @@ const ImLivechatChannelFormController = FormController.extend({
     },
 });
 
-return ImLivechatChannelFormController;
-
-});
+export default ImLivechatChannelFormController;

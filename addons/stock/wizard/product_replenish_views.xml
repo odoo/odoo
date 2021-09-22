@@ -29,7 +29,6 @@
                     <field name="warehouse_id"
                         groups="stock.group_stock_multi_warehouses"/>
                     <field name="route_ids"
-                        groups="stock.group_adv_location"
                         widget="many2many_tags"/>
                     <field name="company_id" invisible="1"/>
                 </group>
@@ -37,10 +36,11 @@
                     <button name="launch_replenishment"
                         string="Confirm"
                         type="object"
+                        data-hotkey="q"
                         class="btn-primary"/>
                     <button string="Discard"
                         class="btn-secondary"
-                        special="cancel" />
+                        special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

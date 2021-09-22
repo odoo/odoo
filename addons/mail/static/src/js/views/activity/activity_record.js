@@ -1,7 +1,6 @@
-odoo.define('mail.ActivityRecord', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var KanbanRecord = require('web.KanbanRecord');
+import KanbanRecord from 'web.KanbanRecord';
 
 var ActivityRecord = KanbanRecord.extend({
     /**
@@ -58,5 +57,5 @@ var ActivityRecord = KanbanRecord.extend({
         };
     },
 });
-return ActivityRecord;
-});
+
+export default ActivityRecord;

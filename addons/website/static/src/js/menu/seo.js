@@ -9,6 +9,9 @@ var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
+const { session } = require('@web/session');
+
+const { registry } = require("@web/core/registry");
 
 var _t = core._t;
 
@@ -267,11 +270,12 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         };
     },
     images: function () {
-        return $('#wrap img').map(function () {
-            var $img = $(this);
-            return  {
-                src: $img.attr('src'),
-                alt: $img.attr('alt'),
+        return $('#wrap img').filter(function () {
+            return this.naturalHeight >= 200 && this.naturalWidth >= 200;
+        }).map(function () {
+            return {
+                src: this.getAttribute('src'),
+                alt: this.getAttribute('alt'),
             };
         });
     },
@@ -317,6 +321,7 @@ var MetaTitleDescription = Widget.extend({
     xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     events: {
         'input input[name=website_meta_title]': '_titleChanged',
+        'input input[name=website_seo_name]': '_seoNameChanged',
         'input textarea[name=website_meta_description]': '_descriptionOnInput',
         'change textarea[name=website_meta_description]': '_descriptionOnChange',
     },
@@ -331,7 +336,11 @@ var MetaTitleDescription = Widget.extend({
         this.htmlPage = options.htmlPage;
         this.canEditTitle = !!options.canEditTitle;
         this.canEditDescription = !!options.canEditDescription;
+        this.canEditUrl = !!options.canEditUrl;
         this.isIndexed = !!options.isIndexed;
+        this.seoName = options.seoName;
+        this.seoNameDefault = options.seoNameDefault;
+        this.seoNameHelp = options.seoNameHelp;
         this.previewDescription = options.previewDescription;
         this._super(parent, options);
     },
@@ -340,6 +349,9 @@ var MetaTitleDescription = Widget.extend({
      */
     start: function () {
         this.$title = this.$('input[name=website_meta_title]');
+        this.$seoName = this.$('input[name=website_seo_name]');
+        this.$seoNamePre = this.$('span.seo_name_pre');
+        this.$seoNamePost = this.$('span.seo_name_post');
         this.$description = this.$('textarea[name=website_meta_description]');
         this.$warning = this.$('div#website_meta_description_warning');
         this.$preview = this.$('.js_seo_preview');
@@ -357,6 +369,15 @@ var MetaTitleDescription = Widget.extend({
             this.$description.val(this.htmlPage.description());
         }
 
+        if (this.canEditUrl) {
+            this.previousSeoName = this.seoName;
+            this.$seoName.val(this.seoName);
+            this.$seoName.attr('placeholder', this.seoNameDefault);
+            // make slug editable with input group for static text
+            const splitsUrl = window.location.pathname.split(this.previousSeoName || this.seoNameDefault);
+            this.$seoNamePre.text(splitsUrl[0]);
+            this.$seoNamePost.text(splitsUrl.slice(-1)[0]);  // at least the -id theorically
+        }
         this._descriptionOnChange();
     },
     /**
@@ -364,6 +385,17 @@ var MetaTitleDescription = Widget.extend({
      */
     getTitle: function () {
         return this.$title.val().trim() || this.htmlPage.defaultTitle;
+    },
+    /**
+     * Get the potential new url with custom seoName as slug.
+       I can differ after save if slug JS != slug Python, but it provide an idea for the preview
+     */
+    getUrl: function () {
+        const path = window.location.pathname.replace(
+            this.previousSeoName || this.seoNameDefault,
+            (this.$seoName.length && this.$seoName.val() ? this.$seoName.val().trim() : this.$seoName.attr('placeholder'))
+        );
+        return window.location.origin + path
     },
     /**
      * Get the current description
@@ -384,6 +416,19 @@ var MetaTitleDescription = Widget.extend({
         var self = this;
         self._renderPreview();
         self.trigger('title-changed');
+    },
+    /**
+     * @private
+     */
+    _seoNameChanged: function () {
+        var self = this;
+        // don't use _, because we need to keep trailing whitespace during edition
+        const slugified = this.$seoName.val().toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '-')      // Remove all non-word chars
+            .replace(/\-\-+/g, '-');        // Replace multiple - with single -
+        this.$seoName.val(slugified);
+        self._renderPreview();
     },
     /**
      * @private
@@ -425,7 +470,7 @@ var MetaTitleDescription = Widget.extend({
             preview = new Preview(this, {
                 title: this.getTitle(),
                 description: this.getDescription(),
-                url: this.htmlPage.url(),
+                url: this.getUrl(),
             });
         } else {
             preview = new Preview(this, {
@@ -538,10 +583,13 @@ var MetaImageSelector = Widget.extend({
         this.metaTitle = data.title || '';
         this.activeMetaImg = data.metaImg;
         this.serverUrl = data.htmlpage.url();
-        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/logo', odoo.session_info.website_id));
-        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/social_default_image', odoo.session_info.website_id));
+        const imgField = data.hasSocialDefaultImage ? 'social_default_image' : 'logo';
+        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/%s', session.website_id, imgField));
         this.images = _.uniq(data.pageImages);
-        this.customImgUrl = _.contains(data.pageImages, data.metaImg) ? false : data.metaImg;
+        this.customImgUrl = _.contains(
+            data.pageImages.map((img)=>  new URL(img, window.location.origin).pathname),
+            new URL(data.metaImg, window.location.origin).pathname)
+            ? false : data.metaImg;
         this.previewDescription = data.previewDescription;
         this._setDescription(this.previewDescription);
         this._super(parent);
@@ -628,6 +676,7 @@ var SeoConfigurator = Dialog.extend({
     canEditDescription: false,
     canEditKeywords: false,
     canEditLanguage: false,
+    canEditUrl: false,
 
     init: function (parent, options) {
         options = options || {};
@@ -652,9 +701,10 @@ var SeoConfigurator = Dialog.extend({
             // Image selector
             self.metaImageSelector = new MetaImageSelector(self, {
                 htmlpage: self.htmlPage,
+                hasSocialDefaultImage: self.hasSocialDefaultImage,
                 title: self.htmlPage.getOgMeta().metaTitle,
-                metaImg : self.metaImg || self.htmlPage.getOgMeta().ogImageUrl,
-                pageImages : _.pluck(self.htmlPage.images().get(), 'src'),
+                metaImg: self.metaImg || self.htmlPage.getOgMeta().ogImageUrl,
+                pageImages: _.pluck(self.htmlPage.images().get(), 'src'),
                 previewDescription: _t('The description will be generated by social media based on page content unless you specify one.'),
             });
             self.metaImageSelector.appendTo(self.$('.js_seo_image'));
@@ -664,8 +714,12 @@ var SeoConfigurator = Dialog.extend({
                 htmlPage: self.htmlPage,
                 canEditTitle: self.canEditTitle,
                 canEditDescription: self.canEditDescription,
+                canEditUrl: self.canEditUrl,
                 isIndexed: self.isIndexed,
                 previewDescription: _t('The description will be generated by search engines based on page content unless you specify one.'),
+                seoNameHelp: _t('This value will be escaped to be compliant with all major browsers and used in url. Keep it empty to use the default name of the record.'),
+                seoName: self.seoName, // 'my-custom-display-name' or ''
+                seoNameDefault: self.seoNameDefault, // 'display-name'
             });
             self.metaTitleDescription.on('title-changed', self, self.titleChanged);
             self.metaTitleDescription.on('description-changed', self, self.descriptionChanged);
@@ -701,6 +755,10 @@ var SeoConfigurator = Dialog.extend({
             self.canEditDescription = data && ('website_meta_description' in data);
             self.canEditKeywords = data && ('website_meta_keywords' in data);
             self.metaImg = data.website_meta_og_img;
+            self.hasSocialDefaultImage = data.has_social_default_image;
+            self.canEditUrl = data && ('seo_name' in data);
+            self.seoName = self.canEditUrl && data.seo_name;
+            self.seoNameDefault = self.canEditUrl && data.seo_name_default;
             if (!self.canEditTitle && !self.canEditDescription && !self.canEditKeywords) {
                 // disable the button to prevent an error if the current page doesn't use the mixin
                 // we make the check here instead of on the view because we don't need to check
@@ -721,6 +779,12 @@ var SeoConfigurator = Dialog.extend({
         }
         if (this.canEditKeywords) {
             data.website_meta_keywords = this.metaKeywords.keywordList.keywords().join(', ');
+        }
+        if (this.canEditUrl) {
+            if (this.metaTitleDescription.$seoName.val() != this.metaTitleDescription.previousSeoName) {
+                data.seo_name = this.metaTitleDescription.$seoName.val();
+                self.reloadOnSave = true;  // will force a refresh on old url and redirect to new slug
+            }
         }
         data.website_meta_og_img = this.metaImageSelector.activeMetaImg;
         this.saveMetaData(data).then(function () {
@@ -761,24 +825,16 @@ var SeoConfigurator = Dialog.extend({
                 // return Promise.reject(new Error("No main_object was found."));
                 resolve(null);
             } else {
-                var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'
-                                ,'website_meta_og_img'];
-                if (obj.model === 'website.page') {
-                    fields.push('website_indexed');
-                    fields.push('website_id');
-                }
                 rpc.query({
-                    model: obj.model,
-                    method: 'read',
-                    args: [[obj.id], fields],
+                    route: "/website/get_seo_data",
+                    params: {
+                        'res_id': obj.id,
+                        'res_model': obj.model,
+                    },
                 }).then(function (data) {
-                    if (data.length) {
-                        var meta = data[0];
-                        meta.model = obj.model;
-                        resolve(meta);
-                    } else {
-                        resolve(null);
-                    }
+                    var meta = data;
+                    meta.model = obj.model;
+                    resolve(meta);
                 }).guardedCatch(reject);
             }
         });
@@ -840,7 +896,10 @@ var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(SeoMenu, '#promote-menu');
+registry.category("website_navbar_widgets").add("SeoMenu", {
+    Widget: SeoMenu,
+    selector: '#promote-menu',
+});
 
 return {
     SeoConfigurator: SeoConfigurator,

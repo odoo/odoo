@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="mailing_trace_report_view_pivot" model="ir.ui.view">
-        <field name="name">mailing.trace.report.view.pivot</field>
+    <record id="mailing_trace_report_sms_view_tree" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.tree</field>
         <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_tree"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <pivot string="Mass Mailing Statistics" disable_linking="True">
-                <field name="campaign" type="row"/>
-                <field name="sent" type="measure"/>
-                <field name="delivered" type="measure"/>
-                <field name="opened" type="measure"/>
-                <field name="bounced" type="measure"/>
-                <field name="replied" type="measure"/>
-                <field name="clicked" type="measure"/>
-            </pivot>
+            <xpath expr="//field[@name='opened']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
-    <record id="mailing_trace_report_view_graph" model="ir.ui.view">
-        <field name="name">mailing.trace.report.view.graph</field>
+    <record id="mailing_trace_report_sms_view_pivot" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.pivot</field>
         <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_pivot"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">pivot</field>
         <field name="arch" type="xml">
-            <graph string="Mass Mailing Statistics">
-                <field name="campaign"/>
-                <field name="sent" type="measure"/>
-            </graph>
+            <xpath expr="//field[@name='opened']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
-    <record id="mailing_trace_report_view_search" model="ir.ui.view">
-        <field name="name">mailing.trace.report.view.search</field>
+    <record id="mailing_trace_report_sms_view_graph" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.graph</field>
         <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_graph"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">graph</field>
         <field name="arch" type="xml">
-            <search string="Mass Mailing Statistics">
-                <group expand="0" string="Extended Filters...">
-                    <field name="scheduled_date"/>
-                </group>
-                <group expand="1" string="Group By...">
-                    <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
-                        domain="[]" context="{'group_by':'campaign'}"/>
-                    <filter string="State" domain="[]" name="state"
-                        context="{'group_by':'state'}"/>
-                    <filter string="Sent By" domain="[]" name="sent_by"
-                        context="{'group_by':'email_from'}"/>
-                    <separator/>
-                    <filter string="Scheduled Period" name="scheduled_date"
-                        domain="[]" context="{'group_by':'scheduled_date'}"/>
-                </group>
-            </search>
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -54,14 +52,36 @@
     <record id="mailing_trace_report_action_sms" model="ir.actions.act_window">
         <field name="name">SMS Marketing Analysis</field>
         <field name="res_model">mailing.trace.report</field>
-        <field name="view_mode">graph,pivot</field>
+        <field name="view_mode">graph,pivot,tree</field>
         <field name="domain">[('mailing_type', '=', 'sms')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                SMS Marketing Statistics allows you to check different mailing related information like number of sent SMS or bounced SMS.
-                You can sort out your analysis by different groups to get accurate grained analysis.
+                No data yet!
+            </p><p>
+                Come back once some SMS Mailings are sent to check out aggregated results.
             </p>
         </field>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence">0</field>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_graph"/>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_pivot"/>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_tree"/>
     </record>
 
     <!-- SMS Marketing / Reporting -->

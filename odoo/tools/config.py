@@ -1,11 +1,6 @@
-#odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-
+import configparser as ConfigParser
 import errno
 import logging
 import optparse
@@ -13,8 +8,9 @@ import glob
 import os
 import sys
 import tempfile
+import warnings
 import odoo
-from os.path import expandvars, expanduser, abspath, realpath
+from os.path import expandvars, expanduser, abspath, realpath, normcase
 from .. import release, conf, loglevels
 from . import appdirs
 
@@ -166,18 +162,27 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="""Comma-separated list of spec to filter which tests to execute. Enable unit tests if set.
-                         A filter spec has the format: [-][tag][/module][:class][.method]
-                         The '-' specifies if we want to include or exclude tests matching this spec.
-                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
-                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
-                         The module, class, and method will respectively match the module name, test class name and test method name.
-                         examples: :TestClass.test_func,/test_module,external
-                         """)
+                         help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
+                         "A filter spec has the format: [-][tag][/module][:class][.method] "
+                         "The '-' specifies if we want to include or exclude tests matching this spec. "
+                         "The tag will match tags added on a class with a @tagged decorator "
+                         "(all Test classes have 'standard' and 'at_install' tags "
+                         "until explicitly removed, see the decorator documentation). "
+                         "'*' will match all tags. "
+                         "If tag is omitted on include mode, its value is 'standard'. "
+                         "If tag is omitted on exclude mode, its value is '*'. "
+                         "The module, class, and method will respectively match the module name, test class name and test method name. "
+                         "Example: --test-tags :TestClass.test_func,/test_module,external "
+
+                         "Filtering and executing the tests happens twice: right "
+                         "after each module installation/update and at the end "
+                         "of the modules loading. At each stage tests are filtered "
+                         "by --test-tags specs and additionally by dynamic specs "
+                         "'at_install' and 'post_install' correspondingly.")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
-                         help="Screencasts will go in DIR/{db_name}/screencasts. '1' can be used to force the same dir as for screenshots.")
+                         help="Screencasts will go in DIR/{db_name}/screencasts.")
         temp_tests_dir = os.path.join(tempfile.gettempdir(), 'odoo_tests')
         group.add_option("--screenshots", dest="screenshots", action="store", my_default=temp_tests_dir,
                          metavar='DIR',
@@ -198,7 +203,7 @@ class configmanager(object):
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
-            'info', 'debug_rpc', 'warn', 'test', 'critical',
+            'info', 'debug_rpc', 'warn', 'test', 'critical', 'runbot',
             'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
@@ -211,6 +216,8 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "SMTP Configuration")
         group.add_option('--email-from', dest='email_from', my_default=False,
                          help='specify the SMTP email address for sending email')
+        group.add_option('--from-filter', dest='from_filter', my_default=False,
+                         help='specify for which email address the SMTP configuration can be used')
         group.add_option('--smtp', dest='smtp_server', my_default='localhost',
                          help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
@@ -221,6 +228,10 @@ class configmanager(object):
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default=False,
                          help='specify the SMTP password for sending email')
+        group.add_option('--smtp-ssl-certificate-filename', dest='smtp_ssl_certificate_filename', my_default=False,
+                         help='specify the SSL certificate used for authentication')
+        group.add_option('--smtp-ssl-private-key-filename', dest='smtp_ssl_private_key_filename', my_default=False,
+                         help='specify the SSL private key used for authentication')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
@@ -244,7 +255,7 @@ class configmanager(object):
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
-        group = optparse.OptionGroup(parser, "Internationalisation options. ",
+        group = optparse.OptionGroup(parser, "Internationalisation options",
             "Use these options to translate Odoo to another language. "
             "See i18n section of the user manual. Option '-d' is mandatory. "
             "Option '-l' is mandatory in case of importation"
@@ -282,18 +293,20 @@ class configmanager(object):
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
-                              "osv_memory tables. The default is False, which means no count-based limit.",
+                              "osv_memory tables. By default there is no limit.",
                          type="int")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=1.0,
-                         help="Force a limit on the maximum age of records kept in the virtual "
-                              "osv_memory tables. This is a decimal value expressed in hours, "
-                              "and the default is 1 hour.",
+        group.add_option("--transient-age-limit", dest="transient_age_limit", my_default=1.0,
+                         help="Time limit (decimal value in hours) records created with a "
+                              "TransientModel (mostly wizard) are kept in the database. Default to 1 hour.",
+                         type="float")
+        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
+                         help="Deprecated alias to the transient-age-limit option",
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
-                         help="Use the unaccent function provided by the database when available.")
+                         help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
                          help="Absolute path to the GeoIP database file.")
         parser.add_option_group(group)
@@ -352,9 +365,11 @@ class configmanager(object):
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
-        self._parse_config(args)
+        opt = self._parse_config(args)
         odoo.netsvc.init_logger()
+        self._warn_deprecated_options()
         odoo.modules.module.initialize_sys_path()
+        return opt
 
     def _parse_config(self, args=None):
         if args is None:
@@ -384,6 +399,10 @@ class configmanager(object):
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
+
+        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
+            "the osv-memory-count-limit option cannot be used with the "
+            "transient-age-limit option, please only use the latter.")
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -424,7 +443,8 @@ class configmanager(object):
         keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
+                'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
@@ -434,7 +454,7 @@ class configmanager(object):
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
             # action=append requiring a real default, so we cannot use the my_default workaround)
-            if getattr(opt, arg):
+            if getattr(opt, arg, None) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
@@ -451,7 +471,7 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
         ]
@@ -510,10 +530,6 @@ class configmanager(object):
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
 
-        if self.options.get('language', False):
-            if len(self.options['language']) > 5:
-                raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
-
         self.options['test_enable'] = bool(self.options['test_tags'])
 
         if opt.save:
@@ -528,6 +544,15 @@ class configmanager(object):
         conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
+        return opt
+
+    def _warn_deprecated_options(self):
+        if self.options['osv_memory_age_limit']:
+            warnings.warn(
+                "The osv-memory-age-limit is a deprecated alias to "
+                "the transient-age-limit option, please use the latter.",
+                DeprecationWarning)
+            self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
@@ -546,7 +571,7 @@ class configmanager(object):
             path = path.strip()
             res = os.path.abspath(os.path.expanduser(path))
             if not os.path.isdir(res):
-                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
+                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, res))
             if not self._is_addons_path(res):
                 raise optparse.OptionValueError("option %s: the path %r is not a valid addons directory" % (opt, path))
             ad_paths.append(res)
@@ -712,7 +737,7 @@ class configmanager(object):
     def _normalize(self, path):
         if not path:
             return ''
-        return realpath(abspath(expanduser(expandvars(path.strip()))))
+        return normcase(realpath(abspath(expanduser(expandvars(path.strip())))))
 
 
 config = configmanager()

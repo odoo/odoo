@@ -2,11 +2,25 @@ odoo.define('sale_product_matrix.sale_matrix_tour', function (require) {
 "use strict";
 
 var tour = require('web_tour.tour');
+let EXPECTED = [
+    "Matrix", "PAV11", "PAV12 + $ 50.00",
+]
+for (let no of ['PAV41', 'PAV42']) {
+    for (let dyn of ['PAV31', 'PAV32']) {
+        for (let al of ['PAV21', 'PAV22']) {
+            let row_label = [al, dyn, no].join(' • ');
+            if (dyn === 'PAV31') {
+                row_label += ' - $ 25.00';
+            }
+            EXPECTED.push(row_label, "", "");
+        }
+    }
+}
 
 tour.register('sale_matrix_tour', {
     url: "/web",
     test: true,
-}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+}, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: ".o_list_button_add",
@@ -36,8 +50,53 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Confirm")',
     run: 'click'
 }, {
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
+    run: 'click'
+}, {
+    trigger: '.o_edit_product_configuration',
+    run: 'click' // edit the matrix
+}, {
+    trigger: '.o_product_variant_matrix',
+    run: function () {
+        // whitespace normalization: removes newlines around text from markup
+        // content, then collapse & convert internal whitespace to regular
+        // spaces.
+        const texts = $('.o_matrix_input_table').find('th, td')
+            .map((_, el) => el.innerText.trim().replace(/\s+/g, ' '))
+            .get();
+
+        for (let i=0; i<EXPECTED.length; ++i) {
+            if (EXPECTED[i] !== texts[i]) {
+                throw new Error(`${EXPECTED[i]} != ${texts[i]}`)
+            }
+        }
+        // set all qties to 3
+        $('.o_matrix_input').val(3);
+    }
+}, {
+    trigger: 'span:contains("Confirm")',
+    run: 'click' // apply the matrix
+}, {
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
+    run: 'click'
+}, {
+    trigger: '.o_edit_product_configuration',
+    run: 'click' // edit the matrix
+}, {
+    trigger: '.o_product_variant_matrix',
+    run: function () {
+        // reset all qties to 1
+        $('.o_matrix_input').val(1);
+    }
+}, {
+    trigger: 'span:contains("Confirm")',
+    run: 'click' // apply the matrix
+}, {
     trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
-    extra_trigger: ".o_sale_order",
+    // wait for qty to be 1
+    extra_trigger: '.o_sale_order .o_field_cell.o_data_cell.o_list_number:contains("1.00")',
     run: 'text Agrolait'
 }, {
     trigger: ".ui-menu-item > a",
@@ -53,6 +112,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // Edit Sales Order.
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
     run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',
@@ -68,7 +128,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.000")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 }, {
     trigger: '.o_form_button_edit:contains("Edit")',
@@ -76,7 +136,8 @@ tour.register('sale_matrix_tour', {
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
-    trigger: "a:contains('Add a product')"
+    trigger: "a:contains('Add a product')",
+    extra_trigger: '.o_form_editable',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: function () {
@@ -101,7 +162,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
-    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.200")',
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 ]);

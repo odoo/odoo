@@ -8,6 +8,7 @@ from . import ir_model
 from . import ir_sequence
 from . import ir_ui_menu
 from . import ir_ui_view
+from . import ir_asset
 from . import ir_actions
 from . import ir_actions_report
 from . import ir_attachment
@@ -32,7 +33,9 @@ from . import ir_demo_failure
 from . import report_layout
 from . import report_paperformat
 
+from . import ir_profile
 from . import image_mixin
+from . import avatar_mixin
 
 from . import res_country
 from . import res_lang

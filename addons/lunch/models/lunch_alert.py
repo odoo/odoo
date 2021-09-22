@@ -1,16 +1,20 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pytz
+import logging
 
 from odoo import api, fields, models
 from odoo.osv import expression
 
 from .lunch_supplier import float_to_time
 from datetime import datetime, timedelta
+from textwrap import dedent
 
 from odoo.addons.base.models.res_partner import _tz_get
 
-WEEKDAY_TO_NAME = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+_logger = logging.getLogger(__name__)
+WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+CRON_DEPENDS = {'name', 'active', 'mode', 'until', 'notification_time', 'notification_moment', 'tz'}
+
 
 class LunchAlert(models.Model):
     """ Alerts to display during a lunch order. An alert can be specific to a
@@ -35,15 +39,16 @@ class LunchAlert(models.Model):
         ('am', 'AM'),
         ('pm', 'PM')], default='am', required=True)
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
+    cron_id = fields.Many2one('ir.cron', ondelete='cascade', required=True, readonly=True)
 
     until = fields.Date('Show Until')
-    recurrency_monday = fields.Boolean('Monday', default=True)
-    recurrency_tuesday = fields.Boolean('Tuesday', default=True)
-    recurrency_wednesday = fields.Boolean('Wednesday', default=True)
-    recurrency_thursday = fields.Boolean('Thursday', default=True)
-    recurrency_friday = fields.Boolean('Friday', default=True)
-    recurrency_saturday = fields.Boolean('Saturday', default=True)
-    recurrency_sunday = fields.Boolean('Sunday', default=True)
+    mon = fields.Boolean(default=True)
+    tue = fields.Boolean(default=True)
+    wed = fields.Boolean(default=True)
+    thu = fields.Boolean(default=True)
+    fri = fields.Boolean(default=True)
+    sat = fields.Boolean(default=True)
+    sun = fields.Boolean(default=True)
 
     available_today = fields.Boolean('Is Displayed Today',
                                      compute='_compute_available_today', search='_search_available_today')
@@ -58,12 +63,10 @@ class LunchAlert(models.Model):
             'Notification time must be between 0 and 12')
     ]
 
-    @api.depends('recurrency_monday', 'recurrency_tuesday', 'recurrency_wednesday',
-                 'recurrency_thursday', 'recurrency_friday', 'recurrency_saturday',
-                 'recurrency_sunday')
+    @api.depends('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):
         today = fields.Date.context_today(self)
-        fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[today.weekday()])
+        fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
         for alert in self:
             alert.available_today = alert.until > today if alert.until else True and alert[fieldname]
@@ -74,7 +77,7 @@ class LunchAlert(models.Model):
 
         searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
         today = fields.Date.context_today(self)
-        fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[today.weekday()])
+        fieldname = WEEKDAY_TO_NAME[today.weekday()]
 
         return expression.AND([
             [(fieldname, operator, value)],
@@ -84,36 +87,99 @@ class LunchAlert(models.Model):
             ])
         ])
 
+    def _sync_cron(self):
+        """ Synchronise the related cron fields to reflect this alert """
+        for alert in self:
+            alert = alert.with_context(tz=alert.tz)
+
+            cron_required = (
+                alert.active
+                and alert.mode == 'chat'
+                and (not alert.until or fields.Date.context_today(alert) <= alert.until)
+            )
+
+            sendat_tz = pytz.timezone(alert.tz).localize(datetime.combine(
+                fields.Date.context_today(alert, fields.Datetime.now()),
+                float_to_time(alert.notification_time, alert.notification_moment)))
+            cron = alert.cron_id.sudo()
+            lc = cron.lastcall
+            if ((
+                lc and sendat_tz.date() <= fields.Datetime.context_timestamp(alert, lc).date()
+            ) or (
+                not lc and sendat_tz <= fields.Datetime.context_timestamp(alert, fields.Datetime.now())
+            )):
+                sendat_tz += timedelta(days=1)
+            sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
+
+            cron.name = f"Lunch: alert chat notification ({alert.name})"
+            cron.active = cron_required
+            cron.nextcall = sendat_utc
+            cron.code = dedent(f"""\
+                # This cron is dynamically controlled by {self._description}.
+                # Do NOT modify this cron, modify the related record instead.
+                env['{self._name}'].browse([{alert.id}])._notify_chat()""")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        crons = self.env['ir.cron'].sudo().create([
+            {
+                'user_id': self.env.ref('base.user_root').id,
+                'active': False,
+                'interval_type': 'days',
+                'interval_number': 1,
+                'numbercall': -1,
+                'doall': False,
+                'name': "Lunch: alert chat notification",
+                'model_id': self.env['ir.model']._get_id(self._name),
+                'state': 'code',
+                'code': "",
+            }
+            for _ in range(len(vals_list))
+        ])
+        for vals, cron in zip(vals_list, crons):
+            vals['cron_id'] = cron.id
+
+        alerts = super().create(vals_list)
+        alerts._sync_cron()
+        return alerts
+
+    def write(self, values):
+        super().write(values)
+        if not CRON_DEPENDS.isdisjoint(values):
+            self._sync_cron()
+
+    def unlink(self):
+        crons = self.cron_id.sudo()
+        super().unlink()
+        crons.unlink()
+
     def _notify_chat(self):
-        records = self.search([('mode', '=', 'chat'), ('active', '=', True)])
+        # Called daily by cron
+        self.ensure_one()
 
-        today = fields.Date.today()
-        now = fields.Datetime.now()
+        if not self.available_today:
+            _logger.warning("cancelled, not available today")
+            if self.cron_id and self.until and fields.Date.context_today(self) > self.until:
+                self.cron_id.unlink()
+                self.cron_id = False
+            return
 
-        for alert in records:
-            notification_to = now.astimezone(pytz.timezone(alert.tz)).replace(second=0, microsecond=0, tzinfo=None)
-            notification_from = notification_to - timedelta(minutes=5)
-            send_at = datetime.combine(fields.Date.today(),
-                float_to_time(alert.notification_time, alert.notification_moment))
+        if not self.active or self.mode != 'chat':
+            raise ValueError("Cannot send a chat notification in the current state")
 
-            if alert.available_today and send_at > notification_from and send_at <= notification_to:
-                order_domain = [('state', '!=', 'cancelled')]
+        order_domain = [('state', '!=', 'cancelled')]
 
-                if alert.location_ids.ids:
-                    order_domain = expression.AND([order_domain, [('user_id.last_lunch_location_id', 'in', alert.location_ids.ids)]])
+        if self.location_ids.ids:
+            order_domain = expression.AND([order_domain, [('user_id.last_lunch_location_id', 'in', self.location_ids.ids)]])
 
-                if alert.recipients != 'everyone':
-                    weeks = 1
+        if self.recipients != 'everyone':
+            weeksago = fields.Date.today() - timedelta(weeks=(
+                1 if self.recipients == 'last_week' else
+                4 if self.recipients == 'last_month' else
+                52  # if self.recipients == 'last_year'
+            ))
+            order_domain = expression.AND([order_domain, [('date', '>=', weeksago)]])
 
-                    if alert.recipients == 'last_month':
-                        weeks = 4
-                    else:  # last_year
-                        weeks = 52
-
-                    delta = timedelta(weeks=weeks)
-                    order_domain = expression.AND([order_domain, [('date', '>=', today - delta)]])
-
-                orders = self.env['lunch.order'].search(order_domain).mapped('user_id')
-                partner_ids = [user.partner_id.id for user in orders]
-                if partner_ids:
-                    self.env['mail.thread'].message_notify(body=alert.message, partner_ids=partner_ids)
+        partners = self.env['lunch.order'].search(order_domain).user_id.partner_id
+        if partners:
+            self.env['mail.thread'].message_notify(body=self.message, partner_ids=partners.ids)

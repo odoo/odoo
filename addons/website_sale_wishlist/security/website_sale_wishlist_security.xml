@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="product_wishlist_rule" model="ir.rule">
             <field name="name">See own Wishlist</field>
@@ -16,5 +15,4 @@
             <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
         </record>
 
-    </data>
 </odoo>

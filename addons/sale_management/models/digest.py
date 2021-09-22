@@ -23,7 +23,7 @@ class Digest(models.Model):
                 ('company_id', '=', company.id)], ['price_total'], ['price_total'])
             record.kpi_all_sale_total_value = sum([channel_sale['price_total'] for channel_sale in all_channels_sales])
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_all_sale_total'] = 'sale.report_all_channels_sales_action&menu_id=%s' % self.env.ref('sale.sale_menu_root').id
         return res

@@ -19,6 +19,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
     </record>
@@ -29,8 +30,8 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+            <field name="default_code" position="after">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
             </field>
         </field>
     </record>
@@ -42,8 +43,30 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
         <field name="arch" type="xml">
-            <field name="sequence" position="replace">
+            <xpath expr="/tree" position="attributes">
+              <attribute name="default_order">website_sequence</attribute>
+            </xpath>
+            <field name="priority" position="before">
                 <field name="website_sequence" widget="handle"/>
+            </field>
+            <field name="website_id" position="after">
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_view_kanban_website_sale">
+        <field name="name">product.template.view.kanban.website_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban" position="attributes">
+              <attribute name="default_order">website_sequence</attribute>
+            </xpath>
+            <field name="id" position="after">
+                <field name="website_sequence"/>
             </field>
         </field>
     </record>
@@ -51,10 +74,10 @@
     <record id="product_template_action_website" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="view_id" ref="product_template_view_tree_website_sale"/>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_id"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1}</field>
+        <field name="context">{'search_default_published': 1, 'tree_view_ref':'website_sale.product_template_view_tree_website_sale', 'kanban_view_ref':'website_sale.product_template_view_kanban_website_sale'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -64,13 +87,39 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
-        <field name="name">product.template.invoice.policy</field>
+    <record model="ir.ui.view" id="product_template_only_website_form_view">
+        <field name="name">product.template.product.only.website.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='invoicing']" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
+                    <field name="base_unit_id" options="{'no_open': True}" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
+                    <span attrs="{'invisible': ['|', ('base_unit_price','=', 0), ('product_variant_count', '>', 1)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                    <span class='text-muted' attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}">Based on variants</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_product_normal_website_form_view">
+        <field name="name">product.product.normal.view.website</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count"/>
+                    <field name="base_unit_id" options="{'no_open': True}"/>
+                    <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                </div>
             </xpath>
         </field>
     </record>
@@ -84,23 +133,25 @@
             <div name="button_box" position="inside">
                 <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
             </div>
-            <xpath expr="//page[@name='sales']" position="after">
-                <page name="shop" string="eCommerce" attrs="{'invisible': [('sale_ok','=',False)]}">
-                    <group name="shop">
-                        <group string="Shop">
-                            <field name="website_url" invisible="1"/>
-                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                            <field name="website_sequence" groups="base.group_no_one"/>
-                            <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                            <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
-                            <field name="accessory_product_ids" widget="many2many_tags"/>
-                            <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                        </group>
-                    </group>
-                    <group name="product_template_images" string="Extra Product Media">
-                        <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
-                    </group>
-                </page>
+            <xpath expr="//group[@name='upsell']" position="inside">
+                <field name="accessory_product_ids" widget="many2many_tags" attrs="{'invisible': [('sale_ok','=',False)]}"
+                       placeholder="Suggested accessories in the eCommerce cart"/>
+                <field name="alternative_product_ids" widget="many2many_tags"
+                       domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                       attrs="{'invisible': [('sale_ok','=',False)]}"
+                       placeholder="Displayed in bottom of product pages"/>
+            </xpath>
+            <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
+                <group string="eCommerce Shop" name="shop" attrs="{'invisible': [('sale_ok','=',False)]}">
+                    <field name="website_url" invisible="1"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                    <field name="website_sequence" groups="base.group_no_one"/>
+                    <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                    <field name="website_ribbon_id" groups="base.group_no_one"/>
+                </group>
+                <group name="product_template_images" string="Extra Product Media" attrs="{'invisible': [('sale_ok','=',False)]}">
+                    <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -110,11 +161,43 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
+            <field name="standard_price" position="after">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">
+                    <field name="base_unit_count"/>
+                    <field name="base_unit_id" options="{'no_open': True}"/>
+                    <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
+                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                    </span>
+                </div>
+            </field>
             <sheet position="inside">
                 <group name="product_variant_images" string="Extra Variant Media">
-                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                 </group>
             </sheet>
+        </field>
+    </record>
+
+    <!-- Product ribbon -->
+    <record id="product_ribbon_form_view" model="ir.ui.view">
+        <field name="name">product.ribbon form view</field>
+        <field name="model">product.ribbon</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="html" widget="char"/>
+                            <field name="text_color"/>
+                        </group>
+                        <group>
+                            <field name="html_class"/>
+                            <field name="bg_color"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -240,7 +323,7 @@
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
                             <div class="o_squared_image">
-                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.value)" t-att-alt="record.name.value"/>
+                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.raw_value)" t-att-alt="record.name.value"/>
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">

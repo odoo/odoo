@@ -1,15 +1,15 @@
-odoo.define('mail.ActivityRenderer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractRendererOwl = require('web.AbstractRendererOwl');
-const ActivityCell = require('mail.ActivityCell');
-const ActivityRecord = require('mail.ActivityRecord');
-const { ComponentAdapter } = require('web.OwlCompatibility');
-const core = require('web.core');
-const KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
-const QWeb = require('web.QWeb');
-const session = require('web.session');
-const utils = require('web.utils');
+import ActivityCell from '@mail/js/views/activity/activity_cell';
+import ActivityRecord from '@mail/js/views/activity/activity_record';
+
+import AbstractRendererOwl from 'web.AbstractRendererOwl';
+import core  from 'web.core';
+import KanbanColumnProgressBar from 'web.KanbanColumnProgressBar';
+import { ComponentAdapter } from 'web.OwlCompatibility';
+import QWeb from 'web.QWeb';
+import session from 'web.session';
+import utils from 'web.utils';
 
 const _t = core._t;
 
@@ -20,12 +20,12 @@ const { useState } = owl.hooks;
  * TODO: Remove this adapter when ActivityRecord is a Component
  */
 class ActivityRecordAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         _.invoke(_.pluck(this.widget.subWidgets, '$el'), 'detach');
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const state = nextProps.widgetArgs[0];
         this.widget._setState(state);
     }
@@ -36,11 +36,11 @@ class ActivityRecordAdapter extends ComponentAdapter {
  * TODO: Remove this adapter when ActivityCell is a Component
  */
 class ActivityCellAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const record = nextProps.widgetArgs[1];
         this.widget._reset(record);
     }
@@ -51,14 +51,14 @@ class ActivityCellAdapter extends ComponentAdapter {
  * TODO: Remove this adapter when KanbanColumnProgressBar is a Component
  */
 class KanbanColumnProgressBarAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const options = nextProps.widgetArgs[0];
         const columnState = nextProps.widgetArgs[1];
-        
+
         const columnId = options.columnID;
         const nextActiveFilter = options.progressBarStates[columnId].activeFilter;
         this.widget.activeFilter = nextActiveFilter ? this.widget.activeFilter : false;
@@ -98,7 +98,7 @@ class ActivityRenderer extends AbstractRendererOwl {
 
     /**
      * Gets all activity resIds in the view.
-     * 
+     *
      * @returns filtered resIds first then the rest.
      */
     get activityResIds() {
@@ -187,7 +187,7 @@ class ActivityRenderer extends AbstractRendererOwl {
             this.activeFilter.activityTypeId = ev.detail.columnID;
             this.activeFilter.resIds = Object.entries(this.props.grouped_activities)
                 .filter(([, resIds]) => ev.detail.columnID in resIds &&
-                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter)
+                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter.value)
                 .map(([key]) => parseInt(key));
         } else {
             this.activeFilter.state = null;
@@ -204,6 +204,4 @@ ActivityRenderer.components = {
 };
 ActivityRenderer.template = 'mail.ActivityRenderer';
 
-return ActivityRenderer;
-
-});
+export default ActivityRenderer;

@@ -31,11 +31,16 @@ Dashboard / Reports for Warehouse Management includes:
         'data/product_data.xml',
         'views/product_views.xml',
         'views/stock_quant_views.xml',
+        'views/report_invoice.xml',
         'views/stock_valuation_layer_views.xml',
+        'wizard/stock_request_count.xml',
+        'wizard/stock_valuation_layer_revaluation_views.xml',
+        'report/report_stock_forecasted.xml',
     ],
     'test': [
     ],
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',
+    'license': 'LGPL-3',
 }

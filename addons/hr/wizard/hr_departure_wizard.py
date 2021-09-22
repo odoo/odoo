@@ -8,27 +8,20 @@ class HrDepartureWizard(models.TransientModel):
     _name = 'hr.departure.wizard'
     _description = 'Departure Wizard'
 
-    @api.model
-    def default_get(self, fields):
-        res = super(HrDepartureWizard, self).default_get(fields)
-        if (not fields or 'employee_id' in fields) and 'employee_id' not in res:
-            if self.env.context.get('active_id'):
-                res['employee_id'] = self.env.context['active_id']
-        return res
-
-    departure_reason = fields.Selection([
-        ('fired', 'Fired'),
-        ('resigned', 'Resigned'),
-        ('retired', 'Retired')
-    ], string="Departure Reason", default="fired")
-    departure_description = fields.Text(string="Additional Information")
+    departure_reason_id = fields.Many2one("hr.departure.reason", default=lambda self: self.env['hr.departure.reason'].search([], limit=1), required=True)
+    departure_description = fields.Html(string="Additional Information")
     departure_date = fields.Date(string="Departure Date", required=True, default=fields.Date.today)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', required=True,
+        default=lambda self: self.env.context.get('active_id', None),
+    )
     archive_private_address = fields.Boolean('Archive Private Address', default=True)
 
     def action_register_departure(self):
         employee = self.employee_id
-        employee.departure_reason = self.departure_reason
+        if self.env.context.get('toggle_active', False) and employee.active:
+            employee.with_context(no_wizard=True).toggle_active()
+        employee.departure_reason_id = self.departure_reason_id
         employee.departure_description = self.departure_description
         employee.departure_date = self.departure_date
 

@@ -42,7 +42,7 @@ EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = {  # Initial side on 1st row/col:
     8: [Image.ROTATE_90],                           # left/bottom
 }
 
-# Arbitraty limit to fit most resolutions, including Nokia Lumia 1020 photo,
+# Arbitrary limit to fit most resolutions, including Nokia Lumia 1020 photo,
 # 8K with a ratio up to 16:10, and almost all variants of 4320p
 IMAGE_MAX_RESOLUTION = 45e6
 
@@ -86,7 +86,7 @@ class ImageProcess():
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
+                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 10e6)))
 
     def image_base64(self, quality=0, output_format=''):
         """Return the base64 encoded image resulting of all the image processing
@@ -378,15 +378,14 @@ def image_fix_orientation(image):
         or the source image if no operation was applied
     :rtype: PIL.Image
     """
-    # `exif_transpose` was added in Pillow 6.0
-    if hasattr(ImageOps, 'exif_transpose'):
-        return ImageOps.exif_transpose(image)
-    if (image.format or '').upper() == 'JPEG' and hasattr(image, '_getexif'):
-        exif = image._getexif()
+    getexif = getattr(image, 'getexif', None) or getattr(image, '_getexif', None)  # support PIL < 6.0
+    if getexif:
+        exif = getexif()
         if exif:
             orientation = exif.get(EXIF_TAG_ORIENTATION, 0)
             for method in EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS.get(orientation, []):
                 image = image.transpose(method)
+            return image
     return image
 
 

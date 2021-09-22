@@ -7,7 +7,7 @@
             <field name="subject">You left items in your cart!</field>
             <field name="email_from">${(object.user_id.email_formatted or user.email_formatted or '') | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
-            <field name="body_html" type="xml">
+            <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
@@ -56,14 +56,14 @@
                         % endfor
                         <hr/>
                     % endif
-                    <div style="text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;">
+                    <div style="text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;">
                         <a href="${object.get_base_url()}/shop/cart?access_token=${object.access_token}"
                             target="_blank"
                             style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                             Resume order
                         </a>
                     </div>
-                    <div style="text-align: center;"><strong>Thank you for shopping with ${user.company_id.name}!</strong></div>
+                    <div style="text-align: center;"><strong>Thank you for shopping with ${company.name}!</strong></div>
                 </td></tr>
                 <tr><td style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>

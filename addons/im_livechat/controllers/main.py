@@ -16,9 +16,9 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public')
     def livechat_lib(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
-        xmlid = 'im_livechat.external_lib'
-        files, remains = request.env["ir.qweb"]._get_asset_content(xmlid, options=request.context)
-        asset = AssetsBundle(xmlid, files)
+        bundle = 'im_livechat.external_lib'
+        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
+        asset = AssetsBundle(bundle, files)
 
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
@@ -33,10 +33,7 @@ class LivechatController(http.Controller):
     def load_templates(self, **kwargs):
         base_url = request.httprequest.base_url
         templates = [
-            'mail/static/src/xml/abstract_thread_window.xml',
-            'mail/static/src/xml/discuss.xml',
-            'mail/static/src/xml/thread.xml',
-            'im_livechat/static/src/xml/im_livechat.xml',
+            'im_livechat/static/src/legacy/public_livechat.xml',
         ]
         return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
 
@@ -59,11 +56,9 @@ class LivechatController(http.Controller):
         if available:
             # find the country from the request
             country_id = False
-            country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+            country_code = request.session.geoip.get('country_code') if request.session.geoip else False
             if country_code:
-                country_ids = request.env['res.country'].sudo().search([('code', '=', country_code)])
-                if country_ids:
-                    country_id = country_ids[0].id
+                country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
             # extract url
             url = request.httprequest.headers.get('Referer')
             # find the first matching rule for the given country and url
@@ -104,8 +99,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
-        Channel = request.env['mail.channel']
-        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
         if channel:
             # limit the creation : only ONE rating per session
             values = {
@@ -115,14 +109,13 @@ class LivechatController(http.Controller):
                 'is_internal': False,
             }
             if not channel.rating_ids:
-                res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
                 values.update({
                     'res_id': channel.id,
-                    'res_model_id': res_model_id,
+                    'res_model_id': request.env['ir.model']._get_id('mail.channel'),
                 })
                 # find the partner (operator)
                 if channel.channel_partner_ids:
-                    values['rated_partner_id'] = channel.channel_partner_ids[0] and channel.channel_partner_ids[0].id or False
+                    values['rated_partner_id'] = channel.channel_partner_ids[0].id
                 # if logged in user, set its partner on rating
                 values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
@@ -147,9 +140,8 @@ class LivechatController(http.Controller):
             :param uuid: (string) the UUID of the livechat channel
             :param is_typing: (boolean) tells whether the website user is typing or not.
         """
-        Channel = request.env['mail.channel']
-        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
-        channel.notify_typing(is_typing=is_typing, is_website_user=True)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
+        channel.notify_typing(is_typing=is_typing)
 
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
     def email_livechat_transcript(self, uuid, email):

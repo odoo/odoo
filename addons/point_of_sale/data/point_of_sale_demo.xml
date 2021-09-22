@@ -103,6 +103,69 @@
           <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
         </record>
 
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'point_of_sale.desk_organizer_product_template',
+                'record': obj().env.ref('point_of_sale.desk_organizer').product_tmpl_id,
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <record id="size_attribute" model="product.attribute">
+            <field name="name">Size</field>
+            <field name="sequence">30</field>
+            <field name="display_type">radio</field>
+            <field name="create_variant">no_variant</field>
+        </record>
+        <record id="size_attribute_s" model="product.attribute.value">
+            <field name="name">S</field>
+            <field name="sequence">1</field>
+            <field name="attribute_id" ref="size_attribute"/>
+        </record>
+        <record id="size_attribute_m" model="product.attribute.value">
+            <field name="name">M</field>
+            <field name="sequence">2</field>
+            <field name="attribute_id" ref="size_attribute"/>
+        </record>
+        <record id="size_attribute_l" model="product.attribute.value">
+            <field name="name">L</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="size_attribute"/>
+        </record>
+        <record id="desk_organizer_size" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="point_of_sale.desk_organizer_product_template"/>
+            <field name="attribute_id" ref="size_attribute"/>
+            <field name="value_ids" eval="[(6, 0, [ref('size_attribute_s'), ref('size_attribute_m'), ref('size_attribute_l')])]"/>
+        </record>
+
+        <record id="fabric_attribute" model="product.attribute">
+            <field name="name">Fabric</field>
+            <field name="sequence">40</field>
+            <field name="display_type">select</field>
+            <field name="create_variant">no_variant</field>
+        </record>
+        <record id="fabric_attribute_plastic" model="product.attribute.value">
+            <field name="name">Plastic</field>
+            <field name="sequence">1</field>
+            <field name="attribute_id" ref="fabric_attribute"/>
+        </record>
+        <record id="fabric_attribute_leather" model="product.attribute.value">
+            <field name="name">Leather</field>
+            <field name="sequence">2</field>
+            <field name="attribute_id" ref="fabric_attribute"/>
+        </record>
+        <record id="fabric_attribute_custom" model="product.attribute.value">
+            <field name="name">Custom</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="fabric_attribute"/>
+            <field name="is_custom">True</field>
+        </record>
+        <record id="desk_organizer_fabric" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="point_of_sale.desk_organizer_product_template"/>
+            <field name="attribute_id" ref="fabric_attribute"/>
+            <field name="value_ids" eval="[(6, 0, [ref('fabric_attribute_plastic'), ref('fabric_attribute_leather'), ref('fabric_attribute_custom')])]"/>
+        </record>
+
         <record id="magnetic_board" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.98</field>

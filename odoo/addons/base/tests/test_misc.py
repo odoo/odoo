@@ -3,9 +3,10 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+import os.path
 import pytz
 
-from odoo.tools import misc, date_utils, merge_sequences
+from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -267,38 +268,192 @@ class TestFormatLangDate(TransactionCase):
         self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='full'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
 
+        #Check timezone conversion in format_time
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='long'), '11:33:00 +0100')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='long'), '05:33:00 HNE')
+
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
 
 
-class TestGroupCalls(BaseCase):
-    def test_callbacks(self):
+class TestCallbacks(BaseCase):
+    def test_callback(self):
         log = []
+        callbacks = misc.Callbacks()
 
+        # add foo
         def foo():
             log.append("foo")
 
-        def bar(items):
-            log.extend(items)
-            callbacks.add(baz)
-
-        def baz():
-            log.append("baz")
-
-        callbacks = misc.GroupCalls()
         callbacks.add(foo)
-        callbacks.add(bar, list)[0].append(1)
-        callbacks.add(bar, list)[0].append(2)
-        self.assertEqual(log, [])
 
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # add bar
+        @callbacks.add
+        def bar():
+            log.append("bar")
 
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # add foo again
+        callbacks.add(foo)
 
-        callbacks.add(bar, list)[0].append(3)
-        callbacks.clear()
-        callbacks()
-        self.assertEqual(log, ["foo", 1, 2, "baz"])
+        # this should call foo(), bar(), foo()
+        callbacks.run()
+        self.assertEqual(log, ["foo", "bar", "foo"])
+
+        # this should do nothing
+        callbacks.run()
+        self.assertEqual(log, ["foo", "bar", "foo"])
+
+    def test_aggregate(self):
+        log = []
+        callbacks = misc.Callbacks()
+
+        # register foo once
+        @callbacks.add
+        def foo():
+            log.append(callbacks.data["foo"])
+
+        # aggregate data
+        callbacks.data.setdefault("foo", []).append(1)
+        callbacks.data.setdefault("foo", []).append(2)
+        callbacks.data.setdefault("foo", []).append(3)
+
+        # foo() is called once
+        callbacks.run()
+        self.assertEqual(log, [[1, 2, 3]])
+        self.assertFalse(callbacks.data)
+
+        callbacks.run()
+        self.assertEqual(log, [[1, 2, 3]])
+
+    def test_reentrant(self):
+        log = []
+        callbacks = misc.Callbacks()
+
+        # register foo that runs callbacks
+        @callbacks.add
+        def foo():
+            log.append("foo1")
+            callbacks.run()
+            log.append("foo2")
+
+        @callbacks.add
+        def bar():
+            log.append("bar")
+
+        # both foo() and bar() are called once
+        callbacks.run()
+        self.assertEqual(log, ["foo1", "bar", "foo2"])
+
+        callbacks.run()
+        self.assertEqual(log, ["foo1", "bar", "foo2"])
+
+
+class TestRemoveAccents(BaseCase):
+    def test_empty_string(self):
+        self.assertEqual(remove_accents(False), False)
+        self.assertEqual(remove_accents(''), '')
+        self.assertEqual(remove_accents(None), None)
+
+    def test_latin(self):
+        self.assertEqual(remove_accents('Niño Hernández'), 'Nino Hernandez')
+        self.assertEqual(remove_accents('Anaïs Clémence'), 'Anais Clemence')
+
+    def test_non_latin(self):
+        self.assertEqual(remove_accents('العربية'), 'العربية')
+        self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
+
+
+class TestAddonsFileAccess(BaseCase):
+
+    def assertCannotAccess(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+        with self.assertRaises(ExceptionType):
+            file_path(path, filter_ext=filter_ext)
+
+    def assertCanRead(self, path, needle='', mode='r', filter_ext=None):
+        with file_open(path, mode, filter_ext) as f:
+            self.assertIn(needle, f.read())
+
+    def assertCannotRead(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+        with self.assertRaises(ExceptionType):
+            file_open(path, filter_ext=filter_ext)
+
+    def test_file_path(self):
+        # absolute path
+        self.assertEqual(__file__, file_path(__file__))
+        self.assertEqual(__file__, file_path(__file__, filter_ext=None)) # means "no filter" too
+        self.assertEqual(__file__, file_path(__file__, filter_ext=('.py',)))
+
+        # directory target is ok
+        self.assertEqual(os.path.dirname(__file__), file_path(os.path.join(__file__, '..')))
+
+        # relative path
+        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        self.assertEqual(__file__, file_path(relpath))
+        self.assertEqual(__file__, file_path(relpath, filter_ext=('.py',)))
+
+        # leading 'addons/' is ignored if present
+        self.assertTrue(file_path("addons/web/__init__.py"))
+        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        self.assertEqual(__file__, file_path(relpath))
+
+        # files in root_path are allowed
+        self.assertTrue(file_path('tools/misc.py'))
+
+        # errors when outside addons_paths
+        self.assertCannotAccess('/doesnt/exist')
+        self.assertCannotAccess('/tmp')
+        self.assertCannotAccess('../../../../../../../../../tmp')
+        self.assertCannotAccess(os.path.join(__file__, '../../../../../'))
+
+        # data_dir is forbidden
+        self.assertCannotAccess(config['data_dir'])
+
+        # errors for illegal extensions
+        self.assertCannotAccess(__file__, ValueError, filter_ext=('.png',))
+        # file doesnt exist but has wrong extension
+        self.assertCannotAccess(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
+
+    def test_file_open(self):
+        # The needle includes UTF8 so we test reading non-ASCII files at the same time.
+        # This depends on the system locale and is harder to unit test, but if you manage to run the
+        # test with a non-UTF8 locale (`LC_ALL=fr_FR.iso8859-1 python3...`) it should not crash ;-)
+        test_needle = "A needle with non-ascii bytes: ♥"
+
+        # absolute path
+        self.assertCanRead(__file__, test_needle)
+        self.assertCanRead(__file__, test_needle.encode(), mode='rb')
+        self.assertCanRead(__file__, test_needle.encode(), mode='rb', filter_ext=('.py',))
+
+        # directory target *is* an error
+        with self.assertRaises(FileNotFoundError):
+            file_open(os.path.join(__file__, '..'))
+
+        # relative path
+        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        self.assertCanRead(relpath, test_needle)
+        self.assertCanRead(relpath, test_needle.encode(), mode='rb')
+        self.assertCanRead(relpath, test_needle.encode(), mode='rb', filter_ext=('.py',))
+
+        # leading 'addons/' is ignored if present
+        self.assertCanRead("addons/web/__init__.py", "import")
+        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        self.assertCanRead(relpath, test_needle)
+
+        # files in root_path are allowed
+        self.assertCanRead('tools/misc.py')
+
+        # errors when outside addons_paths
+        self.assertCannotRead('/doesnt/exist')
+        self.assertCannotRead('')
+        self.assertCannotRead('/tmp')
+        self.assertCannotRead('../../../../../../../../../tmp')
+        self.assertCannotRead(os.path.join(__file__, '../../../../../'))
+
+        # data_dir is forbidden
+        self.assertCannotRead(config['data_dir'])
+
+        # errors for illegal extensions
+        self.assertCannotRead(__file__, ValueError, filter_ext=('.png',))
+        # file doesnt exist but has wrong extension
+        self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))

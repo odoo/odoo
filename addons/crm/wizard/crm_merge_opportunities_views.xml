@@ -17,8 +17,8 @@
                                 <field name="name"/>
                                 <field name="type"/>
                                 <field name="contact_name"/>
-                                <field name="email_from"/>
-                                <field name="phone"/>
+                                <field name="email_from" optional="hide"/>
+                                <field name="phone" class="o_force_ltr" optional="hide"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
                                 <field name="team_id"/>
@@ -26,20 +26,20 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="action_merge" type="object" string="Merge" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button name="action_merge" type="object" string="Merge" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
         </record>
 
-        <act_window
-            id="action_merge_opportunities"
-            name="Merge"
-            res_model="crm.merge.opportunity"
-            binding_model="crm.lead"
-            binding_views="list"
-            view_mode="form"
-            target="new" />
+        <record id="action_merge_opportunities" model="ir.actions.act_window">
+            <field name="name">Merge</field>
+            <field name="res_model">crm.merge.opportunity</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
 
 </odoo>

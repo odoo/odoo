@@ -7,7 +7,7 @@ import json
 
 class WebsiteSaleProductComparison(WebsiteSale):
 
-    @http.route('/shop/compare/', type='http', auth="public", website=True, sitemap=False)
+    @http.route('/shop/compare', type='http', auth="public", website=True, sitemap=False)
     def product_compare(self, **post):
         values = {}
         product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
@@ -30,7 +30,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
         prods.mapped('name')
         for prod in prods:
             ret[prod.id] = {
-                'render': request.env['ir.ui.view'].render_template(
+                'render': request.env['ir.ui.view']._render_template(
                     "website_sale_comparison.product_product",
                     {'product': prod, 'website': request.website}
                 ),

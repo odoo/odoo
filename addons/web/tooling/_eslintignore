@@ -1,0 +1,57 @@
+# Ignore everything
+*
+
+# Whitelist web
+!addons
+addons/*
+!addons/web
+!addons/web/**/*
+
+# Whitelist web_enterprise
+!web_enterprise
+!web_enterprise/**/*
+
+# Whitelist web_studio
+!web_studio
+!web_studio/**/*
+
+# BlackList libs
+addons/web/static/lib
+
+# Ignore everything in web legacy but the top level (adapters)
+addons/web/static/src/legacy/**/*
+!addons/web/static/src/legacy
+!addons/web/static/src/legacy/*.js
+
+# Ignore everything in web_enterprise legacy but the top level (adapters)
+web_enterprise/static/src/legacy/**/*
+!web_enterprise/static/src/legacy
+!web_enterprise/static/src/legacy/*.js
+
+# Ignore everything in web_studio legacy but the top level (adapters)
+web_studio/static/src/legacy/**/*
+!web_studio/static/src/legacy
+!web_studio/static/src/legacy/*.js
+
+# Ignore all legacy related tests
+addons/web/static/tests/**/legacy/*
+web_enterprise/static/tests/**/legacy/*
+web_studio/static/tests/**/legacy/*
+
+# web_dashboard
+# whitelist new code
+!web_dashboard
+!web_dashboard/**/*
+
+# blacklist legacy
+web_dashboard/static/src/legacy/**/*
+web_dashboard/static/tests/legacy/**/*
+
+# web_cohort
+# whitelist new code
+!web_cohort
+!web_cohort/**/*
+
+# blacklist legacy
+web_cohort/static/src/legacy/**/*
+web_cohort/static/tests/legacy/**/*

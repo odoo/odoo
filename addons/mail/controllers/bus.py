@@ -19,17 +19,23 @@ class MailChatController(BusController):
     # Extends BUS Controller Poll
     # --------------------------
     def _poll(self, dbname, channels, last, options):
+        channels = list(channels)  # do not alter original list
+        guest_sudo = request.env['mail.guest']._get_guest_from_request(request).sudo()
+        mail_channels = request.env['mail.channel']
         if request.session.uid:
-            partner_id = request.env.user.partner_id.id
-
-            if partner_id:
-                channels = list(channels)       # do not alter original list
-                for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
-                    channels.append((request.db, 'mail.channel', mail_channel.id))
-                # personal and needaction channel
-                channels.append((request.db, 'res.partner', partner_id))
-                channels.append((request.db, 'ir.needaction', partner_id))
-        return super(MailChatController, self)._poll(dbname, channels, last, options)
+            partner = request.env.user.partner_id
+            mail_channels = partner.channel_ids
+            # personal and needaction channel
+            channels.append((request.db, 'res.partner', partner.id))
+            channels.append((request.db, 'ir.needaction', partner.id))
+        elif guest_sudo:
+            if 'bus_inactivity' in options:
+                guest_sudo.env['bus.presence'].update(inactivity_period=options.get('bus_inactivity'), identity_field='guest_id', identity_value=guest_sudo.id)
+            mail_channels = guest_sudo.channel_ids
+            channels.append((request.db, 'mail.guest', guest_sudo.id))
+        for mail_channel in mail_channels:
+            channels.append((request.db, 'mail.channel', mail_channel.id))
+        return super()._poll(dbname, channels, last, options)
 
     # --------------------------
     # Anonymous routes (Common Methods)
@@ -50,11 +56,14 @@ class MailChatController(BusController):
             email_from = mail_channel.anonymous_name or mail_channel.create_uid.company_id.catchall_formatted
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         body = tools.plaintext2html(message_content)
-        message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(author_id=author_id,
-                                                                                       email_from=email_from, body=body,
-                                                                                       message_type='comment',
-                                                                                       subtype_xmlid='mail.mt_comment')
-        return message and message.id or False
+        message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(
+            author_id=author_id,
+            email_from=email_from,
+            body=body,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment'
+        )
+        return message.id if message else False
 
     @route(['/mail/chat_history'], type="json", auth="public", cors="*")
     def mail_chat_history(self, uuid, last_id=False, limit=20):
@@ -62,4 +71,4 @@ class MailChatController(BusController):
         if not channel:
             return []
         else:
-            return channel.channel_fetch_message(last_id, limit)
+            return channel._channel_fetch_message(last_id, limit)

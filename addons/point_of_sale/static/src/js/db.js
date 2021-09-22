@@ -26,6 +26,7 @@ var PosDB = core.Class.extend({
         this.product_by_id = {};
         this.product_by_barcode = {};
         this.product_by_category_id = {};
+        this.product_packaging_by_barcode = {};
 
         this.partner_sorted = [];
         this.partner_by_id = {};
@@ -180,38 +181,49 @@ var PosDB = core.Class.extend({
         }
         for(var i = 0, len = products.length; i < len; i++){
             var product = products[i];
-            var search_string = utils.unaccent(this._product_search_string(product));
-            var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
-            product.product_tmpl_id = product.product_tmpl_id[0];
-            if(!stored_categories[categ_id]){
-                stored_categories[categ_id] = [];
-            }
-            stored_categories[categ_id].push(product.id);
-
-            if(this.category_search_string[categ_id] === undefined){
-                this.category_search_string[categ_id] = '';
-            }
-            this.category_search_string[categ_id] += search_string;
-
-            var ancestors = this.get_category_ancestors_ids(categ_id) || [];
-
-            for(var j = 0, jlen = ancestors.length; j < jlen; j++){
-                var ancestor = ancestors[j];
-                if(! stored_categories[ancestor]){
-                    stored_categories[ancestor] = [];
+            if (product.id in this.product_by_id) continue;
+            if (product.available_in_pos){
+                var search_string = utils.unaccent(this._product_search_string(product));
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
+                product.product_tmpl_id = product.product_tmpl_id[0];
+                if(!stored_categories[categ_id]){
+                    stored_categories[categ_id] = [];
                 }
-                stored_categories[ancestor].push(product.id);
+                stored_categories[categ_id].push(product.id);
 
-                if( this.category_search_string[ancestor] === undefined){
-                    this.category_search_string[ancestor] = '';
+                if(this.category_search_string[categ_id] === undefined){
+                    this.category_search_string[categ_id] = '';
                 }
-                this.category_search_string[ancestor] += search_string; 
+                this.category_search_string[categ_id] += search_string;
+
+                var ancestors = this.get_category_ancestors_ids(categ_id) || [];
+
+                for(var j = 0, jlen = ancestors.length; j < jlen; j++){
+                    var ancestor = ancestors[j];
+                    if(! stored_categories[ancestor]){
+                        stored_categories[ancestor] = [];
+                    }
+                    stored_categories[ancestor].push(product.id);
+
+                    if( this.category_search_string[ancestor] === undefined){
+                        this.category_search_string[ancestor] = '';
+                    }
+                    this.category_search_string[ancestor] += search_string;
+                }
             }
             this.product_by_id[product.id] = product;
             if(product.barcode){
                 this.product_by_barcode[product.barcode] = product;
             }
         }
+    },
+    add_packagings: function(product_packagings){
+        var self = this;
+        _.map(product_packagings, function (product_packaging) {
+            if (_.find(self.product_by_id, {'id': product_packaging.product_id[0]})) {
+                self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
+            }
+        });
     },
     _partner_search_string: function(partner){
         var str =  partner.name || '';
@@ -233,7 +245,7 @@ var PosDB = core.Class.extend({
         if(partner.vat){
             str += '|' + partner.vat;
         }
-        str = '' + partner.id + ':' + str.replace(':','') + '\n';
+        str = '' + partner.id + ':' + str.replace(':', '').replace(/\n/g, ' ') + '\n';
         return str;
     },
     add_partners: function(partners){
@@ -287,6 +299,8 @@ var PosDB = core.Class.extend({
                                   (partner.country_id ? partner.country_id[1]: '');
                 this.partner_search_string += this._partner_search_string(partner);
             }
+
+            this.partner_search_string = utils.unaccent(this.partner_search_string);
         }
         return updated_count;
     },
@@ -317,7 +331,7 @@ var PosDB = core.Class.extend({
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
-            var r = re.exec(utils.unaccent(this.partner_search_string));
+            var r = re.exec(this.partner_search_string);
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
@@ -349,16 +363,19 @@ var PosDB = core.Class.extend({
     get_product_by_barcode: function(barcode){
         if(this.product_by_barcode[barcode]){
             return this.product_by_barcode[barcode];
-        } else {
-            return undefined;
+        } else if (this.product_packaging_by_barcode[barcode]) {
+            return this.product_by_id[this.product_packaging_by_barcode[barcode].product_id[0]];
         }
+        return undefined;
     },
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
-                list.push(this.product_by_id[product_ids[i]]);
+                const product = this.product_by_id[product_ids[i]];
+                if (!(product.active && product.available_in_pos)) continue;
+                list.push(product);
             }
         }
         return list;
@@ -380,7 +397,9 @@ var PosDB = core.Class.extend({
             var r = re.exec(this.category_search_string[category_id]);
             if(r){
                 var id = Number(r[1]);
-                results.push(this.get_product_by_id(id));
+                const product = this.get_product_by_id(id);
+                if (!(product.active && product.available_in_pos)) continue;
+                results.push(product);
             }else{
                 break;
             }

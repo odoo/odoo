@@ -22,7 +22,7 @@ class BaseLanguageExport(models.TransientModel):
     name = fields.Char('File Name', readonly=True)
     lang = fields.Selection(_get_languages, string='Language', required=True, default=NEW_LANG_KEY)
     format = fields.Selection([('csv','CSV File'), ('po','PO File'), ('tgz', 'TGZ Archive')],
-                              string='File Format', required=True, default='csv')
+                              string='File Format', required=True, default='po')
     modules = fields.Many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id',
                                string='Apps To Export', domain=[('state','=','installed')])
     data = fields.Binary('File', readonly=True, attachment=False)

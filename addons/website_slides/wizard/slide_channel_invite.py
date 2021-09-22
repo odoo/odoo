@@ -6,7 +6,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
 
@@ -15,42 +14,20 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 class SlideChannelInvite(models.TransientModel):
     _name = 'slide.channel.invite'
+    _inherit = 'mail.composer.mixin'
     _description = 'Channel Invitation Wizard'
 
-    @api.model
-    def _default_email_from(self):
-        if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to post message, please configure the sender's email address."))
-
-    @api.model
-    def _default_author_id(self):
-        return self.env.user.partner_id
-
     # composer content
-    subject = fields.Char('Subject')
-    body = fields.Html('Contents', default='', sanitize_style=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template',
-        domain="[('model', '=', 'slide.channel.partner')]")
-    # origin
-    email_from = fields.Char('From', default=_default_email_from)
-    author_id = fields.Many2one(
-        'res.partner', 'Author',
-        ondelete='set null', default=_default_author_id)
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     # slide channel
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
-    channel_url = fields.Char(related="channel_id.website_url", readonly=True)
 
-    @api.onchange('template_id')
-    def _onchange_template_id(self):
-        """ Make the 'subject' and 'body' field match the selected template_id """
-        if self.template_id:
-            self.subject = self.template_id.subject
-            self.body = self.template_id.body_html
+    # Overrides of mail.composer.mixin
+    @api.depends('channel_id')  # fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        self.render_model = 'slide.channel.partner'
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
@@ -62,9 +39,10 @@ class SlideChannelInvite(models.TransientModel):
                     ('id', 'in', self.partner_ids.ids)
                 ])
                 if invalid_partners:
-                    raise UserError(
-                        _('The following recipients have no user account: %s. You should create user accounts for them or allow external sign up in configuration.' %
-                            (','.join(invalid_partners.mapped('name')))))
+                    raise UserError(_(
+                        'The following recipients have no user account: %s. You should create user accounts for them or allow external sign up in configuration.',
+                        ', '.join(invalid_partners.mapped('name'))
+                    ))
 
     @api.model
     def create(self, values):
@@ -81,26 +59,29 @@ class SlideChannelInvite(models.TransientModel):
             email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
 
+        if not self.env.user.email:
+            raise UserError(_("Unable to post message, please configure the sender's email address."))
+        if not self.partner_ids:
+            raise UserError(_("Please select at least one recipient."))
+
         mail_values = []
         for partner_id in self.partner_ids:
             slide_channel_partner = self.channel_id._action_add_members(partner_id)
             if slide_channel_partner:
                 mail_values.append(self._prepare_mail_values(slide_channel_partner))
 
-        # TODO awa: change me to create multi when mail.mail supports it
-        for mail_value in mail_values:
-            self.env['mail.mail'].sudo().create(mail_value)
+        self.env['mail.mail'].sudo().create(mail_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self.env['mail.template']._render_template(self.subject, 'slide.channel.partner', slide_channel_partner.id, post_process=True)
-        body = self.env['mail.template']._render_template(self.body, 'slide.channel.partner', slide_channel_partner.id, post_process=True)
+        subject = self._render_field('subject', slide_channel_partner.ids, options={'render_safe': True})[slide_channel_partner.id]
+        body = self._render_field('body', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
-            'email_from': self.email_from,
-            'author_id': self.author_id.id,
+            'email_from': self.env.user.email_formatted,
+            'author_id': self.env.user.partner_id.id,
             'model': None,
             'res_id': None,
             'subject': subject,
@@ -118,12 +99,15 @@ class SlideChannelInvite(models.TransientModel):
             except ValueError:
                 _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (notif_layout))
             else:
+                # could be great to use _notify_prepare_template_context someday
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
-                    'model_description': self.env['ir.model']._get('website_slides.slide_channel').display_name,
+                    'model_description': self.env['ir.model']._get('slide.channel').display_name,
+                    'record': slide_channel_partner,
                     'company': self.env.company,
+                    'signature': self.channel_id.user_id.signature,
                 }
-                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                mail_values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
         return mail_values

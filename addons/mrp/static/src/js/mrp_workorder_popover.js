@@ -1,10 +1,8 @@
-odoo.define('mrp.mrp_workorder_popover', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var PopoverWidget = require('stock.popover_widget');
-var fieldRegistry = require('web.field_registry');
-var core = require('web.core');
-var _t = core._t;
+import PopoverWidget from 'stock.popover_widget';
+import fieldRegistry from 'web.field_registry';
+import { _t } from 'web.core';
 
 
 /**
@@ -24,6 +22,9 @@ var MrpWorkorderPopover = PopoverWidget.extend({
 
     _render: function () {
         this._super.apply(this, arguments);
+        if (! this.$popover) {
+          return;
+        }
         var self = this;
         this.$popover.find('.action_replan_button').click(function (e) {
             self._onReplanClick(e);
@@ -44,5 +45,4 @@ var MrpWorkorderPopover = PopoverWidget.extend({
 
 fieldRegistry.add('mrp_workorder_popover', MrpWorkorderPopover);
 
-return MrpWorkorderPopover;
-});
+export default MrpWorkorderPopover;

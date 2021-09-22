@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_pos_sale" model="ir.ui.view">
+            <field name="name">sale.order.form.pos.sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_invoice']" position="before">
+                    <button type="object"
+                        name="action_view_pos_order"
+                        class="oe_stat_button"
+                        icon="fa-shopping-basket"
+                        attrs="{'invisible': [('pos_order_count', '=', 0)]}" groups="point_of_sale.group_pos_user">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="pos_order_count" widget="statinfo" nolabel="1" class="mr4" /> Transfered<br/>
+                                to POS
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -5,22 +5,140 @@ import base64
 
 from unittest.mock import patch
 
+from odoo import tools
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.api import call_kw
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
+from odoo.tests.common import users
 
 
+@tagged('mail_post')
 class TestMessagePost(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
         super(TestMessagePost, cls).setUpClass()
         cls._create_portal_user()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com'
+        })
         cls._reset_mail_context(cls.test_record)
+        cls.test_message = cls.env['mail.message'].create({
+            'author_id': cls.partner_employee.id,
+            'body': '<p>Notify Body <span>Woop Woop</span></p>',
+            'email_from': cls.partner_employee.email_formatted,
+            'is_internal': False,
+            'message_id': tools.generate_tracking_message_id('dummy-generate'),
+            'message_type': 'comment',
+            'model': cls.test_record._name,
+            'record_name': False,
+            'reply_to': 'wrong.alias@test.example.com',
+            'subtype_id': cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            'subject': 'Notify Test',
+        })
         cls.user_admin.write({'notification_type': 'email'})
+
+    @users('employee')
+    def test_notify_email_layouts(self):
+        self.user_employee.write({'notification_type': 'email'})
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_message = self.env['mail.message'].browse(self.test_message.ids)
+
+        recipients_data = self._generate_notify_recipients(self.partner_1 + self.partner_2 + self.partner_employee)
+        for email_xmlid in ['mail.message_notification_email',
+                            'mail.mail_notification_borders',
+                            'mail.mail_notification_light',
+                            'mail.mail_notification_paynow']:
+            test_message.write({'email_layout_xmlid': email_xmlid})
+            with self.mock_mail_gateway():
+                test_record._notify_record_by_email(
+                    test_message,
+                    recipients_data,
+                    force_send=False
+                )
+            self.assertEqual(len(self._new_mails), 2, 'Should have 2 emails: one for customers, one for internal users')
+
+            # check customer email
+            customer_email = self._new_mails.filtered(lambda mail: mail.recipient_ids == self.partner_1 + self.partner_2)
+            self.assertTrue(customer_email)
+
+            # check internal user email
+            user_email = self._new_mails.filtered(lambda mail: mail.recipient_ids == self.partner_employee)
+            self.assertTrue(user_email)
+
+    @users('employee')
+    def test_notify_prepare_template_context_company_value(self):
+        """ Verify that the template context company value is right
+        after switching the env company or if a company_id is set
+        on mail record.
+        """
+        current_user = self.env.user
+        main_company = current_user.company_id
+        other_company = self.env['res.company'].with_user(self.user_admin).create({'name': 'Company B'})
+        current_user.sudo().write({'company_ids': [(4, other_company.id)]})
+        test_record = self.env['mail.test.multi.company'].with_user(self.user_admin).create({
+            'name': 'Multi Company Record',
+            'company_id': False,
+        })
+
+        # self.env.company.id = Main Company    AND    test_record.company_id = False
+        self.assertEqual(self.env.company.id, main_company.id)
+        self.assertEqual(test_record.company_id.id, False)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, self.env.company.id)
+
+        # self.env.company.id = Other Company    AND    test_record.company_id = False
+        current_user.company_id = other_company
+        test_record = self.env['mail.test.multi.company'].browse(test_record.id)
+        self.assertEqual(self.env.company.id, other_company.id)
+        self.assertEqual(test_record.company_id.id, False)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, self.env.company.id)
+
+        # self.env.company.id = Other Company    AND    test_record.company_id = Main Company
+        test_record.company_id = main_company
+        test_record = self.env['mail.test.multi.company'].browse(test_record.id)
+        self.assertEqual(self.env.company.id, other_company.id)
+        self.assertEqual(test_record.company_id.id, main_company.id)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, main_company.id)
+
+    def test_notify_recipients_internals(self):
+        pdata = self._generate_notify_recipients(self.partner_1 | self.partner_employee)
+        msg_vals = {
+            'body': 'Message body',
+            'model': self.test_record._name,
+            'res_id': self.test_record.id,
+            'subject': 'Message subject',
+        }
+        link_vals = {
+            'token': 'token_val',
+            'access_token': 'access_token_val',
+            'auth_signup_token': 'auth_signup_token_val',
+            'auth_login': 'auth_login_val',
+        }
+        notify_msg_vals = dict(msg_vals, **link_vals)
+        classify_res = self.env[self.test_record._name]._notify_classify_recipients(pdata, 'My Custom Model Name', msg_vals=notify_msg_vals)
+        # find back information for each recipients
+        partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+        emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+
+        # partner: no access button
+        self.assertFalse(partner_info['has_button_access'])
+
+        # employee: access button and link
+        self.assertTrue(emp_info['has_button_access'])
+        for param, value in link_vals.items():
+            self.assertIn('%s=%s' % (param, value), emp_info['button_access']['url'])
+        self.assertIn('model=%s' % self.test_record._name, emp_info['button_access']['url'])
+        self.assertIn('res_id=%s' % self.test_record.id, emp_info['button_access']['url'])
+        self.assertNotIn('body', emp_info['button_access']['url'])
+        self.assertNotIn('subject', emp_info['button_access']['url'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_needaction(self):
@@ -68,10 +186,12 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         # subscribe second employee to the group to test notifications
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
-        with self.assertSinglePostNotifications([
-                {'partner': self.partner_1, 'type': 'email'},
-                {'partner': self.partner_2, 'type': 'email'},
-                {'partner': self.partner_admin, 'type': 'email'}], {'content': _body}, mail_unlink_sent=True):
+        with self.assertSinglePostNotifications(
+                [{'partner': self.partner_1, 'type': 'email'},
+                 {'partner': self.partner_2, 'type': 'email'},
+                 {'partner': self.partner_admin, 'type': 'email'}],
+                {'content': _body},
+                mail_unlink_sent=True):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body=_body, subject=_subject,
                 message_type='comment', subtype_xmlid='mail.mt_comment',
@@ -83,7 +203,6 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(msg.body, _body)
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
         self.assertEqual(msg.notified_partner_ids, self.user_admin.partner_id | self.partner_1 | self.partner_2)
-        self.assertEqual(msg.channel_ids, self.env['mail.channel'])
 
         # notifications emails should have been deleted
         self.assertFalse(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)]),
@@ -234,22 +353,49 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
         self.assertEqual(new_note.notified_partner_ids, self.env['res.partner'])
 
+    def test_post_log_with_view(self):
+        new_note = self.test_record.with_user(self.user_employee)._message_log_with_view(
+            'test_mail.mail_template_simple_test', values={'partner': self.user_employee.partner_id}
+        )
+
+        self.assertEqual(new_note.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertTrue('<p>Hello %s,</p>' % self.user_employee.name in new_note.body)
+        self.assertEqual(new_note.author_id, self.user_employee.partner_id)
+        self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(new_note.notified_partner_ids, self.env['res.partner'])
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notify(self):
         self.user_employee.write({'notification_type': 'inbox'})
-        new_notification = self.test_record.message_notify(
-            subject='This should be a subject',
-            body='<p>You have received a notification</p>',
-            partner_ids=[self.partner_1.id, self.user_employee.partner_id.id],
-        )
+
+        with self.mock_mail_gateway():
+            new_notification = self.test_record.message_notify(
+                subject='This should be a subject',
+                body='<p>You have received a notification</p>',
+                partner_ids=[self.partner_1.id, self.partner_admin.id, self.user_employee.partner_id.id],
+            )
 
         self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
         self.assertEqual(new_notification.message_type, 'user_notification')
         self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
         self.assertEqual(new_notification.author_id, self.env.user.partner_id)
         self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
-        self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id)
+        self.assertEqual(new_notification.notified_partner_ids, self.partner_1 | self.user_employee.partner_id | self.partner_admin)
         self.assertNotIn(new_notification, self.test_record.message_ids)
+
+        admin_mails = [x for x in self._mails if self.partner_admin.name in x.get('email_to')[0]]
+        self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
+        admin_mail = admin_mails[0].get('body')
+        admin_access_link = admin_mail[admin_mail.index('model='):admin_mail.index('/>') - 1] if 'model=' in admin_mail else None
+  
+        self.assertIsNotNone(admin_access_link, 'The email sent to admin should contain an access link')
+        self.assertIn('model=%s' % self.test_record._name, admin_access_link, 'The access link should contain a valid model argument')
+        self.assertIn('res_id=%d' % self.test_record.id, admin_access_link, 'The access link should contain a valid res_id argument')
+
+        partner_mails = [x for x in self._mails if self.partner_1.name in x.get('email_to')[0]]
+        self.assertEqual(len(partner_mails), 1, 'There should be exactly one email sent to partner')
+        partner_mail = partner_mails[0].get('body')
+        self.assertNotIn('/mail/view?model=', partner_mail, 'The email sent to admin should not contain an access link')
         # todo xdo add test message_notify on thread with followers and stuff
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -294,3 +440,57 @@ class TestMessagePost(TestMailCommon, TestRecipients):
                 subject='About %s' % test_record.name,
                 body_content=test_record.name,
                 attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_post_w_template_mass_mode(self):
+        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        self.user_employee.write({
+            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        })
+
+        self._create_template('mail.test.simple', {
+            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
+            'email_to': 'test@example.com',
+            'email_cc': self.partner_1.email,
+            # After the HTML sanitizer, it will become "<p>Body for: ${object.name}<a href="">link</a></p>"
+            'body_html': 'Body for: ${object.name}<script>test</script><a href="javascript:alert(1)">link</a>',
+        })
+
+        with self.mock_mail_gateway():
+            test_record.with_user(self.user_employee).message_post_with_template(self.email_template.id, composition_mode='mass_mail')
+
+        new_partner = self.env['res.partner'].search([('email', '=', 'test@example.com')])
+
+        self.assertSentEmail(
+            self.user_employee.partner_id,
+            [new_partner],
+            subject='About %s' % test_record.name,
+            body_content=test_record.name,
+            attachments=[])
+
+
+@tagged('mail_post', 'post_install', '-at_install')
+class TestMessagePostGlobal(TestMailCommon, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMessagePostGlobal, cls).setUpClass()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+            'email_from': 'ignasse@example.com',
+            'name': 'Test',
+        })
+        cls._reset_mail_context(cls.test_record)
+        cls.user_admin.write({'notification_type': 'email'})
+
+    @users('employee')
+    def test_message_post_return(self):
+        """ Ensures calling message_post through RPC always return an ID. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        # Use call_kw as shortcut to simulate a RPC call.
+        message_id = call_kw(self.env['mail.test.simple'],
+                             'message_post',
+                             [test_record.id],
+                             {'body': 'test'}
+        )
+        self.assertTrue(isinstance(message_id, int))

@@ -4,6 +4,7 @@ _build/
 # dotfiles
 .*
 !.gitignore
+!.github
 !.mailmap
 # compiled python files
 *.py[co]
@@ -29,6 +30,12 @@ setup/win32/static/less/
 setup/win32/static/wkhtmltopdf/
 setup/win32/static/postgresql*.exe
 
+# js tooling
+node_modules
+package-lock.json
+package.json
+.husky
+
 # various virtualenv
 /bin/
 /build/
@@ -38,3 +45,6 @@ setup/win32/static/postgresql*.exe
 /man/
 /share/
 /src/
+
+# avoid adding it after generation from tsconfig command
+tsconfig.json

@@ -3,7 +3,9 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+
 from odoo import fields
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
 
@@ -469,3 +471,31 @@ class TestStockProductionLot(TestStockCommon):
         # Validate a delivery containing expired products must raise a confirmation wizard.
         self.assertNotEqual(res, True)
         self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
+
+    def test_edit_removal_date_in_inventory_mode(self):
+        """ Try to edit removal_date with the inventory mode.
+        """
+        user_group_stock_manager = self.env.ref('stock.group_stock_manager')
+        self.demo_user = mail_new_test_user(
+            self.env,
+            name='Demo user',
+            login='userdemo',
+            email='d.d@example.com',
+            groups='stock.group_stock_manager',
+        )
+        lot_form = Form(self.LotObj)
+        lot_form.name = 'LOT001'
+        lot_form.product_id = self.apple_product
+        lot_form.company_id = self.env.company
+        apple_lot = lot_form.save()
+
+        quant = self.StockQuantObj.with_context(inventory_mode=True).create({
+            'product_id': self.apple_product.id,
+            'location_id': self.stock_location,
+            'quantity': 10,
+            'lot_id': apple_lot.id,
+        })
+        # Try to write on quant with inventory mode
+        new_date = datetime.today() + timedelta(days=15)
+        quant.with_user(self.demo_user).with_context(inventory_mode=True).write({'removal_date': new_date})
+        self.assertEqual(quant.removal_date, new_date)

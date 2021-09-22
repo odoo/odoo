@@ -19,7 +19,7 @@ class OnboardingController(http.Controller):
             return {}
 
         return {
-            'html': request.env.ref('sale.sale_quotation_onboarding_panel').render({
+            'html': request.env.ref('sale.sale_quotation_onboarding_panel')._render({
                 'company': company,
                 'state': company.get_and_update_sale_quotation_onboarding_state()
             })

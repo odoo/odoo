@@ -1,8 +1,7 @@
-odoo.define('website_slides.quiz.question.form', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var publicWidget = require('web.public.widget');
-var core = require('web.core');
+import publicWidget from 'web.public.widget';
+import core from 'web.core';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -116,14 +115,12 @@ var QuestionFormWidget = publicWidget.Widget.extend({
     },
 
     /**
-     * Handler when user click on 'Save & New', 'Save & Close'
-     * or 'Update' buttons.
+     * Handler when user click on 'Save' or 'Update' buttons.
      * @param ev
      * @private
      */
     _validateQuestion: function (ev) {
         this._createOrUpdateQuestion({
-            save_and_new: $(ev.currentTarget).hasClass('o_wslides_js_quiz_create_next'),
             update: $(ev.currentTarget).hasClass('o_wslides_js_quiz_update'),
         });
     },
@@ -169,7 +166,6 @@ var QuestionFormWidget = publicWidget.Widget.extend({
                 } else {
                     self.trigger_up('display_created_question', {
                         newQuestionRenderedTemplate: renderedQuestion,
-                        save_and_new: options.save_and_new,
                         questionFormWidget: self
                     });
                 }
@@ -177,8 +173,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         } else {
             this.displayNotification({
                 type: 'warning',
-                title: _t('Unable to create question'),
-                message: _t('Please fill up the question'),
+                message: _t('Please fill in the question'),
                 sticky: true
             });
             this.$('.o_wslides_quiz_question input').focus();
@@ -228,5 +223,4 @@ var QuestionFormWidget = publicWidget.Widget.extend({
 
 });
 
-return QuestionFormWidget;
-});
+export default QuestionFormWidget;

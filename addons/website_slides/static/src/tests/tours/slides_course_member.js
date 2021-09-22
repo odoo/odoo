@@ -1,7 +1,6 @@
-odoo.define('website_slides.tour.slide.course.member', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
+import tour from 'web_tour.tour';
 
 /**
  * Global use case:
@@ -47,7 +46,7 @@ tour.register('course_member', {
     }
 }, {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success-1',
-    extra_trigger: '.o_wslides_progress_percentage:contains("20")',
+    extra_trigger: '.o_wslides_progress_percentage:contains("40")',
     run: function () {
         // check navigation with arrow keys
         var event = jQuery.Event("keydown");
@@ -106,6 +105,9 @@ tour.register('course_member', {
 }, {
     trigger: '.o_wslides_js_lesson_quiz_submit'
 }, {
+    // check that we have a properly motivational message to motivate us!
+    trigger: '.o_wslides_quiz_modal_rank_motivational > div > div:contains("Reach the next rank and gain a very nice mug !")'
+}, {
     trigger: 'a:contains("End course")'
 },
 // eLearning: ending course redirect to /slides, course is completed now
@@ -119,12 +121,12 @@ tour.register('course_member', {
 }, {
     trigger: 'button[data-target="#ratingpopupcomposer"]'
 }, {
-    trigger: 'form.o_portal_chatter_composer_form i.fa:eq(4)',
+    trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
     extra_trigger: 'div.modal_shown',
     run: 'click',
     in_modal: false,
 }, {
-    trigger: 'form.o_portal_chatter_composer_form textarea',
+    trigger: 'div.o_portal_chatter_composer_input textarea',
     run: 'text This is a great course. Top !',
     in_modal: false,
 }, {
@@ -137,5 +139,3 @@ tour.register('course_member', {
     run: function () {}, // check review is correctly added
 }
 ]);
-
-});

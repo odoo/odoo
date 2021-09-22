@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSummary" owl="1">
+        <div class="summary clearfix">
+            <div class="line">
+                <div class="entry total">
+                    <span class="badge">Total: </span>
+                    <span class="value">
+                        <t t-esc="props.total" />
+                    </span>
+                    <div t-if="props.tax" class="subentry">
+                        Taxes:
+                        <span class="value">
+                            <t t-esc="props.tax" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

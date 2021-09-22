@@ -7,9 +7,63 @@ var viewRegistry = require('web.view_registry');
 var core = require('web.core');
 var qweb = core.qweb;
 
-var ThemePreviewController = FormController.extend({
+/*
+* Common code for theme installation/update handler.
+*/
+const ThemePreviewControllerCommon = {
+    /**
+     * Called to add loading effect and install/pdate the selected theme depending on action.
+     *
+     * @private
+     * @param {number} res_id
+     * @param {String} action
+     */
+    _handleThemeAction(res_id, action) {
+        this.$loader = $(qweb.render('website.ThemePreview.Loader', {
+            'showTips': action !== 'button_refresh_theme',
+        }));
+        let actionCallback = undefined;
+        this._addLoader();
+        switch (action) {
+            case 'button_choose_theme':
+                actionCallback = result => this.do_action(result);
+                break;
+            case 'button_refresh_theme':
+                actionCallback = () => this._removeLoader();
+                break;
+        }
+        const rpcData = {
+            model: 'ir.module.module',
+            method: action,
+            args: [res_id],
+            context: this.initialState.context,
+        };
+        const rpcOptions = {
+            shadow: true,
+        };
+        this._rpc(rpcData, rpcOptions)
+            .then(actionCallback)
+            .guardedCatch(() => this._removeLoader());
+    },
+    /**
+     * Called to add loader element in DOM.
+     *
+     * @private
+     */
+    _addLoader() {
+        $('body').append(this.$loader);
+    },
+    /**
+     * @private
+     */
+    _removeLoader() {
+        this.$loader.remove();
+    }
+};
+
+var ThemePreviewController = FormController.extend(ThemePreviewControllerCommon, {
     events: Object.assign({}, FormController.prototype.events, {
-        'click .o_use_theme': '_onUseThemeClick',
+        'click .o_use_theme': '_onStartNowClick',
         'click .o_switch_theme': '_onSwitchThemeClick',
         'change input[name="viewer"]': '_onSwitchButtonChange',
     }),
@@ -24,13 +78,24 @@ var ThemePreviewController = FormController.extend({
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
+
     /**
      * @override
      */
     renderButtons: function ($node) {
-        var $previewButton = $(qweb.render('website.ThemePreview.Buttons'));
-        $node.html($previewButton);
+        this.$buttons = $(qweb.render('website.ThemePreview.Buttons'));
+        if ($node) {
+            $node.html(this.$buttons);
+        }
     },
+    /**
+     * Overriden to prevent the controller from hiding the buttons
+     * @see FormController
+     *
+     * @override
+     */
+    updateButtons: function () { },
+
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
@@ -39,16 +104,11 @@ var ThemePreviewController = FormController.extend({
      *
      * @private
      */
-    _updatePager: function () {
-        this._super(...arguments);
-
-        const $buttonSwitch = $(qweb.render('website.ThemePreview.SwitchModeButton'));
-        if (!this.$switcherButton) {
-            $buttonSwitch.appendTo(this.pager.$el);
-        } else {
-            this.$switcherButton.replaceWith($buttonSwitch);
-        }
-        this.$switcherButton = $buttonSwitch;
+    _updateControlPanelProps: async function () {
+        const props = this._super(...arguments);
+        const $switchModeButton = $(qweb.render('website.ThemePreview.SwitchModeButton'));
+        this.controlPanelProps.cp_content.$pager = $switchModeButton;
+        return props;
     },
 
     // -------------------------------------------------------------------------
@@ -71,21 +131,12 @@ var ThemePreviewController = FormController.extend({
         this.trigger_up('history_back');
     },
     /**
-     * Handler called when user click on 'Use this theme' button in forw view.
+     * Handler called when user click on 'START NOW' button in form view.
      *
      * @private
      */
-    _onUseThemeClick: function () {
-        const $loader = $(qweb.render('website.ThemePreview.Loader'));
-        $('body').append($loader);
-        return this._rpc({
-            model: 'ir.module.module',
-            method: 'button_choose_theme',
-            args: [this.getSelectedIds()[0]],
-            context: this.initialState.context,
-        }, {shadow: true})
-            .then(result => this.do_action(result))
-            .guardedCatch(() => $loader.remove());
+    _onStartNowClick: function () {
+        this._handleThemeAction(this.getSelectedIds()[0], 'button_choose_theme');
     },
 });
 
@@ -97,4 +148,7 @@ var ThemePreviewFormView = FormView.extend({
 
 viewRegistry.add('theme_preview_form', ThemePreviewFormView);
 
+return {
+    ThemePreviewControllerCommon: ThemePreviewControllerCommon
+}
 });

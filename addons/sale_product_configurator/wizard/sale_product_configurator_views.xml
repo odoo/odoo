@@ -7,20 +7,24 @@
             <form js_class="product_configurator_form">
                 <group>
                     <field name="product_template_id" class="oe_product_configurator_product_template_id" />
-                    <field name="product_template_attribute_value_ids" invisible="1" />
+                    <field name="product_template_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
                     <field name="product_custom_attribute_value_ids" invisible="1" widget="one2many" >
-                        <tree>
+                        <tree limit="10000">
                             <field name="custom_product_template_attribute_value_id"/>
                             <field name="custom_value"/>
                         </tree>
                     </field>
-                    <field name="product_no_variant_attribute_value_ids" invisible="1" />
+                    <field name="product_no_variant_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
                     <field name="quantity" invisible="1" />
                 </group>
                 <footer>
-                    <button string="Add" class="btn-primary o_sale_product_configurator_add" special="add"/>
-                    <button string="Save" class="btn-primary o_sale_product_configurator_edit" style="display: none;" special="save"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button string="Add" class="btn-primary o_sale_product_configurator_add" special="add" data-hotkey="g"/>
+                    <button string="Save" class="btn-primary o_sale_product_configurator_edit" style="display: none;" special="save" data-hotkey="v"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

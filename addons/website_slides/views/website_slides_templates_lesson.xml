@@ -204,7 +204,6 @@
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
-    <t t-set="is_training_channel" t-value="slide.channel_id.channel_type == 'training'"/>
     <div class="row align-items-center my-3">
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-center">
@@ -244,7 +243,7 @@
                     <span class="d-none d-sm-inline-block">Next</span> <i class="fa fa-chevron-right ml-2"></i>
                 </a>
             </div>
-            <a t-if="is_training_channel" class="btn btn-light border ml-2" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
+            <a class="btn btn-light border ml-2" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
                 <i class="fa fa-desktop mr-2"/>
                 <span class="d-none d-sm-inline-block">Fullscreen</span>
             </a>
@@ -259,10 +258,10 @@
         <img t-if="slide.slide_type == 'infographic'"
             t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
         <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8" style="height: 600px;">
-            <t t-raw="slide.embed_code"/>
+            <t t-out="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
-            <t t-raw="slide.embed_code"/>
+            <t t-out="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_type == 'webpage'" class="bg-white p-3">
             <div t-field="slide.html_content"/>
@@ -442,7 +441,7 @@
         t-att-data-id="slide.id"
         t-att-data-name="slide.name"
         t-att-data-slide-type="slide.slide_type"
-        t-att-data-readonly="not slide.channel_id.is_member"
+        t-att-data-is-member="slide.channel_id.is_member"
         t-att-data-completed="1 if slide_completed else 0"
         t-att-data-quiz-attempts-count="quiz_attempts_count"
         t-att-data-quiz-karma-max="quiz_karma_max"
@@ -452,8 +451,10 @@
         t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None"
         t-att-data-channel-id="slide.channel_id.id"
         t-att-data-channel-enroll="slide.channel_id.enroll"
+        t-att-data-channel-requested-access="slide.channel_id.has_requested_access"
         t-att-data-channel-can-upload="slide.channel_id.can_upload"
-        t-att-data-signup-allowed="signup_allowed">
+        t-att-data-signup-allowed="signup_allowed"
+        t-att-data-session-answers="session_answers">
         <t t-foreach="slide_questions" t-as="question">
             <t t-call="website_slides.lesson_content_quiz_question"/>
         </t>
@@ -463,7 +464,7 @@
 </template>
 
 <template id="lesson_content_quiz_question" name="Lesson: Quiz question template">
-    <div t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not slide.channel_id.is_member else ''))"
+    <div t-att-class="'o_wslides_js_lesson_quiz_question mt-3 %s' % ('completed-disabled' if slide_completed else ('disabled' if not (slide.channel_id.is_member or slide.is_preview) else ''))"
          t-att-data-question-id="question['id']" t-att-data-title="question['question']" >
         <div class="row d-flex mb-2 mx-0">
             <div class="h4">

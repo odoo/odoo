@@ -9,7 +9,7 @@ import requests
 import werkzeug.urls
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, UserError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
@@ -54,7 +54,7 @@ class GoogleDrive(models.Model):
         user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
-                dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
+                action_id = self.env['ir.model.data']._xmlid_lookup('base_setup.action_general_configuration')[2]
                 msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
@@ -75,7 +75,7 @@ class GoogleDrive(models.Model):
             req.raise_for_status()
         except requests.HTTPError:
             if user_is_admin:
-                dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
+                action_id = self.env['ir.model.data']._xmlid_lookup('base_setup.action_general_configuration')[2]
                 msg = _("Something went wrong during the token generation. Please request again an authorization code .")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
@@ -154,7 +154,7 @@ class GoogleDrive(models.Model):
         '''
         # TO DO in master: fix my signature and my model
         if isinstance(res_model, str):
-            res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
+            res_model = self.env['ir.model']._get_id(res_model)
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
@@ -165,7 +165,10 @@ class GoogleDrive(models.Model):
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                try:
+                    domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                except:
+                    raise UserError(_("The document filter must not include any 'dynamic' part, so it should not be based on the current time or current user, for example."))
                 additionnal_context = ast.literal_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
@@ -191,14 +194,15 @@ class GoogleDrive(models.Model):
         return None
 
     def _compute_ressource_id(self):
-        result = {}
         for record in self:
-            word = self._get_key_from_url(record.google_drive_template_url)
-            if word:
-                record.google_drive_resource_id = word
+            if record.google_drive_template_url:
+                word = self._get_key_from_url(record.google_drive_template_url)
+                if word:
+                    record.google_drive_resource_id = word
+                else:
+                    raise UserError(_("Please enter a valid Google Document URL."))
             else:
-                raise UserError(_("Please enter a valid Google Document URL."))
-        return result
+                record.google_drive_resource_id = False
 
     def _compute_client_id(self):
         google_drive_client_id = self.env['ir.config_parameter'].sudo().get_param('google_drive_client_id')
@@ -215,9 +219,15 @@ class GoogleDrive(models.Model):
 
     @api.constrains('model_id', 'filter_id')
     def _check_model_id(self):
-        if self.filter_id and self.model_id.model != self.filter_id.model_id:
-            return False
-        return True
+        for drive in self:
+            if drive.filter_id and drive.model_id.model != drive.filter_id.model_id:
+                raise ValidationError(_(
+                    "Incoherent Google Drive %(drive)s: the model of the selected filter %(filter)r is not matching the model of current template (%(filter_model)r, %(drive_model)r)",
+                    drive=drive.name, filter=drive.filter_id.name, filter_model=drive.filter_id.model_id.model, drive_model=drive.model_id.model,
+                ))
+        if self.model_id.model and self.filter_id:
+            # force an execution of the filter to verify compatibility
+            self.get_google_drive_config(self.model_id.model, 1)
 
     def get_google_scope(self):
         return 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file'

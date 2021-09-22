@@ -1,8 +1,7 @@
-odoo.define('website_rating_project.rating', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var time = require('web.time');
-var publicWidget = require('web.public.widget');
+import time from 'web.time';
+import publicWidget from 'web.public.widget';
 
 publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
     selector: '.o_portal_project_rating .o_rating_image',
@@ -28,5 +27,4 @@ publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
         });
         return this._super.apply(this, arguments);
     },
-});
 });

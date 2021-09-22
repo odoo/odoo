@@ -6,7 +6,7 @@
 {
     'name': 'Hungarian - Accounting',
     'version': '2.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
 Base module for Hungarian localization
@@ -33,4 +33,8 @@ This module consists of:
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

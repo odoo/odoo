@@ -29,6 +29,7 @@
                     <field name="user_ids"/>
                     <field name="nbr_channel"/>
                     <field name="rating_percentage_satisfaction"/>
+                    <field name="rating_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -48,15 +49,11 @@
                                             <br/>
                                             <i class="fa fa-comments" role="img" aria-label="Comments" title="Comments"></i>
                                             <t t-esc="record.nbr_channel.raw_value"/> Sessions
-                                             <div class="float-right">
-                                                <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
-                                                    <a type="action" name="%(rating_rating_action_view_livechat_rating)d" tabindex="10">
-                                                        <i class="fa fa-smile-o text-success" t-if="record.rating_percentage_satisfaction.raw_value &gt;= 70" title="Rating: Great" role="img" aria-label="Happy face"/>
-                                                        <i class="fa fa-meh-o text-warning" t-if="record.rating_percentage_satisfaction.raw_value &gt; 30 and record.rating_percentage_satisfaction.raw_value &lt; 70" title="Rating: Okay" role="img" aria-label="Neutral face"/>
-                                                        <i class="fa fa-frown-o text-danger" t-if="record.rating_percentage_satisfaction.raw_value &lt;= 30" title="Rating: Bad" role="img" aria-label="Sad face"/>
-                                                       <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
-                                                   </a>
-                                                </t>
+                                            <div t-if="record.rating_count.raw_value &gt; 0" class="float-right">
+                                                <a name="action_view_rating" type="object" tabindex="10">
+                                                    <i class="fa fa-smile-o text-success" title="Percentage of happy ratings" role="img" aria-label="Happy face"/>
+                                                    <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
+                                               </a>
                                             </div>
                                         </div>
                                     </div>
@@ -79,17 +76,18 @@
                         <field name="are_you_inside" invisible="1"/>
                     </header>
                     <sheet>
+                        <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                             </button>
-                            <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                            <button name="action_view_rating" attrs="{'invisible':[('rating_count', '=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
                                 <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                             </button>
                         </div>
                         <field name="image_128" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name"/>
                             <h1>
                                 <field name="name" placeholder="e.g. YourWebsite.com"/>
                             </h1>
@@ -105,7 +103,7 @@
                                                 <t t-name="kanban-box">
                                                     <div class="oe_kanban_global_click">
                                                         <div class="o_kanban_image">
-                                                            <img t-att-src="kanban_image('res.users', 'image_1024', record.id.raw_value)" alt="User"/>
+                                                            <img t-att-src="kanban_image('res.users', 'avatar_1024', record.id.raw_value)" alt="User"/>
                                                         </div>
                                                         <div class="o_kanban_details">
                                                             <h4 class="o_kanban_record_title"><field name="name"/></h4>
@@ -170,7 +168,7 @@
                                             or copy this url and send it by email to your customers or suppliers:
                                         </p>
                                         <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
+                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add to your website.</p>
                                     </div>
                                 </group>
                             </page>
@@ -234,12 +232,12 @@
                     <sheet>
                         <group>
                             <field name="action" widget="radio"/>
-                            <field name="regex_url" placeholder="e.g. /page/contactus"/>
+                            <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
                                 <field name="auto_popup_timer" class="oe_inline"/> seconds
                             </div>
-                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </sheet>
                 </form>
@@ -282,7 +280,7 @@
             name="Live Chat"
             web_icon="im_livechat,static/description/icon.png"
             groups="im_livechat_group_user"
-            sequence="205"/>
+            sequence="240"/>
 
         <menuitem
             id="support_channels"

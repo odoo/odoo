@@ -12,6 +12,7 @@ class TestEventQuestionCommon(TestEventCommon):
 
         cls.event_question_1 = cls.env['event.question'].create({
             'title': 'Question1',
+            'question_type': 'simple_choice',
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': False,
             'answer_ids': [
@@ -21,6 +22,7 @@ class TestEventQuestionCommon(TestEventCommon):
         })
         cls.event_question_2 = cls.env['event.question'].create({
             'title': 'Question2',
+            'question_type': 'simple_choice',
             'event_type_id': cls.event_type_complex.id,
             'once_per_order': True,
             'answer_ids': [
@@ -28,4 +30,9 @@ class TestEventQuestionCommon(TestEventCommon):
                 (0, 0, {'name': 'Q2-Answer2'})
             ],
         })
-        cls.event_type_complex.write({'use_questions': True})
+        cls.event_question_3 = cls.env['event.question'].create({
+            'title': 'Question3',
+            'question_type': 'text_box',
+            'event_type_id': cls.event_type_complex.id,
+            'once_per_order': True,
+        })

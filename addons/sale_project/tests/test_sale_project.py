@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestSaleProject(SavepointCase):
+class TestSaleProject(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

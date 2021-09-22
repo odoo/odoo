@@ -10,6 +10,8 @@ odoo.define('website_links.website_links_menu', function (require) {
 var publicWidget = require('web.public.widget');
 var websiteNavbarData = require('website.navbar');
 
+const { registry } = require("@web/core/registry");
+
 var WebsiteLinksMenu = publicWidget.Widget.extend({
 
     /**
@@ -21,6 +23,9 @@ var WebsiteLinksMenu = publicWidget.Widget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(WebsiteLinksMenu, '#o_website_links_share_page');
+registry.category("website_navbar_widgets").add("WebsiteLinksMenu", {
+    Widget: WebsiteLinksMenu,
+    selector: '#o_website_links_share_page',
+});
 
 });

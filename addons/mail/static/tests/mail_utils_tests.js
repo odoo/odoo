@@ -1,14 +1,13 @@
-odoo.define('mail.mail_utils_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var utils = require('mail.utils');
+import * as utils from '@mail/js/utils';
 
 QUnit.module('mail', {}, function () {
 
 QUnit.module('Mail utils');
 
 QUnit.test('add_link utility function', function (assert) {
-    assert.expect(15);
+    assert.expect(19);
 
     var testInputs = {
         'http://admin:password@example.com:8/%2020': true,
@@ -20,6 +19,8 @@ QUnit.test('add_link utility function', function (assert) {
         'fhttps://test.example.com/test': false,
         "https://www.transifex.com/odoo/odoo-11/translate/#fr/lunch?q=text%3A'La+Tartiflette'": true,
         'https://www.transifex.com/odoo/odoo-11/translate/#fr/$/119303430?q=text%3ATartiflette': true,
+        'https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250': true,
+        'http://www.boîtenoire.be': true,
     };
 
     _.each(testInputs, function (willLinkify, content) {
@@ -33,7 +34,7 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
-QUnit.test('addLink: linkify inside text node (1 occurence)', function (assert) {
+QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
     assert.expect(5);
 
     const content = '<p>some text https://somelink.com</p>';
@@ -71,7 +72,7 @@ QUnit.test('addLink: linkify inside text node (1 occurence)', function (assert) 
     );
 });
 
-QUnit.test('addLink: linkify inside text node (2 occurences)', function (assert) {
+QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert) {
     assert.expect(4);
 
     // linkify may add some attributes. Since we do not care of their exact
@@ -105,5 +106,4 @@ QUnit.test('addLink: linkify inside text node (2 occurences)', function (assert)
     );
 });
 
-});
 });

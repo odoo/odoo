@@ -14,13 +14,12 @@ import traceback
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
-import werkzeug.urls
 import werkzeug.utils
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, content_disposition
+from odoo.exceptions import AccessDenied, AccessError, MissingError
+from odoo.http import request, content_disposition, Response
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
@@ -108,7 +107,10 @@ class IrHttp(models.AbstractModel):
             request.uid = request.session.uid
 
     @classmethod
-    def _authenticate(cls, auth_method='user'):
+    def _authenticate(cls, endpoint):
+        auth_method = endpoint.routing["auth"]
+        if request._is_cors_preflight(endpoint):
+            auth_method = 'none'
         try:
             if request.session.uid:
                 try:
@@ -156,7 +158,7 @@ class IrHttp(models.AbstractModel):
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
-                return werkzeug.utils.redirect(name, 301)
+                return request.redirect(name, 301, local=False)
 
             response = werkzeug.wrappers.Response()
             response.last_modified = wdate
@@ -188,13 +190,19 @@ class IrHttp(models.AbstractModel):
 
         # This is done first as the attachment path may
         # not match any HTTP controller
-        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
+        if (isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404) or \
+           (isinstance(exception, odoo.exceptions.AccessError)):
             serve = cls._serve_fallback(exception)
             if serve:
                 return serve
 
         # Don't handle exception but use werkzeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
+        # "The Response is expressed as a single JSON Object, with the following members:
+        #   jsonrpc, result, error, id"
+        if ('werkzeug' in tools.config['dev_mode']
+                and not isinstance(exception, werkzeug.exceptions.NotFound)
+                and request._request_type != 'json'):
             raise exception
 
         try:
@@ -215,7 +223,7 @@ class IrHttp(models.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = cls._authenticate(func.routing["auth"])
+            auth_method = cls._authenticate(func)
         except Exception as e:
             return cls._handle_exception(e)
 
@@ -235,14 +243,16 @@ class IrHttp(models.AbstractModel):
         return result
 
     @classmethod
+    def _redirect(cls, location, code=303):
+        return werkzeug.utils.redirect(location, code=code, Response=Response)
+
+    @classmethod
     def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
         for key, val in list(arguments.items()):
             # Replace uid placeholder by the current request.uid
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 arguments[key] = val.with_user(request.uid)
-                if not val.exists():
-                    return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
     def _generate_routing_rules(cls, modules, converters):
@@ -269,7 +279,9 @@ class IrHttp(models.AbstractModel):
             for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
                 xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
                 kw = {k: routing[k] for k in xtra_keys if k in routing}
-                routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
+                rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw)
+                rule.merge_slashes = False
+                routing_map.add(rule)
             cls._routing_map[key] = routing_map
         return cls._routing_map[key]
 
@@ -296,34 +308,38 @@ class IrHttp(models.AbstractModel):
             record = self.env[model].browse(int(id))
 
         # obj exists
-        if not record or not record.exists() or field not in record:
+        if not record or field not in record:
             return None, 404
 
-        if model == 'ir.attachment':
-            record_sudo = record.sudo()
-            if access_token and not consteq(record_sudo.access_token or '', access_token):
-                return None, 403
-            elif (access_token and consteq(record_sudo.access_token or '', access_token)):
-                record = record_sudo
-            elif record_sudo.public:
-                record = record_sudo
-            elif self.env.user.has_group('base.group_portal'):
-                # Check the read access on the record linked to the attachment
-                # eg: Allow to download an attachment on a task from /my/task/task_id
-                record.check('read')
-                record = record_sudo
-
-        # check read access
         try:
-            # We have prefetched some fields of record, among which the field
-            # 'write_date' used by '__last_update' below. In order to check
-            # access on record, we have to invalidate its cache first.
-            record._cache.clear()
-            record['__last_update']
-        except AccessError:
-            return None, 403
+            if model == 'ir.attachment':
+                record_sudo = record.sudo()
+                if access_token and not consteq(record_sudo.access_token or '', access_token):
+                    return None, 403
+                elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                    record = record_sudo
+                elif record_sudo.public:
+                    record = record_sudo
+                elif self.env.user.has_group('base.group_portal'):
+                    # Check the read access on the record linked to the attachment
+                    # eg: Allow to download an attachment on a task from /my/task/task_id
+                    record.check('read')
+                    record = record_sudo
 
-        return record, 200
+            # check read access
+            try:
+                # We have prefetched some fields of record, among which the field
+                # 'write_date' used by '__last_update' below. In order to check
+                # access on record, we have to invalidate its cache first.
+                if not record.env.su:
+                    record._cache.clear()
+                record['__last_update']
+            except AccessError:
+                return None, 403
+
+            return record, 200
+        except MissingError:
+            return None, 404
 
     @classmethod
     def _binary_ir_attachment_redirect_content(cls, record, default_mimetype='application/octet-stream'):
@@ -365,12 +381,17 @@ class IrHttp(models.AbstractModel):
         filehash = 'checksum' in record and record['checksum'] or False
 
         field_def = record._fields[field]
-        if field_def.type == 'binary' and field_def.attachment:
-            field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
-            if field_attachment:
-                mimetype = field_attachment[0]['mimetype']
-                content = field_attachment[0]['datas']
-                filehash = field_attachment[0]['checksum']
+        if field_def.type == 'binary' and field_def.attachment and not field_def.related:
+            if model != 'ir.attachment':
+                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
+                if field_attachment:
+                    mimetype = field_attachment[0]['mimetype']
+                    content = field_attachment[0]['datas']
+                    filehash = field_attachment[0]['checksum']
+            else:
+                mimetype = record['mimetype']
+                content = record['datas']
+                filehash = record['checksum']
 
         if not content:
             content = record[field] or ''
@@ -467,6 +488,6 @@ class IrHttp(models.AbstractModel):
         if status == 304:
             return werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
-            return werkzeug.utils.redirect(content, code=301)
+            return request.redirect(content, code=301, local=False)
         elif status != 200:
             return request.not_found()

@@ -21,4 +21,5 @@ Once the order is paid, the file is made available in the order confirmation pag
     'demo': [
         'data/product_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

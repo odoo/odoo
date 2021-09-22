@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<odoo>
     <!-- Account Tax Group -->
     <record id="configurable_chart_template" model="account.chart.template">
         <field name="name">Configurable Account Chart Template</field>
@@ -8,5 +8,6 @@
         <field name="cash_account_code_prefix">1015</field>
         <field name="transfer_account_code_prefix">1017</field>
         <field name="currency_id" ref="base.USD"/>
+        <field name="country_id" ref="base.us"/>
     </record>
 </odoo>

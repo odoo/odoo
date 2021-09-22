@@ -14,43 +14,43 @@ tour.register('test_error_website', {
         trigger: 'a[href="/test_user_error_json"]',
     }, {
         content: "rpc user error modal has message",
-        extra_trigger: 'div.toast-body:contains("This is a user rpc test")',
+        extra_trigger: 'div.o_notification_content:contains("This is a user rpc test")',
         trigger: 'button.o_notification_close',
     }, {
         content: "trigger rpc access error",
         trigger: 'a[href="/test_access_error_json"]',
     }, {
         content: "rpc access error modal has message",
-        extra_trigger: 'div.toast-body:contains("This is an access rpc test")',
+        extra_trigger: 'div.o_notification_content:contains("This is an access rpc test")',
         trigger: 'button.o_notification_close',
     }, {
         content: "trigger validation rpc error",
         trigger: 'a[href="/test_validation_error_json"]',
     }, {
         content: "rpc validation error modal has message",
-        extra_trigger: 'div.toast-body:contains("This is a validation rpc test")',
+        extra_trigger: 'div.o_notification_content:contains("This is a validation rpc test")',
         trigger: 'button.o_notification_close',
     }, {
         content: "trigger rpc missing error",
         trigger: 'a[href="/test_missing_error_json"]',
     }, {
         content: "rpc missing error modal has message",
-        extra_trigger: 'div.toast-body:contains("This is a missing rpc test")',
+        extra_trigger: 'div.o_notification_content:contains("This is a missing rpc test")',
         trigger: 'button.o_notification_close',
     }, {
         content: "trigger rpc error 403",
         trigger: 'a[href="/test_access_denied_json"]',
     }, {
         content: "rpc error 403 modal has message",
-        extra_trigger: 'div.toast-body:contains("This is an access denied rpc test")',
+        extra_trigger: 'div.o_notification_content:contains("This is an access denied rpc test")',
         trigger: 'button.o_notification_close',
     }, {
         content: "trigger rpc error 500",
         trigger: 'a[href="/test_internal_error_json"]',
     }, {
         content: "rpc error 500 modal is an ErrorDialog",
-        extra_trigger: 'div.o_dialog_error.modal-body div.alert.alert-warning',
-        trigger: 'button.btn.btn-primary[type="button"]',
+        extra_trigger: 'div.o_dialog_error.modal-content div.alert.alert-warning',
+        trigger: '.modal-footer button.btn.btn-primary',
     },
     // HTTP ERROR
     {

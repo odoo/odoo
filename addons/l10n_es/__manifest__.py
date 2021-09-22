@@ -16,7 +16,7 @@
     "name" : "Spain - Accounting (PGCE 2008)",
     "version" : "4.0",
     "author" : "Spanish Localization Team",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     "description": """
 Spanish charts of accounts (PGCE 2008).
 ========================================
@@ -48,4 +48,8 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

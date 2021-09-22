@@ -5,6 +5,7 @@
     'name': 'Dashboards',
     'version': '1.0',
     'category': 'Productivity',
+    'sequence': 225,
     'summary': 'Build your own dashboards',
     'description': """
 Lets the user create a custom dashboard.
@@ -16,8 +17,19 @@ Allows users to create custom dashboard.
     'data': [
         'security/ir.model.access.csv',
         'views/board_views.xml',
-        'views/board_templates.xml',
-    ],
-    'qweb': ['static/src/xml/board.xml'],
+        ],
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'board/static/src/**/*.scss',
+            'board/static/src/**/*.js',
+        ],
+        'web.qunit_suite_tests': [
+            'board/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'board/static/src/**/*.xml',
+        ],
+    },
+    'license': 'LGPL-3',
 }

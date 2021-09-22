@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import calendar
+
+from collections import defaultdict, OrderedDict
+from datetime import timedelta
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools.float_utils import float_compare
 
 
 class Location(models.Model):
@@ -23,7 +29,7 @@ class Location(models.Model):
         return res
 
     name = fields.Char('Location Name', required=True)
-    complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', store=True)
+    complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
         ('supplier', 'Vendor Location'),
@@ -45,11 +51,18 @@ class Location(models.Model):
         'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
-    comment = fields.Text('Additional Information')
+    child_internal_location_ids = fields.Many2many(
+        'stock.location',
+        string='Internal locations amoung descendants',
+        compute='_compute_child_internal_location_ids',
+        recursive=True,
+        help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'
+    )
+    comment = fields.Html('Additional Information')
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
     posz = fields.Integer('Height (Z)', default=0, help="Optional localization details, for information purpose only")
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
@@ -60,16 +73,81 @@ class Location(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
+    cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.")
+    last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
+    next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
+    warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', recursive=True)
+    storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category')
+    outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id', help='Technical: used to compute weight.')
+    incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id', help='Technical: used to compute weight.')
+    net_weight = fields.Float('Net Weight', compute="_compute_weight")
+    forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
 
-    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
+    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !'),
+                        ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
 
-    @api.depends('name', 'location_id.complete_name')
+    @api.depends('outgoing_move_line_ids.product_qty', 'incoming_move_line_ids.product_qty',
+                 'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
+                 'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
+                 'quant_ids.quantity', 'quant_ids.product_id.weight')
+    def _compute_weight(self):
+        for location in self:
+            location.net_weight = 0
+            quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
+            for quant in quants:
+                location.net_weight += quant.product_id.weight * quant.quantity
+            location.forecast_weight = location.net_weight
+            for line in incoming_move_lines:
+                location.forecast_weight += line.product_id.weight * line.product_qty
+            for line in outgoing_move_lines:
+                location.forecast_weight -= line.product_id.weight * line.product_qty
+
+    @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
         for location in self:
             if location.location_id and location.usage != 'view':
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
+
+    @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
+    def _compute_next_inventory_date(self):
+        for location in self:
+            if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
+                try:
+                    if location.last_inventory_date:
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date).days
+                        if days_until_next_inventory <= 0:
+                            location.next_inventory_date = fields.Date.today() + timedelta(days=1)
+                        else:
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                    else:
+                        location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
+                except OverflowError:
+                    raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
+            else:
+                location.next_inventory_date = False
+
+    @api.depends('location_id.warehouse_id', 'warehouse_view_ids')
+    def _compute_warehouse_id(self):
+        warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
+        view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
+        self.warehouse_id = False
+        for loc in self:
+            path = set(int(loc_id) for loc_id in loc.parent_path.split('/')[:-1])
+            for view_location_id in view_by_wh:
+                if view_location_id in path:
+                    loc.warehouse_id = view_by_wh[view_location_id]
+                    break
+
+    @api.depends('child_ids.usage', 'child_ids.child_internal_location_ids')
+    def _compute_child_internal_location_ids(self):
+        # batch reading optimization is not possible because the field has recursive=True
+        for loc in self:
+            loc.child_internal_location_ids = self.search([('id', 'child_of', loc.id), ('usage', '=', 'internal')])
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -109,10 +187,10 @@ class Location(models.Model):
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
-                children_quants = self.env['stock.quant'].search([('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
+                children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
                 if children_quants and values['active'] == False:
                     raise UserError(_('You still have some product in locations %s') %
-                        (','.join(children_quants.mapped('location_id.name'))))
+                        (', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
@@ -126,41 +204,148 @@ class Location(models.Model):
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
             domain = []
+        elif operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('barcode', operator, name), ('complete_name', operator, name)]
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
-        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(location_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product):
-        ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
-        current_location = self
-        putaway_location = self.env['stock.location']
-        while current_location and not putaway_location:
-            # Looking for a putaway about the product.
-            putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.product_id == product)
-            if putaway_rules:
-                putaway_location = putaway_rules[0].location_out_id
-            # If not product putaway found, we're looking with category so.
-            else:
-                categ = product.categ_id
-                while categ:
-                    putaway_rules = current_location.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
-                    if putaway_rules:
-                        putaway_location = putaway_rules[0].location_out_id
-                        break
-                    categ = categ.parent_id
-            current_location = current_location.location_id
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
+        """Returns the location where the product has to be put, if any compliant
+        putaway strategy is found. Otherwise returns self.
+        The quantity should be in the default UOM of the product, it is used when
+        no package is specified.
+        """
+        # find package type on package or packaging
+        package_type = self.env['stock.package.type']
+        if package:
+            package_type = package.package_type_id
+        elif packaging:
+            package_type = packaging.package_type_id
+
+        putaway_rules = self.env['stock.putaway.rule']
+        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        categ = product.categ_id
+        while categ:
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            categ = categ.parent_id
+        if package_type:
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+
+        # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
+        qty_by_location = defaultdict(lambda: 0)
+        locations = self.child_internal_location_ids
+        if locations.storage_category_id:
+            move_line_data = self.env['stock.move.line'].read_group([
+                ('product_id', '=', product.id),
+                ('location_dest_id', 'in', locations.ids),
+                ('state', 'not in', ['draft', 'done', 'cancel'])
+            ], ['location_dest_id', 'product_id', 'product_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
+            quant_data = self.env['stock.quant'].read_group([
+                ('product_id', '=', product.id),
+                ('location_id', 'in', locations.ids),
+            ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
+
+            for values in move_line_data:
+                uoms = self.env['uom.uom'].browse(values['product_uom_id'])
+                qty_done = sum(max(ml_uom._compute_quantity(float(qty), product.uom_id), float(qty_reserved))
+                               for qty_reserved, qty, ml_uom in zip(values['product_qty'], values['qty_done'], list(uoms)))
+                qty_by_location[values['location_dest_id'][0]] = qty_done
+            for values in quant_data:
+                qty_by_location[values['location_id'][0]] += values['quantity']
+
+        putaway_location = putaway_rules._get_putaway_location(product, quantity, package, qty_by_location)
+        if not putaway_location:
+            putaway_location = locations[0] if locations and self.usage == 'view' else self
+
         return putaway_location
 
-    @api.returns('stock.warehouse', lambda value: value.id)
-    def get_warehouse(self):
-        """ Returns warehouse id of warehouse that contains location """
-        domain = [('view_location_id', 'parent_of', self.ids)]
-        return self.env['stock.warehouse'].search(domain, limit=1)
+    def _get_next_inventory_date(self):
+        """ Used to get the next inventory date for a quant located in this location. It is
+        based on:
+        1. Does the location have a cyclic inventory set?
+        2. If not 1, then is there an annual inventory date set (for its company)?
+        3. If not 1 and 2, then quants have no next inventory date."""
+        if self.usage not in ['internal', 'transit']:
+            return False
+        next_inventory_date = False
+        if self.next_inventory_date:
+            next_inventory_date = self.next_inventory_date
+        elif self.company_id.annual_inventory_month:
+            today = fields.Date.today()
+            annual_inventory_month = int(self.company_id.annual_inventory_month)
+            # Manage 0 and negative annual_inventory_day
+            annual_inventory_day = max(self.company_id.annual_inventory_day, 1)
+            max_day = calendar.monthrange(today.year, annual_inventory_month)[1]
+            # Manage annual_inventory_day bigger than last_day
+            annual_inventory_day = min(annual_inventory_day, max_day)
+            next_inventory_date = today.replace(
+                month=annual_inventory_month, day=annual_inventory_day)
+            if next_inventory_date <= today:
+                # Manage leap year with the february
+                max_day = calendar.monthrange(today.year + 1, annual_inventory_month)[1]
+                annual_inventory_day = min(annual_inventory_day, max_day)
+                next_inventory_date = next_inventory_date.replace(
+                    day=annual_inventory_day, year=today.year + 1)
+        return next_inventory_date
 
     def should_bypass_reservation(self):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+
+    def _check_can_be_used(self, product, quantity=0, package=None, location_qty=0):
+        """Check if product/package can be stored in the location. Quantity
+        should in the default uom of product, it's only used when no package is
+        specified."""
+        self.ensure_one()
+        if package and package.package_type_id:
+            return self._check_package_storage(product, package)
+        return self._check_product_storage(product, quantity, location_qty)
+
+    def _check_product_storage(self, product, quantity, location_qty):
+        """Check if a number of product can be stored in the location. Quantity
+        should in the default uom of product."""
+        self.ensure_one()
+        if self.storage_category_id:
+            # check weight
+            if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
+                return False
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and any(float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0 for q in self.quant_ids):
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same" and self.quant_ids and self.quant_ids.product_id != product:
+                return False
+
+            # check if enough space
+            product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
+            # To handle new line without quantity in order to avoid suggesting a location already full
+            if product_capacity and location_qty >= product_capacity.quantity:
+                return False
+            if product_capacity and quantity + location_qty > product_capacity.quantity:
+                return False
+        return True
+
+    def _check_package_storage(self, product, package):
+        """Check if the given package can be stored in the location."""
+        self.ensure_one()
+        if self.storage_category_id:
+            # check weight
+            if self.storage_category_id.max_weight < self.forecast_weight + package.package_type_id.max_weight:
+                return False
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and any(float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0 for q in self.quant_ids):
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same" and self.quant_ids and self.quant_ids.product_id != product:
+                return False
+            # check if enough space
+            package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
+            if package_capacity:
+                package_number = len(self.quant_ids.package_id.filtered(lambda q: q.package_type_id == package.package_type_id))
+                if package_number >= package_capacity.quantity:
+                    return False
+        return True
 
 
 class Route(models.Model):
@@ -173,9 +358,10 @@ class Route(models.Model):
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
     rule_ids = fields.One2many('stock.rule', 'route_id', 'Rules', copy=True)
-    product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ")
-    product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
-    warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
+    product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.")
+    product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.")
+    warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
+    packaging_selectable = fields.Boolean('Applicable on Packaging', help="When checked, the route will be selectable on the Product Packaging.")
     supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse')
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(
@@ -186,6 +372,7 @@ class Route(models.Model):
         'product.template', 'stock_route_product', 'route_id', 'product_id',
         'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    packaging_ids = fields.Many2many('product.packaging', 'stock_location_route_packaging', 'route_id', 'packaging_id', 'Packagings', copy=False, check_company=True)
     warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',

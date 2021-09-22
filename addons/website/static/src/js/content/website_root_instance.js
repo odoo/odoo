@@ -1,13 +1,6 @@
-odoo.define('root.widget', function (require) {
-'use strict';
+/** @odoo-module alias=root.widget */
 
-var lazyloader = require('web.public.lazyloader');
-var websiteRootData = require('website.root');
+import { createPublicRoot } from "@web/legacy/js/public/public_root";
+import { WebsiteRoot } from "./website_root";
 
-var websiteRoot = new websiteRootData.WebsiteRoot(null);
-return lazyloader.allScriptsLoaded.then(function () {
-    return websiteRoot.attachTo(document.body).then(function () {
-        return websiteRoot;
-    });
-});
-});
+export default createPublicRoot(WebsiteRoot);

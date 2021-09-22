@@ -17,7 +17,7 @@
                                         Settings on this page will apply to this website
                                     </div>
                                     <div class="mt16">
-                                        <field name="website_id" widget="selection"/>
+                                        <field name="website_id" options="{'no_open': True, 'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="action_website_create_new" type="object" string="Create a New Website" class="btn-secondary" icon="fa-arrow-right"/>
@@ -40,7 +40,7 @@
                         <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
                             <div class="col-12 o_setting_box" id="website_action_setting" style="margin-left: 30px; margin-bottom: 16px;">
                                 <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fa-globe"/>
-                                <button name="install_theme_on_current_website" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
+                                <button name="install_theme_on_current_website" type="object" string="Pick a Theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
                                 <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fa-plus"/>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
@@ -69,7 +69,7 @@
                                     <div class="text-muted">
                                         The company this website belongs to
                                     </div>
-                                    <field name="website_company_id"/>
+                                    <field name="website_company_id" attrs="{'required': [('website_id', '!=', False)]}" />
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="languages_setting">
@@ -87,7 +87,7 @@
                                         <field name="website_language_count" invisible="1"/>
                                         <div class="mt8" attrs="{'invisible':[('website_language_count', '&lt;', 2)]}">
                                             <label class="o_light_label mr8" string="Default" for="website_default_lang_id"/>
-                                            <field name="website_default_lang_id" widget="selection" attrs="{'required': [('website_id', '!=', False)]}"/>
+                                            <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                     </div>
                                     <div class="mt8">
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="domain_settings" groups="website.group_multi_website">
+                            <div class="col-12 col-lg-6 o_setting_box" id="domain_settings">
                                 <div class="o_setting_right_pane">
                                     <label string="Domain" for="website_domain"/>
                                     <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
@@ -103,7 +103,7 @@
                                         Display this website when users visit this domain
                                     </div>
                                     <div class="mt8">
-                                        <field name="website_domain" placeholder="www.odoo.com"/>
+                                        <field name="website_domain" placeholder="https://www.odoo.com"/>
                                     </div>
                                     <div groups="base.group_no_one">
                                         <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
@@ -211,7 +211,7 @@
                                     <label string="Default Social Share Image" for="has_default_share_image"/>
                                     <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                     <div class="text-muted" attrs="{'invisible': [('has_default_share_image', '=', False)]}">
-                                        If set, replaces the company logo as the default social share image.
+                                        If set, replaces the website logo as the default social share image.
                                     </div>
                                     <field name="social_default_image" widget="image" class="w-25 mt-2" attrs="{'invisible': [('has_default_share_image', '=', False)]}"/>
                                 </div>
@@ -242,6 +242,11 @@
                                             <i class="fa fa-arrow-right"/>
                                             Create a Google Project and Get a Key
                                         </a>
+                                        <a role="button" class="btn-link" target="_blank"
+                                           href="https://cloud.google.com/maps-platform/pricing">
+                                            <i class="fa fa-arrow-right"/>
+                                            Enable billing on your Google Project
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -256,7 +261,7 @@
                                         Let your customers log in to see their documents
                                     </div>
                                     <div class="mt8">
-                                        <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
+                                        <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
                                     </div>
                                     <div class="mt8 content-group">
                                         <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
@@ -279,16 +284,16 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <div class="row mt16">
-                                            <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
-                                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                            <label class="col-lg-3 o_light_label" string="Measurement ID" for="google_analytics_key"/>
+                                            <field name="google_analytics_key" placeholder="G-XXXXXXXXXX"
                                                 attrs="{'required': [('has_google_analytics', '=', True)]}"/>
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
-                                            How to get my Tracking ID
+                                            How to get my Measurement ID
                                         </a>
                                     </div>
                                 </div>
@@ -338,7 +343,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics_dashboard.html"
                                             class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Client ID
@@ -383,7 +388,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'website'}</field>
+            <field name="context">{'module' : 'website', 'bin_size': False}</field>
         </record>
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"

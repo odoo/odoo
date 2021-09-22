@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, datetime
 
 
 class IrFilters(models.Model):
@@ -35,7 +33,7 @@ class IrFilters(models.Model):
 
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        default = dict(default or {}, name=_('%s (copy)', self.name))
         return super(IrFilters, self).copy(default)
 
     def _get_eval_domain(self):

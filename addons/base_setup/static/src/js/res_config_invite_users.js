@@ -41,6 +41,7 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
             }).then(function (data) {
                 self.active_users = data.active_users;
                 self.pending_users = data.pending_users;
+                self.action_pending_users = data.action_pending_users;
                 self.pending_count = data.pending_count;
                 self.resend_invitation = data.resend_invitation || false;
             });
@@ -79,7 +80,10 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
                 // filter out invalid email addresses
                 var invalidEmails = _.reject(emails, this._validateEmail);
                 if (invalidEmails.length) {
-                    this.do_warn(_.str.sprintf(_t('The following email addresses are invalid: %s.'), invalidEmails.join(', ')));
+                    this.displayNotification({ message: _.str.sprintf(
+                        _t('Invalid email addresses: %s.'),
+                        invalidEmails.join(', ')
+                    ), type: 'danger' });
                 }
                 emails = _.difference(emails, invalidEmails);
 
@@ -90,7 +94,10 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
                     });
                     var existingEmails = _.intersection(emails, this.emails.concat(pendingEmails));
                     if (existingEmails.length) {
-                        this.do_warn(_.str.sprintf(_t('The following email addresses already exist: %s.'), existingEmails.join(', ')));
+                        this.displayNotification({ message: _.str.sprintf(
+                            _t('Email addresses already existing: %s.'),
+                            existingEmails.join(', ')
+                        ), type: 'danger' });
                     }
                     emails = _.difference(emails, existingEmails);
                 }
@@ -135,49 +142,19 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
          * @param {MouseEvent} ev
          */
         _onClickMore: function (ev) {
-            var self = this;
             ev.preventDefault();
-            this._rpc({
-                model: 'ir.model.data',
-                method: 'xmlid_to_res_model_res_id',
-                args: ["base.view_users_form"],
-            })
-            .then(function (data) {
-                self.do_action({
-                    name: _t('Users'),
-                    type: 'ir.actions.act_window',
-                    view_mode: 'tree,form',
-                    res_model: 'res.users',
-                    domain: [['log_ids', '=', false]],
-                    context: {
-                        search_default_no_share: true,
-                    },
-                    views: [[false, 'list'], [data[1], 'form']],
-                });
-            });
+            this.do_action(this.action_pending_users);
         },
         /**
          * @private
          * @param {MouseEvent} ev
          */
         _onClickUser: function (ev) {
-            var self = this;
             ev.preventDefault();
             var user_id = $(ev.currentTarget).data('user-id');
-            this._rpc({
-                model: 'ir.model.data',
-                method: 'xmlid_to_res_model_res_id',
-                args: ["base.view_users_form"],
-            })
-            .then(function (data) {
-                self.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: 'res.users',
-                    view_mode: 'form',
-                    res_id: user_id,
-                    views: [[data[1], 'form']],
-                });
-            });
+
+            var action = Object.assign({}, this.action_pending_users, {res_id: user_id});
+            this.do_action(action);
         },
         /**
          * @private

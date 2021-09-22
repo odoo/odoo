@@ -12,6 +12,11 @@ class test_inherits(common.TransactionCase):
 
         self.assertEqual(daughter._inherits, {'test.inherit.mother': 'template_id'})
 
+        # the field supporting the inheritance should be auto_join
+        field = daughter._fields['template_id']
+        self.assertTrue(field.delegate)
+        self.assertTrue(field.auto_join, "delegate fields should be auto_join")
+
     def test_10_access_from_child_to_parent_model(self):
         """ check whether added field in model is accessible from children models (_inherits) """
         # This test checks if the new added column of a parent model
@@ -59,7 +64,7 @@ class test_inherits(common.TransactionCase):
         field = mother._fields['surname']
 
         # the field dependencies are added
-        self.assertItemsEqual(field.depends, ['name', 'field_in_mother'])
+        self.assertItemsEqual(self.registry.field_depends[field], ['name', 'field_in_mother'])
 
     def test_40_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
@@ -68,6 +73,14 @@ class test_inherits(common.TransactionCase):
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
                          [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C')])
+
+    def test_41_selection_extension(self):
+        """ check that attribute selection_add=... extends selection on fields. """
+        model = self.env['test_new_api.selection']
+        field = model._fields['other']
+        self.assertIsInstance(field.selection, str)
+        self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
+
 
 class test_inherits_demo(TransactionCaseWithUserDemo):
 

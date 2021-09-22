@@ -3,6 +3,8 @@ odoo.define('hr_attendance.greeting_message', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
+var time = require('web.time');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 
@@ -47,9 +49,13 @@ var GreetingMessage = AbstractAction.extend({
         this.previous_attendance_change_date = action.previous_attendance_change_date && moment.utc(action.previous_attendance_change_date).local();
 
         // check in/out times displayed in the greeting message template.
-        this.format_time = 'HH:mm:ss';
+        this.format_time = time.getLangTimeFormat();
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
+
+        // extra hours amount displayed in the greeting message template.
+        this.total_overtime_float = action.total_overtime; // Used for comparison in template
+        this.total_overtime = field_utils.format.float_time(this.total_overtime_float)
 
         if (action.hours_today) {
             var duration = moment.duration(action.hours_today, "hours");
@@ -158,7 +164,7 @@ var GreetingMessage = AbstractAction.extend({
                     if (result.action) {
                         self.do_action(result.action);
                     } else if (result.warning) {
-                        self.do_warn(result.warning);
+                        self.displayNotification({ title: result.warning, type: 'danger' });
                         setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
                     }
                 }, function () {

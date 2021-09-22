@@ -7,12 +7,15 @@ from odoo import api, models
 class Users(models.Model):
     _inherit = 'res.users'
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Trigger automatic subscription based on user groups """
-        user = super(Users, self).create(values)
-        self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', user.groups_id.ids)])._action_add_members(user.partner_id)
-        return user
+        users = super(Users, self).create(vals_list)
+        for user in users:
+            self.env['slide.channel'].sudo().search([
+                ('enroll_group_ids', 'in', user.groups_id.ids)
+            ])._action_add_members(user.partner_id)
+        return users
 
     def write(self, vals):
         """ Trigger automatic subscription based on updated user groups """

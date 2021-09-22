@@ -7,6 +7,7 @@ from odoo import fields, models
 class FleetVehicleAssignationLog(models.Model):
     _inherit = 'fleet.vehicle.assignation.log'
 
+    driver_employee_id = fields.Many2one(related="vehicle_id.driver_employee_id", string='Driver (Employee)')
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
 
     def _compute_attachment_number(self):
@@ -19,7 +20,7 @@ class FleetVehicleAssignationLog(models.Model):
 
     def action_get_attachment_view(self):
         self.ensure_one()
-        res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         res['domain'] = [('res_model', '=', 'fleet.vehicle.assignation.log'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'fleet.vehicle.assignation.log', 'default_res_id': self.id}
         return res

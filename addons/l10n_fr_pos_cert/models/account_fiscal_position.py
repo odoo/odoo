@@ -13,7 +13,7 @@ class AccountFiscalPosition(models.Model):
                 raise UserError(
                     _(
                         "You cannot modify a fiscal position used in a POS order. "
-                        + "You should archive it and create a new one."
+                        "You should archive it and create a new one."
                     )
                 )
         return super(AccountFiscalPosition, self).write(vals)

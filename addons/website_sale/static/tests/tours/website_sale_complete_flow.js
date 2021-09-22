@@ -3,6 +3,7 @@ odoo.define('website_sale_tour.tour', function (require) {
 
     var tour = require("web_tour.tour");
     var rpc = require("web.rpc");
+    const tourUtils = require('website_sale.tour_utils');
 
     tour.register('website_sale_tour', {
         test: true,
@@ -26,6 +27,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(2),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -55,6 +57,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="email"]').val('abc@odoo.com');
             $('input[name="street"]').val('SO1 Billing Street, 33');
             $('input[name="city"]').val('SO1BillingCity');
+            $('input[name="zip"]').val('10000');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },
@@ -75,6 +78,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="phone"]').val('8888888888');
             $('input[name="street"]').val('17, SO1 Shipping Road');
             $('input[name="city"]').val('SO1ShippingCity');
+            $('input[name="zip"]').val('10000');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },
@@ -130,8 +134,8 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Pay Now",
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        // extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
     },
     {
         content: "Sign up",
@@ -161,7 +165,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
@@ -218,6 +222,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(2),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -263,6 +268,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="phone"]').val('7777777777');
             $('input[name="street"]').val('SO2New Shipping Street, 5');
             $('input[name="city"]').val('SO2NewShipping');
+            $('input[name="zip"]').val('1200');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },
@@ -277,7 +283,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
     },
     {
         content: "Open Dropdown for See quotation",
@@ -305,7 +311,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
@@ -336,7 +342,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as abc",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
@@ -356,6 +362,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(),
     {
         content: "Proceed to checkout",
         trigger: 'a[href*="/shop/checkout"]',
@@ -381,6 +388,6 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[id="o_payment_form_pay"]:visible',
+        trigger: 'button[name="o_payment_submit_button"]:visible',
     }]);
 });

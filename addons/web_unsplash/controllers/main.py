@@ -30,7 +30,7 @@ class Web_Unsplash(http.Controller):
             view counter.
         '''
         try:
-            if not url.startswith('https://api.unsplash.com/photos/'):
+            if not url.startswith('https://api.unsplash.com/photos/') and not request.env.registry.in_test_mode():
                 raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
             access_key = self._get_access_key()
             requests.get(url, params=url_encode({'client_id': access_key}))
@@ -81,9 +81,10 @@ class Web_Unsplash(http.Controller):
         for key, value in unsplashurls.items():
             url = value.get('url')
             try:
-                if not url.startswith('https://images.unsplash.com/'):
+                if not url.startswith('https://images.unsplash.com/') and not request.env.registry.in_test_mode():
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
+
                 req = requests.get(url)
                 if req.status_code != requests.codes.ok:
                     continue
@@ -113,6 +114,7 @@ class Web_Unsplash(http.Controller):
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,
+                'description': value.get('description'),
             })
             attachment.generate_access_token()
             uploads.append(attachment._get_media_info())

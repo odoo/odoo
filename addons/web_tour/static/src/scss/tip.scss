@@ -1,6 +1,36 @@
+$o-tip-width: 28px;
+$o-tip-height: 38px;
+$o-tip-anchor-space: 0;
+$o-tip-bounce-half-size: 3px;
+$o-tip-color: $o-enterprise-color;
+$o-tip-border-width: 3px;
+$o-tip-border-color: white;
+$o-tip-animation-speed: 500ms;
+$o-tip-arrow-size: 12px;
+
+$o-tip-duration-in: 200ms;
+$o-tip-size-duration-in: floor($o-tip-duration-in * 3 / 4);
+$o-tip-size-delay-in: $o-tip-duration-in - $o-tip-size-duration-in;
+
+@keyframes move-left-right {
+    0% {
+        transform: translate(-$o-tip-bounce-half-size, 0);
+    }
+    100% {
+        transform: translate($o-tip-bounce-half-size, 0);
+    }
+}
+@keyframes move-bottom-top {
+    0% {
+        transform: translate(0, -$o-tip-bounce-half-size);
+    }
+    100% {
+        transform: translate(0, $o-tip-bounce-half-size);
+    }
+}
 
 .o_tooltip_parent {
-    position: relative!important;
+    position: relative !important;
 
     // Tooltips are placed in the <body/> element with z-index 1070 because this
     // is the only way to position them above everything else. However, for
@@ -17,115 +47,86 @@
     // home menu (this is especially useful in the website where most tooltips
     // are placed in the body and need to be placed above elements with z-index
     // like the navbar).
-    opacity: 0.999;
+    opacity: 0.999 !important;
 }
 
 .o_tooltip {
-    $o-tip-color: $o-brand-odoo;
-    $o-tip-size: 24px;
-    $o-tip-border-width: 2px;
-    $o-tip-arrow-length: 10px;
-    $o-tip-arrow-width: 20px;
-    $o-tip-arrow-integration: 2px;
-
-    $o-tip-duration-in: 300ms;
-    $o-tip-size-duration-in: floor($o-tip-duration-in * 3 / 4);
-    $o-tip-size-delay-in: floor($o-tip-duration-in / 4);
-    $o-tip-border-radius-duration-in: floor($o-tip-duration-in / 2);
-    $o-tip-border-radius-delay-in: floor($o-tip-duration-in * 0);
-    $o-tip-bg-color-duration-in: floor($o-tip-duration-in * 1);
-    $o-tip-bg-color-delay-in: floor($o-tip-duration-in * 0);
-    $o-tip-arrow-duration-in: floor($o-tip-duration-in / 2);
-    $o-tip-arrow-delay-in: floor($o-tip-duration-in * 0);
-    $o-tip-white-arrow-duration-in: floor($o-tip-duration-in * 1);
-    $o-tip-white-arrow-delay-in: floor($o-tip-duration-in * 0);
-
-    $o-tip-duration-out: 200ms;
-    $o-tip-size-duration-out: floor($o-tip-duration-out * 2 / 3);
-    $o-tip-size-delay-out: floor($o-tip-duration-out * 0);
-    $o-tip-border-radius-duration-out: floor($o-tip-duration-out * 2 / 3);
-    $o-tip-border-radius-delay-out: floor($o-tip-duration-out / 3);
-    $o-tip-arrow-duration-out: floor($o-tip-duration-out / 2);
-    $o-tip-arrow-delay-out: floor($o-tip-duration-out / 2);
-
-    box-sizing: content-box;
     /*rtl:begin:ignore*/
-    @include o-position-absolute($top: 50%, $left: 50%);
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
     /*rtl:end:ignore*/
-    opacity: 0;
-    width: $o-tip-size;
-    height: $o-tip-size;
-    border: $o-tip-border-width solid $o-tip-color;
-    border-radius: 50%;
-    padding: 0; // ! Cannot be changed ! Javascript rely on this.
-    z-index: $zindex-tooltip; // See comment on 'o_tooltip_parent' class
-    background-color: $o-tip-color;
-    box-shadow: 0 2px 2px 1px rgba(150, 150, 150, 0.3);
+    z-index: $zindex-tooltip !important; // See comment on 'o_tooltip_parent' class
+    opacity: 0 !important;
+    width: $o-tip-width !important;
+    height: $o-tip-width !important; // the shape must be done using transform
+    margin: 0 !important;
+    padding: 0 !important;
 
-    transition:
-        width $o-tip-size-duration-out ease $o-tip-size-delay-out,
-        height $o-tip-size-duration-out ease $o-tip-size-delay-out,
-        margin $o-tip-size-duration-out ease $o-tip-size-delay-out,
-        border-radius $o-tip-border-radius-duration-out ease $o-tip-border-radius-delay-out;
+    transition: opacity 400ms ease 0ms !important;
 
     &.o_animated {
-        animation: move-bottom-top 500ms ease-in 0ms infinite alternate;
+        animation: move-bottom-top $o-tip-animation-speed ease-in 0ms infinite alternate !important;
+
         &.right, &.left {
-            animation-name: move-left-right;
+            animation-name: move-left-right !important;
         }
     }
+    &.o_tooltip_visible {
+        opacity: 1 !important;
+    }
 
+    &.o_tooltip_fixed {
+        position: fixed !important;
+    }
+
+    // Use the ::before element to make the tip shape: a simple filled and
+    // bordered square with one corner and 3 rounded corners, then transformed.
+    // Transform, from right to left: 1) make the arrow point up, 2) scale along
+    // Y axis so that the tip reach the desired height, 3) translate along the Y
+    // axis so that the arrow exactly points at the original square tip border
+    // = the border that will be against the pointed element, 4) rotate the
+    // the shape depending on the tip orientation.
     &::before {
         content: "";
-        border: 0 solid rgba(0, 0, 0, 0);
-        transition: all $o-tip-arrow-duration-out ease $o-tip-arrow-delay-out;
+        @include o-position-absolute(0, 0);
+        width: $o-tip-width; // Not 100% need to stay small and square for close transition
+        height: $o-tip-width;
+        border: $o-tip-border-width solid $o-tip-border-color;
+        border-radius: 0 50% 50% 50%;
+        background: radial-gradient(lighten($o-tip-color, 7%), $o-tip-color);
+        box-shadow: 0 0 40px 2px rgba(255, 255, 255, 0.5);
+    }
+    $-sqrt-2: 1.4142;
+    $-tip-scale: $o-tip-height / ((1 + $-sqrt-2) * $o-tip-width / 2);
+    $-tip-overflow: ($-sqrt-2 * $-tip-scale - 1) * $o-tip-width / 2;
+    $-tip-translate: $o-tip-anchor-space + $-tip-overflow;
+    &.top::before {
+        transform: rotate(180deg) translateY($-tip-translate) scaleY($-tip-scale) rotate(45deg);
     }
     &.right::before {
-        @include o-position-absolute($left: -$o-tip-arrow-length+$o-tip-arrow-integration, $top: ($o-tip-size - $o-tip-arrow-width) / 2);
-        border-width: $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2 0;
-        border-right-color: $o-tip-color;
-    }
-    &.top::before {
-        /*rtl:begin:ignore*/
-        @include o-position-absolute($bottom: -$o-tip-arrow-length+$o-tip-arrow-integration, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
-        /*rtl:end:ignore*/
-        border-width: $o-tip-arrow-length $o-tip-arrow-width/2 0 $o-tip-arrow-width/2;
-        border-top-color: $o-tip-color;
-    }
-    &.left::before {
-        @include o-position-absolute($right: -$o-tip-arrow-length+$o-tip-arrow-integration, $top: ($o-tip-size - $o-tip-arrow-width) / 2);
-        border-width: $o-tip-arrow-width/2 0 $o-tip-arrow-width/2 $o-tip-arrow-length;
-        border-left-color: $o-tip-color;
+        transform: rotate(270deg) translateY($-tip-translate) scaleY($-tip-scale) rotate(45deg);
     }
     &.bottom::before {
-        /*rtl:begin:ignore*/
-        @include o-position-absolute($top: -$o-tip-arrow-length+$o-tip-arrow-integration, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
-        /*rtl:end:ignore*/
-        border-width: 0 $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2;
-        border-bottom-color: $o-tip-color;
+        transform: rotate(0deg) translateY($-tip-translate) scaleY($-tip-scale) rotate(45deg);
     }
-
-    &::after {
-        content: "";
-        @include o-position-absolute(-$o-tip-border-width, -$o-tip-border-width, -$o-tip-border-width, -$o-tip-border-width);
-        border-color: $o-tip-color;
-        border-radius: 50%;
-        transition: margin $o-tip-size-duration-out ease $o-tip-size-delay-out, border-radius $o-tip-duration-out linear 0s;
-        background: radial-gradient(lighten($o-tip-color, 7%), $o-tip-color);
+    &.left::before {
+        transform: rotate(90deg) translateY($-tip-translate) scaleY($-tip-scale) rotate(45deg);
     }
 
     > .o_tooltip_overlay {
         display: none;
         @include o-position-absolute(0, 0, 0, 0);
-        margin: -$o-tip-border-width;
         z-index: -1;
     }
     > .o_tooltip_content {
         overflow: hidden;
-        padding: floor($o-tip-size/4) floor($o-tip-size/2);
+        direction: ltr;
+        position: relative;
+        padding: 7px 14px;
+        background-color: inherit;
+        color: transparent;
         visibility: hidden;
-        transition: visibility 0s ease 0s;
-        color: black;
 
         // Force style so that it does not depend on where the tooltip is attached
         line-height: $line-height-base;
@@ -148,98 +149,85 @@
     }
 
     &.active {
-        border-radius: 0;
-        background-color: white;
+        border: $o-tip-border-width solid $o-tip-color !important;
+        background-color: white !important;
 
         transition:
             width $o-tip-size-duration-in ease $o-tip-size-delay-in,
             height $o-tip-size-duration-in ease $o-tip-size-delay-in,
-            margin $o-tip-size-duration-in ease $o-tip-size-delay-in,
-            border-radius $o-tip-border-radius-duration-in ease $o-tip-border-radius-delay-in,
-            background-color $o-tip-bg-color-duration-in ease $o-tip-bg-color-delay-in;
+            margin $o-tip-size-duration-in ease $o-tip-size-delay-in !important;
 
         &::before {
-            transition: all $o-tip-arrow-duration-in ease $o-tip-arrow-delay-in;
-        }
-        &::after {
-            border: 0 solid rgba(0, 0, 0, 0);
+            width: $o-tip-arrow-size;
+            height: $o-tip-arrow-size;
+            border-color: $o-tip-color;
             border-radius: 0;
+            background: white;
+            box-shadow: none;
         }
 
         > .o_tooltip_overlay {
             display: block;
         }
         > .o_tooltip_content {
-            direction: ltr;
+            // Content background must appear immediately to hide the bottom of
+            // the square present to shape the bubble arrow. But text must
+            // appear at the very end.
+            color: black;
             visibility: visible;
-            transition: visibility 0s ease $o-tip-duration-in;
+            transition: color 0ms ease $o-tip-duration-in;
         }
 
+        $-arrow-offset: ($o-tip-width - $o-tip-arrow-size) / 2 - $o-tip-border-width;
+        $-tip-translate: $o-tip-anchor-space + $o-tip-arrow-size / 2;
         &.right {
+            transform: translateX($-tip-translate) !important;
+
             &::before {
-                left: -$o-tip-arrow-length;
-                border-right-color: $o-tip-color;
-            }
-            &::after {
-                @include o-position-absolute($left: -$o-tip-arrow-length+$o-tip-border-width*2, $top: ($o-tip-size - $o-tip-arrow-width) / 2);
-                border-width: $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2 0;
-                border-right-color: white;
-                transition: border-right-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
+                @include o-position-absolute($left: -$o-tip-arrow-size, $top: $-arrow-offset);
+                transform: translateX(50%) rotate(45deg);
             }
         }
         &.top {
+            transform: translateY(-$-tip-translate) !important;
+
             &::before {
-                bottom: -$o-tip-arrow-length;
-                border-top-color: $o-tip-color;
-            }
-            &::after {
                 /*rtl:begin:ignore*/
-                @include o-position-absolute($bottom: -$o-tip-arrow-length+$o-tip-border-width*2, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
+                @include o-position-absolute($bottom: -$o-tip-arrow-size, $left: $-arrow-offset);
                 /*rtl:end:ignore*/
-                border-width: $o-tip-arrow-length $o-tip-arrow-width/2 0 $o-tip-arrow-width/2;
-                border-top-color: white;
-                transition: border-top-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
+                transform: translateY(-50%) rotate(45deg);
             }
         }
         &.left {
+            transform: translateX(-$-tip-translate) !important;
+
             &::before {
-                right: -$o-tip-arrow-length;
-                border-left-color: $o-tip-color;
-            }
-            &::after {
-                @include o-position-absolute($right: -$o-tip-arrow-length+$o-tip-border-width*2, $top: ($o-tip-size - $o-tip-arrow-width) / 2);
-                border-width: $o-tip-arrow-width/2 0 $o-tip-arrow-width/2 $o-tip-arrow-length;
-                border-left-color: white;
-                transition: border-left-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
+                @include o-position-absolute($right: -$o-tip-arrow-size, $top: $-arrow-offset);
+                transform: translateX(-50%) rotate(45deg);
             }
         }
         &.bottom {
-            &::before {
-                top: -$o-tip-arrow-length;
-                border-bottom-color: $o-tip-color;
-            }
-            &::after {
-                /*rtl:begin:ignore*/
-                @include o-position-absolute($top: -$o-tip-arrow-length+$o-tip-border-width*2, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
-                /*rtl:end:ignore*/
-                border-width: 0 $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2;
-                border-bottom-color: white;
-                transition: border-bottom-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
-            }
-        }
-    }
+            transform: translateY($-tip-translate) !important;
 
-    &.inverse {
-        &.left, &.right {
-            &::before, &.active::after {
-                top: auto;
-                bottom: ($o-tip-size - $o-tip-arrow-width) / 2;
+            &::before {
+                /*rtl:begin:ignore*/
+                @include o-position-absolute($top: -$o-tip-arrow-size, $left: $-arrow-offset);
+                /*rtl:end:ignore*/
+                transform: translateY(50%) rotate(45deg);
             }
         }
-        &.top, &.bottom {
-            &::before, &.active::after {
-                left: auto#{"/*rtl:ignore*/"};
-                right: ($o-tip-size - $o-tip-arrow-width) / 2#{"/*rtl:ignore*/"};
+        &.inverse {
+            &.left, &.right {
+                &::before {
+                    top: auto;
+                    bottom: $-arrow-offset;
+                }
+            }
+            &.top, &.bottom {
+                &::before {
+                    left: auto#{"/*rtl:ignore*/"};
+                    right: $-arrow-offset#{"/*rtl:ignore*/"};
+                }
             }
         }
     }
@@ -247,6 +235,6 @@
 
 @media print {
     .o_tooltip {
-        display: none;
+        display: none !important;
     }
 }

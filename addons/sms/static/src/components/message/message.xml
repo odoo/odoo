@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//*[@name='failureIcon']" position="replace">
+            <t t-if="message.message_type === 'sms'">
+                <i class="o_Message_notificationIcon fa fa-mobile"/> SMS
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//*[@name='notificationIcon']" position="replace">
+            <t t-if="message.message_type === 'sms'">
+                <i class="o_Message_notificationIcon fa fa-mobile"/> SMS
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,11 +1,12 @@
 odoo.define('website.mobile', function (require) {
 'use strict';
 
-var core = require('web.core');
+const {_t} = require('web.core');
+const {Markup} = require('web.utils');
 var Dialog = require('web.Dialog');
 var websiteNavbarData = require('website.navbar');
 
-var _t = core._t;
+const { registry } = require("@web/core/registry");
 
 var MobilePreviewDialog = Dialog.extend({
     /**
@@ -50,13 +51,19 @@ var MobileMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _onMobilePreviewClick: function () {
-        new MobilePreviewDialog(this, {
-            title: _t('Mobile preview') + ' <span class="fa fa-refresh"/>',
+        if (this.mobilePreview && !this.mobilePreview.isDestroyed()) {
+            return this.mobilePreview.close();
+        }
+        this.mobilePreview = new MobilePreviewDialog(this, {
+            title: Markup(_.escape(_t('Mobile preview')) + ' <span class="fa fa-refresh"/>'),
         }).open();
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(MobileMenu, '#mobile-menu');
+registry.category("website_navbar_widgets").add("MobileMenu", {
+    Widget: MobileMenu,
+    selector: '#mobile-menu',
+});
 
 return {
     MobileMenu: MobileMenu,

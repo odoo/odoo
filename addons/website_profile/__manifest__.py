@@ -12,10 +12,17 @@
         'gamification'
     ],
     'data': [
-        'data/profile_data.xml',
+        'data/mail_template_data.xml',
         'views/gamification_badge_views.xml',
         'views/website_profile.xml',
         'security/ir.model.access.csv',
     ],
     'auto_install': False,
+    'assets': {
+        'web.assets_frontend': [
+            'website_profile/static/src/scss/website_profile.scss',
+            'website_profile/static/src/js/website_profile.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

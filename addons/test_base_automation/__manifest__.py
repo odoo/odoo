@@ -8,7 +8,7 @@
     'sequence': 9877,
     'summary': 'Base Automation Tests: Ensure Flow Robustness',
     'description': """This module contains tests related to base automation. Those are
-contained in a separate module as it contains models used only to perform
+present in a separate module as it contains models used only to perform
 tests independently to functional aspects of other models.""",
     'depends': ['base_automation'],
     'data': [
@@ -16,4 +16,5 @@ tests independently to functional aspects of other models.""",
     ],
     'installable': True,
     'application': False,
+    'license': 'LGPL-3',
 }

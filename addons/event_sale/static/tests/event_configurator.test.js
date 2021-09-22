@@ -27,18 +27,18 @@ odoo.define('event.configurator.tests', function (require) {
                 'product.product': {
                     fields: {
                         id: {type: 'integer'},
-                        event_ok: {type: 'boolean'},
+                        detailed_type: {type: 'selection'},
                         rent_ok: {type: 'boolean'}//sale_rental purposes
                     },
                     records: [{
                         id: 1,
                         display_name: "Customizable Event",
-                        event_ok: true,
+                        detailed_type: 'event',
                         rent_ok: false//sale_rental purposes
                     }, {
                         id: 2,
                         display_name: "Desk",
-                        event_ok: false,
+                        detailed_type: 'service',
                         rent_ok: false//sale_rental purposes
                     }]
                 },
@@ -77,7 +77,7 @@ odoo.define('event.configurator.tests', function (require) {
         }
     }, function (){
         QUnit.test('Select a regular product and verify that the event configurator is not opened', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,
@@ -85,9 +85,9 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
+                    if (params.method === 'read' && params.args[1][0] === 'detailed_type') {
                         assert.ok(true);
-                        return Promise.resolve([{event_ok: false}]);
+                        return Promise.resolve([{detailed_type: 'service'}]);
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -114,9 +114,9 @@ odoo.define('event.configurator.tests', function (require) {
                 data: this.data,
                 arch: getArch(),
                 mockRPC: function (route, params) {
-                    if (params.method === 'read' && params.args[1][0] === 'event_ok') {
+                    if (params.method === 'read' && params.args[1][0] === 'detailed_type') {
                         assert.ok(true);
-                        return Promise.resolve([{event_ok: true}]);
+                        return Promise.resolve([{detailed_type: 'event'}]);
                     }
                     return this._super.apply(this, arguments);
                 },

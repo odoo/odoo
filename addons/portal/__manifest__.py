@@ -14,18 +14,39 @@ portal.
 
 This module contains most code coming from odoo v10 website_portal. Purpose
 of this module is to allow the display of a customer portal without having
-a dependency towards website edition and customization capabilities.""",
+a dependency towards website editing and customization capabilities.""",
     'depends': ['web', 'web_editor', 'http_routing', 'mail', 'auth_signup'],
     'data': [
         'security/ir.model.access.csv',
-        'data/portal_data.xml',
-        'views/assets.xml',
+        'data/mail_template_data.xml',
+        'data/mail_templates.xml',
         'views/portal_templates.xml',
         'wizard/portal_share_views.xml',
         'wizard/portal_wizard_views.xml',
     ],
-    'qweb': [
-        'static/src/xml/portal_chatter.xml',
-        'static/src/xml/portal_signature.xml',
-    ],
+    'assets': {
+        'web._assets_primary_variables': [
+            'portal/static/src/scss/primary_variables.scss',
+        ],
+        'web._assets_frontend_helpers': [
+            ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
+        ],
+        'web.assets_frontend': [
+            'portal/static/src/scss/bootstrap.extend.scss',
+            'portal/static/src/scss/portal.scss',
+            'portal/static/src/js/portal.js',
+            'portal/static/src/js/portal_chatter.js',
+            'portal/static/src/js/portal_composer.js',
+            'portal/static/src/js/portal_signature.js',
+            'portal/static/src/js/portal_sidebar.js',
+        ],
+        'web.assets_tests': [
+            'portal/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'portal/static/src/xml/portal_chatter.xml',
+            'portal/static/src/xml/portal_signature.xml',
+        ],
+    },
+    'license': 'LGPL-3',
 }

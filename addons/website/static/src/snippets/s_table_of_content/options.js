@@ -11,7 +11,6 @@ options.registry.TableOfContent = options.Class.extend({
         this.targetedElements = 'h1, h2';
         const $headings = this.$target.find(this.targetedElements);
         if ($headings.length > 0) {
-            this.isAnimateScrolling = this.$target.find(this.targetedElements)[0].dataset.anchor === 'true' ? true : false;
             this._generateNav();
         }
         // Generate the navbar if the content changes
@@ -29,28 +28,45 @@ options.registry.TableOfContent = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Options
+    // Private
     //--------------------------------------------------------------------------
 
     /**
-     * Animate (or not) scrolling.
-     *
-     * @see this.selectClass for parameters
+     * @private
      */
-    animateScrolling: function (previewMode, widgetValue, params) {
+    _generateNav: function (ev) {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        const $nav = this.$target.find('.s_table_of_content_navbar');
         const $headings = this.$target.find(this.targetedElements);
-        const anchorValue = widgetValue ? 'true' : '0';
-        _.each($headings, el => el.dataset.anchor = anchorValue);
-        this.isAnimateScrolling = !!widgetValue;
+        $nav.empty();
+        _.each($headings, el => {
+            const $el = $(el);
+            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+            $('<a>').attr('href', "#" + id)
+                    .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
+                    .text($el.text())
+                    .appendTo($nav);
+            $el.attr('id', id);
+            $el[0].dataset.anchor = 'true';
+        });
+        $nav.find('a:first').addClass('active');
     },
+});
+
+options.registry.TableOfContentNavbar = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
     /**
      * Change the navbar position.
      *
      * @see this.selectClass for parameters
      */
     navbarPosition: function (previewMode, widgetValue, params) {
-        const $navbar = this.$target.find('.s_table_of_content_navbar_wrap');
-        const $mainContent = this.$target.find('.s_table_of_content_main');
+        const $navbar = this.$target;
+        const $mainContent = this.$target.parent().find('.s_table_of_content_main');
         if (widgetValue === 'top' || widgetValue === 'left') {
             $navbar.prev().before($navbar);
         }
@@ -74,43 +90,16 @@ options.registry.TableOfContent = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     */
-    _generateNav: function (ev) {
-        const $nav = this.$target.find('.s_table_of_content_navbar');
-        const $headings = this.$target.find(this.targetedElements);
-        $nav.empty();
-        _.each($headings, el => {
-            const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
-            $('<a>').attr('href', "#" + id)
-                    .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
-                    .text($el.text())
-                    .appendTo($nav);
-            $el.attr('id', id);
-            $el[0].dataset.anchor = this.isAnimateScrolling === true ? 'true' : '0';
-        });
-        $nav.find('a:first').addClass('active');
-    },
-    /**
      * @override
      */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
-            case 'animateScrolling': {
-                const $headings = this.$target.find(this.targetedElements);
-                if ($headings.length > 0) {
-                    return $headings[0].dataset.anchor === 'true' ? 'true' : '0';
-                } else {
-                    return 'true';
-                }
-            }
             case 'navbarPosition': {
-                const $navbar = this.$target.find('.s_table_of_content_navbar_wrap');
+                const $navbar = this.$target;
                 if ($navbar.hasClass('s_table_of_content_horizontal_navbar')) {
                     return 'top';
                 } else {
-                    const $mainContent = this.$target.find('.s_table_of_content_main');
+                    const $mainContent = $navbar.parent().find('.s_table_of_content_main');
                     return $navbar.prev().is($mainContent) === true ? 'right' : 'left';
                 }
             }
@@ -120,12 +109,13 @@ options.registry.TableOfContent = options.Class.extend({
 });
 
 options.registry.TableOfContentMainColumns = options.Class.extend({
+    forceNoDeleteButton: true,
+
     /**
      * @override
      */
     start: function () {
         const leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
         leftPanelEl.querySelector('.oe_snippet_clone').classList.add('d-none'); // TODO improve the way to do that
         return this._super.apply(this, arguments);
     },

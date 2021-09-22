@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from itertools import chain
 
 import psutil
 import werkzeug.serving
@@ -53,11 +54,11 @@ except ImportError:
 
 import odoo
 from odoo.modules import get_modules
-from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
 
@@ -128,7 +129,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
-    given by the environement, this is used by autoreload to keep the listen
+    given by the environment, this is used by autoreload to keep the listen
     socket open when a reload happens.
     """
     def __init__(self, host, port, app):
@@ -295,6 +296,7 @@ class FSWatcherInotify(FSWatcherBase):
     def stop(self):
         self.started = False
         self.thread.join()
+        del self.watcher  # ensures inotify watches are freed up before reexec
 
 
 #----------------------------------------------------------
@@ -304,6 +306,7 @@ class FSWatcherInotify(FSWatcherBase):
 class CommonServer(object):
     def __init__(self, app):
         self.app = app
+        self._on_stop_funcs = []
         # config
         self.interface = config['http_interface'] or '0.0.0.0'
         self.port = config['http_port']
@@ -330,6 +333,19 @@ class CommonServer(object):
             if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
                 raise
         sock.close()
+
+    def on_stop(self, func):
+        """ Register a cleanup function to be executed when the server stops """
+        self._on_stop_funcs.append(func)
+
+    def stop(self):
+        for func in self._on_stop_funcs:
+            try:
+                _logger.debug("on_close call %s", func)
+                func()
+            except Exception:
+                _logger.warning("Exception in %s", func.__name__, exc_info=True)
+
 
 class ThreadedServer(CommonServer):
     def __init__(self, app):
@@ -390,7 +406,7 @@ class ThreadedServer(CommonServer):
         # e.g. threads that exceeded their real time,
         # but which finished before the server could restart.
         for thread in list(self.limits_reached_threads):
-            if not thread.isAlive():
+            if not thread.is_alive():
                 self.limits_reached_threads.remove(thread)
         if self.limits_reached_threads:
             self.limit_reached_time = self.limit_reached_time or time.time()
@@ -398,20 +414,41 @@ class ThreadedServer(CommonServer):
             self.limit_reached_time = None
 
     def cron_thread(self, number):
+        # Steve Reich timing style with thundering herd mitigation.
+        #
+        # On startup, all workers bind on a notification channel in
+        # postgres so they can be woken up at will. At worst they wake
+        # up every SLEEP_INTERVAL with a jitter. The jitter creates a
+        # chorus effect that helps distribute on the timeline the moment
+        # when individual worker wake up.
+        #
+        # On NOTIFY, all workers are awaken at the same time, sleeping
+        # just a bit prevents they all poll the database at the exact
+        # same time. This is known as the thundering herd effect.
+
         from odoo.addons.base.models.ir_cron import ir_cron
-        while True:
-            time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = odoo.modules.registry.Registry.registries
-            _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                if registry.ready:
-                    thread = threading.currentThread()
-                    thread.start_time = time.time()
-                    try:
-                        ir_cron._acquire_job(db_name)
-                    except Exception:
-                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                    thread.start_time = None
+        conn = odoo.sql_db.db_connect('postgres')
+        with conn.cursor() as cr:
+            pg_conn = cr._cnx
+            cr.execute("LISTEN cron_trigger")
+            cr.commit()
+
+            while True:
+                select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
+                time.sleep(number / 100)
+                pg_conn.poll()
+
+                registries = odoo.modules.registry.Registry.registries
+                _logger.debug('cron%d polling for jobs', number)
+                for db_name, registry in registries.d.items():
+                    if registry.ready:
+                        thread = threading.currentThread()
+                        thread.start_time = time.time()
+                        try:
+                            ir_cron._process_jobs(db_name)
+                        except Exception:
+                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                        thread.start_time = None
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -462,11 +499,11 @@ class ThreadedServer(CommonServer):
 
         test_mode = config['test_enable'] or config['test_file']
         if test_mode or (config['http_enable'] and not stop):
-            # some tests need the http deamon to be available...
+            # some tests need the http daemon to be available...
             self.http_spawn()
 
     def stop(self):
-        """ Shutdown the WSGI server. Wait for non deamon threads.
+        """ Shutdown the WSGI server. Wait for non daemon threads.
         """
         if getattr(odoo, 'phoenix', None):
             _logger.info("Initiating server reload")
@@ -479,6 +516,8 @@ class ThreadedServer(CommonServer):
         if self.httpd:
             self.httpd.shutdown()
 
+        super().stop()
+
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
         # threading.Thread.join() should not mask signals (at least in python 2.5).
@@ -488,7 +527,7 @@ class ThreadedServer(CommonServer):
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
                     thread not in self.limits_reached_threads):
-                while thread.isAlive() and (time.time() - stop_time) < 1:
+                while thread.is_alive() and (time.time() - stop_time) < 1:
                     # We wait for requests to finish, up to 1 second.
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
@@ -510,6 +549,15 @@ class ThreadedServer(CommonServer):
         rc = preload_registries(preload)
 
         if stop:
+            if config['test_enable']:
+                logger = odoo.tests.runner._logger
+                with Registry.registries._lock:
+                    for db, registry in Registry.registries.d.items():
+                        report = registry._assertion_report
+                        log = logger.error if not report.wasSuccessful() \
+                         else logger.warning if not report.testsRun \
+                         else logger.info
+                        log("%s when loading database %r", report, db)
             self.stop()
             return rc
 
@@ -626,6 +674,7 @@ class GeventServer(CommonServer):
     def stop(self):
         import gevent
         self.httpd.stop()
+        super().stop()
         gevent.shutdown()
 
     def run(self, preload, stop):
@@ -639,9 +688,8 @@ class PreforkServer(CommonServer):
     dispatcher to will parse the first HTTP request line.
     """
     def __init__(self, app):
+        super().__init__(app)
         # config
-        self.address = config['http_enable'] and \
-            (config['http_interface'] or '0.0.0.0', config['http_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -650,8 +698,6 @@ class PreforkServer(CommonServer):
             self.cron_timeout = self.timeout
         # working vars
         self.beat = 4
-        self.app = app
-        self.pid = os.getpid()
         self.socket = None
         self.workers_http = {}
         self.workers_cron = {}
@@ -800,7 +846,7 @@ class PreforkServer(CommonServer):
                 raise
 
     def start(self):
-        # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
+        # wakeup pipe, python doesn't throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
         self.pipe = self.pipe_new()
@@ -814,13 +860,13 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
-        if self.address:
+        if config['http_enable']:
             # listen to socket
-            _logger.info('HTTP service (werkzeug) running on %s:%s', *self.address)
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.setblocking(0)
-            self.socket.bind(self.address)
+            self.socket.bind((self.interface, self.port))
             self.socket.listen(8 * self.population)
 
     def stop(self, graceful=True):
@@ -830,6 +876,7 @@ class PreforkServer(CommonServer):
             self.long_polling_pid = None
         if graceful:
             _logger.info("Stopping gracefully")
+            super().stop()
             limit = time.time() + self.timeout
             for pid in self.workers:
                 self.worker_kill(pid, signal.SIGINT)
@@ -924,7 +971,7 @@ class Worker(object):
                 raise
 
     def check_limits(self):
-        # If our parent changed sucide
+        # If our parent changed suicide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
             self.alive = False
@@ -944,7 +991,7 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-        resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
+        resource.setrlimit(resource.RLIMIT_CPU, (int(cpu_time + config['limit_time_cpu']), hard))
 
     def process_work(self):
         pass
@@ -988,7 +1035,7 @@ class Worker(object):
                          len(odoo.modules.registry.Registry.registries))
             self.stop()
         except Exception:
-            _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
+            _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
 
@@ -1006,14 +1053,25 @@ class Worker(object):
                     break
                 self.process_work()
         except:
-            _logger.exception("Worker %s (%s) Exception occured, exiting...", self.__class__.__name__, self.pid)
+            _logger.exception("Worker %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
 
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
+    def __init__(self, multi):
+        super(WorkerHTTP, self).__init__(multi)
+
+        # The ODOO_HTTP_SOCKET_TIMEOUT environment variable allows to control socket timeout for
+        # extreme latency situations. It's generally better to use a good buffering reverse proxy
+        # to quickly free workers rather than increasing this timeout to accommodate high network
+        # latencies & b/w saturation. This timeout is also essential to protect against accidental
+        # DoS due to idle HTTP connections.
+        sock_timeout = os.environ.get("ODOO_HTTP_SOCKET_TIMEOUT")
+        self.sock_timeout = float(sock_timeout) if sock_timeout else 2
+
     def process_request(self, client, addr):
         client.setblocking(1)
-        client.settimeout(2)
+        client.settimeout(self.sock_timeout)
         client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
@@ -1059,8 +1117,10 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                select.select([self.wakeup_fd_r], [], [], interval)
-                # clear wakeup pipe if we were interrupted
+                select.select([self.wakeup_fd_r, self.dbcursor._cnx], [], [], interval)
+                # clear pg_conn/wakeup pipe if we were interrupted
+                time.sleep(self.pid / 100 % .1)
+                self.dbcursor._cnx.poll()
                 empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
@@ -1087,7 +1147,7 @@ class WorkerCron(Worker):
                 start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
-            base.models.ir_cron.ir_cron._acquire_job(db_name)
+            base.models.ir_cron.ir_cron._process_jobs(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
@@ -1113,6 +1173,15 @@ class WorkerCron(Worker):
         Worker.start(self)
         if self.multi.socket:
             self.multi.socket.close()
+
+        dbconn = odoo.sql_db.db_connect('postgres')
+        self.dbcursor = dbconn.cursor()
+        self.dbcursor.execute("LISTEN cron_trigger")
+        self.dbcursor.commit()
+
+    def stop(self):
+        super().stop()
+        self.dbcursor.close()
 
 #----------------------------------------------------------
 # start/stop public api
@@ -1151,19 +1220,16 @@ def load_test_file_py(registry, test_file):
     threading.currentThread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
-        for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
-            for mod_mod in get_test_modules(mod):
+        for mod in [m for m in get_modules() if '%s%s%s' % (os.path.sep, m, os.path.sep) in test_file]:
+            for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-                if test_path == mod_path:
-                    tests = odoo.modules.module.unwrap_suite(
+                if test_path == config._normalize(mod_path):
+                    tests = loader.unwrap_suite(
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    result = odoo.modules.module.OdooTestRunner().run(suite)
-                    success = result.wasSuccessful()
-                    if hasattr(registry._assertion_report,'report_result'):
-                        registry._assertion_report.report_result(success)
-                    if not success:
+                    suite(registry._assertion_report)
+                    if not registry._assertion_report.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
@@ -1188,24 +1254,24 @@ def preload_registries(dbnames):
                     _logger.warning('test file %s is not a python file', test_file)
                 else:
                     _logger.info('loading test file %s', test_file)
-                    with odoo.api.Environment.manage():
-                        load_test_file_py(registry, test_file)
+                    load_test_file_py(registry, test_file)
 
             # run post-install tests
             if config['test_enable']:
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
-                                registry._init_modules)
+                                sorted(registry._init_modules))
                 _logger.info("Starting post tests")
-                with odoo.api.Environment.manage():
-                    for module_name in module_names:
-                        result = run_unit_tests(module_name, position='post_install')
-                        registry._assertion_report.record_result(result)
-                _logger.info("All post-tested in %.2fs, %s queries",
-                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                tests_before = registry._assertion_report.testsRun
+                result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                registry._assertion_report.update(result)
+                _logger.info("%d post-tests in %.2fs, %s queries",
+                             registry._assertion_report.testsRun - tests_before,
+                             time.time() - t0,
+                             odoo.sql_db.sql_counter - t0_sql)
 
-            if registry._assertion_report.failures:
+            if not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
@@ -1218,7 +1284,6 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
-    odoo.service.wsgi_server._patch_xmlrpc_marshaller()
 
     if odoo.evented:
         server = GeventServer(odoo.service.wsgi_server.application)
@@ -1243,7 +1308,7 @@ def start(preload=None, stop=False):
             # On 32bit systems the default size of an arena is 512K while on 64bit systems it's 64M [3],
             # hence a threaded worker will quickly reach it's default memory soft limit upon concurrent requests.
             # We therefore set the maximum arenas allowed to 2 unless the MALLOC_ARENA_MAX env variable is set.
-            # Note: Setting MALLOC_ARENA_MAX=0 allow to explicitely set the default glibs's malloc() behaviour.
+            # Note: Setting MALLOC_ARENA_MAX=0 allow to explicitly set the default glibs's malloc() behaviour.
             #
             # [1] https://sourceware.org/glibc/wiki/MallocInternals#Arenas_and_Heaps
             # [2] https://www.gnu.org/software/libc/manual/html_node/The-GNU-Allocator.html

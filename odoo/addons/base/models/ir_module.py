@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
 import importlib
@@ -11,9 +11,11 @@ import os
 import pkg_resources
 import shutil
 import tempfile
+import threading
 import zipfile
 
 import requests
+import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -147,6 +149,7 @@ STATES = [
     ('to install', 'To be installed'),
 ]
 
+
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
@@ -173,8 +176,13 @@ class Module(models.Model):
     @api.depends('name', 'description')
     def _get_desc(self):
         for module in self:
-            path = modules.get_module_resource(module.name, 'static/description/index.html')
-            if path:
+            if not module.name:
+                module.description_html = False
+                continue
+            module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
+            if module_path:
+                path = modules.check_resource_path(module_path, 'static/description/index.html')
+            if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
@@ -238,8 +246,10 @@ class Module(models.Model):
             if module.icon:
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
-            else:
+            elif module.id:
                 path = modules.module.get_module_icon(module.name)
+            else:
+                path = ''
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
@@ -302,14 +312,15 @@ class Module(models.Model):
 
     def _compute_has_iap(self):
         for module in self:
-            module.has_iap = 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
+            module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
-    def unlink(self):
-        if not self:
-            return True
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_installed(self):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
+
+    def unlink(self):
         self.clear_caches()
         return super(Module, self).unlink()
 
@@ -369,6 +380,10 @@ class Module(models.Model):
         demo = False
 
         for module in self:
+            if module.state not in states_to_update:
+                demo = demo or module.demo
+                continue
+
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
@@ -384,9 +399,9 @@ class Module(models.Model):
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
-            # check dependencies and update module itself
-            self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
+                # check dependencies and update module itself
+                self.check_external_dependencies(module.name, newstate)
                 module.write({'state': newstate, 'demo': module_demo})
 
         return demo
@@ -563,29 +578,37 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
+        if getattr(threading.currentThread(), 'testing', False):
+            raise RuntimeError(
+                "Module operations inside tests are not transactional and thus forbidden.\n"
+                "If you really need to perform module operations to test a specific behavior, it "
+                "is best to write it as a standalone script, and ask the runbot/metastorm team "
+                "for help."
+            )
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
             # during execution, the lock won't be released until timeout.
             self._cr.execute("SELECT * FROM ir_cron FOR UPDATE NOWAIT")
         except psycopg2.OperationalError:
-            raise UserError(_("The server is busy right now, module operations are not possible at"
-                              " this time, please try again later."))
+            raise UserError(_("Odoo is currently processing a scheduled action.\n"
+                              "Module operations are not possible at this time, "
+                              "please try again later or contact your system administrator."))
         function(self)
 
         self._cr.commit()
-        api.Environment.reset()
-        modules.registry.Registry.new(self._cr.dbname, update_module=True)
-
+        registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
         self._cr.commit()
-        env = api.Environment(self._cr, self._uid, self._context)
+        self._cr.reset()
+        assert self.env.registry is registry
+
         # pylint: disable=next-method-called
-        config = env['ir.module.module'].next() or {}
+        config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu = env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
+        menu = self.env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -605,6 +628,11 @@ class Module(models.Model):
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
+        if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
+            raise UserError(_(
+                "One or more of the selected modules have already been uninstalled, if you "
+                "believe this to be an error, you may try again later or contact support."
+            ))
         deps = self.downstream_dependencies()
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
@@ -635,6 +663,8 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_upgrade(self):
+        if not self:
+            return
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
 
@@ -645,15 +675,22 @@ class Module(models.Model):
             i += 1
             if module.state not in ('installed', 'to upgrade'):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
-            self.check_external_dependencies(module.name, 'to upgrade')
+            if self.get_module_info(module.name).get("installable", True):
+                self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):
-                if dep.module_id.state == 'installed' and dep.module_id not in todo:
+                if (
+                    dep.module_id.state == 'installed'
+                    and dep.module_id not in todo
+                    and dep.module_id.name != 'studio_customization'
+                ):
                     todo.append(dep.module_id)
 
         self.browse(module.id for module in todo).write({'state': 'to upgrade'})
 
         to_install = []
         for module in todo:
+            if not self.get_module_info(module.name).get("installable", True):
+                continue
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_('You try to upgrade the module %s that depends on the module: %s.\nBut this module is not available in your system.') % (module.name, dep.name,))
@@ -761,7 +798,7 @@ class Module(models.Model):
             _logger.warning(msg)
             raise UserError(msg)
 
-        apps_server = urls.url_parse(self.get_apps_server())
+        apps_server = werkzeug.urls.url_parse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
         tmp = tempfile.mkdtemp()
@@ -772,7 +809,7 @@ class Module(models.Model):
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
-                up = urls.url_parse(url)
+                up = werkzeug.urls.url_parse(url)
                 if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
                     raise AccessDenied()
 
@@ -783,7 +820,7 @@ class Module(models.Model):
                     content = response.content
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
-                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
+                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.', module_name))
                 else:
                     zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
@@ -908,9 +945,10 @@ class Module(models.Model):
         }
 
     @api.model
-    def search_panel_select_range(self, field_name):
+    def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
-            domain = [('module_ids', '!=', False)]
+            enable_counters = kwargs.get('enable_counters', False)
+            domain = [('parent_id', '=', False), ('child_ids.module_ids', '!=', False)]
 
             excluded_xmlids = [
                 'base.module_category_website_theme',
@@ -927,19 +965,32 @@ class Module(models.Model):
                 excluded_category_ids.append(categ.id)
 
             if excluded_category_ids:
-                domain = expression.AND([domain, [
-                    ('id', 'not in', excluded_category_ids),
-                    ('parent_id', 'not in', excluded_category_ids),
-                ]])
-            categories = self.env['ir.module.category'].search(domain)
-            categories = categories | categories.mapped('parent_id')
+                domain = expression.AND([
+                    domain,
+                    [('id', 'not in', excluded_category_ids)],
+                ])
+
+            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
+
+            values_range = OrderedDict()
+            for record in records:
+                record_id = record['id']
+                if enable_counters:
+                    model_domain = expression.AND([
+                        kwargs.get('search_domain', []),
+                        kwargs.get('category_domain', []),
+                        kwargs.get('filter_domain', []),
+                        [('category_id', 'child_of', record_id), ('category_id', 'not in', excluded_category_ids)]
+                    ])
+                    record['__count'] = self.env['ir.module.module'].search_count(model_domain)
+                values_range[record_id] = record
+
             return {
                 'parent_field': 'parent_id',
-                'values': self.env['ir.module.category'].search_read(
-                    [('id', 'in', categories.ids)],
-                    ['display_name', 'parent_id']),
+                'values': list(values_range.values()),
             }
-        return super(Module, self).search_panel_select_range(field_name)
+
+        return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

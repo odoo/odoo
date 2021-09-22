@@ -2,15 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from ast import literal_eval
 
 
 class Company(models.Model):
     _inherit = "res.company"
 
+    website_id = fields.Many2one('website', compute='_compute_website_id', store=True)
+
+    def _compute_website_id(self):
+        for company in self:
+            company.website_id = self.env['website'].search([('company_id', '=', company.id)], limit=1)
+
     @api.model
     def action_open_website_theme_selector(self):
-        action = self.env.ref('website.theme_install_kanban_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website.theme_install_kanban_action")
         action['target'] = 'new'
         return action
 
@@ -21,19 +26,6 @@ class Company(models.Model):
     def google_map_link(self, zoom=8):
         partner = self.sudo().partner_id
         return partner and partner.google_map_link(zoom) or None
-
-    def _compute_website_theme_onboarding_done(self):
-        """ The step is marked as done if one theme is installed. """
-        # we need the same domain as the existing action
-        action = self.env.ref('website.theme_install_kanban_action').read()[0]
-        domain = literal_eval(action['domain'])
-        domain.append(('state', '=', 'installed'))
-        installed_themes_count = self.env['ir.module.module'].sudo().search_count(domain)
-        for record in self:
-            record.website_theme_onboarding_done = (installed_themes_count > 0)
-
-    website_theme_onboarding_done = fields.Boolean("Onboarding website theme step done",
-                                                   compute='_compute_website_theme_onboarding_done')
 
     def _get_public_user(self):
         self.ensure_one()

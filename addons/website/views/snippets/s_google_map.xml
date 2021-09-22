@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Google Map" id="s_google_map">
+    <section class="s_google_map pt256 pb256" data-map-type="ROADMAP" data-map-color="" data-map-zoom="12" data-map-gps="(50.854975,4.3753899)" data-pin-style="flat">
+        <div class="map_container"/>
+    </section>
+</template>
+
+<!-- Snippet's Options -->
+<template id="s_google_map_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-js="GoogleMap" data-selector=".s_google_map">
+            <we-gpspicker string="Address"
+                data-select-data-attribute="" data-attribute-name="mapGps"
+                data-set-formatted-address=""
+                placeholder="e.g. De Brouckere, Brussels, Belgium"
+                data-no-preview="true"/>
+            <we-select string="Marker style" data-attribute-name="pinStyle">
+                <we-button data-select-data-attribute="">Default</we-button>
+                <we-button data-select-data-attribute="flat">Flat</we-button>
+            </we-select>
+            <we-select string="Type" data-no-preview="true" data-reset-map-color="" data-attribute-name="mapType">
+                <we-button data-name="roadmap_opt" data-select-data-attribute="ROADMAP">RoadMap</we-button>
+                <we-button data-select-data-attribute="TERRAIN">Terrain</we-button>
+                <we-button data-select-data-attribute="SATELLITE">Satellite</we-button>
+                <we-button data-select-data-attribute="HYBRID">Hybrid</we-button>
+            </we-select>
+            <we-select string="&#8985; Style" data-dependencies="roadmap_opt" data-no-preview="true" data-attribute-name="mapColor">
+                <we-button data-select-data-attribute="" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg"/>
+                <we-button data-select-data-attribute="lightMonoMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg"/>
+                <we-button data-select-data-attribute="cupertinoMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg"/>
+                <we-button data-select-data-attribute="retroMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg"/>
+                <we-button data-select-data-attribute="cobaltMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg"/>
+                <we-button data-select-data-attribute="flatMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg"/>
+                <we-button data-select-data-attribute="blueMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg"/>
+                <we-button data-select-data-attribute="lillaMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg"/>
+                <we-button data-select-data-attribute="carMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg"/>
+                <we-button data-select-data-attribute="bwMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg"/>
+            </we-select>
+            <we-input string="Zoom" data-select-data-attribute="12" data-no-preview="true" data-attribute-name="mapZoom" data-step="1"/>
+            <we-checkbox string="Description" data-no-preview="true" data-show-description="true"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_google_map_000_scss" model="ir.asset">
+    <field name="name">Google map 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_google_map/000.scss</field>
+</record>
+
+<record id="website.s_google_map_000_js" model="ir.asset">
+    <field name="name">Google map 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_google_map/000.js</field>
+</record>
+
+</odoo>

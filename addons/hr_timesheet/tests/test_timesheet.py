@@ -4,8 +4,6 @@
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
-from datetime import datetime, timedelta
-
 
 class TestCommonTimesheet(TransactionCase):
 
@@ -23,6 +21,7 @@ class TestCommonTimesheet(TransactionCase):
         self.partner = self.env['res.partner'].create({
             'name': 'Customer Task',
             'email': 'customer@task.com',
+            'phone': '42',
         })
 
         self.analytic_account = self.env['account.analytic.account'].create({
@@ -37,7 +36,6 @@ class TestCommonTimesheet(TransactionCase):
             'allow_timesheets': True,
             'partner_id': self.partner.id,
             'analytic_account_id': self.analytic_account.id,
-            'allow_timesheet_timer': True
         })
         self.task1 = self.env['project.task'].create({
             'name': 'Task One',
@@ -131,7 +129,6 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 7,
             'employee_id': self.empl_employee2.id,
         })
-        timesheet3._onchange_employee_id()
         self.assertEqual(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
         self.assertEqual(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
@@ -172,7 +169,6 @@ class TestTimesheet(TestCommonTimesheet):
         non_tracked_project = self.env['project.project'].create({
             'name': 'Project without timesheet',
             'allow_timesheets': False,
-            'allow_timesheet_timer': False,
             'partner_id': self.partner.id,
         })
         self.assertFalse(non_tracked_project.analytic_account_id, "A non time-tracked project shouldn't generate an analytic account")
@@ -214,7 +210,7 @@ class TestTimesheet(TestCommonTimesheet):
         tracked_project.analytic_account_id.unlink()
 
     def test_transfert_project(self):
-        """ Transfert task with timesheet to another project should not modified past timesheets (they are still linked to old project. """
+        """ Transfert task with timesheet to another project. """
         Timesheet = self.env['account.analytic.line']
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
@@ -242,8 +238,8 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 1, "Still one timesheet in project 1")
-        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEqual(timesheet_count1, 0, "No timesheet in project 1")
+        self.assertEqual(timesheet_count2, 1, "Still one timesheet in project 2")
         self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
 
         # it is forbidden to set a task with timesheet without project
@@ -272,10 +268,9 @@ class TestTimesheet(TestCommonTimesheet):
         })
         timesheets = timesheet_1 + timesheet_2
 
-        # increase unit_amount to trigger amount recomputation
         with self.assertRaises(AccessError):
-            # because the employee 1 is the sudo and he doesn't have the access right to update timesheet of employee 2
-            timesheets.sudo().write({
+            # should raise since employee 1 doesn't have the access rights to update employee's 2 timesheet
+            timesheets.with_user(self.empl_employee.user_id).write({
                 'unit_amount': 2,
             })
 
@@ -289,77 +284,3 @@ class TestTimesheet(TestCommonTimesheet):
         }, {
             'amount': -12.0,
         }])
-
-    def test_minutes_computing_after_timer_stop(self):
-        """ Test if unit_amount is updated after stoping a timer """
-        Timesheet = self.env['account.analytic.line']
-        timesheet_1 = Timesheet.with_user(self.user_employee).create({
-            'project_id': self.project_customer.id,
-            'task_id': self.task1.id,
-            'name': '/',
-            'unit_amount': 1,
-        })
-
-        # When the timer is less than 1 minute
-        now = datetime.now()
-        timesheet_1.with_user(self.user_employee).action_timer_start()
-        timesheet_1.with_user(self.user_employee).user_timer_id.timer_start = now - timedelta(seconds=28)
-        timesheet_1.with_user(self.user_employee).action_timer_stop()
-
-        self.assertEqual(timesheet_1.unit_amount, 1, 'unit_amount still should have the same value')
-
-        # When the timer is greater than 1 minute
-        now = datetime.now()
-        timesheet_1.with_user(self.user_employee).action_timer_start()
-        timesheet_1.with_user(self.user_employee).user_timer_id.timer_start = now - timedelta(minutes=1, seconds=28)
-        timesheet_1.with_user(self.user_employee).action_timer_stop()
-
-        self.assertGreater(timesheet_1.unit_amount, 1, 'unit_amount should be greated than his last value')
-
-    def test_allow_timesheets_and_timer(self):
-        """
-        Check that a modification of the 'allow_timesheets' field updates correctly the
-        'allow_timesheet_timer' field.
-        """
-        Project = self.env['project.project']
-
-        # case 1: create a project with allow_timesheets set to FALSE
-        project_1 = Project.create({
-            'name': 'Project 1',
-            'allow_timesheets': False,
-            'partner_id': self.partner.id
-        })
-
-        self.assertFalse(
-            project_1.allow_timesheet_timer,
-            "On project creation with 'allow_timesheets' set to FALSE, 'allow_timesheet_timer' shall be set to FALSE")
-
-        # case 2: create a project with allow_timesheets set to TRUE
-        project_2 = Project.create({
-            'name': 'Project 2',
-            'allow_timesheets': True,
-            'partner_id': self.partner.id,
-            'analytic_account_id': self.analytic_account.id
-        })
-
-        self.assertTrue(
-            project_2.allow_timesheet_timer,
-            "On project creation with 'allow_timesheets' set to TRUE, 'allow_timesheet_timer' shall be set to TRUE")
-
-        # case 3: change 'allow_timesheets' from FALSE to TRUE
-        project_1.write({
-            'allow_timesheets': True
-        })
-
-        self.assertTrue(
-            project_1.allow_timesheet_timer,
-            "On 'allow_timesheets' change to TRUE, 'allow_timesheet_timer' shall be set to TRUE")
-
-        # case 4: change 'allow_timesheets' from TRUE to FALSE
-        project_2.write({
-            'allow_timesheets': False
-        })
-
-        self.assertFalse(
-            project_2.allow_timesheet_timer,
-            "On 'allow_timesheets' change to FALSE, 'allow_timesheet_timer' shall be set to FALSE")

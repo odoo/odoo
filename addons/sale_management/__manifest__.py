@@ -5,7 +5,7 @@
     'name': 'Sales',
     'version': '1.0',
     'category': 'Sales/Sales',
-    'sequence': 17,
+    'sequence': 5,
     'summary': 'From quotations to invoices',
     'description': """
 Manage sales quotations and orders
@@ -35,10 +35,11 @@ The Dashboard for the Sales Manager will include
 * My Quotations
 * Monthly Turnover (Graph)
     """,
-    'website': 'https://www.odoo.com/page/sales',
+    'website': 'https://www.odoo.com/app/sales',
     'depends': ['sale', 'digest'],
     'data': [
         'security/sale_management_security.xml',
+        'data/digest_data.xml',
         'views/sale_portal_templates.xml',
         'views/sale_order_template_views.xml',
         'security/ir.model.access.csv',
@@ -55,4 +56,10 @@ The Dashboard for the Sales Manager will include
     'application': True,
     'uninstall_hook': 'uninstall_hook',
     'post_init_hook': 'post_init_hook',
+    'assets': {
+        'web.assets_frontend': [
+            'sale_management/static/src/js/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

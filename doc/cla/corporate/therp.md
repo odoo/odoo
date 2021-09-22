@@ -3,6 +3,8 @@ Netherlands, 2015-03-09
 Updated:
     2016-05-27
     2017-06-27
+    2020-10-08
+    2021-03-02
 
 Therp BV agrees to the terms of the Odoo Corporate 
 Contributor License Agreement v1.0.
@@ -21,4 +23,7 @@ List of contributors:
 *  Lara Freeke lfreeke@therp.nl https://github.com/lfreeke
 *  Ronald Portier ronald@therp.nl https://github.com/nl66278
 *  George Daramouskas gdaramouskas@therp.nl https://github.com/daramousk
+*  Nikos Tsirintanis ntsirintanis@therp.nl https://github.com/ntsirintanis
+*  Jan Verbeek jverbeek@therp.nl https://github.com/janverb
+*  Danny de Jong ddejong@therp.nl https://github.com/bamilab
 

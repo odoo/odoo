@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 
 
@@ -36,6 +38,10 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('reverse_entry_ids')
         return rslt
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return self.sale_line_id.order_id or res
+
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
         if new:
@@ -68,6 +74,38 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
 
+    def _action_done(self):
+        res = super()._action_done()
+        sale_order_lines_vals = []
+        for move in self.move_lines:
+            sale_order = move.picking_id.sale_id
+            # Creates new SO line only when pickings linked to a sale order and
+            # for moves with qty. done and not already linked to a SO line.
+            if not sale_order or move.location_dest_id.usage != 'customer' or move.sale_line_id or not move.quantity_done:
+                continue
+            product = move.product_id
+            so_line_vals = {
+                'move_ids': [(4, move.id, 0)],
+                'name': product.display_name,
+                'order_id': sale_order.id,
+                'product_id': product.id,
+                'product_uom_qty': 0,
+                'qty_delivered': move.quantity_done,
+            }
+            if product.invoice_policy == 'delivery':
+                # Check if there is already a SO line for this product to get
+                # back its unit price (in case it was manually updated).
+                so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
+                if so_line:
+                    so_line_vals['price_unit'] = so_line[0].price_unit
+            elif product.invoice_policy == 'order':
+                # No unit price if the product is invoiced on the ordered qty.
+                so_line_vals['price_unit'] = 0
+            sale_order_lines_vals.append(so_line_vals)
+
+        if sale_order_lines_vals:
+            self.env['sale.order.line'].create(sale_order_lines_vals)
+        return res
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
@@ -104,7 +142,7 @@ class StockPicking(models.Model):
                 'origin_picking': origin_picking,
                 'moves_information': moves_information.values(),
             }
-            return self.env.ref('sale_stock.exception_on_picking').render(values=values)
+            return self.env.ref('sale_stock.exception_on_picking')._render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_sorted, _keys_in_groupby)
         self._log_activity(_render_note_exception_quantity, documents)
@@ -119,19 +157,18 @@ class ProductionLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
+        sale_orders = defaultdict(lambda: self.env['sale.order'])
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            move = move_line.move_id
+            if move.picking_id.location_dest_id.usage == 'customer' and move.sale_line_id.order_id:
+                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_ids = sale_orders[lot.id]
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):
         self.ensure_one()
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

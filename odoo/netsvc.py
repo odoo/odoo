@@ -9,6 +9,7 @@ import pprint
 import sys
 import threading
 import time
+import traceback
 import warnings
 
 from . import release
@@ -23,8 +24,6 @@ def log(logger, level, prefix, msg, depth=None):
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
         logger.log(level, indent+line)
         indent=indent_after
-
-path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
 class PostgreSQLHandler(logging.Handler):
     """ PostgreSQL Logging Handler will store logs in the database, by default
@@ -48,7 +47,7 @@ class PostgreSQLHandler(logging.Handler):
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
@@ -56,7 +55,7 @@ class PostgreSQLHandler(logging.Handler):
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
-#These are the sequences need to get colored ouput
+#These are the sequences needed to get colored output
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
@@ -125,18 +124,28 @@ def init_logger():
         return record
     logging.setLogRecordFactory(record_factory)
 
-    logging.addLevelName(25, "INFO")
-    logging.captureWarnings(True)
-
     # enable deprecation warnings (disabled by default)
-    warnings.filterwarnings('once', category=DeprecationWarning)
+    warnings.simplefilter('default', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
-    # ignore warning from older setuptools version using imp
-    warnings.filterwarnings('ignore', category=DeprecationWarning, module='setuptools.depends')
-    # ignore warning from zeep using defusedxml.lxml
-    warnings.filterwarnings('ignore', category=DeprecationWarning, module='zeep.loader')
+    # recordsets are both sequence and set so trigger warning despite no issue
+    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    # ignore a bunch of warnings we can't really fix ourselves
+    for module in [
+        'babel.util', # deprecated parser module, no release yet
+        'zeep.loader',# zeep using defusedxml.lxml
+        'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
+        'ofxparse',# ofxparse importing ABC from collections
+        'astroid',  # deprecated imp module (fixed in 2.5.1)
+        'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
+    ]:
+        warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
+
+    # the SVG guesser thing always compares str and bytes, ignore it
+    warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
+    # reportlab does a bunch of bytes/str mixing in a hashmap
+    warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
 
     from .tools.translate import resetlocale
     resetlocale()
@@ -228,7 +237,39 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
+    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
     'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
     'error': ['odoo:ERROR', 'werkzeug:ERROR'],
     'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
 }
+
+logging.RUNBOT = 25
+logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.captureWarnings(True)
+# must be after `loggin.captureWarnings` so we override *that* instead of the
+# other way around
+showwarning = warnings.showwarning
+IGNORE = {
+    'Comparison between bytes and int', # a.foo != False or some shit, we don't care
+}
+def showwarning_with_traceback(message, category, filename, lineno, file=None, line=None):
+    if category is BytesWarning and message.args[0] in IGNORE:
+        return
+
+    # find the stack frame maching (filename, lineno)
+    filtered = []
+    for frame in traceback.extract_stack():
+        if 'importlib' not in frame.filename:
+            filtered.append(frame)
+        if frame.filename == filename and frame.lineno == lineno:
+            break
+    return showwarning(
+        message, category, filename, lineno,
+        file=file,
+        line=''.join(traceback.format_list(filtered))
+    )
+warnings.showwarning = showwarning_with_traceback
+
+def runbot(self, message, *args, **kws):
+    self.log(logging.RUNBOT, message, *args, **kws)
+logging.Logger.runbot = runbot

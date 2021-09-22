@@ -1,13 +1,13 @@
-odoo.define('mail.ActivityView', function (require) {
-"use strict";
+/** @odoo-module **/;
 
-const ActivityController = require('mail.ActivityController');
-const ActivityModel = require('mail.ActivityModel');
-const ActivityRenderer = require('mail.ActivityRenderer');
-const BasicView = require('web.BasicView');
-const core = require('web.core');
-const RendererWrapper = require('web.RendererWrapper');
-const view_registry = require('web.view_registry');
+import ActivityController from '@mail/js/views/activity/activity_controller';
+import ActivityModel from '@mail/js/views/activity/activity_model';
+import ActivityRenderer from '@mail/js/views/activity/activity_renderer';
+
+import BasicView from 'web.BasicView';
+import core from 'web.core';
+import RendererWrapper from 'web.RendererWrapper';
+import view_registry from 'web.view_registry';
 
 const _lt = core._lt;
 
@@ -26,9 +26,11 @@ const ActivityView = BasicView.extend({
     /**
      * @override
      */
-    init: function () {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        const { search_view_id } = params.action || {};
+        this.controllerParams.searchViewId = search_view_id ? search_view_id[0] : false;
         this.loadParams.type = 'list';
         // limit makes no sense in this view as we display all records having activities
         this.loadParams.limit = false;
@@ -48,6 +50,4 @@ const ActivityView = BasicView.extend({
 
 view_registry.add('activity', ActivityView);
 
-return ActivityView;
-
-});
+export default ActivityView;

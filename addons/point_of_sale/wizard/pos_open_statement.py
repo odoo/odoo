@@ -34,5 +34,5 @@ class PosOpenStatement(models.TransientModel):
             'res_model': 'account.bank.statement',
             'domain': str([('id', 'in', BankStatement.ids)]),
             'views': [(tree_id, 'tree'), (form_id, 'form')],
-            'search_view_id': search_id,
+            'search_view_id': [search_id],
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Marketing / Mailing -->
-    <menuitem name="Email Marketing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
+    <menuitem name="Email Marketing" id="mass_mailing_menu_root" sequence="115" web_icon="mass_mailing,static/description/icon.png"/>
     <menuitem name="Mailing Lists" id="mass_mailing_mailing_list_menu"
         parent="mass_mailing_menu_root" sequence="2" groups="mass_mailing.group_mass_mailing_user"/>
 
@@ -12,7 +12,7 @@
         groups="mass_mailing.group_mass_mailing_user"/>
 
     <!-- Configuration / Blacklist -->
-    <menuitem id="mail_blacklist_mm_menu" name="Blacklist"
+    <menuitem id="mail_blacklist_mm_menu" name="Blacklisted Email Addresses"
         action="mail.mail_blacklist_action"
         parent="mass_mailing_configuration"/>
 

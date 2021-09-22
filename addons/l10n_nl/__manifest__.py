@@ -6,7 +6,7 @@
 {
     'name': 'Netherlands - Accounting',
     'version': '3.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
     'depends': [
@@ -28,8 +28,13 @@
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template_data.xml',
         'data/menuitem.xml',
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
     ],
-    'demo': [],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'auto_install': False,
     'installable': True,
+    'license': 'LGPL-3',
 }

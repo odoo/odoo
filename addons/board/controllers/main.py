@@ -11,7 +11,7 @@ class Board(Controller):
     @route('/board/add_to_dashboard', type='json', auth='user')
     def add_to_dashboard(self, action_id, context_to_save, domain, view_mode, name=''):
         # Retrieve the 'My Dashboard' action from its xmlid
-        action = request.env.ref('board.open_board_my_dash_action')
+        action = request.env.ref('board.open_board_my_dash_action').sudo()
 
         if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form' and action_id:
             # Maybe should check the content instead of model board.board ?

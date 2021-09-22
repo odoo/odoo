@@ -4,7 +4,7 @@ import json
 import base64
 import logging
 
-from odoo.addons.account.tests.common import HttpCase
+from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
 _logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class TestPingenSend(HttpCase):
             })],
         })
 
-        invoice.post()
+        invoice.action_post()
 
         return invoice
 
@@ -62,20 +62,20 @@ class TestPingenSend(HttpCase):
         }
 
         response = requests.post(self.pingen_url, data=self.data, files=files)
-        if 400 <= response.status_code <= 599:
+        if 400 <= response.status_code <= 599 or response.json()['error']:
             msg = "%(code)s %(side)s Error: %(reason)s for url: %(url)s\n%(body)s" % {
                 'code': response.status_code,
                 'side': r"%s",
                 'reason': response.reason,
                 'url': self.pingen_url,
                 'body': response.text}
-            if response.status_code <= 499:
+            if response.status_code <= 499 or response.json()['error']:
                 raise requests.HTTPError(msg % "Client")
             else:
                 _logger.warning(msg % "Server")
 
     def test_pingen_send_invoice(self):
         self.render_and_send('external_layout_standard')
-        self.render_and_send('external_layout_background')
+        self.render_and_send('external_layout_striped')
         self.render_and_send('external_layout_boxed')
-        self.render_and_send('external_layout_clean')
+        self.render_and_send('external_layout_bold')

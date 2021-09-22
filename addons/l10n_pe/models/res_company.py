@@ -1,13 +1,12 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api
+from odoo import models
 
 
 class ResCompany(models.Model):
+    _inherit = 'res.company'
 
-    _inherit = "res.company"
-
-    @api.onchange('country_id')
-    def onchange_country(self):
-        """In Peru, the rounding method it's calculated as global"""
-        for rec in self.filtered(lambda x: x.country_id == self.env.ref('base.pe')):
-            rec.tax_calculation_rounding_method = 'round_globally'
+    def _localization_use_documents(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.country_id.code == "PE" or super()._localization_use_documents()

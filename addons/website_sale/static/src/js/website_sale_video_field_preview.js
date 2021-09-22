@@ -4,6 +4,7 @@ odoo.define('website_sale.video_field_preview', function (require) {
 
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var fieldRegistry = require('web.field_registry');
 
 var QWeb = core.qweb;
@@ -16,7 +17,7 @@ var FieldVideoPreview = AbstractField.extend({
 
     _render: function () {
         this.$el.html(QWeb.render('productVideo', {
-            embedCode: this.value,
+            embedCode: Markup(this.value),
         }));
     },
 });

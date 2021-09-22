@@ -5,9 +5,9 @@
             <field name="name">crm.activity.report.graph</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <graph string="Activities Analysis" stacked="True">
-                    <field name="mail_activity_type_id" type="col"/>
-                    <field name="date" interval="month" type="row"/>
+                <graph string="Activities Analysis" sample="1">
+                    <field name="mail_activity_type_id"/>
+                    <field name="date" interval="month"/>
                 </graph>
             </field>
         </record>
@@ -16,7 +16,7 @@
             <field name="name">crm.activity.report.pivot</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <pivot string="Activities Analysis" disable_linking="True">
+                <pivot string="Activities Analysis" sample="1">
                     <field name="mail_activity_type_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
                 </pivot>
@@ -53,9 +53,11 @@
                     <separator/>
                     <filter string="Won" name="won" domain="[('stage_id.is_won', '=', True)]"/>
                     <separator/>
-                    <filter string="Completed Last 365 Days" name="completion_date" domain="[
+                    <filter string="Trailing 12 months" name="completion_date" domain="[
                         ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                        ('date', '&lt;', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                        ('date', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="1" string="Group By">
@@ -77,7 +79,7 @@
         </record>
 
        <record id="crm_activity_report_action" model="ir.actions.act_window">
-           <field name="name">Pipeline Activities</field>
+           <field name="name">Activities</field>
            <field name="res_model">crm.activity.report</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
@@ -88,22 +90,28 @@
                 'graph_groupbys': ['date:month', 'subtype_id'],
             }</field>
             <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Start scheduling activities on your opportunities
+                </p>
+            </field>
        </record>
 
-       <menuitem
-            id="crm_activity_report_menu"
-            name="Activities"
-            groups="sales_team.group_sale_manager"
-            parent="crm_menu_report"
-            action="crm_activity_report_action"
-            sequence="3"/>
-
-       <record id="crm_activity_report_action_team" model="ir.actions.act_window">
-           <field name="name">Pipeline Activities</field>
-           <field name="res_model">crm.activity.report</field>
-           <field name="view_mode">graph,pivot,tree</field>
-           <field name="context">{'search_default_team_id': active_id}</field>
-           <field name="domain">[]</field>
-       </record>
+        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
+            <field name="name">Pipeline Activities</field>
+            <field name="res_model">crm.activity.report</field>
+            <field name="view_mode">graph,pivot,tree</field>
+            <field name="context">{'search_default_team_id': active_id}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Start scheduling activities on your opportunities
+                </p>
+            </field>
+        </record>
 
 </odoo>

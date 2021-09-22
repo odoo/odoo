@@ -1,19 +1,19 @@
-odoo.define('mail.Activity', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var mailUtils = require('mail.utils');
+import * as mailUtils from '@mail/js/utils';
 
-var AbstractField = require('web.AbstractField');
-var BasicModel = require('web.BasicModel');
-var config = require('web.config');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var session = require('web.session');
-var framework = require('web.framework');
-var time = require('web.time');
+import AbstractField from 'web.AbstractField';
+import BasicModel from 'web.BasicModel';
+import config from 'web.config';
+import core from 'web.core';
+import field_registry from 'web.field_registry';
+import session from 'web.session';
+import framework from 'web.framework';
+import time from 'web.time';
 
 var QWeb = core.qweb;
 var _t = core._t;
+const _lt = core._lt;
 
 /**
  * Fetches activities and postprocesses them.
@@ -81,22 +81,22 @@ BasicModel.include({
  * @param {Array} activities list of activity Object
  * @return {Array} : list of modified activity Object
  */
-var setDelayLabel = function (activities){
+var setDelayLabel = function (activities) {
     var today = moment().startOf('day');
-    _.each(activities, function (activity){
+    _.each(activities, function (activity) {
         var toDisplay = '';
         var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
-        if (diff === 0){
+        if (diff === 0) {
             toDisplay = _t("Today");
         } else {
-            if (diff < 0){ // overdue
-                if (diff === -1){
+            if (diff < 0) { // overdue
+                if (diff === -1) {
                     toDisplay = _t("Yesterday");
                 } else {
                     toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
                 }
             } else { // due
-                if (diff === 1){
+                if (diff === 1) {
                     toDisplay = _t("Tomorrow");
                 } else {
                     toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
@@ -200,11 +200,11 @@ var BasicActivity = AbstractField.extend({
                 if (rslt_action) {
                     self.do_action(rslt_action, {
                         on_close: function () {
-                            self.trigger_up('reload');
+                            self.trigger_up('reload', { keepChanges: true });
                         },
                     });
                 } else {
-                    self.trigger_up('reload');
+                    self.trigger_up('reload', { keepChanges: true });
                 }
             }
         );
@@ -212,7 +212,6 @@ var BasicActivity = AbstractField.extend({
     /**
      * @private
      * @param {integer} id
-     * @param {integer} previousActivityTypeID
      * @param {function} callback
      * @return {Promise}
      */
@@ -264,7 +263,7 @@ var BasicActivity = AbstractField.extend({
         var self = this;
         _.each(activities, function (activity) {
             if (activity.fileuploadID) {
-                $(window).on(activity.fileuploadID, function() {
+                $(window).on(activity.fileuploadID, function () {
                     framework.unblockUI();
                     // find the button clicked and display the feedback popup on it
                     var files = Array.prototype.slice.call(arguments, 1);
@@ -272,7 +271,7 @@ var BasicActivity = AbstractField.extend({
                         activityID: activity.id,
                         attachmentIds: _.pluck(files, 'id')
                     }).then(function () {
-                        self.trigger_up('reload');
+                        self.trigger_up('reload', { keepChanges: true });
                     });
                 });
             }
@@ -339,16 +338,16 @@ var BasicActivity = AbstractField.extend({
         var $markDoneBtn = $(ev.currentTarget);
         var activityID = $markDoneBtn.data('activity-id');
         var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
-        var forceNextActivity = $markDoneBtn.data('force-next-activity');
+        var chainingTypeActivity = $markDoneBtn.data('chaining-type-activity');
 
-        if ($markDoneBtn.data('toggle') == 'collapse') {
+        if ($markDoneBtn.data('toggle') === 'collapse') {
             var $actLi = $markDoneBtn.parents('.o_log_activity');
             var $panel = self.$('#o_activity_form_' + activityID);
 
             if (!$panel.data('bs.collapse')) {
                 var $form = $(QWeb.render('mail.activity_feedback_form', {
                     previous_activity_type_id: previousActivityTypeID,
-                    force_next: forceNextActivity
+                    chaining_type: chainingTypeActivity
                 }));
                 $panel.append($form);
                 self._onMarkActivityDoneActions($markDoneBtn, $form, activityID);
@@ -381,14 +380,14 @@ var BasicActivity = AbstractField.extend({
             $markDoneBtn.popover({
                 template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
                 container: $markDoneBtn,
-                title : _t("Feedback"),
+                title: _t("Feedback"),
                 html: true,
                 trigger: 'manual',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
-                content : function () {
+                content: function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', {
                         previous_activity_type_id: previousActivityTypeID,
-                        force_next: forceNextActivity
+                        chaining_type: chainingTypeActivity
                     }));
                     self._onMarkActivityDoneActions($markDoneBtn, $popover, activityID);
                     return $popover;
@@ -421,21 +420,21 @@ var BasicActivity = AbstractField.extend({
             ev.stopPropagation();
             self._markActivityDone({
                 activityID: activityID,
-                feedback: _.escape($form.find('#activity_feedback').val()),
+                feedback: $form.find('#activity_feedback').val(),
             });
         });
         $form.on('click', '.o_activity_popover_done_next', function (ev) {
             ev.stopPropagation();
             self._markActivityDoneAndScheduleNext({
                 activityID: activityID,
-                feedback: _.escape($form.find('#activity_feedback').val()),
+                feedback: $form.find('#activity_feedback').val(),
             });
         });
         $form.on('click', '.o_activity_popover_discard', function (ev) {
             ev.stopPropagation();
             if ($btn.data('bs.popover')) {
                 $btn.popover('hide');
-            } else if ($btn.data('toggle') == 'collapse') {
+            } else if ($btn.data('toggle') === 'collapse') {
                 self.$('#o_activity_form_' + activityID).collapse('hide');
             }
         });
@@ -476,7 +475,7 @@ var BasicActivity = AbstractField.extend({
             },
         };
         return this.do_action(action, { on_close: function () {
-            self.trigger_up('reload');
+            self.trigger_up('reload', { keepChanges: true });
         } });
     },
     /**
@@ -541,119 +540,17 @@ var BasicActivity = AbstractField.extend({
 });
 
 // -----------------------------------------------------------------------------
-// Activities Widget for Form views ('mail_activity' widget)
-// -----------------------------------------------------------------------------
-var Activity = BasicActivity.extend({
-    className: 'o_mail_activity',
-    events:_.extend({}, BasicActivity.prototype.events, {
-        'click a': '_onClickRedirect',
-    }),
-    specialData: '_fetchSpecialActivity',
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this._activities = this.record.specialData[this.name];
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._unbindOnUploadAction();
-        return this._super.apply(this, arguments);
-    },
-
-    //------------------------------------------------------------
-    // Private
-    //------------------------------------------------------------
-    /**
-     * @private
-     * @param {Object} fieldsToReload
-     */
-    _reload: function (fieldsToReload) {
-        this.trigger_up('reload_mail_fields', fieldsToReload);
-    },
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
-        _.each(this._activities, function (activity) {
-            var note = mailUtils.parseAndTransform(activity.note || '', mailUtils.inline);
-            var is_blank = (/^\s*$/).test(note);
-            if (!is_blank) {
-                activity.note = mailUtils.parseAndTransform(activity.note, mailUtils.addLink);
-            } else {
-                activity.note = '';
-            }
-        });
-        var activities = setFileUploadID(setDelayLabel(this._activities));
-        if (activities.length) {
-            var nbActivities = _.countBy(activities, 'state');
-            this.$el.html(QWeb.render('mail.activity_items', {
-                uid: session.uid,
-                activities: activities,
-                nbPlannedActivities: nbActivities.planned,
-                nbTodayActivities: nbActivities.today,
-                nbOverdueActivities: nbActivities.overdue,
-                dateFormat: time.getLangDateFormat(),
-                datetimeFormat: time.getLangDatetimeFormat(),
-                session: session,
-                widget: this,
-            }));
-            this._bindOnUploadAction(this._activities);
-        } else {
-            this._unbindOnUploadAction(this._activities);
-            this.$el.empty();
-        }
-    },
-    /**
-     * @override
-     * @private
-     * @param {Object} record
-     */
-    _reset: function (record) {
-        this._super.apply(this, arguments);
-        this._activities = this.record.specialData[this.name];
-        // the mail widgets being persistent, one need to update the res_id on reset
-        this.res_id = record.res_id;
-    },
-
-    //------------------------------------------------------------
-    // Handlers
-    //------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRedirect: function (ev) {
-        var id = $(ev.currentTarget).data('oe-id');
-        if (id) {
-            ev.preventDefault();
-            var model = $(ev.currentTarget).data('oe-model');
-            this.trigger_up('redirect', {
-                res_id: id,
-                res_model: model,
-            });
-        }
-    },
-
-});
-
-// -----------------------------------------------------------------------------
 // Activities Widget for Kanban views ('kanban_activity' widget)
 // -----------------------------------------------------------------------------
 var KanbanActivity = BasicActivity.extend({
-    className: 'o_mail_activity_kanban',
     template: 'mail.KanbanActivity',
-    events:_.extend({}, BasicActivity.prototype.events, {
+    events: _.extend({}, BasicActivity.prototype.events, {
         'show.bs.dropdown': '_onDropdownShow',
     }),
     fieldDependencies: _.extend({}, BasicActivity.prototype.fieldDependencies, {
         activity_exception_decoration: {type: 'selection'},
-        activity_exception_icon: {type: 'char'}
+        activity_exception_icon: {type: 'char'},
+        activity_state: {type: 'selection'},
     }),
 
     /**
@@ -683,7 +580,7 @@ var KanbanActivity = BasicActivity.extend({
      * @private
      */
     _reload: function () {
-        this.trigger_up('reload', { db_id: this.record_id });
+        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
     },
     /**
      * @override
@@ -757,6 +654,66 @@ var KanbanActivity = BasicActivity.extend({
 });
 
 // -----------------------------------------------------------------------------
+// Activities Widget for List views ('list_activity' widget)
+// -----------------------------------------------------------------------------
+const ListActivity = KanbanActivity.extend({
+    template: 'mail.ListActivity',
+    events: Object.assign({}, KanbanActivity.prototype.events, {
+        'click .dropdown-menu.o_activity': '_onDropdownClicked',
+    }),
+    fieldDependencies: _.extend({}, KanbanActivity.prototype.fieldDependencies, {
+        activity_summary: {type: 'char'},
+        activity_type_id: {type: 'many2one', relation: 'mail.activity.type'},
+        activity_type_icon: {type: 'char'},
+    }),
+    label: _lt('Next Activity'),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: async function () {
+        await this._super(...arguments);
+        // set the 'special_click' prop on the activity icon to prevent from
+        // opening the record when the user clicks on it (as it opens the
+        // activity dropdown instead)
+        this.$('.o_activity_btn > span').prop('special_click', true);
+        if (this.value.count) {
+            let text;
+            if (this.recordData.activity_exception_decoration) {
+                text = _t('Warning');
+            } else {
+                text = this.recordData.activity_summary ||
+                          this.recordData.activity_type_id.data.display_name;
+            }
+            this.$('.o_activity_summary').text(text);
+        }
+        if (this.recordData.activity_type_icon) {
+            this.el.querySelector('.o_activity_btn > span').classList.replace('fa-clock-o', this.recordData.activity_type_icon);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * As we are in a list view, we don't want clicks inside the activity
+     * dropdown to open the record in a form view.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDropdownClicked: function (ev) {
+        ev.stopPropagation();
+    },
+});
+
+// -----------------------------------------------------------------------------
 // Activity Exception Widget to display Exception icon ('activity_exception' widget)
 // -----------------------------------------------------------------------------
 
@@ -790,18 +747,14 @@ var ActivityException = AbstractField.extend({
         this.$el.empty();
         if (this.value) {
             this.$el.attr({
-                'title': _t('This record has an exception activity.'),
-                'class': "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
+                title: _t('This record has an exception activity.'),
+                class: "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
             });
         }
     }
 });
 
 field_registry
-    .add('mail_activity', Activity)
     .add('kanban_activity', KanbanActivity)
+    .add('list_activity', ListActivity)
     .add('activity_exception', ActivityException);
-
-return Activity;
-
-});

@@ -13,7 +13,7 @@ class ReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits='Product Unit of Measure', required=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='move_id.product_uom', readonly=False)
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='product_id.uom_id')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
@@ -24,10 +24,10 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError(_("You may only return one picking at a time."))
         res = super(ReturnPicking, self).default_get(fields)
         if self.env.context.get('active_id') and self.env.context.get('active_model') == 'stock.picking':
+            if len(self.env.context.get('active_ids', list())) > 1:
+                raise UserError(_("You may only return one picking at a time."))
             picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
             if picking.exists():
                 res.update({'picking_id': picking.id})
@@ -77,12 +77,15 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        quantity = stock_move.product_qty - sum(
-            stock_move.move_dest_ids
-            .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
-            .mapped('move_line_ids.product_qty')
-        )
-        quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
+        quantity = stock_move.product_qty
+        for move in stock_move.move_dest_ids:
+            if move.origin_returned_move_id and move.origin_returned_move_id != stock_move:
+                continue
+            if move.state in ('partially_available', 'assigned'):
+                quantity -= sum(move.move_line_ids.mapped('product_qty'))
+            elif move.state in ('done'):
+                quantity -= move.product_qty
+        quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
         return {
             'product_id': stock_move.product_id.id,
             'quantity': quantity,
@@ -97,7 +100,7 @@ class ReturnPicking(models.TransientModel):
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
-            'date_expected': fields.Datetime.now(),
+            'date': fields.Datetime.now(),
             'location_id': return_line.move_id.location_dest_id.id,
             'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
             'picking_type_id': new_picking.picking_type_id.id,
@@ -107,20 +110,24 @@ class ReturnPicking(models.TransientModel):
         }
         return vals
 
+    def _prepare_picking_default_values(self):
+        return {
+            'move_lines': [],
+            'picking_type_id': self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id,
+            'state': 'draft',
+            'origin': _("Return of %s") % self.picking_id.name,
+            'location_id': self.picking_id.location_dest_id.id,
+            'location_dest_id': self.location_id.id
+        }
+
     def _create_returns(self):
         # TODO sle: the unreserve of the next moves could be less brutal
         for return_move in self.product_return_moves.mapped('move_id'):
             return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
 
         # create new picking for returned products
-        picking_type_id = self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id
-        new_picking = self.picking_id.copy({
-            'move_lines': [],
-            'picking_type_id': picking_type_id,
-            'state': 'draft',
-            'origin': _("Return of %s") % self.picking_id.name,
-            'location_id': self.picking_id.location_dest_id.id,
-            'location_dest_id': self.location_id.id})
+        new_picking = self.picking_id.copy(self._prepare_picking_default_values())
+        picking_type_id = new_picking.picking_type_id.id
         new_picking.message_post_with_view('mail.message_origin_link',
             values={'self': new_picking, 'origin': self.picking_id},
             subtype_id=self.env.ref('mail.mt_note').id)
@@ -142,8 +149,22 @@ class ReturnPicking(models.TransientModel):
                 # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
                 # +--------------------------------------------------------------------------------------------------------+
                 move_orig_to_link = return_line.move_id.move_dest_ids.mapped('returned_move_ids')
+                # link to original move
+                move_orig_to_link |= return_line.move_id
+                # link to siblings of original move, if any
+                move_orig_to_link |= return_line.move_id\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))
                 move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
-                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | return_line.move_id]
+                # link to children of originally returned moves, if any. Note that the use of
+                # 'return_line.move_id.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
+                # instead of 'return_line.move_id.move_orig_ids.move_dest_ids' prevents linking a
+                # return directly to the destination moves of its parents. However, the return of
+                # the return will be linked to the destination moves.
+                move_dest_to_link |= return_line.move_id.move_orig_ids.mapped('returned_move_ids')\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link]
                 vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
                 r.write(vals)
         if not returned_lines:
@@ -159,12 +180,13 @@ class ReturnPicking(models.TransientModel):
         # Override the context to disable all the potential filters that could have been set previously
         ctx = dict(self.env.context)
         ctx.update({
+            'default_partner_id': self.picking_id.partner_id.id,
             'search_default_picking_type_id': pick_type_id,
             'search_default_draft': False,
             'search_default_assigned': False,
             'search_default_confirmed': False,
             'search_default_ready': False,
-            'search_default_late': False,
+            'search_default_planning_issues': False,
             'search_default_available': False,
         })
         return {

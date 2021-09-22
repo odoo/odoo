@@ -31,31 +31,32 @@ class TestWebsiteSaleStockProductWarehouse(TestWebsiteSaleProductAttributeValueC
         # Create two stockable products
         product_1 = self.env['product.product'].create({
             'name': 'Product A',
-            'inventory_availability': 'always',
+            'allow_out_of_stock_order': False,
             'type': 'product',
             'default_code': 'E-COM1',
         })
 
         product_2 = self.env['product.product'].create({
             'name': 'Product B',
-            'inventory_availability': 'always',
+            'allow_out_of_stock_order': False,
             'type': 'product',
             'default_code': 'E-COM2',
         })
 
         # Update quantity of Product A in Warehouse 1
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product_1.id,
             'inventory_quantity': 10.0,
             'location_id': warehouse_1.lot_stock_id.id,
         })
 
         # Update quantity of Product B in Warehouse 2
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product_2.id,
             'inventory_quantity': 10.0,
             'location_id': warehouse_2.lot_stock_id.id,
         })
+        quants.action_apply_inventory()
 
         # Get current website and set warehouse_id of Warehouse 1
         current_website = self.env['website'].get_current_website()
@@ -65,10 +66,10 @@ class TestWebsiteSaleStockProductWarehouse(TestWebsiteSaleProductAttributeValueC
         combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()
 
         # Check available quantity of product is according to warehouse
-        self.assertEqual(combination_info['virtual_available'], 10, "10 units of Product A should be available in warehouse 1.")
+        self.assertEqual(combination_info['free_qty'], 10, "10 units of Product A should be available in warehouse 1.")
 
         product = product_2.with_context(website_id=current_website.id)
         combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()
 
         # Check available quantity of product is according to warehouse
-        self.assertEqual(combination_info['virtual_available'], 0, "Product B should not be available in warehouse 1.")
+        self.assertEqual(combination_info['free_qty'], 0, "Product B should not be available in warehouse 1.")

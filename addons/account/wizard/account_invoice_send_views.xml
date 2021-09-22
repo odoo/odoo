@@ -8,6 +8,11 @@
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <form string="Invoice send &amp; Print">
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': [('move_types', '=', False)]}">
+                        You have selected the following document types at the same time:
+                        <field name="move_types"/>
+                    </div>
                     <!-- truly invisible fields for control and options -->
                     <field name="composition_mode" invisible="1"/>
                     <field name="invoice_ids" invisible="1"/>
@@ -58,35 +63,35 @@
 
                     <footer>
                         <button string="Send &amp; Print"
-                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}"
+                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}" data-hotkey="q"
                             name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
-                        <button string="Send"
+                        <button string="Send" data-hotkey="q"
                             attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}"
                             name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
-                        <button string="Print"
+                        <button string="Print" data-hotkey="q"
                             attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}"
                             name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
                             attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}"
-                            class="pull-right btn-secondary" help="Save as a new template" />
+                            class="pull-right btn-secondary" help="Save as a new template" data-hotkey="w" />
                     </footer>
                 </form>
             </field>
         </record>
 
-       <act_window
-            name="Send &amp; print"
-            id="invoice_send"
-            res_model="account.invoice.send"
-            binding_model="account.move"
-            binding_views="list"
-            view_mode="form"
-            target="new"
-            context="{
-                'default_template_id': ref('account.email_template_edi_invoice'),
-                'mark_invoice_as_sent': True,
-            }"/>
+        <record id="invoice_send" model="ir.actions.server">
+            <field name="name">Send &amp; print</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_and_print()
+            </field>
+        </record>
 
     </data>
 

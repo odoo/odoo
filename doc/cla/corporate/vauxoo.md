@@ -48,3 +48,8 @@ Carmen Liliana Miranda González carmen@vauxoo.com https://github.com/CarmenMira
 Arturo Flores arturo@vauxoo.com https://github.com/umiphos
 Deivis Laya deivis@vauxoo.com https://github.com/deivislaya
 Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
+Randall Castro randall@vauxoo.com https://github.com/randall-vx
+Alejandro Santillan asantillan@vauxoo.com https://github.com/R4Alex
+Williams Estrada williams@vauxoo.com https://github.com/WR-96
+Fernanda Hernández fernanda@vauxoo.com https://github.com/fernandahf
+Luigys Toro luigys@vauxoo.com https://github.com/desdelinux

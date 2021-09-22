@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketScreen" owl="1">
+        <div class="ticket-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div class="screen-full-width">
+                <div class="rightpane pane-border">
+                    <div class="controls">
+                        <div class="buttons">
+                            <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="trigger('create-new-order')">New Order</button>
+                            <button class="discard" t-on-click="trigger('close-screen')">Back</button>
+                        </div>
+                        <t t-set="_placeholder">Search Orders...</t>
+                        <SearchBar config="getSearchBarConfig()" placeholder="_placeholder" />
+                        <div t-if="shouldShowPageControls()" class="item">
+                            <div class="page-controls">
+                                <div class="previous" t-on-click="trigger('prev-page')">
+                                    <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
+                                </div>
+                                <div class="next" t-on-click="trigger('next-page')">
+                                    <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
+                                </div>
+                            </div>
+                            <div class="page">
+                                <span><t t-esc="getPageNumber()" /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="orders">
+                        <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
+                        <t t-if="_filteredOrderList.length !== 0">
+                            <div class="header-row">
+                                <div class="col start wide">Date</div>
+                                <div class="col start wide">Receipt Number</div>
+                                <div class="col start">Customer</div>
+                                <div class="col start wide" t-if="showCardholderName()">Cardholder Name</div>
+                                <div class="col start">Employee</div>
+                                <div class="col end">Total</div>
+                                <div class="col start narrow">Status</div>
+                                <div class="col center very-narrow" name="delete"></div>
+                            </div>
+                            <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
+                                <div class="order-row pointer" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="trigger('click-order', order)">
+                                    <div class="col start wide">
+                                        <t t-esc="getDate(order)"></t>
+                                    </div>
+                                    <div class="col start wide">
+                                        <t t-esc="order.name"></t>
+                                    </div>
+                                    <div class="col start">
+                                        <t t-esc="getCustomer(order)"></t>
+                                    </div>
+                                    <div t-if="showCardholderName()" class="col start">
+                                        <t t-esc="getCardholderName(order)"></t>
+                                    </div>
+                                    <div class="col start">
+                                        <t t-esc="getEmployee(order)"></t>
+                                    </div>
+                                    <div class="col end">
+                                        <t t-esc="getTotal(order)"></t>
+                                    </div>
+                                    <div class="col start narrow">
+                                        <t t-esc="getStatus(order)"></t>
+                                    </div>
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col center very-narrow delete-button" name="delete" t-on-click.stop="trigger('delete-order', order)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </div>
+                                    <div t-else="" class="col center very-narrow delete-button"></div>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="empty-order-list">
+                                <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-shopping-cart"></i>
+                                <h1>No orders found</h1>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="leftpane">
+                    <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />
+                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
+                    <OrderDetails order="_selectedSyncedOrder" selectedOrderlineId="_selectedOrderlineId" highlightHeaderNote="_state.ui.highlightHeaderNote" />
+                    <div class="pads">
+                        <div class="control-buttons">
+                            <InvoiceButton t-if="env.pos.config.module_account" order="_selectedSyncedOrder" />
+                            <ReprintReceiptButton order="_selectedSyncedOrder" />
+                        </div>
+                        <div class="subpads">
+                            <!-- We set so that the term 'Refund' is translated. -->
+                            <t t-set="_actionName">Refund</t>
+                            <ActionpadWidget client="getSelectedClient()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
+                            <NumpadWidget disabledModes="['price', 'discount']" activeMode="_selectedOrderlineId and 'quantity'" disableSign="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

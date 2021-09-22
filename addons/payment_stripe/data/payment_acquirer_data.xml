@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <record id="payment.payment_acquirer_stripe" model="payment.acquirer">
-            <field name="name">Stripe</field>
-            <field name="image_128" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
-            <field name="provider">stripe</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="view_template_id" ref="stripe_form"/>
-            <field name="registration_view_template_id" ref="stripe_s2s_form"/>
-        </record>
-    </data>
+<odoo noupdate="1">
+
+    <record id="payment.payment_acquirer_stripe" model="payment.acquirer">
+        <field name="provider">stripe</field>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">False</field>
+        <field name="support_refund"></field>
+        <field name="support_tokenization">True</field>
+        <field name="allow_tokenization">True</field>
+    </record>
+
+    <record id="payment_method_stripe" model="account.payment.method">
+        <field name="name">Stripe</field>
+        <field name="code">stripe</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
 </odoo>

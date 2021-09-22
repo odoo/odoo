@@ -14,7 +14,7 @@
 {
     'name': 'Dominican Republic - Accounting',
     'version': '2.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
 Localization Module for Dominican Republic
@@ -103,4 +103,8 @@ en Odoo):
         # configuration wizard, views, reports...
         'data/account_chart_template_configure_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

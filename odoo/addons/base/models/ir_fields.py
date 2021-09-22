@@ -7,7 +7,7 @@ import itertools
 import psycopg2
 import pytz
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.tools import ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
@@ -16,13 +16,6 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
-CREATE = lambda values: (0, False, values)
-UPDATE = lambda id, values: (1, id, values)
-DELETE = lambda id: (2, id, False)
-FORGET = lambda id: (3, id, False)
-LINK_TO = lambda id: (4, id, False)
-DELETE_ALL = lambda: (5, False, False)
-REPLACE_WITH = lambda ids: (6, False, ids)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -30,7 +23,6 @@ class ImportWarning(Warning):
 
 class ConversionNotFound(ValueError):
     pass
-
 
 class IrFieldsConverter(models.AbstractModel):
     _name = 'ir.fields.converter'
@@ -48,6 +40,41 @@ class IrFieldsConverter(models.AbstractModel):
             elif isinstance(error_params, tuple):
                 error_params = tuple(sanitize(v) for v in error_params)
         return error_type(error_msg % error_params, error_args)
+
+    def _get_import_field_path(self, field, value):
+        """ Rebuild field path for import error attribution to the right field.
+        This method uses the 'parent_fields_hierarchy' context key built during treatment of one2many fields
+        (_str_to_one2many). As the field to import is the last of the chain (child_id/child_id2/field_to_import),
+        we need to retrieve the complete hierarchy in case of error in order to assign the error to the correct
+        column in the import UI.
+
+        :param (str) field: field in which the value will be imported.
+        :param (str or list) value:
+            - str: in most of the case the value we want to import into a field is a string (or a number).
+            - list: when importing into a one2may field, all the records to import are regrouped into a list of dict.
+                E.g.: creating multiple partners: [{None: 'ChildA_1', 'type': 'Private address'}, {None: 'ChildA_2', 'type': 'Private address'}]
+                where 'None' is the name. (because we can find a partner by his name, we don't need to specify the field.)
+
+        The field_path value is computed based on the last field in the chain.
+        for example,
+            - path_field for 'Private address' at childA_1 is ['partner_id', 'type']
+            - path_field for 'childA_1' is ['partner_id']
+
+        So, by retrieving the correct field_path for each value to import, if errors are raised for those fields,
+        we can the link the errors to the correct header-field couple in the import UI.
+        """
+        field_path = [field]
+        parent_fields_hierarchy = self._context.get('parent_fields_hierarchy')
+        if parent_fields_hierarchy:
+            field_path = parent_fields_hierarchy + field_path
+
+        field_path_value = value
+        while isinstance(field_path_value, list):
+            key = list(field_path_value[0].keys())[0]
+            if key:
+                field_path.append(key)
+            field_path_value = field_path_value[0][key]
+        return field_path
 
     @api.model
     def for_model(self, model, fromtype=str):
@@ -70,6 +97,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         def fn(record, log):
             converted = {}
+            import_file_context = self.env.context.get('import_file')
             for field, value in record.items():
                 if field in REFERENCING_FIELDS:
                     continue
@@ -84,7 +112,24 @@ class IrFieldsConverter(models.AbstractModel):
                             # uniform handling
                             w = ImportWarning(w)
                         log(field, w)
+                except (UnicodeEncodeError, UnicodeDecodeError) as e:
+                    log(field, ValueError(str(e)))
                 except ValueError as e:
+                    if import_file_context:
+                        # if the error is linked to a matching error, the error is a tuple
+                        # E.g.:("Value X cannot be found for field Y at row 1", {
+                        #   'more_info': {},
+                        #   'value': 'X',
+                        #   'field': 'Y',
+                        #   'field_path': child_id/Y,
+                        # })
+                        # In order to link the error to the correct header-field couple in the import UI, we need to add
+                        # the field path to the additional error info.
+                        # As we raise the deepest child in error, we need to add the field path only for the deepest
+                        # error in the import recursion. (if field_path is given, don't overwrite it)
+                        error_info = len(e.args) > 1 and e.args[1]
+                        if error_info and not error_info.get('field_path'):  # only raise the deepest child in error
+                            error_info['field_path'] = self._get_import_field_path(field, value)
                     log(field, e)
             return converted
 
@@ -141,7 +186,6 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
-        true, yes, false, no = _(u"true"), _(u"yes"), _(u"false"), _(u"no")
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
@@ -160,10 +204,13 @@ class IrFieldsConverter(models.AbstractModel):
         if value.lower() in falses:
             return False, []
 
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
+
         return True, [self._format_import_error(
-            ImportWarning,
-            _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"),
-            (value, yes),
+            ValueError,
+            _(u"Unknown value '%s' for boolean field '%%(field)s'"),
+            value,
             {'moreinfo': _(u"Use '1' for yes and '0' for no")}
         )]
 
@@ -207,7 +254,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid date for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31")}
             )
 
     @api.model
@@ -239,7 +286,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31 23:59:59")}
             )
 
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
@@ -270,9 +317,15 @@ class IrFieldsConverter(models.AbstractModel):
         for item, label in selection:
             label = ustr(label)
             labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
-            if value == str(item) or value in labels:
+            # case insensitive comparaison of string to allow to set the value even if the given 'value' param is not
+            # exactly (case sensitive) the same as one of the selection item.
+            if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
                 return item, []
 
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
+        elif field.name in self._context.get('import_set_empty_fields', []):
+            return False, []
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
@@ -300,7 +353,7 @@ class IrFieldsConverter(models.AbstractModel):
         """
         # the function 'flush' comes from BaseModel.load(), and forces the
         # creation/update of former records (batch creation)
-        flush = self._context.get('import_flush', lambda arg=None: None)
+        flush = self._context.get('import_flush', lambda **kw: None)
 
         id = None
         warnings = []
@@ -343,19 +396,19 @@ class IrFieldsConverter(models.AbstractModel):
                 xmlid = value
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
-            flush(xmlid)
-            id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
+            flush(xml_id=xmlid)
+            id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
             field_type = _(u"name")
             if value == '':
                 return False, field_type, warnings
-            flush()
+            flush(model=field.comodel_name)
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
-                        _(u"Found multiple matches for field '%%(field)s' (%d matches)")
-                        % (len(ids))))
+                        _(u"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)")
+                        % (value, len(ids))))
                 id, _name = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
@@ -363,7 +416,7 @@ class IrFieldsConverter(models.AbstractModel):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.") % RelatedModel._description
+                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
                 Exception,
@@ -371,17 +424,57 @@ class IrFieldsConverter(models.AbstractModel):
                 subfield
             )
 
-        if id is None:
+        set_empty = False
+        skip_record = False
+        if self.env.context.get('import_file'):
+            import_set_empty_fields = self.env.context.get('import_set_empty_fields') or []
+            field_path = "/".join((self.env.context.get('parent_fields_hierarchy', []) + [field.name]))
+            set_empty = field_path in import_set_empty_fields
+            skip_record = field_path in self.env.context.get('import_skip_records', [])
+        if id is None and not set_empty and not skip_record:
             if error_msg:
                 message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
             else:
                 message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
+
+            error_info_dict = {'moreinfo': action}
+            if self.env.context.get('import_file'):
+                # limit to 50 char to avoid too long error messages.
+                value = value[:50] if isinstance(value, str) else value
+                error_info_dict.update({'value': value, 'field_type': field_type})
+                if error_msg:
+                    error_info_dict['error_message'] = error_msg
             raise self._format_import_error(
                 ValueError,
                 message,
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
-                {'moreinfo': action})
+                error_info_dict)
         return id, field_type, warnings
+
+    def _xmlid_to_record_id(self, xmlid, model):
+        """ Return the record id corresponding to the given external id,
+        provided that the record actually exists; otherwise return ``None``.
+        """
+        import_cache = self.env.context.get('import_cache', {})
+        result = import_cache.get(xmlid)
+
+        if not result:
+            module, name = xmlid.split('.', 1)
+            query = """
+                SELECT d.model, d.res_id
+                FROM ir_model_data d
+                JOIN "{}" r ON d.res_id = r.id
+                WHERE d.module = %s AND d.name = %s
+            """.format(model._table)
+            self.env.cr.execute(query, [module, name])
+            result = self.env.cr.fetchone()
+
+        if result:
+            res_model, res_id = import_cache[xmlid] = result
+            if res_model != model._name:
+                MSG = "Invalid external ID %s: expected model %r, found %r"
+                raise ValueError(MSG % (xmlid, model._name, res_model))
+            return res_id
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an
@@ -432,13 +525,25 @@ class IrFieldsConverter(models.AbstractModel):
             ids.append(id)
             warnings.extend(ws)
 
+        if field.name in self._context.get('import_set_empty_fields', []) and any([id is None for id in ids]):
+            ids = [id for id in ids if id]
+        elif field.name in self._context.get('import_skip_records', []) and any([id is None for id in ids]):
+            return None, warnings
+
         if self._context.get('update_many2many'):
-            return [LINK_TO(id) for id in ids], warnings
+            return [Command.link(id) for id in ids], warnings
         else:
-            return [REPLACE_WITH(ids)], warnings
+            return [Command.set(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records):
+        name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
+        prefix = field.name + '/'
+        relative_name_create_enabled_fields = {
+            k[len(prefix):]: v
+            for k, v in name_create_enabled_fields.items()
+            if k.startswith(prefix)
+        }
         commands = []
         warnings = []
 
@@ -452,12 +557,22 @@ class IrFieldsConverter(models.AbstractModel):
             # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
             records = ({subfield:item} for item in record[subfield].split(','))
 
-        def log(_, e):
-            if not isinstance(e, Warning):
-                raise e
-            warnings.append(e)
+        def log(f, exception):
+            if not isinstance(exception, Warning):
+                current_field_name = self.env[field.comodel_name]._fields[f].string
+                arg0 = exception.args[0] % {'field': '%(field)s/' + current_field_name}
+                exception.args = (arg0, *exception.args[1:])
+                raise exception
+            warnings.append(exception)
 
-        convert = self.for_model(self.env[field.comodel_name])
+        # Complete the field hierarchy path
+        # E.g. For "parent/child/subchild", field hierarchy path for "subchild" is ['parent', 'child']
+        parent_fields_hierarchy = self._context.get('parent_fields_hierarchy', []) + [field.name]
+
+        convert = self.with_context(
+            name_create_enabled_fields=relative_name_create_enabled_fields,
+            parent_fields_hierarchy=parent_fields_hierarchy
+        ).for_model(self.env[field.comodel_name])
 
         for record in records:
             id = None
@@ -475,10 +590,10 @@ class IrFieldsConverter(models.AbstractModel):
                     writable['id'] = record['id']
 
             if id:
-                commands.append(LINK_TO(id))
-                commands.append(UPDATE(id, writable))
+                commands.append(Command.link(id))
+                commands.append(Command.update(id, writable))
             else:
-                commands.append(CREATE(writable))
+                commands.append(Command.create(writable))
 
         return commands, warnings
 

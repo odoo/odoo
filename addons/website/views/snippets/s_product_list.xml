@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template name="Products List" id="s_product_list">
-    <section class="s_product_list" >
+<template name="Items" id="s_product_list">
+    <t t-set="url" value="url or '#'"/>
+    <section class="s_product_list">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_1" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_1" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Furniture</a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_2" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_2" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Clothes</a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_3" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_3" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Books</a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_4" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_4" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Essential oils</a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_5" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_5" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Service</a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="http://www.odoo.com">
-                        <img src="/web/image/website.s_product_list_default_image_6" alt="#" class="img img-fluid"/>
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_6" alt="" class="img img-fluid"/>
                     </a>
                     <div class="s_product_list_item_link">
-                        <a href="http://www.odoo.com" class="btn btn-alpha">View item</a>
+                        <a t-att-href="url" class="btn btn-primary">Multimedia</a>
                     </div>
                 </div>
             </div>
@@ -58,15 +59,16 @@
     </section>
 </template>
 
-<template id="_assets_snippet_s_product_list_css_000_variables" inherit_id="website._assets_primary_variables">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_product_list/000_variables.scss"/>
-    </xpath>
-</template>
-<template id="assets_snippet_s_product_list_css_000" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_product_list/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_product_list_000_variables_scss" model="ir.asset">
+    <field name="name">Product list 000 variables SCSS</field>
+    <field name="bundle">web._assets_primary_variables</field>
+    <field name="path">website/static/src/snippets/s_product_list/000_variables.scss</field>
+</record>
+
+<record id="website.s_product_list_000_scss" model="ir.asset">
+    <field name="name">Product list 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_product_list/000.scss</field>
+</record>
 
 </odoo>

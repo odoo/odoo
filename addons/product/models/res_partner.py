@@ -29,11 +29,11 @@ class Partner(models.Model):
                 limit=1
             )
             default_for_country = pls and pls[0]
-            actual = self.env['ir.property'].get('property_product_pricelist', 'res.partner', 'res.partner,%s' % partner.id)
+            actual = self.env['ir.property']._get('property_product_pricelist', 'res.partner', 'res.partner,%s' % partner.id)
             # update at each change country, and so erase old pricelist
             if partner.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
                 # keep the company of the current user before sudo
-                self.env['ir.property'].sudo().set_multi(
+                self.env['ir.property']._set_multi(
                     'property_product_pricelist',
                     partner._name,
                     {partner.id: partner.property_product_pricelist or default_for_country.id},

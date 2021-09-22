@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo import tools
 from odoo import models, fields, api
+
+from functools import lru_cache
 
 
 class AccountInvoiceReport(models.Model):
@@ -13,10 +14,9 @@ class AccountInvoiceReport(models.Model):
 
     # ==== Invoice fields ====
     move_id = fields.Many2one('account.move', readonly=True)
-    name = fields.Char('Invoice #', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     country_id = fields.Many2one('res.country', string="Country")
@@ -39,11 +39,6 @@ class AccountInvoiceReport(models.Model):
     ], string='Payment Status', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     invoice_date = fields.Date(readonly=True, string="Invoice Date")
-    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True)
-    invoice_partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
-    nbr_lines = fields.Integer(string='Line Count', readonly=True)
-    residual = fields.Float(string='Due Amount', readonly=True)
-    amount_total = fields.Float(string='Total', readonly=True)
 
     # ==== Invoice line fields ====
     quantity = fields.Float(string='Product Quantity', readonly=True)
@@ -59,7 +54,7 @@ class AccountInvoiceReport(models.Model):
     _depends = {
         'account.move': [
             'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
-            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'invoice_partner_bank_id',
+            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id',
         ],
         'account.move.line': [
             'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
@@ -73,6 +68,10 @@ class AccountInvoiceReport(models.Model):
         'res.partner': ['country_id'],
     }
 
+    @property
+    def _table_query(self):
+        return '%s %s %s' % (self._select(), self._from(), self._where())
+
     @api.model
     def _select(self):
         return '''
@@ -84,9 +83,8 @@ class AccountInvoiceReport(models.Model):
                 line.analytic_account_id,
                 line.journal_id,
                 line.company_id,
-                COALESCE(line.currency_id, line.company_currency_id)        AS currency_id,
+                line.company_currency_id,
                 line.partner_id AS commercial_partner_id,
-                move.name,
                 move.state,
                 move.move_type,
                 move.partner_id,
@@ -95,39 +93,18 @@ class AccountInvoiceReport(models.Model):
                 move.payment_state,
                 move.invoice_date,
                 move.invoice_date_due,
-                move.invoice_payment_term_id,
-                move.invoice_partner_bank_id,
-                move.amount_residual_signed                                 AS residual,
-                ROUND(
-                  line.price_total / COALESCE(
-                    (SELECT rate FROM res_currency_rate cr WHERE
-                      cr.currency_id = line.currency_id AND
-                      cr.company_id = line.company_id AND
-                      cr.name <= COALESCE(line.date,NOW())
-                    ORDER BY cr.name DESC
-                    LIMIT 1)
-                    ,1),
-                  COALESCE((SELECT decimal_places
-                   FROM res_currency rc INNER JOIN res_currency_rate cr ON
-                    rc.id = cr.currency_id
-                   WHERE cr.currency_id = (COALESCE(line.currency_id, line.company_currency_id)) AND
-                         cr.company_id = line.company_id
-                   LIMIT 1
-                   ),2))
-                    *
-                   (CASE WHEN move.amount_total_signed < 0
-                        THEN -1
-                        ELSE 1
-                    END)                                                    AS amount_total,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                SUM(line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
-                -SUM(line.balance)                                          AS price_subtotal,
-                -SUM(line.balance / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0))
-                                                                            AS price_average,
-                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
-                1                                                           AS nbr_lines
+                -line.balance * currency_table.rate                         AS price_subtotal,
+                -COALESCE(
+                   -- Average line price
+                   (line.balance / NULLIF(line.quantity, 0.0))
+                   -- convert to template uom
+                   * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
+                   0.0) * currency_table.rate                               AS price_average,
+                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
         '''
 
     @api.model
@@ -143,7 +120,10 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-        '''
+                JOIN {currency_table} ON currency_table.company_id = line.company_id
+        '''.format(
+            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+        )
 
     @api.model
     def _where(self):
@@ -153,57 +133,36 @@ class AccountInvoiceReport(models.Model):
                 AND NOT line.exclude_from_invoice_tab
         '''
 
+
+class ReportInvoiceWithoutPayment(models.AbstractModel):
+    _name = 'report.account.report_invoice'
+    _description = 'Account report without payment lines'
+
     @api.model
-    def _group_by(self):
-        return '''
-            GROUP BY
-                line.id,
-                line.move_id,
-                line.product_id,
-                line.account_id,
-                line.analytic_account_id,
-                line.journal_id,
-                line.company_id,
-                line.currency_id,
-                line.partner_id,
-                move.name,
-                move.state,
-                move.move_type,
-                move.amount_residual_signed,
-                move.amount_total_signed,
-                move.partner_id,
-                move.invoice_user_id,
-                move.fiscal_position_id,
-                move.payment_state,
-                move.invoice_date,
-                move.invoice_date_due,
-                move.invoice_payment_term_id,
-                move.invoice_partner_bank_id,
-                uom_template.id,
-                template.categ_id,
-                COALESCE(partner.country_id, commercial_partner.country_id)
-        '''
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['account.move'].browse(docids)
 
-    def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('''
-            CREATE OR REPLACE VIEW %s AS (
-                %s %s %s %s
-            )
-        ''' % (
-            self._table, self._select(), self._from(), self._where(), self._group_by()
-        ))
+        qr_code_urls = {}
+        for invoice in docs:
+            if invoice.display_qr_code:
+                new_code_url = invoice.generate_qr_code()
+                if new_code_url:
+                    qr_code_urls[invoice.id] = new_code_url
 
+        return {
+            'doc_ids': docids,
+            'doc_model': 'account.move',
+            'docs': docs,
+            'qr_code_urls': qr_code_urls,
+        }
 
 class ReportInvoiceWithPayment(models.AbstractModel):
     _name = 'report.account.report_invoice_with_payments'
     _description = 'Account report with payment lines'
+    _inherit = 'report.account.report_invoice'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        return {
-            'doc_ids': docids,
-            'doc_model': 'account.move',
-            'docs': self.env['account.move'].browse(docids),
-            'report_type': data.get('report_type') if data else '',
-        }
+        rslt = super()._get_report_values(docids, data)
+        rslt['report_type'] = data.get('report_type') if data else ''
+        return rslt

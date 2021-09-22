@@ -17,24 +17,12 @@
     </record>
 
     <!-- Projects -->
-    <record id="account_analytic_account_project_1" model="account.analytic.account">
-        <field name="name">Office Design</field>
-        <field name="code">OD</field>
-        <field name="active" eval="True"/>
-    </record>
-
     <record id="project.project_project_1" model="project.project">
-        <field name="analytic_account_id" ref="account_analytic_account_project_1"/>
-    </record>
-
-    <record id="account_analytic_account_project_2" model="account.analytic.account">
-        <field name="name">Research &amp; Development Project</field>
-        <field name="code">RD</field>
-        <field name="active" eval="True"/>
+        <field name="allow_timesheets" eval="True"/>
     </record>
 
     <record id="project.project_project_2" model="project.project">
-        <field name="analytic_account_id" ref="account_analytic_account_project_2"/>
+        <field name="allow_timesheets" eval="True"/>
     </record>
 
     <!-- Timesheet Lines -->
@@ -3681,6 +3669,24 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_task_5"/>
         <field name="amount">-90.0</field>
+    </record>
+
+    <!-- Projects -->
+    <record id="project.project_milestone_2" model="project.milestone">
+        <field name="deadline" eval="(DateTime.now() + relativedelta(years=1, months=3)).strftime('%Y-%m-15')"/>
+    </record>
+
+    <record id="project_update_1" model="project.update" context="{'default_project_id': ref('project.project_project_1')}">
+        <field name="name">Weekly review</field>
+        <field name="user_id" eval="ref('base.user_demo')"/>
+        <field name="progress" eval="30"/>
+        <field name="status">on_hold</field>
+    </record>
+    <record id="project_update_2" model="project.update" context="{'default_project_id': ref('project.project_project_2')}">
+        <field name="name">Weekly review</field>
+        <field name="user_id" eval="ref('base.user_admin')"/>
+        <field name="progress" eval="30"/>
+        <field name="status">off_track</field>
     </record>
 
 </odoo>

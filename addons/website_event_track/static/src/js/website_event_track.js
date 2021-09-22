@@ -14,19 +14,38 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    start: function () {
+        this._super.apply(this, arguments).then(() => {
+            this.$el.find('[data-toggle="popover"]').popover()
+        })
+    },
+
+    /**
      * @private
      * @param {Event} ev
      */
     _onEventTrackSearchInput: function (ev) {
         ev.preventDefault();
-
         var text = $(ev.currentTarget).val();
-        var filter = _.str.sprintf(':containsLike(%s)', text);
-
-        $('#search_summary').removeClass('invisible');
         var $tracks = $('.event_track');
-        $('#search_number').text($tracks.filter(filter).length);
-        $tracks.removeClass('invisible').not(filter).addClass('invisible');
+
+        //check if the user is performing a search; i.e., text is not empty
+        if (text) {
+            function filterTracks(index, element) {
+                //when filtering elements only check the text content
+                return this.textContent.toLowerCase().includes(text.toLowerCase());
+            }
+            $('#search_summary').removeClass('invisible');
+            $('#search_number').text($tracks.filter(filterTracks).length);
+
+            $tracks.removeClass('invisible').not(filterTracks).addClass('invisible');
+        } else {
+            //if no search is being performed; hide the result count text
+            $('#search_summary').addClass('invisible');
+            $tracks.removeClass('invisible')
+        }
     },
 });
 });

@@ -7,7 +7,7 @@
                 <tree string="City" editable="top">
                     <field name="name"/>
                     <field name="zipcode"/>
-                    <field name="country_id"/>
+                    <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="state_id" context="{'default_country_id': country_id}"/>
                 </tree>
             </field>

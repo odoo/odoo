@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Create extra MOs that will have stock.valuation.layers + can be used to populate reports -->
+    <record id="mrp_production_drawer_2" model="mrp.production">
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        <field name="product_qty">5</field>
+        <field name="location_src_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
+        <field name="create_date" eval="(datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="date_planned_start" eval="(datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="mrp_production_drawer_3" model="mrp.production">
+        <field name="product_id" ref="product.product_product_27"/>
+        <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        <field name="product_qty">3</field>
+        <field name="location_src_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
+        <field name="create_date" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="date_planned_start" eval="(datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <function model="stock.move" name="create">
+        <value model="stock.move" eval="
+            obj().env.ref('mrp_account.mrp_production_drawer_2')._get_moves_raw_values() +
+            obj().env.ref('mrp_account.mrp_production_drawer_2')._get_moves_finished_values() +
+            obj().env.ref('mrp_account.mrp_production_drawer_3')._get_moves_raw_values() +
+            obj().env.ref('mrp_account.mrp_production_drawer_3')._get_moves_finished_values()"/>
+    </function>
+
+    <function model="mrp.production" name="action_confirm" eval="[[
+        ref('mrp_account.mrp_production_drawer_2'),
+        ref('mrp_account.mrp_production_drawer_3'),
+    ]]"/>
+
+    <function model="mrp.production" name="write">
+        <value eval="[ref('mrp_account.mrp_production_drawer_2')]"/>
+        <value eval="{'qty_producing': 5, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
+    </function>
+    <function model="mrp.production" name="write">
+        <value eval="[ref('mrp_account.mrp_production_drawer_3')]"/>
+        <value eval="{'qty_producing': 3, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
+    </function>
+
+    <function model="mrp.production" name="action_assign">
+        <value eval="[ref('mrp_account.mrp_production_drawer_2'),
+                        ref('mrp_account.mrp_production_drawer_3')]"/>
+    </function>
+
+    <function model="stock.move" name="write">
+        <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp_account.mrp_production_drawer_2').id)]).ids"/>
+        <value eval="{'quantity_done': 5}"/>
+    </function>
+    <function model="stock.move" name="write">
+        <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp_account.mrp_production_drawer_3').id)]).ids"/>
+        <value eval="{'quantity_done': 4}"/>
+    </function>
+
+    <function model="mrp.production" name="_post_inventory">
+        <value eval="[ref('mrp_account.mrp_production_drawer_2'),
+                        ref('mrp_account.mrp_production_drawer_3')]"/>
+    </function>
+
+    <function model="mrp.production" name="button_mark_done">
+        <value eval="[ref('mrp_account.mrp_production_drawer_2'),
+                        ref('mrp_account.mrp_production_drawer_3')]"/>
+    </function>
+
+    <!-- Rewrite history so they finished in the past so it looks more interesting in graphs -->
+    <function model="mrp.production" name="write">
+        <value eval="[ref('mrp_account.mrp_production_drawer_2')]"/>
+        <value eval="{'date_finished': (datetime.now() - relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M:%S')}"/>
+    </function>
+    <function model="mrp.production" name="write">
+        <value eval="[ref('mrp_account.mrp_production_drawer_3')]"/>
+        <value eval="{'date_finished': (datetime.now() - relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M:%S')}"/>
+    </function>
+</odoo>

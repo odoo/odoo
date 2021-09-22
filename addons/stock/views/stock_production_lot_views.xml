@@ -10,26 +10,37 @@
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      attrs="{'invisible': [('display_complete', '=', False)]}">
+                        <button class="oe_stat_button" name="action_lot_open_transfers"
+                                type="object" icon="fa-truck" help="Transfers"
+                                attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="delivery_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                </span>
+                                <span class="o_stat_text">Transfers</span>
+                            </div>
+                        </button>                           
                         <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only"/>
+                    <label for="name"/>
                     <h1>
                         <field name="name" placeholder="e.g. LOT/0001/20121"/>
                     </h1>
                 </div>
                 <group name="main_group">
                     <group>
-                        <field name="product_id" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
+                        <field name="product_id" context="{'default_type': 'product', 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <label for="product_qty" attrs="{'invisible': [('display_complete', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('display_complete', '=', False)]}">
                             <field name="product_qty"/>
-                            <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
+                    <group></group>
                 </group>
                 <notebook attrs="{'invisible': [('display_complete', '=', False)]}">
                     <page string="Description" name="description">
@@ -38,9 +49,9 @@
                 </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -51,11 +62,12 @@
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
             <tree string="Lots/Serial Numbers" multi_edit="1">
-                <field name="name"/>
+                <field name="name" decoration-bf="1"/>
                 <field name="ref" optional="show"/>
                 <field name="product_id" readonly="1"/>
                 <field name="create_date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="last_delivery_partner_id" optional="hide" string="Transfer to"/>
             </tree>
         </field>
     </record>
@@ -87,8 +99,8 @@
           <p class="o_view_nocontent_smiling_face">
             Add a lot/serial number
           </p><p>
-            This is the list of all the production lots you recorded. When
-            you select a lot, you can get the traceability of the products contained in lot.
+            Lots/Serial numbers help you tracking the path followed by your products.
+            From their traceability report you will see the full history of their use, as well as their composition.
           </p>
         </field>
     </record>

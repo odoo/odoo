@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="crm_team_salesteams_view_kanban_inherit_website_sale" model="ir.ui.view"> 
-        <field name="name">crm.team.kanban</field>
+    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view"> 
+        <field name="name">crm.team.view.kanban.dashboard.inherit.website.sale</field>
         <field name="model">crm.team</field>
-        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//t[@name='third_options']" position="after">

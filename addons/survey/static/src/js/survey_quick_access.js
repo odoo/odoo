@@ -7,6 +7,7 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     selector: '.o_survey_quick_access',
     events: {
         'click button[type="submit"]': '_onSubmit',
+        'input #session_code': '_onSessionCodeInput',
     },
 
         //--------------------------------------------------------------------------
@@ -23,6 +24,8 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
             if (!self.readonly) {
                 $(document).on('keypress', self._onKeyPress.bind(self));
             }
+
+            self.$('input').focus();
         });
     },
 
@@ -32,6 +35,10 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
 
     // Handlers
     // -------------------------------------------------------------------------
+
+    _onSessionCodeInput: function () {
+        this.el.querySelectorAll('.o_survey_error > span').forEach((elem) => elem.classList.add('d-none'));
+    },
 
     _onKeyPress: function (event) {
         if (event.keyCode === 13) {  // Enter
@@ -47,15 +54,23 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
 
     _submitCode: function () {
         var self = this;
-        this.$('.o_survey_error').addClass("d-none");
-        var $accessCodeInput = this.$('input#access_code');
+        this.$('.o_survey_error > span').addClass("d-none");
+        const sessionCodeInputVal = this.$('input#session_code').val().trim();
+        if (!sessionCodeInputVal) {
+            self.$('.o_survey_session_error_invalid_code').removeClass("d-none");
+            return;
+        }
         this._rpc({
-            route: `/survey/check_access_code/${$accessCodeInput.val()}`,
+            route: `/survey/check_session_code/${sessionCodeInputVal}`,
         }).then(function (response) {
             if (response.survey_url) {
                 window.location = response.survey_url;
             } else {
-                self.$('.o_survey_error').removeClass("d-none");
+                if (response.error && response.error === 'survey_session_closed') {
+                    self.$('.o_survey_session_error_closed').removeClass("d-none");
+                } else {
+                    self.$('.o_survey_session_error_invalid_code').removeClass("d-none");
+                }
             }
         });
     },

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_icon_form" model="ir.ui.view">
+        <field name="name">payment.icon.form</field>
+        <field name="model">payment.icon</field>
+        <field name="arch" type="xml">
+            <form string="Payment Icon">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Name"/></h1>
+                    </div>
+                    <notebook>
+                        <page string="Acquirers list" name="acquirers">
+                            <field nolabel="1" name="acquirer_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_icon_tree" model="ir.ui.view">
+        <field name="name">payment.icon.tree</field>
+        <field name="model">payment.icon</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_payment_icon" model="ir.actions.act_window">
+        <field name="name">Payment Icons</field>
+        <field name="res_model">payment.icon</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a payment icon
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_payment_icon"
+              id="payment_icon_menu"
+              parent="account.root_payment_menu"
+              groups="base.group_no_one"/>
+
+</odoo>

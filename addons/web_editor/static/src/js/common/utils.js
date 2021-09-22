@@ -1,7 +1,7 @@
 odoo.define('web_editor.utils', function (require) {
 'use strict';
 
-const ColorpickerDialog = require('web.ColorpickerDialog');
+const {ColorpickerWidget} = require('web.Colorpicker');
 
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
@@ -16,6 +16,7 @@ const CSS_SHORTHANDS = {
     'border-radius': ['border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius'],
     'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
     'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],
+    'padding': ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
 };
 /**
  * Key-value mapping to list converters from an unit A to an unit B.
@@ -31,6 +32,20 @@ const CSS_UNITS_CONVERSION = {
     'ms-s': () => 0.001,
     'rem-px': () => _computePxByRem(),
     'px-rem': () => _computePxByRem(true),
+    '%-px': () => -1, // Not implemented but should simply be ignored for now
+    'px-%': () => -1, // Not implemented but should simply be ignored for now
+};
+/**
+ * Colors of the default palette, used for substitution in shapes/illustrations.
+ * key: number of the color in the palette (ie, o-color-<1-5>)
+ * value: color hex code
+ */
+const DEFAULT_PALETTE = {
+    '1': '#3AADAA',
+    '2': '#7C6576',
+    '3': '#F6F6F6',
+    '4': '#FFFFFF',
+    '5': '#383E45',
 };
 
 /**
@@ -103,11 +118,11 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^(-?[0-9.]+)(\w*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+)([A-Za-z% -]*)$/);
     if (!m) {
         return null;
     }
-    return [m[1], m[2]];
+    return [m[1].trim(), m[2].trim()];
 }
 /**
  * Checks if two css values are equal.
@@ -120,13 +135,53 @@ function _getNumericAndUnit(value) {
  * @returns {boolean}
  */
 function _areCssValuesEqual(value1, value2, cssProp, $target) {
-    // If not colors, they will be left untouched
-    value1 = ColorpickerDialog.normalizeCSSColor(value1);
-    value2 = ColorpickerDialog.normalizeCSSColor(value2);
-
     // String comparison first
     if (value1 === value2) {
         return true;
+    }
+
+    // It could be a CSS variable, in that case the actual value has to be
+    // retrieved before comparing.
+    if (value1.startsWith('var(--')) {
+        value1 = _getCSSVariableValue(value1.substring(6, value1.length - 1));
+    }
+    if (value2.startsWith('var(--')) {
+        value2 = _getCSSVariableValue(value2.substring(6, value2.length - 1));
+    }
+    if (value1 === value2) {
+        return true;
+    }
+
+    // They may be colors, normalize then re-compare the resulting string
+    const color1 = ColorpickerWidget.normalizeCSSColor(value1);
+    const color2 = ColorpickerWidget.normalizeCSSColor(value2);
+    if (color1 === color2) {
+        return true;
+    }
+
+    // They may be gradients
+    const value1IsGradient = _isColorGradient(value1);
+    const value2IsGradient = _isColorGradient(value2);
+    if (value1IsGradient !== value2IsGradient) {
+        return false;
+    }
+    if (value1IsGradient) {
+        // Kinda hacky and probably inneficient but probably the easiest way:
+        // applied the value as background-image of two fakes elements and
+        // compare their computed value.
+        const temp1El = document.createElement('div');
+        temp1El.style.backgroundImage = value1;
+        document.body.appendChild(temp1El);
+        value1 = getComputedStyle(temp1El).backgroundImage;
+        document.body.removeChild(temp1El);
+
+        const temp2El = document.createElement('div');
+        temp2El.style.backgroundImage = value2;
+        document.body.appendChild(temp2El);
+        value2 = getComputedStyle(temp2El).backgroundImage;
+        document.body.removeChild(temp2El);
+
+        return value1 === value2;
     }
 
     // Convert the second value in the unit of the first one and compare
@@ -139,14 +194,146 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
     const numValue2 = _convertValueToUnit(value2, data[1], cssProp, $target);
     return (Math.abs(numValue1 - numValue2) < Number.EPSILON);
 }
+/**
+ * @param {string|number} name
+ * @returns {boolean}
+ */
+function _isColorCombinationName(name) {
+    const number = parseInt(name);
+    return (!isNaN(number) && number % 100 !== 0);
+}
+/**
+ * @param {string[]} colorNames
+ * @param {string} [prefix='bg-']
+ * @returns {string[]}
+ */
+function _computeColorClasses(colorNames, prefix = 'bg-') {
+    let hasCCClasses = false;
+    const isBgPrefix = (prefix === 'bg-');
+    const classes = colorNames.map(c => {
+        if (isBgPrefix && _isColorCombinationName(c)) {
+            hasCCClasses = true;
+            return `o_cc${c}`;
+        }
+        return (prefix + c);
+    });
+    if (hasCCClasses) {
+        classes.push('o_cc');
+    }
+    return classes;
+}
+/**
+ * @param {string} key
+ * @param {CSSStyleDeclaration} [htmlStyle] if not provided, it is computed
+ * @returns {string}
+ */
+function _getCSSVariableValue(key, htmlStyle) {
+    if (htmlStyle === undefined) {
+        htmlStyle = window.getComputedStyle(document.documentElement);
+    }
+    // Get trimmed value from the HTML element
+    let value = htmlStyle.getPropertyValue(`--${key}`).trim();
+    // If it is a color value, it needs to be normalized
+    value = ColorpickerWidget.normalizeCSSColor(value);
+    // Normally scss-string values are "printed" single-quoted. That way no
+    // magic conversation is needed when customizing a variable: either save it
+    // quoted for strings or non quoted for colors, numbers, etc. However,
+    // Chrome has the annoying behavior of changing the single-quotes to
+    // double-quotes when reading them through getPropertyValue...
+    return value.replace(/"/g, "'");
+}
+/**
+ * Normalize a color in case it is a variable name so it can be used outside of
+ * css.
+ *
+ * @param {string} color the color to normalize into a css value
+ * @returns {string} the normalized color
+ */
+function _normalizeColor(color) {
+    if (ColorpickerWidget.isCSSColor(color)) {
+        return color;
+    }
+    return _getCSSVariableValue(color);
+}
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+function _getBgImageURL(el) {
+    const parts = _backgroundImageCssToParts($(el).css('background-image'));
+    const string = parts.url || '';
+    const match = string.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return '';
+    }
+    const matchedURL = match[2];
+    // Make URL relative if possible
+    const fullURL = new URL(matchedURL, window.location.origin);
+    if (fullURL.origin === window.location.origin) {
+        return fullURL.href.slice(fullURL.origin.length);
+    }
+    return matchedURL;
+}
+/**
+ * Extracts url and gradient parts from the background-image CSS property.
+ *
+ * @param {string} CSS 'background-image' property value
+ * @returns {Object} contains the separated 'url' and 'gradient' parts
+ */
+function _backgroundImageCssToParts(css) {
+    const parts = {};
+    css = css || '';
+    if (css.startsWith('url(')) {
+        const urlEnd = css.indexOf(')') + 1;
+        parts.url = css.substring(0, urlEnd).trim();
+        const commaPos = css.indexOf(',', urlEnd);
+        css = commaPos > 0 ? css.substring(commaPos + 1) : '';
+    }
+    if (_isColorGradient(css)) {
+        parts.gradient = css.trim();
+    }
+    return parts;
+}
+/**
+ * Combines url and gradient parts into a background-image CSS property value
+ *
+ * @param {Object} contains the separated 'url' and 'gradient' parts
+ * @returns {string} CSS 'background-image' property value
+ */
+function _backgroundImagePartsToCss(parts) {
+    let css = parts.url || '';
+    if (parts.gradient) {
+        css += (css ? ', ' : '') + parts.gradient;
+    }
+    return css || 'none';
+}
+/**
+ * @param {string} [value]
+ * @returns {boolean}
+ */
+function _isColorGradient(value) {
+    // FIXME duplicated in odoo-editor/utils.js
+    return value && value.includes('-gradient(');
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
+    DEFAULT_PALETTE: DEFAULT_PALETTE,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
     getNumericAndUnit: _getNumericAndUnit,
     areCssValuesEqual: _areCssValuesEqual,
+    isColorCombinationName: _isColorCombinationName,
+    isColorGradient: _isColorGradient,
+    computeColorClasses: _computeColorClasses,
+    getCSSVariableValue: _getCSSVariableValue,
+    normalizeColor: _normalizeColor,
+    getBgImageURL: _getBgImageURL,
+    backgroundImageCssToParts: _backgroundImageCssToParts,
+    backgroundImagePartsToCss: _backgroundImagePartsToCss,
 };
 });

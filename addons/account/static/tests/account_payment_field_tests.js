@@ -16,7 +16,7 @@ QUnit.module('account', {
                 },
                 records: [{
                     id: 1,
-                    payments_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 555.0, "name": "Customer Payment: INV/2017/0004", "date": "2017-04-25", "position": "before", "ref": "BNK1/2017/0003 (INV/2017/0004)", "payment_id": 22, "move_id": 10, "journal_name": "Bank"}], "outstanding": false, "title": "Less Payment"}',
+                    payments_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 555.0, "name": "Customer Payment: INV/2017/0004", "date": "2017-04-25", "position": "before", "ref": "BNK1/2017/0003 (INV/2017/0004)", "payment_id": 22, "move_id": 10, "partial_id": 38, "journal_name": "Bank"}], "outstanding": false, "title": "Less Payment"}',
                     outstanding_credits_debits_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 100.0, "journal_name": "INV/2017/0004", "position": "before", "id": 20}], "move_id": 4, "outstanding": true, "title": "Outstanding credits"}',
                 }]
             },
@@ -26,7 +26,7 @@ QUnit.module('account', {
     QUnit.module('Reconciliation');
 
     QUnit.test('Reconciliation form field', async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         var form = await createView({
             View: FormView,
@@ -38,9 +38,8 @@ QUnit.module('account', {
             '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === 'remove_move_reconcile') {
-                    assert.deepEqual(args.args, [22], "should call remove_move_reconcile {warning: required focus}");
-                    assert.deepEqual(args.kwargs, {context: {"move_id": 1}}, "should call remove_move_reconcile {warning: required focus}");
+                if (args.method === 'js_remove_outstanding_partial') {
+                    assert.deepEqual(args.args, [10, 38], "should call js_remove_outstanding_partial {warning: required focus}");
                     return Promise.resolve();
                 }
                 if (args.method === 'js_assign_outstanding_line') {

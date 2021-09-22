@@ -28,7 +28,7 @@
             </div>
             <div class="form-group row mt-2">
                 <label class="col-md-4 col-form-label" data-toggle="tooltip" data-placement="bottom"
-                    title="Public: Forum is pubic\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group">Privacy</label>
+                    title="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group">Privacy</label>
                 <div class="col-md-8">
                     <div class="custom-control custom-radio">
                         <input type="radio" id="public" name="privacy" class="custom-control-input" value="public" checked="checked"/>
@@ -49,5 +49,18 @@
                 </div>
             </div>
         </form>
+    </t>
+    <t t-name="website_forum.web_editor_toolbar" t-extend="web_editor.toolbar" primary="True">
+        <t t-jquery="li#heading1-dropdown-item" t-operation="replace"/>
+        <t t-jquery="li#heading2-dropdown-item" t-operation="replace"/>
+        <t t-jquery="li#heading3-dropdown-item" t-operation="replace"/>
+        <t t-jquery="div#font-size" t-operation="replace"/>
+        <t t-jquery="div#colorInputButtonGroup" t-operation="replace"/>
+        <t t-jquery="div#toolbar" t-operation="append">
+            <div id="history" class="btn-group">
+                <div id="undo" data-call="undo" class="btn fa fa-undo"/>
+                <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
+            </div>
+        </t>
     </t>
 </templates>

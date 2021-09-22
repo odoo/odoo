@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_round
 
 
 class StockPicking(models.Model):
@@ -36,11 +37,14 @@ class StockMove(models.Model):
         """ Returns the unit price for the move"""
         self.ensure_one()
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
             line = self.purchase_line_id
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_void']
+                qty = line.product_qty or 1
+                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
+                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
@@ -105,6 +109,10 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return self.purchase_line_id.order_id or res
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -142,6 +150,17 @@ class StockWarehouse(models.Model):
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
+    def get_rules_dict(self):
+        result = super(StockWarehouse, self).get_rules_dict()
+        for warehouse in self:
+            result[warehouse.id].update(warehouse._get_receive_rules_dict())
+        return result
+
+    def _get_routes_values(self):
+        routes = super(StockWarehouse, self)._get_routes_values()
+        routes.update(self._get_receive_routes_values('buy_to_resupply'))
+        return routes
+
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
@@ -163,18 +182,34 @@ class ReturnPicking(models.TransientModel):
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    def _quantity_in_progress(self):
-        res = super(Orderpoint, self)._quantity_in_progress()
-        for poline in self.env['purchase.order.line'].search([('state', 'in', ('draft', 'sent', 'to approve')), ('orderpoint_id', 'in', self.ids), ('move_dest_ids', '=', False)]):
-            res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
-        return res
+    show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
+    supplier_id = fields.Many2one(
+        'product.supplierinfo', string='Product Supplier', check_company=True,
+        domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    vendor_id = fields.Many2one(related='supplier_id.name', string="Vendor", store=True)
+
+    @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
+    def _compute_qty(self):
+        """ Extend to add more depends values """
+        return super()._compute_qty()
+
+    @api.depends('supplier_id')
+    def _compute_lead_days(self):
+        return super()._compute_lead_days()
+
+    @api.depends('route_id')
+    def _compute_show_suppplier(self):
+        buy_route = []
+        for res in self.env['stock.rule'].search_read([('action', '=', 'buy')], ['route_id']):
+            buy_route.append(res['route_id'][0])
+        for orderpoint in self:
+            orderpoint.show_supplier = orderpoint.route_id.id in buy_route
 
     def action_view_purchase(self):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
         """
-        action = self.env.ref('purchase.purchase_rfq')
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
 
         # Remvove the context since the action basically display RFQ and not PO.
         result['context'] = {}
@@ -184,6 +219,57 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def _get_lead_days_values(self):
+        values = super()._get_lead_days_values()
+        if self.supplier_id:
+            values['supplierinfo'] = self.supplier_id
+        return values
+
+    def _get_replenishment_order_notification(self):
+        self.ensure_one()
+        order = self.env['purchase.order.line'].search([
+            ('orderpoint_id', 'in', self.ids)
+        ], limit=1).order_id
+        if order:
+            action = self.env.ref('purchase.action_rfq_form')
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('The following replenishment order has been generated'),
+                    'message': '%s',
+                    'links': [{
+                        'label': order.display_name,
+                        'url': f'#action={action.id}&id={order.id}&model=purchase.order',
+                    }],
+                    'sticky': False,
+                }
+            }
+        return super()._get_replenishment_order_notification()
+
+    def _prepare_procurement_values(self, date=False, group=False):
+        values = super()._prepare_procurement_values(date=date, group=group)
+        values['supplierinfo_id'] = self.supplier_id
+        return values
+
+    def _quantity_in_progress(self):
+        res = super()._quantity_in_progress()
+        qty_by_product_location, dummy = self.product_id._get_quantity_in_progress(self.location_id.ids)
+        for orderpoint in self:
+            product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
+            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] += product_uom_qty
+        return res
+
+    def _set_default_route_id(self):
+        route_id = self.env['stock.rule'].search([
+            ('action', '=', 'buy')
+        ]).route_id
+        orderpoint_wh_supplier = self.filtered(lambda o: o.product_id.seller_ids)
+        if route_id and orderpoint_wh_supplier:
+            orderpoint_wh_supplier.route_id = route_id[0].id
+        return super()._set_default_route_id()
 
 
 class ProductionLot(models.Model):
@@ -206,7 +292,7 @@ class ProductionLot(models.Model):
 
     def action_view_po(self):
         self.ensure_one()
-        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

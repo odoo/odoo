@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
-class TestEventCommon(common.SavepointCase):
+class TestEventCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,6 +27,13 @@ class TestEventCommon(common.SavepointCase):
             company_id=cls.env.ref("base.main_company").id,
             groups='base.group_user',
         )
+        cls.user_eventregistrationdesk = mail_new_test_user(
+            cls.env, login='user_eventregistrationdesk',
+            name='Ursule EventRegistration', email='ursule.eventregistration@test.example.com',
+            tz='Europe/Brussels', notification_type='inbox',
+            company_id=cls.env.ref("base.main_company").id,
+            groups='base.group_user,event.group_event_registration_desk',
+        )
         cls.user_eventuser = mail_new_test_user(
             cls.env, login='user_eventuser',
             name='Ursule EventUser', email='ursule.eventuser@test.example.com',
@@ -42,38 +49,43 @@ class TestEventCommon(common.SavepointCase):
             groups='base.group_user,event.group_event_manager',
         )
 
-        cls.customer = cls.env['res.partner'].create({
+        cls.event_customer = cls.env['res.partner'].create({
             'name': 'Constantin Customer',
             'email': 'constantin@test.example.com',
             'country_id': cls.env.ref('base.be').id,
             'phone': '0485112233',
+            'mobile': False,
         })
+        cls.event_customer2 = cls.env['res.partner'].create({
+            'name': 'Constantin Customer 2',
+            'email': 'constantin2@test.example.com',
+            'country_id': cls.env.ref('base.be').id,
+            'phone': '0456987654',
+            'mobile': '0456654321',
+        })
+
         cls.event_type_complex = cls.env['event.type'].create({
             'name': 'Update Type',
             'auto_confirm': True,
-            'is_online': False,
             'has_seats_limitation': True,
-            'default_registration_max': 30,
-            'use_timezone': True,
+            'seats_max': 30,
             'default_timezone': 'Europe/Paris',
-            'use_ticket': True,
             'event_type_ticket_ids': [(0, 0, {
-                'name': 'First Ticket',
+                    'name': 'First Ticket',
                 }), (0, 0, {
                     'name': 'Second Ticket',
                 })
             ],
-            'use_mail_schedule': True,
             'event_type_mail_ids': [
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'template_id': cls.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
+                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
                 (0, 0, {  # 1 days before event
                     'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',
-                    'template_id': cls.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
+                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
             ],
         })
         cls.event_0 = cls.env['event.event'].create({
@@ -84,7 +96,7 @@ class TestEventCommon(common.SavepointCase):
             'date_tz': 'Europe/Brussels',
         })
 
-        # set country in order to format belgium numbers
+        # set country in order to format Belgian numbers
         cls.event_0.company_id.write({'country_id': cls.env.ref('base.be').id})
 
     @classmethod

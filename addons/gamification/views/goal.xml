@@ -153,7 +153,7 @@
                             <div class="o_kanban_content">
                                 <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                 <div class="float-left">
-                                    <img class="o_image_24_cover" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                                    <img class="o_image_24_cover" t-att-src="kanban_image('res.users', 'avatar_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                                 </div>
                                 <field name="user_id" />
                                 <div class="o_goal_state_block">
@@ -204,7 +204,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new goal definition
             </p><p>
-                A goal definition is a technical model of goal defining a condition to reach.
+                A goal definition is a technical specification of a condition to reach.
                 The dates, values to reach or users are defined in goal instance.
             </p>
         </field>
@@ -228,16 +228,16 @@
         <field name="arch" type="xml">
             <form string="Goal definitions">
                 <sheet>
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Get started"/>
                         </h1>
-                        <label for="description" class="oe_edit_only"/>
+                        <label for="description"/>
                         <div>
-                            <field name="description" class="oe_inline"/>
+                            <field name="description" placeholder="e.g. Register to the platform" class="oe_inline"/>
                         </div>
 
-                        <group string="How to compute the goal?" name="compute_details">
+                        <group string="How is the goal computed?" name="compute_details">
 
                             <field widget="radio" name="computation_mode"/>
 
@@ -252,7 +252,7 @@
                             <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
                             <field name="condition" widget="radio"/>
                         </group>
-                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', 'not in', ('sum', 'count'))]}">
                             <field name="batch_mode" />
                             <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
                             <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"
@@ -260,7 +260,7 @@
                             <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
                                 placeholder="e.g. user.partner_id.id"/>
                         </group>
-                        <group string="Formating Options" name="format_options">
+                        <group string="Formatting Options" name="format_options">
                             <field name="display_mode" widget="radio" />
                             <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
                             <field name="monetary"/>

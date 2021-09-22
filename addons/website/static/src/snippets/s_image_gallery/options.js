@@ -9,7 +9,7 @@ var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({
-    xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
+    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
 
     /**
      * @override
@@ -17,11 +17,8 @@ options.registry.gallery = options.Class.extend({
     start: function () {
         var self = this;
 
-        // The snippet should not be editable
-        this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
-
         // Make sure image previews are updated if images are changed
-        this.$target.on('save', 'img', function (ev) {
+        this.$target.on('image_changed', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
@@ -46,7 +43,8 @@ options.registry.gallery = options.Class.extend({
             }
         });
 
-        if (this.$('.container:first > *:not(div)').length) {
+        const $container = this.$('> .container, > .container-fluid, > .o_container_small');
+        if ($container.find('> *:not(div)').length) {
             self.mode(null, self.getMode());
         }
 
@@ -56,9 +54,17 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        var uuid = new Date().getTime();
-        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        this.$target.find('[data-target]').attr('data-target', '#slideshow_' + uuid);
+        if (this.$target.find('.o_add_images').length) {
+            this.addImages(false);
+        }
+        // TODO should consider the async parts
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._adaptNavigationIDs();
     },
     /**
      * @override
@@ -79,7 +85,8 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        var $container = this.$('.container:first');
+        const $images = this.$('img');
+        var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
@@ -87,13 +94,18 @@ options.registry.gallery = options.Class.extend({
             dialog.on('save', this, function (attachments) {
                 for (var i = 0; i < attachments.length; i++) {
                     $('<img/>', {
-                        class: 'img img-fluid',
+                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
                         src: attachments[i].image_src,
                         'data-index': ++index,
+                        alt: attachments[i].description || '',
+                        'data-name': _t('Image'),
+                        style: $images.length > 0 ? $images[0].style.cssText : '',
                     }).appendTo($container);
                 }
-                this.mode('reset', this.getMode());
-                this.trigger_up('cover_update');
+                if (attachments.length > 0) {
+                    this.mode('reset', this.getMode());
+                    this.trigger_up('cover_update');
+                }
             });
             dialog.on('closed', this, () => resolve());
             dialog.open();
@@ -134,7 +146,7 @@ options.registry.gallery = options.Class.extend({
      */
     grid: function () {
         var imgs = this._getImages();
-        var $row = $('<div/>', {class: 'row'});
+        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
@@ -144,18 +156,11 @@ options.registry.gallery = options.Class.extend({
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
-                $row = $('<div/>', {class: 'row'});
+                $row = $('<div/>', {class: 'row s_nb_column_fixed'});
                 $row.appendTo($container);
             }
         });
         this.$target.css('height', '');
-    },
-    /**
-     * Allows to changes the interval of automatic slideshow (not active in
-     * edit mode).
-     */
-    interval: function (previewMode, widgetValue) {
-        this.$target.find('.carousel:first').attr('data-interval', widgetValue || '0');
     },
     /**
      * Displays the images with the "masonry" layout.
@@ -167,12 +172,12 @@ options.registry.gallery = options.Class.extend({
         var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
 
-        var $row = $('<div/>', {class: 'row'});
+        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         this._replaceContent($row);
 
         // Create columns
         for (var c = 0; c < columns; c++) {
-            var $col = $('<div/>', {class: 'col o_snippet_not_selectable ' + colClass});
+            var $col = $('<div/>', {class: 'o_masonry_col o_snippet_not_selectable ' + colClass});
             $row.append($col);
             cols.push($col[0]);
         }
@@ -190,7 +195,7 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            $lowest.append(imgs.pop());
+            $lowest.append(imgs.shift());
         }
     },
     /**
@@ -201,17 +206,18 @@ options.registry.gallery = options.Class.extend({
     mode: function (previewMode, widgetValue, params) {
         widgetValue = widgetValue || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
-        this[widgetValue]();
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
+        this[widgetValue]();
         this.trigger_up('cover_update');
+        this._refreshPublicWidgets();
     },
     /**
      * Displays the images with the standard layout: floating images.
      */
     nomode: function () {
-        var $row = $('<div/>', {class: 'row'});
+        var $row = $('<div/>', {class: 'row s_nb_column_fixed'});
         var imgs = this._getImages();
 
         this._replaceContent($row);
@@ -233,7 +239,7 @@ options.registry.gallery = options.Class.extend({
      */
     removeAllImages: function (previewMode) {
         var $addImg = $('<div>', {
-            class: 'alert alert-info css_editable_mode_display text-center',
+            class: 'alert alert-info css_non_editable_mode_hidden text-center',
         });
         var $text = $('<span>', {
             class: 'o_add_images',
@@ -249,18 +255,22 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with a "slideshow" layout.
      */
     slideshow: function () {
-        var imgStyle = this.$el.find('.active[data-styling]').data('styling') || '';
-        var urls = _.map(this._getImages(), function (img) {
-            return $(img).attr('src');
-        });
+        const imageEls = this._getImages();
+        const images = _.map(imageEls, img => ({
+            // Use getAttribute to get the attribute value otherwise .src
+            // returns the absolute url.
+            src: img.getAttribute('src'),
+            alt: img.getAttribute('alt'),
+        }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
         var params = {
-            srcs: urls,
+            images: images,
             index: 0,
             title: "",
-            interval: currentInterval || this.$target.data('interval') || 0,
+            interval: currentInterval || 0,
             id: 'slideshow_' + new Date().getTime(),
-            userStyle: imgStyle,
+            attrClass: imageEls.length > 0 ? imageEls[0].className : '',
+            attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
         $slideshow = $(qweb.render('website.gallery.slideshow', params));
         this._replaceContent($slideshow);
@@ -272,17 +282,6 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-    },
-    /**
-     * Allows to change the style of the individual images.
-     *
-     * @see this.selectClass for parameters
-     */
-    styling: function (previewMode, value) {
-        var classes = _.map(this.$el.find('[data-styling]'), function (el) {
-            return $(el).data('styling');
-        }).join(' ');
-        this.$('img').removeClass(classes).addClass(value);
     },
 
     //--------------------------------------------------------------------------
@@ -317,13 +316,32 @@ options.registry.gallery = options.Class.extend({
                     imgs.push(data.$image[0]);
                     break;
             }
+            position = imgs.indexOf(data.$image[0]);
             _.each(imgs, function (img, index) {
                 // Note: there might be more efficient ways to do that but it is
                 // more simple this way and allows compatibility with 10.0 where
                 // indexes were not the same as positions.
                 $(img).attr('data-index', index);
             });
-            this.mode('reset', this.getMode());
+            const currentMode = this.getMode();
+            this.mode('reset', currentMode);
+            if (currentMode === 'slideshow') {
+                const $carousel = this.$target.find('.carousel');
+                $carousel.removeClass('slide');
+                $carousel.carousel(position);
+                this.$target.find('.carousel-indicators li').removeClass('active');
+                this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
+                this.trigger_up('activate_snippet', {
+                    $snippet: this.$target.find('.carousel-item.active img'),
+                    ifInactiveOptions: true,
+                });
+                $carousel.addClass('slide');
+            } else {
+                this.trigger_up('activate_snippet', {
+                    $snippet: data.$image,
+                    ifInactiveOptions: true,
+                });
+            }
         }
     },
 
@@ -331,6 +349,21 @@ options.registry.gallery = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptNavigationIDs: function () {
+        var uuid = new Date().getTime();
+        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#slideshow_' + uuid);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#slideshow_' + uuid);
+            }
+        });
+    },
     /**
      * @override
      */
@@ -347,25 +380,18 @@ options.registry.gallery = options.Class.extend({
                 this.activeMode = activeModeName;
                 return activeModeName;
             }
-            case 'interval': {
-                const carousel = this.$target[0].querySelector('.carousel');
-                return (carousel && carousel.dataset.interval || '0');
-            }
             case 'columns': {
                 return `${this._getColumns()}`;
             }
-            case 'styling': {
-                const img = this.$target[0].querySelector('img');
-                if (!img) {
-                    return '';
-                }
-                for (const className of params.possibleValues) {
-                    if (className && img.classList.contains(className)) {
-                        return className;
-                    }
-                }
-                return '';
-            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'slideshow_mode_opt') {
+            return false;
         }
         return this._super(...arguments);
     },
@@ -410,7 +436,7 @@ options.registry.gallery = options.Class.extend({
      * @returns {jQuery} the main container of the snippet
      */
     _replaceContent: function ($content) {
-        var $container = this.$('.container:first');
+        var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         $container.empty().append($content);
         return $container;
     },
@@ -442,7 +468,6 @@ options.registry.gallery_img = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position: function (previewMode, widgetValue, params) {
-        this.trigger_up('deactivate_snippet');
         this.trigger_up('option_update', {
             optionName: 'gallery',
             name: 'image_index_request',

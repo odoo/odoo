@@ -7,10 +7,9 @@ import logging
 import os
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
-
 from random import randrange
 from PIL import Image
 
@@ -32,7 +31,7 @@ class Company(models.Model):
         return self.env.user.company_id.currency_id
 
     def _get_default_favicon(self, original=False):
-        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        img_path = get_resource_path('web', 'static/img/favicon.ico')
         with tools.file_open(img_path, 'rb') as f:
             if original:
                 return base64.b64encode(f.read())
@@ -62,8 +61,9 @@ class Company(models.Model):
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
-    report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
-    report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
+    report_header = fields.Html(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
+    report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
+    company_details = fields.Html(string='Company Details', help="Header text displayed at the top of all reports.")
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
@@ -78,13 +78,14 @@ class Company(models.Model):
         'res.country.state', compute='_compute_address', inverse='_inverse_state',
         string="Fed. State", domain="[('country_id', '=?', country_id)]"
     )
-    bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
+    bank_ids = fields.One2many(related='partner_id.bank_ids', readonly=False)
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
+    mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
-    company_registry = fields.Char()
+    company_registry = fields.Char(compute='_compute_company_registry', store=True, readonly=False)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     base_onboarding_company_state = fields.Selection([
@@ -93,6 +94,8 @@ class Company(models.Model):
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
+    layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
+    layout_background_image = fields.Binary("Background Image")
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
@@ -115,6 +118,11 @@ class Company(models.Model):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
 
+    def _compute_company_registry(self):
+        # exists to allow overrides
+        for company in self:
+            company.company_registry = company.company_registry
+    
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
@@ -183,7 +191,7 @@ class Company(models.Model):
         """ Returns the user's company
             - Deprecated
         """
-        _logger.warning(_("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore"))
+        _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
     # deprecated, use clear_caches() instead
@@ -205,6 +213,7 @@ class Company(models.Model):
             'phone': vals.get('phone'),
             'website': vals.get('website'),
             'vat': vals.get('vat'),
+            'country_id': vals.get('country_id'),
         })
         # compute stored fields, for example address dependent fields
         partner.flush()
@@ -212,7 +221,7 @@ class Company(models.Model):
         self.clear_caches()
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
-        self.env.user.write({'company_ids': [(4, company.id)]})
+        self.env.user.write({'company_ids': [Command.link(company.id)]})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):
@@ -260,7 +269,7 @@ class Company(models.Model):
     @api.model
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
-        action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_open_base_onboarding_company")
         action['res_id'] = self.env.company.id
         return action
 

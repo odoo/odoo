@@ -6,7 +6,7 @@
 {
     'name': 'New Zealand - Accounting',
     'version': '1.1',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 New Zealand Accounting Module
 =============================
@@ -31,4 +31,8 @@ Also:
              'data/account_chart_template_configure_data.xml',
              'data/res_currency_data.xml',
              ],
+     'demo': [
+         'demo/demo_company.xml',
+     ],
+    'license': 'LGPL-3',
 }

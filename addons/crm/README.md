@@ -2,7 +2,7 @@ Odoo CRM
 --------
 
 Boost sales productivity, improve win rates, grow revenue with the Odoo
-<a href="https://www.odoo.com/page/crm">Open Source CRM</a>.
+<a href="https://www.odoo.com/app/crm">Open Source CRM</a>.
 
 Manage your sales funnel with no effort. Attract leads, follow-up on phone
 calls and meetings. Analyse the quality of your leads to make informed
@@ -55,7 +55,7 @@ see what your team is busy with.
 Lead Automation and Marketing Campaigns
 ---------------------------------------
 
-Drive performance by automating tasks with Odoo <a href="https://www.odoo.com/page/crm">CRM</a>.
+Drive performance by automating tasks with Odoo <a href="https://www.odoo.com/app/crm">CRM</a>.
 
 Use our marketing campaigns to automate lead acquisition, follow ups and
 promotions. Define automated actions (e.g. ask a salesperson to call, send an

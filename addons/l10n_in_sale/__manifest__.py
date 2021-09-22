@@ -3,16 +3,18 @@
 
 {
     'name': 'Indian - Sale Report(GST)',
+    'icon': '/l10n_in/static/description/icon.png',
     'version': '1.0',
     'description': """GST Sale Report""",
-    'category': 'Accounting/Accounting',
+    'category': 'Accounting/Localizations/Sale',
     'depends': [
         'l10n_in',
         'sale',
     ],
     'data': [
         'views/report_sale_order.xml',
-        'views/sale_views.xml'
+        'views/sale_views.xml',
+        'views/res_partner_views.xml',
     ],
     'demo': [
         'data/product_demo.xml',
@@ -20,4 +22,5 @@
     'installable': True,
     'application': False,
     'auto_install': True,
+    'license': 'LGPL-3',
 }
