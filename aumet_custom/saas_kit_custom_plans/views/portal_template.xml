@@ -5,66 +5,95 @@
 
 <odoo>
     <template id="portal_contract_page_inherit_template" inherit_id="odoo_saas_kit.portal_contract_page">
-        <xpath expr="//t/div[hasclass('container')]/div[hasclass('panel')]/div[hasclass('panel-heading')]/div[hasclass('row')]/div[hasclass('justify-content-end')]/div/div[hasclass('card')]/div[hasclass('col-12')]/section/h3" position="after">
-            <t t-if="contract.is_custom_plan">
-                <h5 class="text-right">
+        <xpath expr="//table[@id='saas_apps_table']/tbody" position="inside">
+            <tr id="add_apps_row_id" class="contract_apps_data_row">
+                <td id="add_apps_td_1" class="add_apps_tr d-flex">
+                    <div class="d-flex">
+                        <button id="add_apps_icon_div">
+                            <img id ="" src="/saas_kit_custom_plans/static/src/img/add_black_24dp.svg"></img>
+                        </button>
+                    </div>
+                    <div id="add_apps_div">
+                        <span id="add_app_span_1">Add Apps</span><br/>
+                        <span id="add_app_span_2">Add another app to your contract</span>
+                    </div>
+                </td>
+                <td id="add_apps_td_2" class="add_apps_tr">
+                </td>
+                <td id="add_apps_td_3" class="add_apps_tr">
+                </td>
+                <td id="add_apps_td_3" class="add_apps_tr">
+                </td>
+            </tr>
+                <!-- <h5 class="text-right">
                     <a href="#" class="text-center" id="modal_for_apps"><strong>ADD APPS</strong></a>
-                </h5>
-                
-                <div class="modal fade" id="add_apps" >
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content" style="overflow: scroll;">
-                            <div class="modal-header" style="margin-top:1%;">
-                                <h4 class="modal-title">Add Desired apps to you Contracts
-                                </h4>
+                </h5> -->
+        </xpath>
+
+        <xpath expr="//table[@id='saas_apps_table']" position="after">
+            <div class="modal fade" id="add_apps" >
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content" style="overflow: scroll;">
+                        <div class="modal-header" style="margin-top:3%;">
+                            <div class="modal-title" id="add_app_text">Add Apps
                             </div>
-                            <section style="page-break-inside: auto;" class="mt32">
-                                <div class="dd_container_row container-fluid row" style="padding:2%;">
-                                <div class="d-flex align-content-start flex-wrap">                                
-                                    <t t-foreach="contract.update_saas_module_ids" t-as="app">
-                                        <div class="col-md-4 col-sm-12" style="height: 80px; margin-bottom: 2%;">
-                                            <div style="border-radius: 10px;border: 1px solid #E0E0E0;" class="oe-padded h-100 ml">
-                                                <div class="d-flex" style="margin: 2%;">
-                                                    <div style="width: 10%;">
-                                                        <div class="d-flex justify-content-center align-items-center" style="margin-top:22px;">
-                                                            <input type="checkbox" class="check_app"/>
-                                                        </div>
-                                                    </div>
-                                                    <div style="width: 90%;" class="product_div">
-                                                        <div style="margin-left: 4%;" class="product_name" t-att-data-value="app.technical_name">
-                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 15px;line-height: 22px;color: #333333;"><b><t t-esc="app.name[0:15]" /></b></span>
-                                                        </div>
-                                                        <div style="margin-left: 4%;" >
-                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;">Category: <t t-esc="app.categ_id.name and app.categ_id.name[:8]" /></span>
-                                                        </div>
-                                                        <div style="margin-left: 4%;" class="product_price">
-                                                            <span style="font-family: Montserrat;font-style: normal;font-weight: normal;font-size: 13px;line-height: 22px;color: #333333;"><b><span class="price" style="white-space: nowrap;"><t t-esc="app.price" /> <span itemprop="priceCurrency" t-esc="contract.currency_id.name"/></span><t t-if="is_users"><t t-if="costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t><t t-else=""><t t-if="is_fixed_users  and costing_nature == 'per_user'"> /per user</t><t t-else=""> /per month</t></t></b></span>
-                                                        </div>
-                                                    </div>
-                                                    <div style="width: 30%;">
-                                                        <div class="d-flex justify-content-center align-items-center" style="margin-top:2%;">
-                                                            <span t-field="app.image" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" style="height: 50px; border-radius: 10px;"/>
-                                                        </div>
-                                                    </div>
+                        </div>
+                        <div class="row d-flex" style="padding-left: 6%; padding-right: 6%; overflow: scroll; width: 103%;">
+                            <table class="" id="apps_to_add" style="width: 100%;">
+                                <thead id="head_apps_to_add">
+                                    <tr id="apps_to_add_table_head_tr" style="border-bottom: 1px solid rgba(0, 0, 0, 0.2);">
+                                        <th class="apps_to_add_thead_label">
+                                            APP DETAILS
+                                        </th>
+                                        <th class="apps_to_add_thead_label">
+                                            PRICE
+                                        </th>
+                                        <th class="apps_to_add_thead_label">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="contract.update_saas_module_ids" t-as="module">
+                                        <tr class="apps_to_add_data_row" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                                            <th id="module_name" class="">
+                                                <div style="">
+                                                    <span t-if="not request.env.user._is_public()">
+                                                    <span class="apps_to_add_data_image" t-field="module.image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}"/>
+                                                    </span><span class="apps_to_add_module_name" t-esc="module.name" />
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </th>
+                                            <th class="">
+                                                <div class="apps_to_add_module_price_div">
+                                                    <span class="apps_to_add_module_price" style="margin-left: 7px;" t-field="module.price"/> <span itemprop="priceCurrency" t-esc="contract.company_id.currency_id.name"/>
+                                                </div>
+                                            </th>
+                                            <th class="apps_to_add_img_row">
+                                                <div class="d-flex">
+                                                    <div class="apps_to_add_tech_name d-none"><t t-esc="module.technical_name"/></div>
+                                                    <button class="apps_to_select_button" style="background: none; border: none;">
+                                                        <img class="apps_to_select_img" src="/saas_kit_custom_plans/static/src/img/check-inactive.svg"></img>                                                
+                                                    </button>
+                                                    <button class="apps_selected_button">
+                                                        <img class="apps_selected_img" src="/saas_kit_custom_plans/static/src/img/check-active.svg"></img>                                                
+                                                    </button>
+                                                </div>
+                                            </th>
+                                        </tr>
                                     </t>
-                                </div>
-                                </div>
-                            </section>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn" style="background-color:#304FE0; color: #FFFFFF !important;" id="add_apps_submit" t-att-value="contract.id">Add</button>
-                                <button type="button" class="btn mr-auto" data-dismiss="modal">Cancel</button>
-                            </div>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn mr-auto" data-dismiss="modal">Discard</button>
+                            <button type="button" class="btn btn" style="background-color:#55D237; color: #FFFFFF !important;" id="add_apps_submit" t-att-value="contract.id">Add Apps</button>
                         </div>
                     </div>
                 </div>
-            </t>
+            </div>
         </xpath>
 
         <xpath expr="//t/div[hasclass('container')]/div[hasclass('panel')]/div[hasclass('panel-heading')]/div[hasclass('row')]/div[hasclass('justify-content-end')]/div/div[hasclass('card')]/div[hasclass('col-12')]/section/table/thead/tr/th[3]" position="after">
-            <th class="text-right">
+            <th class="contract_apps_thead_label" style="border: none;">
                 Status
             </th>
         </xpath>
@@ -77,7 +106,11 @@
                 </t>
             </t>
             <th class="text-right">
-                <span><t t-esc="status" /></span>
+                <div class="contract_apps_status_div_text d-flex" style="margin-top: 22px;">
+                    <!-- <div> -->
+                        <span class="contract_apps_span_status_text"><t t-esc="status" /></span>
+                    <!-- </div> -->
+                </div>
             </th>
         </xpath>
     </template>

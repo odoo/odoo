@@ -6,7 +6,7 @@
 <odoo>
     <data>
         <record id="custom_domain_view_wizard" model="ir.ui.view">
-            <field name="name">Custom Domain Detail</field>
+            <field name="name">Subdomain Detail</field>
             <field name="model">custom.domain.wizard</field>
             <field name="arch" type="xml">
                 <form>
@@ -18,7 +18,7 @@
                                 <field name="is_ssl_enable" />
                             </group>
                         </group>
-                        <h3 attrs="{'invisible': [('is_ssl_enable', '=', False)]}">Note:-DNS entries should be made to Point Custom Domain to the SubDomain provided by SAAS ki before enabling HTTPS here. !</h3>
+                        <h3 attrs="{'invisible': [('is_ssl_enable', '=', False)]}">Note:-DNS entries should be made to Point Subdomain to the Subdomain provided by SAAS ki before enabling HTTPS here. !</h3>
                     </sheet>
                     <footer>
                         <button name="save_domain" string="Create" type="object" class="btn-primary"/>
@@ -29,7 +29,7 @@
         </record>
 
         <record id="custom_domain_wizard_action" model="ir.actions.act_window">
-            <field name="name">Enter Custom Domain</field>
+            <field name="name">Enter Subdomain</field>
             <field name="res_model">custom.domain.wizard</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="custom_domain_view_wizard"/>

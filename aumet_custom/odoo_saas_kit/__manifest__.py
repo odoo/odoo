@@ -17,7 +17,7 @@
   "name"                 :  "Odoo SaaS Kit",
   "summary"              :  """Odoo SaaS Kit allows you to run your Odoo As A SaaS business. After installation and set uo you can sell Odoo As A Saas to your client via subscription based model""",
   "category"             :  "Extra Tools",
-  "version"              :  "2.0.1",
+  "version"              :  "2.0.3",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
   "license"              :  "Other proprietary",

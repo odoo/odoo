@@ -13,6 +13,8 @@ from odoo.exceptions import UserError, Warning
 from odoo.modules.module import get_module_resource
 from odoo.addons.odoo_saas_kit.models.lib import query
 from odoo.addons.odoo_saas_kit.models.lib import saas
+from odoo.addons.odoo_saas_kit.models.lib import client
+
 
 import logging
 
@@ -110,6 +112,7 @@ class CustomSaasClient(models.Model):
                 else:
                     raise UserError("Couldn't create the instance with the selected domain name. Please use some other domain name.")
             else:
+                obj.missed_modules = False
                 super(CustomSaasClient, self).fetch_client_url(domain_name=domain_name)
 
     @api.model
@@ -140,6 +143,40 @@ class CustomSaasClient(models.Model):
         client_ids = self.env['saas.client'].sudo().search([('state', '=', 'started'), ('missed_modules', '=', True)])
         for client_id in client_ids:
             client_id.install_modules()
+            
+    def drop_db(self):
+        for obj in self:
+            if obj.saas_contract_id.is_custom_plan:
+                if obj.state == "inactive":
+                    host_server, db_server = obj.saas_contract_id.server_id.get_server_details()
+                    _logger.info("HOST SERER %r   DB SERVER  %r"%(host_server,db_server))
+                    response = client.main(obj.database_name, obj.containter_port, host_server, get_module_resource('odoo_saas_kit'), from_drop_db=True, version=self.saas_contract_id.odoo_version_id.code)
+                    if not response['db_drop']:
+                        raise UserError("ERROR: Couldn't Drop Client Database. Please Try Again Later.\n\nOperation\tStatus\n\nDrop database: \t{}\n".format(response['db_drop']))
+                    else:
+                        obj.is_drop_db = True
+                        if obj.is_drop_container:
+                            obj.saas_contract_id.state = 'cancel'
+                            obj.state = 'cancel'
+            else:
+                return super(CustomSaasClient, self).drop_db()
+                        
+    def drop_container(self):
+        for obj in self:
+            if obj.saas_contract_id.is_custom_plan:
+                if obj.state == "inactive":
+                    host_server, db_server = obj.saas_contract_id.server_id.get_server_details()
+                    _logger.info("HOST SERER %r   DB SERVER  %r"%(host_server,db_server))
+                    response = client.main(obj.database_name, obj.containter_port, host_server, get_module_resource('odoo_saas_kit'), container_id=obj.container_id, db_server=db_server, from_drop_container=True, version=self.saas_contract_id.odoo_version_id.code)
+                    if not response['drop_container'] or not response['delete_nginx_vhost'] or not response['delete_data_dir']:
+                        raise UserError("ERROR: Couldn't Drop Client Container. Please Try Again Later.\n\nOperation\tStatus\n\nDelete Domain Mapping: \t{}\nDelete Data Directory: \t{}".format(response['drop_container'], response['delete_nginx_vhost']))
+                    else:
+                        obj.is_drop_container = True
+                        if obj.is_drop_db:
+                            obj.saas_contract_id.state = 'cancel'
+                            obj.state = 'cancel'
+            else:
+                return super(CustomSaasClient, self).drop_container()
 
 class CustomModuleStatus(models.Model):
     _inherit = 'saas.module.status'

@@ -133,7 +133,7 @@ class SaasContract(models.Model):
     due_users_price = fields.Float(string="Due users price", default=1.0)
     previous_cycle_user = fields.Integer(string="Previous User")
     client_state = fields.Selection(string="Client State", related='saas_client.state')
-    custom_domain_ids = fields.One2many(comodel_name='custom.domain', inverse_name='contract_id', string="Custom Domains")
+    custom_domain_ids = fields.One2many(comodel_name='custom.domain', inverse_name='contract_id', string="Subdomains")
 
     @api.onchange('pricelist_id')
     def pricelist_id_change(self):
@@ -751,11 +751,12 @@ class SaasContract(models.Model):
         self.ensure_one()
         if not self.saas_client.client_url:
             raise UserError("SaaS Instance Not Found! Please create it from the associated client record for sharing the credentials.")
+        
         template = self.on_create_email_template
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
 
 
-        if self.plan_id.use_specific_user_template:
+        if self.saas_client:
             try:
                 token = generate_token()
                 self.sudo().set_user_data(token=token)
@@ -834,7 +835,7 @@ class SaasContract(models.Model):
         subdomain_name = self.domain_name
         if not self.use_separate_domain:
             subdomain_name += "."+self.saas_domain_url
-        response = generate_ssl_custom_domain.main_add(subdomain_name, domain, is_ssl, module_path)
+        response = generate_ssl_custom_domain.main_add(subdomain_name.lower(), domain.lower(), is_ssl, module_path)
         if response.get('status'):
             vals = dict()
             vals['name'] = domain
@@ -854,3 +855,13 @@ class SaasContract(models.Model):
         else:
             error = response.get('message')
             raise UserError("ER 502: {}".format(error))
+
+    @api.model
+    def redirect_invitation_url(self, contract_id=None):
+        contract_id = self.browse(int(contract_id)).sudo()
+        if contract_id.state == 'confirm' and contract_id.saas_client and contract_id.saas_client.invitation_url:
+            login_url = contract_id.saas_client.invitation_url
+        else:
+            login_url = '/my'
+        return login_url
+        

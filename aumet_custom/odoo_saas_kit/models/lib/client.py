@@ -10,7 +10,7 @@ data_dir = "/var/lib/odoo/Odoo-SAAS-Data/"
 client_admin_passwd = "Yb32vfyRsMa7HDaG"
 template_port = 8888
 _logger = logging.getLogger(__name__)
-
+oversion = "14"
 class container(object):
 
     def __init__(self):
@@ -100,9 +100,10 @@ def delete_remote_data_dir(domain,ssh_obj):
     sftp = ssh_obj.open_sftp()
     if "odoo-server.conf" in sftp.listdir(path):#os.path.exists(path+"/odoo-server.conf"):
         try:
-            if "14.0" in sftp.listdir(path+"/data-dir/addons/"):#os.path.exists(path+"/data-dir/addons/12.0"): 
-                _logger.info("Permissions of Odoo addons/14.0")
-                sftp.chmod(path+"/data-dir/addons/14.0",0o700)
+            ver = oversion + ".0"
+            if ver in sftp.listdir(path+"/data-dir/addons/"):#os.path.exists(path+"/data-dir/addons/12.0"): 
+                _logger.info("Permissions of Odoo addons/%s"%ver)
+                sftp.chmod(path+"/data-dir/addons/"+ver,0o700)
             execute_on_remote_shell(ssh_obj,"rm -rf %s"%path)
             return True
         except Exception as error:
@@ -116,9 +117,10 @@ def delete_data_dir(domain):
     _logger.info("$$$$$ %r "%path)
     if os.path.exists(path+"/odoo-server.conf"):
         try:
-            if os.path.exists(path+"/data-dir/addons/14.0"):
-                _logger.info("Permissions of Odoo addons/14.0")
-                os.chmod(path+"/data-dir/addons/14.0",0o700)
+            ver = oversion + ".0"
+            if os.path.exists(path+"/data-dir/addons/"+ver):
+                _logger.info("Permissions of Odoo addons/%s"%ver)
+                os.chmod(path+"/data-dir/addons/"+ver,0o700)
             shutil.rmtree(path)
             return True
         except Exception as error:
@@ -153,7 +155,7 @@ def update_values(config_path):
     nginx_vhost = parser.get("options","odoo_saas_data")+"/docker_vhosts"
     data_dir = parser.get("options","odoo_saas_data")
     client_admin_passwd = parser.get("options","template_master")
-    template_port = parser.get("options","template_odoo_port")
+    template_port = parser.get("options","template_odoo_port_v"+str(oversion))
 
 def login_remote(context):
     try:
@@ -176,14 +178,15 @@ def execute_on_remote_shell(ssh_obj,command):
         _logger.info("++++++++++ERROR++++%r",e)
         return False
 
-def main(domain, port, host_server, config_path, container_id=None, db_server=None, from_drop_container=None, from_drop_db=None):
+def main(domain, port, host_server, config_path, container_id=None, db_server=None, from_drop_container=None, from_drop_db=None, version = "14"):
     server_type = host_server['server_type']
     _logger.info("____%r++++++"%domain)
     _logger.info("____%r++++++"%container_id)
     _logger.info("____%r++++++"%port)
     _logger.info("____%r++++++"%host_server)
     _logger.info("____%r++++++"%db_server)
-  
+    global oversion
+    oversion = version 
     response = {"db_drop":False,"drop_container": False,'delete_data_dir':False,'delete_nginx_vhost':False }
     update_values(config_path)
     isitlocal = True

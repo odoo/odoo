@@ -54,7 +54,7 @@ class odoo_container:
         self.odoo_config = parser.get("options","odoo_saas_data")
         self.container_passwd = parser.get("options","container_passwd")
         self.template_odoo_port = parser.get("options","template_odoo_port_v"+version)
-        self.template_odoo_lport = parser.get("options","template_odoo_lport_v"+version)
+        self.template_odoo_lport = parser.get("options","template_odoo_lport_v+"version)
         self.common_addons = parser.get("options","common_addons_v"+version)
         self.odoo_template = parser.get("options","odoo_template_v"+version)
         self.data_dir = parser.get("options","data_dir_path")

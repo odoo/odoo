@@ -7,8 +7,22 @@
     <template id="custom_plan_product_page_inherit" inherit_id="website_sale.product">
         <xpath expr="//div[hasclass('js_product', 'js_main_product')]/t[1]" position="after">
             <t t-if="product.saas_plan_id">
-                <a href="/custom/plan" class="text-center" id="">Choose you own Apps</a>
+                <div style="padding: 3%; margin-bottom: 3%; background: rgba(0, 177, 173, 0.09); border: 1px solid rgba(0, 177, 173, 0.3); font-family: 'Source Sans Pro', sans-serif; border-radius: 4px;">
+                    <a href="/custom/plan" class="text-center" id="" style="text-decoration: underline;">Select Your Own Apps</a>
+                    <p style="font-style: italic;">Make selection of your apps according to your own requirements.</p>
+                </div>
             </t>
         </xpath>
     </template>
+
+    <template id="template_header_select_own_apps" inherit_id="website.template_header_default">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <li class="nav-item" style="background: rgba(0, 177, 173, 0.09); border: 1px solid rgba(0, 177, 173, 0.3); font-family: 'Source Sans Pro', sans-serif; border-radius: 4px;">
+                <a role="menuitem" href="/custom/plan" class="nav-link">
+                    Select Your Own Apps
+                </a>
+            </li>
+        </xpath>
+    </template>
+
 </odoo>

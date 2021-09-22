@@ -4,8 +4,10 @@
 
 odoo.define('saas_kit_custom_plan.update_app', function (require) {
     var rpc = require('web.rpc');
+    var apps = new Array();
+
     $('document').ready(function(){
-        $('#modal_for_apps').click(function(){
+        $('#add_apps_icon_div, #add_app_span_1').click(function(){
             var contract_id = parseInt($('#add_apps_submit').attr('value'));
             rpc.query({
                 model: 'saas.contract',
@@ -14,23 +16,21 @@ odoo.define('saas_kit_custom_plan.update_app', function (require) {
             })
             .then(function(data){
                 if (data){
+                    apps.length = 0;
+                    $('.apps_to_select_button').css('display', 'inline');
+                    $('.apps_selected_button').css('display', 'none');
+                    $('.apps_to_add_data_row').css('background', '#FFFFFF');
                     $("#add_apps").modal("toggle");
                 }
             });
         });
 
         $('#add_apps_submit').click(function(){
-            var checkbox = $('input:checkbox:checked');
-            if (checkbox.length == 0){
+            if (apps.length == 0){
                 alert('Please Select Atleast One App to continue !')
                 return
             }
             var contract_id = parseInt($('#add_apps_submit').attr('value'));
-            var apps = new Array();
-            checkbox.each(function(i, el){
-                console.log($(this).parent().parent().parent().children('.product_div'));
-                apps.push($(this).parent().parent().parent().children('.product_div').children('.product_name').attr('data-value'));
-            });
             rpc.query({
                 model: 'saas.contract',
                 method: 'add_apps',
@@ -38,9 +38,24 @@ odoo.define('saas_kit_custom_plan.update_app', function (require) {
             })
             .then(function(data){
                 $('#add_apps').modal('hide');
-                $('input:checkbox').removeAttr('checked');
                 location.href='/my/saas/contract/'+contract_id+'?access_token='+data
             });
+        });
+
+        $('.apps_to_select_button').click(function(ev){
+            var technical_name = $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_to_add_tech_name').text();
+            apps.push(technical_name);
+            $(ev.currentTarget).closest('.apps_to_add_data_row').css('background', 'rgba(141, 255, 87, 0.2)');
+            $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_selected_button').css('display', 'inline');
+            $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_to_select_button').css('display', 'none');
+        });
+
+        $('.apps_selected_button').click(function(ev){
+            var technical_name = $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_to_add_tech_name').text();
+            apps.splice($.inArray(technical_name, apps), 1);
+            $(ev.currentTarget).closest('.apps_to_add_data_row').css('background', '#FFFFFF');
+            $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_selected_button').css('display', 'none');
+            $(ev.currentTarget).closest('.apps_to_add_img_row').find('.apps_to_select_button').css('display', 'inline');
         });
     });
 });

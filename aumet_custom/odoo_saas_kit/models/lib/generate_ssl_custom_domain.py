@@ -1,5 +1,5 @@
 from . create_certificate import generate_certificate, check_ips
-import os
+import os, re
 import subprocess
 from configparser import SafeConfigParser
 import shutil
@@ -184,6 +184,13 @@ def main_remove(custom_domain, module_path):
 
 def main_add(subdomain, custom_domain, ssl_flag, module_path):
     _logger.info(locals())
+    regex = re.compile("^((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$")
+    if not re.search(regex,custom_domain):
+        _logger.info("Invalid Domain %r"%custom_domain)
+        return {
+                'status': False,
+                'message': "Invalid Domain %r. Try replacing underscore with hypen & avoid any other special characters."%custom_domain
+                }
     odoo_saas_data = read_path_saas_conf(module_path)
     try:
         if check_ips(custom_domain, subdomain):

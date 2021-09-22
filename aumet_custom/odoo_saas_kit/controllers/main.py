@@ -79,8 +79,17 @@ class MailController(http.Controller):
             return request.redirect('/error')
 
     @http.route('/client/domain-created/redirect', type="http", auth="public", website=True)
-    def domain_set_template(self):
-        return request.render('odoo_saas_kit.redirect_page')
+    def domain_set_template(self, contract_id=None, **kwargs):
+        contract_id = int(contract_id)
+        values = {
+            'contract_id': contract_id,
+        }
+        contract = request.env['saas.contract'].sudo().browse([contract_id])
+        active_partner = request.env.user.partner_id
+        if contract.exists() and contract.partner_id.id == active_partner.id:
+            return request.render('odoo_saas_kit.redirect_page', values)
+        else:
+            return request.redirect('/my')
 
 
 class CustomWebsiteSale(WebsiteSale):

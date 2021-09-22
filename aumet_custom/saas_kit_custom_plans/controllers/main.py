@@ -34,10 +34,9 @@ class CustomMailController(MailController):
 
 
 class PlanPage(http.Controller):
-    
-    @http.route('/custom/plan', type='http', auth="public",  website=True)
-    def custom_plan_redirect(self):
-        data = dict()        
+
+    def _create_custom_plan_data(self):
+        data = dict()
         modules = request.env['saas.module'].sudo().search([('is_published', '=', True)])
         IrDefault = request.env['ir.default'].sudo()
         data['is_odoo_version'] = IrDefault.get('res.config.settings', 'is_odoo_version')
@@ -49,17 +48,17 @@ class PlanPage(http.Controller):
         else:
             data['normal_view'] = False
             data['categorical_view'] = True
-            data['categories'] = dict()            
-            for module in modules:
-                if not module.categ_id:
-                    if data['categories'].get('DEFAULT'):
-                        data['categories']['DEFAULT'].append(module)                 
-                    else:
-                        data['categories']['DEFAULT'] = [module]                 
-                elif data['categories'].get(module.categ_id.name.upper()):
-                    data['categories'][module.categ_id.name.upper()].append(module)
+        data['categories'] = dict()            
+        for module in modules:
+            if not module.categ_id:
+                if data['categories'].get('DEFAULT'):
+                    data['categories']['DEFAULT'].append(module)                 
                 else:
-                    data['categories'][module.categ_id.name.upper()] = [module]
+                    data['categories']['DEFAULT'] = [module]                 
+            elif data['categories'].get(module.categ_id.name.upper()):
+                data['categories'][module.categ_id.name.upper()].append(module)
+            else:
+                data['categories'][module.categ_id.name.upper()] = [module]
 
         data['max_users'] = IrDefault.get('res.config.settings', 'max_users')
         data['is_free_users'] = IrDefault.get('res.config.settings', 'is_free_users')
@@ -74,6 +73,11 @@ class PlanPage(http.Controller):
             data['costing_nature'] = 'per_month'
         data['company'] = request.env.company
         data['modules'] = modules
+        return data
+    
+    @http.route('/custom/plan', type='http', auth="public",  website=True)
+    def custom_plan_redirect(self):
+        data = self._create_custom_plan_data()        
         return request.render('saas_kit_custom_plans.plan_page', data)
 
 
@@ -88,4 +92,19 @@ class PlanPage(http.Controller):
         sale_order = request.website.sale_get_order(force_create=1)
         if sale_order and product_id:
             return sale_order.create_custom_contract_line(product_id=product_id, odoo_version_id=odoo_version_id, saas_users=saas_users, total_cost=total_cost, users_cost=users_cost, recurring_interval=recurring_interval, module_ids=module_ids)
+
+    @http.route('/show/categ/view', type='http', auth='public', website=True)
+    def show_categ_view(self):
+        data = self._create_custom_plan_data()
+        return request.render('saas_kit_custom_plans.category_view_template', data)
         
+    @http.route('/show/normal/view', type='http', auth='public', website=True)
+    def show_normal_view(self):
+        data = self._create_custom_plan_data()
+        return request.render('saas_kit_custom_plans.normal_view_template', data)
+
+    @http.route('/show/selected/apps/view', type='http', auth='public', website=True)
+    def show_selected_apps_view(self):
+        data = self._create_custom_plan_data()
+        return request.render('saas_kit_custom_plans.select_apps_section', data)
+

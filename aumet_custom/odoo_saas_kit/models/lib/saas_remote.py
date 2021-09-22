@@ -327,26 +327,6 @@ class nginx_vhost:
         self.sitesEnable=sitesEnable
         self.sitesAvailable=sitesAvailable
 
-
-    def login_remote(self,remote_host,remote_user,remote_passwd):
-        try:
-            ssh_obj = paramiko.SSHClient()
-            ssh_obj.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh_obj.connect(hostname=remote_host, username=remote_user, password=remote_password)
-            return ssh_obj
-        except Exception as e:
-            _logger.info("Couldn't connect remote")
-            return False
-
-    def exexute_on_remote_shell(self,ssh_obj,command):
-        try:
-            ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
-            _logger.info(ssh_stdout)
-            return True
-        except Exception as e:
-            _logger.info("++++++++++ERROR++++%r",e)
-            return False
-
     def execute_on_shell(self,cmd):
         try:
             res = subprocess.check_output(cmd,stderr=subprocess.STDOUT,shell=True)

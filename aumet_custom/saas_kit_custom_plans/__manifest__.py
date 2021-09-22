@@ -17,7 +17,7 @@
   "name"                 :  "Odoo SaaS Custom Plans",
   "summary"              :  """Odoo SaaS Custom Plans allows you to provide option to your clients to select custom Plans of their choice for Odoo Saas Kit""",
   "category"             :  "Extra Tools",
-  "version"              :  "1.0.2",
+  "version"              :  "1.0.4",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
   "license"              :  "Other proprietary",

@@ -5,38 +5,46 @@
 
 <odoo>
     <template id="subdomain_page">
-        <t t-call="portal.portal_layout">
+        <t t-call="website.layout">
+        <!-- <t t-call="portal.portal_layout"> -->
             <t t-set="title">SaaS Domain</t>
-            <br/>
-            <h3>Choose Your Domain Name</h3>
-            <p>Choose a desired subdomain name for your SaaS instance.</p>
-            <p>Check its availibility and confirm.</p>
-
-            <form class="col-md-6 col-md-offset-3">
+            <div style="padding: 5%;">
+                <span style="margin-left: 1%; font-family: 'Source Sans Pro', sans-serif; font-size: 26px; font-weight: 600;">Choose Your Domain Name</span>
                 
-                <span id="contract_id" t-att-value="contract_id"></span>
+                <p style="margin-left: 1%; font-family: 'Source Sans Pro', sans-serif; font-size: 16px;">Select your subdomain name for your SAAS Instance and from where your customers will access your store..</p>
+                <form class="col-md-6 col-md-offset-3">
 
-                <div class="input-group">
-                    <input id="subdomain_name" type="text" class="form-control" name="msg" placeholder="Subdomain name"/>
-                    <div class="input-group-addon">
-                        <span id="domain_name" class="input-group-text">.<t t-esc="base_url"/></span>
+                    <span id="contract_id" t-att-value="contract_id"></span>
+
+                    <div class="input-group">
+                        <input id="subdomain_name" style="border: 1px solid #999999;" type="text" class="form-control" name="msg" placeholder="Subdomain name"/>
+                        <div class="input-group-addon">
+                            <span id="domain_name" style="border: 1px solid #999999;" class="input-group-text">.<t t-esc="base_url"/></span>
+                        </div>
                     </div>
-                </div>
-                <br/>
-                <button type="button" class="btn btn-primary confirm_domain">Confirm</button>
-                <span id="taken_warning" style="color: #ff0000; margin-left: 25px; display:none">Domain already taken. Plese enter some other domain name.</span>
-                <a id="status_link" style="display:none;" t-attf-href="/my/saas/contract/#{contract_id}">Click here to check the status of your contract</a>
-                <span id="taken_warning" style="color: #ff0000; margin-left: 25px; display:none">Domain already taken. Plese enter some other domain name.</span>
-            </form>
+                    <span id="taken_warning" style="display : none; font-family: 'Source Sans Pro',  sans-serif; font-style: italic; color: #FA1010; font-size: 16px;">Domain already taken. Plese enter some other domain name.</span>
+                    <br/>
+                    <button type="button" class="btn confirm_domain" style="background: #7C7BAD; font-family: 'Source Sans Pro', sans-serif; color: #FFFFFF; font-size: 15px;">Select &amp; Continue</button>
+                    <a id="status_link" style="display:none;" t-attf-href="/my/saas/contract/#{contract_id}">Click here to check the status of your contract</a>
+                </form>
+            </div>
         </t>
     </template>
+    
     <template id="redirect_page">
-        <t t-call="portal.portal_layout">
-            <div class="text-center">
+        <t t-call="website.layout">
+            <t t-set="title">Successful</t>
+            <div class="text-center" style="padding: 5%;">
+                <div>
+                    <img src="/odoo_saas_kit/static/src/img/icon.svg"></img>
+                </div>
+                <p style="font-family: 'Source Sans Pro', sans-serif; font-size: 26px; font-weight: 600;">Instance Successfully Created</p>
+                <span style="font-family: 'Source Sans Pro', sans-serif; font-size: 16px; color: rgba(0, 0, 0, 0.8);">We have sent you an E-Mail having url to reset password for your Instance.</span>
                 <br/>
-                <h3>Your Instance is Successfully Created</h3>
-                <p>We have sent you an E-Mail having url to reset password of your Instance. Kindly visit the url and reset your password.</p>
-                <p>If you did not received E-mail please go to your Account and post a message on the relative Contract.</p>
+                <span style="font-family: 'Source Sans Pro', sans-serif; font-size: 16px; color: rgba(0, 0, 0, 0.8);">If you did not received E-mail please go to your Account and post a message on the relative Contract.</span>
+                <br/>
+                <br/>
+                <button type="button" class="btn go_to_account" t-att-value="contract_id" style="background: #7C7BAD; font-family: 'Source Sans Pro', sans-serif; color: #FFFFFF; font-size: 15px;">Reset Password</button>
             </div>
         </t>
     </template>

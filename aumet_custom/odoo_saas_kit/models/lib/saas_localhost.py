@@ -428,7 +428,7 @@ def create_db_template(db_template=None,modules=None, config_path=None,host_serv
 
     response['odoo_image'] = OdooObject.odoo_image
     sitesEnable = OdooObject.odoo_config+"/docker_vhosts/"
-    host_domain = "db14_templates."+host_server['server_domain']
+    host_domain = "db"+version.split(".")[0]+"_templates."+host_server['server_domain']
     response['port'] = OdooObject.template_odoo_port
     response['lport'] = OdooObject.template_odoo_lport
     response['name'] = OdooObject.odoo_template
