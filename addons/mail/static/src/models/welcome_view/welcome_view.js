@@ -78,7 +78,7 @@ function factory(dependencies) {
             if (this.messaging.currentGuest) {
                 await this.messaging.models['mail.welcome_view'].updateGuestNameServerSide(this.pendingGuestName.trim());
             }
-            browser.location.href = `/discuss/channel/${this.channelId}`;
+            browser.location.href = `/discuss/channel/${this.channel.id}`;
         }
 
         //----------------------------------------------------------------------
@@ -119,27 +119,52 @@ function factory(dependencies) {
     }
 
     WelcomeView.fields = {
-        channelId: attr({
+        /**
+         * The channel to redirect to once the user clicks on the 'joinButton'.
+         */
+        channel: one2one('mail.thread', {
             required: true,
         }),
         /**
-         * Used as value for `id`, `for`, and `name` attributes of the guest
+         * Used as a value for `id`, `for`, and `name` attributes of the guest
          * name input and its label. Necessary to ensure the uniqueness.
          */
         guestNameInputUniqueId: attr({
             default: `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`,
         }),
+        /**
+         * Ref the to input element containing the 'pendingGuestName'.
+         */
         guestNameInputRef: attr(),
+        /**
+         * Determines whether the 'guestNameInput' should be focused the next
+         * time the component is updated.
+         */
         isDoFocusGuestNameInput: attr(),
+        /**
+         * Determines whether the 'joinButton' is disabled.
+         * 
+         * Shall be disabled when 'pendingGuestName' is an empty string or when
+         * the current user is not a guest.
+         */
         isJoinButtonDisabled: attr({
             compute: '_computeIsJoinButtonDisabled'
         }),
+        /**
+         * The MediaPreview linked to the current WelcomeView.
+         */
         mediaPreview: one2one('mail.media_preview', {
             default: create(),
             isCausal: true,
             readonly: true,
             required: true,
         }),
+        /**
+         * The value of the 'guestNameInput'.
+         * 
+         * Will be used to update the current guest's name when joining the
+         * channel by clicking on the 'joinButton'.
+         */
         pendingGuestName: attr(),
     };
 

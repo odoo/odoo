@@ -164,12 +164,22 @@ function factory(dependencies) {
         audioStream: attr({
             default: null,
         }),
+        /**
+         * States whether the browser has the required APIs for
+         * microphone/camera recording.
+         */
         doesBrowserSupportMediaDevices: attr({
             compute: '_computeDoesBrowserSupportMediaDevices',
         }),
+        /**
+         * States if the user's microphone is currently recording.
+         */
         isMicrophoneEnabled: attr({
             compute: '_computeIsMicrophoneEnabled',
         }),
+        /**
+         * States if the user's camera is currently recording.
+         */
         isVideoEnabled: attr({
             compute: '_computeIsVideoEnabled',
         }),
