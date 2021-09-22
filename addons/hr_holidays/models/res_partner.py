@@ -29,8 +29,8 @@ class ResPartner(models.Model):
         partners_format = super().mail_partner_format()
         for partner in self:
             # in the rare case of multi-user partner, return the earliest possible return date
-            dates = sorted(partner.mapped('user_ids.leave_date_to'))
-            date = dates[0] if dates and all(dates) else False
+            dates = partner.mapped('user_ids.leave_date_to')
+            date = sorted(dates)[0] if dates and all(dates) else False
             partners_format.get(partner).update({
                 'out_of_office_date_end': date.strftime(DEFAULT_SERVER_DATE_FORMAT) if date else False,
             })
