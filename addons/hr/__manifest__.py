@@ -59,6 +59,7 @@
             'hr/static/src/js/language.js',
             'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
+            'hr/static/src/js/user_menu.js',
             'hr/static/src/models/*/*.js',
         ],
         'web.qunit_suite_tests': [
