@@ -79,7 +79,7 @@ class Channel(models.Model):
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
     # access
-    uuid = fields.Char('UUID', size=50, index=True, default=_generate_random_token, copy=False)
+    uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     public = fields.Selection([
         ('public', 'Everyone'),
         ('private', 'Invited people only'),
@@ -88,6 +88,11 @@ class Channel(models.Model):
         help='This group is visible by non members. Invisible groups can add members through the invite button.')
     group_public_id = fields.Many2one('res.groups', string='Authorized Group',
                                       default=lambda self: self.env.ref('base.group_user'))
+
+    _sql_constraints = [
+        ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
+    ]
+
     # COMPUTE / INVERSE
 
     @api.depends('channel_type')
