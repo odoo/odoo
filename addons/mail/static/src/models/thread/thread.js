@@ -1460,7 +1460,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsChatChannel() {
-            return this.channel_type === 'chat';
+            return this.channel_type === 'chat' || this.channel_type === 'group';
         }
 
         /**
