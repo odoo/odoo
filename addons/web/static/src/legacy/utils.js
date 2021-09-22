@@ -296,7 +296,7 @@ export function makeLegacyRainbowManService(legacyEnv) {
         dependencies: ["effect"],
         start(env, { effect }) {
             legacyEnv.bus.on("show-effect", null, (payload) => {
-                effect.add(payload.type, payload);
+                effect.add(payload);
             });
         },
     };
