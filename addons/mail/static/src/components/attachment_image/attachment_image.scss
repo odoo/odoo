@@ -7,18 +7,13 @@
     flex-shrink: 0;
     margin: map-get($spacers, 1);
 
-    img {
-        object-fit: contain;
-        margin: 0 auto;
-    }
-
     &:hover {
         .o_AttachmentImage_imageOverlay {
             opacity: 1;
         }
     }
 
-    &.o-composer-attachment {
+    &.o-isAttachmentLinkedToComposer {
         width: 50px;
     }
 }
@@ -29,6 +24,11 @@
 
 .o_AttachmentImage_actions {
     justify-content: space-between;
+}
+
+.o_AttachmentImage_image {
+    object-fit: contain;
+    margin: 0 auto;
 }
 
 .o_AttachmentImage_imageOverlay {

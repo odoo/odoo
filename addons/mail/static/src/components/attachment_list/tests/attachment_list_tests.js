@@ -218,7 +218,7 @@ QUnit.test('view attachment', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage img',
+        '.o_AttachmentImage_image',
         "attachment should have an image part"
     );
     await afterNextRender(() => document.querySelector('.o_AttachmentImage').click());
@@ -254,7 +254,7 @@ QUnit.test('close attachment viewer', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage img',
+        '.o_AttachmentImage_image',
         "attachment should have an image part"
     );
 
@@ -378,7 +378,7 @@ QUnit.test('plain text file is viewable', async function (assert) {
 
     assert.hasClass(
         document.querySelector('.o_AttachmentCard'),
-        'o-viewable',
+        'o-isViewable',
         "should be viewable",
     );
 });
@@ -402,7 +402,7 @@ QUnit.test('HTML file is viewable', async function (assert) {
     await this.createMessageComponent(message);
     assert.hasClass(
         document.querySelector('.o_AttachmentCard'),
-        'o-viewable',
+        'o-isViewable',
         "should be viewable",
     );
 });
@@ -426,7 +426,7 @@ QUnit.test('ODT file is not viewable', async function (assert) {
     await this.createMessageComponent(message);
     assert.doesNotHaveClass(
         document.querySelector('.o_AttachmentCard'),
-        'o-viewable',
+        'o-isViewable',
         "should not be viewable",
     );
 });
@@ -450,7 +450,7 @@ QUnit.test('DOCX file is not viewable', async function (assert) {
     await this.createMessageComponent(message);
     assert.doesNotHaveClass(
         document.querySelector('.o_AttachmentCard'),
-        'o-viewable',
+        'o-isViewable',
         "should not be viewable",
     );
 });

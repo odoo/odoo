@@ -2,7 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_AttachmentCard:hover .o_AttachmentCard_asideItemUnlink.o-pretty {
+.o_AttachmentCard:hover .o_AttachmentCard_asideItemUnlink.o-isPretty {
     transform: translateX(0);
 }
 
@@ -11,11 +11,11 @@
 }
 
 .o_AttachmentCard_aside {
-    &:not(.o-has-multiple-action) {
+    &:not(.o-hasMultipleAction) {
         min-width: 50px;
     }
 
-    &.o-has-multiple-action {
+    &.o-hasMultipleAction {
         min-width: 30px;
     }
 }
@@ -25,7 +25,7 @@
     height: 100%;
 }
 
-.o_AttachmentCard_asideItemUnlink.o-pretty {
+.o_AttachmentCard_asideItemUnlink.o-isPretty {
     top: 0;
     transform: translateX(100%);
 }
@@ -71,11 +71,11 @@
 .o_AttachmentCard_asideItemUnlink {
     cursor: pointer;
 
-    &:not(.o-pretty):hover {
+    &:not(.o-isPretty):hover {
         background-color: gray('400');
     }
 
-    &.o-pretty {
+    &.o-isPretty {
         color: white;
         background-color: $o-brand-primary;
 
@@ -95,7 +95,7 @@
     font-weight: 400;
 }
 
-.o_AttachmentCard_image.o-attachment-viewable {
+.o_AttachmentCard_image.o-isAttachmentViewable {
     cursor: zoom-in;
 }
 
@@ -103,6 +103,6 @@
 // Animation
 // ------------------------------------------------------------------
 
-.o_AttachmentCard_asideItemUnlink.o-pretty {
+.o_AttachmentCard_asideItemUnlink.o-isPretty {
     transition: transform 0.3s ease 0s;
 }

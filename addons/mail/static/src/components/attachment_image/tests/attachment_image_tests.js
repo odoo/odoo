@@ -54,7 +54,7 @@ QUnit.test('auto layout with image', async function (assert) {
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentImage img`).length,
+        document.querySelectorAll(`.o_AttachmentImage_image`).length,
         1,
         "attachment should have an image part"
     );

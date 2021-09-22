@@ -5,7 +5,7 @@
             <t t-if="attachmentImage and attachmentImage.attachment">
                 <div class="o_AttachmentImage d-flex position-relative"
                     t-att-class="{
-                        'o-composer-attachment': attachmentImage.attachment.isLinkedToComposer,
+                        'o-isAttachmentLinkedToComposer': attachmentImage.attachment.isLinkedToComposer,
                         'o-isUploading': attachmentImage.attachment.isUploading,
                     }"
                     t-att-title="attachmentImage.attachment.displayName ? attachmentImage.attachment.displayName : undefined"
@@ -13,7 +13,7 @@
                     t-on-click="attachmentImage.onClickImage"
                     t-att-data-mimetype="attachmentImage.attachment.mimetype"
                 >
-                    <img class="img img-fluid" t-att-src="attachmentImage.imageUrl" t-att-alt="attachmentImage.attachment.name"/>
+                    <img class="o_AttachmentImage_image img img-fluid" t-att-src="attachmentImage.imageUrl" t-att-alt="attachmentImage.attachment.name"/>
                     <t t-if="attachmentImage.attachment.isUploading and attachmentImage.attachment.isLinkedToComposer">
                         <div class="o_AttachmentImage_uploading d-flex align-items-center justify-content-center position-absolute" title="Uploading">
                             <i class="fa fa-spin fa-circle-o-notch"/>
