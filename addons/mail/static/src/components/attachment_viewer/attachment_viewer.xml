@@ -5,22 +5,20 @@
         <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0">
             <t t-if="attachmentViewer">
                 <div class="o_AttachmentViewer_header" t-on-click="_onClickHeader">
-                    <t t-if="attachmentViewer.attachment.isViewable">
-                        <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">
-                            <t t-if="attachmentViewer.attachment.isImage">
-                                <i class="fa fa-picture-o" role="img" title="Image"/>
-                            </t>
-                            <t t-if="attachmentViewer.attachment.isPdf">
-                                <i class="fa fa-file-text" role="img" title="PDF file"/>
-                            </t>
-                            <t t-if="attachmentViewer.attachment.isText">
-                                <i class="fa fa-file-text" role="img" title="Text file"/>
-                            </t>
-                            <t t-if="attachmentViewer.attachment.isVideo">
-                                <i class="fa fa-video-camera" role="img" title="Video"/>
-                            </t>
-                        </div>
-                    </t>
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">
+                        <t t-if="attachmentViewer.attachment.isImage">
+                            <i class="fa fa-picture-o" role="img" title="Image"/>
+                        </t>
+                        <t t-if="attachmentViewer.attachment.isPdf">
+                            <i class="fa fa-file-text" role="img" title="PDF file"/>
+                        </t>
+                        <t t-if="attachmentViewer.attachment.isText">
+                            <i class="fa fa-file-text" role="img" title="Text file"/>
+                        </t>
+                        <t t-if="attachmentViewer.attachment.isVideo">
+                            <i class="fa fa-video-camera" role="img" title="Video"/>
+                        </t>
+                    </div>
                     <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
                         <span class="o_AttachmentViewer_nameText text-truncate" t-esc="attachmentViewer.attachment.displayName"/>
                     </div>

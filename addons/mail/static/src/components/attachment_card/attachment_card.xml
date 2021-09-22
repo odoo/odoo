@@ -3,13 +3,11 @@
     <t t-name="mail.AttachmentCard" owl="1">
         <div>
             <t t-if="attachmentCard and attachmentCard.attachment">
-                <div class="o_AttachmentCard d-flex o-has-card-details"
-                     t-att-class="{
-                            'o-downloadable': !attachmentCard.attachment.isLinkedToComposer,
-                            'o-editable': props.isEditable,
-                            'o-isUploading': attachmentCard.attachment.isUploading,
-                            'o-viewable': attachmentCard.attachment.isViewable,
-                            }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" t-att-data-id="attachmentCard.attachment.localId"
+                <div class="o_AttachmentCard d-flex"
+                    t-att-class="{
+                        'o-isUploading': attachmentCard.attachment.isUploading,
+                        'o-viewable': attachmentCard.attachment.isViewable,
+                    }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" t-att-data-id="attachmentCard.attachment.localId"
                 >
                     <!-- Image style-->
                     <!-- o_image from mimetype.scss -->

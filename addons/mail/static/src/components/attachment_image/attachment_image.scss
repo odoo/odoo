@@ -12,7 +12,7 @@
         margin: 0 auto;
     }
 
-    &.o-details-overlay:hover {
+    &:hover {
         .o_AttachmentImage_imageOverlay {
             opacity: 1;
         }
@@ -23,24 +23,12 @@
     }
 }
 
-.o_AttachmentImageUploading {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-}
-
 .o_AttachmentImage_action {
     min-width: 20px;
 }
 
 .o_AttachmentImage_actions {
     justify-content: space-between;
-}
-
-.o_AttachmentImage_filename {
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .o_AttachmentImage_imageOverlay {
@@ -54,6 +42,13 @@
 .o_AttachmentImage_imageOverlayDetails {
     margin: map-get($spacers, 1);
     width: 200px;
+}
+
+.o_AttachmentImage_uploading {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
 }
 
 

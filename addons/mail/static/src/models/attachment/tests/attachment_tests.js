@@ -100,24 +100,6 @@ QUnit.test('fileType', async function (assert) {
     assert.ok(attachment.isText);
 });
 
-QUnit.test('isTextFile', async function (assert) {
-    assert.expect(5);
-
-    await this.start();
-    assert.notOk(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
-
-    const attachment = this.messaging.models['mail.attachment'].create({
-        filename: "test.txt",
-        id: 750,
-        mimetype: 'text/plain',
-        name: "test.txt",
-    });
-    assert.ok(attachment);
-    assert.ok(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
-    assert.strictEqual(attachment, this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
-    assert.ok(attachment.isText);
-});
-
 QUnit.test('isViewable', async function (assert) {
     assert.expect(5);
 

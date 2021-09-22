@@ -370,12 +370,6 @@ function factory(dependencies) {
             inverse: 'attachment',
             isCausal: true,
         }),
-        /**
-         * States the attachment lists that are displaying this attachment.
-         */
-        attachmentList: many2many('mail.attachment_list', {
-            inverse: 'attachments'
-        }),
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),

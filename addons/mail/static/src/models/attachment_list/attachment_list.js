@@ -75,7 +75,6 @@ function factory(dependencies) {
          */
         attachments: many2many('mail.attachment', {
             compute: '_computeAttachments',
-            inverse: 'attachmentList',
         }),
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
