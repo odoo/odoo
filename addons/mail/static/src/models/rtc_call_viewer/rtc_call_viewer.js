@@ -144,7 +144,7 @@ function factory(dependencies) {
          * @private
          */
         _computeAspectRatio() {
-            const rtcAspectRatio = this.messaging.mailRtc.videoConfig && this.messaging.mailRtc.videoConfig.aspectRatio;
+            const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
             const aspectRatio = rtcAspectRatio || 16 / 9;
             // if we are in minimized mode (round avatar frames), we treat the cards like squares.
             return this.isMinimized ? 1 : aspectRatio;
@@ -170,7 +170,7 @@ function factory(dependencies) {
             if (this.isFullScreen || this.threadView.compact) {
                 return false;
             }
-            return !this.threadView.thread.mailRtc || this.threadView.thread.videoCount === 0;
+            return !this.threadView.thread.rtc || this.threadView.thread.videoCount === 0;
         }
 
         /**
@@ -180,7 +180,7 @@ function factory(dependencies) {
             if (!this.threadView) {
                 return 'tiled';
             }
-            if (!this.threadView.thread.mailRtc) {
+            if (!this.threadView.thread.rtc) {
                 return 'tiled';
             }
             if (!this.threadView.thread.videoCount || !this.mainParticipantCard) {
@@ -274,7 +274,7 @@ function factory(dependencies) {
         /**
          * @private
          */
-        _onChangeMailRtcChannel() {
+        _onChangeRtcChannel() {
             this.deactivateFullScreen();
             this.update({ filterVideoGrid: false });
         }
@@ -412,8 +412,8 @@ function factory(dependencies) {
     };
     RtcCallViewer.onChanges = [
         new OnChange({
-            dependencies: ['threadView.thread.mailRtc'],
-            methodName: '_onChangeMailRtcChannel',
+            dependencies: ['threadView.thread.rtc'],
+            methodName: '_onChangeRtcChannel',
         }),
         new OnChange({
             dependencies: ['threadView.thread.videoCount'],

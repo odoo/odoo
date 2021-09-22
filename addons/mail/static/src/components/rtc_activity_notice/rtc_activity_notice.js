@@ -15,7 +15,7 @@ export class RtcActivityNotice extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        this.messaging.mailRtc.channel.open();
+        this.messaging.rtc.channel.open();
     }
 
 }

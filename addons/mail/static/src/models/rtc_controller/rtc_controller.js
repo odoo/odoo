@@ -30,21 +30,21 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickCamera(ev) {
-            this.messaging.mailRtc.toggleUserVideo();
+            this.messaging.rtc.toggleUserVideo();
         }
 
         /**
          * @param {MouseEvent} ev
          */
         async onClickDeafen(ev) {
-            await this.messaging.mailRtc.currentRtcSession.toggleDeaf();
+            await this.messaging.rtc.currentRtcSession.toggleDeaf();
         }
 
         /**
          * @param {MouseEvent} ev
          */
         onClickMicrophone(ev) {
-            this.messaging.mailRtc.toggleMicrophone();
+            this.messaging.rtc.toggleMicrophone();
         }
 
         /**
@@ -61,7 +61,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickScreen(ev) {
-            this.messaging.mailRtc.toggleScreenShare();
+            this.messaging.rtc.toggleScreenShare();
         }
 
         /**

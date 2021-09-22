@@ -118,7 +118,7 @@ function factory(dependencies) {
                 audioInputDeviceId,
             });
             this.env.services.local_storage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
-            await this.messaging.mailRtc.updateLocalAudioTrack(true);
+            await this.messaging.rtc.updateLocalAudioTrack(true);
         }
 
         /**
@@ -166,12 +166,12 @@ function factory(dependencies) {
         async setThresholdValue(voiceActivationThreshold) {
             this.update({ voiceActivationThreshold });
             this.env.services.local_storage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold);
-            await this.messaging.mailRtc.updateVoiceActivation();
+            await this.messaging.rtc.updateVoiceActivation();
         }
 
         async togglePushToTalk() {
             this.update({ usePushToTalk: !this.usePushToTalk });
-            await this.messaging.mailRtc.updateVoiceActivation();
+            await this.messaging.rtc.updateVoiceActivation();
             this._saveSettings();
         }
 

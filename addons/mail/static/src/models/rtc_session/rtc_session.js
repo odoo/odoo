@@ -79,7 +79,7 @@ function factory(dependencies) {
             }
             audioElement.load();
             audioElement.volume = this.partner && this.partner.volumeSetting ? this.partner.volumeSetting.volume : this.volume;
-            audioElement.muted = this.messaging.mailRtc.currentRtcSession.isDeaf;
+            audioElement.muted = this.messaging.rtc.currentRtcSession.isDeaf;
             // Using both autoplay and play() as safari may prevent play() outside of user interactions
             // while some browsers may not support or block autoplay.
             audioElement.autoplay = true;
@@ -134,7 +134,7 @@ function factory(dependencies) {
          * of the current partner.
          */
         async toggleDeaf() {
-            if (!this.mailRtc) {
+            if (!this.rtc) {
                 return;
             }
             this.updateAndBroadcast({
@@ -146,12 +146,12 @@ function factory(dependencies) {
                 }
                 session.audioElement.muted = this.isDeaf;
             }
-            if (this.channel.mailRtc) {
+            if (this.channel.rtc) {
                 /**
                  * Ensures that the state of the microphone matches the deaf state
                  * and notifies peers.
                  */
-                await this.async(() => this.channel.mailRtc.toggleMicrophone({
+                await this.async(() => this.channel.rtc.toggleMicrophone({
                     requestAudioDevice: false,
                 }));
             }
@@ -163,7 +163,7 @@ function factory(dependencies) {
          * @param {Object} data
          */
         updateAndBroadcast(data) {
-            if (!this.mailRtc) {
+            if (!this.rtc) {
                 return;
             }
             this.update(data);
@@ -394,7 +394,7 @@ function factory(dependencies) {
          * This can be true for many sessions, as one user can have multiple
          * sessions active across several tabs, browsers and devices.
          * To determine if this session is the active session of this tab,
-         * use this.mailRtc instead.
+         * use this.rtc instead.
          */
         isOwnSession: attr({
             compute: '_computeIsOwnSession',
@@ -411,15 +411,6 @@ function factory(dependencies) {
          */
         isTalking: attr({
             default: false,
-        }),
-        /**
-         * If set, this session is the session of the current user and is in the active RTC call.
-         * This information is distinct from this.isOwnSession as there can be other
-         * sessions from other channels with the same partner (sessions opened from different
-         * tabs or devices).
-         */
-        mailRtc: one2one('mail.rtc', {
-            inverse: 'currentRtcSession',
         }),
         /**
          * Name of the session, based on the partner name if set.
@@ -442,6 +433,15 @@ function factory(dependencies) {
          */
         peerToken: attr({
             compute: '_computePeerToken',
+        }),
+        /**
+         * If set, this session is the session of the current user and is in the active RTC call.
+         * This information is distinct from this.isOwnSession as there can be other
+         * sessions from other channels with the same partner (sessions opened from different
+         * tabs or devices).
+         */
+        rtc: one2one('mail.rtc', {
+            inverse: 'currentRtcSession',
         }),
         /**
          * MediaStream of the user's video.

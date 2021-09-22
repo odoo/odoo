@@ -4,15 +4,15 @@
     <t t-name="mail.RtcActivityNotice" owl="1">
         <li class="o_RtcActivityNotice">
             <RtcInvitations/>
-            <t t-if="messaging.mailRtc.channel">
-                <t t-set="title">Open conference: <t t-esc="messaging.mailRtc.channel.displayName"/></t>
+            <t t-if="messaging.rtc.channel">
+                <t t-set="title">Open conference: <t t-esc="messaging.rtc.channel.displayName"/></t>
                 <a class="o_RtcActivityNotice_button" t-att-title="title" role="button" t-on-click="_onClick">
                     <div class="o_RtcActivityNotice_buttonContent">
-                        <span class="o_RtcActivityNotice_buttonTitle" t-esc="messaging.mailRtc.channel.displayName"/>
+                        <span class="o_RtcActivityNotice_buttonTitle" t-esc="messaging.rtc.channel.displayName"/>
                         <i class="o_RtcActivityNotice_outputIndicator fa" t-att-class="{
-                            'fa-microphone': !messaging.mailRtc.sendDisplay and !messaging.mailRtc.sendUserVideo,
-                            'fa-video-camera': messaging.mailRtc.sendUserVideo,
-                            'fa-desktop': messaging.mailRtc.sendDisplay,
+                            'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
+                            'fa-video-camera': messaging.rtc.sendUserVideo,
+                            'fa-desktop': messaging.rtc.sendDisplay,
                         }"/>
                     </div>
                 </a>

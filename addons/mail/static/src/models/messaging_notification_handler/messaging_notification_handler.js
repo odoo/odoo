@@ -534,7 +534,7 @@ function factory(dependencies) {
             if (!channel) {
                 return;
             }
-            if (channel.mailRtc) {
+            if (channel.rtc) {
                 return;
             }
             if (rtcSession) {
@@ -551,7 +551,7 @@ function factory(dependencies) {
          */
         _handleNotificationRtcPeerToPeer({ sender, notifications }) {
             for (const content of notifications) {
-                this.messaging.mailRtc.handleNotification(sender, content);
+                this.messaging.rtc.handleNotification(sender, content);
             }
         }
 
@@ -572,9 +572,9 @@ function factory(dependencies) {
          * @param {number} [sessionId]
          */
         async _handleNotificationRtcSessionEnded({ sessionId }) {
-            const currentSession = this.messaging.mailRtc.currentRtcSession;
+            const currentSession = this.messaging.rtc.currentRtcSession;
             if (currentSession && currentSession.id === sessionId) {
-                this.messaging.mailRtc.channel.endCall();
+                this.messaging.rtc.channel.endCall();
                 this.env.services['notification'].notify({
                     message: this.env._t("Disconnected from the RTC call by the server"),
                     type: 'warning',

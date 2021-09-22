@@ -1133,13 +1133,13 @@ function factory(dependencies) {
          * The channel that is hosting the current RTC call.
          */
         channel: one2one('mail.thread', {
-            inverse: 'mailRtc',
+            inverse: 'rtc',
         }),
         /**
          * String, peerToken of the current session used to identify him during the peer-to-peer transactions.
          */
         currentRtcSession: one2one('mail.rtc_session', {
-            inverse: 'mailRtc',
+            inverse: 'rtc',
         }),
         /**
          * ICE servers used by RTCPeerConnection to retrieve the public IP address (STUN)
