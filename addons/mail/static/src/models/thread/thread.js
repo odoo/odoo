@@ -326,12 +326,12 @@ function factory(dependencies) {
          * Client-side ending of the call.
          */
         endCall() {
-            if (this.mailRtc) {
-                this.mailRtc.reset();
+            if (this.rtc) {
+                this.rtc.reset();
                 this.messaging.soundEffects.channelLeave.play();
             }
             this.update({
-                mailRtc: unlink(),
+                rtc: unlink(),
                 rtcInvitingSession: unlink(),
             });
         }
@@ -744,9 +744,9 @@ function factory(dependencies) {
          */
         async toggleCall(options) {
             this.update({ hasPendingRtcRequest: true });
-            const isActiveCall = !!this.mailRtc;
-            if (this.messaging.mailRtc.channel) {
-                await this.messaging.mailRtc.channel.leaveCall();
+            const isActiveCall = !!this.rtc;
+            if (this.messaging.rtc.channel) {
+                await this.messaging.rtc.channel.leaveCall();
             }
             if (isActiveCall) {
                 this.update({ hasPendingRtcRequest: false });
@@ -765,7 +765,7 @@ function factory(dependencies) {
             if (this.model !== 'mail.channel') {
                 return;
             }
-            if (!this.messaging.mailRtc.isClientRtcCompatible) {
+            if (!this.messaging.rtc.isClientRtcCompatible) {
                 this.env.services.notification.notify({
                     message: this.env._t("Your browser does not support webRTC."),
                     type: 'warning',
@@ -782,13 +782,13 @@ function factory(dependencies) {
                 return;
             }
             this.update({
-                mailRtc: link(this.messaging.mailRtc),
+                rtc: link(this.messaging.rtc),
                 rtcInvitingSession: unlink(),
                 rtcSessions,
                 invitedGuests,
                 invitedPartners,
             });
-            await this.async(() => this.messaging.mailRtc.initSession({
+            await this.async(() => this.messaging.rtc.initSession({
                 currentSessionId: sessionId,
                 iceServers,
                 startWithAudio: true,
@@ -812,7 +812,7 @@ function factory(dependencies) {
         updateRtcSessions(rtcSessions) {
             const oldCount = this.rtcSessions.length;
             this.update({ rtcSessions });
-            if (this.mailRtc) {
+            if (this.rtc) {
                 const newCount = this.rtcSessions.length;
                 if (newCount > oldCount) {
                     this.messaging.soundEffects.channelJoin.play();
@@ -821,8 +821,8 @@ function factory(dependencies) {
                     this.messaging.soundEffects.memberLeave.play();
                 }
             }
-            this.mailRtc && this.mailRtc.filterCallees(this.rtcSessions);
-            if (this.mailRtc && !this.mailRtc.currentRtcSession) {
+            this.rtc && this.rtc.filterCallees(this.rtcSessions);
+            if (this.rtc && !this.rtc.currentRtcSession) {
                 this.endCall();
             }
         }
@@ -2244,12 +2244,6 @@ function factory(dependencies) {
             compute: '_computeLocalMessageUnreadCounter',
         }),
         /**
-         * If set, the current thread is the thread that hosts the current RTC call.
-         */
-        mailRtc: one2one('mail.rtc', {
-            inverse: 'channel',
-        }),
-        /**
          * States the number of members in this thread according to the server.
          * Guests are excluded from the count.
          * Only makes sense if this thread is a channel.
@@ -2373,6 +2367,12 @@ function factory(dependencies) {
          */
         pendingSeenMessageId: attr(),
         public: attr(),
+        /**
+         * If set, the current thread is the thread that hosts the current RTC call.
+         */
+        rtc: one2one('mail.rtc', {
+            inverse: 'channel',
+        }),
         /**
          * The session that invited the current user, it is only set when the
          * invitation is still pending.
