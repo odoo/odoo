@@ -4,16 +4,16 @@
     <t t-name="mail.RtcCallParticipantCard" owl="1">
         <div class="o_RtcCallParticipantCard"
              t-att-class="{
-                'o-is-talking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
-                'o-is-invitation': callParticipantCard and callParticipantCard.isInvitation,
+                'o-isTalking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
+                'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
             }"
             t-on-contextmenu="_onContextMenu"
         >
             <t t-if="callParticipantCard">
                 <div class="o_RtcCallParticipantCard_container"
                      t-att-class="{
-                        'o-minimized': callParticipantCard.isMinimized,
-                        'o-can-click': !callParticipantCard.isInvitation,
+                        'o-isMinimized': callParticipantCard.isMinimized,
+                        'o-canClick': !callParticipantCard.isInvitation,
                      }"
                      t-att-title="callParticipantCard.name"
                      t-att-aria-label="callParticipantCard.name"
@@ -27,10 +27,10 @@
                         <div class="o_RtcCallParticipantCard_avatar" draggable="false">
                             <img alt="Avatar"
                                  t-att-class="{
-                                    'o-is-talking': callParticipantCard.isTalking,
-                                    'o-is-invitation': callParticipantCard.isInvitation,
+                                    'o-isTalking': callParticipantCard.isTalking,
+                                    'o-isInvitation': callParticipantCard.isInvitation,
                                  }"
-                                 class="o_RtcCallParticipantCard_avatar_image rounded-circle"
+                                 class="o_RtcCallParticipantCard_avatarImage rounded-circle"
                                  t-att-src="callParticipantCard.avatarUrl"
                                  draggable="false"
                             />
@@ -44,29 +44,29 @@
                                 <span class="o_RtcCallParticipantCard_name" t-esc="callParticipantCard.name"/>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.mailRtc">
-                                <span class="o_RtcCallParticipantCard_liveIndicator badge-pill o-minimized" title="live" aria-label="live">
+                                <span class="o_RtcCallParticipantCard_liveIndicator badge-pill o-isMinimized" title="live" aria-label="live">
                                     LIVE
                                 </span>
                             </t>
                         </span>
                         <div class="o_RtcCallParticipantCard_overlayTop">
                             <t t-if="callParticipantCard.rtcSession.isMuted">
-                                <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-class="{'o-minimized': callParticipantCard.isMinimized }" title="muted" aria-label="muted">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="muted" aria-label="muted">
                                     <i class="fa fa-microphone-slash"/>
                                 </span>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.isDeaf">
-                                <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-class="{'o-minimized': callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
                                     <i class="fa fa-deaf"/>
                                 </span>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.channel.mailRtc and callParticipantCard.rtcSession.isAudioInError">
-                                <span class="o_RtcCallParticipantCard_overlayTop_element text-danger" title="Issue with audio">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement text-danger" title="Issue with audio">
                                     <i class="fa fa-exclamation-triangle"/>
                                 </span>
                             </t>
                             <t t-if="callParticipantCard.rtcSession.channel.mailRtc and !callParticipantCard.rtcSession.mailRtc and !['connected', 'completed'].includes(callParticipantCard.rtcSession.connectionState)">
-                                <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-title="callParticipantCard.rtcSession.connectionState">
+                                <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-title="callParticipantCard.rtcSession.connectionState">
                                     <i class="fa fa-lg fa-signal o_RtcCallParticipantCard_connectionState"/>
                                 </span>
                             </t>
