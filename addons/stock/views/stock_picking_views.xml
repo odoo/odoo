@@ -474,6 +474,10 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
+                    <field name="move_line_ids"
+                        string="Package"
+                        filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
+                        groups="stock.group_tracking_lot"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
