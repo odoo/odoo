@@ -39,6 +39,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'displayed_image_id',
     'display_name',
     'portal_user_names',
+    'legend_normal',
+    'legend_blocked',
+    'legend_done',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
