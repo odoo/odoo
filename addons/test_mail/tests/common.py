@@ -36,17 +36,6 @@ class TestMailCommon(MailCommon):
         return cls.records, cls.partners
 
 
-class TestMailMultiCompanyCommon(MailCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestMailMultiCompanyCommon, cls).setUpClass()
-        cls.company_2 = cls.env['res.company'].create({
-            'name': 'Second Test Company',
-            'currency_id': 2,
-        })
-
-
 class TestRecipients(TransactionCase):
 
     @classmethod
