@@ -16,6 +16,7 @@
     % set customer = object.event_id.find_partner_customer()
     % set target_responsible = object.partner_id == object.event_id.partner_id
     % set target_customer = object.partner_id == customer
+    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
     <p>
         Hello ${object.common_name},<br/><br/>
 
@@ -142,6 +143,7 @@
     % set customer = object.event_id.find_partner_customer()
     % set target_responsible = object.partner_id == object.event_id.partner_id
     % set target_customer = object.partner_id == customer
+    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
     <p>
         Hello ${object.common_name},<br/><br/>
         % if is_online and target_responsible:
