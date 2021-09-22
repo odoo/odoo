@@ -71,9 +71,15 @@ class Invite(models.TransientModel):
                     'add_sign': True,
                 })
                 partners_data = []
-                recipient_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
-                for pid, active, pshare, notif, groups in recipient_data:
-                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                recipients_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
+                for pid, active, pshare, notif, groups in recipients_data:
+                    pdata = {
+                        'active': active,
+                        'id': pid,
+                        'groups': groups or [],
+                        'notif': 'email',
+                        'share': pshare,
+                    }
                     if not pshare and notif:  # has an user and is not shared, is therefore user
                         partners_data.append(dict(pdata, type='user'))
                     elif pshare and notif:  # has an user and is shared, is therefore portal
@@ -81,7 +87,10 @@ class Invite(models.TransientModel):
                     else:  # has no user, is therefore customer
                         partners_data.append(dict(pdata, type='customer'))
 
-                document._notify_record_by_email(message, partners_data, send_after_commit=False)
+                document._notify_thread_by_email(
+                    message, partners_data,
+                    send_after_commit=False
+                )
                 # in case of failure, the web client must know the message was
                 # deleted to discard the related failure notification
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/delete', {'message_ids': message.ids})

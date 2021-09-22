@@ -84,7 +84,7 @@ class BaseModel(models.AbstractModel):
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+    def _notify_get_reply_to(self, default=None):
         """ Returns the preferred reply-to email address when replying to a thread
         on documents. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
@@ -104,19 +104,9 @@ class BaseModel(models.AbstractModel):
         An example would be tasks taking their reply-to alias from their project.
 
         :param default: default email if no alias or catchall is found;
-        :param records: DEPRECATED, self should be a valid record set or an
-          empty recordset if a generic reply-to is required;
-        :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
-        :param doc_names: dict(res_id, doc_name) used to compute doc name part of
-          the from name; provide it if already known to avoid queries, otherwise
-          name_get on document will be performed;
         :return result: dictionary. Keys are record IDs and value is formatted
           like an email "Company_name Document_name <reply_to@email>"/
         """
-        if records:
-            raise ValueError('Use of records is deprecated as this method is available on BaseModel.')
-
         _records = self
         model = _records._name if _records and _records._name != 'mail.thread' else False
         res_ids = _records.ids if _records and model else []
@@ -125,7 +115,7 @@ class BaseModel(models.AbstractModel):
         alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         result = dict.fromkeys(_res_ids, False)
         result_email = dict()
-        doc_names = doc_names if doc_names else dict()
+        doc_names = dict()
 
         if alias_domain:
             if model and res_ids:
@@ -148,7 +138,7 @@ class BaseModel(models.AbstractModel):
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
             # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
+            company_name = self.env.company.name
             for res_id in result_email:
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
                 result[res_id] = tools.formataddr((name, result_email[res_id]))
@@ -203,16 +193,11 @@ class BaseModel(models.AbstractModel):
             '&', ('hidden', '=', False),
             '|', ('res_model', '=', self._name), ('res_model', '=', False)])
 
-    def _notify_email_headers(self):
-        """
-            Generate the email headers based on record
-        """
+    def _notify_by_email_get_headers(self):
+        """ Generate the email headers based on record """
         if not self:
             return {}
         self.ensure_one()
-        return repr(self._notify_email_header_dict())
-
-    def _notify_email_header_dict(self):
         return {
             'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
         }

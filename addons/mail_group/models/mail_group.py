@@ -424,7 +424,7 @@ class MailGroup(models.Model):
                 # SMTP headers related to the subscription
                 email_url_encoded = urls.url_quote(email_member)
                 headers = {
-                    ** self._notify_email_header_dict(),
+                    ** self._notify_by_email_get_headers(),
                     'List-Archive': f'<{base_url}/groups/{slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
                     'List-Unsubscribe': f'<{base_url}/groups?unsubscribe&email={email_url_encoded}>',

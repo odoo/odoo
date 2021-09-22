@@ -349,8 +349,8 @@ class TestTrackingInternals(TestMailCommon):
         self.assertFalse(msg_emp[0].get('tracking_value_ids'), "should not have protected tracking values")
         self.assertTrue(msg_sudo[0].get('tracking_value_ids'), "should have protected tracking values")
 
-        msg_emp = self.record._notify_prepare_template_context(self.record.message_ids, {})
-        msg_sudo = self.record.sudo()._notify_prepare_template_context(self.record.message_ids, {})
+        msg_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
+        msg_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
 

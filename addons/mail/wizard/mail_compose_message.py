@@ -252,7 +252,7 @@ class MailComposer(models.TransientModel):
         # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
         # different wording depending on the state of the object.
         # Therefore, we can set the description in the context from the beginning to avoid falling
-        # back on the regular display_name retrieved in '_notify_prepare_template_context'.
+        # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
         model_description = self._context.get('model_description')
 
         for wizard in self:
@@ -395,7 +395,7 @@ class MailComposer(models.TransientModel):
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
                 record = self.env[self.model].browse(res_id)
-                mail_values['headers'] = record._notify_email_headers()
+                mail_values['headers'] = repr(record._notify_by_email_get_headers())
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(is_notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
