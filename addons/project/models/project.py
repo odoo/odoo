@@ -1951,12 +1951,12 @@ class Task(models.Model):
                 res -= dependency_subtype
         return res
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ Handle project users and managers recipients that can assign
         tasks and create new one directly from notification emails. Also give
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
-        groups = super(Task, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(Task, self)._notify_get_recipients_groups(msg_vals=msg_vals)
         local_msg_vals = dict(msg_vals or {})
         self.ensure_one()
 
@@ -1983,13 +1983,13 @@ class Task(models.Model):
 
         return groups
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+    def _notify_get_reply_to(self, default=None):
         """ Override to set alias of tasks to their project if any. """
-        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default)
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
         if leftover:
-            res.update(super(Task, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+            res.update(super(Task, leftover)._notify_get_reply_to(default=default))
         return res
 
     def email_split(self, msg):
@@ -2044,8 +2044,8 @@ class Task(models.Model):
                 task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
-    def _notify_email_header_dict(self):
-        headers = super(Task, self)._notify_email_header_dict()
+    def _notify_by_email_get_headers(self):
+        headers = super(Task, self)._notify_by_email_get_headers()
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
