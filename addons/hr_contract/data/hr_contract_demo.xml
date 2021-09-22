@@ -8,6 +8,7 @@
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
         <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="date_end" eval="time.strftime('%Y-%m-15')"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_admin').job_id.id"/>
@@ -16,17 +17,19 @@
         <field eval="7540.0" name="wage"/>
         <field name="state">draft</field>
         <field name="kanban_state">normal</field>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
     </record>
 
     <record id="hr_contract_admin_new" model="hr.contract">
         <field name="name">Contract For Mitchell Admin</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_start" eval="time.strftime('%Y-%m-16')"/>
         <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
         <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="notes">This is Mitchell Admin's contract</field>
         <field eval="5500.0" name="wage"/>
         <field name="state">open</field>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
     </record>
 
     <record id="hr_contract_al" model="hr.contract">
