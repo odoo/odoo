@@ -106,6 +106,8 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'body': 'Dear {{ object.display_name }} this is an SMS.',
         })
 
+        self._init_mail_gateway()
+
     @mute_logger('odoo.addons.sms.models.sms_sms')
     @users('employee')
     @warmup

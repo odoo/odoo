@@ -183,7 +183,11 @@ class TestBaseMailPerformance(BaseMailPerformance):
     @users('__system__', 'employee')
     @warmup
     def test_create_mail_simple(self):
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=7, employee=7):
+=======
+        with self.assertQueryCount(__system__=7, emp=7):
+>>>>>>> ee9b2eb23cb... temp
             self.env['mail.test.simple'].create({'name': 'Test'})
 
     @users('__system__', 'employee')
@@ -237,7 +241,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=7, employee=7):
+=======
+        with self.assertQueryCount(__system__=7, emp=7):
+>>>>>>> ee9b2eb23cb... temp
             model.create({'name': 'Test'})
 
     @users('__system__', 'employee')
@@ -259,7 +267,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
             #voip module read activity_type during create leading to one less query in enterprise on action_feedback
             category = activity.activity_type_id.category
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=17, employee=19):
+=======
+        with self.assertQueryCount(__system__=17, emp=19):
+>>>>>>> ee9b2eb23cb... temp
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'employee')
@@ -276,7 +288,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=18, employee=21):
+=======
+        with self.assertQueryCount(__system__=18, emp=21):
+>>>>>>> ee9b2eb23cb... temp
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -379,7 +395,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=4, employee=7):
+=======
+        with self.assertQueryCount(__system__=4, emp=7):
+>>>>>>> ee9b2eb23cb... temp
             record.message_post(
                 body='<p>Test message_post as log</p>',
                 subtype_xmlid='mail.mt_note',
@@ -390,7 +410,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=4, employee=7):
+=======
+        with self.assertQueryCount(__system__=4, emp=7):
+>>>>>>> ee9b2eb23cb... temp
             record.message_post(
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
@@ -415,7 +439,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=12, employee=16):
+=======
+        with self.assertQueryCount(__system__=12, emp=16):
+>>>>>>> ee9b2eb23cb... temp
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -466,7 +494,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
             record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
             record.flush()
 
+<<<<<<< HEAD
     @users('__system__', 'employee')
+=======
+    @users('__system__', 'emp')
+>>>>>>> ee9b2eb23cb... temp
     @warmup
     def test_notification_reply_to_batch(self):
         test_records_sudo = self.env['mail.test.container'].sudo().create([
@@ -476,7 +508,11 @@ class TestMailAPIPerformance(BaseMailPerformance):
             } for index in range(10)
         ])
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=1, employee=1):
+=======
+        with self.assertQueryCount(__system__=1, emp=1):
+>>>>>>> ee9b2eb23cb... temp
             test_records = self.env['mail.test.container'].browse(test_records_sudo.ids)
             reply_to = test_records._notify_get_reply_to(
                 default=self.env.user.email_formatted
@@ -506,7 +542,17 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'notification_type': 'email',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
         })
+<<<<<<< HEAD
 
+=======
+        self.admin = self.env.user
+
+        # prepare recipients to test for more realistic workload
+        self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'Test Customer',
+            'email': 'test@example.com'
+        })
+>>>>>>> ee9b2eb23cb... temp
         self.container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
             'name': 'Test Container',
             'customer_id': self.customer.id,
@@ -994,7 +1040,11 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
+<<<<<<< HEAD
         with self.assertQueryCount(employee=70):
+=======
+        with self.assertQueryCount(emp=70):
+>>>>>>> ee9b2eb23cb... temp
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
