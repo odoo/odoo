@@ -293,12 +293,12 @@ class TestStockProductionLot(TestStockCommon):
         receipt.action_confirm()
 
         # Defines a date during the receipt.
-        move = receipt.move_ids_without_package[0]
-        line = move.move_line_ids[0]
-        self.assertEqual(move.use_expiration_date, True)
-        line.lot_name = 'Apple Box #2'
-        line.expiration_date = expiration_date
-        line.qty_done = 4
+        move_form = Form(receipt.move_ids_without_package, view="stock.view_stock_move_operations")
+        with move_form.move_line_ids.new() as line:
+            line.lot_name = 'Apple Box #2'
+            line.expiration_date = expiration_date
+            line.qty_done = 4
+        move = move_form.save()
 
         receipt._action_done()
         # Get back the lot created when the picking was done...
