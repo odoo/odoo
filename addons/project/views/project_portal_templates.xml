@@ -97,33 +97,37 @@
     <template id="portal_tasks_list" name="Tasks List">
         <t t-if="grouped_tasks">
             <t t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <!-- Allows overrides in modules -->
+                        <t t-set="group_by_in_header_list" t-value="['priority', 'status', 'project', 'stage']"></t>
+                        <t t-set="number_of_header" t-value="7"></t>
+                        <!-- Computes the right colspan once and use it everywhere -->
+                        <t t-set="grouped_tasks_colspan" t-value="number_of_header - 1 if groupby in group_by_in_header_list else number_of_header"></t>
+                        <th class="text-left">Ref</th>
+                        <th t-if="groupby != 'priority'">Priority</th>
+                        <th>Name</th>
+                        <th name="project_portal_assignees">Assignees</th>
+                        <th t-if="groupby != 'status'">Status</th>
+                        <th t-if="groupby != 'project'">Project</th>
+                        <th t-if="groupby != 'stage'">Stage</th>
+                    </tr>
+                </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
-                    <thead>
-                        <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
-                            <th class="text-left">Ref</th>
-                            <th t-if="groupby != 'priority'">Priority</th>
-                            <th t-if="groupby == 'none'">Name</th>
-                            <th t-if="groupby == 'project'">
-                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project:</em>
+                    <tbody>
+                        <tr t-if="not groupby == 'none'" class="thead-light">
+                            <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span t-field="tasks[0].sudo().project_id.name"/></th>
-                            <th t-if="groupby == 'stage'">
-                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
+                            <th t-if="groupby == 'stage'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
-                            <th t-if="groupby == 'priority'">
-                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in priority:</em>
+                            <th t-if="groupby == 'priority'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
-                            <th t-if="groupby == 'status'">
-                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in status:</em>
+                            <th t-if="groupby == 'status'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().kanban_state"/></th>
-                            <th t-if="groupby == 'customer'">
-                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
+                            <th t-if="groupby == 'customer'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
-                            <th name="project_portal_assignees">Assignees</th>
-                            <th t-if="groupby != 'status'">Status</th>
-                            <th t-if="groupby != 'project'">Project</th>
-                            <th t-if="groupby != 'stage'">Stage</th>
                         </tr>
-                    </thead>
+                    </tbody>
                     <tbody>
                         <t t-foreach="tasks" t-as="task">
                             <tr>

@@ -33,14 +33,24 @@
             </t>
             <t t-if="grouped_timesheets">
                 <t t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th t-if="not groupby == 'date'">Date</th>
+                            <th t-if="not groupby == 'employee'">Employee</th>
+                            <th t-if="not groupby == 'project'">Project</th>
+                            <th t-if="not groupby == 'task'">Task</th>
+                            <th>Description</th>
+                            <th t-if="is_uom_day" class="text-right">Days Spent</th>
+                            <th t-else="" class="text-right">Hours Spent</th>
+                        </tr>
+                    </thead>
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
                         <t t-set="timesheets" t-value="timesheets_with_hours[0]"/>
                         <t t-set="hours_spent" t-value="timesheets_with_hours[1]"/>
-                        <thead style="font-size: 0.8rem">
-                            <tr t-if="not groupby =='none'" t-attf-class="{{'thead-light'}}">
+                        <tbody style="font-size: 0.8rem">
+                            <tr t-if="not groupby =='none'" class="thead-light">
                                 <t t-if="groupby == 'project'">
                                     <th t-if="groupby == 'project'" colspan="5">
-                                        <em class="font-weight-normal text-muted">Timesheets for project:</em>
                                         <span t-field="timesheets[0].project_id.name"/>
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
@@ -54,7 +64,6 @@
                                 </t>
                                 <t t-elif="groupby == 'task'">
                                     <th colspan="5">
-                                        <em class="font-weight-normal text-muted">Timesheets for task:</em>
                                         <span t-field="timesheets[0].task_id.name"/>
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
@@ -68,7 +77,6 @@
                                 </t>
                                 <t t-elif="groupby == 'date'">
                                     <th colspan="5">
-                                        <em class="font-weight-normal text-muted">Timesheets on </em>
                                         <span t-field="timesheets[0].date"/>
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
@@ -82,7 +90,6 @@
                                 </t>
                                 <t t-elif="groupby == 'employee'">
                                     <th colspan="5">
-                                        <em class="font-weight-normal text-muted">Timesheets for employee:</em>
                                         <span t-field="timesheets[0].employee_id.name"/>
                                     </th>
                                     <th colspan="1" class="text-right text-muted">
@@ -105,16 +112,7 @@
                                     </t>
                                 </div>
                             </tr>
-                            <tr>
-                                <th t-if="not groupby == 'date'">Date</th>
-                                <th t-if="not groupby == 'employee'">Employee</th>
-                                <th t-if="not groupby == 'project'">Project</th>
-                                <th t-if="not groupby == 'task'">Task</th>
-                                <th>Description</th>
-                                <th t-if="is_uom_day" class="text-right">Days Spent</th>
-                                <th t-else="" class="text-right">Hours Spent</th>
-                            </tr>
-                        </thead>
+                        </tbody>
                         <tbody style="font-size: 0.8rem">
                             <t t-foreach="timesheets" t-as="timesheet">
                                 <tr>
