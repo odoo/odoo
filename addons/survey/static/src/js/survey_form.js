@@ -956,7 +956,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         if (this.options.surveyToken && this.options.sessionInProgress) {
             this.call('bus_service', 'addChannel', this.options.surveyToken);
-            this.call('bus_service', 'startPolling');
 
             if (!this._checkisOnMainTab()) {
                 this.shouldReloadMasterTab = true;

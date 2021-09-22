@@ -2,8 +2,8 @@
 
 import { busService } from '@bus/services/bus_service';
 import { multiTabService } from '@bus/multi_tab_service';
-import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
 import { makeMultiTabToLegacyEnv } from '@bus/services/legacy/make_multi_tab_to_legacy_env';
+import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service_to_legacy_env';
 import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
 
 import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
@@ -19,7 +19,6 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
 const ROUTES_TO_IGNORE = [
-    '/longpolling/poll',
     '/web/webclient/load_menus',
     '/web/dataset/call_kw/res.users/load_views',
     '/web/dataset/call_kw/res.users/systray_get_activities'
@@ -86,20 +85,8 @@ function setupMessagingServiceRegistries({
         }
     };
 
-    const customBusService = {
-        ...busService,
-        start() {
-            const originalService = busService.start(...arguments);
-            Object.assign(originalService, {
-                _registerWindowUnload() {}, // Do nothing
-                updateOption() {},
-            });
-            return originalService;
-        },
-    };
-
     services = {
-        bus_service: customBusService,
+        bus_service: busService,
         messaging: messagingService,
         messagingValues,
         presence: makeFakePresenceService({

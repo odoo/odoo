@@ -34,6 +34,8 @@ export const browser = {
     navigator: navigator,
     Notification: window.Notification,
     open: window.open.bind(window),
+    SharedWorker: window.SharedWorker,
+    Worker: window.Worker,
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,
     sessionStorage,

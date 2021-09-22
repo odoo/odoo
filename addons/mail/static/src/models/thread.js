@@ -1435,6 +1435,25 @@ registerModel({
         },
         /**
          * @private
+         * @return {FieldCommand}
+         */
+         _computeMessagingAsAllCurrentClientThreads() {
+            // The current client is linked to this thread if any of
+            // those conditions is met:
+            //  - `isServerPinned` is true.
+            //  - `messaging.currentPartner` is set and this partner is
+            //     a member of this thread.
+            //  - `messaging.currentGuest` is set and this guest is a
+            //     guest member of this thread.
+            const isPartnerMember = this.members.includes(this.messaging.currentPartner);
+            const isGuestMember = this.guestMembers.includes(this.messaging.currentGuest);
+            if (!this.messaging || !isPartnerMember && !isGuestMember && !this.isServerPinned) {
+                return clear();
+            }
+            return this.messaging;
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeMessagingAsRingingThread() {
@@ -2131,6 +2150,10 @@ registerModel({
         messageSeenIndicators: many('MessageSeenIndicator', {
             inverse: 'thread',
             isCausal: true,
+        }),
+        messagingAsAllCurrentClientThreads: one('Messaging', {
+            compute: '_computeMessagingAsAllCurrentClientThreads',
+            inverse: 'allCurrentClientThreads',
         }),
         messagingAsRingingThread: one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
