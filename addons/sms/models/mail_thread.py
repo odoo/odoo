@@ -204,8 +204,8 @@ class MailThread(models.AbstractModel):
         :param partner_ids: if set is a record set of partners to notify;
         :param number_field: if set is a name of field to use on current record
           to compute a number to notify;
-        :param sms_numbers: see ``_notify_record_by_sms``;
-        :param sms_pid_to_number: see ``_notify_record_by_sms``;
+        :param sms_numbers: see ``_notify_thread_by_sms``;
+        :param sms_pid_to_number: see ``_notify_thread_by_sms``;
         """
         self.ensure_one()
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}
@@ -237,17 +237,29 @@ class MailThread(models.AbstractModel):
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        self._notify_record_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
 
-    def _notify_record_by_sms(self, message, recipients_data, msg_vals=False,
+    def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
                               sms_numbers=None, sms_pid_to_number=None,
                               check_existing=False, put_in_queue=False, **kwargs):
         """ Notification method: by SMS.
 
-        :param message: mail.message record to notify;
-        :param recipients_data: see ``_notify_thread``;
-        :param msg_vals: see ``_notify_thread``;
+        :param message: ``mail.message`` record to notify;
+        :param recipients_data: list of recipients information (based on res.partner
+          records), formatted like
+            [{'active': partner.active;
+              'id': id of the res.partner being recipient to notify;
+              'groups': res.group IDs if linked to a user;
+              'notif': 'inbox', 'email', 'sms' (SMS App);
+              'share': partner.partner_share;
+              'type': 'customer', 'portal', 'user;'
+             }, {...}].
+          See ``MailThread._notify_get_recipients``;
+        :param msg_vals: dictionary of values used to create the message. If given it
+          may be used to access values related to ``message`` without accessing it
+          directly. It lessens query count in some optimized use cases by avoiding
+          access message content in db;
 
         :param sms_numbers: additional numbers to notify in addition to partners
           and classic recipients;
@@ -264,7 +276,7 @@ class MailThread(models.AbstractModel):
         sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
-        body = msg_vals['body'] if msg_vals and msg_vals.get('body') else message.body
+        body = msg_vals['body'] if msg_vals and 'body' in msg_vals else message.body
         sms_base_vals = {
             'body': html2plaintext(body),
             'mail_message_id': message.id,

@@ -607,7 +607,7 @@ class MailCase(MockEmail):
         some notification methods, notably testing links or group-based notification
         details.
 
-        See notably ``MailThread._notify_compute_recipients()``.
+        See notably ``MailThread._notify_get_recipients()``.
         """
         return [
             {'id': partner.id,

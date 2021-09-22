@@ -500,13 +500,13 @@ class Applicant(models.Model):
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+    def _notify_get_reply_to(self, default=None):
         """ Override to set alias of applicants to their job definition if any. """
-        aliases = self.mapped('job_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        aliases = self.mapped('job_id')._notify_get_reply_to(default=default)
         res = {app.id: aliases.get(app.job_id.id) for app in self}
         leftover = self.filtered(lambda rec: not rec.job_id)
         if leftover:
-            res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+            res.update(super(Applicant, leftover)._notify_get_reply_to(default=default))
         return res
 
     def _message_get_suggested_recipients(self):

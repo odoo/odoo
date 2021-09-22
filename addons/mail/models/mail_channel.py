@@ -349,14 +349,14 @@ class Channel(models.Model):
                         new_partner_id=channel_partner.partner_id.id,
                         new_partner_name=channel_partner.partner_id.name,
                     )
-                channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+                channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
                 members_data.append({
                     'id': channel_partner.partner_id.id,
                     'im_status': channel_partner.partner_id.im_status,
                     'name': channel_partner.partner_id.name,
                 })
             for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.guest_id):
-                channel_partner.channel_id.message_post(body=_('<div class="o_mail_notification">joined the channel</div>'), message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+                channel_partner.channel_id.message_post(body=_('<div class="o_mail_notification">joined the channel</div>'), message_type="notification", subtype_xmlid="mail.mt_comment")
                 guest_members_data.append({
                     'id': channel_partner.guest_id.id,
                     'name': channel_partner.guest_id.name,
@@ -479,13 +479,13 @@ class Channel(models.Model):
             return False
         return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
 
-    def _notify_compute_recipients(self, message, msg_vals):
+    def _notify_get_recipients(self, message, msg_vals):
         """ Override recipients computation as channel is not a standard
         mail.thread document. Indeed there are no followers on a channel.
         Instead of followers it has members that should be notified.
 
-        :param message: see ``MailThread._notify_compute_recipients()``;
-        :param msg_vals: see ``MailThread._notify_compute_recipients()``;
+        :param message: see ``MailThread._notify_get_recipients()``;
+        :param msg_vals: see ``MailThread._notify_get_recipients()``;
 
         :return recipients: structured data holding recipients data. See
           ``MailThread._notify_thread()`` for more details about its content
@@ -536,13 +536,13 @@ class Channel(models.Model):
 
         return recipients_data
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        groups = super(Channel, self)._notify_get_groups(msg_vals=msg_vals)
-        for (index, (group_name, group_func, group_data)) in enumerate(groups):
+        groups = super(Channel, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        for (index, (group_name, _group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups

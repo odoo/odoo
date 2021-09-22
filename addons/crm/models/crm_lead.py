@@ -1751,10 +1751,10 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(Lead, self)._notify_get_recipients_groups(msg_vals=msg_vals)
         local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()
@@ -1777,19 +1777,20 @@ class Lead(models.Model):
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (
-            'group_sale_salesman', lambda pdata: pdata['type'] == 'user' and salesman_group_id in pdata['groups'], {
-                'actions': salesman_actions,
-            })
+            'group_sale_salesman',
+            lambda pdata: pdata['type'] == 'user' and salesman_group_id in pdata['groups'],
+            {'actions': salesman_actions}
+        )
 
         return [new_group] + groups
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+    def _notify_get_reply_to(self, default=None):
         """ Override to set alias of lead and opportunities to their sales team if any. """
-        aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default)
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)
         if leftover:
-            res.update(super(Lead, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+            res.update(super(Lead, leftover)._notify_get_reply_to(default=default))
         return res
 
     def _message_get_default_recipients(self):
