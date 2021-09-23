@@ -117,6 +117,51 @@ QUnit.module("Views", (hooks) => {
         unpatchDate();
     });
 
+    QUnit.test(
+        "forecast filter domain is combined with other domains with an AND",
+        async function (assert) {
+            assert.expect(1);
+
+            const unpatchDate = patchDate(2021, 8, 16, 16, 54, 0);
+
+            serverData.views["foo,false,search"] = `
+                <search>
+                    <filter name="other_filter" string="Other Filter" domain="[('bar', '=', 2)]"/>
+                    <filter name="forecast_filter" string="Forecast Filter" context="{ 'forecast_filter': 1 }"/>
+                </search>
+            `;
+
+            await makeView({
+                resModel: "foo",
+                type: "forecast_graph",
+                serverData,
+                searchViewId: false,
+                context: {
+                    search_default_other_filter: 1,
+                    search_default_forecast_filter: 1,
+                    forecast_field: "date_field",
+                },
+                mockRPC(_, args) {
+                    if (args.method === "web_read_group") {
+                        const { domain } = args.kwargs;
+                        assert.deepEqual(domain, [
+                            "&",
+                            ["bar", "=", 2],
+                            "|",
+                            ["date_field", "=", false],
+                            ["date_field", ">=", "2021-09-01"],
+                        ]);
+                    }
+                },
+            });
+
+            // note that the facets of the two filters are combined with an OR.
+            // --> current behavior in legacy
+
+            unpatchDate();
+        }
+    );
+
     /** @todo remove this legacy test when conversion of all forecast views is done */
     QUnit.test(
         "legacy and new forecast views can share search model state",

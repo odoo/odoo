@@ -25,7 +25,13 @@ const DATE_FORMAT = {
 class ForecastModelExtension extends ActionModel.Extension {
     /**
      * @override
-     * @returns {any}
+     */
+    dispatch() {
+        this.state.forecastStart = null;
+    }
+
+    /**
+     * @override
      */
     get(property) {
         switch (property) {
@@ -35,80 +41,66 @@ class ForecastModelExtension extends ActionModel.Extension {
     }
 
     /**
+     * Adds a domain constraint to only get records from the start of the period containing "now",
+     * only if a "Forecast" filter is active
+     *
+     * @returns {Array[]}
+     */
+    getDomain() {
+        const forecastField = this.config.context.forecast_field;
+        if (!forecastField) {
+            return null;
+        }
+        const filters = this.config.get("filters").flat();
+        const forecastFilter = filters.some((f) => {
+            return f.isActive && f.context && f.context.forecast_filter;
+        });
+        if (!forecastFilter) {
+            return null;
+        }
+        const forecastStart = this._getForecastStart(forecastField);
+        return ["|", [forecastField, "=", false], [forecastField, ">=", forecastStart]];
+    }
+
+    /**
      * @override
      */
     prepareState() {
         super.prepareState(...arguments);
         Object.assign(this.state, {
-            forecastField: null,  // {string} forecast_field from the context (name)
-            forecastFilter: null,  // {boolean} if the "Forecast" filter is active
-            forecastStart: null,  // {string} limiting bound of the filter (if active)
-                                  // -> starting date before which records are filtered out
+            forecastStart: null,
         });
     }
 
     /**
-     * The state needs to be recomputed each time the parent model initiates a load action.
-     *
-     * @override
-     * @returns {Promise}
-     */
-    callLoad() {
-        // this is bad to do this always: if a state has been received and the view is loaded the
-        // first time, the state won't be used! to fix!
-        this._computeState();
-        return super.callLoad(...arguments);
-    }
-
-    /**
-     * Adds a domain constraint to only get records from the start of the period containing "now",
-     * only if the "Forecast" filter is active
-     *
-     * @returns {Array[]}
-     */
-    getDomain() {
-        return !this.state.forecastFilter ? null :
-            ['|', [this.state.forecastField, '=', false],
-             [this.state.forecastField, '>=', this.state.forecastStart]
-            ];
-    }
-
-    /**
-     * The state is mostly dependent on 2 context keys :
-     * forecast_field -> is a prerequisite for this extension to work
-     * forecast_filter -> a filter which applies this context key should be present and active in
-     * order to get the modified domain
-     * If the forecast_field is present in the groupby, the related granularity is used
-     * If no granularity is specified, or if there is no groupby, the default is "month"
-     * If there is a groupby, but not the forecast_field, "day" is used (the filter will get data
-     * from 00:00:00 today, browser time)
-     *
+     * Returns a date (datetime) starting from a forecast field of type date (resp. datetime).
+     * The value returned depends on the active groubys.
      * @private
+     * @param {string} forecastField name of the date/time field related to the forecast
+     * @returns {string}
      */
-    _computeState() {
-        this.prepareState();
-        if (!this.config.context.forecast_field) { return; }
-        this.state.forecastField = this.config.context.forecast_field;
-        const format = DATE_FORMAT[this.config.fields[this.state.forecastField].type];
-        const filters = this.config.get('filters').flat();
-        this.state.forecastFilter = !!filters.filter(f => f.isActive && f.context &&
-            f.context.forecast_filter).length;
-        const groupBy = this.config.get('groupBy').flat();
-        const forecastGroupBys = groupBy.filter(gb => gb.includes(this.state.forecastField));
-        let granularity = "month";
-        if (forecastGroupBys.length > 0) {
-            [this.state.forecastField, granularity] = [...forecastGroupBys[0].split(":"), granularity];
-        } else if (groupBy.length) {
-            // there is a groupBy, but it is not the forecast_field
-            granularity = "day";
+    _getForecastStart(forecastField) {
+        if (!this.state.forecastStart) {
+            const type = this.config.fields[forecastField].type;
+            const groupBy = this.config.get("groupBy").flat();
+            const firstForecastGroupBy = groupBy.find((gb) => gb.includes(forecastField));
+            let granularity = "month";
+            if (firstForecastGroupBy) {
+                granularity = firstForecastGroupBy.split(":")[1] || "month";
+            } else if (groupBy.length) {
+                // there is a groupBy, but it is not the forecast_field
+                granularity = "day";
+            }
+            let startMoment = moment().startOf(granularity);
+            // The server needs a date/time in UTC, but to avoid a day shift in case
+            // of date, we only need to consider it for datetime fields
+            if (type === "datetime") {
+                startMoment = moment.utc(startMoment);
+            }
+            const format = DATE_FORMAT[type];
+            this.state.forecastStart = startMoment.format(format);
         }
-        let startMoment = moment().startOf(granularity);
-        // The server needs a date/time in UTC, but to avoid a day shift in case
-        // of date, we only need to consider it for datetime fields
-        if (this.config.fields[this.state.forecastField].type === "datetime") {
-            startMoment = moment.utc(startMoment);
-        }
-        this.state.forecastStart = startMoment.format(format);
+        return this.state.forecastStart;
     }
 }
 
