@@ -68,9 +68,9 @@
                 background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
                 background-position: map-get($style, 'position');
                 background-size: map-get($style, 'size');
-                @if map-get($style, 'repeat-y') {
-                    background-repeat: repeat-y;
-                }
+                background-repeat:
+                    if(map-get($style, 'repeat-x'), repeat, no-repeat)
+                    if(map-get($style, 'repeat-y'), repeat, no-repeat);
 
                 @each $mapping-name, $mapping in $extra-mappings {
                     $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, $mapping or ());
