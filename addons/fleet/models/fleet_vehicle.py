@@ -201,40 +201,42 @@ class FleetVehicle(models.Model):
         return self.license_plate or _('No plate')
 
     def _search_contract_renewal_due_soon(self, operator, value):
-        params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
-        res = []
         assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
+        delay_alert_contract = int(
+            self.env['ir.config_parameter'].sudo().get_param('hr_fleet.delay_alert_contract', default=30)
+        )
+
         if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
             search_operator = 'in'
         else:
             search_operator = 'not in'
+
         today = fields.Date.context_today(self)
-        datetime_today = fields.Datetime.from_string(today)
-        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
-        res_ids = self.env['fleet.vehicle.log.contract'].search([
+        limit_date = today + relativedelta(days=+delay_alert_contract)
+
+        subquery = self.env['fleet.vehicle.log.contract']._search([
             ('expiration_date', '>', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
-        res.append(('id', search_operator, res_ids))
-        return res
+        ])
+        return [('log_contracts', search_operator, subquery)]
 
     def _search_get_overdue_contract_reminder(self, operator, value):
-        res = []
+        # VFE TODO add tests for those two search methods.
         assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
+
         if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
             search_operator = 'in'
         else:
             search_operator = 'not in'
-        today = fields.Date.context_today(self)
-        res_ids = self.env['fleet.vehicle.log.contract'].search([
+
+        subquery = self.env['fleet.vehicle.log.contract']._search([
             ('expiration_date', '!=', False),
-            ('expiration_date', '<', today),
+            ('expiration_date', '<', fields.Date.context_today(self)),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
-        res.append(('id', search_operator, res_ids))
-        return res
+        ])
+
+        return [('log_contracts', search_operator, subquery)]
 
     @api.model
     def create(self, vals):

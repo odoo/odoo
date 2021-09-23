@@ -172,6 +172,25 @@ class AccountAnalyticLine(models.Model):
                     ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                     ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                 ('task_id.project_id.privacy_visibility', '=', 'portal')]
+        # Rebase conflict, to verify
+        # user = self.env.user
+        # commercial_partner = user.partner_id.commercial_partner_id
+        # # Sudo to avoid useless rules on subquery models
+        # # same for active_test
+        # sub_query_env = self.with_context(active_test=False).sudo()
+        # return [
+        #     ('task_id', 'in', sub_query_env.env["project.task"]._search([
+        #         ('project_id.privacy_visibility', '=', 'portal'),
+        #         '|', '|',
+        #             ('project_id', 'in', sub_query_env.env['project.project']._search([
+        #                 '|',
+        #                 ('allowed_portal_user_ids', 'child_of', [user.id]),
+        #                 ('message_partner_ids', 'child_of', [commercial_partner.id]),
+        #             ], order="id")),
+        #             ('message_partner_ids', 'child_of', [commercial_partner.id]),
+        #             ('allowed_user_ids', 'in', [user.id]),
+        #     ], order="id")),
+        # ]
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.

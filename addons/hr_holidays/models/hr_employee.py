@@ -150,13 +150,20 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
-        holidays = self.env['hr.leave'].sudo().search([
+        HrLeave = self.env["hr.leave"]
+        subquery = HrLeave.sudo()._search([
             ('employee_id', '!=', False),
             ('state', 'not in', ['cancel', 'refuse']),
             ('date_from', '<=', datetime.datetime.utcnow()),
-            ('date_to', '>=', datetime.datetime.utcnow())
+            ('date_to', '>=', datetime.datetime.utcnow()),
         ])
-        return [('id', 'in', holidays.mapped('employee_id').ids)]
+
+        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+            search_operator = 'inselect'
+        else:
+            search_operator = 'not inselect'
+
+        return [('id', search_operator, subquery.select('"%s"."employee_id"' % HrLeave._table))]
 
     @api.model
     def create(self, values):

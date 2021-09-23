@@ -51,36 +51,15 @@ class MailBlackListMixin(models.AbstractModel):
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
-        self.flush(['email_normalized'])
-        self.env['mail.blacklist'].flush(['email', 'active'])
         self._assert_primary_email()
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
-
-        if value:
-            query = """
-                SELECT m.id
-                    FROM mail_blacklist bl
-                    JOIN %s m
-                    ON m.email_normalized = bl.email AND bl.active
-            """
+        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
+            search_operator = 'inselect'
         else:
-            query = """
-                SELECT m.id
-                    FROM %s m
-                    LEFT JOIN mail_blacklist bl
-                    ON m.email_normalized = bl.email AND bl.active
-                    WHERE bl.id IS NULL
-            """
-        self._cr.execute(query % self._table)
-        res = self._cr.fetchall()
-        if not res:
-            return [(0, '=', 1)]
-        return [('id', 'in', [r[0] for r in res])]
+            search_operator = 'not inselect'
+
+        Blacklist = self.env['mail.blacklist']
+        base_query = Blacklist.sudo()._search([])
+        return [('email_normalized', search_operator, base_query.select('"%s"."email"' % (Blacklist._table)))]
 
     @api.depends('email_normalized')
     def _compute_is_blacklisted(self):

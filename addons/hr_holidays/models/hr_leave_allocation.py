@@ -178,8 +178,8 @@ class HolidaysAllocation(models.Model):
         if not is_officer:
             domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
 
-        allocations = self.sudo().search(domain)
-        return [('id', 'in', allocations.ids)]
+        subquery = self.sudo()._search(domain)
+        return [('id', 'in', subquery)]
 
     @api.depends('employee_id', 'holiday_status_id', 'taken_leave_ids.number_of_days', 'taken_leave_ids.state')
     def _compute_leaves(self):

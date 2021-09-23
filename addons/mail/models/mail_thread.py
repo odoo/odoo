@@ -118,43 +118,55 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids
+        """Search function for message_follower_ids"""
+        # First solution, ideal, but crashes for security reasons.
+        # Generic Users have no right to access message_followers records
+        # Furthermore, currently the ORM adds a useless subquery, like the second solution
+        # return [('message_follower_ids.partner_id', operator, operand)]
 
-        Do not use with operator 'not in'. Use instead message_is_followers
-        """
-        # TOFIX make it work with not in
-        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
-        followers = self.env['mail.followers'].sudo().search([
+        # Second solution, works, but one query depth for nothing...
+        # return [('id', 'in', self.sudo()._search([('message_follower_ids.partner_id', operator, operand)], order="id"))]
+
+        # Last solution, works best, but kinda hacky
+        MailFollowers = self.env['mail.followers']
+        subQuery = MailFollowers.sudo()._search([
             ('res_model', '=', self._name),
-            ('partner_id', operator, operand)])
-        # using read() below is much faster than followers.mapped('res_id')
-        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+            ('partner_id', operator, operand)
+        ])
+        return [('id', 'inselect', subQuery.select('"%s"."%s"' % (MailFollowers._table, "res_id")))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
-        followers = self.env['mail.followers'].sudo().search([
+        MailFollowers = self.env['mail.followers']
+        followers_query = MailFollowers.sudo()._search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
-            ])
-        # using read() below is much faster than followers.mapped('res_id')
-        following_ids = [res['res_id'] for res in followers.read(['res_id'])]
+        ])
+        query, params = followers_query.select('"%s"."%s"' % (MailFollowers._table, "res_id"))
+        self.env.cr.execute(query, params)
+        following_ids = [val[0] for val in self.env.cr.fetchall()]
         for record in self:
             record.message_is_follower = record.id in following_ids
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])
+        # VFE NOTE: currently the orm adds a useless query depth in this kind of case:
+        # id IN (
+        #   SELECT mail_followers.res_id FROM mail_followers WHERE id IN(
+        #       SELECT id from mail_followers ...
+        # This could be bypassed with the inselect logic, but the gain would
+        # be low and the resulting code would be less clear.
+        subquery = self.sudo()._search([
+            ('message_follower_ids.partner_id', '=', self.env.user.partner_id.id)
+        ], order='id')
         # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
         if (operator == '=' and operand) or (operator == '!=' and not operand):
             # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'in', subquery)]
         else:
             # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'not in', subquery)]
 
     def _compute_has_message(self):
         self.flush()

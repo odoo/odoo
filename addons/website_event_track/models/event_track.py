@@ -346,11 +346,11 @@ class Track(models.Model):
         if operator == "not in":
             raise NotImplementedError("Unsupported 'Not In' operation on track wishlist visitors")
 
-        track_visitors = self.env['event.track.visitor'].sudo().search([
+        subquery = self.env['event.track.visitor'].sudo()._search([
             ('visitor_id', operator, operand),
             ('is_wishlisted', '=', True)
         ])
-        return [('id', 'in', track_visitors.track_id.ids)]
+        return [('event_track_visitor_ids', 'in', subquery)]
 
     # TIME
 

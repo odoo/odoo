@@ -159,12 +159,12 @@ class StockQuant(models.Model):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
         domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        subquery = self.env['stock.quant']._search(domain_loc)
         if (operator == '!=' and value is True) or (operator == '=' and value is False):
             domain_operator = 'not in'
         else:
             domain_operator = 'in'
-        return [('id', domain_operator, quant_ids)]
+        return [('id', domain_operator, subquery)]
 
     @api.model
     def create(self, vals):
@@ -991,13 +991,12 @@ class QuantPackage(models.Model):
 
     def _search_owner(self, operator, value):
         if value:
-            packs = self.search([('quant_ids.owner_id', operator, value)])
+            subquery = self._search([('quant_ids.owner_id', operator, value)])
         else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'parent_of', packs.ids)]
-        else:
-            return [('id', '=', False)]
+            subquery = self._search([('quant_ids', operator, value)])
+        # if subquery:
+        # VFE TODO verify subquery works fine for parent_of
+        return [('id', 'parent_of', subquery)]
 
     def unpack(self):
         for package in self:

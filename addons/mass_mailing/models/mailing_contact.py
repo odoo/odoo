@@ -93,8 +93,8 @@ class MassMailingContact(models.Model):
 
         if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
             [active_list_id] = self._context['default_list_ids']
-            contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
-            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
+            subquery = self.env['mailing.contact.subscription']._search([('list_id', '=', active_list_id), ('opt_out', '=', value)])
+            return [('subscription_list_ids', 'in', subquery)]
         else:
             return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
 

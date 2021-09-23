@@ -30,11 +30,12 @@ class ResPartner(models.Model):
             ]).mapped('channel_id')
 
     def _search_slide_channel_completed_ids(self, operator, value):
-        cp_done = self.env['slide.channel.partner'].sudo().search([
+        SlideChannelPartner = self.env['slide.channel.partner']
+        subquery = SlideChannelPartner.sudo()._search([
             ('channel_id', operator, value),
             ('completed', '=', True)
         ])
-        return [('id', 'in', cp_done.partner_id.ids)]
+        return [('id', 'inselect', subquery.select('"%s"."partner_id"' % (SlideChannelPartner._table)))]
 
     @api.depends('is_company')
     def _compute_slide_channel_count(self):

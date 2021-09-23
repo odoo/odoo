@@ -27,8 +27,9 @@ class AccountAnalyticAccount(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_existing_tasks(self):
-        projects = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
-        has_tasks = self.env['project.task'].search_count([('project_id', 'in', projects.ids)])
+        has_tasks = bool(self.env['project.task'].search([
+            ('project_id.analytic_account_id', 'in', self.ids),
+        ], limit=1))
         if has_tasks:
             raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
 

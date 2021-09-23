@@ -20,8 +20,6 @@ class MailMessage(models.Model):
             message.rating_value = mapping.get(message.id, 0.0)
 
     def _search_rating_value(self, operator, operand):
-        ratings = self.env['rating.rating'].sudo().search([
-            ('rating', operator, operand),
-            ('message_id', '!=', False)
-        ])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+        # Ideally, the domain could be directly returned, but this could trigger security errors.
+        subquery = self.sudo()._search([('rating_ids.rating', operator, operand)])
+        return [('id', 'in', subquery)]

@@ -277,14 +277,14 @@ class LunchSupplier(models.Model):
         if (not operator in ['=', '!=']) or (not value in [True, False]):
             return []
 
-        searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
+        search_operator = ">" if (operator == '=' and value) or (operator == '!=' and not value) else "<"
 
         now = fields.Datetime.now().replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
         fieldname = WEEKDAY_TO_NAME[now.weekday()]
 
         recurrency_domain = expression.OR([
             [('recurrency_end_date', '=', False)],
-            [('recurrency_end_date', '>' if searching_for_true else '<', now)]
+            [('recurrency_end_date', search_operator, now)]
         ])
 
         return expression.AND([

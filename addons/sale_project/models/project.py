@@ -181,18 +181,13 @@ class ProjectTask(models.Model):
             else:
                 task.task_to_invoice = False
 
-    @api.model
     def _search_task_to_invoice(self, operator, value):
-        query = """
-            SELECT so.id
-            FROM sale_order so
-            WHERE so.invoice_status != 'invoiced'
-                AND so.invoice_status != 'no'
-        """
-        operator_new = 'inselect'
+        subquery = self.env['sale.order'].sudo()._search([("invoice_status", "not in", ["invoiced", "no"])])
         if(bool(operator == '=') ^ bool(value)):
-            operator_new = 'not inselect'
-        return [('sale_order_id', operator_new, (query, ()))]
+            search_operator = 'not in'
+        else:
+            search_operator = 'in'
+        return [('sale_order_id', search_operator, subquery)]
 
 
 class ProjectTaskRecurrence(models.Model):

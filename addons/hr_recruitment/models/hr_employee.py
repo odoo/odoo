@@ -18,10 +18,7 @@ class HrEmployee(models.Model):
             employee.newly_hired_employee = bool(employee.create_date > (now - timedelta(days=90)))
 
     def _search_newly_hired_employee(self, operator, value):
-        employees = self.env['hr.employee'].search([
-            ('create_date', '>', fields.Datetime.now() - timedelta(days=90))
-        ])
-        return [('id', 'in', employees.ids)]
+        return [('create_date', '>', fields.Datetime.now() - timedelta(days=90))]
 
     @api.model
     def create(self, vals):

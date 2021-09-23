@@ -282,8 +282,8 @@ class ProductTemplate(models.Model):
                 template.barcode = template.product_variant_ids.barcode
 
     def _search_barcode(self, operator, value):
-        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
-        return [('id', 'in', templates.ids)]
+        subquery = self.with_context(active_test=False)._search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', subquery)]
 
     def _set_barcode(self):
         if len(self.product_variant_ids) == 1:
