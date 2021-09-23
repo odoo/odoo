@@ -130,6 +130,30 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
                 img = img[:-1] + suffix + ')'
         return img
 
+    def write(self, vals):
+        if 'cover_properties' not in vals:
+            return super().write(vals)
+
+        cover_properties = json_safe.loads(vals['cover_properties'])
+        resize_classes = cover_properties.get('resize_class', '').split()
+        classes = ['o_half_screen_height', 'o_full_screen_height', 'cover_auto']
+        if not set(resize_classes).isdisjoint(classes):
+            # Updating cover properties and the given 'resize_class' set is
+            # valid, normal write.
+            return super().write(vals)
+
+        # If we do not receive a valid resize_class via the cover_properties, we
+        # keep the original one (prevents updates on list displays from
+        # destroying resize_class).
+        copy_vals = dict(vals)
+        for item in self:
+            old_cover_properties = json_safe.loads(item.cover_properties)
+            cover_properties['resize_class'] = old_cover_properties.get('resize_class', classes[0])
+            copy_vals['cover_properties'] = json_safe.dumps(cover_properties)
+            super(WebsiteCoverPropertiesMixin, item).write(copy_vals)
+        return True
+
+
 class WebsiteMultiMixin(models.AbstractModel):
 
     _name = 'website.multi.mixin'
