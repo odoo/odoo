@@ -52,7 +52,7 @@ files.filter(f => f.endsWith('svg')).forEach(filePath => {
     } else {
         shape.size = '100% auto';
     }
-    shape.scss = `'${shape.page}/${shape.name}': ('position': ${shape.position[0]}, 'size': ${shape.size}, 'colors': (${shape.colors.join(', ')}), 'repeat-y': ${shape.repeatY})`;
+    shape.scss = `'${shape.page}/${shape.name}': ('position': ${shape.position[0]}, 'size': ${shape.size}, 'colors': (${shape.colors.join(', ')})${shape.repeatY ? ", 'repeat-y': true" : ""})`;
     shapes.push(shape);
 });
 const xml = shapes.map(shape => shape.optionXML).join('\n');
