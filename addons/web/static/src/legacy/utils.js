@@ -282,10 +282,11 @@ export function makeLegacyCrashManagerService(legacyEnv) {
 
 export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
     return promise.then(on_success || (() => {})).catch((reason) => {
+        let alreadyThrown = false;
         if (on_fail) {
-            on_fail(reason);
+            alreadyThrown = on_fail(reason) === "alreadyThrown";
         }
-        if (reason instanceof Error) {
+        if (reason instanceof Error && !alreadyThrown) {
             throw reason;
         }
     });
