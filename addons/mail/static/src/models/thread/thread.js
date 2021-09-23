@@ -317,6 +317,29 @@ function factory(dependencies) {
         }
 
         /**
+         * Creates a new group chat with the provided partners.
+         *
+         * @param {Object} param0
+         * @param {number[]} param0.partners_to Ids of the partners to add as channel
+         * members.
+         * @param {boolean|string} param0.default_display_mode
+         * @returns {mail.thread} The newly created group chat.
+         */
+        static async createGroupChat({ default_display_mode, partners_to }) {
+            const channelData = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'create_group',
+                kwargs: {
+                    default_display_mode,
+                    partners_to,
+                },
+            });
+            return this.messaging.models['mail.thread'].insert(
+                this.messaging.models['mail.thread'].convertData(channelData)
+            );
+        }
+
+        /**
          * Client-side ending of the call.
          */
         endCall() {
@@ -971,8 +994,9 @@ function factory(dependencies) {
          *
          * @param {Object} [param0]
          * @param {boolean} [param0.expanded=false]
+         * @param {boolean} [param0.focus=true]
          */
-        async open({ expanded = false } = {}) {
+        async open({ expanded = false, focus = true } = {}) {
             const discuss = this.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
@@ -981,10 +1005,11 @@ function factory(dependencies) {
                     // both in chat window and as main document does not look
                     // good.
                     this.messaging.chatWindowManager.closeThread(this);
-                    return this.messaging.openDocument({
+                    await this.messaging.openDocument({
                         id: this.id,
                         model: this.model,
                     });
+                    return;
                 }
             }
             // check if thread must be opened in discuss
@@ -993,7 +1018,7 @@ function factory(dependencies) {
                 (!device.isMobile && (discuss.isOpen || expanded)) ||
                 this.model === 'mail.box'
             ) {
-                return discuss.openThread(this);
+                return discuss.openThread(this, { focus });
             }
             // thread must be opened in chat window
             return this.messaging.chatWindowManager.openThread(this, {
