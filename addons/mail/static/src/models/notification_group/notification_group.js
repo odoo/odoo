@@ -115,6 +115,7 @@ function factory(dependencies) {
                     target: 'current',
                     res_model: this.res_model,
                     domain: [['message_has_error', '=', true]],
+                    context: { create: false },
                 },
             });
             if (this.messaging.device.isMobile) {
