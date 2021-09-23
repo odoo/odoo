@@ -66,24 +66,6 @@ export class Dropdown extends Component {
         // Set up key navigation -----------------------------------------------
         useDropdownNavigation();
 
-        // Set up toggler and positioning --------------------------------------
-        /** @type {string} **/
-        let position =
-            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
-        if (localization.direction === "rtl") {
-            let [direction, variant = "middle"] = position.split("-");
-            if (["bottom", "top"].includes(direction)) {
-                variant = variant === "start" ? "end" : "start";
-            } else {
-                direction = direction === "left" ? "right" : "left";
-            }
-            position = [direction, variant].join("-");
-        }
-        const positioningOptions = {
-            popper: "menuRef",
-            position,
-            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
-        };
         if (this.props.toggler === "parent") {
             // Add parent click listener to handle toggling
             useEffect(
@@ -102,13 +84,37 @@ export class Dropdown extends Component {
                 },
                 () => []
             );
+        }
+
+        // Setup positioning only when in desktop
+        if (!this.env.isSmall) {
+            /** @type {string} **/
+            let position =
+                this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+            if (localization.direction === "rtl") {
+                let [direction, variant = "middle"] = position.split("-");
+                if (["bottom", "top"].includes(direction)) {
+                    variant = variant === "start" ? "end" : "start";
+                } else {
+                    direction = direction === "left" ? "right" : "left";
+                }
+                position = [direction, variant].join("-");
+            }
+
+            const positioningOptions = {
+                popper: "menuRef",
+                position,
+                directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
+            };
 
             // Position menu relatively to parent element
-            usePosition(() => this.el.parentElement, positioningOptions);
-        } else {
-            // Position menu relatively to inner toggler
-            const togglerRef = useRef("togglerRef");
-            usePosition(() => togglerRef.el, positioningOptions);
+            if (this.props.toggler === "parent") {
+                usePosition(() => this.el.parentElement, positioningOptions);
+            } else {
+                // Position menu relatively to inner toggler
+                const togglerRef = useRef("togglerRef");
+                usePosition(() => togglerRef.el, positioningOptions);
+            }
         }
     }
 
