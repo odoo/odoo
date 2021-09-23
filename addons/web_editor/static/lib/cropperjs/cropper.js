@@ -945,9 +945,19 @@
     context.scale(scaleX, scaleY);
     context.imageSmoothingEnabled = imageSmoothingEnabled;
     context.imageSmoothingQuality = imageSmoothingQuality;
-    context.drawImage.apply(context, [image].concat(_toConsumableArray(params.map(function (param) {
-      return Math.floor(normalizeDecimalNumber(param));
-    }))));
+    /**
+     * ODOO FIX START
+     *
+     * Canevas is translated and then translated back. For the second translation the
+     * translation distances were rounded to the nearest integer below when it should
+     * not since the distances of the first translation are either an integer or the
+     * half of an integer.
+     *
+     * Fix proposed by https://github.com/fengyuanchen/cropperjs/pull/866
+     */
+    params = params.map(normalizeDecimalNumber);
+    context.drawImage(image, params[0], params[1], Math.floor(params[2]), Math.floor(params[3]));
+    // ODOO FIX END
     context.restore();
     return canvas;
   }
