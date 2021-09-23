@@ -394,6 +394,10 @@ class StockMove(models.Model):
     def _prepare_merge_moves_distinct_fields(self):
         return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share']
 
+    @api.model
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_production_id']
+
     def _merge_moves_fields(self):
         res = super()._merge_moves_fields()
         res['cost_share'] = sum(self.mapped('cost_share'))

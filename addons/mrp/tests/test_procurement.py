@@ -520,3 +520,79 @@ class TestProcurement(TestMrpCommon):
         mo_assign_at_confirm.action_confirm()
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.reserved_availability, 5, "Components should have been auto-reserved")
+
+    def test_check_update_qty_mto_chain(self):
+        """ Simulate a mto chain with a manufacturing order. Updating the
+        initial demand should also impact the initial move but not the
+        linked manufacturing order.
+        """
+        def create_run_procurement(product, product_qty, values=None):
+            if not values:
+                values = {
+                    'warehouse_id': picking_type_out.warehouse_id,
+                    'action': 'pull_push',
+                    'group_id': procurement_group,
+                }
+            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+                product, product_qty, self.uom_unit, vendor.property_stock_customer,
+                product.name, '/', self.env.company, values)
+            ])
+
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        vendor = self.env['res.partner'].create({
+            'name': 'Roger'
+        })
+        # This needs to be tried with MTO route activated
+        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        # Define products requested for this BoM.
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'categ_id': self.env.ref('product.product_category_all').id
+        })
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ]
+        })
+
+        procurement_group = self.env['procurement.group'].create({
+            'move_type': 'direct',
+            'partner_id': vendor.id
+        })
+        # Create initial procurement that will generate the initial move and its picking.
+        create_run_procurement(product, 10, {
+            'group_id': procurement_group,
+            'warehouse_id': picking_type_out.warehouse_id,
+            'partner_id': vendor
+        })
+        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertTrue(manufacturing_order, 'No manufacturing order created.')
+
+        # Check manufacturing order data.
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The manufacturing order qty should be the same as the move.')
+
+        # Create procurement to decrease quantity in the initial move but not in the related MO.
+        create_run_procurement(product, -5.00)
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
+
+        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        create_run_procurement(product, 2.00)
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
+        manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')

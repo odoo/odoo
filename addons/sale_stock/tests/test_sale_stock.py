@@ -1119,3 +1119,42 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         picking.move_lines.write({'quantity_done': 3.66})
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
+
+    def test_17_qty_update_propagation(self):
+        """ Creates a sale order, then modifies the sale order lines qty and verifies
+        that quantity changes are correctly propagated to the delivery picking.
+        """
+        # Sell a product.
+        product = self.company_data['product_delivery_no']    # storable
+        product.type = 'product'    # storable
+
+        self.env['stock.quant']._update_available_quantity(product, self.company_data['default_warehouse'].lot_stock_id, 50)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 50, 'product_uom': product.uom_id.id, 'price_unit': product.list_price}),
+            ],
+        })
+        sale_order.action_confirm()
+
+        # Check picking created
+        self.assertEqual(len(sale_order.picking_ids), 1, 'A delivery picking should have been created.')
+        move_out = sale_order.picking_ids.move_lines
+        self.assertEqual(len(move_out), 1, 'Only one move should be created for a single product.')
+        self.assertEqual(move_out.product_uom_qty, 50, 'The move quantity should be the same as the quantity sold.')
+
+        # Decrease the quantity in the sale order and check the move has been updated.
+        sale_order.write({
+            'order_line': [
+                (1, sale_order.order_line.id, {'product_uom_qty': 30}),
+            ]
+        })
+        self.assertEqual(move_out.product_uom_qty, 30, 'The move quantity should have been decreased as the sale order line was.')
+
+        # Increase the quantity in the sale order and check the move has been updated.
+        sale_order.write({
+            'order_line': [
+                (1, sale_order.order_line.id, {'product_uom_qty': 40})
+            ]
+        })
+        self.assertEqual(move_out.product_uom_qty, 40, 'The move quantity should have been increased as the sale order line was.')
