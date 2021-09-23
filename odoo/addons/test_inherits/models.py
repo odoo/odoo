@@ -44,6 +44,7 @@ class Box(models.Model):
     def write(self, vals):
         """ Method to call invalidate_cache for the test case """
         result = super().write(vals)
+        self.flush()
         self.invalidate_cache()
         return result
 
