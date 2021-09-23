@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_attendance
-# 
+#
 # Translators:
 # Martin Trigaux, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
@@ -9,7 +9,7 @@
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
@@ -18,17 +18,17 @@ msgstr ""
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
 "Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "Giờ \"Đăng nhập\" không thể trước giờ \"Đăng xuất\"."
+msgstr "Giờ \"Ra\" không thể trước giờ \"Vào\"."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -50,8 +50,8 @@ msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
 msgstr ""
-"<b>Cảnh báo! Lần kiểm tra cuối cùng đã hơn 12 giờ trước.</b><br/>Nếu điều "
-"này không đúng, xin vui lòng liên hệ với nhân viên phòng nhân sự"
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>Nếu điều này không "
+"đúng, vui lòng liên hệ với nhân viên phòng Nhân sự"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -61,7 +61,7 @@ msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"P
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
-msgstr "<span class=\"o_form_label\">Mã PIN nhân viên</span>"
+msgstr "<span class=\"o_form_label\">Mã nhân viên</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -70,7 +70,10 @@ msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            Last Month\n"
 "                        </span>"
-msgstr "<span class=\"o_stat_text\">Tháng gần nhất</span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Tháng trước\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -82,13 +85,13 @@ msgstr "<span class=\"o_stat_text\">Có mặt</span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attended Since</span>"
-msgstr "<span class=\"o_stat_text\">Điểm danh từ</span>"
+msgstr "<span class=\"o_stat_text\">Có mặt từ</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr "<span class=\"o_stat_text\">Chưa điểm danh từ</span>"
+msgstr "<span class=\"o_stat_text\">Vắng mặt từ</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -98,8 +101,8 @@ msgid ""
 "title=\"Available\"/>"
 msgstr ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
-"title=\"Sẵn sàng\"/>"
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Khả dụng\" "
+"title=\"Khả dụng\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -122,7 +125,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
-msgstr "Người quản trị"
+msgstr "Quản trị viên"
 
 #. module: hr_attendance
 #. openerp-web
@@ -147,13 +150,13 @@ msgstr "Hoàn thành một ngày làm việc tốt nữa! Hẹn gặp lại bạ
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 msgid "Attendance"
-msgstr "Chấm công"
+msgstr "Vào/Ra"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
 msgid "Attendance Analysis"
-msgstr "Phân tích Điểm danh"
+msgstr "Phân tích Vào/Ra"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -161,7 +164,7 @@ msgstr "Phân tích Điểm danh"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr "Trạng thái chấm công"
+msgstr "Trạng thái Điểm danh"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -172,7 +175,7 @@ msgstr "Trạng thái chấm công"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
-msgstr "Chấm công"
+msgstr "Quản lý Vào/Ra"
 
 #. module: hr_attendance
 #. openerp-web
@@ -207,8 +210,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"Không thể tạo mới đăng nhập/đăng xuất cho %(empl_name)s, người mà đã đăng "
-"nhập vào %(datetime)s"
+"Không thể tạo mới bản ghi vào/ra cho %(empl_name)s, người mà đẵ đăng nhập "
+"vào %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -219,8 +222,8 @@ msgid ""
 "resources."
 msgstr ""
 "Không thể thực hiện việc đăng xuất cho nhân viên %(empl_name)s, do không tìm"
-" thấy lần đăng nhập tương ứng. Dữ liệu Điểm danh của bạn có thể đã được điều"
-" chỉnh bởi bộ phận nhân sự."
+" thấy lần đăng nhập tương ứng. Số liệu vào/ra của bạn chắc là đã được điều "
+"chỉnh bởi bộ phận nhân sự."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -298,7 +301,7 @@ msgstr "Logo Công ty"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập cấu hình"
+msgstr "Thiết lập Cấu hình"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -308,12 +311,12 @@ msgstr "Cấu hình"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
-msgstr "Tạo một nhân viên mới"
+msgstr "Tạo nhân viên mới"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
@@ -323,7 +326,7 @@ msgstr "Thời điểm tạo"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
-msgstr "Phòng/Ban"
+msgstr "Phòng ban"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
@@ -358,7 +361,7 @@ msgstr "Nhân viên"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 msgid "Employee PIN"
-msgstr "Mã PIN nhân viên"
+msgstr "Mã PIN Nhân viên"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -382,7 +385,7 @@ msgstr "Sử dụng PIN"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr "Lỗi: Không tìm thấy nhân viên tương ứng."
+msgstr "Lỗi: Không tìm thấy nhân tương ứng."
 
 #. module: hr_attendance
 #. openerp-web
@@ -406,28 +409,28 @@ msgstr "Thật vui vì bạn đã quay lai, đã lâu rồi!"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr "Trở lại"
+msgstr "Quay lại"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good afternoon"
-msgstr "Chào buổi chiều"
+msgstr "Chào Buổi chiều"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good evening"
-msgstr "Chào buổi tối"
+msgstr "Chào Buổi tối"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good morning"
-msgstr "Chào buổi sáng"
+msgstr "Chào Buổi sáng"
 
 #. module: hr_attendance
 #. openerp-web
@@ -490,7 +493,7 @@ msgstr "Giờ"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr "Giờ làm tháng gần nhất"
+msgstr "Giờ Tháng trước"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
@@ -498,19 +501,19 @@ msgstr "Giờ làm tháng gần nhất"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr "Hiển thị giờ làm tháng gần nhất"
+msgstr "Hiển thị Giờ Tháng trước"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr "Giờ làm hôm nay"
+msgstr "Giờ Hôm nay"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
-msgstr "Tìm kiếm Điểm danh"
+msgstr "Tìm kiếm Vào/Ra"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
@@ -564,7 +567,7 @@ msgstr "Có mặt lần cuối"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -574,12 +577,12 @@ msgstr "Cập nhật lần cuối bởi"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manager"
-msgstr "Người quản lý"
+msgstr "Quản lý"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
@@ -589,12 +592,12 @@ msgstr "Điểm danh thủ công"
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
 msgid "Message"
-msgstr "Thông báo"
+msgstr "Thông điệp"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr "Điểm danh của tôi"
+msgstr "Vào/Ra của tôi"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -604,12 +607,12 @@ msgstr "Không đăng xuất"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr "Không tìm thấy dữ liệu chấm công"
+msgstr "Không tìm thấy bản ghi điểm danh nào"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "No attendance records to display"
-msgstr "Không có dữ liệu chấm công để hiển thị"
+msgstr "Không có bản ghi điểm danh nào hiển thị"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph
@@ -627,14 +630,14 @@ msgstr "No employee corresponding to Badge ID '%(barcode)s.'"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr "Không sẵn sàng"
+msgstr "Không tồn tại"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Đồng ý"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -646,7 +649,7 @@ msgstr "Cán bộ"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr "Vui lòng nhập mã PIN của bạn vào"
+msgstr "Nhập mã PIN của bạn"
 
 #. module: hr_attendance
 #. openerp-web
@@ -665,7 +668,7 @@ msgstr "Báo cáo"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr "Quét thẻ"
+msgstr "Quét Thẻ"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -709,7 +712,7 @@ msgstr "Nhóm như vậy là không được phép."
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "The attendance records of your employees will be displayed here."
-msgstr "Dữ liệu đăng nhập/ đăng xuất của nhân viên sẽ được hiển thị ở đây."
+msgstr "Các bản ghi vào/ra của nhân viên sẽ được hiển thị ở đây."
 
 #. module: hr_attendance
 #. openerp-web
@@ -731,8 +734,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
-"Người dùng sẽ có quyền truy cập vào trình đơn Quản lý Điểm danh, cho phép họ"
-" quản lý vào ra của chính mình."
+"Người dùng sẽ có quyền truy cập vào trình đơn Quản lý Vào/Ra, cho phép họ "
+"quản lý vào ra của chính mình."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -754,7 +757,7 @@ msgstr "Giờ làm việc hôm nay:"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr "Sử dụng mã PIN để đăng nhập trong chế độ Ki-ốt"
+msgstr "Sử dụng mã PIN để đăng nhập trong Chế độ Kiosk"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -777,15 +780,15 @@ msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
-"Cảnh báo: Người dùng của bạn nên được liên kết với một nhân viên để sử dụng "
-"điểm danh.Hãy liên hệ với quản trị viên của bạn."
+"Cảnh báo: Tài khoản của bạn đã liên kết với một nhân viên được sử dụng để "
+"điểm danh. Hãy liên hệ Quản trị viên để biết thêm chi tiết."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome"
-msgstr "Chào mừng"
+msgstr "Chào đón"
 
 #. module: hr_attendance
 #. openerp-web
@@ -800,35 +803,35 @@ msgstr "Chào mừng bạn đến"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome!"
-msgstr "Xin chào!"
+msgstr "Xin chào đón!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr "Giờ làm việc"
+msgstr "Số Giờ làm việc"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
 msgid "Worked Hours"
-msgstr "Giờ đã làm việc"
+msgstr "Số giờ đã làm"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr "Giờ đã làm tháng gần nhất"
+msgstr "Số giờ đã làm việc tháng trước"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Wrong PIN"
-msgstr "Sai PIN"
+msgstr "Mã PIN không đúng"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr "Bạn không thể nhân bản dữ liệu chấm công"
+msgstr "Bạn không thể nhân bản dữ liệu có vắng"
 
 #. module: hr_attendance
 #. openerp-web
@@ -837,7 +840,7 @@ msgstr "Bạn không thể nhân bản dữ liệu chấm công"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check in"
-msgstr "đăng nhập"
+msgstr "vào"
 
 #. module: hr_attendance
 #. openerp-web
@@ -846,7 +849,7 @@ msgstr "đăng nhập"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check out"
-msgstr "đăng xuất"
+msgstr "ra"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids

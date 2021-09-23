@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mail
-# 
+#
 # Translators:
 # Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
 # Thang Duong Bao <nothingctrl@gmail.com>, 2020
@@ -19,7 +19,7 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
@@ -28,10 +28,10 @@ msgstr ""
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail
@@ -57,14 +57,13 @@ msgstr "%(activity_name)s: %(summary)s được giao cho bạn"
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
-"%(user_name)s đã mời bạn cùng theo dõi tài liệu %(document)s : %(title)s"
+msgstr "%(user_name)s đã mời bạn theo dõi tài liệu %(document)s: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr "%(user_name)s đã mời bạn theo dõi tài liệu mới."
+msgstr "%(user_name)s đã mời bạn theo dõi một tài liệu mới."
 
 #. module: mail
 #. openerp-web
@@ -85,7 +84,7 @@ msgstr "%d Thông điệp"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d ngày quá hạn"
+msgstr "Quá hạn %d ngày"
 
 #. module: mail
 #. openerp-web
@@ -132,14 +131,14 @@ msgstr ""
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid "%s is typing..."
-msgstr "%s đang gõ..."
+msgstr "%s đang viết..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/thread/thread.js:0
 #, python-format
 msgid "%s, %s and more are typing..."
-msgstr "%s, %s và mọi người đang gõ..."
+msgstr "%s, %s và ai đó nữa đang viết..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -219,8 +218,8 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">%(author)s được mời %(new_partner)s đến "
-"<a href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"<div class=\"o_mail_notification\">%(author)s đã mời %(new_partner)s đến <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
@@ -270,7 +269,7 @@ msgid ""
 msgstr ""
 "<p><b>Chat với đồng nghiệp</b> theo thời gian thực sử dụng thông điệp trực "
 "tiếp.</p><p><i>Bạn có thể cần phải mời người dùng từ ứng dụng Thiết lập "
-"trước để họ có tài khoản người dùng trong Hệ thống.</i></p>"
+"trước để họ có tài khoản người dùng trong Odoo.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -305,7 +304,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr "<p>Tạo kênh mới.</p>"
+msgstr "<p>Tạo một kênh ở đây.</p>"
 
 #. module: mail
 #. openerp-web
@@ -440,8 +439,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python dictionary sẽ được biểu thị/đánh giá để cung cấp các giá trị mặc định"
-" khi tạo mới các bản ghi cho bí danh này."
+"Một Python dictionary mà sẽ được biểu thị/đánh giá để cung cấp các giá trị "
+"mặc định khi tạo mới các bản ghi cho bí danh này."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
@@ -495,7 +494,7 @@ msgstr "Nhóm truy cập"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Cần có Hành động"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
@@ -535,7 +534,7 @@ msgstr "Được kích hoạt mặc định khi đăng ký (subscribing)."
 #: model:ir.model.fields,field_description:mail.field_mail_channel__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Hiệu lực"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__active_domain
@@ -557,7 +556,7 @@ msgstr "Miền hiệu lực"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 #, python-format
 msgid "Activities"
-msgstr "Các hoạt động"
+msgstr "Hoạt động"
 
 #. module: mail
 #. openerp-web
@@ -581,7 +580,7 @@ msgstr "Hoạt động"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Trang trí cho Hoạt động ngoại lệ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
@@ -593,7 +592,7 @@ msgstr "Hoạt động Mixin"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_state
 msgid "Activity State"
-msgstr "Trạng thái hoạt động"
+msgstr "Trạng thái Hoạt động"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -642,7 +641,7 @@ msgstr "Thêm Kênh theo dõi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr "Thêm email ở danh sách đen"
+msgstr "Thêm Email vào Danh sách đen"
 
 #. module: mail
 #. openerp-web
@@ -723,7 +722,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr "Thêm địa chỉ email ở danh sách mới"
+msgstr "Thêm địa chỉ email vào danh sách trắng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -745,7 +744,7 @@ msgstr "Thiết lập nâng cao"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
 msgid "Alert"
-msgstr "Cảnh báo"
+msgstr "Báo động"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_id
@@ -760,7 +759,7 @@ msgstr "Bí danh"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
-msgstr "An ninh về bí danh liên hệ"
+msgstr "An ninh về Bí danh liên hệ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__alias_domain
@@ -772,21 +771,21 @@ msgstr "Tên miền bí danh"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_name
 msgid "Alias Name"
-msgstr "Alias Name"
+msgstr "Tên bí danh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_domain
 msgid "Alias domain"
-msgstr "Alias domain"
+msgstr "Miền bí danh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_model_id
 msgid "Aliased Model"
-msgstr "Mô hình bí danh"
+msgstr "Bí danh Model"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
@@ -851,8 +850,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
-"Các câu trả lời không đi đến luồng thảo luận trên tài liệu gốc. Điều này gây"
-" tác động vào message-id đã được tạo."
+"Các câu trả lời không về luồng thảo luận trên tài liệu gốc. Cái này có một "
+"sự tác động vào message-id được tạo."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
@@ -873,7 +872,7 @@ msgstr "Áp dụng"
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_search
 msgid "Archived"
-msgstr "Đã lưu"
+msgstr "Đã lưu trữ"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
@@ -923,7 +922,7 @@ msgstr "Đính kèm"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số lượng đính kèm"
 
 #. module: mail
 #. openerp-web
@@ -942,7 +941,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Attachments"
-msgstr "Tệp đính kèm"
+msgstr "Đính kèm"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__attachment_ids
@@ -951,8 +950,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Các tệp đính kèm được liên kết với tài liệu thông qua model / res_id và "
-"thông báo của trường thông tin này."
+"Các tệp đính kèm được liên kết với tài liệu thông qua mô hình / res_id và "
+"thông báo qua trường này."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
@@ -982,7 +981,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr "Avatar của tác giả"
+msgstr "Avatar của Tác giả"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
@@ -1013,12 +1012,12 @@ msgstr "Tự động đăng ký nhận tin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr "Tác vụ tự động"
+msgstr "Hoạt động tự động"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr "Tự động thông báo"
+msgstr "Thông báo tự động"
 
 #. module: mail
 #. openerp-web
@@ -1136,7 +1135,7 @@ msgstr "Gọi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 msgid "Can Write"
-msgstr "Có thể viết"
+msgstr "Có thể Ghi"
 
 #. module: mail
 #. openerp-web
@@ -1164,7 +1163,7 @@ msgstr "Hủy Email"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr "Hủy thông báo thất bại"
+msgstr "Huỷ bỏ thông báo bị lỗi"
 
 #. module: mail
 #. openerp-web
@@ -1220,7 +1219,7 @@ msgstr "Catchall Email"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_cc
 msgid "Cc"
-msgstr "Cc"
+msgstr "CC"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -1261,7 +1260,7 @@ msgstr "Kiểm duyệt kênh"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
 msgid "Channel Type"
-msgstr "Loại kênh"
+msgstr "Kiểu Kênh"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
@@ -1288,7 +1287,7 @@ msgstr "Kênh thiết lập"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
-msgstr "Các kênh"
+msgstr "Kênh"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
@@ -1308,7 +1307,7 @@ msgstr "Nhắn tin"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
 msgid "Chat Discussion"
-msgstr "Thảo luận"
+msgstr "Thảo luận Chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1415,7 +1414,7 @@ msgstr "Công ty"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Soạn email"
+msgstr "Soạn Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -1456,14 +1455,14 @@ msgstr "Xác nhận"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "Thật tuyệt vời, hộp thư đến của bạn đã không còn mail nào để xử lý"
+msgstr "Chúc mừng, hộp thư đến của bạn không còn thông điệp phải xử lý"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss/discuss.js:0
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr "Thật tuyệt vời, hộp thư đến của bạn đã không còn mail nào để xử lý!"
+msgstr "Chúc mừng, hộp thư của bạn đang trống!"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__smtp
@@ -1532,7 +1531,7 @@ msgstr "Tạo hoạt động tiếp theo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr "Tạo Uid"
+msgstr "ID người tạo"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -1587,7 +1586,7 @@ msgstr "Tạo bởi"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: mail
 #. openerp-web
@@ -1634,13 +1633,13 @@ msgstr "Ngày tạo"
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
-"Người dùng hiện tại có một thông báo được đánh dấu sao và liên kết tới thông"
-" điệp này"
+"Người dùng hiện hành có một thông báo chưa đánh sao liên kết với thông điệp "
+"này"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__is_moderator
 msgid "Current user is a moderator of the channel"
-msgstr "Người dùng hiện tại là người kiểm duyệt của kênh"
+msgstr "Người dùng hiện tại là một người kiểm duyệt của kênh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -1652,12 +1651,12 @@ msgstr "Tin nhắn bị trả lại tùy chỉnh"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
 msgid "Custom channel name"
-msgstr "Tên kênh tùy chỉnh"
+msgstr "Tên kênh tuỳ ý"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
-msgstr "Customer is required for inbox / email notification"
+msgstr "Buộc phải có khách hàng để thông báo vào inbox hoặc email"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:0
@@ -1695,7 +1694,7 @@ msgstr "Gửi"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__decoration_type
 msgid "Decoration Type"
-msgstr "Loại"
+msgstr "Kiểu trang trí"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
@@ -1764,7 +1763,7 @@ msgstr "Delay Label"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr "Loại trễ"
+msgstr "Kiểu trễ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -1783,12 +1782,12 @@ msgstr "Xoá"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
-msgstr "Xoá email"
+msgstr "Xoá Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
 msgid "Delete Message Copy"
-msgstr "Xoá bản sao thông điệp"
+msgstr "Xoá Bản sao Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -1801,7 +1800,7 @@ msgstr "Giao thư đã lỗi"
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__description
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Miêu tả"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__description
@@ -1832,7 +1831,7 @@ msgstr "Tin nhắn trực tiếp"
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 #, python-format
 msgid "Discard"
-msgstr "Huỷ bỏ"
+msgstr "Hủy bỏ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -1952,8 +1951,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
-"Không giữ bản sao của email trong lịch sử tài liệu giao tiếp (chỉ gửi thư "
-"hàng loạt)"
+"Không giữ một bản sao của email trong lịch sử giao tiếp tài liệu (chỉ gửi "
+"thư hàng loạt)"
 
 #. module: mail
 #. openerp-web
@@ -2039,12 +2038,12 @@ msgstr "Tải xuống"
 #: code:addons/mail/static/src/components/drop_zone/drop_zone.xml:0
 #, python-format
 msgid "Drag Files Here"
-msgstr "Thả file vào đây"
+msgstr "Kéo thả file vào đây"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Dropdown menu"
-msgstr "Trình đơn thả xuống"
+msgstr "Menu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -2055,7 +2054,7 @@ msgstr "Ngày đến hạn"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Ngày đáo hạn"
+msgstr "Đến hạn Vào"
 
 #. module: mail
 #. openerp-web
@@ -2082,7 +2081,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range_type
 msgid "Due type"
-msgstr "Loại thời hạn"
+msgstr "Kiểu Đến hạn"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2157,7 +2156,7 @@ msgstr "Email Aliases Mixin"
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr "Email Blacklist"
+msgstr "Danh sách đen các Email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -2182,13 +2181,13 @@ msgstr "Xem trước Email"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
-msgstr "Tìm kiếm Email"
+msgstr "Tìm kiểm Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
-msgstr "Mẫu email"
+msgstr "Mẫu Email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
@@ -2224,7 +2223,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__bounce
 msgid "Email address rejected by destination"
-msgstr "Địa chỉ email bị từ chối bởi điểm đến"
+msgstr "Địa chỉ email bị từ chối bởi phía đích"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2264,7 +2263,7 @@ msgstr "Email của đối tác liên quan (nếu có) hoặc Không"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr "Tính năng gửi lại email"
+msgstr "Đồ thuật gửi lại email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
@@ -2377,7 +2376,7 @@ msgstr "Ngoại lệ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Các bộ lọc mở rộng..."
+msgstr "Các bộ lọc Mở rộng..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -2425,7 +2424,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Loại thất bại"
+msgstr "Kiểu thất bại"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -2463,7 +2462,7 @@ msgstr "Field \"Mail Blacklist\" cannot be changed to \"False\"."
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr "Không thể thay đổi trường \"Chủ đề Thư\" thành \"Sai\"."
+msgstr "Không thể thay đổi trường \"Thư chủ đề\" thành \"Sai\"."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_desc
@@ -2473,12 +2472,12 @@ msgstr "Mô tả trường"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_groups
 msgid "Field Groups"
-msgstr "Trường nhóm"
+msgstr "Nhóm trường"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_type
 msgid "Field Type"
-msgstr "Loại trường"
+msgstr "Kiểu trường"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -2499,7 +2498,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
 msgid "Fields"
-msgstr "Trường thông tin"
+msgstr "Trường"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__copyvalue
@@ -2540,7 +2539,7 @@ msgstr "Theo dõi"
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
-msgstr "Người theo dõi"
+msgstr "Theo dõi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_channel_ids
@@ -2551,7 +2550,7 @@ msgstr "Người theo dõi"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Người theo dõi (Kênh)"
+msgstr "Người theo dõi (Các kênh)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
@@ -2562,7 +2561,7 @@ msgstr "Người theo dõi (Kênh)"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Người theo dõi (Đối tác)"
+msgstr "Người theo dõi (Các đối tác)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -2579,7 +2578,7 @@ msgstr "Những Người dõi theo"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr "Chỉ những người dõi theo"
+msgstr "Chỉ những Người dõi theo"
 
 #. module: mail
 #. openerp-web
@@ -2622,7 +2621,7 @@ msgstr "Từ"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
-msgstr ""
+msgstr "Trình soạn thảo đầy đủ"
 
 #. module: mail
 #. openerp-web
@@ -2663,7 +2662,7 @@ msgstr "Nhóm theo"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
-msgstr "Gom nhóm..."
+msgstr "Nhóm theo..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
@@ -2699,12 +2698,12 @@ msgstr "Xử lý trong hệ thống"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
 msgid "Has Cancel"
-msgstr "Hủy"
+msgstr "Có Hủy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr "Đã đề cập"
+msgstr "Có Đề cập"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__has_error
@@ -2759,7 +2758,7 @@ msgstr "Ẩn"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__hidden
 msgid "Hide the subtype in the follower options"
-msgstr "Ẩn các trường phụ trong tùy chọn người theo dõi"
+msgstr "Ẩn các kiểu phụ trong tùy chọn người theo dõi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_internal
@@ -2854,7 +2853,7 @@ msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
-msgstr "Id của tài nguyên đã theo dõi"
+msgstr "Id của tài nguyên được theo dõi"
 
 #. module: mail
 #. openerp-web
@@ -2880,7 +2879,7 @@ msgstr "Rảnh rỗi"
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
 #: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu đánh dấu chọn, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error
@@ -2891,7 +2890,7 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu được đánh dấu, thông điệp có lỗi về gửi tin."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__send_mail
@@ -2965,8 +2964,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Nếu bạn đã thiết lập một miền email catch-all chuyển hướng đến Hệ thống, hãy"
-" nhập tên miền vào đây."
+"Nếu bạn đã thiết lập một miền email catch-all chuyển hướng đến Odoo, hãy "
+"nhập tên miền vào đây."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2975,9 +2974,9 @@ msgid ""
 "notification and review them one by one by clicking on the red envelope next"
 " to each message."
 msgstr ""
-"Nếu bạn muốn gửi lại chúng, hãy nhấp vào hủy ngay bây giờ, sau đó nhấp vào "
-"thông báo và đánh giá từng cái một bằng cách nhấp vào phong bì màu đỏ bên "
-"cạnh mỗi thư."
+"Nếu bạn muốn gửi lại, hãy bấm nút Huỷ, rồi bấm vào biểu tượng thông báo đề "
+"xem xét lại từng tin một bằng cách bấm vào biểu tượng phong bì màủ đỏ bên "
+"cạnh mỗi tin."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -3018,7 +3017,7 @@ msgstr "Hộp thư đến"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
-"Cho biết hoạt động này đã được tạo tự động chứ không phải bởi bất kỳ người "
+"Chỉ báo rằng hoạt động này đã được tạo tự động, không phải bởi bất kỳ người "
 "dùng nào."
 
 #. module: mail
@@ -3040,7 +3039,7 @@ msgstr "Đối tượng ban đầu"
 #: model:ir.model.fields,help:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,help:mail.field_mail_message__parent_id
 msgid "Initial thread message."
-msgstr "Thông điệp khởi đầu hội thoại."
+msgstr "Thông điệp khơi mào luồng hội thoại."
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
@@ -3079,7 +3078,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr "Trường email chính không hợp lệ trên đối tượng %s"
+msgstr "Trường email chính không hợp lệ ở model %s"
 
 #. module: mail
 #. openerp-web
@@ -3158,7 +3157,7 @@ msgstr "Bị cấm"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification
@@ -3178,7 +3177,7 @@ msgstr "Đã đăng ký theo dõi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr "Nhắn tin"
+msgstr "Là một kênh chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -3262,7 +3261,7 @@ msgstr "Tìm nạp lần cuối"
 #: model:ir.model.fields,field_description:mail.field_res_partner____last_update
 #: model:ir.model.fields,field_description:mail.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_last_seen_partner_ids
@@ -3318,7 +3317,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: mail
 #. openerp-web
@@ -3359,14 +3358,14 @@ msgstr "Rời kênh này"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Danh sách cc từ email nhận vào."
+msgstr "Danh sách CC từ email đến"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
 msgstr ""
-"Liệt kê các kênh mà sẽ được thêm như đối tượng lắng nghe tài liệu hiện tại."
+"Liệt kê các kênh mà sẽ được thêm như đối tượng lắng nghe tài liệu hiện hành."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -3374,13 +3373,13 @@ msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
 "Danh sách các đối tác mà sẽ được thêm vào như người theo dõi tài liệu hiện "
-"tại."
+"hành."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "List users in the current channel"
-msgstr "Liệt kê người dùng ở Kênh hiện tại"
+msgstr "Liệt kê người dùng ở Kênh hiện hành"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__channel_id
@@ -3432,7 +3431,7 @@ msgstr "Đang nạp..."
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "Ghi nhận"
+msgstr "Ghi chú"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3448,7 +3447,7 @@ msgstr "Ghi 1 hoạt động"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
 msgid "Log an Internal Note"
-msgstr "Ghi một ghi chú nội bộ"
+msgstr "Tạo ghi chú nội bộ"
 
 #. module: mail
 #. openerp-web
@@ -3487,7 +3486,7 @@ msgstr "Kiểu hoạt động mail"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr "Kiểu hoạt động mail"
+msgstr "Kiểu Hoạt động Thư"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -3583,7 +3582,7 @@ msgstr "Mails"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Tệp đính kèm chính"
+msgstr "Đính kèm chính"
 
 #. module: mail
 #. openerp-web
@@ -3635,7 +3634,7 @@ msgstr "Đánh dấu đã đọc"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Mark as Todo"
-msgstr "Đánh dấu cần làm"
+msgstr "Đánh dấu là Việc cần làm"
 
 #. module: mail
 #. openerp-web
@@ -3668,7 +3667,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Tính năng gộp đối tác"
+msgstr "Đồ thuật Trộn đối tác"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:0
@@ -3684,7 +3683,7 @@ msgstr "Được trộn với đối tác sau:"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Message"
-msgstr "Thông báo"
+msgstr "Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
@@ -3695,7 +3694,7 @@ msgstr "Thông báo"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Có Lỗi Gửi Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -3705,7 +3704,7 @@ msgstr "ID Thông điệp"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr "Thông báo thông điệp"
+msgstr "Thông báo Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
@@ -3730,7 +3729,7 @@ msgstr "Kiểu thông điệp"
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Message are pending moderation"
-msgstr "Tin nhắn của bạn đang đợi kiểm duyệt"
+msgstr "Thông điệp đang chờ kiểm duyệt"
 
 #. module: mail
 #. openerp-web
@@ -3813,7 +3812,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
 #: model:ir.model.fields,help:mail.field_mail_message__message_id
 msgid "Message unique identifier"
-msgstr "Thông báo nhận dạng duy nhất"
+msgstr "Mã Duy nhất nhận dạng Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_id
@@ -3837,7 +3836,7 @@ msgstr "Message-Id"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 #, python-format
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Thông điệp"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -3890,12 +3889,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Model"
-msgstr "Model"
+msgstr "Mô hình"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
 msgid "Model has change"
-msgstr "Đối tượng đã đổi"
+msgstr "Đối tượng đã thay đổi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_model
@@ -3913,12 +3912,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
 msgid "Models"
-msgstr "Mẫu"
+msgstr "Đối tượng"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "Moderate Messages"
-msgstr "Moderate Messages"
+msgstr "Kiểm duyệt Thông điệp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation
@@ -3934,12 +3933,12 @@ msgstr "Được kiểm duyệt bởi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_ids
 msgid "Moderated Emails"
-msgstr "Email kiểm duyệt"
+msgstr "Email được kiểm duyệt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_channel_ids
 msgid "Moderated channels"
-msgstr "Kênh kiểm duyệt"
+msgstr "Kênh được kiểm duyệt"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -3950,7 +3949,7 @@ msgstr "Moderated channels must have moderators."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
 msgid "Moderated emails count"
-msgstr "Đếm email được kiểm duyệt"
+msgstr "SL email được kiểm duyệt"
 
 #. module: mail
 #. openerp-web
@@ -3969,7 +3968,7 @@ msgstr "Moderation List"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
-msgstr "Moderation Lists"
+msgstr "Danh sách Kiểm duyệt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderation_status
@@ -3980,7 +3979,7 @@ msgstr "Trạng thái kiểm duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
 msgid "Moderation count"
-msgstr "Moderation count"
+msgstr "SL Kiểm duyệt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
@@ -3990,7 +3989,7 @@ msgstr "Người kiểm duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr "Người kiểm duyệt"
+msgstr "Người Kiểm duyệt"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -4051,8 +4050,7 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
-"Name to use for the generated report file (may contain placeholders)\n"
-"The extension can be omitted and will then come from the report type."
+"Tên để sử dụng cho việc tạo các file báo cáo (có thể chứa placeholders)\n"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__needaction
@@ -4155,9 +4153,7 @@ msgstr "Giá trị mới"
 msgid ""
 "Newcomers on this moderated channel will automatically receive the "
 "guidelines."
-msgstr ""
-"Newcomers on this moderated channel will automatically receive the "
-"guidelines."
+msgstr "Người mới vào kênh kiểm duyệt này sẽ  tự động nhận được hướng dẫn."
 
 #. module: mail
 #. openerp-web
@@ -4191,7 +4187,7 @@ msgstr "Hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hành động kế tiếp"
+msgstr "Hạn chót lần hành động kế tiếp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
@@ -4205,7 +4201,7 @@ msgstr "Tóm tắt hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_id
 msgid "Next Activity Type"
-msgstr "Kiểu hoạt động kế tiếp"
+msgstr "Kiểu hành động kế tiếp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -4321,7 +4317,7 @@ msgstr "Thông báo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr "Loại thông báo"
+msgstr "Kiểu thông báo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify_msg
@@ -4333,7 +4329,7 @@ msgstr "Thông báo tin nhắn"
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
 #: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
-msgstr "Notification: Delete Notifications older than 6 Month"
+msgstr "Thông báo: Xóa thông báo sau 6 tháng"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_notification_action
@@ -4348,14 +4344,12 @@ msgstr "Thông báo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
 msgid "Notify followers"
-msgstr "Thông báo đến những người theo dõi"
+msgstr "Báo những Người dõi theo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
-"Thông báo đến những người theo dõi tài liệu này (chỉ những bài đăng hàng "
-"loạt)"
+msgstr "Báo những đối tượng theo dõi tài liệu này (mass post only)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -4366,7 +4360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng Hành động"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -4374,8 +4368,8 @@ msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
 " action deadline."
 msgstr ""
-"Số ngày/tuần/tháng trước khi thực hiện công việc này. Nó cho phép lên kế "
-"hoạch thời hạn thực hiện công việc."
+"Số ngày/tuần/tháng trước khi thực thi hành động. Điều này cho phép bạn lập "
+"kế hoạch cho hạn chót của hành động."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error_counter
@@ -4397,7 +4391,7 @@ msgstr "Số lỗi"
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgstr "Số thông điệp cần có hành động"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -4408,7 +4402,7 @@ msgstr "Số thông báo cần xử lý"
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số lượng các thông điệp có lỗi về gửi tin"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread_counter
@@ -4419,7 +4413,7 @@ msgstr "Số lượng tin gửi đi bị lỗi"
 #: model:ir.model.fields,help:mail.field_res_partner__message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Số tin chưa đọc"
+msgstr "Số thông điệp chưa đọc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -4466,7 +4460,7 @@ msgstr "Đồng ý"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
 msgid "Old Value Char"
-msgstr "Giá trị Char cũ"
+msgstr "Char giá trị cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_datetime
@@ -4486,12 +4480,12 @@ msgstr "Giá trị Integer cũ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_monetary
 msgid "Old Value Monetary"
-msgstr "Giá trị tiền tệ cũ"
+msgstr "Giá trị Monetary cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_text
 msgid "Old Value Text"
-msgstr "Giá trị văn bản cũ"
+msgstr "Giá trị Text cũ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4542,7 +4536,7 @@ msgstr ""
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Only custom models can be modified."
-msgstr "Chỉ có thể sửa đổi các mô hình tùy chỉnh."
+msgstr "Chỉ có thể sửa đổi các model tùy chỉnh."
 
 #. module: mail
 #. openerp-web
@@ -4602,9 +4596,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tuỳ chọn của một chủ đề/bản ghi (thread) mà tất cả các thông điệp gửi đến"
-" sẽ được gắn/đính vào, thậm chí khi không có người trả lời. Nếu được thiết "
-"lập, điều này sẽ vô hiệu hoàn toàn việc tạo mới bản ghi."
+"ID tuỳ chọn của một chủ đề/bản ghi (thread) mà tất cả các thông điệp đến sẽ "
+"được gắn/đính vào, thâm chí nếu người ta không reply nó. Nếu được thiết lập,"
+" điều này sẽ vô hiệu hoàn toàn việc tạo mới bản ghi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_id
@@ -4648,7 +4642,7 @@ msgstr "Giá trị tùy chọn để sử dụng nếu trường mục tiêu tr�
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing"
-msgstr "Chờ xuất đi"
+msgstr "Chờ gửi đi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
@@ -4687,7 +4681,7 @@ msgstr "Ghi đè email của tác giả"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_user_id
 msgid "Owner"
-msgstr "Người phụ trách"
+msgstr "Chủ sở hữu"
 
 #. module: mail
 #. openerp-web
@@ -4701,7 +4695,7 @@ msgstr "Tệp tin PDF"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr "Cha"
+msgstr "Cấp cha"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
@@ -4715,7 +4709,7 @@ msgstr "Thông báo cha"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Mô hình cha"
+msgstr "Model cha"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
@@ -4773,7 +4767,7 @@ msgstr "Partner with additional information for mail resend"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Đối tác cần có hành động"
+msgstr "Đối tác mà Cần có hành động"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__pending_moderation
@@ -4835,7 +4829,7 @@ msgstr "Biểu thức Placeholder"
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
 #, python-format
 msgid "Planned"
-msgstr "Đã lên kế hoạch"
+msgstr "Đã hoạch định"
 
 #. module: mail
 #. openerp-web
@@ -4848,7 +4842,7 @@ msgstr "Hoạt động đã Lên Kế hoạch"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr "Dự định"
+msgstr "Hoạch định trong"
 
 #. module: mail
 #. openerp-web
@@ -4860,7 +4854,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Vui lòng liên lạc với chúng tôi thay vì sử dụng"
+msgstr "Thay vì thế, vui lòng liên lạc với chúng tôi qua"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -4904,8 +4898,8 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Chính sách cho phép đăng tin nhắn lên tài liệu sử dụng cổng email.\n"
-"- mọi người: Mọi người có thể đăng\n"
+"Cho sách cho phép post các thông điệp lên tài liệu sử dụng.\n"
+"- mọi người: Mọi người có thể post\n"
 "- đối tác: Chỉ các đối tác đã xác thực\n"
 "- người theo dõi: Chỉ những người ở trong danh sách dõi theo của tài liệu hoặc thành viên của các kênh sau đây\n"
 
@@ -4931,12 +4925,12 @@ msgstr "Gửi tin nhắn của bạn lên kênh"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Powered by"
-msgstr "Được hỗ trợ bởi"
+msgstr "Nền tảng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
 msgid "Preceding Activities"
-msgstr "Hoạt động trước"
+msgstr "Hoạt động Liền trước"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4986,7 +4980,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
 msgid "Previous Activity Type"
-msgstr "Kiểu hoạt động trước"
+msgstr "Kiểu Hoạt động Trước đó"
 
 #. module: mail
 #. openerp-web
@@ -5027,7 +5021,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr "Hợp đồng bảo hành nhà phát hành"
+msgstr "Hợp đồng bảo hành với nhà phát hành"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -5047,7 +5041,7 @@ msgstr "Tìm nhanh..."
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Re:"
-msgstr "Trả lời:"
+msgstr "V/v:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__read_date
@@ -5202,7 +5196,7 @@ msgstr "ID tài liệu liên quan"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr "Model tài liệu liên quan"
+msgstr "Đối tượng Tài liệu liên quan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
@@ -5227,7 +5221,7 @@ msgstr "Đối tác liên quan"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
 msgid "Relation field"
-msgstr "Trường quan hệ"
+msgstr "Trường Quan hệ"
 
 #. module: mail
 #. openerp-web
@@ -5292,8 +5286,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Địa chỉ email trả lời. Thiết lập reply_to sẽ bỏ qua việc tạo luồng (thread) "
-"tự động."
+"Địa chỉ email reply. Thiết lập reply_to sẽ bỏ qua việc tạo luồng (thread) tự"
+" động."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
@@ -5302,7 +5296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
-msgstr "Trả lời đến"
+msgstr "Trả lời Đến"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
@@ -5327,7 +5321,7 @@ msgstr "Gửi lại các mục dã chọn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
 msgid "Resend wizard"
-msgstr "Tính năng gửi lại"
+msgstr "Đồ thuật Gửi lại"
 
 #. module: mail
 #. openerp-web
@@ -5355,7 +5349,7 @@ msgstr "Người phụ trách"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_user_id
 msgid "Responsible User"
-msgstr "Người phụ trách"
+msgstr "Người chịu trách nhiệm"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5407,17 +5401,17 @@ msgstr "Lưu"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
-msgstr "Lưu thành 1 mẫu mới"
+msgstr "Lưu thành mẫu mới"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr "Lưu mẫu mới"
+msgstr "Lưu thành mẫu mới"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr "Ấn định (thời gian)"
+msgstr "Ấn định"
 
 #. module: mail
 #. openerp-web
@@ -5441,20 +5435,20 @@ msgstr "Schedule activities to help you get things done."
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr "Lên công việc"
+msgstr "Ấn định hoạt động"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Schedule an Activity"
-msgstr "Lên kế hoạch hoạt động"
+msgstr "Ấn định một Hoạt động"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule an activity"
-msgstr "Lên một công việc"
+msgstr "Ấn định một hoạt động"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -5467,7 +5461,7 @@ msgstr "Ngày dự kiến"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr "Lên lịch ngày gửi"
+msgstr "Ngày gửi được Ấn định"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -5526,7 +5520,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by Everyone"
-msgstr ""
+msgstr "Đã thấy bởi Mọi người"
 
 #. module: mail
 #. openerp-web
@@ -5600,7 +5594,7 @@ msgstr "Gửi email (%s)"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 #, python-format
 msgid "Send Now"
-msgstr "Gửi ngay"
+msgstr "Gửi Ngay"
 
 #. module: mail
 #. openerp-web
@@ -5673,12 +5667,12 @@ msgstr "Đã gửi"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__sequence
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__sequence
 msgid "Sequence"
-msgstr "Trình tự"
+msgstr "Thứ tự"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía Máy chủ"
+msgstr "Hoạt động máy chủ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__active
@@ -5733,7 +5727,7 @@ msgstr "Hiển thị một thông điệp trợ giúp"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
-msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo mà trước ngày hôm nay"
 
 #. module: mail
 #. openerp-web
@@ -5811,7 +5805,7 @@ msgstr "Trạng thái"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Status"
-msgstr "Trạng thái"
+msgstr "Tình trạng"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_state
@@ -5824,21 +5818,21 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn phải được chuyển\n"
+"Quá hạn: Ngày đến hạn đã trôi qua\n"
 "Hôm nay: Hôm nay là ngày phải thực hiện\n"
-"Kế hoạch: Các hoạt động trong tương lai."
+"Đã hoạch định: Các hoạt động trong tương lai."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_model_object_field
 msgid "Sub-field"
-msgstr "Sub-field"
+msgstr "Trường Thứ cấp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_object
 msgid "Sub-model"
-msgstr "Sub-model"
+msgstr "Model Thứ cấp"
 
 #. module: mail
 #. openerp-web
@@ -5896,7 +5890,7 @@ msgstr "Kiểu phụ"
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
 msgid "Summary"
-msgstr "Tổng kết"
+msgstr "Tóm tắt"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -5907,7 +5901,7 @@ msgstr "System Parameter"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
 msgid "System notification"
-msgstr "Thông báo của hệ thống"
+msgstr "Thông báo hệ thống"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
@@ -5942,7 +5936,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,help:mail.field_ir_cron__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr "Tên kĩ thuật của người dùng trên dữ liệu"
+msgstr "Tên kĩ thuật của người dùng ở bản ghi dữ liệu"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
@@ -5952,7 +5946,7 @@ msgstr "Xem trước Mẫu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
 msgid "Template Preview Language"
-msgstr "Ngôn ngữ mẫu xem trước"
+msgstr "Ngôn ngữ Xem trước mẫu"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6013,12 +6007,12 @@ msgstr "Alias e-mail đã được sử dụng. Vui lòng nhập một cái khá
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
 msgid "The email address must be unique per channel !"
-msgstr "Email của mỗi kênh phải khác nhau, không được trùng !"
+msgstr "Email của mỗi kênh phải khác nhau, không được trùng!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr "Thư  đã được gửi đến"
+msgstr "Email gửi đến"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -6040,9 +6034,10 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (kiểu tài liệu Odoo) mà bí danh này ứng với nó. Bất kỳ tin nhắn email "
-"nào không phản hồi lại một bản ghi có sẵn sẽ tự động tạo một bản ghi mới cho"
-" model này (vd: tạo mới một nhiệm vụ dự án nếu model là project.task)"
+"Model (Kiểu Tài liệu Odoo) mà bí danh này ứng với nó. Bất kỳ thông điệp "
+"email mà không đáp lại (reply) một bản ghi có sẵn sẽ làm cho Hệ thống tự "
+"động tạo một bản ghi mới cho model này (vd: tạo mới một Nhiệm vụ Dự án nếu "
+"model là project.task)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -6052,7 +6047,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Tên của bí danh email, vd 'vieclam' nếu bạn muốn bắt tin nhắn gửi đến địa "
+"Tên của bí danh email, vd 'vieclam' nếu bạn muốn bắt thông điệp gửi đến địa "
 "chỉ email <vieclam@vidu.odoo.com>"
 
 #. module: mail
@@ -6065,10 +6060,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Chủ sở hữu của các bản ghi được tạo khi nhận email trên bí danh này. Nếu "
-"trường nàykhông được đặt, hệ thống sẽ cố gắng tìm đúng chủ sở hữu dựa "
-"trênđịa chỉ người gửi (Từ) hoặc sẽ sử dụng tài khoản quản trị viên nếu không"
-" cóngười dùng hệ thống nào được tìm thấy cho địa chỉ đó."
+"Chủ sở hữu của các bản ghi được tạo khi nhận email về bí danh này. Nếu "
+"trường này không được đặt, hệ thống sẽ cố gắng tìm đúng chủ sở hữu dựa trên "
+"địa chỉ người gửi (Từ) hoặc sẽ sử dụng tài khoản Quản trị viên nếu không tìm"
+" thấy người dùng trên hệ thống cho địa chỉ đó."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -6084,9 +6079,9 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Hoạt động được yêu cầu không thể thực hiện vì quy định bảo mật. Vui lòng liên hệ với người quản trị hệ thống của bạn.\n"
+"Hành động được yêu cầu không thể thực hiện được vì hạn chế về an ninh. Vui lòng liên hệ với quản trị hệ thống của bạn.\n"
 "\n"
-"(Loại dữ liệu: %s, Hoạt động: %s)"
+"(Kiểu tài liệu: %s, Hành động: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -6187,7 +6182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr "Đến ngày"
+msgstr "Đến"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
@@ -6230,7 +6225,7 @@ msgstr "Hôm nay"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Today Activities"
-msgstr "Các oạt động hôm nay"
+msgstr "Hoạt động Hôm nay"
 
 #. module: mail
 #. openerp-web
@@ -6265,8 +6260,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
-"Các giá trị được theo dõi được lưu trữ trong một model riêng biệt. Trường "
-"này cho phép tạo lại theo dõi và tạo thống kê trên model."
+"Các giá trị được theo dõi được lưu trữ trong một mô hình riêng biệt. Trường "
+"này cho phép tạo lại theo dõi và tạo thống kê trên mô hình."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -6277,13 +6272,13 @@ msgstr "Theo vết"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr "Kiểm soát thay đổi"
+msgstr "Giá trị Truy vết"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr "Kiểm soát dữ liệu"
+msgstr "Giá trị Truy vết"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__tracking_sequence
@@ -6294,13 +6289,13 @@ msgstr "Theo dõi thứ tự trường"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
-msgstr "Kiểm soát dữ liệu"
+msgstr "Giá trị Truy vết"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Trigger Next Activity"
-msgstr "Điều kiện cho tác vụ kế tiếp"
+msgstr "Khởi chạy Hoạt động kế tiếp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -6308,12 +6303,12 @@ msgstr "Điều kiện cho tác vụ kế tiếp"
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_type
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Type"
-msgstr "Loại"
+msgstr "Kiểu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr "Loại trễ"
+msgstr "Kiểu trễ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -6406,7 +6401,7 @@ msgstr "Đơn vị trễ"
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
 #, python-format
 msgid "Unknown error"
-msgstr "Lỗi chưa xác định"
+msgstr "Lỗi không xác định"
 
 #. module: mail
 #. openerp-web
@@ -6424,7 +6419,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Thông điệp chưa đọc"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread_counter
@@ -6435,7 +6430,7 @@ msgstr "Tin chưa đọc"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Bộ đếm tin chưa đọc"
+msgstr "Bộ đếm Thông điệp chưa đọc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -6481,7 +6476,7 @@ msgstr "Chưa được đăng ký"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Unsupported report type %s found."
-msgstr "Tìm thấy loại báo cáo %s không được hỗ trợ."
+msgstr "Kiểu loại báo cáo %s không được hỗ trợ."
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -6503,7 +6498,7 @@ msgstr "Unsuspected None"
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 #, python-format
 msgid "Upload Document"
-msgstr "Tải lên"
+msgstr "Tải tài liệu lên"
 
 #. module: mail
 #. openerp-web
@@ -6569,7 +6564,7 @@ msgstr "User Specific Notification"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr "Tên trường"
+msgstr "Tên trường Người dùng"
 
 #. module: mail
 #. openerp-web
@@ -6920,7 +6915,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
-msgstr "Bạn đã được phân công/gán cho %s"
+msgstr "Bạn đã được giao cho %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -6932,7 +6927,7 @@ msgstr "Bạn đã được phân công/gán cho"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "You have been invited to: %s"
-msgstr ""
+msgstr "Bạn đã được mời đến: %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
@@ -6980,7 +6975,7 @@ msgstr "Bạn:"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr "Của bạn"
+msgstr " "
 
 #. module: mail
 #. openerp-web
@@ -7057,7 +7052,7 @@ msgstr "alias %(name)s: %(error)s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "assigned you an activity"
-msgstr "giao cho bạn một hoạt động"
+msgstr "đã giao cho bạn một hoạt động"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
@@ -7079,8 +7074,8 @@ msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
-"không thể xử lý. Địa chỉ này\n"
-"    được dùng để thu thập các phản hồi và không nên dùng cho liên hệ trực tiếp"
+"không được tiếp nhận. Địa chỉ này\n"
+"    chỉ được dùng để tiếp nhạn trả lời (reply) của bạn, không được dùng khi bạn tạo email mới và gửi trực tiếp vào địa chỉ này."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -7097,7 +7092,7 @@ msgstr "ngày"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "document"
-msgstr "chứng từ"
+msgstr "tài liệu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -7108,14 +7103,14 @@ msgstr "hoàn thành"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr "vd: Thảo luận về đề xuất"
+msgstr "vd: Thảo luận về Báo giá"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "for"
-msgstr "trong"
+msgstr "phân cho"
 
 #. module: mail
 #. openerp-web
@@ -7127,7 +7122,7 @@ msgstr ""
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr "chung"
+msgstr "chung chung"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -7172,7 +7167,7 @@ msgstr "tháng"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "mycompany.odoo.com"
-msgstr "mycompany.odoo.com"
+msgstr "mycompany.erponline.com"
 
 #. module: mail
 #. openerp-web
@@ -7188,7 +7183,7 @@ msgstr "bây giờ"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr "trên"
+msgstr "vào"
 
 #. module: mail
 #. openerp-web
@@ -7275,7 +7270,7 @@ msgstr "bán hàng"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "target model unspecified"
-msgstr "đối tượng mục tiêu không xác định"
+msgstr "model đích không xác định"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -7292,7 +7287,7 @@ msgstr "tài liệu này"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "to close for"
-msgstr "để đóng cho"
+msgstr "với hạn chót"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
