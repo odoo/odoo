@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import logging
 from functools import partial
 
 import odoo
@@ -111,6 +111,29 @@ class TestTestCursor(common.TransactionCase):
         self.cr.rollback()
         self.check(self.record, 'A')
 
+    def test_interleaving(self):
+        """If test cursors are retrieved independently it becomes possible for
+        the savepoint operations to be interleaved (especially as some are lazy
+        e.g. the request cursor, so cursors might be semantically nested but
+        technically interleaved), and for them to commit one another:
+
+        .. code-block:: sql
+
+            SAVEPOINT A
+            SAVEPOINT B
+            RELEASE SAVEPOINT A
+            RELEASE SAVEPOINT B -- "savepoint b does not exist"
+        """
+        a = self.registry.cursor()
+        _b = self.registry.cursor()
+        # `a` should warn that it found un-closed cursor `b` when trying to close itself
+        with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
+            a.close()
+        [msg] = cm.output
+        self.assertIn('WARNING:odoo.sql_db:Found different un-closed cursor', msg)
+        # avoid a warning on teardown (when self.cr finds a still on the stack)
+        # as well as ensure the stack matches our expectations
+        self.assertEqual(a._cursors_stack.pop(), a)
 
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
