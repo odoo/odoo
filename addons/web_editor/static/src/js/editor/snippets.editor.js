@@ -253,7 +253,8 @@ var SnippetEditor = Widget.extend({
         function isEmptyAndRemovable($el, editor) {
             editor = editor || $el.data('snippet-editor');
             return $el.children().length === 0 && $el.text().trim() === ''
-                && !$el.hasClass('oe_structure') && (!editor || editor.isTargetParentEditable);
+                && !$el.hasClass('oe_structure') && !$el.parent().hasClass('carousel-item')
+                && (!editor || editor.isTargetParentEditable);
         }
     },
     /**

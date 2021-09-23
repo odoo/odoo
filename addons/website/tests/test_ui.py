@@ -152,3 +152,6 @@ class TestUi(odoo.tests.HttpCase):
             </t>
         """
         self.start_tour("/", "public_user_editor", login=None)
+
+    def test_07_carousel_snippet_content_removal(self):
+        self.start_tour("/", "carousel_content_removal", login='admin')
