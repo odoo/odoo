@@ -210,9 +210,9 @@ class ProjectCustomerPortal(CustomerPortal):
         Task = request.env['project.task']
         if access_token:
             Task = Task.sudo()
-        task = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1)
-        task.sudo().attachment_ids.generate_access_token()
-        values = self._task_get_page_view_values(task, access_token, project=project_sudo, **kw)
+        task_sudo = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
+        task_sudo.attachment_ids.generate_access_token()
+        values = self._task_get_page_view_values(task_sudo, access_token, project=project_sudo, **kw)
         values['project'] = project_sudo
         return request.render("project.portal_my_task", values)
 
