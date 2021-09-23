@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="EditListPopup" t-inherit="point_of_sale.EditListPopup" t-inherit-mode="extension" owl="1">
+        <xpath expr="//main" position="before">
+            <div t-if="props.serials">
+
+                <h4 style="font-weight: normal; width:100%">Serial/Lot:</h4>
+                <span>
+                <select t-on-change="onLotChange()" style="margin-left:10px;width: 60%;"
+                        id="lot_serial"
+                        class="location_select">
+                        <option t-foreach="props.serials" t-as="serial" t-att-selected="serial.isSelected"
+                                t-key="serial.name" t-att-value="props.serial">
+                            <span>
+                                <t t-esc="serial.name"/>
+                            </span>
+                        </option>
+
+                </select>
+                    <t t-if="props.expiration_date">
+                    <t t-esc="props.expiration_date or ''"/>
+                </t>
+
+                    <t t-else="">
+                    <span t-foreach="props.serials" t-as="serial" t-key="serial.name">
+                        <t t-if="serial.isSelected" t-esc="serial.expiration_date or ''"/>
+                    </span>
+                </t>
+                </span>
+                <div style="width:80%;margin:auto">
+                    <div class="table_head" style="background:#E5E5E5; color:#000000;">
+                            <div>Unit</div>
+                        <div>Per/Unit</div>
+                        <div>Price</div>
+                        <div>Available</div>
+                        </div>
+                    <div id="uom_list">
+                        <t t-foreach="props.uom_list" t-as="uom">
+                            <t t-set="qty" t-value="Math.round(props.qty / uom.factor_inv)"/>
+                            <t t-if="qty>=1 or uom.qty">
+                            <div class="table_head"
+                                 style="background:rgba(229, 229, 229, 0.4); color:#000000;border-bottom:1px ;font-size:15px;"
+                                 t-on-click="onUOMSelect(uom.item)">
+
+                                <div>
+                                    <t t-esc="uom.label"/>
+                                </div>
+                                <div t-esc="uom.factor_inv"/>
+                                <div t-esc="uom.price"/>
+                                <t t-if="props.qty">
+                                    <div t-esc="qty"/>
+                                </t>
+                                <t t-else="">
+                                    <div t-esc="uom.qty"/>
+                                </t>
+                            </div>
+                            </t>
+                    </t>
+                        </div>
+                    </div>
+                </div>
+        </xpath>
+        <xpath expr="//main" position="attributes">
+            <attribute name="hidden">true</attribute>
+        </xpath>
+    </t>
+</templates>
+
+
