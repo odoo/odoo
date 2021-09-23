@@ -55,7 +55,7 @@ msgstr "%s foutieve ontvangers"
 #, python-format
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
-msgstr ""
+msgstr "%s van de %s geselecteerde SMS-tekstberichten zijn opnieuw verzonden."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -160,12 +160,12 @@ msgstr "Geblacklist"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "Telefoon op zwarte lijst is een mobiel nummer"
+msgstr "Telefoon op blacklist is een mobiel nummer"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Telefoon op zwarte lijst Is een vaste lijn"
+msgstr "Telefoon op blacklist Is een vaste lijn"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -183,7 +183,7 @@ msgstr "Koop krediet"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "Koop tegoed."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -359,7 +359,7 @@ msgstr "Fout"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "Fouttype:"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -502,7 +502,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Als het telefoonnummer op de zwarte lijst staat, ontvangt de contactpersoon "
+"Als het telefoonnummer op de blacklist staat, ontvangt de contactpersoon "
 "geen mass-sms meer van welke lijst dan ook"
 
 #. module: sms
@@ -533,9 +533,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Geeft aan of een op de zwarte lijst geplaatst telefoonnummer een mobiel "
-"nummer is. Helpt bij het onderscheiden welk nummer op de zwarte lijst staat "
-"als het model zowel een mobiel als een telefoon veld bevat."
+"Geeft aan of een op de blacklist geplaatst telefoonnummer een mobiel nummer "
+"is. Helpt bij het onderscheiden welk nummer op de blacklist staat als het "
+"model zowel een mobiel als een telefoon veld bevat."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -544,9 +544,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Geeft aan of een op de zwarte lijst geplaatst nummer een telefoonnummer is. "
-"Helpt bij het onderscheiden welk nummer op de zwarte lijst staat als een "
-"model zowel een mobiel als een telefoon veld bevat."
+"Geeft aan of een op de blacklist geplaatst nummer een telefoonnummer is. "
+"Helpt bij het onderscheiden welk nummer op de blacklist staat als een model "
+"zowel een mobiel als een telefoon veld bevat."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -768,7 +768,7 @@ msgstr "Aantal ongelezen berichten"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Afgemeld"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -888,7 +888,7 @@ msgstr "Verwijder de contextuele actie van het gerelateerde model"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Weergavemodel"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1206,13 +1206,13 @@ msgstr "Sjablonen"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "De sms-berichten konden niet opnieuw worden verzonden."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "Het nummer dat je probeert te bereiken, is niet correct opgemaakt."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1224,15 +1224,15 @@ msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "Er zijn geen sms-berichten om opnieuw te verzenden."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Dit telefoonnummer staat op de zwarte lijst voor sms-marketing. Klik om deze"
-" van de zwarte lijst te verwijderen."
+"Dit telefoonnummer staat op de blacklist voor sms-marketing. Klik om deze "
+"van de blacklist te verwijderen."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1363,13 +1363,13 @@ msgstr "Je hebt geen toegang tot dit bericht en/of het gerelateerde document."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "Je hebt geen in aanmerking komend IAP-account."
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "Je hebt niet genoeg tegoed op je IAP-account."
 
 #. module: sms
 #. openerp-web
@@ -1392,12 +1392,12 @@ msgstr "Bijv. +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "bijv. Agendaherinnering"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "bijv. Contact"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form

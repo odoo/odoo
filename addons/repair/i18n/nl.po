@@ -63,6 +63,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* De status 'Concept' wordt gebruikt wanneer een gebruiker een nieuwe en onbevestigde reparatieopdracht invoert.\n"
+"* De status 'Bevestigd' wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigt.\n"
+"* De status 'Klaar voor reparatie' wordt gebruikt om te beginnen met repareren. De gebruiker kan pas beginnen met repareren nadat de reparatieopdracht is bevestigd.\n"
+"* De status 'In reparatie' wordt gebruikt wanneer de reparatie bezig is.\n"
+"* De status 'Te factureren' wordt gebruikt om de factuur te genereren voor of nadat de reparatie is uitgevoerd.\n"
+"* De status 'Gereed' wordt ingesteld wanneer de reparatie is voltooid.\n"
+"* De status 'Geannuleerd' wordt gebruikt wanneer de gebruiker de reparatieopdracht annuleert."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -113,7 +120,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Reparaties</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -515,7 +522,7 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "Belangrijke reparatieopdracht"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -923,7 +930,7 @@ msgstr "Reparatie"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Reparatiebeschrijving:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -948,7 +955,7 @@ msgstr "Reparatieregel (onderdelen)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Reparatieopmerkingen"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -991,7 +998,7 @@ msgstr "Reparatieofferte #:"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "Reparatieofferte: per e-mail verzenden"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1038,13 +1045,13 @@ msgstr "Reparatie moet in reparatie zijn om de reparatie te eindigen."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Aantal reparatieorders"
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Reparatieorders van %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1092,7 +1099,7 @@ msgstr "Verkooporder"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Verkooporder waaruit het te repareren product afkomstig is."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1125,7 +1132,7 @@ msgstr "Offerte versturen"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "Serienummer is vereist voor bewerkingsregels met producten: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1199,7 +1206,7 @@ msgstr "Labels"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
@@ -1207,7 +1214,7 @@ msgstr "BTW"
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name

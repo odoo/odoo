@@ -85,6 +85,9 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Het btw-nummer [%(wrong_vat)s] voor %(record_label)s de VIES-btw-"
+"validatiecontrole is niet geslaagd of voldeed niet aan het verwachte formaat"
+" %(expected_format)s. "
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -93,6 +96,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Het btw-nummer [%(wrong_vat)s] voor record_label lijkt niet geldig.\n"
+"Let op: het verwachte formaat is %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -101,18 +106,20 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Het gevonden land voor dit buitenlandse btw-nummer komt niet overeen met het"
+" land dat op deze fiscale positie is ingesteld."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 msgid "VAT/Tax ID"
-msgstr ""
+msgstr "Btw-nummer"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -130,10 +137,10 @@ msgstr ""
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "fiscale positie [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "relatie [%s]"

@@ -27,6 +27,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    bijv.: 1*(referentie-eenheid)=ratio*(deze eenheid)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -35,6 +38,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    bijv.: 1*(deze eenheid)=ratio*(referentie-eenheid)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -80,7 +86,7 @@ msgstr "Kleur"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "Gecombineerde verhouding"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -122,7 +128,7 @@ msgstr "Dozijnen"
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
 msgid "Dummy field to keep track of reference uom change"
-msgstr ""
+msgstr "Dummy-veld om de wijziging van de referentiehoeveelheid bij te houden"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -211,7 +217,7 @@ msgstr "Referentie maateenheid voor deze categorie"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referentie maateenheid"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -226,7 +232,7 @@ msgstr "Zoek maateenheid"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "Zoek maateenheidcategorie"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -245,11 +251,18 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Sommige kritieke velden zijn gewijzigd op %s.\n"
+"Houd er rekening mee dat bestaande gegevens door deze wijziging NIET worden bijgewerkt.\n"
+"\n"
+"Aangezien meeteenheden van invloed zijn op het hele systeem, kan dit kritieke problemen veroorzaken.\n"
+"bijv. het wijzigen van de afronding kan de voorraadstand verstoren.\n"
+"\n"
+"Daarom wordt het niet aanbevolen om kerneenheden in een actieve database te wijzigen."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "Oppervlakte"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -272,6 +285,8 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"De volgende maateenheden worden door het systeem gebruikt en kunnen niet worden verwijderd: %s\n"
+"je kunt ze in plaats daarvan archiveren."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -366,7 +381,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr ""
+msgstr "Maateenheidcategorie %s moet een referentie-eenheid hebben."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -377,7 +392,7 @@ msgstr "Maateenheidcategorie %sheeft slechts één referentie maateenheid."
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "Maateenheid"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -433,7 +448,7 @@ msgstr "ft"
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -478,12 +493,12 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "m²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter

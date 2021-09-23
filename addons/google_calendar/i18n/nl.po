@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s en %(length)s volgen"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -49,7 +49,7 @@ msgstr "%(reminder_type)s - %(duration)s Minuten"
 #: code:addons/google_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "&nbsp;Google"
-msgstr ""
+msgstr "&nbsp;Google"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -84,6 +84,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"Er is een fout opgetreden bij het genereren van het token. Je "
+"autorisatiecode is mogelijk ongeldig of is al verlopen [%s]. Je moet je "
+"client-ID en geheim controleren op het platform van Google API's of proberen"
+" je agendasynchronisatie te stoppen en opnieuw te starten."
 
 #. module: google_calendar
 #. openerp-web
@@ -219,7 +223,7 @@ msgstr "Google"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_cal_account_id
 msgid "Google Cal Account"
-msgstr ""
+msgstr "Google Cal-account"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
@@ -229,7 +233,7 @@ msgstr "Google Agenda"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr ""
+msgstr "Google Agenda-accountgegevens"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -259,13 +263,13 @@ msgstr "Google Calendar: synchronisatie"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr ""
+msgstr "Google-synchronisatie gestopt"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google gaf de volgende uitleg: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -408,18 +412,21 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"De volgende afspraak kan niet worden gesynchroniseerd met Google Agenda. "
+"</br>Het wordt niet gesynchroniseerd zolang het niet is "
+"bijgewerkt.</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "De synchronisatie met Google-agenda is succesvol gestopt."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "De gebruiker heeft al een Google-account"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -464,6 +471,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"Je staat op het punt de synchronisatie van je agenda met Google te stoppen. "
+"Weet je zeker dat je door wilt gaan?"
 
 #. module: google_calendar
 #. openerp-web
@@ -479,7 +488,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "ongedefinieerde tijd"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -487,3 +496,5 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+"je lijkt geen toestemming te hebben om deze afspraak in Google Agenda te "
+"wijzigen"

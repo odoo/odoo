@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "%1d dagen vervallen"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -70,6 +70,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Het wijzigen van de bedrijfsnaam of "
+"het btw-nummer is niet toegestaan zodra document(en) zijn uitgegeven voor je"
+" account. <br/>Neem voor deze operatie rechtstreeks contact met ons "
+"op.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -368,7 +372,7 @@ msgid ""
 "internal employees."
 msgstr ""
 "Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te"
-" beperken tot interne medewerkers."
+" beperken tot interne werknemers."
 
 #. module: portal
 #. openerp-web
@@ -378,7 +382,7 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
-"Momenteel beperkt tot interne medewerkers. Klik om het beschikbaar te maken "
+"Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken "
 "voor iedereen die dit document bekijkt."
 
 #. module: portal
@@ -421,7 +425,7 @@ msgstr "Documenten"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "Vervalt over %1d dagen"
 
 #. module: portal
 #. openerp-web
@@ -513,12 +517,12 @@ msgstr "Uitnodigingsbericht invoeren"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Is intern"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Is portaal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -544,7 +548,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Laatste authenticatie"
 
 #. module: portal
 #. openerp-web
@@ -647,6 +651,8 @@ msgstr "Telefoon"
 #, python-format
 msgid "Please enter your password to confirm you own this account"
 msgstr ""
+"Voer uw wachtwoord in om te bevestigen dat je de eigenaar bent van dit "
+"account"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -678,7 +684,7 @@ msgstr "Portaal gebruikers instellingen"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "Portaal: Gebruikersuitnodiging"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -708,7 +714,7 @@ msgstr "Gepubliceerd op %s"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Opnieuw uitnodigen"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -733,7 +739,7 @@ msgstr "Gerelateerde documentmodel"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Toegang intrekken"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -800,6 +806,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Sommige velden zijn verplicht. Zorg ervoor dat je een bericht schrijft of "
+"een document bijvoegt"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -859,13 +867,15 @@ msgstr "De bijlage bestaat niet of je hebt geen rechten om ze te bekijken."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "De contactpersoon \"%s\" heeft geen geldig e-mailadres."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
 msgstr ""
+"Het contact \"%s\" heeft hetzelfde e-mailadres en heeft een bestaande "
+"gebruiker (%s)."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -893,13 +903,13 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "De relatie \"%s\" heeft al toegang tot de portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access."
-msgstr ""
+msgstr "De relatie \"%s\" heeft geen toegang tot de portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -908,6 +918,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"De sjabloon \"Portal: nieuwe gebruiker\" niet gevonden voor het verzenden "
+"van e-mail naar de portalgebruiker."
 
 #. module: portal
 #. openerp-web
@@ -933,12 +945,16 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Deze relatie is gekoppeld aan een interne Gebruiker en heeft al toegang tot "
+"de Portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Deze tekst staat aan het einde van de e-mail die naar nieuwe "
+"portalgebruikers wordt verzonden."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1095,12 +1111,12 @@ msgstr "Je moet zijn"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Je moet eerst de portal toegang verlenen aan de relatie \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at ${object.user_id.company_id.name}"
-msgstr ""
+msgstr "Jouw account bij ${object.user_id.company_id.name}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
