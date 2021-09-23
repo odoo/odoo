@@ -272,3 +272,6 @@ class TestUi(odoo.tests.HttpCase):
         }])
 
         self.start_tour("/?enable_editor=1", "focus_blur_snippets", login="admin")
+
+    def test_14_carousel_snippet_content_removal(self):
+        self.start_tour("/", "carousel_content_removal", login='admin')
