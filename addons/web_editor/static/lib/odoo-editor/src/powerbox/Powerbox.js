@@ -268,7 +268,9 @@ export class Powerbox {
                     this.options.postValidate &&
                     this.options.postValidate();
             }
-            !command.isIntermediateStep && this._stop();
+            if (!command || !command.isIntermediateStep) {
+                this._stop();
+            }
         };
         this.options.document.addEventListener('keyup', keyup);
         this.options.document.addEventListener('keydown', keydown, true);
