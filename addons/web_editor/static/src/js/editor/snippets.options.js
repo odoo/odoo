@@ -3781,7 +3781,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {UserValueWidget} widget - the widget which triggered the option change
      * @returns {Promise}
      */
-    _select: async function (previewMode, widget) {
+    _select: async function (previewMode, widget, inMutex = false) {
         let $applyTo = null;
 
         if (previewMode === true) {
@@ -3803,7 +3803,7 @@ const SnippetOptionWidget = Widget.extend({
                 });
                 await Promise.all(proms);
             } else {
-                await this[methodName](previewMode, widgetValue, params);
+                await this[methodName](previewMode, widgetValue, params, inMutex);
             }
         }
 
@@ -3939,7 +3939,8 @@ const SnippetOptionWidget = Widget.extend({
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        // TROUBLES START HERE
+        this.trigger_up('snippet_edition_request', {exec: async (inMutex = true) => {
             // If some previous snippet edition in the mutex removed the target from
             // the DOM, the widget can be destroyed, in that case the edition request
             // is now useless and can be discarded.
@@ -3974,7 +3975,7 @@ const SnippetOptionWidget = Widget.extend({
             }
 
             // Call widget option methods and update $target
-            await this._select(previewMode, widget);
+            await this._select(previewMode, widget, inMutex);
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)

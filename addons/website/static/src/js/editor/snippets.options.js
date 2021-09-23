@@ -1649,7 +1649,7 @@ options.registry.layout_column = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    selectCount: async function (previewMode, widgetValue, params) {
+    selectCount: async function (previewMode, widgetValue, params, inMutex=false) {
         const previousNbColumns = this.$('> .row').children().length;
         let $row = this.$('> .row');
         if (!$row.length) {
@@ -1657,7 +1657,7 @@ options.registry.layout_column = options.Class.extend({
         }
 
         const nbColumns = parseInt(widgetValue);
-        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length);
+        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length, inMutex);
         // Yield UI thread to wait for event to bubble before activate_snippet is called.
         // In this case this lets the select handle the click event before we switch snippet.
         // TODO: make this more generic in activate_snippet event handler.
@@ -1691,7 +1691,7 @@ options.registry.layout_column = options.Class.extend({
      * @param {jQuery} $row - the row in which to update the columns
      * @param {integer} count - positif to add, negative to remove
      */
-    _updateColumnCount: async function ($row, count) {
+    _updateColumnCount: async function ($row, count, inMutex=false) {
         if (!count) {
             return;
         }
@@ -1707,7 +1707,7 @@ options.registry.layout_column = options.Class.extend({
             var self = this;
             for (const el of $row.children().slice(count)) {
                 await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
+                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false, inMutex: inMutex});
                 });
             }
         }

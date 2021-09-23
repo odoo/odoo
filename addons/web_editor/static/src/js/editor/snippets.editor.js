@@ -428,9 +428,8 @@ var SnippetEditor = Widget.extend({
      * @param {boolean} [shouldRecordUndo=true]
      * @returns {Promise}
      */
-    removeSnippet: async function (shouldRecordUndo = true) {
+    removeSnippet: async function (shouldRecordUndo = true, inMutex = false) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-
         // First enable a surrounding snippet (or just disable the current
         // snippet if there is nothing around).
         const parent = this.$target[0].parentElement;
@@ -440,6 +439,7 @@ var SnippetEditor = Widget.extend({
             this.trigger_up('activate_snippet', {
                 $snippet: $(previousSibling || nextSibling || parent),
                 onSuccess: () => resolve(),
+                inMutex: inMutex,
             });
         });
 
@@ -1751,7 +1751,7 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise<SnippetEditor>}
      *          (might be async when an editor must be created)
      */
-    _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions) {
+    _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions, inMutex) {
         if (this._blockPreviewOverlays && previewMode) {
             return;
         }
@@ -1770,10 +1770,7 @@ var SnippetsMenu = Widget.extend({
                 $snippet = $globalSnippet;
             }
         }
-        const exec = previewMode
-            ? action => this._mutex.exec(action)
-            : action => this._execWithLoadingEffect(action, false);
-        return exec(() => {
+        const action = () => {
             return new Promise(resolve => {
                 if ($snippet && $snippet.length) {
                     return this._createSnippetEditor($snippet).then(resolve);
@@ -1832,7 +1829,11 @@ var SnippetsMenu = Widget.extend({
 
                 return editorToEnable;
             });
-        });
+        };
+        const exec = previewMode
+            ? action => this._mutex.exec(action)
+            : action => this._execWithLoadingEffect(action, false);
+        return inMutex ? action : exec(action);
     },
     /**
      * @private
@@ -2643,7 +2644,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onActivateSnippet: function (ev) {
-        const prom = this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions);
+        const prom = this._activateSnippet(ev.data.$snippet, ev.data.previewMode, ev.data.ifInactiveOptions, ev.data.inMutex);
         if (ev.data.onSuccess) {
             prom.then(() => ev.data.onSuccess());
         }
@@ -2962,7 +2963,7 @@ var SnippetsMenu = Widget.extend({
     _onRemoveSnippet: async function (ev) {
         ev.stopPropagation();
         const editor = await this._createSnippetEditor(ev.data.$snippet);
-        await editor.removeSnippet(ev.data.shouldRecordUndo);
+        await editor.removeSnippet(ev.data.shouldRecordUndo, ev.data.inMutex);
         if (ev.data.onSuccess) {
             ev.data.onSuccess();
         }
@@ -3012,6 +3013,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
+        // use mutex here
         this._execWithLoadingEffect(ev.data.exec, true);
     },
     /**
