@@ -18,8 +18,10 @@
                 <widget name="web_ribbon" title="Paid" attrs="{'invisible': [('is_paid', '=', False)]}"/>
             </div>
             <field name="booth_category_id" position="after">
+                <field name="currency_id" invisible="1"/>
                 <field name="product_id" attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
-                <field name="price" attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
+                       attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
             </field>
             <group name="renter" position="after">
                 <group name="sales" groups="base.group_no_one"
@@ -44,7 +46,8 @@
         <field name="inherit_id" ref="event_booth.event_booth_view_tree"/>
         <field name="arch" type="xml">
             <field name="booth_category_id" position="after">
-                <field name="price"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
             </field>
         </field>
     </record>

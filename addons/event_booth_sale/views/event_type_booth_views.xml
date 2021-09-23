@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="event_booth.event_type_booth_view_form_from_type"/>
         <field name="arch" type="xml">
             <field name="booth_category_id" position="after">
+                <field name="currency_id" invisible="1"/>
                 <field name="product_id"/>
-                <field name="price"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
             </field>
         </field>
     </record>
@@ -19,8 +20,9 @@
         <field name="inherit_id" ref="event_booth.event_type_booth_view_tree_from_type"/>
         <field name="arch" type="xml">
             <field name="booth_category_id" position="after">
+                <field name="currency_id" invisible="1"/>
                 <field name="product_id"/>
-                <field name="price"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
             </field>
         </field>
     </record>

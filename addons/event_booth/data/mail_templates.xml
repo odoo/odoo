@@ -19,19 +19,19 @@
         <ul t-if="booth.partner_id" name="contact_details">
             <t t-set="contact_name" t-value="booth.contact_name"/>
             <li t-if="contact_name">
-                <b>Name</b>: <span t-esc="contact_name"/>
+                <b>Renter Name</b>: <span t-esc="contact_name"/>
             </li>
             <t t-set="contact_email" t-value="booth.contact_email"/>
             <li t-if="contact_email">
-                <b>Email</b>: <span t-esc="contact_email"/>
+                <b>Renter Email</b>: <span t-esc="contact_email"/>
             </li>
             <t t-set="contact_mobile" t-value="booth.contact_mobile"/>
             <li t-if="contact_mobile">
-                <b>Mobile</b>: <span t-esc="contact_mobile"/>
+                <b>Renter Mobile</b>: <span t-esc="contact_mobile"/>
             </li>
             <t t-set="contact_phone" t-value="booth.contact_phone"/>
             <li t-if="contact_phone">
-                <b>Phone</b>: <span t-esc="contact_phone"/>
+                <b>Renter Phone</b>: <span t-esc="contact_phone"/>
             </li>
         </ul>
     </template>
