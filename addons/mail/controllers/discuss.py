@@ -4,7 +4,8 @@
 import json
 from collections import defaultdict
 from datetime import datetime, timedelta
-from psycopg2.errors import UniqueViolation
+from psycopg2 import IntegrityError
+from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
 from odoo.http import request
@@ -35,7 +36,9 @@ class DiscussController(http.Controller):
                     'name': channel_name or create_token,
                     'public': 'public',
                 })
-            except UniqueViolation:
+            except IntegrityError as e:
+                if e.pgcode != UNIQUE_VIOLATION:
+                    raise
                 # concurrent insert attempt: another request created the channel.
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
