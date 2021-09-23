@@ -82,14 +82,13 @@ class TestEventData(TestEventBoothSaleCommon):
         ]})
 
         # change event type to one using booths: include event type booths and keep reserved booths
-        event_form = Form(event)
-        event_form.event_type_id = event_type_wbooths
-        self.assertEqual(event_form.event_booth_count, 3)
+        with Form(event) as event_form:
+            event_form.event_type_id = event_type_wbooths
+        self.assertEqual(event.event_booth_count, 3)
         self.assertEqual(
-            set(r['name'] for r in event_form.event_booth_ids._records),
+            set(r['name'] for r in event.event_booth_ids),
             set(('Custom Standard Booth 2', 'Standard Booth', 'Premium Booth')),
             'Should keep booths with reservation, remove unused ones and add type ones'
         )
-        event_form.save()
         self.assertEqual(event.event_booth_count_available, 2)
         self.assertEqual(event.event_booth_category_ids, self.event_booth_category_1 + self.event_booth_category_2)

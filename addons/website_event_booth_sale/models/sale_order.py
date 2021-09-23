@@ -53,6 +53,6 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
         if product.detailed_type == 'event_booth' and set_qty > 1:
             set_qty = 1
-            values['warning'] = _('Sorry, you can\'t modify quantity to an Event Booth product.')
+            values['warning'] = _('You cannot manually change the quantity of an Event Booth product.')
         values.update(super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs))
         return values
