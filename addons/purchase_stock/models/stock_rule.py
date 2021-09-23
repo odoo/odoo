@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
+from odoo.tools import float_compare
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
@@ -93,15 +94,17 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
-                # We need a rule to generate the PO. However the rule generated
-                # the same domain for PO and the _prepare_purchase_order method
-                # should only uses the common rules's fields.
-                vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
-                # The company_id is the same for all procurements since
-                # _make_po_get_domain add the company in the domain.
-                # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
-                # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
-                po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
+                if positive_values:
+                    # We need a rule to generate the PO. However the rule generated
+                    # the same domain for PO and the _prepare_purchase_order method
+                    # should only uses the common rules's fields.
+                    vals = rules[0]._prepare_purchase_order(company_id, origins, positive_values)
+                    # The company_id is the same for all procurements since
+                    # _make_po_get_domain add the company in the domain.
+                    # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
+                    # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
+                    po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
@@ -131,6 +134,9 @@ class StockRule(models.Model):
                         procurement.values, po_line)
                     po_line.write(vals)
                 else:
+                    if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                        # If procurement contains negative quantity, don't create a new line that would contain negative qty
+                        continue
                     # If it does not exist a PO line for current procurement.
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.

@@ -238,16 +238,20 @@ class StockRule(models.Model):
             forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
 
         # Prepare the move values, adapt the `procure_method` if needed.
+        procurements = sorted(procurements, key=lambda proc: float_compare(proc[0].product_qty, 0.0, precision_rounding=proc[0].product_uom.rounding) > 0)
         for procurement, rule in procurements:
             procure_method = rule.procure_method
             if rule.procure_method == 'mts_else_mto':
                 qty_needed = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
-                qty_available = forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id]
-                if float_compare(qty_needed, qty_available, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
-                    procure_method = 'make_to_stock'
+                if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
                     forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
-                else:
                     procure_method = 'make_to_order'
+                elif float_compare(qty_needed, forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id],
+                                   precision_rounding=procurement.product_id.uom_id.rounding) > 0:
+                    procure_method = 'make_to_order'
+                else:
+                    forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
+                    procure_method = 'make_to_stock'
 
             move_values = rule._get_stock_move_values(*procurement)
             move_values['procure_method'] = procure_method
