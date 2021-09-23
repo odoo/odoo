@@ -16,30 +16,25 @@
                     <input type="text" class="form-control" name="tag_ids" id="tag_ids" placeholder="Tags"/>
                 </div>
                 <label for="channel_type">Choose a layout</label>
-                <div class="form-row">
-                    <div class="form-group col-6">
-                        <div class="form-check px-0">
-                            <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type1" value="training" checked="checked"/>
-                            <label for="channel_type1">
-                                <img class="w-100" src="/website_slides/static/src/img/channel-training-layout.png" alt="Training Layout"/>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group col-6">
-                        <div class="form-check px-0">
-                            <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type2" value="documentation"/>
-                            <label for="channel_type2">
-                                <img class="w-100" src="/website_slides/static/src/img/channel-documentation-layout.png" alt="Documentation Layout"/>
-                            </label>
-                        </div>
-                    </div>
+                <div class="d-flex flex-row justify-content-around">
+                    <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type1" value="training" checked="checked"/>
+                    <label for="channel_type1">
+                        <img src="/website_slides/static/src/img/channel-training-layout.png"
+                            alt="Training Layout"/>
+                    </label>
+                    <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type2" value="documentation"/>
+                    <label for="channel_type2">
+                        <img src="/website_slides/static/src/img/channel-documentation-layout.png"
+                            alt="Documentation Layout"/>
+                    </label>
                 </div>
                 <div class="form-group">
                     <label for="title">Description</label>
-                    <textarea rows="2" class="form-control" name="description" id="description"
+                    <textarea rows="1" class="form-control" name="description" id="description"
                               placeholder="Common tasks for a computer scientist is asking the right questions and answering
                               questions. In this course, you'll study those topics with activities about mathematics, science and logic." />
                 </div>
+                <label id="communication-label">Review</label>
                 <div class="form-group">
                     <div class="o_wslide_channel_communication_type">
                         <div class="form-check">
