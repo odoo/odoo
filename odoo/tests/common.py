@@ -31,6 +31,7 @@ import warnings
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
@@ -1577,6 +1578,20 @@ class HttpCase(TransactionCase):
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+
+    def profile(self, **kwargs):
+        test_profiler = super().profile(**kwargs)
+        old_setup_session = odoo.http.root.setup_session
+        session_name = self.profile_session
+        def profile_setup_session(httprequest):
+            _logger.info('Pathing session')
+            session = old_setup_session(httprequest)
+            httprequest.session.profile_session = self.profile_session
+            httprequest.session.profile_expiration = str(datetime.now() + relativedelta(minutes=5))
+            httprequest.session.profile_collectors = kwargs.get('collectors')
+            return session
+        patcher = patch('odoo.http.root.setup_session', new=profile_setup_session)
+        return profiler.Nested(test_profiler, patcher)
 
 
 # kept for backward compatibility
