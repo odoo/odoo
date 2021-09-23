@@ -152,9 +152,9 @@ class SQLCollector(Collector):
     def stop(self):
         self.profiler.init_thread.query_hooks.remove(self.hook)
 
-    def hook(self, cr, query, params, query_start, query_time):
+    def hook(self, cr, query, params, query_start, query_time, error=None):
         self.add({
-            'query': str(query),
+            'query': '(FAILED)' if error else '' + str(query),
             'full_query': str(cr._format(query, params)),
             'start': query_start,
             'time': query_time,

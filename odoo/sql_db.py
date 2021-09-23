@@ -305,41 +305,43 @@ class Cursor(BaseCursor):
         if self.sql_log:
             _logger.debug("query: %s", self._format(query, params))
         start = time.time()
+        error = None
         try:
             params = params or None
             res = self._obj.execute(query, params)
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
+            error = e.message
             raise
+        finally:
+            # simple query count is always computed
+            self.sql_log_count += 1
+            delay = (time.time() - start)
+            current_thread = threading.current_thread()
+            if hasattr(current_thread, 'query_count'):
+                current_thread.query_count += 1
+                current_thread.query_time += delay
 
-        # simple query count is always computed
-        self.sql_log_count += 1
-        delay = (time.time() - start)
-        current_thread = threading.current_thread()
-        if hasattr(current_thread, 'query_count'):
-            current_thread.query_count += 1
-            current_thread.query_time += delay
+            # optional hooks for performance and tracing analysis
+            for hook in getattr(current_thread, 'query_hooks', ()):
+                hook(self, query, params, start, delay, error=error)
 
-        # optional hooks for performance and tracing analysis
-        for hook in getattr(current_thread, 'query_hooks', ()):
-            hook(self, query, params, start, delay)
+            # advanced stats only if sql_log is enabled
+            if self.sql_log:
+                delay *= 1E6
 
-        # advanced stats only if sql_log is enabled
-        if self.sql_log:
-            delay *= 1E6
-
-            query_lower = self._obj.query.decode().lower()
-            res_from = re_from.match(query_lower)
-            if res_from:
-                self.sql_from_log.setdefault(res_from.group(1), [0, 0])
-                self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query_lower)
-            if res_into:
-                self.sql_into_log.setdefault(res_into.group(1), [0, 0])
-                self.sql_into_log[res_into.group(1)][0] += 1
-                self.sql_into_log[res_into.group(1)][1] += delay
+                query_lower = self._obj.query.decode().lower()
+                res_from = re_from.match(query_lower)
+                if res_from:
+                    self.sql_from_log.setdefault(res_from.group(1), [0, 0])
+                    self.sql_from_log[res_from.group(1)][0] += 1
+                    self.sql_from_log[res_from.group(1)][1] += delay
+                res_into = re_into.match(query_lower)
+                if res_into:
+                    self.sql_into_log.setdefault(res_into.group(1), [0, 0])
+                    self.sql_into_log[res_into.group(1)][0] += 1
+                    self.sql_into_log[res_into.group(1)][1] += delay
         return res
 
     def split_for_in_conditions(self, ids, size=None):
@@ -471,7 +473,6 @@ class Cursor(BaseCursor):
         self.postrollback.clear()
         self.postcommit.run()
         return result
-
     @check
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
