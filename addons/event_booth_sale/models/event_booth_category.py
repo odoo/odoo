@@ -16,12 +16,18 @@ class EventBoothCategory(models.Model):
 
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
+<<<<<<< HEAD
         domain=[('detailed_type', '=', 'event_booth')], default=_default_product_id,
         groups="event.group_event_registration_desk")
     price = fields.Float(
         string='Price', compute='_compute_price', digits='Product Price', readonly=False,
         store=True, groups="event.group_event_registration_desk")
     currency_id = fields.Many2one(related='product_id.currency_id', groups="event.group_event_registration_desk")
+=======
+        domain=[('detailed_type', '=', 'event_booth')], default=_default_product_id)
+    price = fields.Float(string='Price', compute='_compute_price', digits='Product Price', readonly=False, store=True)
+    currency_id = fields.Many2one(related='product_id.currency_id')
+>>>>>>> 93dcbcb8ae8... temp
     price_reduce = fields.Float(
         string='Price Reduce', compute='_compute_price_reduce',
         compute_sudo=True, digits='Product Price', groups="event.group_event_registration_desk")
