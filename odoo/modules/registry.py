@@ -137,8 +137,7 @@ class Registry(Mapping):
         self.cache_sequence = None
 
         # Flags indicating invalidation of the registry or the cache.
-        self.registry_invalidated = False
-        self.cache_invalidated = False
+        self._invalidation_flags = threading.local()
 
         with closing(self.cursor()) as cr:
             has_unaccent = odoo.modules.db.has_unaccent(cr)
@@ -362,6 +361,24 @@ class Registry(Mapping):
         """
         for model in self.models.values():
             model.clear_caches()
+
+    @property
+    def registry_invalidated(self):
+        """ Determine whether the current thread has modified the registry. """
+        return getattr(self._invalidation_flags, 'registry', False)
+
+    @registry_invalidated.setter
+    def registry_invalidated(self, value):
+        self._invalidation_flags.registry = value
+
+    @property
+    def cache_invalidated(self):
+        """ Determine whether the current thread has modified the cache. """
+        return getattr(self._invalidation_flags, 'cache', False)
+
+    @cache_invalidated.setter
+    def cache_invalidated(self, value):
+        self._invalidation_flags.cache = value
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
