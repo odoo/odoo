@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -41,23 +41,6 @@ function factory(dependencies) {
          */
         close() {
             this.update({ isOpen: false });
-        }
-
-        async createMeetingChannel() {
-            const channelData = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'create_group',
-                kwargs: {
-                    default_display_mode: 'video_full_screen',
-                    partners_to: [this.messaging.currentPartner.id],
-                },
-            });
-            const channel = this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(channelData)
-            );
-            this.update({ mostRecentMeetingChannel: link(channel) });
-            this.channelInvitationForm.update({ doFocusOnSearchInput: true });
-            this.channelInvitationForm.searchPartnersToInvite();
         }
 
         focus() {
@@ -193,8 +176,43 @@ function factory(dependencies) {
          *
          * @param {MouseEvent} ev
          */
-        onClickStartAMeetingButton(ev) {
-            this.createMeetingChannel();
+        async onClickStartAMeetingButton(ev) {
+            const meetingChannel = await this.messaging.models['mail.thread'].createGroupChat({
+                default_display_mode: 'video_full_screen',
+                partners_to: [this.messaging.currentPartner.id],
+            });
+            if (!this.exists()) {
+                return;
+            }
+            await meetingChannel.open();
+            if (!meetingChannel.exists()) {
+                return;
+            }
+            await meetingChannel.toggleCall({ startWithVideo: true });
+            if (!this.threadView) {
+                return;
+            }
+            if (!this.threadView.channelInvitationForm) {
+                this.threadView.update({
+                    channelInvitationForm: insert({
+                        threadView: this.threadView,
+                    }),
+                });
+            }
+            this.update({
+                invitePopover: insert({
+                    anchorRef: this.startAMeetingButtonRef,
+                    discussOwner: this,
+                    position: 'bottom',
+                    target: replace(
+                        this.threadView.channelInvitationForm,
+                    ),
+                    targetComponentName: 'ChannelInvitationForm',
+                    type: 'inviteButton',
+                }),
+            });
+            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.threadView.channelInvitationForm.searchPartnersToInvite();
         }
 
         /**
@@ -309,22 +327,6 @@ function factory(dependencies) {
                 return "";
             }
             return this.addingChannelValue;
-        }
-
-        /**
-         * @private
-         * @returns {mail.channel_invitation_form}
-         */
-        _computeChannelInvitationForm() {
-            if (!this.mostRecentMeetingChannel) {
-                return clear();
-            }
-            return insertAndReplace({
-                searchResultCount: clear(),
-                searchTerm: clear(),
-                selectablePartners: clear(),
-                selectedPartners: clear(),
-            });
         }
 
         /**
@@ -454,16 +456,6 @@ function factory(dependencies) {
             isCausal: true,
         }),
         /**
-         * Determines the channel invitation form to use for the invitation
-         * to the most recent meeting channel.
-         */
-        channelInvitationForm: one2one('mail.channel_invitation_form', {
-            compute: '_computeChannelInvitationForm',
-            inverse: 'discuss',
-            isCausal: true,
-            readonly: true,
-        }),
-        /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
@@ -479,6 +471,14 @@ function factory(dependencies) {
          */
         initActiveId: attr({
             default: 'mail.box_inbox',
+        }),
+        /**
+         * If set, this is the record of invite button popover that is currently
+         * open in the discuss sidebar.
+         */
+        invitePopover: one2one('mail.popover', {
+            isCausal: true,
+            inverse: 'discussOwner',
         }),
         /**
          * Determine whether current user is currently adding a channel from
@@ -511,11 +511,6 @@ function factory(dependencies) {
             default: null,
         }),
         /**
-         * The channel created last time the user clicked on the "Start a
-         * meeting" button.
-         */
-        mostRecentMeetingChannel: one2one('mail.thread'),
-        /**
          * The message that is currently selected as being replied to in Inbox.
          * There is only one reply composer shown at a time, which depends on
          * this selected message.
@@ -539,6 +534,11 @@ function factory(dependencies) {
         sidebarQuickSearchValue: attr({
             default: "",
         }),
+        /**
+         * States the OWL ref of the start a meeting button in sidebar.
+         * Useful to provide anchor for the invite popover positioning.
+         */
+        startAMeetingButtonRef: attr(),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */

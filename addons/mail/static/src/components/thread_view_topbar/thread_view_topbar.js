@@ -13,6 +13,7 @@ export class ThreadViewTopbar extends Component {
      */
     setup() {
         super.setup();
+        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'inviteButton' });
         useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadNameInput' });
         useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadDescriptionInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId' });

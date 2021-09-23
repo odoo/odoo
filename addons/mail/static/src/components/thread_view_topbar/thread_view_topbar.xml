@@ -58,14 +58,12 @@
                         </button>
                     </t>
                     <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.hasInviteFeature">
-                        <Popover popoverClass="'o_ThreadViewTopbar_invitePopover'" position="'bottom'">
-                            <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button" t-att-class="{ 'o-active': threadViewTopBar.threadView.channelInvitationForm.component }" title="Add users" t-on-click="threadViewTopBar.onClickInviteButton">
-                                <i class="fa fa-lg fa-user-plus"/>
-                            </button>
-                            <t t-set="opened">
-                                <ChannelInvitationForm localId="threadViewTopBar.threadView.channelInvitationForm.localId"/>
-                            </t>
-                        </Popover>
+                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button" t-att-class="{ 'o-active': threadViewTopBar.invitePopover }" title="Add users" t-on-click="threadViewTopBar.onClickInviteButton" t-ref="inviteButton">
+                            <i class="fa fa-lg fa-user-plus"/>
+                        </button>
+                        <t t-if="threadViewTopBar.invitePopover">
+                            <MessagingPopover class="o_ThreadViewTopbar_invitePopover" popoverLocalId="threadViewTopBar.invitePopover.localId"/>
+                        </t>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
                     <t t-if="!messaging.isCurrentUserGuest and threadViewTopBar.thread and threadViewTopBar.thread.hasMemberListFeature and threadViewTopBar.threadView.hasMemberList and !threadViewTopBar.threadView.isMemberListOpened">

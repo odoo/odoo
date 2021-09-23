@@ -317,6 +317,29 @@ function factory(dependencies) {
         }
 
         /**
+         * Creates a new group chat with the provided partners.
+         *
+         * @param {Object} param0
+         * @param {number[]} param0.partners_to Ids of the partners to add as channel
+         * members.
+         * @param {boolean|string} param0.default_display_mode
+         * @returns {mail.thread} The newly created group chat.
+         */
+        static async createGroupChat({ default_display_mode, partners_to }) {
+            const channelData = await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'create_group',
+                kwargs: {
+                    default_display_mode,
+                    partners_to,
+                },
+            });
+            return this.messaging.models['mail.thread'].insert(
+                this.messaging.models['mail.thread'].convertData(channelData)
+            );
+        }
+
+        /**
          * Client-side ending of the call.
          */
         endCall() {

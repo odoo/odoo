@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, create, insert, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -70,13 +70,30 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickInviteButton(ev) {
-            if (this.threadView.channelInvitationForm.component) {
+            if (this.messaging.isCurrentUserGuest) {
                 return;
             }
-            if (!this.messaging.isCurrentUserGuest) {
-                this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
-                this.threadView.channelInvitationForm.searchPartnersToInvite();
+            if (!this.threadView.channelInvitationForm) {
+                this.threadView.update({
+                    channelInvitationForm: insert({
+                        threadView: this.threadView,
+                    }),
+                });
             }
+            this.update({
+                invitePopover: insert({
+                    anchorRef: this.inviteButtonRef,
+                    position: 'bottom',
+                    target: replace(
+                        this.threadView.channelInvitationForm,
+                    ),
+                    targetComponentName: 'ChannelInvitationForm',
+                    threadViewTopbarOwner: this,
+                    type: 'inviteButton',
+                }),
+            });
+            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.threadView.channelInvitationForm.searchPartnersToInvite();
         }
 
         /**
@@ -415,6 +432,19 @@ function factory(dependencies) {
          * `doSetSelectionEndOnThreadDescriptionInput` to have an effect.
          */
         doSetSelectionStartOnThreadDescriptionInput: attr(),
+       /**
+         * States the OWL ref of the invite button.
+         * Useful to provide anchor for the invite popover positioning.
+         */
+        inviteButtonRef: attr(),
+        /**
+         * If set, this is the record of invite button popover that is currently
+         * open in the topbar.
+         */
+        invitePopover: one2one('mail.popover', {
+            isCausal: true,
+            inverse: 'threadViewTopbarOwner',
+        }),
         /**
          * Determines whether this thread is currently being renamed.
          */
