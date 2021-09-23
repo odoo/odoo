@@ -79,15 +79,15 @@ export class ModelManager {
          */
         this._listenersObservingFieldOfLocalId = new Map();
         /**
-         * Set of listeners that should be notified at the end of the current
-         * update cycle.
+         * Map of listeners that should be notified at the end of the current
+         * update cycle. Value contains list of info to help for debug.
          */
-        this._listenersToNotifyAfterUpdateCycle = new Set();
+        this._listenersToNotifyAfterUpdateCycle = new Map();
         /**
-         * Set of listeners that should be notified as part of the current
-         * update cycle.
+         * Map of listeners that should be notified as part of the current
+         * update cycle. Value contains list of info to help for debug.
          */
-        this._listenersToNotifyInUpdateCycle = new Set();
+        this._listenersToNotifyInUpdateCycle = new Map();
         /**
          * Map between listeners and a set of localId that they are using.
          * Useful for easily being able to clean up a listener without having to
@@ -166,7 +166,16 @@ export class ModelManager {
      */
     all(Model, filterFunc) {
         for (const listener of this._listeners) {
-            this._listenersObservingAllByModel.get(Model).add(listener);
+            const entry = this._listenersObservingAllByModel.get(Model);
+            const info = {
+                error: Error(),
+                reason: `all() - ${Model}`,
+            };
+            if (entry.has(listener)) {
+                entry.get(listener).push(info);
+            } else {
+                entry.set(listener, [info]);
+            }
         }
         const allRecords = Object.values(Model.__records);
         if (filterFunc) {
@@ -260,9 +269,18 @@ export class ModelManager {
         for (const listener of this._listeners) {
             this._localIdsObservedByListener.get(listener).add(localId);
             if (!this._listenersObservingLocalId.has(localId)) {
-                this._listenersObservingLocalId.set(localId, new Set());
+                this._listenersObservingLocalId.set(localId, new Map());
             }
-            this._listenersObservingLocalId.get(localId).add(listener);
+            const entry = this._listenersObservingLocalId.get(localId);
+            const info = {
+                error: Error(),
+                reason: `get record - ${localId}`,
+            };
+            if (entry.has(listener)) {
+                entry.get(listener).push(info);
+            } else {
+                entry.set(listener, [info]);
+            }
         }
         const record = Model.__records[localId];
         if (record) {
@@ -416,11 +434,11 @@ export class ModelManager {
                 const field = Model.fields[fieldName];
                 // 0. Forbidden name.
                 if (fieldName in Model.prototype) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has a forbidden name.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has a forbidden name.`);
                 }
                 // 1. Field type is required.
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
                 }
                 // 2. Invalid keys based on field type.
                 if (field.fieldType === 'attribute') {
@@ -436,7 +454,7 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
                 }
                 if (field.fieldType === 'relation') {
@@ -456,36 +474,36 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
                     if (!Models[field.to]) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" targets to unknown model name "${field.to}".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" targets to unknown model name "${field.to}".`);
                     }
                     if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
                     }
                     if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
                     }
                 }
                 // 3. Computed field.
                 if (field.compute && !(typeof field.compute === 'string')) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" must be a string (instance method name).`);
+                    throw new Error(`Field "${Model}/${fieldName}" property "compute" must be a string (instance method name).`);
                 }
                 if (field.compute && !(Model.prototype[field.compute])) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
+                    throw new Error(`Field "${Model}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
                 }
                 // 4. Related field.
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
                 }
                 if (field.related) {
                     if (!(typeof field.related === 'string')) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
                     }
                     const [relationName, relatedFieldName, other] = field.related.split('.');
                     if (!relationName || !relatedFieldName || other) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
                     }
                     // find relation on self or parents.
                     let relatedRelation;
@@ -497,10 +515,10 @@ export class ModelManager {
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedRelation) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown relation name "${relationName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown relation name "${relationName}".`);
                     }
                     if (relatedRelation.fieldType !== 'relation') {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to non-relational field "${relationName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to non-relational field "${relationName}".`);
                     }
                     // Assuming related relation is valid...
                     // find field name on related model or any parents.
@@ -514,16 +532,16 @@ export class ModelManager {
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedField) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
                     }
                     if (relatedField.fieldType !== field.fieldType) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch type with its related model field.`);
+                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch type with its related model field.`);
                     }
                     if (
                         relatedField.fieldType === 'relation' &&
                         relatedField.to !== field.to
                     ) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch target model name with its related model field.`);
+                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch target model name with its related model field.`);
                     }
                 }
             }
@@ -540,22 +558,22 @@ export class ModelManager {
             for (const fieldName in Model.fields) {
                 const field = Model.fields[fieldName];
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
                 }
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
                 }
                 if (field.fieldType === 'attribute') {
                     continue;
                 }
                 if (!field.relationType) {
                     throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" must define a relation type in "relationType".`
+                        `Field "${Model}/${fieldName}" must define a relation type in "relationType".`
                     );
                 }
                 if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
                     throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" has invalid relation type "${field.relationType}".`
+                        `Field "${Model}/${fieldName}" has invalid relation type "${field.relationType}".`
                     );
                 }
                 if (!field.inverse) {
@@ -579,7 +597,7 @@ export class ModelManager {
                 const RelatedModel = Models[field.to];
                 if (!RelatedModel) {
                     throw new Error(
-                        `Model name of relation "${Model.modelName}/${fieldName}" does not exist.`
+                        `Model name of relation "${Model}/${fieldName}" does not exist.`
                     );
                 }
                 const inverseField = RelatedModel.fields[field.inverse];
@@ -589,7 +607,7 @@ export class ModelManager {
                             Model.modelName
                         }/${
                             fieldName
-                        }" has no inverse field "${RelatedModel.modelName}/${field.inverse}".`
+                        }" has no inverse field "${RelatedModel}/${field.inverse}".`
                     );
                 }
                 if (inverseField.inverse !== fieldName) {
@@ -670,7 +688,7 @@ export class ModelManager {
              */
             const localId = Model._createRecordLocalId(data);
             if (Model.get(localId)) {
-                throw Error(`A record already exists for model "${Model.modelName}" with localId "${localId}".`);
+                throw Error(`A record already exists for model "${Model}" with localId "${localId}".`);
             }
             /**
              * 2. Prepare record state. Assign various keys and values that are
@@ -702,11 +720,11 @@ export class ModelManager {
                 }
             }
             if (!this._listenersObservingLocalId.has(localId)) {
-                this._listenersObservingLocalId.set(localId, new Set());
+                this._listenersObservingLocalId.set(localId, new Map());
             }
             this._listenersObservingFieldOfLocalId.set(localId, new Map());
             for (const field of Model.__fieldList) {
-                this._listenersObservingFieldOfLocalId.get(localId).set(field, new Set());
+                this._listenersObservingFieldOfLocalId.get(localId).set(field, new Map());
             }
             /**
              * 3. Register record and invoke the life-cycle hook `_willCreate.`
@@ -733,7 +751,7 @@ export class ModelManager {
                 if (field.compute) {
                     const listener = new Listener({
                         isPartOfUpdateCycle: true,
-                        onChange: () => {
+                        onChange: (info) => {
                             this.startListening(listener);
                             const res = record[field.compute]();
                             this.stopListening(listener);
@@ -746,7 +764,7 @@ export class ModelManager {
                 if (field.related) {
                     const listener = new Listener({
                         isPartOfUpdateCycle: true,
-                        onChange: () => {
+                        onChange: (info) => {
                             this.startListening(listener);
                             const res = field.computeRelated(record);
                             this.stopListening(listener);
@@ -762,11 +780,19 @@ export class ModelManager {
              * the end of the update cycle.
              */
             this._createdRecords.add(record);
-            for (const listener of this._listenersObservingAllByModel.get(Model)) {
-                this._markListenerToNotify(listener);
+            for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+                this._markListenerToNotify(listener, {
+                    error: Error(),
+                    reason: `_create: allByModel - ${Model}`,
+                    infoList,
+                });
             }
-            for (const listener of this._listenersObservingLocalId.get(localId)) {
-                this._markListenerToNotify(listener);
+            for (const [listener, infoList] of this._listenersObservingLocalId.get(localId).entries()) {
+                this._markListenerToNotify(listener, {
+                    error: Error(),
+                    reason: `_create: localId - ${localId}`,
+                    infoList,
+                });
             }
             records.push(record);
         }
@@ -793,11 +819,19 @@ export class ModelManager {
             }
         }
         this._createdRecords.delete(record);
-        for (const listener of this._listenersObservingLocalId.get(record.localId)) {
-            this._markListenerToNotify(listener);
+        for (const [listener, infoList] of this._listenersObservingLocalId.get(record.localId).entries()) {
+            this._markListenerToNotify(listener, {
+                error: Error(),
+                reason: `_delete: localId - ${Model}`,
+                infoList,
+            });
         }
-        for (const listener of this._listenersObservingAllByModel.get(Model)) {
-            this._markListenerToNotify(listener);
+        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+            this._markListenerToNotify(listener, {
+                error: Error(),
+                reason: `_delete: allByModel - ${Model}`,
+                infoList,
+            });
         }
         delete Model.__records[record.localId];
         if (record === this._messaging) {
@@ -845,7 +879,7 @@ export class ModelManager {
                 record._created();
                 for (const onChange of record.constructor.onChanges || []) {
                     const listener = new Listener({
-                        onChange: () => {
+                        onChange: (info) => {
                             this.startListening(listener);
                             for (const dependency of onChange.dependencies) {
                                 let target = record;
@@ -915,12 +949,12 @@ export class ModelManager {
                 throw new Error(`Missing static property "modelName" on Model class "${Model.name}".`);
             }
             if (generatedNames.includes(Model.modelName)) {
-                throw new Error(`Duplicate model name "${Model.modelName}" shared on 2 distinct Model classes.`);
+                throw new Error(`Duplicate model name "${Model}" shared on 2 distinct Model classes.`);
             }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
             toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
-            this._listenersObservingAllByModel.set(Model, new Set());
+            this._listenersObservingAllByModel.set(Model, new Map());
         }
         /**
          * Check that declared model fields are correct.
@@ -976,13 +1010,13 @@ export class ModelManager {
             : field.relationType === 'one2one' ? ModelField.one2one
             : undefined;
         if (!relFunc) {
-            throw new Error(`Cannot compute inverse Relation of "${Model.modelName}/${field.fieldName}".`);
+            throw new Error(`Cannot compute inverse Relation of "${Model}/${field.fieldName}".`);
         }
         const inverseField = new ModelField(Object.assign(
             {},
             relFunc(Model.modelName, { inverse: field.fieldName }),
             {
-                fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
+                fieldName: `_inverse_${Model}/${field.fieldName}`,
             }
         ));
         return inverseField;
@@ -997,12 +1031,25 @@ export class ModelManager {
      * @private
      * @param {Object} listener
      */
-    _markListenerToNotify(listener) {
+    _markListenerToNotify(listener, info) {
+        if (!(listener instanceof Listener)) {
+            throw new Error(`Listener is not a listener ${listener}`);
+        }
         if (listener.isPartOfUpdateCycle) {
-            this._listenersToNotifyInUpdateCycle.add(listener);
+            const entry = this._listenersToNotifyInUpdateCycle.get(listener);
+            if (entry) {
+                entry.push(info);
+            } else {
+                this._listenersToNotifyInUpdateCycle.set(listener, [info]);
+            }
         }
         if (!listener.isPartOfUpdateCycle) {
-            this._listenersToNotifyAfterUpdateCycle.add(listener);
+            const entry = this._listenersToNotifyAfterUpdateCycle.get(listener);
+            if (entry) {
+                entry.push(info);
+            } else {
+                this._listenersToNotifyAfterUpdateCycle.set(listener, [info]);
+            }
         }
     }
 
@@ -1015,9 +1062,9 @@ export class ModelManager {
      * re-render and for records with "on change".
      */
     _notifyListenersAfterUpdateCycle() {
-        for (const listener of this._listenersToNotifyAfterUpdateCycle) {
+        for (const [listener, infoList] of this._listenersToNotifyAfterUpdateCycle.entries()) {
             this._listenersToNotifyAfterUpdateCycle.delete(listener);
-            listener.onChange();
+            listener.onChange(infoList);
         }
     }
 
@@ -1033,9 +1080,9 @@ export class ModelManager {
      */
     _notifyListenersInUpdateCycle() {
         while (this._listenersToNotifyInUpdateCycle.size > 0) {
-            for (const listener of this._listenersToNotifyInUpdateCycle) {
+            for (const [listener, infoList] of this._listenersToNotifyInUpdateCycle.entries()) {
                 this._listenersToNotifyInUpdateCycle.delete(listener);
-                listener.onChange();
+                listener.onChange(infoList);
             }
         }
     }
@@ -1123,8 +1170,25 @@ export class ModelManager {
                     get() { // this is bound to record
                         for (const listener of this.modelManager._listeners) {
                             this.modelManager._localIdsObservedByListener.get(listener).add(this.localId);
-                            this.modelManager._listenersObservingLocalId.get(this.localId).add(listener);
-                            this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field).add(listener);
+                            if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
+                                this.modelManager._listenersObservingLocalId.set(this.localId, new Map());
+                            }
+                            const entryLocalId = this.modelManager._listenersObservingLocalId.get(this.localId);
+                            const info = {
+                                error: Error(),
+                                reason: `getField - ${this.localId} / ${field.fieldName}`,
+                            };
+                            if (entryLocalId.has(listener)) {
+                                entryLocalId.get(listener).push(info);
+                            } else {
+                                entryLocalId.set(listener, [info]);
+                            }
+                            const entryField = this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field);
+                            if (entryField.has(listener)) {
+                                entryField.get(listener).push(info);
+                            } else {
+                                entryField.set(listener, [info]);
+                            }
                         }
                         return field.get(this);
                     },
@@ -1166,8 +1230,12 @@ export class ModelManager {
                 continue;
             }
             hasChanged = true;
-            for (const listener of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
-                this._markListenerToNotify(listener);
+            for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field).entries()) {
+                this._markListenerToNotify(listener, {
+                    error: Error(),
+                    reason: `_update: field - ${record.localId} / ${field.fieldName}`,
+                    infoList,
+                });
             }
         }
         if (hasChanged) {

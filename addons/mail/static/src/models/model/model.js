@@ -181,6 +181,13 @@ function factory() {
         }
 
         /**
+         * @returns {string}
+         */
+        static toString() {
+            return this.modelName;
+        }
+
+        /**
          * Perform an async function and wait until it is done. If the record
          * is deleted, it raises a RecordDeletedError.
          *

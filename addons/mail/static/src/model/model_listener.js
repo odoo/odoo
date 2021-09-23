@@ -9,7 +9,8 @@ export class Listener {
      * @param {Object} param
      * @param {function} param.onChange function that will be called when this
      *  listener is notified of change, which is when records or fields that are
-     *  listened to are created/updated/deleted.
+     *  listened to are created/updated/deleted. This function is called with
+     *  1 param that contains info
      * @param {boolean} [param.isPartOfUpdateCycle=false] determines at which
      *  point during the update cycle of the models this `onChange` function
      *  will be called.
