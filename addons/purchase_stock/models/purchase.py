@@ -4,7 +4,7 @@ from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -462,7 +462,7 @@ class PurchaseOrderLine(models.Model):
         if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if float_compare(qty_to_push, 0.0, precision_rounding=self.product_uom.rounding) > 0:
+        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach

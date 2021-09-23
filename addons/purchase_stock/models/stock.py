@@ -26,6 +26,10 @@ class StockMove(models.Model):
         distinct_fields += ['purchase_line_id', 'created_purchase_line_id']
         return distinct_fields
 
+    @api.model
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
@@ -88,7 +92,7 @@ class StockMove(models.Model):
         self.write({'created_purchase_line_id': False})
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
+        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('draft', 'done', 'cancel'):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
         elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
