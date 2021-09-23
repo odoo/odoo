@@ -98,12 +98,15 @@ function factory(dependencies) {
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
+         * @param {boolean} [param1.focus] if set, set focus the chat window
+         *   to open.
          * @param {boolean} [param1.isFolded=false]
          * @param {boolean} [param1.makeActive=false]
          * @param {boolean} [param1.notifyServer]
          * @param {boolean} [param1.replaceNewMessage=false]
          */
         openThread(thread, {
+            focus,
             isFolded = false,
             makeActive = false,
             notifyServer,
@@ -131,7 +134,7 @@ function factory(dependencies) {
             if (makeActive) {
                 // avoid double notify at this step, it will already be done at
                 // the end of the current method
-                chatWindow.makeActive({ notifyServer: false });
+                chatWindow.makeActive({ focus, notifyServer: false });
             }
             // Flux specific: notify server of chat window being opened.
             if (notifyServer && !this.messaging.currentGuest) {

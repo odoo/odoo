@@ -36,23 +36,6 @@ function factory(dependencies) {
             this.update({ isOpen: false });
         }
 
-        async createMeetingChannel() {
-            const channelData = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'create_group',
-                kwargs: {
-                    default_display_mode: 'video_full_screen',
-                    partners_to: [this.messaging.currentPartner.id],
-                },
-            });
-            const channel = this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(channelData)
-            );
-            this.update({ mostRecentMeetingChannel: link(channel) });
-            this.channelInvitationForm.update({ doFocusOnSearchInput: true });
-            this.channelInvitationForm.searchPartnersToInvite();
-        }
-
         focus() {
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
@@ -183,8 +166,17 @@ function factory(dependencies) {
          *
          * @param {MouseEvent} ev
          */
-        onClickStartAMeetingButton(ev) {
-            this.createMeetingChannel();
+        async onClickStartAMeetingButton(ev) {
+            const meetingChannel = await this.messaging.models['mail.thread'].createGroupChat({
+                default_display_mode: 'video_full_screen',
+                partners_to: [this.messaging.currentPartner.id],
+            });
+            meetingChannel.toggleCall({ startWithVideo: true });
+            await meetingChannel.open({ focus: false });
+            if (!meetingChannel.exists() || !this.threadView) {
+                return;
+            }
+            this.threadView.topbar.openInvitePopoverView();
         }
 
         /**
@@ -214,12 +206,16 @@ function factory(dependencies) {
          * Opens the given thread in Discuss, and opens Discuss if necessary.
          *
          * @param {mail.thread} thread
+         * @param {Object} [param1={}]
+         * @param {Boolean} [param1.focus=true]
          */
-        async openThread(thread) {
+        async openThread(thread, { focus = true } = {}) {
             this.update({
                 thread: link(thread),
             });
-            this.focus();
+            if (focus) {
+                this.focus();
+            }
             if (!this.isOpen) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
@@ -276,22 +272,6 @@ function factory(dependencies) {
                 return "";
             }
             return this.addingChannelValue;
-        }
-
-        /**
-         * @private
-         * @returns {mail.channel_invitation_form}
-         */
-        _computeChannelInvitationForm() {
-            if (!this.mostRecentMeetingChannel) {
-                return clear();
-            }
-            return insertAndReplace({
-                searchResultCount: clear(),
-                searchTerm: clear(),
-                selectablePartners: clear(),
-                selectedPartners: clear(),
-            });
         }
 
         /**
@@ -394,16 +374,6 @@ function factory(dependencies) {
             isCausal: true,
         }),
         /**
-         * Determines the channel invitation form to use for the invitation
-         * to the most recent meeting channel.
-         */
-        channelInvitationForm: one2one('mail.channel_invitation_form', {
-            compute: '_computeChannelInvitationForm',
-            inverse: 'discuss',
-            isCausal: true,
-            readonly: true,
-        }),
-        /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
@@ -451,17 +421,17 @@ function factory(dependencies) {
             default: null,
         }),
         /**
-         * The channel created last time the user clicked on the "Start a
-         * meeting" button.
-         */
-        mostRecentMeetingChannel: one2one('mail.thread'),
-        /**
          * Quick search input value in the discuss sidebar (desktop). Useful
          * to filter channels and chats based on this input content.
          */
         sidebarQuickSearchValue: attr({
             default: "",
         }),
+        /**
+         * States the OWL ref of the start a meeting button in sidebar.
+         * Useful to provide anchor for the invite popover positioning.
+         */
+        startAMeetingButtonRef: attr(),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
