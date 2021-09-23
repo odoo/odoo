@@ -122,7 +122,7 @@
                     <div t-if="lead.state_id" t-field="lead.state_id"/>
                     <div t-if="lead.country_id" t-field="lead.country_id"/>
                 </div>
-                <div class="mt-3 mb-3" name="marketing"
+                <div class="mt-3" name="marketing"
                         t-if="lead.campaign_id or lead.medium_id or lead.source_id">
                     <div class="font-weight-bold">
                         Marketing:
@@ -136,6 +136,22 @@
                     <div t-if="lead.source_id">
                         Source: <span t-field="lead.source_id"/>
                     </div>
+                </div>
+                <t t-set="lead_followers" t-value="merged_followers and merged_followers.get(lead.id)"/>
+                <div class="mt-3 mb-3" name="merged_followers" t-if="lead_followers">
+                    <div>
+                        The contacts below have been added as followers of this lead
+                        because they have been contacted less than 30 days ago on
+                        <span class="font-weight-bold" t-esc="lead.name"/>.
+                    </div>
+                    <ul>
+                      <li t-foreach="lead_followers" t-as="follower">
+                        <t t-esc="follower.partner_id.name"/>
+                        <t t-if="follower.partner_id.email">
+                            (<t t-esc="follower.partner_id.email"/>)
+                        </t>
+                      </li>
+                    </ul>
                 </div>
             </blockquote>
         </t>

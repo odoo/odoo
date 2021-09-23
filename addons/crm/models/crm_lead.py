@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split, is_html_empty
+from odoo.tools import date_utils, email_re, email_split, is_html_empty, groupby
 
 from . import crm_stage
 
@@ -1296,10 +1296,13 @@ class Lead(models.Model):
         if team_id:
             merged_data['team_id'] = team_id
 
+        merged_followers = opportunities_head._merge_followers(opportunities_tail)
+
         # log merge message
         opportunities_head.message_post_with_view(
             "crm.crm_lead_merge_summary",
             values={
+                "merged_followers": merged_followers,
                 "opportunities": opportunities_tail,
                 "is_html_empty": is_html_empty
             },
@@ -1433,6 +1436,50 @@ class Lead(models.Model):
             'res_id': self.id,
             'opportunity_id': self.id,
         })
+
+    def _merge_followers(self, opportunities):
+        """Add the followers into the destination lead if they post a message in the last 30 days.
+
+        :param opportunities : Record<crm.lead> of opportunities to transfer
+        :return: {old_lead_id: Record<mail.followers>} Followers which have been added in
+            the destination lead grouped by source lead ID.
+        """
+        self.ensure_one()
+
+        self.env['mail.message'].flush()
+        self.env['mail.followers'].flush()
+
+        # Get the active followers (followers whose partner post a message on the
+        # leads in the last 30 days) which should be moved on the destination lead
+        self.env.cr.execute(
+            '''
+            SELECT MAX(mf.id) AS id
+              FROM mail_followers AS mf
+              JOIN mail_message AS mm
+                ON mm.author_id = mf.partner_id
+               AND mm.res_id = mf.res_id
+               AND mm.model = 'crm.lead'
+               AND mm.date > NOW() - INTERVAL '30 DAY'
+                   /* Check if the partner is already
+                      following the destination lead */
+         LEFT JOIN mail_followers AS destf
+                ON destf.res_model = 'crm.lead'
+               AND destf.res_id = %(lead_id)s
+               AND destf.partner_id = mf.partner_id
+                   /* Select only once each partner
+                      to not create duplicated followers */
+             WHERE mf.res_model = 'crm.lead'
+               AND mf.res_id IN %(lead_ids)s
+               AND destf IS NULL
+          GROUP BY mf.partner_id
+            ''',
+            {'lead_ids': tuple(opportunities.ids), 'lead_id': self.id},
+        )
+        followers_to_update = [r[0] for r in self.env.cr.fetchall()]
+        followers_to_update = self.env['mail.followers'].browse(followers_to_update).sudo()
+        followers_by_old_lead = dict(groupby(followers_to_update, lambda f: f.res_id))
+        followers_to_update.write({'res_id': self.id})
+        return followers_by_old_lead
 
     # CONVERT
     # ----------------------------------------------------------------------
