@@ -207,3 +207,6 @@ class TestUi(odoo.tests.HttpCase):
         lang = self.env['res.lang']._activate_lang('nl_NL')
         self.env['website'].browse(1).write({'language_ids': [(4, lang.id, 0)]})
         self.start_tour("/nl/contactus", 'edit_translated_page_redirect', login='admin')
+
+    def test_11_carousel_snippet_content_removal(self):
+        self.start_tour("/", "carousel_content_removal", login='admin')
