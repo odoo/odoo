@@ -16,6 +16,9 @@ class ResConfigSettings(models.TransientModel):
 
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, ondelete='cascade')
+
+    website_fallback_id = fields.Many2one("website", string="Fallback Website", config_parameter="website.fallback_id",
+                                          help="Visitors of your website will be redirected to this website or its specified domain if any.")
     website_name = fields.Char('Website Name', related='website_id.name', readonly=False)
     website_domain = fields.Char('Website Domain', related='website_id.domain', readonly=False)
     website_country_group_ids = fields.Many2many(related='website_id.country_group_ids', readonly=False)

@@ -24,6 +24,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="website_fallback_setting">
+                                <div class="o_setting_right_pane">
+                                    <label for="website_fallback_id"/>
+                                    <div class="text-muted">
+                                        Redirect visitors automatically towards the selected website.
+                                    </div>
+                                    <div class="mt8">
+                                        <field name="website_fallback_id" options="{'no_open': True, 'no_create': True}"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Website <button name="action_website_create_new" type="object" string="New" class="ml-2 btn btn-link" icon="fa-plus" groups="!website.group_multi_website"/></h2>
                         <div class="row mt16 o_settings_container" id="website_settings_placeholder" attrs="{'invisible': [('website_id', '!=', False)]}">

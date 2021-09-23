@@ -175,6 +175,26 @@ class Http(models.AbstractModel):
                     return request.env['ir.http']._handle_exception(werkzeug.exceptions.Forbidden())
 
     @classmethod
+    def _get_redirect(cls):
+        """
+        Returns a redirect response if the request targets a website that is not set as the default fallback
+        website, the request comes from a public user, and the fallback website has a correctly configured
+        domain. To bypass redirection, one may use the /web/login/ page to login and then browse the
+        website as a non-public user.
+        """
+        icp_sudo = request.env['ir.config_parameter'].sudo()
+        fallback_website_id = int(icp_sudo.get_param("website.fallback_id"))
+        if fallback_website_id:
+            Website = request.env['website']
+            if not Website.get_current_website(fallback=False) and '/web/login' not in request.httprequest.url:
+                fallback_website = Website.browse(fallback_website_id)
+                if fallback_website.domain:
+                    path = request.httprequest.url.replace(request.httprequest.url_root, fallback_website.domain + '/')
+                    public_user = request.env.user.id == fallback_website._get_cached("user_id")
+                    if public_user and fallback_website.domain != fallback_website.cdn_url:
+                        return cls._redirect(path, 303)
+
+    @classmethod
     def _dispatch(cls):
         """
         In case of rerouting for translate (e.g. when visiting odoo.com/fr_BE/),
@@ -203,6 +223,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
+        request.domain_redirect = cls._get_redirect()
 
         # DEPRECATED for /website/force/<website_id> - remove me in master~saas-14.4
         # Force website with query string paramater, typically set from website selector in frontend navbar and inside tests

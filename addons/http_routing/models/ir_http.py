@@ -463,6 +463,9 @@ class IrHttp(models.AbstractModel):
         if request.is_frontend:
             cls._add_dispatch_parameters(func)
 
+            if getattr(request, "domain_redirect", None):
+                return request.domain_redirect
+
             path = request.httprequest.path.split('/')
             default_lg_id = cls._get_default_lang()
             if request.routing_iteration == 1:
