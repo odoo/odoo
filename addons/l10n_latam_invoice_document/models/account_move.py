@@ -226,7 +226,7 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _prepare_tax_lines_data_for_totals(self, tax_line_id_filter=None, tax_ids_filter=None):
+    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
         # Overridden from account in order to exclude some taxes from the totals' computation.
         # TODO CLEANME: we'd better get rid of those l10n_latam_tax_ids fields.
         report_or_portal_view = 'commit_assetsbundle' in self.env.context \
@@ -238,7 +238,7 @@ class AccountMove(models.Model):
             tax_line_id_filter = lambda aml, tax: tax in aml.move_id.l10n_latam_tax_ids.tax_line_id
             tax_ids_filter = lambda aml, tax: tax in aml.l10n_latam_tax_ids
 
-        return super()._prepare_tax_lines_data_for_totals(tax_line_id_filter, tax_ids_filter)
+        return super()._prepare_tax_lines_data_for_totals_from_invoice(tax_line_id_filter, tax_ids_filter)
 
     @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):
