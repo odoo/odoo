@@ -20,64 +20,71 @@ export class ForecastSearchModel extends SearchModel {
     exportState() {
         const state = super.exportState();
         state.forecast = {
-            forecastField: this.forecastField,
-            forecastFilter: this.forecastFilter,
             forecastStart: this.forecastStart,
         };
         return state;
     }
 
     /**
-     * @protected
-     * @returns {string}
+     * @override
      */
-    _getForecastStart() {
-        /** @todo stop using moment */
-        const type = this.searchViewFields[this.forecastField].type;
-        let startMoment;
-        const groupBy = this.groupBy;
-        const firstForecastGroupBy = groupBy.find((gb) => gb.includes(this.forecastField));
-        let granularity = "month";
-        if (firstForecastGroupBy) {
-            granularity = firstForecastGroupBy.split(":")[1] || "month";
-        } else if (groupBy.length) {
-            granularity = "day";
+    _getDomain(params = {}) {
+        const domain = super._getDomain(...arguments);
+        const forecastField = this.globalContext.forecast_field;
+        if (!forecastField) {
+            return domain;
         }
-        startMoment = moment().startOf(granularity);
-        if (type === "datetime") {
-            startMoment = moment.utc(startMoment);
+        let forecastFilter = false;
+        for (const queryElem of this.query) {
+            const searchItem = this.searchItems[queryElem.searchItemId];
+            if (searchItem.type === "filter") {
+                const context = makeContext(searchItem.context || {});
+                if (context.forecast_filter) {
+                    forecastFilter = true;
+                    break;
+                }
+            }
         }
-        const format = DATE_FORMAT[type];
-        return startMoment.format(format);
+        if (!forecastFilter) {
+            return domain;
+        }
+        const forecastStart = this._getForecastStart(forecastField);
+        const forecastDomain = [
+            "|",
+            [forecastField, "=", false],
+            [forecastField, ">=", forecastStart],
+        ];
+        const fullDomain = Domain.and([domain, forecastDomain]);
+
+        return params.raw ? fullDomain : fullDomain.toList();
     }
 
-    _getSearchItemDomain(activeItem) {
-        const domain = super._getSearchItemDomain(...arguments);
-
-        const { forecast_field: forecastField } = this.globalContext;
-        const searchItem = this.searchItems[activeItem.searchItemId];
-
-        if (forecastField && searchItem.type === "filter") {
-            const context = makeContext(searchItem.context || {});
-            if (!context.forecast_filter) {
-                return domain;
+    /**
+     * @protected
+     * @param {string} forecastField
+     * @returns {string}
+     */
+    _getForecastStart(forecastField) {
+        if (!this.forecastStart) {
+            /** @todo stop using moment */
+            const { type } = this.searchViewFields[forecastField];
+            let startMoment;
+            const groupBy = this.groupBy;
+            const firstForecastGroupBy = groupBy.find((gb) => gb.includes(forecastField));
+            let granularity = "month";
+            if (firstForecastGroupBy) {
+                granularity = firstForecastGroupBy.split(":")[1] || "month";
+            } else if (groupBy.length) {
+                granularity = "day";
             }
-
-            this.forecastField = forecastField;
-            this.forecastFilter = true;
-            if (!this.forecastStart) {
-                this.forecastStart = this._getForecastStart();
+            startMoment = moment().startOf(granularity);
+            if (type === "datetime") {
+                startMoment = moment.utc(startMoment);
             }
-
-            const forecastDomain = [
-                "|",
-                [this.forecastField, "=", false],
-                [this.forecastField, ">=", this.forecastStart],
-            ];
-            return Domain.and([domain, forecastDomain]);
+            const format = DATE_FORMAT[type];
+            this.forecastStart = startMoment.format(format);
         }
-
-        return domain;
+        return this.forecastStart;
     }
 
     /**
@@ -85,11 +92,8 @@ export class ForecastSearchModel extends SearchModel {
      */
     _importState(state) {
         super._importState(...arguments);
-        if (state.Forecast) {
-            const { forecastField, forecastFilter, forecastStart } = state.forecast;
-            this.forecastField = forecastField;
-            this.forecastFilter = forecastFilter;
-            this.forecastStart = forecastStart;
+        if (state.forecast) {
+            this.forecastStart = state.forecast.forecastStart;
         }
     }
 
@@ -98,8 +102,6 @@ export class ForecastSearchModel extends SearchModel {
      */
     _reset() {
         super._reset();
-        this.forecastField = null;
-        this.forecastFilter = false;
         this.forecastStart = null;
     }
 }
