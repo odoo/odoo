@@ -148,3 +148,16 @@ class test_inherits(common.TransactionCase):
         boxes.unit_id = unit_bar
 
         self.assertEquals(boxes.mapped('unit_id.name'), ['bar'])
+
+    def test_write_parent_multi_fields(self):
+        pallet = self.env['test.pallet'].create(
+            {
+                'name': 'Bread',
+                'field_in_box': 'Box',
+                'size': 10
+            }
+        )
+        self.assertEquals(pallet.size, 10)
+        pallet.write({"field_in_box": 'Big Box', 'size': 50})
+        self.assertEquals(pallet.field_in_box, 'Big Box')
+        self.assertEquals(pallet.size, 50)

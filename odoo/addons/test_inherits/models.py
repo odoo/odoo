@@ -41,6 +41,12 @@ class Box(models.Model):
     field_in_box = fields.Char('Field1')
     size = fields.Integer()
 
+    def write(self, vals):
+        """ Method to call invalidate_cache for the test case """
+        result = super().write(vals)
+        self.invalidate_cache()
+        return result
+
 
 # We add a third level of _inherits
 class Pallet(models.Model):
