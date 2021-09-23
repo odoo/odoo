@@ -230,7 +230,10 @@ var ServicesMixin = {
                 action: action,
                 options: options,
                 on_success: resolve,
-                on_fail: reject,
+                on_fail: (reason) => {
+                    reject(reason);
+                    return "alreadyThrown"
+                },
             });
         });
     },
