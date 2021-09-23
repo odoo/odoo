@@ -48,10 +48,6 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
-    is_overtime = fields.Boolean('Is Overtime')
-    overtime_amount = fields.Monetary("Overtime Cost")
-    overtime_duration = fields.Float("Overtime Duration")
-    total_amount = fields.Monetary('Total Amount', compute='_compute_total_amount', store=True)
 
     def name_get(self):
         result = super().name_get()
@@ -74,11 +70,6 @@ class AccountAnalyticLine(models.Model):
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
-
-    @api.depends('overtime_amount', 'amount')
-    def _compute_total_amount(self):
-        for analytic_line in self:
-            analytic_line.total_amount = analytic_line.overtime_amount + analytic_line.amount
 
     @api.depends('task_id', 'task_id.project_id')
     def _compute_project_id(self):
@@ -244,25 +235,25 @@ class AccountAnalyticLine(models.Model):
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
-        if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id', 'is_overtime']):
+        if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
-                if timesheet.is_overtime:
-                    overtime_cost = timesheet.employee_id.overtime_cost
-                    overtime_price = -timesheet.unit_amount * overtime_cost
-                    overtime_converted = timesheet.employee_id.currency_id._convert(
-                        overtime_price, timesheet.account_id.currency_id, self.env.company, timesheet.date)
-                    result[timesheet.id].update({
-                        'overtime_amount': overtime_converted,
-                        'overtime_duration': timesheet.unit_amount,
-                    })
-                else:
-                    cost = timesheet.employee_id.timesheet_cost or 0.0
-                    amount = -timesheet.unit_amount * cost
-                    amount_converted = timesheet.employee_id.currency_id._convert(
-                        amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
-                    result[timesheet.id].update({
-                        'amount': amount_converted,
-                    })
+                cost = timesheet._employee_timesheet_cost()
+                amount = -timesheet.unit_amount * cost
+                amount_converted = timesheet.employee_id.currency_id._convert(
+                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
+                result[timesheet.id].update({
+                    'amount': amount_converted,
+                })
+                # if timesheet.is_overtime:
+                #     overtime_cost = timesheet.employee_id.overtime_cost
+                #     overtime_price = -timesheet.unit_amount * overtime_cost
+                #     overtime_converted = timesheet.employee_id.currency_id._convert(
+                #         overtime_price, timesheet.account_id.currency_id, self.env.company, timesheet.date)
+                #     result[timesheet.id].update({
+                #         'overtime_amount': overtime_converted,
+                #         'overtime_duration': timesheet.unit_amount,
+                #     })
+                # else:
         return result
 
     def _is_timesheet_encode_uom_day(self):

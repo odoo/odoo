@@ -21,9 +21,7 @@ class ProfitabilityAnalysis(models.Model):
     line_date = fields.Date("Date", readonly=True)
     # cost
     timesheet_unit_amount = fields.Float("Timesheet Duration", digits=(16, 2), readonly=True, group_operator="sum")
-    overtime_unit_amount = fields.Float("Overtime Duration", digits=(16, 2), readonly=True, group_operator="sum")
     timesheet_cost = fields.Float("Timesheet Cost", digits=(16, 2), readonly=True, group_operator="sum")
-    overtime_cost = fields.Monetary("Overtime Cost", readonly=True, group_operator="sum")
     expense_cost = fields.Float("Other Costs", digits=(16, 2), readonly=True, group_operator="sum")
     # sale revenue
     order_confirmation_date = fields.Datetime('Sales Order Confirmation Date', readonly=True)
@@ -93,9 +91,7 @@ class ProfitabilityAnalysis(models.Model):
                     sub.amount_untaxed_to_invoice as amount_untaxed_to_invoice,
                     sub.amount_untaxed_invoiced as amount_untaxed_invoiced,
                     sub.timesheet_unit_amount as timesheet_unit_amount,
-                    sub.overtime_unit_amount as overtime_unit_amount,
                     sub.timesheet_cost as timesheet_cost,
-                    sub.overtime_cost as overtime_cost,
                     sub.expense_cost as expense_cost,
                     sub.other_revenues as other_revenues,
                     sub.line_date as line_date,
@@ -122,9 +118,7 @@ class ProfitabilityAnalysis(models.Model):
                         COST_SUMMARY.amount_untaxed_to_invoice AS amount_untaxed_to_invoice,
                         COST_SUMMARY.amount_untaxed_invoiced AS amount_untaxed_invoiced,
                         COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
-                        COST_SUMMARY.overtime_unit_amount AS overtime_unit_amount,
                         COST_SUMMARY.timesheet_cost AS timesheet_cost,
-                        COST_SUMMARY.overtime_cost AS overtime_cost,
                         COST_SUMMARY.expense_cost AS expense_cost,
                         COST_SUMMARY.other_revenues AS other_revenues,
                         COST_SUMMARY.line_date::date AS line_date
@@ -138,9 +132,7 @@ class ProfitabilityAnalysis(models.Model):
                                 analytic_account_id,
                                 sale_line_id,
                                 SUM(timesheet_unit_amount) AS timesheet_unit_amount,
-                                SUM(overtime_unit_amount) AS overtime_unit_amount,
                                 SUM(timesheet_cost) AS timesheet_cost,
-                                SUM(overtime_cost) AS overtime_cost,
                                 SUM(expense_cost) AS expense_cost,
                                 SUM(other_revenues) AS other_revenues,
                                 SUM(downpayment_invoiced) AS downpayment_invoiced,
@@ -156,9 +148,7 @@ class ProfitabilityAnalysis(models.Model):
                                     P.analytic_account_id AS analytic_account_id,
                                     TS.so_line AS sale_line_id,
                                     TS.unit_amount AS timesheet_unit_amount,
-                                    TS.overtime_duration AS overtime_unit_amount,
                                     TS.amount AS timesheet_cost,
-                                    TS.overtime_amount AS overtime_cost,
                                     0.0 AS other_revenues,
                                     0.0 AS expense_cost,
                                     0.0 AS downpayment_invoiced,
@@ -178,9 +168,7 @@ class ProfitabilityAnalysis(models.Model):
                                     P.analytic_account_id AS analytic_account_id,
                                     AAL.so_line AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
-                                    0.0 AS overtime_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    0.0 AS overtime_cost,
                                     AAL.amount AS other_revenues,
                                     0.0 AS expense_cost,
                                     0.0 AS downpayment_invoiced,
@@ -211,9 +199,7 @@ class ProfitabilityAnalysis(models.Model):
                                     P.analytic_account_id AS analytic_account_id,
                                     AAL.so_line AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
-                                    0.0 AS overtime_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    0.0 AS overtime_cost,
                                     0.0 AS other_revenues,
                                     AAL.amount AS expense_cost,
                                     0.0 AS downpayment_invoiced,
@@ -235,9 +221,7 @@ class ProfitabilityAnalysis(models.Model):
                                     P.analytic_account_id AS analytic_account_id,
                                     MY_SOLS.id AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
-                                    0.0 AS overtime_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    0.0 AS overtime_cost,
                                     0.0 AS other_revenues,
                                     0.0 AS expense_cost,
                                     CASE WHEN MY_SOLS.invoice_status = 'invoiced' THEN MY_SOLS.price_reduce ELSE 0.0 END AS downpayment_invoiced,
@@ -260,9 +244,7 @@ class ProfitabilityAnalysis(models.Model):
                                     P.analytic_account_id AS analytic_account_id,
                                     OLIS.id AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
-                                    0.0 AS overtime_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    0.0 AS overtime_cost,
                                     0.0 AS other_revenues,
                                     OLIS.price_reduce AS expense_cost,
                                     0.0 AS downpayment_invoiced,
@@ -288,9 +270,7 @@ class ProfitabilityAnalysis(models.Model):
                                     AMOUNT_UNTAXED.analytic_account_id AS analytic_account_id,
                                     AMOUNT_UNTAXED.sale_line_id AS sale_line_id,
                                     0.0 AS timesheet_unit_amount,
-                                    0.0 AS overtime_unit_amount,
                                     0.0 AS timesheet_cost,
-                                    0.0 AS overtime_cost,
                                     0.0 AS other_revenues,
                                     0.0 AS expense_cost,
                                     0.0 AS downpayment_invoiced,
