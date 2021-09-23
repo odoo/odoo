@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductScreen" t-if="!props.order" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension"
-       owl="1">
-        <xpath expr="//ActionpadWidget" position="replace"/>
+<!--    <t t-name="ProductScreen" t-if="!props.order" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension"-->
+<!--       owl="1">-->
+<!--        <xpath expr="//ActionpadWidget" position="replace"/>-->
 
-        <xpath expr="//div[hasclass('pads')]" position="inside">
-            <ActionpadWidget client="client"/>
-            <button class="button pay" t-on-click="trigger('click-pay')">
-                Continue to payment
-            </button>
-        </xpath>
-    </t>
+<!--        <xpath expr="//div[hasclass('pads')]" position="inside">-->
+<!--            <ActionpadWidget client="client"/>-->
+<!--            <button class="button pay" t-on-click="trigger('click-pay')">-->
+<!--                Continue to payment-->
+<!--            </button>-->
+<!--        </xpath>-->
+<!--    </t>-->
 
 </templates>

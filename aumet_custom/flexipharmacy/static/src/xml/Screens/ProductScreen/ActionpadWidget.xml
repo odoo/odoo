@@ -2,33 +2,33 @@
 <templates id="template" xml:space="preserve">
     <t t-name="ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension" owl="1">
         <xpath expr="//button[hasclass('set-customer')]" position="replace">
-            <button class="button set-customer" t-att-class="{'decentered': isLongName}"
-                    t-on-click="trigger('click-customer')" t-att-disabled="env.pos.get_order().get_refund_order()">
-                <t t-if="!env.isMobile"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
-                <t t-if="client">
-                    <t t-esc="client.name"/>
-                </t>
-                <t t-else="">
-                    Customer
-                </t>
-            </button>
-        </xpath>
-        <xpath expr="//button[hasclass('set-customer')]" position="after">
-            <button class="button set-customer" t-att-class="{'decentered': isLongName}"
-                    t-on-click="trigger('click-doctor')">
-                <t t-if="!env.isMobile"><i class="fa fa-user-md" role="img" aria-label="Customer" title="Customer"/></t>
-                <t t-if="env.pos.get_order().get_doctor()">
-                    <t t-esc="env.pos.get_order().get_doctor().name"/>
-                </t>
-                <t t-else="">
-                    Doctor
-                </t>
-            </button>
+             <div style="width: 50%; float: left;">
+                <button class="button set-customer" t-att-class="{'decentered': isLongName}"
+                        t-on-click="trigger('click-doctor')">
+                    <t t-if="!env.isMobile"><i class="fa fa-user-md" role="img" aria-label="Customer" title="Customer"/></t>
+                    <t t-if="env.pos.get_order().get_doctor()">
+                        <t t-esc="env.pos.get_order().get_doctor().name"/>
+                    </t>
+                    <t t-else="">
+                        Doctor
+                    </t>
+                </button>
+                <button class="button set-customer" t-att-class="{'decentered': isLongName}"
+                        t-on-click="trigger('click-customer')" t-att-disabled="env.pos.get_order().get_refund_order()">
+                    <t t-if="!env.isMobile"><i class="fa fa-user-circle" role="img" aria-label="Customer" title="Customer" /></t>
+                    <t t-if="client">
+                        <t t-esc="client.name"/>
+                    </t>
+                    <t t-else="">
+                        Customer
+                    </t>
+                </button>
+            </div>
         </xpath>
         <xpath expr="//button[hasclass('pay')]" position="replace">
-             <button class="button pay" style="height:108px !important" t-on-click="trigger('click-pay')">
+             <button class="button pay" t-on-click="trigger('click-pay')">
                 <div class="pay-circle">
-                    <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay"/>
+                    <i class="fa fa-play" role="img" aria-label="Pay" title="Pay"/>
                 </div>
                  Payment
             </button>

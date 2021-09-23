@@ -1,3 +1,21 @@
+@font-face {
+        font-family: 'Cairo';
+        src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot');
+        src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot?#iefix') format('embedded-opentype'),
+        url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.woff') format('woff'),
+        url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.ttf') format('truetype'),
+        url('/aumet_pos_theme/static/src/fontss/cairo-v10-latin-regular.svg#DIN Next LT Arabic') format('svg');
+        font-weight: normal;
+        font-style: normal;
+}
+.pos{
+    font-family: Cairo;
+}
+
+.pos button {
+    font-family: Cairo !important;
+}
+
 @keyframes r {
     0% {
         transform: rotate(0deg);
@@ -57,7 +75,6 @@ svg.gear {
 
 .pos .pos-topheader {
     width: 100%;
-    height: 60px;
     color: #ffffff;
     background: #1FBBA6;
 }
@@ -105,14 +122,14 @@ svg.gear {
     justify-content: space-between;
 }
 
-.pos .pos-rightheader {
-    flex-grow: 1;
-    flex-shrink: 1;
-    height: 100%;
-    overflow: hidden;
-    overflow-x: hidden;
-    padding-left: 200px;
-}
+/*.pos .pos-rightheader {*/
+/*    flex-grow: 1;*/
+/*    flex-shrink: 1;*/
+/*    height: 100%;*/
+/*    overflow: hidden;*/
+/*    overflow-x: hidden;*/
+/*    padding-left: 200px;*/
+/*}*/
 
 .pos .pos-rightheader > * {
     border-right: 0;
@@ -122,15 +139,16 @@ svg.gear {
 .pos .pos-rightheader .username {
     float: left;
     color: #ffffff;
-    font-size: 20px;
-    margin-right: 0;
-    line-height: 20px;
+    font-size: 18px;
+    /*margin-right: 0;*/
+    /*line-height: 20px;*/
     font-style: normal;
-    margin-left: 10px;
-    margin-top: 6px;
+    /*margin-left: 10px;*/
+    /*margin-top: 6px;*/
     vertical-align: middle;
-    display: flex;
-    justify-content: space-between;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    font-family: "Cairo";
 }
 
 
@@ -140,10 +158,10 @@ svg.gear {
 }
 
 .pos .pos-rightheader .header-button.lock-button {
-    width: 10%;
+    /*width: 10%;*/
     color: #ffffff !important;
     font-size: 20px;
-    line-height: 60px;
+    /*line-height: 60px;*/
     font-style: normal;
     margin: 0;
     vertical-align: middle;
@@ -159,12 +177,14 @@ svg.gear {
 
 .pos .pos-rightheader .header-button:last-child {
     border-left: 0 !important;
+    color: white;
+    font-size: 15px;
 }
 
 .pos .pos-content {
     width: 100%;
     position: absolute;
-    top: 60px;
+    /*top: 60px;*/
     bottom: 0;
     background: #ffffff;
 }
@@ -174,19 +194,19 @@ svg.gear {
 
 .pos .leftpane {
     background: #ffffff;
-    max-width: 25% !important;
+    /*max-width: 25% !important;*/
     border-right: 1px solid #5F5955;
     height: 100%;
     display: flex;
     flex-direction: column;
-    flex-grow: 0;
+    /*flex-grow: 0;*/
 }
 
 .pos .leftpane .pads {
     border-top: 0;
     width: 100% !important;
     margin: auto;
-    flex: 0 0 55% !important;
+    /*flex: 0 0 55% !important;*/
 }
 
 
@@ -208,7 +228,24 @@ svg.gear {
 }
 
 .pos .order .order-empty {
-    margin: 0 !important;
+    width: 80%;
+    min-width: 80%;
+    margin: auto !important;
+    margin-top: 50px !important;
+}
+
+.pos .order .order-empty h1{
+    font-size: 18px !important;
+    color: black;
+}
+
+.pos .order .order-empty p{
+    font-size: 16px !important;
+    color: black;
+}
+
+.pos .order .order-empty .fa{
+    font-size: 150px !important;
 }
 
 .pos .order .orderline {
@@ -241,6 +278,7 @@ svg.gear {
 
 .pos .ticket-button {
     background: #1FBBA6 !important;
+    padding-right: 70px !important;
 }
 
 /*  ********* The control buttons ********* */
@@ -265,7 +303,28 @@ svg.gear {
 
 .pos .product-screen .numpad {
     height: 100% !important;
+    order: 1;
+}
 
+.pos .product-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
+}
+
+.pos .product-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
+}
+
+.pos .order-management-screen .numpad {
+    height: 100% !important;
+    order: 1;
+}
+
+.pos .order-management-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
+}
+
+.pos .order-management-screen .numpad .numpad-minus{
+    border-bottom-left-radius: 10px !important;
 }
 
 .pos .control-button:active {
@@ -279,29 +338,48 @@ svg.gear {
 
 /*  ********* The actionpad (payment, set customer) ********* */
 
-
 .pos .actionpad {
-    padding: 0 !important;
+    display: table-footer-group !important;
     margin: auto !important;
     width: 80% !important;
-    text-align: center;
-    vertical-align: top;
-    border: none !important;
-    border-radius: 0 !important;
-    flex-grow: 1;
-    display: flex;
-    height: 15% !important;
-    max-width: 80% !important;
+    min-width: 80% !important;
+    order: 2;
+    /*border-bottom-left-radius: 10px !important;*/
+    border-radius: 10px !important;
 }
 
+/*.pos .actionpad {*/
+/*    padding: 0 !important;*/
+/*    margin: auto !important;*/
+/*    width: 80% !important;*/
+/*    text-align: center;*/
+/*    vertical-align: top;*/
+/*    border: none !important;*/
+/*    border-radius: 0 !important;*/
+/*    flex-grow: 1;*/
+/*    display: flex;*/
+/*    height: 15% !important;*/
+/*    max-width: 80% !important;*/
+/*}*/
 
-.pos .actionpad .button:first-child {
-    border-radius: 0 0 0 10px !important;
+/*.pos .actionpad {*/
+/*    margin-right: 16px !important;*/
+/*}*/
+
+.pos .actionpad .pay{
+    width: 50% !important;
+    height: 120px !important;
+    border-radius: 0 10px 10px 0 !important;
+    background: #1FBBA6 !important;
+    color: white;
 }
+
+/*.pos .actionpad .button:first-child {*/
+/*    border-radius: 0 0 0 10px !important;*/
+/*}*/
 
 .pos .actionpad .button:last-child {
-    border-radius: 0 0 10px 0 !important;
-
+    border-bottom-left-radius: 10px;
 }
 
 .pos .actionpad .button:hover {
@@ -309,27 +387,27 @@ svg.gear {
 }
 
 .pos .actionpad .button.set-customer {
-    padding: 0 !important
+    padding: 0 !important;
 }
 
-.pos .pay {
-    color: #ffffff;
-    background-color: #1FBBA6;
-    border-radius: 10px 10px 10px 10px !important;
-    font-weight: 500;
-    font-size: 18px;
-    height: 15%;
-    width: 70%;
-    max-width: 70%;
-    margin: 8px;
-}
+/*.pos .pay {*/
+/*    color: #ffffff;*/
+/*    background-color: #1FBBA6;*/
+/*    border-radius: 10px 10px 10px 10px !important;*/
+/*    font-weight: 500;*/
+/*    font-size: 18px;*/
+/*    height: 15%;*/
+/*    width: 70%;*/
+/*    max-width: 70%;*/
+/*    margin: 8px;*/
+/*}*/
 
 .pos .pay:hover {
     opacity: 0.9;
 }
 
 .pos .actionpad .button.set-customer {
-    height: 100% !important;
+    height: 60px !important;
 }
 
 .pos .middel {
@@ -359,6 +437,7 @@ svg.gear {
     margin: auto !important;
     width: 80% !important;
     min-width: 80% !important;
+    margin-bottom: 20px !important;
 }
 
 .pos .product-screen .numpad button {
@@ -372,6 +451,26 @@ svg.gear {
     background-color: #E2E2E2;
 }
 
+
+.pos .order-management-screen .numpad {
+    text-align: center;
+    border: 0 !important;
+    margin: auto !important;
+    width: 80% !important;
+    min-width: 80% !important;
+    margin-bottom: 20px !important;
+}
+
+.pos .order-management-screen .numpad button {
+    float: left;
+    height: 25%;
+    width: 25% !important;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #5F5955;
+    border-radius: 0 !important;
+    background-color: #E2E2E2;
+}
 .pos .numpad button:hover {
     background: #efefef;
 }
@@ -398,13 +497,15 @@ svg.gear {
 .pos .numpad button:nth-child(1) {
     border-top-left-radius: 10px;
 }
-
+.pos .actionpad .button:first-child{
+    border-top-left-radius: 10px !important;
+}
 .pos .numpad button:nth-child(13) {
     border-bottom-left-radius: 10px;
 }
 
 .pos .numpad button:last-child {
-    border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px !important;
 }
 
 .pos .input-button {
@@ -760,5 +861,79 @@ svg.gear {
     margin: auto;
     width: 431px !important;
 }
+
+.fa-custom-style{
+    font-size: 22px;
+}
+
+.pos .pos-logo {
+    visibility: hidden;
+}
+
+.search-bar-portal .search-box .icon {
+    color: #12B9A9 !important;
+}
+
+.search-bar-portal .search-box .clear-icon {
+    display: none;
+}
+
+.pos .pos-rightheader .header-button {
+    border-right: 0px !important;
+    border-left: 0px !important;
+}
+
+.vl {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 30px;
+    margin-top: 9px;
+}
+
+/*.pos .leftpane .pads .subpads .numpad {*/
+/*    display: none;*/
+/*}*/
+
+
+.pos .leftpane .pads .subpads {
+    flex-direction: column;
+}
+
+.pos .actionpad .button.pay .pay-circle .fa {
+    top: -3px !important;
+    color: #12B9A9 !important;
+}
+
+.pos .actionpad .button.pay .pay-circle {
+    background: white !important;
+}
+
+
+.openinigCashDiv {
+    margin-top: -20px;
+    width: 30%;
+    min-width: 30%;
+    max-width: 30%;
+    margin: auto;
+    border: 1px solid #E2E2E2;
+}
+
+.cashbox-input {
+    margin: auto;
+    line-height: 30px;
+    font-size: 16px;
+    border: solid 1px rgb(202, 202, 202);
+    /*border-top-width: 0px;*/
+    cursor: pointer;
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+
+/*.openCashButton {*/
+/*    height: unset !important;*/
+/*    border-radius: 0px 0px 0 0 !important;*/
+/*    margin-bottom: 5px !important;*/
+/*}*/
 
 /*--------------------End-Receipt-Screen---------------------------*/

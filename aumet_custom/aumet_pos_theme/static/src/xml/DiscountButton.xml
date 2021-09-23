@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="DiscountButton" t-inherit="pos_discount.DiscountButton" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('js_discount')]" position="replace">
+            <div class="control-button js_discount">
+                <i class="fa fa-tag"></i>
+                <span> </span>
+                <span>Add Discount</span>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
