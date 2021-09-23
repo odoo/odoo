@@ -1771,11 +1771,8 @@ class AccountMove(models.Model):
                 'formatted_amount_untaxed':                  Same as amount_untaxed, but as a string formatted accordingly with partner's locale.
                 'allow_tax_edition':                         True if the user should have the ability to manually edit the tax amounts by group
                                                              to fix rounding errors.
-                'groups_by_total_type':                      A dictionary formed liked {'total_type': groups_data}
-                                                             Where total_type is either:
-                                                                - 'main_total':  meaning all the amounts in groups_data are part of amount_total
-                                                                - 'after_total': meaning the amounts in groups_data are not part of amount_total
-                                                                                 and should be displayed as modificators applied to it.
+                'groups_by_subtotals':                       A dictionary formed liked {'subtotal': groups_data}
+                                                             Where total_type is a subtotal name defined on a tax group, or the default one: 'Untaxed Amount'.
                                                              And groups_data is a list of dict in the following form:
                                                                 {
                                                                     'tax_group_name':                  The name of the tax groups this total is made for.
@@ -1787,6 +1784,14 @@ class AccountMove(models.Model):
                                                                                                        formatted accordingly with partner's locale.
                                                                     'tax_group_id':                    The id of the tax group corresponding to this dict.
                                                                     'group_key':                       A unique key identifying this total dict,
+                                                                }
+                'subtotals':                                 A list of dictionaries in the following form, one for each subtotal in groups_by_subtotals' keys
+                                                                {
+                                                                    'name':                            The name of the subtotal
+                                                                    'amount':                          The total amount for this subtotal, summing all
+                                                                                                       the tax groups belonging to preceding subtotals and the base amount
+                                                                    'formatted_amount':                Same as amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
                                                                 }
             }
         """
