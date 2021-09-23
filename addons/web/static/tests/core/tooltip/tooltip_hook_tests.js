@@ -19,8 +19,12 @@ const mainComponents = registry.category("main_components");
  *
  * @param {Component} Child a child Component that contains nodes with "data-tooltip" attribute
  * @param {Object} [options]
- * @param {Object} options.mockSetTimeout the mocked setTimeout to use (by default, calls the
+ * @param {function} options.mockSetTimeout the mocked setTimeout to use (by default, calls the
  *   callback directly)
+ * @param {function} options.mockSetInterval the mocked setInterval to use (by default, calls the
+ *   callback directly)
+ * @param {function} options.mockClearTimeout the mocked clearTimeout to use (by default, does nothing)
+ * @param {function} options.mockClearInterval the mocked clearInterval to use (by default, does nothing)
  * @returns {Promise<Component>}
  */
 async function makeParent(Child, options = {}) {
@@ -51,7 +55,9 @@ async function makeParent(Child, options = {}) {
 
     patchWithCleanup(browser, {
         setTimeout: options.mockSetTimeout || ((fn) => fn()),
+        clearTimeout: options.mockClearTimeout || (() => {}),
         setInterval: options.mockSetInterval || ((fn) => fn()),
+        clearInterval: options.mockClearInterval || (() => {}),
     });
 
     const comp = await mount(Parent, { env, target: fixture });
@@ -251,5 +257,32 @@ QUnit.module("Tooltip hook", () => {
             parent.el.querySelector(".o-tooltip").innerHTML,
             "<ul><li>X: 3</li><li>Y: abc</li></ul>"
         );
+    });
+
+    QUnit.test("destroy a component that called useTooltip", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
+            <button data-tooltip="tooltip">Action</button>
+        `;
+        const parent = await makeParent(MyComponent, {
+            mockSetInterval() {
+                assert.step("setInterval");
+            },
+            mockClearInterval() {
+                assert.step("clearInterval");
+            },
+        });
+
+        assert.verifySteps(["setInterval"]);
+        assert.containsNone(parent, ".o_popover_container .o-tooltip");
+
+        parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        assert.strictEqual(parent.el.querySelector(".o-tooltip").innerText, "tooltip");
+
+        parent.destroy();
+
+        assert.verifySteps(["clearInterval"]);
     });
 });

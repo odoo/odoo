@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { useListener } from "@web/core/utils/hooks";
+import { useEffect, useListener } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "./tooltip";
 
@@ -89,23 +89,29 @@ export function useTooltip() {
 
     // Regularly check that the target is still in the DOM and we're still
     // hovering it, because if not, we have to close the tooltip
-    browser.setInterval(() => {
-        if (!target) {
-            return;
-        }
-        if (!document.body.contains(target)) {
-            return cleanup(); // target is no longer in the DOM
-        }
-        const targetRect = target.getBoundingClientRect();
-        if (
-            positionX < targetRect.left ||
-            positionX > targetRect.right ||
-            positionY < targetRect.top ||
-            positionY > targetRect.bottom
-        ) {
-            return cleanup(); // mouse is no longer hovering the target
-        }
-    }, CLOSE_DELAY);
+    useEffect(
+        () => {
+            const interval = browser.setInterval(() => {
+                if (!target) {
+                    return;
+                }
+                if (!document.body.contains(target)) {
+                    return cleanup(); // target is no longer in the DOM
+                }
+                const targetRect = target.getBoundingClientRect();
+                if (
+                    positionX < targetRect.left ||
+                    positionX > targetRect.right ||
+                    positionY < targetRect.top ||
+                    positionY > targetRect.bottom
+                ) {
+                    return cleanup(); // mouse is no longer hovering the target
+                }
+            }, CLOSE_DELAY);
+            return () => browser.clearInterval(interval);
+        },
+        () => []
+    );
 
     // Listen (using event delegation) to "mouseenter" events on all nodes with
     // the "data-tooltip" or "data-tooltip-template" attribute, to open the tooltip.
