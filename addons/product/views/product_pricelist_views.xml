@@ -108,7 +108,7 @@
                                 <field name="fixed_price" widget="monetary" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}"/>
                                 <label for="percent_price" string="Discount" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>
                                 <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
-                                    <field name="percent_price" class="oe_inline" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>%%
+                                    <field name="percent_price" class="oe_inline" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>%
                                 </div>
                                 <field name="base" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
                                 <field name="base_pricelist_id" attrs="{
@@ -118,7 +118,7 @@
                                 <label for="price_discount" string="Discount" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
                                 <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
                                     <field name="price_discount"/>
-                                    <span>%%</span>
+                                    <span>%</span>
                                 </div>
                                 <field name="price_surcharge" widget="monetary" string="Extra Fee" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
                                 <field name="price_round" string="Rounding Method" attrs="{'invisible':[('compute_price', '!=', 'formula')]}"/>
