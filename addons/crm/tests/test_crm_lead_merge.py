@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from datetime import timedelta
 
 from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
 from odoo.fields import Datetime
@@ -391,3 +392,97 @@ class TestLeadMerge(TestLeadMergeCommon):
         # 2many accessors updated
         self.assertEqual(master_lead.activity_ids, activity)
         self.assertEqual(master_lead.calendar_event_ids, calendar_event)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_merge_method_followers(self):
+        """ Test that the followers of the leads are added in the destination lead.
+
+        They should be added if:
+        - The related partner was active on the lead (posted a message in the last 30 days)
+        - The related partner is not already following the destination lead
+
+        Leads                       Followers           Info
+        ---------------------------------------------------------------------------------
+        lead_w_contact              contact_1           OK (destination lead)
+        lead_w_email                contact_1           KO (already following the destination lead)
+                                    contact_2           OK (active on lead_w_email)
+                                    contact_company     KO (most recent message on lead_w_email is 35 days ago, message
+                                                            on lead_w_partner is not counted as he doesn't follow it)
+        lead_w_partner              contact_2           KO (already added with lead_w_email)
+        lead_w_partner_company
+        """
+        self.leads.message_follower_ids.unlink()
+        self.leads.message_ids.unlink()
+
+        self.lead_w_contact.message_subscribe([self.contact_1.id])
+        self.lead_w_email.message_subscribe([self.contact_1.id, self.contact_2.id, self.contact_company.id])
+        self.lead_w_partner.message_subscribe([self.contact_2.id])
+
+        self.env['mail.message'].create([{
+            'author_id': self.contact_1.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_contact.id,
+            'date': Datetime.now() - timedelta(days=1),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }, {
+            'author_id': self.contact_1.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_email.id,
+            'date': Datetime.now() - timedelta(days=20),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }, {
+            'author_id': self.contact_2.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_email.id,
+            'date': Datetime.now() - timedelta(days=15),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }, {
+            'author_id': self.contact_2.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_partner.id,
+            'date': Datetime.now() - timedelta(days=29),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }, {
+            'author_id': self.contact_company.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_email.id,
+            'date': Datetime.now() - timedelta(days=35),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }, {
+            'author_id': self.contact_company.id,
+            'model': 'crm.lead',
+            'res_id': self.lead_w_partner.id,
+            'date': Datetime.now(),
+            'subtype_id': self.ref('mail.mt_comment'),
+            'reply_to': False,
+            'body': 'Test follower',
+        }])
+        initial_followers = self.lead_w_contact.message_follower_ids
+
+        leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+        master_lead = leads._merge_opportunity(max_length=None)
+
+        self.assertEqual(master_lead, self.lead_w_contact)
+
+        # Check followers of the destination lead
+        new_partner_followers = (master_lead.message_follower_ids - initial_followers).partner_id
+        self.assertIn(self.contact_2, new_partner_followers,
+                      'The partner must follow the destination lead')
+        # "contact_company" posted a message 35 days ago on lead_2, so it's considered as inactive
+        # "contact_company" posted a message now on lead_3, but he doesn't follow lead_3
+        # so this message is just ignored
+        self.assertNotIn(self.contact_company, new_partner_followers,
+                         'The partner was not active on the lead')
+        self.assertIn(self.contact_1, master_lead.message_follower_ids.partner_id,
+                      'Should not have removed follower of the destination lead')
