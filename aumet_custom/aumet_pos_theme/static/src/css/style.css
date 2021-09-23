@@ -1,14 +1,15 @@
 @font-face {
-        font-family: 'Cairo';
-        src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot');
-        src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot?#iefix') format('embedded-opentype'),
-        url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.woff') format('woff'),
-        url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.ttf') format('truetype'),
-        url('/aumet_pos_theme/static/src/fontss/cairo-v10-latin-regular.svg#DIN Next LT Arabic') format('svg');
-        font-weight: normal;
-        font-style: normal;
+    font-family: 'Cairo';
+    src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot');
+    src: url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.eot?#iefix') format('embedded-opentype'),
+    url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.woff') format('woff'),
+    url('/aumet_pos_theme/static/src/fonts/cairo-v10-latin-regular.ttf') format('truetype'),
+    url('/aumet_pos_theme/static/src/fontss/cairo-v10-latin-regular.svg#DIN Next LT Arabic') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
-.pos{
+
+.pos {
     font-family: Cairo;
 }
 
@@ -234,17 +235,17 @@ svg.gear {
     margin-top: 50px !important;
 }
 
-.pos .order .order-empty h1{
+.pos .order .order-empty h1 {
     font-size: 18px !important;
     color: black;
 }
 
-.pos .order .order-empty p{
+.pos .order .order-empty p {
     font-size: 16px !important;
     color: black;
 }
 
-.pos .order .order-empty .fa{
+.pos .order .order-empty .fa {
     font-size: 150px !important;
 }
 
@@ -306,11 +307,11 @@ svg.gear {
     order: 1;
 }
 
-.pos .product-screen .numpad .numpad-minus{
+.pos .product-screen .numpad .numpad-minus {
     border-bottom-left-radius: 10px !important;
 }
 
-.pos .product-screen .numpad .numpad-minus{
+.pos .product-screen .numpad .numpad-minus {
     border-bottom-left-radius: 10px !important;
 }
 
@@ -319,11 +320,11 @@ svg.gear {
     order: 1;
 }
 
-.pos .order-management-screen .numpad .numpad-minus{
+.pos .order-management-screen .numpad .numpad-minus {
     border-bottom-left-radius: 10px !important;
 }
 
-.pos .order-management-screen .numpad .numpad-minus{
+.pos .order-management-screen .numpad .numpad-minus {
     border-bottom-left-radius: 10px !important;
 }
 
@@ -366,7 +367,7 @@ svg.gear {
 /*    margin-right: 16px !important;*/
 /*}*/
 
-.pos .actionpad .pay{
+.pos .actionpad .pay {
     width: 50% !important;
     height: 120px !important;
     border-radius: 0 10px 10px 0 !important;
@@ -471,6 +472,7 @@ svg.gear {
     border-radius: 0 !important;
     background-color: #E2E2E2;
 }
+
 .pos .numpad button:hover {
     background: #efefef;
 }
@@ -497,9 +499,11 @@ svg.gear {
 .pos .numpad button:nth-child(1) {
     border-top-left-radius: 10px;
 }
-.pos .actionpad .button:first-child{
+
+.pos .actionpad .button:first-child {
     border-top-left-radius: 10px !important;
 }
+
 .pos .numpad button:nth-child(13) {
     border-bottom-left-radius: 10px;
 }
@@ -862,7 +866,7 @@ svg.gear {
     width: 431px !important;
 }
 
-.fa-custom-style{
+.fa-custom-style {
     font-size: 22px;
 }
 
@@ -937,3 +941,117 @@ svg.gear {
 /*}*/
 
 /*--------------------End-Receipt-Screen---------------------------*/
+
+
+.pos .login-overlay {
+    background: #FFFFFF !important;
+}
+
+.pos .login-overlay:before {
+    background: #FFFFFF !important;
+}
+
+.pos .screen-login {
+    position: absolute;
+    background-color: #FFFFFF;
+}
+
+.pos .login-title {
+    height: 40%;
+    vertical-align: middle;
+    line-height: 5;
+    font-size: larger;
+}
+
+.pos .login-body {
+    display: flex;
+    justify-content: center;
+    height: 37%;
+}
+
+.pos .login-footer {
+    height: 18%;
+}
+
+.pos .login-element {
+    float: left;
+    width: 40%;
+    height: 60%;
+}
+
+.pos .login-barcode-img {
+    width: 80px;
+    height: 55px;
+    background: white;
+    border: 0px;
+}
+
+.pos .login-barcode-text {
+    color: #000000 !important;
+}
+
+.pos .login-or {
+    font-size: 15px;
+    font-style: italic;
+    float: left;
+    width: 10%;
+    height: 100%;
+    line-height: 5;
+}
+
+.pos .login-button {
+    background: #373737 !important;
+    color: #FFFFFF !important;
+}
+
+@media screen and (max-width: 576px) {
+    .pos .screen-login {
+        font-family: 'Lato', sans-serif;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background-color: #fff;
+        overflow: hidden;
+    }
+
+    .pos .login-body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pos .login-button {
+        color: #fff;
+        background-color: #00A09D;
+        border-color: #00A09D;
+        height: 38px;
+    }
+
+    .pos .popups .popup-selection {
+        width: 90%;
+    }
+
+    .pos .login-barcode-text {
+        color: #adb5bd;
+        margin-top: 8px;
+        margin-bottom: 0;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    .pos .login-element .o_barcode_mobile_container .o_mobile_barcode {
+        top: 0;
+        height: 55px;
+    }
+}
+
+.pos .pos-rightheader .header-button.lock-button {
+    font-size: 20px;
+    color: rgb(94, 185, 55);
+    transition: all 200ms ease-in-out;
+    width: 18px;
+}
+
+.pos .pos-rightheader .header-button.lock-button:hover {
+    color: rgb(197, 52, 0);
+}
