@@ -381,7 +381,7 @@ class AccountPayment(models.Model):
     @api.depends('partner_id', 'destination_account_id', 'journal_id')
     def _compute_is_internal_transfer(self):
         for payment in self:
-            payment.is_internal_transfer = payment.partner_id == payment.journal_id.company_id.partner_id
+            payment.is_internal_transfer = payment.partner_id and payment.partner_id == payment.journal_id.company_id.partner_id
 
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
