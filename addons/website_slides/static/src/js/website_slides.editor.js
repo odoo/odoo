@@ -7,7 +7,7 @@ import SlidesCourseTagAdd from '@website_slides/js/slides_course_tag_add';
 
 const TagCourseDialog = SlidesCourseTagAdd.TagCourseDialog;
 
-var ChannelCreateDialog = Dialog.extend({
+export const ChannelCreateDialog = Dialog.extend({
     template: 'website.slide.channel.create',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
         ['/website_slides/static/src/xml/website_slides_channel.xml',

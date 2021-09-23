@@ -10,6 +10,7 @@
     'depends': ['website_slides', 'website_sale'],
     'installable': True,
     'data': [
+        'data/product_data.xml',
         'report/sale_report_views.xml',
         'views/website_slides_menu_views.xml',
         'views/slide_channel_views.xml',
@@ -25,6 +26,9 @@
         'web.assets_frontend': [
             'website_sale_slides/static/src/js/**/*',
         ],
+        'web.assets_qweb': [
+            'website_sale_slides/static/src/xml/website_slides_channel.xml',
+        ]
     },
     'license': 'LGPL-3',
 }
