@@ -910,6 +910,8 @@ class AccountJournal(models.Model):
         :param payment_type: either inbound or outbound, used to know which lines to return
         :return: Either the inbound or outbound payment method lines
         """
+        if not self:
+            return self.env['account.payment.method.line']
         self.ensure_one()
         if payment_type == 'inbound':
             return self.inbound_payment_method_line_ids
