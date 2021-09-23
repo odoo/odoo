@@ -924,7 +924,7 @@ const Wysiwyg = Widget.extend({
                 $node.replaceWith(element);
                 this.odooEditor.unbreakableStepUnactive();
                 this.odooEditor.historyStep();
-            } else {
+            } else if (element) {
                 this.odooEditor.execCommand('insertHTML', element.outerHTML);
             }
         });
