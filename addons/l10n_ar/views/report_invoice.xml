@@ -122,9 +122,6 @@
             <attribute name="t-esc">l10n_ar_values['price_unit']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
-        <xpath expr="//span[@id='line_tax_ids']" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), l10n_ar_values['taxes']))</attribute>
-        </xpath>
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
             <attribute name="t-value">current_subtotal + l10n_ar_values['price_subtotal']</attribute>
         </t>
@@ -148,25 +145,20 @@
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
-        <t t-set="tax_totals" position="attributes">
-            <attribute name="t-value">o._get_tax_totals_for_latam_invoice_report()</attribute>
-        </t>
-
         <!-- use column vat instead of taxes and only if vat discriminated -->
         <xpath expr="//th[@name='th_taxes']/span" position="replace">
             <span>% VAT</span>
         </xpath>
 
-        <xpath expr="//th[@name='th_taxes']" position="attributes">
-            <attribute name="t-if">o.tax_totals_json</attribute>
-        </xpath>
-
         <!-- use column vat instead of taxes and only list vat taxes-->
+        <xpath expr="//th[@name='th_taxes']" position="attributes">
+            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+        </xpath>
         <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
-            <attribute name="t-if">o.tax_totals_json</attribute>
+            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
         </xpath>
         <span id="line_tax_ids" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), l10n_ar_values['taxes'].filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
         </span>
 
         <!-- remove payment reference that is not used in Argentina -->

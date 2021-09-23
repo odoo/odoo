@@ -53,6 +53,7 @@ class L10nLatamDocumentType(models.Model):
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _filter_taxes_included(self, taxes):
+        # TODO BORRAR
         """ This method is to be inherited by different localizations and must return filter the given taxes recordset
         returning the taxes to be included on reports of this document type. All taxes are going to be discriminated
         except the one returned by this method. """

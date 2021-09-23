@@ -2,8 +2,6 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-import json
-import re
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -231,9 +229,3 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
-
-    def _get_tax_totals_for_latam_invoice_report(self):
-        self.ensure_one()
-        tax_totals = json.loads(self.tax_totals_json)
-        tax_totals['amount_untaxed'] = self.l10n_latam_amount_untaxed
-        return tax_totals

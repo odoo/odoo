@@ -1640,10 +1640,10 @@ class AccountMove(models.Model):
                 move.tax_totals_json = None
                 continue
 
-            tax_lines_data = move._prepare_tax_lines_data_for_totals_from_invoice()
+            tax_lines_data, amount_untaxed = move._prepare_tax_lines_data_for_totals_from_invoice()
 
             move.tax_totals_json = json.dumps({
-                **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
+                **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, amount_untaxed, move.currency_id),
                 'allow_tax_edition': move.is_purchase_document(include_receipts=False) and move.state == 'draft',
             })
 
@@ -1660,11 +1660,15 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
+        taxes_filtered = tax_line_id_filter or tax_ids_filter
+        filtered_amount_untaxed = self.amount_total
+
         tax_line_id_filter = tax_line_id_filter or (lambda aml, tax: True)
         tax_ids_filter = tax_ids_filter or (lambda aml, tax: True)
 
         balance_multiplicator = -1 if self.is_inbound() else 1
         tax_lines_data = []
+
 
         for line in self.line_ids:
             if line.tax_line_id and tax_line_id_filter(line, line.tax_line_id):
@@ -1673,6 +1677,7 @@ class AccountMove(models.Model):
                     'tax_amount': line.amount_currency * balance_multiplicator,
                     'tax': line.tax_line_id,
                 })
+                filtered_amount_untaxed -= line.amount_currency * balance_multiplicator
 
             if line.tax_ids:
                 for base_tax in line.tax_ids.flatten_taxes_hierarchy():
@@ -1684,7 +1689,12 @@ class AccountMove(models.Model):
                             'tax_affecting_base': line.tax_line_id,
                         })
 
-        return tax_lines_data
+        if taxes_filtered:
+            amount_untaxed = self.currency_id.round(filtered_amount_untaxed)
+        else:
+            amount_untaxed = self.amount_untaxed
+
+        return tax_lines_data, amount_untaxed
 
     @api.model
     def _prepare_tax_lines_data_for_totals_from_object(self, object_lines, tax_results_function):
