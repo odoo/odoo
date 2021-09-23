@@ -101,11 +101,11 @@ HTMLHeadingElement.prototype.oEnter = function () {
  */
 HTMLQuoteElement.prototype.oEnter = HTMLHeadingElement.prototype.oEnter;
 /**
- * Specific behavior for list items: deletion and unindentation in some cases.
+ * Specific behavior for list items: deletion and unindentation when empty.
  */
 HTMLLIElement.prototype.oEnter = function () {
-    // If not last list item or not empty last item, regular block split
-    if (this.nextElementSibling || this.textContent) {
+    // If not empty list item, regular block split
+    if (this.textContent) {
         const node = HTMLElement.prototype.oEnter.call(this, ...arguments);
         if (node.classList.contains('o_checked')) {
             toggleClass(node, 'o_checked');
