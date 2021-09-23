@@ -103,6 +103,9 @@ class HrWorkEntry(models.Model):
     def _check_if_error(self):
         if not self:
             return False
+        if self.env.context.get('skip_work_entry_check'):
+            return False
+
         undefined_type = self.filtered(lambda b: not b.work_entry_type_id)
         undefined_type.write({'state': 'conflict'})
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
