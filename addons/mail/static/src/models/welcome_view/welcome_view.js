@@ -144,8 +144,8 @@ function factory(dependencies) {
         /**
          * Determines whether the 'joinButton' is disabled.
          * 
-         * Shall be disabled when 'pendingGuestName' is an empty string or when
-         * the current user is not a guest.
+         * Shall be disabled when 'pendingGuestName' is an empty string while
+         * the current user is a guest.
          */
         isJoinButtonDisabled: attr({
             compute: '_computeIsJoinButtonDisabled'
