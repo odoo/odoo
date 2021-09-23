@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
@@ -13,7 +14,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
-from odoo.tests.common import Form
+from odoo.tests.common import Form, users
 
 
 class TestActivityCommon(TestMailCommon):
@@ -224,69 +225,6 @@ class TestActivityFlow(TestActivityCommon):
             # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
 
-    def test_action_feedback_attachment(self):
-        Partner = self.env['res.partner']
-        Activity = self.env['mail.activity']
-        Attachment = self.env['ir.attachment']
-        Message = self.env['mail.message']
-
-        partner = self.env['res.partner'].create({
-            'name': 'Tester',
-        })
-
-        activity = Activity.create({
-            'summary': 'Test',
-            'activity_type_id': 1,
-            'res_model_id': self.env.ref('base.model_res_partner').id,
-            'res_id': partner.id,
-        })
-
-        attachments = Attachment
-        attachments += Attachment.create({
-            'name': 'test',
-            'res_name': 'test',
-            'res_model': 'mail.activity',
-            'res_id': activity.id,
-            'datas': 'test',
-        })
-        attachments += Attachment.create({
-            'name': 'test2',
-            'res_name': 'test',
-            'res_model': 'mail.activity',
-            'res_id': activity.id,
-            'datas': 'testtest',
-        })
-
-        # Checking if the attachment has been forwarded to the message
-        # when marking an activity as "Done"
-        activity.action_feedback()
-        activity_message = Message.search([], order='id desc', limit=1)
-        self.assertEqual(set(activity_message.attachment_ids.ids), set(attachments.ids))
-        for attachment in attachments:
-            self.assertEqual(attachment.res_id, activity_message.id)
-            self.assertEqual(attachment.res_model, activity_message._name)
-
-    def test_chained_activities(self):
-        Partner = self.env['ir.model']._get('res.partner')
-        partner = self.env['res.partner'].create({
-            'name': 'Tester',
-        })
-        chained_activity = self.env['mail.activity'].create({
-            'summary': 'Test',
-            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
-            'res_model_id': Partner.id,
-            'res_id': partner.id,
-        })
-        chained_activity.action_feedback(feedback='Done')
-
-        self.assertFalse(chained_activity.exists())
-
-        next_activity = partner.activity_ids
-
-        self.assertNotEqual(chained_activity.id, next_activity.id)
-        self.assertEqual(next_activity.summary, 'Take the second step.')
-        self.assertEqual(next_activity.date_deadline, date.today() + relativedelta(days=10))
-
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
@@ -424,6 +362,89 @@ class TestActivityMixin(TestActivityCommon):
             user_id=self.user_admin.id,
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
+    @users('employee')
+    def test_feedback_w_attachments(self):
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': 1,
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        attachments = self.env['ir.attachment'].create([{
+            'name': 'test',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'test',
+        }, {
+            'name': 'test2',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'testtest',
+        }])
+
+        # Checking if the attachment has been forwarded to the message
+        # when marking an activity as "Done"
+        activity.action_feedback()
+        activity_message = test_record.message_ids[-1]
+        self.assertEqual(set(activity_message.attachment_ids.ids), set(attachments.ids))
+        for attachment in attachments:
+            self.assertEqual(attachment.res_id, activity_message.id)
+            self.assertEqual(attachment.res_model, activity_message._name)
+
+    @users('employee')
+    def test_feedback_chained_current_date(self):
+        frozen_now = datetime(2021, 10, 10, 14, 30, 15)
+
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+        first_activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
+            'date_deadline': frozen_now + relativedelta(days=-2),
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        first_activity_id = first_activity.id
+
+        with freeze_time(frozen_now):
+            first_activity.action_feedback(feedback='Done')
+        self.assertFalse(first_activity.exists())
+
+        # check chained activity
+        new_activity = test_record.activity_ids
+        self.assertNotEqual(new_activity.id, first_activity_id)
+        self.assertEqual(new_activity.summary, 'Take the second step.')
+        self.assertEqual(new_activity.date_deadline, frozen_now.date() + relativedelta(days=10))
+
+    @users('employee')
+    def test_feedback_chained_previous(self):
+        self.env.ref('test_mail.mail_act_test_chained_2').sudo().write({'delay_from': 'previous_activity'})
+        frozen_now = datetime(2021, 10, 10, 14, 30, 15)
+
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+        first_activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_chained_1').id,
+            'date_deadline': frozen_now + relativedelta(days=-2),
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id('mail.test.activity'),
+            'summary': 'Test',
+        })
+        first_activity_id = first_activity.id
+
+        with freeze_time(frozen_now):
+            first_activity.action_feedback(feedback='Done')
+        self.assertFalse(first_activity.exists())
+
+        # check chained activity
+        new_activity = test_record.activity_ids
+        self.assertNotEqual(new_activity.id, first_activity_id)
+        self.assertEqual(new_activity.summary, 'Take the second step.')
+        self.assertEqual(new_activity.date_deadline, frozen_now.date() + relativedelta(days=8),
+                         'New deadline should take into account original activity deadline, not current date')
 
     def test_mail_activity_state(self):
         """Create 3 activity for 2 different users in 2 different timezones.
