@@ -203,4 +203,53 @@ QUnit.module("Tooltip hook", () => {
         assert.strictEqual(parent.el.querySelector(".o_popover").innerText, "left");
         assert.hasClass(parent.el.querySelector(".o_popover"), "o-popper-position--lm");
     });
+
+    QUnit.test("tooltip with a template, no info", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
+            <button data-tooltip-template="my_tooltip_template">Action</button>
+        `;
+        const parent = await makeParent(MyComponent);
+        parent.env.qweb.addTemplate("my_tooltip_template", "<i>tooltip</i>");
+
+        assert.containsNone(parent, ".o_popover_container .o-tooltip");
+        parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        assert.strictEqual(parent.el.querySelector(".o-tooltip").innerHTML, "<i>tooltip</i>");
+    });
+
+    QUnit.test("tooltip with a template and info", async (assert) => {
+        class MyComponent extends Component {
+            get info() {
+                return JSON.stringify({ x: 3, y: "abc" });
+            }
+        }
+        MyComponent.template = xml`
+            <button
+                data-tooltip-template="my_tooltip_template"
+                t-att-data-tooltip-info="info">
+                Action
+            </button>
+        `;
+        const parent = await makeParent(MyComponent);
+        parent.env.qweb.addTemplate(
+            "my_tooltip_template",
+            `
+                <ul>
+                    <li>X: <t t-esc="info.x"/></li>
+                    <li>Y: <t t-esc="info.y"/></li>
+                </ul>
+            `
+        );
+
+        assert.containsNone(parent, ".o_popover_container .o-tooltip");
+        parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        assert.strictEqual(
+            parent.el.querySelector(".o-tooltip").innerHTML,
+            "<ul><li>X: 3</li><li>Y: abc</li></ul>"
+        );
+    });
 });

@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { useListener } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "./tooltip";
-import { registry } from "@web/core/registry";
 
 /**
  * The useTooltip hook allows to display custom tooltips on every elements with
@@ -18,6 +17,19 @@ import { registry } from "@web/core/registry";
  * The ideal position of the tooltip can be specified thanks to the attribute
  * "data-tooltip-position":
  *   <button data-tooltip="This is a tooltip" data-tooltip-position="left">Do something</button>
+ *
+ * For advanced tooltips containing dynamic and/or html content, the
+ * "data-tooltip-template" and "data-tooltip-info" attributes can be used.
+ * For example, let's suppose the following qweb template:
+ *   <t t-name="some_template">
+ *     <ul>
+ *       <li>info.x</li>
+ *       <li>info.y</li>
+ *     </ul>
+ *   </t>
+ * This template can then be used in a tooltip as follows:
+ *   <button data-tooltip-template="some_template" data-tooltip-info="info">Do something</button>
+ * with "info" being a stringified object with two keys "x" and "y".
  */
 const OPEN_DELAY = 400;
 const CLOSE_DELAY = 200;
@@ -46,13 +58,12 @@ export function useTooltip() {
     function onMouseEnter(ev) {
         const dataset = ev.target.dataset;
         const tooltip = dataset.tooltip;
-
-        let Component, props;
-        if ("tooltipComponent" in dataset) {
-            ({ Component, props } = JSON.parse(dataset["tooltipComponent"]));
-            Component = registry.category("tooltips").get(Component, null);
+        let template, info;
+        if ("tooltipTemplate" in dataset) {
+            template = dataset.tooltipTemplate;
+            info = dataset.tooltipInfo ? JSON.parse(dataset.tooltipInfo) : null;
         }
-        if (tooltip || Component) {
+        if (tooltip || template) {
             cleanup();
             target = ev.target;
             openTooltipTimeout = browser.setTimeout(() => {
@@ -60,7 +71,7 @@ export function useTooltip() {
                 closeTooltip = popover.add(
                     target,
                     Tooltip,
-                    { tooltip, Component, props },
+                    { tooltip, template, info },
                     { position }
                 );
             }, OPEN_DELAY);
@@ -97,6 +108,7 @@ export function useTooltip() {
     }, CLOSE_DELAY);
 
     // Listen (using event delegation) to "mouseenter" events on all nodes with
-    // the "data-tooltip" attribute, to open the tooltip.
-    useListener("mouseenter", "[data-tooltip]", onMouseEnter, { capture: true });
+    // the "data-tooltip" or "data-tooltip-template" attribute, to open the tooltip.
+    const selector = "[data-tooltip], [data-tooltip-template]";
+    useListener("mouseenter", selector, onMouseEnter, { capture: true });
 }
