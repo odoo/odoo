@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
         )
         products = so_lines.mapped('product_id')
         related_channels = self.env['slide.channel'].search(
-            [('product_id', 'in', products.ids)]
+            [('product_id', 'in', products.ids), ('enroll', '=', 'payment')],
         )
         channel_products = related_channels.mapped('product_id')
 

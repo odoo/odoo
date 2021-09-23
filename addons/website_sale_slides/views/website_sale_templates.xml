@@ -34,4 +34,15 @@
     </div>
 </template>
 
+<template id="cart_summary_inherit_website_sale_slides"
+          inherit_id="website_sale.cart_summary"
+          name="Course Cart right column">
+    <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+        <div t-if="line.product_id.channel_ids"
+             t-foreach="line.product_id.channel_ids.filtered(lambda course: course.enroll == 'payment')"
+             t-as="course"
+             t-esc="course.name"/>
+    </xpath>
+</template>
+
 </data></odoo>
