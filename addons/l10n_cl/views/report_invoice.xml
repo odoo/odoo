@@ -149,11 +149,11 @@
         </xpath>
 
         <xpath expr="//span[@id='line_tax_ids']" position="attributes">
-            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids))</attribute>
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.tax_lines))</attribute>
         </xpath>
 
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
-            <attribute name="t-value">current_subtotal + l10n_cl_values['l10n_latam_price_subtotal']</attribute>
+            <attribute name="t-value">current_subtotal + l10n_cl_values['price_subtotal']</attribute>
         </t>
 
         <xpath expr="//th[@name='th_subtotal']/span[@groups='account.group_show_line_subtotals_tax_included']" position="replace">
@@ -162,7 +162,7 @@
 
         <span t-field="line.price_subtotal" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">current_subtotal + l10n_cl_values['l10n_latam_price_subtotal']</attribute>
+            <attribute name="t-esc">current_subtotal + l10n_cl_values['price_subtotal']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 

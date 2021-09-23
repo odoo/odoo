@@ -302,18 +302,19 @@ class AccountMove(models.Model):
             included_taxes = self.l10n_latam_document_type_id and \
                 self.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
             if not included_taxes:
-                l10n_latam_amount_untaxed = self.amount_untaxed
+                amount_untaxed = self.amount_untaxed
                 not_included_invoice_taxes = tax_lines
             else:
                 included_invoice_taxes = tax_lines.filtered(lambda x: x.tax_line_id in included_taxes)
                 not_included_invoice_taxes = tax_lines - included_invoice_taxes
                 sign = -1 if self.is_inbound() else 1
-                l10n_latam_amount_untaxed = self.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
-            res['l10n_latam_amount_untaxed'] = l10n_latam_amount_untaxed
-            res['l10n_latam_tax_ids'] = not_included_invoice_taxes
+                amount_untaxed = self.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
+            res['amount_untaxed'] = amount_untaxed
+            res['tax_lines'] = not_included_invoice_taxes
         else:
-            res['l10n_latam_amount_untaxed'] = False
-            res['l10n_latam_tax_ids'] = [(5, 0)]
+            res['amount_untaxed'] = False
+            res['tax_lines'] = self.env['account.move.line']
+
         return res
 
     def _compute_invoice_taxes_by_group(self):
@@ -325,7 +326,7 @@ class AccountMove(models.Model):
         move_with_doc_type = self.filtered('l10n_latam_document_type_id')
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
-            tax_lines = move._l10n_ar_amount_and_taxes()['l10n_latam_tax_ids']
+            tax_lines = move._l10n_ar_amount_and_taxes()['tax_lines']
             tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
             res = {}
             # There are as many tax line as there are repartition lines
@@ -347,7 +348,7 @@ class AccountMove(models.Model):
             # generate a tax line.
             zero_taxes = set()
             for line in move.line_ids:
-                for tax in line._l10n_ar_prices_and_taxes()['l10n_latam_tax_ids'].flatten_taxes_hierarchy():
+                for tax in line._l10n_ar_prices_and_taxes()['taxes'].flatten_taxes_hierarchy():
                     if tax.tax_group_id not in res or tax.id in zero_taxes:
                         res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
                         res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
