@@ -147,9 +147,9 @@
                     <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>
                     <filter string="Dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
                     <separator/>
-                    <filter string="Today" name="today" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
-                    <filter string="Last 7 days" name="last_7days" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                    <filter string="Last 30 days" name="last_month" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Today" name="today" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last 7 days" name="last_7days" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last 30 days" name="last_month" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter name="filter_create_date" date="create_date"/>
                     <group expand="0" string="Group By">

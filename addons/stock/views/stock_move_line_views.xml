@@ -109,9 +109,9 @@
                 <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]"/>
                 <separator/>
                 <filter name="date" date="date" default_period="this_month"/>
-                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', (context_today() - relativedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
                 <separator/>
