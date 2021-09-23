@@ -173,7 +173,7 @@ class Slide(models.Model):
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_form=False)
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
