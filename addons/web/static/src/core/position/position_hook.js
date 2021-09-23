@@ -229,8 +229,9 @@ export function usePosition(reference, options) {
     const popperRef = popper ? useRef(popper) : useComponent();
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {
-        if (popperRef.el) {
-            reposition(getReference(), popperRef.el, options);
+        const ref = getReference();
+        if (popperRef.el && ref) {
+            reposition(ref, popperRef.el, options);
         }
     };
     useEffect(update);

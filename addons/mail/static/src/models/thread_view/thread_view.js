@@ -97,18 +97,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.channel_invitation_form}
-         */
-        _computeChannelInvitationForm() {
-            return (this.thread && this.thread.hasInviteFeature)
-                ? insertAndReplace({
-                    searchResultCount: clear(),
-                    searchTerm: clear(),
-                    selectablePartners: clear(),
-                    selectedPartners: clear(),
-                })
-                : clear();
-        }
 
         /**
          * @private
@@ -361,10 +349,8 @@ function factory(dependencies) {
          * Only applies if this thread is a channel.
          */
         channelInvitationForm: one2one('mail.channel_invitation_form', {
-            compute: '_computeChannelInvitationForm',
             inverse: 'threadView',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * List of component hints. Hints contain information that help

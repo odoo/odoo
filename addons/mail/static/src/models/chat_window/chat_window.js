@@ -110,7 +110,9 @@ function factory(dependencies) {
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
-            this.focus();
+            if ((options && options.focus !== undefined) ? options.focus : true) {
+                this.focus();
+            }
         }
 
         /**

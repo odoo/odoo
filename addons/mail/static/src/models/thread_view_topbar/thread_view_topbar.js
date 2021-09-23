@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -75,12 +75,10 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickInviteButton(ev) {
-            if (this.threadView.channelInvitationForm.component) {
-                return;
-            }
-            if (!this.messaging.isCurrentUserGuest) {
-                this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
-                this.threadView.channelInvitationForm.searchPartnersToInvite();
+            if (this.invitePopoverView) {
+                this.update({ invitePopoverView: clear() });
+            } else {
+                this.openInvitePopoverView();
             }
         }
 
@@ -374,6 +372,23 @@ function factory(dependencies) {
             this.update({ isMouseOverUserInfo: false });
         }
 
+        /**
+         * Open the invite popover view in this thread view topbar.
+         */
+        openInvitePopoverView() {
+            this.threadView.update({ channelInvitationForm: insertAndReplace() });
+            this.update({
+                invitePopoverView: insertAndReplace({
+                    channelInvitationForm: replace(this.threadView.channelInvitationForm),
+                }),
+            });
+            if (this.messaging.isCurrentUserGuest) {
+                return;
+            }
+            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.threadView.channelInvitationForm.searchPartnersToInvite();
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -593,6 +608,19 @@ function factory(dependencies) {
          */
         isEditingGuestName: attr({
             default: false,
+        }),
+        /**
+         * States the OWL ref of the invite button.
+         * Useful to provide anchor for the invite popover positioning.
+         */
+        inviteButtonRef: attr(),
+        /**
+         * If set, this is the record of invite button popover that is currently
+         * open in the topbar.
+         */
+        invitePopoverView: one2one('mail.popover_view', {
+            isCausal: true,
+            inverse: 'threadViewTopbarOwner',
         }),
         /**
          * Determines whether this thread is currently being renamed.

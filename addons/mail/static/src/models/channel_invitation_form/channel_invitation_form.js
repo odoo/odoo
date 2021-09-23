@@ -22,33 +22,18 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * Closes this channel invitation form.
-         */
-        close() {
-            this.component.trigger('o-popover-close');
-        }
-
-        /**
          * Handles click on the "invite" button.
          *
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
             if (this.thread.channel_type === 'chat') {
-                const channelData = await this.env.services.rpc(({
-                    model: 'mail.channel',
-                    method: 'create_group',
-                    kwargs: {
-                        partners_to: [...new Set([
-                            this.messaging.currentPartner.id,
-                            ...this.thread.members.map(member => member.id),
-                            ...this.selectedPartners.map(partner => partner.id),
-                        ])],
-                    },
-                }));
-                const channel = this.messaging.models['mail.thread'].insert(
-                    this.messaging.models['mail.thread'].convertData(channelData)
-                );
+                const partners_to = [...new Set([
+                    this.messaging.currentPartner.id,
+                    ...this.thread.members.map(member => member.id),
+                    ...this.selectedPartners.map(partner => partner.id),
+                ])];
+                const channel = await this.messaging.models['mail.thread'].createGroupChat({ partners_to });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
@@ -76,7 +61,7 @@ function factory(dependencies) {
                 searchTerm: "",
                 selectedPartners: unlinkAll(),
             });
-            this.close();
+            this.delete();
         }
 
         /**
@@ -190,20 +175,6 @@ function factory(dependencies) {
             return this.env._t("Invite to Channel");
         }
 
-        /**
-         * @private
-         * @returns {mail.thread}
-         */
-        _computeThread() {
-            if (this.threadView && this.threadView.thread) {
-                return link(this.threadView.thread);
-            }
-            if (this.discuss && this.discuss.mostRecentMeetingChannel) {
-                return link(this.discuss.mostRecentMeetingChannel);
-            }
-            return clear();
-        }
-
     }
 
     ChannelInvitationForm.fields = {
@@ -213,9 +184,6 @@ function factory(dependencies) {
          * it is open to update the button active state.
          */
         component: attr(),
-        discuss: one2one('mail.discuss', {
-            inverse: 'channelInvitationForm',
-        }),
         /**
          * Determines whether this search input needs to be focused.
          */
@@ -237,6 +205,10 @@ function factory(dependencies) {
          */
         inviteButtonText: attr({
             compute: '_computeInviteButtonText',
+        }),
+        popoverView: one2one('mail.popover_view', {
+            inverse: 'channelInvitationForm',
+            isCausal: true,
         }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
@@ -268,8 +240,8 @@ function factory(dependencies) {
          * States the thread on which this list operates (if any).
          */
         thread: many2one('mail.thread', {
-            compute: '_computeThread',
             readonly: true,
+            related: 'threadView.thread',
             required: true,
         }),
         /**
