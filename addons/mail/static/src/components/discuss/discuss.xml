@@ -13,7 +13,7 @@
             </t>
             <t t-else="">
                 <t t-if="!messaging.device.isMobile">
-                    <DiscussSidebar class="o_Discuss_sidebar bg-light border-right"/>
+                    <DiscussSidebar class="o_Discuss_sidebar bg-light border-right" localId="discuss.localId"/>
                 </t>
                 <t t-if="messaging.device.isMobile" t-call="mail.Discuss.content"/>
                 <t t-else="">
