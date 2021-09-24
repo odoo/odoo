@@ -80,7 +80,6 @@ const Wysiwyg = Widget.extend({
         const commands = this._getCommands();
 
         let editorCollaborationOptions;
-
         if (options.collaborationChannel) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
         }
@@ -247,7 +246,7 @@ const Wysiwyg = Widget.extend({
         this.call('bus_service', 'onNotification', this, (notifications) => {
             for (const [channel, busData] of notifications) {
                 if (
-                    channel[1] == 'editor_collaboration' &&
+                    channel[1] === 'editor_collaboration' &&
                     channel[2] === modelName &&
                     channel[3] === fieldName &&
                     channel[4] === resId
@@ -271,7 +270,7 @@ const Wysiwyg = Widget.extend({
             } else {
                 return clientA.startTime < clientB.startTime;
             }
-        }
+        };
         const rpcMutex = new Mutex();
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
@@ -301,7 +300,7 @@ const Wysiwyg = Widget.extend({
                                 bus_data: rpcData,
                             },
                         });
-                    })
+                    });
                 },
                 onRequest: {
                     get_start_time: () => startCollaborationTime,
