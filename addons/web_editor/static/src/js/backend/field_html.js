@@ -185,7 +185,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 res_id: this.res_id,
             },
             placeholder: this.attrs && this.attrs.placeholder,
-            collaborationChannel: {
+            collaborationChannel: !!this.nodeOptions.collaborative && {
                 collaborationModelName: this.model,
                 collaborationFieldName: this.name,
                 collaborationResId: parseInt(this.res_id),
@@ -196,7 +196,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             snippets: this.nodeOptions.snippets,
             value: this.value,
             mediaModalParams: {
-                noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos: true,
+                noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
             },
             linkForceNewWindow: true,
 
