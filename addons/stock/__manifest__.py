@@ -122,7 +122,6 @@
             'stock/static/src/js/basic_model.js',
             'stock/static/src/js/stock_rescheduling_popover.js',
             'stock/static/src/scss/forecast_widget.scss',
-            'stock/static/src/scss/stock_traceability_report.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
         ],
         'web.assets_tests': [

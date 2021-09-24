@@ -57,8 +57,14 @@
     'post_init_hook': '_create_warehouse_data',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
+        'web.report_assets_common': [
+            'mrp/static/src/scss/mrp_bom_report.scss',
+        ],
         'web.assets_backend': [
             'mrp/static/src/scss/mrp_workorder_kanban.scss',
+            'mrp/static/src/scss/mrp_fields.scss',
+            'mrp/static/src/scss/mrp_gantt.scss',
+            'mrp/static/src/scss/mrp_document_kanban_view.scss',
             'mrp/static/src/js/mrp.js',
             'mrp/static/src/js/mrp_bom_report.js',
             'mrp/static/src/js/mrp_workorder_popover.js',
@@ -71,12 +77,6 @@
             'mrp/static/src/js/mrp_should_consume.js',
             'mrp/static/src/js/mrp_field_one2many_with_copy.js',
             'mrp/static/src/js/report_stock_reception.js',
-        ],
-        'web.assets_common': [
-            'mrp/static/src/scss/mrp_bom_report.scss',
-            'mrp/static/src/scss/mrp_fields.scss',
-            'mrp/static/src/scss/mrp_gantt.scss',
-            'mrp/static/src/scss/mrp_document_kanban_view.scss',
         ],
         'web.qunit_suite_tests': [
             'mrp/static/tests/**/*',
