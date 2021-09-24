@@ -231,7 +231,7 @@
                 </div>
                 <group>
                     <group name="col_left">
-                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
                         <label for="request_date_from" string="Dates" id="label_dates"/>
                         <div>
                             <field name="date_from" invisible="1" widget="daterange"/>
@@ -408,7 +408,7 @@
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
                 <h1 class="d-flex flex-row justify-content-between">
-                    <field name="holiday_status_id" options="{'no_open': True}"/>
+                    <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave'}"/>
                 </h1>
             </div>
             <field name="employee_id" position="replace"/>
@@ -661,7 +661,8 @@
             'search_default_my_team': 2,
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
-            'hide_employee_name': 1}
+            'hide_employee_name': 1,
+            'holiday_status_name_get': False}
         </field>
         <field name="domain">[]</field>
         <field name="help" type="html">
@@ -679,7 +680,8 @@
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
-            'hide_employee_name': 1}
+            'hide_employee_name': 1,
+            'holiday_status_name_get': False}
         </field>
         <field name="domain">[('holiday_allocation_id', '=', active_id)]</field>
         <field name="help" type="html">
