@@ -104,9 +104,9 @@ class MaintenanceEquipment(models.Model):
         args = args or []
         equipment_ids = []
         if name:
-            equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            equipment_ids = self._search(['|', ('name', '=', name), ('serial_no', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not equipment_ids:
-            equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            equipment_ids = self._search(['|', ('name', operator, name), ('serial_no', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
         return equipment_ids
 
     name = fields.Char('Equipment Name', required=True, translate=True)
