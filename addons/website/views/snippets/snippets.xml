@@ -1152,49 +1152,49 @@
             <t t-if="request.session.get('geoip', {}).get('country_code')">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">⌙ Country</t>
-                    <t t-set="attribute_rule">visibilityValueCountryRule</t>
-                    <t t-set="save_attribute">visibilityValueCountry</t>
-                    <t t-set="attribute_name">data-country</t>
-                    <t t-set="model">res.country</t>
-                    <t t-set="call_with">code</t>
-                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                    <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
+                    <t t-set="save_attribute" t-valuef="visibilityValueCountry"/>
+                    <t t-set="attribute_name" t-valuef="data-country"/>
+                    <t t-set="model" t-valuef="res.country"/>
+                    <t t-set="call_with" t-valuef="code"/>
+                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
                 </t>
             </t>
             <t t-if="len(current_website.language_ids) > 1">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">⌙ Languages</t>
-                    <t t-set="attribute_rule">visibilityValueLangRule</t>
-                    <t t-set="save_attribute">visibilityValueLang</t>
-                    <t t-set="attribute_name">lang</t>
-                    <t t-set="model">res.lang</t>
-                    <t t-set="call_with">code</t>
-                    <t t-set="domain">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
-                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                    <t t-set="attribute_rule" t-valuef="visibilityValueLangRule"/>
+                    <t t-set="save_attribute" t-valuef="visibilityValueLang"/>
+                    <t t-set="attribute_name" t-valuef="lang"/>
+                    <t t-set="model" t-valuef="res.lang"/>
+                    <t t-set="call_with" t-valuef="code"/>
+                    <t t-set="domain" t-translation="off">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
+                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
                 </t>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Campaign</t>
-                <t t-set="attribute_rule">visibilityValueUtmCampaignRule</t>
-                <t t-set="save_attribute">visibilityValueUtmCampaign</t>
-                <t t-set="attribute_name">data-utm-campaign</t>
-                <t t-set="model">utm.campaign</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmCampaignRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmCampaign"/>
+                <t t-set="attribute_name" t-valuef="data-utm-campaign"/>
+                <t t-set="model" t-valuef="utm.campaign"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Medium</t>
-                <t t-set="attribute_rule">visibilityValueUtmMediumRule</t>
-                <t t-set="save_attribute">visibilityValueUtmMedium</t>
-                <t t-set="attribute_name">data-utm-medium</t>
-                <t t-set="model">utm.medium</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmMediumRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmMedium"/>
+                <t t-set="attribute_name" t-valuef="data-utm-medium"/>
+                <t t-set="model" t-valuef="utm.medium"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Source</t>
-                <t t-set="attribute_rule">visibilityValueUtmSourceRule</t>
-                <t t-set="save_attribute">visibilityValueUtmSource</t>
-                <t t-set="attribute_name">data-utm-source</t>
-                <t t-set="model">utm.source</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmSourceRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmSource"/>
+                <t t-set="attribute_name" t-valuef="data-utm-source"/>
+                <t t-set="model" t-valuef="utm.source"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <we-select string="⌙ Users"
                 data-dependencies="visibility_conditional"
