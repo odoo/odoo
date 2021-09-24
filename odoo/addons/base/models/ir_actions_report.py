@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
+from odoo.tools.pdf import OdooPdf
 from odoo.tools import config, is_html_empty
 from odoo.sql_db import TestCursor
 from odoo.http import request
@@ -730,14 +731,13 @@ class IrActionsReport(models.Model):
                 "individually, which will avoid merging.") % "\n".join(records))
 
     def _merge_pdfs(self, streams):
-        writer = PdfFileWriter()
+        merged = OdooPdf.new()
         for stream in streams:
-            reader = PdfFileReader(stream)
-            writer.appendPagesFromReader(reader)
-        result_stream = io.BytesIO()
-        streams.append(result_stream)
-        writer.write(result_stream)
-        return result_stream.getvalue()
+            with OdooPdf.open(stream) as src:
+                merged.pages.extend(src.pages)
+        with io.BytesIO() as _buffer:
+            merged.save(_buffer)
+            return _buffer.getvalue()
 
     def _render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
