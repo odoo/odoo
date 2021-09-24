@@ -4,6 +4,21 @@ odoo.define('web_editor.convertInline', function (require) {
 var FieldHtml = require('web_editor.field.html');
 
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
+
+// Note: duplicated from odoo-editor utils.
+// DOES NOT SUPPORT RGBA (Outlook doesn't support transparency)
+function rgbToHex(rgb = '') {
+    return (
+        '#' +
+        (rgb.match(/\d{1,3}/g) || [])
+            .map(x => {
+                x = parseInt(x).toString(16);
+                return x.length === 1 ? '0' + x : x;
+            })
+            .join('')
+    );
+}
+
 /**
  * Returns the css rules which applies on an element, tweaked so that they are
  * browser/mail client ok.
@@ -12,7 +27,7 @@ const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),
  * @returns {Object} css property name -> css property value
  */
 function getMatchedCSSRules(a) {
-    var i, r, k;
+    var i, r, k, l;
     var doc = a.ownerDocument;
     var rulesCache = a.ownerDocument._rulesCache || (a.ownerDocument._rulesCache = []);
 
@@ -29,11 +44,37 @@ function getMatchedCSSRules(a) {
             }
             if (rules) {
                 for (r = rules.length-1; r >= 0; r--) {
+                    const conditionText = rules[r].conditionText;
+                    const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
+                    const minWidth = minWidthMatch && +(minWidthMatch[1] || '0');
+                    if (minWidth && minWidth >= 1200) {
+                        // Large min-width media queries should be included.
+                        // eg., .container has a default max-width for all
+                        // screens.
+                        let mediaRules;
+                        try {
+                            mediaRules = rules[r].rules || rules[r].cssRules;
+                        } catch (e) {
+                            console.log(`Can't read the css rules of: ${sheets[i].href} (${conditionText})`, e);
+                            continue;
+                        }
+                        if (mediaRules) {
+                            for (k = mediaRules.length-1; k >= 0; k--) {
+                                var selectorText = mediaRules[k].selectorText;
+                                if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
+                                    var st = selectorText.split(/\s*,\s*/);
+                                    for (l = 0 ; l < st.length ; l++) {
+                                        rulesCache.push({ 'selector': st[l], 'style': mediaRules[k].style });
+                                    }
+                                }
+                            }
+                        }
+                    }
                     var selectorText = rules[r].selectorText;
                     if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
                         var st = selectorText.split(/\s*,\s*/);
-                        for (k = 0 ; k < st.length ; k++) {
-                            rulesCache.push({ 'selector': st[k], 'style': rules[r].style });
+                        for (l = 0 ; l < st.length ; l++) {
+                            rulesCache.push({ 'selector': st[l], 'style': rules[r].style });
                         }
                     }
                 }
@@ -93,8 +134,11 @@ function getMatchedCSSRules(a) {
         }
     });
 
-    if (style.display === 'block') {
+    if (style.display === 'block' && !(a.classList && a.classList.contains('btn-block'))) {
         delete style.display;
+    }
+    if (!style['box-sizing']) {
+        style['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
     }
 
     // The css generates all the attributes separately and not in simplified form.
@@ -157,18 +201,34 @@ function getMatchedCSSRules(a) {
         delete style['text-decoration-thickness'];
     }
 
-    // text-align inheritance does not seem to get past <td> elements on some
-    // mail clients
-    if (style['text-align'] === 'inherit') {
-        var $el = $(a).parent();
-        do {
-            var align = $el.css('text-align');
-            if (_.indexOf(['left', 'right', 'center', 'justify'], align) >= 0) {
-                style['text-align'] = align;
-                break;
+    // color and text-align inheritance do not seem to get past <td> elements on
+    // some mail clients. TODO: This is hacky as it applies a color/text-align
+    // style to all descendants of nodes with a color style. We can probably do
+    // this more elegantly.
+    if (style.color || style['text-align']) {
+        function _styleDescendants(node, styleName) {
+            const camelCased = styleName.replace(/-(\w)/g, match => match[1].toUpperCase());
+            node.style[camelCased] = style[styleName];
+            for (const child of $(node).children()) {
+                const childStyle = $(child).css(styleName);
+                if (childStyle && childStyle !== 'inherit') {
+                    _styleDescendants(child, styleName);
+                }
             }
-            $el = $el.parent();
-        } while ($el.length && !$el.is('html'));
+        }
+        if (style.color) {
+            _styleDescendants(a, 'color');
+        }
+        if (style['text-align']) {
+            _styleDescendants(a, 'text-align');
+        }
+    }
+
+    // flexboxes are not supported in Windows Outlook
+    for (const styleName in style) {
+        if (styleName.includes('flex') || `${style[styleName]}`.includes('flex')) {
+            delete style[styleName];
+        }
     }
 
     return style;
@@ -197,13 +257,45 @@ function fontToImg($editable) {
         });
         if (content) {
             var color = $font.css('color').replace(/\s/g, '');
-            $font.replaceWith($('<img/>', {
-                src: _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, Math.round($font.height()))),
+            let $backgroundColoredElement = $font;
+            let bg, isTransparent;
+            do {
+                bg = $backgroundColoredElement.css('background-color').replace(/\s/g, '');
+                isTransparent = bg === 'transparent' || bg === 'rgba(0,0,0,0)';
+                $backgroundColoredElement = $backgroundColoredElement.parent();
+            } while (isTransparent && $backgroundColoredElement[0]);
+            if (bg === 'rgba(0,0,0,0)' && isTransparent) {
+                // default on white rather than black background since opacity
+                // is not supported.
+                bg = 'rgb(255,255,255)';
+            }
+            const style = $font.attr('style');
+            const width = $font.width();
+            const height = $font.height();
+            const lineHeight = $font.css('line-height');
+            // Compute the padding.
+            // First get the dimensions of the icon itself (::before)
+            $font.css({height: 'fit-content', width: 'fit-content', 'line-height': 'normal'});
+            const hPadding = width && (width - $font.width()) / 2;
+            const vPadding = height && (height - $font.height()) / 2;
+            let padding = '';
+            if (hPadding || vPadding) {
+                padding = vPadding ? vPadding + 'px ' : '0 ';
+                padding += hPadding ? hPadding + 'px' : '0';
+            }
+            const $img = $('<img/>').attr({
+                width, height,
+                src: `/web_editor/font_to_img/${content.charCodeAt(0)}/${window.encodeURI(color)}/${window.encodeURI(bg)}/${Math.max(1, $font.height())}`,
                 'data-class': $font.attr('class'),
-                'data-style': $font.attr('style'),
+                'data-style': style,
                 class: $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), ''), // remove inline font-awsome style
-                style: $font.attr('style'),
-            }).css({height: 'auto', width: 'auto'}));
+                style,
+            }).css({
+                'box-sizing': 'border-box', // keep the fontawesome's dimensions
+                'line-height': lineHeight,
+                padding, width: width + 'px', height: height + 'px',
+            });
+            $font.replaceWith($img);
         } else {
             $font.remove();
         }
@@ -237,6 +329,312 @@ function applyOverDescendants(node, func) {
     }
 }
 
+const reColMatch = /(^| )col(-[\w\d]+)*( |$)/;
+const reOffsetMatch = /(^| )offset(-[\w\d]+)*( |$)/;
+function _getColumnSize(column) {
+    const colMatch = column.className.match(reColMatch);
+    const colOptions = colMatch[2] && colMatch[2].substr(1).split('-');
+    const colSize = colOptions && (colOptions.length === 2 ? +colOptions[1] : +colOptions[0]) || 0;
+    const offsetMatch = column.className.match(reOffsetMatch);
+    const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split('-');
+    const offsetSize = offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0]) || 0;
+    return colSize + offsetSize;
+}
+
+
+// Attributes all tables should have in a mailing.
+const tableAttributes = {
+    cellspacing: 0,
+    cellpadding: 0,
+    border: 0,
+    width: '100%',
+    align: 'center',
+    role: 'presentation',
+};
+// Cancel tables default styles.
+const tableStyles = {
+    'border-collapse': 'collapse',
+    'text-align': 'inherit',
+};
+function _createTable(attributes = []) {
+    const $table = $('<table/>');
+    $table.attr(tableAttributes).css(tableStyles);
+    $table[0].style.setProperty('width', '100%', 'important');
+    for (const attr of attributes) {
+        if (attr.name !== 'width' && attr.value !== '100%') {
+            $table.attr(attr.name, attr.value);
+        }
+    }
+    return $table;
+}
+function _createColumnGrid() {
+    return new Array(12).fill().map(() => $('<td/>'));
+}
+function _applyColspanToGridElement($gridElement, colspan) {
+    $gridElement.attr('colspan', colspan);
+    const width = Math.round(+$gridElement.attr('colspan') * 100 / 12) + '%';
+    $gridElement.attr('width', width);
+    $gridElement.css('width', width);
+}
+
+/**
+ * Converts bootstrap rows and columns to actual tables.
+ *
+ * Note: Because of the limited support of media queries in emails, this doesn't
+ * support the mixing and matching of column options (e.g., "col-4 col-sm-6" and
+ * "col col-4" aren't supported).
+ *
+ * @param {jQuery} $editable
+ */
+function bootstrapToTable($editable) {
+    // First give all rows in columns a separate container parent.
+    $editable.find('.row').filter((i, row) => reColMatch.test(row.parentElement.className)).wrap('<div class="o_fake_table"/>');
+
+    // Now convert all containers with rows to tables.
+    for (const container of $editable.find('.container:has(.row), .container-fluid:has(.row), .o_fake_table:has(.row)')) {
+        const $container = $(container);
+
+
+        // TABLE
+        const $table = _createTable(container.attributes);
+        for (const child of [...container.childNodes]) {
+            $table.append(child);
+        }
+        $table.removeClass('container container-fluid o_fake_table');
+        $container.before($table);
+        $container.remove();
+
+
+        // ROWS
+        const $bootstrapRows = $table.children().filter('.row');
+        for (const bootstrapRow of $bootstrapRows) {
+            const $bootstrapRow = $(bootstrapRow);
+            const $row = $('<tr/>');
+            for (const attr of bootstrapRow.attributes) {
+                $row.attr(attr.name, attr.value);
+            }
+            $row.removeClass('row');
+            for (const child of [...bootstrapRow.childNodes]) {
+                $row.append(child);
+            }
+            $bootstrapRow.before($row);
+            $bootstrapRow.remove();
+
+
+            // COLUMNS
+            const $bootstrapColumns = $row.children().filter((i, column) => column.className && column.className.match(reColMatch));
+
+            // 1. Replace generic "col" classes with specific "col-n", computed
+            //    by sharing the available space between them.
+            const $flexColumns = $bootstrapColumns.filter((i, column) => !/\d/.test(column.className.match(reColMatch)[0] || '0'));
+            const colTotalSize = $bootstrapColumns.toArray().map(child => _getColumnSize(child)).reduce((a, b) => a + b);
+            const colSize = Math.round((12 - colTotalSize) / $flexColumns.length);
+            for (const flexColumn of $flexColumns) {
+                flexColumn.classList.remove(flexColumn.className.match(reColMatch)[0].trim());
+                flexColumn.classList.add(`col-${colSize}`);
+            }
+
+            // 2. Create and fill up the row(s) with grid(s).
+            let grid = _createColumnGrid();
+            let gridIndex = 0;
+            let $currentRow = $($row[0].cloneNode());
+            $row.after($currentRow);
+            let $currentCol;
+            let columnIndex = 0;
+            for (const bootstrapColumn of $bootstrapColumns) {
+                const columnSize = _getColumnSize(bootstrapColumn);
+                if (gridIndex + columnSize < 12) {
+                    $currentCol = grid[gridIndex];
+                    _applyColspanToGridElement($currentCol, columnSize);
+                    gridIndex += columnSize;
+                    if (columnIndex === $bootstrapColumns.length - 1) {
+                        // We handled all the columns but there is still space
+                        // in the row. Insert the columns and fill the row.
+                        grid[gridIndex].attr('colspan', 12 - gridIndex);
+                        $currentRow.append(...grid.filter(td => td.attr('colspan')));
+                    }
+                } else if (gridIndex + columnSize === 12) {
+                    // Finish the row.
+                    $currentCol = grid[gridIndex];
+                    _applyColspanToGridElement($currentCol, columnSize);
+                    $currentRow.append(...grid.filter(td => td.attr('colspan')));
+                    if (columnIndex !== $bootstrapColumns.length - 1) {
+                        // The row was filled before we handled all of its
+                        // columns. Create a new one and start again from there.
+                        const $previousRow = $currentRow;
+                        $currentRow = $($currentRow[0].cloneNode());
+                        $previousRow.after($currentRow);
+                        grid = _createColumnGrid();
+                        gridIndex = 0;
+                    }
+                } else {
+                    // Fill the row with what was in the grid before it
+                    // overflowed.
+                    _applyColspanToGridElement(grid[gridIndex], 12 - gridIndex);
+                    $currentRow.append(...grid.filter(td => td.attr('colspan')));
+                    // Start a new row that starts with the current col.
+                    const $previousRow = $currentRow;
+                    $currentRow = $($currentRow[0].cloneNode());
+                    $previousRow.after($currentRow);
+                    grid = _createColumnGrid();
+                    $currentCol = grid[0];
+                    _applyColspanToGridElement($currentCol, columnSize);
+                    gridIndex = columnSize;
+                }
+                if ($currentCol) {
+                    for (const attr of bootstrapColumn.attributes) {
+                        if (attr.name !== 'colspan') {
+                            $currentCol.attr(attr.name, attr.value);
+                        }
+                    }
+                    const colMatch = bootstrapColumn.className.match(reColMatch);
+                    $currentCol.removeClass(colMatch[0]);
+                    for (const child of [...bootstrapColumn.childNodes]) {
+                        $currentCol.append(child);
+                    }
+                    // Adapt width to colspan.
+                    _applyColspanToGridElement($currentCol, +$currentCol.attr('colspan'));
+                }
+                columnIndex++;
+            }
+            $row.remove(); // $row was cloned and inserted already
+        }
+    }
+}
+
+function cardToTable($editable) {
+    for (const card of $editable.find('.card')) {
+        const $card = $(card);
+        // Table
+        const $table = _createTable(card.attributes);
+        for (const child of [...card.childNodes]) {
+            if (child.nodeType === Node.TEXT_NODE) {
+                $table.append(child);
+            } else {
+                const $row = $('<tr/>');
+                const $col = $('<td/>');
+                if (child.nodeName === 'IMG') {
+                    $col.append(child);
+                } else {
+                    for (const attr of child.attributes) {
+                        $col.attr(attr.name, attr.value);
+                    }
+                    for (const descendant of [...child.childNodes]) {
+                        $col.append(descendant);
+                    }
+                    $(child).remove();
+                }
+                $row.append($col);
+                $table.append($row);
+            }
+        }
+        $card.before($table);
+        $card.remove();
+    }
+}
+
+function listGroupToTable($editable) {
+    for (const listGroup of $editable.find('.list-group')) {
+        const $listGroup = $(listGroup);
+        // Table
+        let $table;
+        if ($listGroup.find('.list-group-item').length) {
+            $table = _createTable(listGroup.attributes);
+        } else {
+            $table = $(listGroup.cloneNode());
+            for (const attr of $listGroup.attributes) {
+                $table.attr(attr.name, attr.value);
+            }
+        }
+        for (const child of [...listGroup.childNodes]) {
+            const $child = $(child);
+            if ($child.hasClass('list-group-item')) {
+                // List groups are <ul>s that render like tables. Their
+                // li.list-group-item children should translate to tr > td.
+                const $row = $('<tr/>');
+                const $col = $('<td/>');
+                for (const attr of child.attributes) {
+                    $col.attr(attr.name, attr.value);
+                }
+                for (const descendant of [...child.childNodes]) {
+                    $col.append(descendant);
+                }
+                $col.removeClass('list-group-item');
+                $row.append($col);
+                $table.append($row);
+                $(child).remove();
+            } else {
+                $table.append(child);
+            }
+        }
+        $table.removeClass('list-group');
+        if ($listGroup.is('td')) {
+            $listGroup.append($table);
+            $listGroup.removeClass('list-group');
+        } else {
+            $listGroup.before($table);
+            $listGroup.remove();
+        }
+    }
+}
+
+function addTables($editable) {
+    for (const snippet of $editable.find('.o_mail_snippet_general, .o_layout')) {
+        // Convert all snippets and the mailing itself into table > tr > td
+        const $table = _createTable(snippet.attributes);
+        const $row = $('<tr/>');
+        const $col = $('<td/>');
+        $row.append($col);
+        $table.append($row);
+        for (const child of [...snippet.childNodes]) {
+            $col.append(child);
+        }
+        $(snippet).before($table);
+        $(snippet).remove();
+
+        // If snippet doesn't have a table as child, wrap its contents in one.
+        if (!$col.children().filter('table')) {
+            const $tableB = _createTable();
+            $tableB[0].style.width
+            const $rowB = $('<tr/>');
+            const $colB = $('<td/>');
+            $rowB.append($colB);
+            $tableB.append($rowB);
+            for (const child of [...$table[0].childNodes]) {
+                $colB.append(child);
+            }
+            $col.append($tableB);
+        }
+    }
+}
+
+const rePadding = /(\d+)/;
+function formatTables($editable) {
+    for (const table of $editable.find('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
+        const $table = $(table);
+        const tablePaddingTop = +$table.css('padding-top').match(rePadding)[1];
+        const tablePaddingRight = +$table.css('padding-right').match(rePadding)[1];
+        const tablePaddingBottom = +$table.css('padding-bottom').match(rePadding)[1];
+        const tablePaddingLeft = +$table.css('padding-left').match(rePadding)[1];
+        for (const column of $table.find('td').filter((i, td) => $(td).closest('table').is($table))) {
+            const $column = $(column);
+            if ($column.css('padding')) {
+                const columnPaddingTop = +$column.css('padding-top').match(rePadding)[1];
+                const columnPaddingRight = +$column.css('padding-right').match(rePadding)[1];
+                const columnPaddingBottom = +$column.css('padding-bottom').match(rePadding)[1];
+                const columnPaddingLeft = +$column.css('padding-left').match(rePadding)[1];
+                $column.css({
+                    'padding-top': columnPaddingTop + tablePaddingTop,
+                    'padding-right': columnPaddingRight + tablePaddingRight,
+                    'padding-bottom': columnPaddingBottom + tablePaddingBottom,
+                    'padding-left': columnPaddingLeft + tablePaddingLeft,
+                });
+            }
+        }
+        $table.css('padding', '');
+    }
+}
+
 /**
  * Converts css style to inline style (leave the classes on elements but forces
  * the style they give as inline style).
@@ -247,9 +645,17 @@ function classToStyle($editable) {
     applyOverDescendants($editable[0], function (node) {
         var $target = $(node);
         var css = getMatchedCSSRules(node);
+        // Flexbox
+        for (const styleName in node.style) {
+            if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
+                node.style[styleName] = '';
+            }
+        }
+
+        // Do not apply css that would override inline styles (which are prioritary).
         var style = $target.attr('style') || '';
         _.each(css, function (v,k) {
-            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
+            if (!(new RegExp('(^|;)\\s*' + k).test(style))) {
                 style = k+':'+v+';'+style;
             }
         });
@@ -258,6 +664,9 @@ function classToStyle($editable) {
         } else {
             $target.attr('style', style);
         }
+        if ($target.get(0).style.width) {
+            $target.attr('width', $target.css('width')); // Widths need to be applied as attributes as well.
+        }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
             $(node).html('&nbsp;');
@@ -265,31 +674,40 @@ function classToStyle($editable) {
 
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;vertical-align:middle"><tr><td></td></tr></table>');
-            $hack.find('td')
-                .attr('height', $target.outerHeight())
-                .css({
-                    'text-align': $target.parent().css('text-align'),
-                    'margin': $target.css('padding'),
-                    'border-radius': $target.css('border-radius'),
-                    'background-color': $target.css('background-color'),
-                });
-            $target.after($hack);
-            $target.appendTo($hack.find('td'));
-            // the space add a line when it's a table but it's invisible when it's a link
-            node = $hack[0].previousSibling;
-            if (node && node.nodeType === Node.TEXT_NODE && !node.textContent.match(/\S/)) {
-                $(node).remove();
-            }
-            node = $hack[0].nextSibling;
-            if (node && node.nodeType === Node.TEXT_NODE && !node.textContent.match(/\S/)) {
-                $(node).remove();
-            }
+            $target.prepend(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->`);
+            $target.append(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->`);
         }
         else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
             $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>');
         }
     });
+}
+
+// Note: ignores rgba colors, which are not supported in Outlook.
+function normalizeColors($editable) {
+    for (const node of $editable.find('[style*="rgb"]')) {
+        const rgbMatch = node.getAttribute('style').match(/rgb?\(([\d\.]*,?\s?){3,4}\)/g);
+        for (const rgb of rgbMatch || []) {
+            node.setAttribute('style', node.getAttribute('style').replace(rgb, rgbToHex(rgb)));
+        }
+    }
+}
+
+/**
+ * Converts all css values that use the rem unit to px.
+ *
+ * @param {JQuery} $editable
+ */
+function normalizeRem($editable) {
+    const rootFontSizeProperty = $editable.closest('html').css('font-size');
+    const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
+    for (const node of $editable.find('[style*="rem"]')) {
+        const remMatch = node.getAttribute('style').match(/[\d\.]+\s*rem/g);
+        for (const rem of remMatch || []) {
+            const remValue = parseFloat(rem.replace(/[^\d\.]/g, ''));
+            node.setAttribute('style', node.getAttribute('style').replace(rem, remValue * rootFontSize + 'px'));
+        }
+    }
 }
 
 /**
@@ -350,13 +768,20 @@ FieldHtml.include({
         attachmentThumbnailToLinkImg($editable);
         fontToImg($editable);
         classToStyle($editable);
+        bootstrapToTable($editable);
+        cardToTable($editable);
+        listGroupToTable($editable);
+        addTables($editable);
+        formatTables($editable);
+        normalizeColors($editable);
+        normalizeRem($editable);
 
         // fix outlook image rendering bug
         _.each(['width', 'height'], function(attribute) {
-            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+            $editable.find('img').attr(attribute, function(){
                 return $(this)[attribute]();
             }).css(attribute, function(){
-                return $(this).get(0).style[attribute] || 'auto';
+                return $(this).get(0).style[attribute] || $(this)[attribute]() || 'auto';
             });
         });
 
@@ -368,7 +793,14 @@ FieldHtml.include({
 
 return {
     fontToImg: fontToImg,
+    bootstrapToTable: bootstrapToTable,
+    cardToTable: cardToTable,
+    listGroupToTable: listGroupToTable,
+    addTables: addTables,
+    formatTables: formatTables,
     classToStyle: classToStyle,
+    normalizeColors: normalizeColors,
+    normalizeRem: normalizeRem,
     attachmentThumbnailToLinkImg: attachmentThumbnailToLinkImg,
 };
 });
