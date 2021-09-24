@@ -181,8 +181,8 @@ var SnippetEditor = Widget.extend({
         var $customize = this._customize$Elements[this._customize$Elements.length - 1];
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
-        this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
-        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
+        this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !this.$target.hasClass('oe_unremovable');
         this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
 
         // Initialize move/clone/remove buttons
@@ -483,7 +483,7 @@ var SnippetEditor = Widget.extend({
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
                     });
-                return isEmpty && !$el.hasClass('oe_structure')
+                return isEmpty && !$el.hasClass('oe_structure') && !$el.hasClass('oe_unremovable')
                     && (!editor || editor.isTargetParentEditable);
             };
 
