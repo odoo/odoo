@@ -12,7 +12,7 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        line_ids = self.mapped('line_ids').filtered(lambda line: any(sol.is_downpayment for sol in line.sale_line_ids))
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
