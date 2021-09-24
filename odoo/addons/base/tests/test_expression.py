@@ -1238,7 +1238,6 @@ class TestMany2one(TransactionCase):
                 SELECT "res_company".id
                 FROM "res_company"
                 WHERE ("res_company"."name"::text like %s)
-                ORDER BY "res_company"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1254,9 +1253,7 @@ class TestMany2one(TransactionCase):
                     SELECT "res_partner".id
                     FROM "res_partner"
                     WHERE ("res_partner"."name"::text LIKE %s)
-                    ORDER BY "res_partner"."id"
                 ))
-                ORDER BY "res_company"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1269,12 +1266,10 @@ class TestMany2one(TransactionCase):
                 SELECT "res_company".id
                 FROM "res_company"
                 WHERE ("res_company"."name"::text LIKE %s)
-                ORDER BY "res_company"."id"
             )) OR ("res_partner"."country_id" IN (
                 SELECT "res_country".id
                 FROM "res_country"
                 WHERE ("res_country"."code"::text LIKE %s)
-                ORDER BY "res_country"."id"
             )))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1294,11 +1289,26 @@ class TestMany2one(TransactionCase):
                 SELECT "res_company".id
                 FROM "res_company"
                 WHERE ("res_company"."name"::text like %s)
-                ORDER BY "res_company"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
             company_ids = self.company._search([('name', 'like', self.company.name)], order='id')
+            self.Partner.search([('company_id', 'in', company_ids)])
+
+        # special case, with a LIMIT to make ORDER BY necessary
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (
+                SELECT "res_company".id
+                FROM "res_company"
+                WHERE ("res_company"."name"::text like %s)
+                ORDER BY "res_company"."id"
+                LIMIT 1
+            ))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            company_ids = self.company._search([('name', 'like', self.company.name)], order='id', limit=1)
             self.Partner.search([('company_id', 'in', company_ids)])
 
     def test_autojoin(self):
@@ -1326,7 +1336,6 @@ class TestMany2one(TransactionCase):
                 SELECT "res_partner".id
                 FROM "res_partner"
                 WHERE ("res_partner"."name"::text LIKE %s)
-                ORDER BY "res_partner"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1346,7 +1355,6 @@ class TestMany2one(TransactionCase):
                 LEFT JOIN "res_partner" AS "res_company__partner_id" ON
                     ("res_company"."partner_id" = "res_company__partner_id"."id")
                 WHERE ("res_company__partner_id"."name"::text LIKE %s)
-                ORDER BY "res_company"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1405,7 +1413,6 @@ class TestMany2one(TransactionCase):
                 SELECT "res_company".id
                 FROM "res_company"
                 WHERE ("res_company"."name"::text LIKE %s)
-                ORDER BY "res_company"."sequence", "res_company"."name"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1447,7 +1454,6 @@ class TestOne2many(TransactionCase):
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
                 WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                ORDER BY "res_partner_bank"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1463,9 +1469,7 @@ class TestOne2many(TransactionCase):
                     SELECT "res_partner_bank"."partner_id"
                     FROM "res_partner_bank"
                     WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                    ORDER BY "res_partner_bank"."id"
                 ))
-                ORDER BY "res_partner"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1601,7 +1605,6 @@ class TestOne2many(TransactionCase):
                 SELECT "res_partner_bank"."partner_id"
                 FROM "res_partner_bank"
                 WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1640,7 +1643,6 @@ class TestMany2many(TransactionCase):
                     SELECT "res_groups".id
                     FROM "res_groups"
                     WHERE ("res_groups"."color" = %s)
-                    ORDER BY "res_groups"."id"
                 )
             ))
             ORDER BY "res_users"."id"
@@ -1659,10 +1661,8 @@ class TestMany2many(TransactionCase):
                             SELECT "ir_rule".id
                             FROM "ir_rule"
                             WHERE ("ir_rule"."name"::text LIKE %s)
-                            ORDER BY "ir_rule"."id"
                         )
                     ))
-                    ORDER BY "res_groups"."id"
                 )
             ))
             ORDER BY "res_users"."id"
@@ -1685,7 +1685,6 @@ class TestMany2many(TransactionCase):
                     SELECT "res_company".id
                     FROM "res_company"
                     WHERE ("res_company"."name"::text LIKE %s)
-                    ORDER BY "res_company"."sequence", "res_company"."name"
                 )
             ))
             ORDER BY "res_users"."id"
