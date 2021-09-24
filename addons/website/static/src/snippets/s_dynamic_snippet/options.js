@@ -45,6 +45,15 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
         }
+        if (params.attributeName === 'numberOfRecords' && previewMode === false) {
+            const dataSet = this.$target.get(0).dataset;
+            if (dataSet.numberOfElements > dataSet.numberOfRecords) {
+                dataSet.numberOfElements = dataSet.numberOfRecords;
+            }
+            if (dataSet.numberOfElementsSmallDevices > dataSet.numberOfRecords) {
+                dataSet.numberOfElementsSmallDevices = dataSet.numberOfRecords;
+            }
+        }
     },
 
     //--------------------------------------------------------------------------

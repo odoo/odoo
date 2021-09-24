@@ -30,13 +30,44 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
      * options
      * @private
      */
-    _getQWebRenderParams: function () {
+    _getQWebRenderOptions: function () {
         return Object.assign(
             this._super.apply(this, arguments),
             {
-                interval : parseInt(this.$target[0].dataset.carouselInterval),
+                interval: parseInt(this.$target[0].dataset.carouselInterval),
             },
         );
+    },
+
+    /**
+     *
+     * @override
+     */
+    _renderContent: function () {
+        this._super.apply(this, arguments);
+        this._computeHeights();
+    },
+
+    /**
+     *
+     * Force height of carousel to the higher slide, to avoid flickering.
+     * @private
+     */
+    _computeHeights: function () {
+        var maxHeight = 0;
+        var $items = this.$('.carousel-item');
+        $items.css('min-height', '');
+        _.each($items, function (el) {
+            var $item = $(el);
+            var isActive = $item.hasClass('active');
+            $item.addClass('active');
+            var height = $item.outerHeight();
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+            $item.toggleClass('active', isActive);
+        });
+        $items.css('min-height', maxHeight);
     },
 
 });
