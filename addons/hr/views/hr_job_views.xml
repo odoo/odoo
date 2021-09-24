@@ -22,7 +22,7 @@
                             <page string="Job Description">
                                 <div attrs="{'invisible': [('state', '!=', 'recruit')]}" name="job_description">
                                     <label for="description"/>
-                                    <field name="description"/>
+                                    <field name="description" options="{'collaborative': true}"/>
                                 </div>
                             </page>
                             <page string="Recruitment">
