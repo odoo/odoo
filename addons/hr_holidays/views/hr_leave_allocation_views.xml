@@ -97,7 +97,7 @@
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':current_date}"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"/>
 
                             <field name="allocation_type" invisible="1" widget="radio"
                                 attrs="{'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
