@@ -4,6 +4,7 @@ odoo.define('web.test_env', async function (require) {
     const Bus = require('web.Bus');
     const { buildQuery } = require('web.rpc');
     const session = require('web.session');
+    const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
     let qweb;
 
@@ -22,6 +23,9 @@ odoo.define('web.test_env', async function (require) {
             // time and they never change
             qweb = new owl.QWeb({ templates: session.owlTemplates });
         }
+        registerCleanup(() => {
+            qweb.subscriptions = {};
+        });
 
         const defaultTranslationParamters = {
             code: "en_US",
