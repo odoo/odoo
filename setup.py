@@ -42,6 +42,7 @@ setup(
         'psycopg2 >= 2.2',
         'pydot',
         'pypdf2',
+        'pyopenssl',
         'pyserial',
         'python-dateutil',
         'python-stdnum',
@@ -59,7 +60,6 @@ setup(
     python_requires='>=3.6',
     extras_require={
         'ldap': ['python-ldap'],
-        'SSL': ['pyopenssl'],
     },
     tests_require=[
         'freezegun',
