@@ -5,6 +5,7 @@ from odoo.tests.common import TransactionCase
 from odoo.tools import pdf
 from odoo.modules.module import get_module_resource
 import io
+import pikepdf
 
 
 class TestPdf(TransactionCase):
@@ -15,79 +16,58 @@ class TestPdf(TransactionCase):
         file_path = get_module_resource('base', 'tests', 'minimal.pdf')
         self.file = open(file_path, 'rb').read()
         self.minimal_reader_buffer = io.BytesIO(self.file)
-        self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 
     def test_odoo_pdf_file_reader(self):
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 0)
+        with pdf.OdooPdf.open(self.minimal_reader_buffer) as minimal_pdf:
+            attachments = list(minimal_pdf.get_attachments())
+            self.assertEqual(len(attachments), 0)
 
-        pdf_writer = pdf.PdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
+            minimal_pdf.add_attachment('test_attachment.txt', b'My awesome attachment')
 
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 1)
+            attachments = list(minimal_pdf.get_attachments())
+            self.assertEqual(len(attachments), 1)
 
     def test_odoo_pdf_file_writer(self):
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 0)
+        with pdf.OdooPdf.open(self.minimal_reader_buffer) as minimal_pdf:
+            attachments = list(minimal_pdf.get_attachments())
+            self.assertEqual(len(attachments), 0)
 
-        pdf_writer = pdf.OdooPdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+            minimal_pdf.add_attachment('test_attachment.txt', b'My awesome attachment')
+            attachments = list(minimal_pdf.get_attachments())
+            self.assertEqual(len(attachments), 1)
 
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 1)
-
-        pdf_writer.addAttachment('another_attachment.txt', b'My awesome OTHER attachment')
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 2)
+            minimal_pdf.add_attachment('another_attachment.txt', b'My awesome OTHER attachment')
+            attachments = list(minimal_pdf.get_attachments())
+            self.assertEqual(len(attachments), 2)
 
     def test_odoo_pdf_file_reader_with_owner_encryption(self):
-        pdf_writer = pdf.OdooPdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        with pdf.OdooPdf.open(self.minimal_reader_buffer) as minimal_pdf, io.BytesIO() as _buffer:
+            minimal_pdf.add_attachment('test_attachment.txt', b'My awesome attachment')
+            minimal_pdf.add_attachment('another_attachment.txt', b'My awesome OTHER attachment')
 
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
-        pdf_writer.addAttachment('another_attachment.txt', b'My awesome OTHER attachment')
+            minimal_pdf.save(_buffer, encryption=pikepdf.Encryption(user="", owner="foo"))
 
-        pdf_writer.encrypt("", "foo")
-
-        with io.BytesIO() as writer_buffer:
-            pdf_writer.write(writer_buffer)
-            encrypted_content = writer_buffer.getvalue()
-
-        with io.BytesIO(encrypted_content) as reader_buffer:
-            pdf_reader = pdf.OdooPdfFileReader(reader_buffer)
-            attachments = list(pdf_reader.getAttachments())
-
-        self.assertEqual(len(attachments), 2)
+            with pdf.OdooPdf.open(_buffer) as encrypted_pdf:
+                attachments = list(encrypted_pdf.get_attachments())
+                self.assertEqual(len(attachments), 2)
 
     def test_merge_pdf(self):
-        self.assertEqual(self.minimal_pdf_reader.getNumPages(), 1)
-        page = self.minimal_pdf_reader.getPage(0)
+        with pdf.OdooPdf.open(self.minimal_reader_buffer) as minimal_pdf:
+            self.assertEqual(len(minimal_pdf.pages), 1)
 
-        merged_pdf = pdf.merge_pdf([self.file, self.file])
-        merged_reader_buffer = io.BytesIO(merged_pdf)
-        merged_pdf_reader = pdf.OdooPdfFileReader(merged_reader_buffer)
-        self.assertEqual(merged_pdf_reader.getNumPages(), 2)
-        merged_reader_buffer.close()
+        merged_file = pdf.merge_pdf([self.file, self.file])
+        with pdf.OdooPdf.open(io.BytesIO(merged_file)) as merged_pdf:
+            self.assertEqual(len(merged_pdf.pages), 2)
 
     def test_branded_file_writer(self):
-        # It's not easy to create a PDF with PyPDF2, so instead we copy minimal.pdf with our custom pdf writer
-        pdf_writer = pdf.PdfFileWriter()  # BrandedFileWriter
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
-        writer_buffer = io.BytesIO()
-        pdf_writer.write(writer_buffer)
-        branded_content = writer_buffer.getvalue()
-        writer_buffer.close()
+        with pdf.OdooPdf.open(self.minimal_reader_buffer) as minimal_pdf, io.BytesIO() as _buffer:
+            minimal_pdf.save(_buffer)
 
-        # Read the metadata of the newly created pdf.
-        reader_buffer = io.BytesIO(branded_content)
-        pdf_reader = pdf.PdfFileReader(reader_buffer)
-        pdf_info = pdf_reader.getDocumentInfo()
-        self.assertEqual(pdf_info['/Producer'], 'Odoo')
-        self.assertEqual(pdf_info['/Creator'], 'Odoo')
-        reader_buffer.close()
+            # Read the metadata of the newly created pdf.
+            with pdf.OdooPdf.open(_buffer) as branded_pdf:
+                with branded_pdf.open_metadata(set_pikepdf_as_editor=False) as meta:
+                    self.assertEqual(meta['xmp:CreatorTool'], 'Odoo')
+                    self.assertEqual(meta['pdf:Producer'], "Odoo")
 
     def tearDown(self):
         super().tearDown()
