@@ -125,6 +125,17 @@ var MassMailingFieldHtml = FieldHtml.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+     _createWysiwygIntance: async function () {
+        await this._super(...arguments);
+        // Data is removed on save but we need the mailing and its body to be
+        // named so they are handled properly by the snippets menu.
+        this.$content.find('.o_layout').addBack().data('name', 'Mailing');
+        // We don't want to drop snippets directly within the wysiwyg.
+        this.$content.removeClass('o_editable').addClass('o_not_editable')
+    },
+    /**
      * Returns true if the editable area is empty.
      *
      * @private
@@ -269,15 +280,16 @@ var MassMailingFieldHtml = FieldHtml.extend({
             // This wrapper structure is the only way to have a responsive
             // and centered fixed-width content column on all mail clients
             $new_wrapper = $('<div/>', {
-                class: 'container o_mail_wrapper o_mail_regular',
+                class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
             });
             $newWrapperContent = $('<div/>', {
-                class: 'col o_mail_no_options o_mail_wrapper_td oe_structure'
+                class: 'col o_mail_no_options o_mail_wrapper_td oe_structure o_editable'
             });
             $new_wrapper.append($('<div class="row"/>').append($newWrapperContent));
         }
         var $newLayout = $('<div/>', {
-            class: 'o_layout ' + themeParams.className,
+            class: 'o_layout oe_unremovable oe_unmovable ' + themeParams.className,
+            'data-name': 'Mailing',
         }).append($new_wrapper);
 
         var $contents;
