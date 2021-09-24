@@ -246,6 +246,7 @@ const UserValueWidget = Widget.extend({
         this.containerEl = document.createElement('div');
 
         if (this.imgEl) {
+            this.containerEl.appendChild(document.createTextNode('\u200B')); // Ensures proper vertical centering.
             this.containerEl.appendChild(this.imgEl);
         }
 
@@ -813,7 +814,14 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
         this.menuEl = document.createElement('we-selection-items');
         if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => node && this.menuEl.appendChild(node));
+            this.options.childNodes.forEach(node => {
+                if (node) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        node.insertBefore(document.createTextNode('\u200B'), node.firstChild); // Ensures proper height.
+                    }
+                    this.menuEl.appendChild(node);
+                }
+            });
         }
         this.containerEl.appendChild(this.menuEl);
     },
@@ -902,6 +910,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
+        this.menuTogglerEl.appendChild(document.createTextNode('\u200B')); // Ensures proper height.
         this.iconEl = this.imgEl || null;
         const icon = this.el.dataset.icon;
         if (icon) {
@@ -960,11 +969,11 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             this.menuTogglerItemEl = null;
         }
 
-        let textContent = '';
+        let textContent = '\u200B'; // Ensures proper height.
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
             const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
-            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
+            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.replace('\u200B', '').trim()));
             const imgSrc = activeWidget.el.dataset.img;
             if (value) {
                 textContent = value;
