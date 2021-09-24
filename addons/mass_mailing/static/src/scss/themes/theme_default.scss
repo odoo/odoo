@@ -29,7 +29,7 @@ $o-mm-def-btn-text      : $o-mm-def-color-2;
 @include bg-variant(".bg-o-color-4", $o-mm-def-color-7);
 @include bg-variant(".bg-gray-lighter", $o-mm-def-color-1);
 
-td:not([align]) {
+div.col:not([align]) {
     // Default browser style but needed so that alignment works on some mail
     // clients (see convert_inline)
     text-align: inherit;
@@ -58,10 +58,8 @@ td:not([align]) {
 .o_layout {
     overflow: hidden;
     box-sizing: content-box;
-    width: 94%;
     min-height: 100%;
     background-color: $o-mm-def-color-1;
-    padding: 0 3%;
 
     // Forces on <p/> and <hx/> elements as several mail clients does not
     // correctly inherit font properties
@@ -82,6 +80,7 @@ td:not([align]) {
             width: $o-mm-def-body-width;
             border: 1px solid darken($o-mm-def-color-1, 2%);
             background-color: $o-mm-def-color-2;
+            flex: none;
         }
     }
 }
@@ -89,7 +88,7 @@ td:not([align]) {
 // ===== Snippets (general) =====
 .o_mail_snippet_general {
     width: 100%;
-    max-width: $o-mm-def-body-width; // should not be necessary thanks to mail wrapper
+    box-sizing: border-box;
     margin: 0 auto;
 
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -142,7 +141,7 @@ td:not([align]) {
         }
     }
 
-    td, th {
+    div.col {
         vertical-align: top;
     }
 }
@@ -161,7 +160,7 @@ td:not([align]) {
             display: inline-block;
         }
     }
-    td {
+    div .col, div[class*="col-"] {
         vertical-align: middle;
     }
 }
@@ -218,11 +217,11 @@ td:not([align]) {
         height: 1px;
         background-color: darken($o-mm-def-color-1, 15%);
     }
-    table table {
-        td, th {
+    div.container div.container {
+        div.col:not(.o_col_head) {
             vertical-align: middle;
         }
-        td {
+        div.col {
             padding: 10px 20px;
             * {
                 margin: 0;
@@ -285,7 +284,7 @@ td:not([align]) {
             }
         }
     }
-    td {
+    div.col:not(.o_col_head) {
         vertical-align: middle;
     }
 }
@@ -321,6 +320,6 @@ td:not([align]) {
 // classes may remain on clients' templates, <td/> are forced to 0 margin to
 // be sure (normally <td/> should not consider margin properties but some mail
 // clients might make the mistake to do so).
-td[class*="mb"], td[class*="mt"] {
+div.col[class*="mb"], div.col[class*="mt"] {
     margin: 0!important;
 }
