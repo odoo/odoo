@@ -32,8 +32,8 @@ export function useDragVisibleDropZone() {
 
         // Thoses Events prevent the browser to open or download the file if
         // it's dropped outside of the dropzone
-        window.addEventListener('dragover', ev => ev.preventDefault());
-        window.addEventListener('drop', ev => ev.preventDefault());
+        window.addEventListener('dragover', preventDefault);
+        window.addEventListener('drop', preventDefault);
     });
 
     onWillUnmount(() => {
@@ -41,13 +41,17 @@ export function useDragVisibleDropZone() {
         document.removeEventListener('dragleave', _onDragleaveListener, true);
         document.removeEventListener('drop', _onDropListener, true);
 
-        window.removeEventListener('dragover', ev => ev.preventDefault());
-        window.removeEventListener('drop', ev => ev.preventDefault());
+        window.removeEventListener('dragover', preventDefault);
+        window.removeEventListener('drop', preventDefault);
     });
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    function preventDefault(ev) {
+        ev.preventDefault();
+    }
 
     /**
      * Shows the dropzone when entering the browser window, to let the user know
