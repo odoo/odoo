@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -356,7 +356,7 @@ class AccountReconcileModel(models.Model):
         base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
-    def _get_write_off_move_lines_dict(self, st_line, residual_balance):
+    def _get_write_off_move_lines_dict(self, st_line, residual_balance, partner_id):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
         :param st_line:             An account.bank.statement.line record.(possibly empty, if performing manual reconciliation)
         :param residual_balance:    The residual balance of the statement line.
@@ -420,13 +420,16 @@ class AccountReconcileModel(models.Model):
             residual_balance -= balance
 
             if line.tax_ids:
-                writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
-                tax = line.tax_ids
+                taxes = line.tax_ids
+                detected_fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(partner_id)
+                if detected_fiscal_position:
+                    taxes = detected_fiscal_position.map_tax(taxes)
+                writeoff_line['tax_ids'] = [Command.set(taxes.ids)]
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
-                    tax = tax[0].with_context(force_price_include=True)
-                tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+                    taxes = taxes[0].with_context(force_price_include=True)
+                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line)
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
                     for tax_line in tax_vals_list:
@@ -828,6 +831,7 @@ class AccountReconcileModel(models.Model):
                 writeoff_vals_list = self._get_write_off_move_lines_dict(
                     st_line,
                     matched_candidates_values['balance_sign'] * residual_balance_after_rec,
+                    partner.id,
                 )
                 if writeoff_vals_list:
                     rslt['status'] = 'write_off'
@@ -1043,6 +1047,7 @@ class AccountReconcileModel(models.Model):
         writeoff_vals_list = self._get_write_off_move_lines_dict(
             st_line,
             matched_candidates_values['balance_sign'] * residual_balance_after_rec,
+            partner.id,
         )
 
         rslt = {
