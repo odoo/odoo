@@ -7,6 +7,7 @@ import re
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
+from datetime import datetime, time
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
@@ -48,6 +49,26 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
+    overtime_duration = fields.Float("Overtime Duration", default=0.0, group_operator="sum")
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        res = super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        uom = str(self.env.company.timesheet_encode_uom_id.name).lower()
+
+        for line in res:
+            if line.get('__range') and line.get('employee_id') and 'overtime_duration:sum' in fields:
+                first_date = datetime.strptime(line['__range']['date']['from'], '%Y-%m-%d').date()
+                end_date = datetime.strptime(line['__range']['date']['to'], '%Y-%m-%d').date()
+                employee = self.env['hr.employee'].browse(line['employee_id'][0])
+                result = employee.get_timesheet_and_working_hours(first_date, end_date)
+                overtime = result[employee.id]['timesheet_hours'] - result[employee.id]['working_hours']
+                if uom == 'days':
+                    overtime /= employee.resource_calendar_id.hours_per_day
+                    rounding = len(str(self.env.company.timesheet_encode_uom_id.rounding).split('.')[1])
+                    overtime = round(overtime, rounding)
+                line['overtime_duration'] = overtime
+        return res
 
     def name_get(self):
         result = super().name_get()
