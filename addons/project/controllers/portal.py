@@ -63,7 +63,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # task count
         task_count = Task.search_count(domain)
         # pager
-        url = "/my/project/%s" % project.id
+        url = "/my/projects/%s" % project.id
         pager = portal_pager(
             url=url,
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
@@ -146,7 +146,20 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/project/<int:project_id>',
+                 '/my/project/<int:project_id>/page/<int:page>',
+                 '/my/project/<int:project_id>/task/<int:task_id>',
+                 '/my/project/<int:project_id>/project_sharing'], type='http', auth="public")
+    def portal_project_routes_outdated(self, **kwargs):
+        """ Redirect the outdated routes to the new routes. """
+        return request.redirect(request.httprequest.path.replace('/my/project/', '/my/projects/'))
+
+    @http.route(['/my/task', '/my/task/page/<int:page>'], type='http', auth='public')
+    def portal_my_task_routes_outdated(self, **kwargs):
+        """ Redirect the outdated routes to the new routes. """
+        return request.redirect(request.httprequest.path.replace('/my/task', '/my/tasks'))
+
+    @http.route(['/my/projects/<int:project_id>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, task_id=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
@@ -195,7 +208,7 @@ class ProjectCustomerPortal(CustomerPortal):
             session_info['open_task_action'] = task.action_project_sharing_open_task()
         return session_info
 
-    @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
+    @http.route("/my/projects/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
     def render_project_backend_view(self, project_id, task_id=None):
         project = request.env['project.project'].sudo().browse(project_id)
         if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
@@ -206,7 +219,7 @@ class ProjectCustomerPortal(CustomerPortal):
             {'session_info': self._prepare_project_sharing_session_info(project, task)},
         )
 
-    @http.route('/my/project/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
+    @http.route('/my/projects/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
     def portal_my_project_task(self, project_id=None, task_id=None, access_token=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
@@ -414,7 +427,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'grouped_tasks': grouped_tasks,
             'page_name': 'task',
             'default_url': '/my/tasks',
-            'task_url': 'task',
+            'task_url': 'tasks',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'searchbar_groupby': searchbar_groupby,
@@ -433,7 +446,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # The route should not be called if at least hr_timesheet is not installed
         raise MissingError(_('There is nothing to report.'))
 
-    @http.route(['/my/task/<int:task_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/tasks/<int:task_id>'], type='http', auth="public", website=True)
     def portal_my_task(self, task_id, report_type=None, access_token=None, **kw):
         try:
             task_sudo = self._document_check_access('project.task', task_id, access_token)
