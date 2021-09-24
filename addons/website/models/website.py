@@ -333,11 +333,14 @@ class Website(models.Model):
         domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
         client_themes = request.env['ir.module.module'].search(domain).mapped('name')
         client_themes_img = dict([(t, http.addons_manifest[t].get('images_preview_theme', {})) for t in client_themes])
-        params = {
-            'palette': palette,
-            'client_themes': client_themes_img,
-        }
-        return self._website_api_rpc('/api/website/1/configurator/recommended_themes/%s' % industry_id, params)
+        themes_suggested = self._website_api_rpc(
+            '/api/website/2/configurator/recommended_themes/%s' % industry_id,
+            {'client_themes': client_themes_img}
+        )
+        process_svg = self.env['website.configurator.feature']._process_svg
+        for theme in themes_suggested:
+            theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
+        return themes_suggested
 
     @api.model
     def configurator_skip(self):
