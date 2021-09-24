@@ -212,7 +212,7 @@
                     <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
-                    <field name="resource_calendar_id"/>
+                    <field name="resource_calendar_id" required="1"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
