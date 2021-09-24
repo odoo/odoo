@@ -3,6 +3,7 @@
 
 from datetime import datetime as dt
 from datetime import timedelta as td
+from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID
 from odoo.tests import Form
@@ -10,6 +11,7 @@ from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
 
+@freeze_time("2021-01-14 09:12:15")
 class TestReorderingRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
