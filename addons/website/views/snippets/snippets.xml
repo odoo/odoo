@@ -241,72 +241,6 @@
     </xpath>
 </template>
 
-<template id="snippet_options_border_line_widgets">
-    <we-row t-att-string="label">
-        <we-input data-name="border_width_opt"
-                  t-att-data-apply-to="apply_to"
-                  data-select-style="0"
-                  t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}width"
-                  data-unit="px"
-                  t-att-data-extra-class="with_bs_class and 'border'"
-                  t-att-data-variable="width_variable"/>
-        <we-select t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}style"
-                   data-dependencies="border_width_opt"
-                   t-att-data-apply-to="apply_to"
-                   t-att-data-variable="style_variable">
-            <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
-            <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
-            <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
-        </we-select>
-        <we-colorpicker data-dependencies="border_width_opt"
-                        t-att-data-apply-to="apply_to"
-                        data-select-style="true"
-                        t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}color"
-                        data-color-prefix="border-"
-                        t-att-data-color="color_variable"/>
-    </we-row>
-</template>
-
-<template id="snippet_options_border_widgets">
-    <t t-call="website.snippet_options_border_line_widgets">
-        <t t-set="label">Border</t>
-        <t t-set="with_bs_class" t-value="True"/>
-    </t>
-    <we-input string="Round Corners"
-              t-att-data-apply-to="apply_to"
-              t-att-data-dependencies="not so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
-              data-select-style="0" data-css-property="border-radius"
-              data-unit="px" data-extra-class="rounded"
-              t-att-data-variable="radius_variable"/>
-</template>
-
-<template id="snippet_options_shadow_widgets">
-    <we-button-group string="Shadow" data-shadow-class="shadow" t-att-data-variable="shadow_variable">
-        <we-button data-set-shadow="">None</we-button>
-        <we-button data-set-shadow="outset"
-                   data-img="/website/static/src/img/snippets_options/shadow_out.svg"
-                   data-name="shadow_active_opt"
-                   title="Outset"/>
-        <we-button data-set-shadow="inset"
-                   data-img="/website/static/src/img/snippets_options/shadow_in.svg"
-                   data-name="shadow_inset_opt"
-                   title="Inset"/>
-    </we-button-group>
-    <we-multi data-css-property="box-shadow" data-dependencies="shadow_active_opt, shadow_inset_opt" t-att-data-variable="shadow_variable">
-        <we-colorpicker string="⌙ Color" data-select-style="" data-css-compatible=""/>
-        <we-row string="⌙ Offset (X, Y)">
-            <we-input data-select-style="" data-unit="px"/>
-            <we-input data-select-style="" data-unit="px"/>
-        </we-row>
-        <we-input string="⌙ Blur" data-select-style="" data-unit="px"/>
-        <we-input string="⌙ Spread" data-select-style="" data-unit="px"/>
-        <!-- Inset parameter always hidden (as controlled above) but needed -->
-        <!-- for the we-multi widget to work properly. -->
-        <we-checkbox data-name="fake_inset_shadow_opt" data-select-style="inset"/>
-    </we-multi>
-</template>
-
 <template id="snippet_options_conditional_visibility">
     <we-select t-att-string="option_name" t-att-data-attribute-name="attribute_rule" data-no-preview="true" data-dependencies="visibility_conditional" data-is-visibility-condition="true">
         <we-button data-select-data-attribute="">Visible for</we-button>
@@ -332,6 +266,18 @@
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
+    <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item"
+        data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
+        <t t-call="web_editor.snippet_options_container_width"/>
+    </div>
+    <div data-option-name="minHeight" data-selector="section" data-exclude="section .row > div *">
+        <we-button-group string="Height">
+            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
+            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
+            <we-button data-select-class="o_full_screen_height" title="Full screen">100%</we-button>
+        </we-button-group>
+    </div>
+
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
@@ -340,10 +286,10 @@
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
-        <t t-call="website.snippet_options_border_widgets">
+        <t t-call="web_editor.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
         </t>
-        <t t-call="website.snippet_options_shadow_widgets"/>
+        <t t-call="web_editor.snippet_options_shadow_widgets"/>
     </div>
 
     <!-- COLOR | .s_cards -->
@@ -355,30 +301,17 @@
     </div>
 
     <!-- H-ALIGN -->
-    <div id="so_text_align" data-selector=".s_share, .s_text_highlight">
-        <we-button-group string="Alignment">
-            <we-button title="Left" data-select-class="text-left"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="text-center"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="text-right"><i class="fa fa-fw fa-align-right"/></we-button>
-        </we-button-group>
-    </div>
+    <t t-call="web_editor.snippet_options_text_align">
+        <t t-set="selector" t-value="'.s_share, .s_text_highlight'"/>
+    </t>
 
-    <div id="so_width" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
-        <we-select string="Width">
-            <we-button data-select-class="w-25">25%</we-button>
-            <we-button data-select-class="w-50">50%</we-button>
-            <we-button data-select-class="w-75">75%</we-button>
-            <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
-        </we-select>
-    </div>
+    <t t-call="web_editor.snippet_options_width">
+        <t t-set="selector" t-value="'.s_alert, .s_card, .s_blockquote, .s_text_highlight'"/>
+    </t>
 
-    <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
-        <we-button-group string="Alignment" data-dependencies="!so_width_100">
-            <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
-        </we-button-group>
-    </div>
+    <t t-call="web_editor.snippet_options_block_align">
+        <t t-set="selector" t-value="'.s_alert, .s_card, .s_blockquote, .s_text_highlight'"/>
+    </t>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <!-- Dedicated colorpicker so that there is not 3 level of
@@ -511,8 +444,8 @@
     <div data-js="Box"
          data-selector="section .row > div"
          data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize">
-        <t t-call="website.snippet_options_border_widgets"/>
-        <t t-call="website.snippet_options_shadow_widgets"/>
+        <t t-call="web_editor.snippet_options_border_widgets"/>
+        <t t-call="web_editor.snippet_options_shadow_widgets"/>
     </div>
 
     <!-- Mobile display options -->
@@ -655,14 +588,14 @@
          data-target="nav"
          data-no-check="true"
          groups="website.group_website_designer">
-        <t t-call="website.snippet_options_border_widgets">
+        <t t-call="web_editor.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
             <t t-set="width_variable" t-value="'menu-border-width'"/>
             <t t-set="style_variable" t-value="'menu-border-style'"/>
             <t t-set="color_variable" t-value="'menu-border-color'"/>
             <t t-set="radius_variable" t-value="'menu-border-radius'"/>
         </t>
-        <t t-call="website.snippet_options_shadow_widgets">
+        <t t-call="web_editor.snippet_options_shadow_widgets">
             <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
         </t>
     </div>
@@ -936,8 +869,8 @@
          data-target="#footer"
          data-no-check="true"
          groups="website.group_website_designer">
-        <t t-call="website.snippet_options_border_widgets"/>
-        <t t-call="website.snippet_options_shadow_widgets"/>
+        <t t-call="web_editor.snippet_options_border_widgets"/>
+        <t t-call="web_editor.snippet_options_shadow_widgets"/>
     </div>
 
     <!-- Scroll to Top -->
@@ -1067,32 +1000,9 @@
         </we-select>
     </div>
 
-    <!-- Stretch section -->
-    <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item"
-        data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
-        <we-button-group string="Content Width">
-            <we-button data-select-class="o_container_small"
-                       data-img="/website/static/src/img/snippets_options/content_width_small.svg"
-                       title="Small"/>
-            <we-button data-select-class="container"
-                       data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
-                       title="Regular"/>
-            <we-button data-select-class="container-fluid"
-                       data-img="/website/static/src/img/snippets_options/content_width_full.svg"
-                       title="Full"/>
-        </we-button-group>
-    </div>
-
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]">
-        <!-- Min height of section -->
-        <we-button-group string="Height" data-show-scroll-button="">
-            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
-            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
-            <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
-        </we-button-group>
-
-        <we-checkbox string="⌙ Scroll down button"
+        <we-checkbox string="Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
                      data-dependencies="full_height_opt"
