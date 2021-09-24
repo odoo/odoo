@@ -205,9 +205,9 @@ class StockLandedCost(models.Model):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        digits = self.env['decimal.precision'].precision_get('Product Price')
         towrite_dict = {}
         for cost in self.filtered(lambda cost: cost._get_targeted_move_ids()):
+            rounding = cost.currency_id.rounding
             total_qty = 0.0
             total_cost = 0.0
             total_weight = 0.0
@@ -224,7 +224,7 @@ class StockLandedCost(models.Model):
 
                 former_cost = val_line_values.get('former_cost', 0.0)
                 # round this because former_cost on the valuation lines is also rounded
-                total_cost += tools.float_round(former_cost, precision_digits=digits) if digits else former_cost
+                total_cost += cost.currency_id.round(former_cost)
 
                 total_line += 1
 
@@ -250,8 +250,8 @@ class StockLandedCost(models.Model):
                         else:
                             value = (line.price_unit / total_line)
 
-                        if digits:
-                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
+                        if rounding:
+                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='UP')
                             fnc = min if line.price_unit > 0 else max
                             value = fnc(value, line.price_unit - value_split)
                             value_split += value
