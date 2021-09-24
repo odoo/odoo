@@ -1229,7 +1229,7 @@ class StockMove(models.Model):
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
         moves.filtered(lambda move: not move.picking_id.immediate_transfer
-                       and move.state == 'confirmed'
+                       and move.state in ('confirmed', 'partially_available')
                        and (move._should_bypass_reservation()
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
