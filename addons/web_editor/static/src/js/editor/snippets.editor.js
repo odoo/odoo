@@ -2381,14 +2381,15 @@ var SnippetsMenu = Widget.extend({
                     self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
+                    const doc = self.options.wysiwyg.odooEditor.document;
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         const point = {x: ui.position.left, y: ui.position.top};
-                        const container = {container: document.body};
-                        let droppedOnNotNearest = $.touching(
+                        const container = {container: doc.body};
+                        let droppedOnNotNearest = doc.defaultView.$.touching(
                             point, '.oe_structure_not_nearest', container
                         ).first();
                         // If dropped outside of a dropzone with class oe_structure_not_nearest,
@@ -2396,7 +2397,7 @@ var SnippetsMenu = Widget.extend({
                         const selector = droppedOnNotNearest.length
                             ? '.oe_drop_zone'
                             : ':not(.oe_structure_not_nearest) > .oe_drop_zone';
-                        let $el = $.nearest(
+                        let $el = doc.defaultView.$.nearest(
                             point, selector, container
                         ).first();
                         if ($el.length) {
