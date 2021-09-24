@@ -1485,6 +1485,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.withGradients) {
             options.withGradients = !!this.options.dataAttributes.withGradients;
         }
+        if (this.options.dataAttributes.noTransparency) {
+            options.noTransparency = !!this.options.dataAttributes.noTransparency;
+            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
+        }
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
