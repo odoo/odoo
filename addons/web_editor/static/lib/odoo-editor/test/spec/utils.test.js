@@ -1208,6 +1208,52 @@ describe('Utils', () => {
                     .expect([anchorNode, anchorOffset, focusNode, focusOffset])
                     .to.eql([p1.firstChild, 0, p1.firstChild, 11]);
             });
+            it('should limit the selection to the title text (nested)', () => {
+                const [p] = insertTestHtml(
+                    `<p>
+                        <span>
+                            <font>title</font>
+                        </span>
+                    </p>`,
+                );
+                const span = p.childNodes[1];
+                const whiteBeforeFont = span.childNodes[0];
+                const title = span.childNodes[1].firstChild;
+                const whiteAfterFont = span.childNodes[2];
+                const range = document.createRange();
+                range.setStart(whiteBeforeFont, 0);
+                range.setEnd(whiteAfterFont, 10);
+                const result = getDeepRange(p.parentElement, { range, select: true });
+                const { startContainer, startOffset, endContainer, endOffset } = result;
+                window.chai
+                    .expect([startContainer, startOffset, endContainer, endOffset])
+                    .to.eql([title, 0, title, 5]);
+                const { anchorNode, anchorOffset, focusNode, focusOffset } =
+                    document.getSelection();
+                window.chai
+                    .expect([anchorNode, anchorOffset, focusNode, focusOffset])
+                    .to.eql([title, 0, title, 5]);
+            });
+            it('should not limit the selection to the title text within p siblings', () => {
+                const [p0, p1, p2] = insertTestHtml(
+                    `<p><br/></p><p>
+                        <font>title</font>
+                    </p><p><br/></p>`,
+                );
+                const range = document.createRange();
+                range.setStart(p0, 0);
+                range.setEnd(p2, 0);
+                const result = getDeepRange(p1.parentElement, { range, select: true });
+                const { startContainer, startOffset, endContainer, endOffset } = result;
+                window.chai
+                    .expect([startContainer, startOffset, endContainer, endOffset])
+                    .to.eql([p0, 0, p2, 0]);
+                const { anchorNode, anchorOffset, focusNode, focusOffset } =
+                    document.getSelection();
+                window.chai
+                    .expect([anchorNode, anchorOffset, focusNode, focusOffset])
+                    .to.eql([p0, 0, p2, 0]);
+            });
         });
         describe('backward', () => {
             it('should select the contents of an element', () => {

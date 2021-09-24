@@ -752,7 +752,7 @@ export function getDeepestPosition(node, offset) {
     while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
-        offset = 0;
+        offset = reversed ? nodeSize(node) : 0;
         didMove = true;
     }
     return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
