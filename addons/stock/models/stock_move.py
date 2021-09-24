@@ -215,16 +215,18 @@ class StockMove(models.Model):
         multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
         consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
 
-        show_details_visible = multi_locations_enabled or has_package
-
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
             elif len(move._get_move_lines()) > 1:
                 move.show_details_visible = True
             else:
+                has_childlocation = bool(move.location_id.child_ids | move.location_dest_id.child_ids)
+                # If Multi Location is not enabled, do not show details even if children locations exist
+                # If Multi Location is enabled, do not show details if there are no children locations
+                show_because_location = has_childlocation and multi_locations_enabled
                 move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
-                                             show_details_visible or move.has_tracking != 'none') and
+                                             show_because_location or has_package or move.has_tracking != 'none') and
                                              move._show_details_in_draft() and
                                              move.show_operations is False)
 
