@@ -716,6 +716,14 @@ class HolidaysRequest(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    def onchange(self, values, field_name, field_onchange):
+        # Try to force the leave_type name_get when creating new records
+        # This is called right after pressing create and returns the name_get for
+        # most fields in the view.
+        if 'employee_id' in field_onchange:
+            self = self.with_context(employee_id=int(field_onchange['employee_id']))
+        return super().onchange(values, field_name, field_onchange)
+
     def name_get(self):
         res = []
         for leave in self:

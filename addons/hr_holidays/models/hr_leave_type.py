@@ -372,8 +372,11 @@ class HolidaysType(models.Model):
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
 
+    def requested_name_get(self):
+        return self._context.get('holiday_status_name_get', True) and self._context.get('employee_id')
+
     def name_get(self):
-        if not self._context.get('employee_id'):
+        if not self.requested_name_get():
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(HolidaysType, self).name_get()
         res = []
