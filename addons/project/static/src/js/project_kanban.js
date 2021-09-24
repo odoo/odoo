@@ -68,7 +68,7 @@ const ProjectTaskKanbanColumn = KanbanColumn.extend({
     },
 });
 
-const ProjectTaskKanbanRenderer = KanbanRenderer.extend({
+export const ProjectTaskKanbanRenderer = KanbanRenderer.extend({
     config: Object.assign({}, KanbanRenderer.prototype.config, {
         KanbanColumn: ProjectTaskKanbanColumn,
     }),
