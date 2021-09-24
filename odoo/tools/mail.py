@@ -185,6 +185,11 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
+    # Convert mso conditionals to mako tags, otherwise they are stripped by the
+    # cleaner. Restore them afterwards.
+    src = src.replace(u'<!--[if mso]>', u'<%mso_if%>')
+    src = src.replace(u'<![endif]-->', u'<%mso_endif%>')
+
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace(u'<%', misc.html_escape(u'<%'))
     src = src.replace(u'%>', misc.html_escape(u'%>'))
@@ -239,6 +244,9 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace(u'%7C', u'|')
         cleaned = cleaned.replace(u'&lt;%', u'<%')
         cleaned = cleaned.replace(u'%&gt;', u'%>')
+        # OUTLOOK compatibility: restore mso conditionals
+        cleaned = cleaned.replace(u'<%mso_if%>', u'<!--[if mso]>')
+        cleaned = cleaned.replace(u'<%mso_endif%>', u'<![endif]-->')
         # html considerations so real html content match database value
         cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
