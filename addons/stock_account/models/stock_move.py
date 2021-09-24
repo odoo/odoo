@@ -400,15 +400,15 @@ class StockMove(models.Model):
         elif self.product_id.valuation == 'real_time':
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
-            analalytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
+            analytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
                 lambda l: l.account_id == account_valuation)._prepare_analytic_line()
-            amount = - sum(vals['amount'] for vals in analalytic_line_vals)
-            unit_amount = - sum(vals['unit_amount'] for vals in analalytic_line_vals)
+            amount = - sum(vals['amount'] for vals in analytic_line_vals)
+            unit_amount = - sum(vals['unit_amount'] for vals in analytic_line_vals)
         elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
             amount = sum(self.stock_valuation_layer_ids.mapped('value'))
-            unit_amount = sum(self.stock_valuation_layer_ids.mapped('quantity'))
+            unit_amount = - sum(self.stock_valuation_layer_ids.mapped('quantity'))
         if self.analytic_account_line_id:
-            self.analytic_account_line_id.unit_amount = - unit_amount
+            self.analytic_account_line_id.unit_amount = unit_amount
             self.analytic_account_line_id.amount = amount
             return False
         elif amount:

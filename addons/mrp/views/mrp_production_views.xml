@@ -6,7 +6,7 @@
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Orders" js_class="lazy_column_list" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1">
+                <tree string="Manufacturing Orders" js_class="lazy_column_list" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
@@ -19,7 +19,7 @@
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_id" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show" nolabel="1"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="components_availability_state" invisible="1" options='{"lazy": true}'/>
@@ -37,8 +37,8 @@
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state" 
                            decoration-success="state in ('done', 'to_close')"
-                           decoration-warning="state == 'draft'"
-                           decoration-info="state in ('confirmed', 'progress')"
+                           decoration-warning="state == 'progress'"
+                           decoration-info="state in ('confirmed', 'draft')"
                            optional="show" widget="badge"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="delay_alert_date" invisible="1"/>

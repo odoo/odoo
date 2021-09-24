@@ -94,6 +94,13 @@ class MrpRoutingWorkcenter(models.Model):
             bom_id = self.env.context.get('bom_id')
             for operation in self:
                 operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+            return {
+                'view_mode': 'form',
+                'res_model': 'mrp.bom',
+                'views': [(False, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': bom_id,
+            }
 
     def _skip_operation_line(self, product):
         """ Control if a operation should be processed, can be inherited to add
