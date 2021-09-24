@@ -1,46 +1,9 @@
 /** @odoo-module **/
 
-import AbstractField from 'web.AbstractField';
-import { _t } from 'web.core';
 import fields from 'web.basic_fields';
 import fieldUtils from 'web.field_utils';
 import field_registry from 'web.field_registry';
 import time from 'web.time';
-
-/**
- * This widget is used to display the availability on a workorder.
- */
-var SetBulletStatus = AbstractField.extend({
-    // as this widget is based on hardcoded values, use it in another context
-    // probably won't work
-    // supportedFieldTypes: ['selection'],
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.classes = this.nodeOptions && this.nodeOptions.classes || {};
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @override
-     */
-    _renderReadonly: function () {
-        this._super.apply(this, arguments);
-        var bullet_class = this.classes[this.value] || 'default';
-        if (this.value) {
-            var title = this.value === 'waiting' ? _t('Waiting Materials') : '';
-            this.$el.attr({'title': title, 'style': 'display:inline'});
-            this.$el.removeClass('text-success text-danger text-default');
-            this.$el.html($('<span>' + title + '</span>').addClass('badge badge-' + bullet_class));
-        }
-    }
-});
 
 var TimeCounter = fields.FieldFloatTime.extend({
 
@@ -255,7 +218,6 @@ var FieldEmbedURLViewer = fields.FieldChar.extend({
 
 
 field_registry
-    .add('bullet_state', SetBulletStatus)
     .add('mrp_time_counter', TimeCounter)
     .add('embed_viewer', FieldEmbedURLViewer);
 
