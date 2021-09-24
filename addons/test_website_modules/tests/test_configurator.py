@@ -27,7 +27,7 @@ class TestConfigurator(odoo.tests.HttpCase):
                     {"id": 4, "label": "abortion clinic"},
                     {"id": 5, "label": "abrasives supplier"},
                     {"id": 6, "label": "abundant life church"}]}
-            elif '/api/website/1/configurator/recommended_themes' in endpoint:
+            elif '/api/website/2/configurator/recommended_themes' in endpoint:
                 return []
             elif '/api/website/1/configurator/custom_resources/' in endpoint:
                 return {
