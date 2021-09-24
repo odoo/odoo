@@ -364,7 +364,7 @@ class Project(models.Model):
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
         for project in self:
-            project.access_url = '/my/project/%s' % project.id
+            project.access_url = f'/my/projects/{project.id}'
 
     def _compute_access_warning(self):
         super(Project, self)._compute_access_warning()
@@ -1397,7 +1397,7 @@ class Task(models.Model):
     def _compute_access_url(self):
         super(Task, self)._compute_access_url()
         for task in self:
-            task.access_url = '/my/task/%s' % task.id
+            task.access_url = f'/my/tasks/{task.id}'
 
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()

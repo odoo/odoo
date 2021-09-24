@@ -7,7 +7,7 @@
                 <t t-else="">Projects</t>
             </li>
             <li t-if="page_name == 'project_task' and project" class="breadcrumb-item active">
-                <a t-if="project" t-attf-href="/my/project/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
+                <a t-if="project" t-attf-href="/my/projects/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
             </li>
             <li t-elif="project" t-attf-class="breadcrumb-item #{'active ' if not project else ''} text-truncate col-8 col-lg-10">
                 <t t-esc="project.name"/>
@@ -61,7 +61,7 @@
                 <tbody>
                     <tr t-foreach="projects" t-as="project">
                         <td>
-                            <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
+                            <a t-attf-href="/my/projects/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                         </td>
                         <td class="text-right">
                             <t t-out="project.task_count_with_subtasks" />
@@ -262,7 +262,7 @@
                             </div>
                             <div class="row mb-4">
                                 <div class="col-12 col-md-6">
-                                    <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id"/></div>
+                                    <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/projects/#{task.project_id.id}" t-field="task.project_id"/></div>
                                     <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>
                                     <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/></div>
                                     <div name="portal_my_task_planned_hours">

@@ -322,7 +322,7 @@ class IrHttp(models.AbstractModel):
                     record = record_sudo
                 elif self.env.user.has_group('base.group_portal'):
                     # Check the read access on the record linked to the attachment
-                    # eg: Allow to download an attachment on a task from /my/task/task_id
+                    # eg: Allow to download an attachment on a task from /my/tasks/task_id
                     record.check('read')
                     record = record_sudo
 
