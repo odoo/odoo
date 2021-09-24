@@ -293,7 +293,7 @@ class HolidaysType(models.Model):
 
     @api.model
     def get_days_all_request(self):
-        leave_types = sorted(self.search([]).filtered(lambda x: ((x.virtual_remaining_leaves or x.max_leaves))), key=self._model_sorting_key, reverse=True)
+        leave_types = sorted(self.search([]).filtered(lambda x: ((x.virtual_remaining_leaves > 0 or x.max_leaves))), key=self._model_sorting_key, reverse=True)
         return [lt._get_days_request() for lt in leave_types]
 
     def _get_days_request(self):
