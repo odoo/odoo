@@ -65,8 +65,8 @@
             <t t-set="with_gradients" t-value="True"/>
         </t>
         <div data-js="Box" data-selector=".s_media_list_item" data-target="&gt; .row">
-            <t t-call="website.snippet_options_border_widgets"/>
-            <t t-call="website.snippet_options_shadow_widgets"/>
+            <t t-call="web_editor.snippet_options_border_widgets"/>
+            <t t-call="web_editor.snippet_options_shadow_widgets"/>
         </div>
         <div data-selector=".s_media_list_item" data-target="&gt; .row">
             <we-button-group string="Layout">

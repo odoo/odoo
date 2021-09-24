@@ -390,6 +390,13 @@ function bootstrapToTable($editable) {
     // First give all rows in columns a separate container parent.
     $editable.find('.row').filter((i, row) => reColMatch.test(row.parentElement.className)).wrap('<div class="o_fake_table"/>');
 
+    // These containers from the mass mailing masonry snippet require full
+    // height contents, which is only possible if the table itself has a set
+    // height. We also need to restyle it because of the change in structure.
+    $editable.find('.o_masonry_grid_container').css('padding', 0)
+        .find('> .o_fake_table').css('height', function() { return $(this).height() })
+        .find('.row').css('height', '');
+
     // Now convert all containers with rows to tables.
     for (const container of $editable.find('.container:has(.row), .container-fluid:has(.row), .o_fake_table:has(.row)')) {
         const $container = $(container);

@@ -36,7 +36,7 @@ const SNIPPETS_TEMPLATE = `
         <div id="snippet_structure" class="o_panel">
             <div class="o_panel_header">First Panel</div>
             <div class="o_panel_body">
-                <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">
+                <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg">
                     <div class="s_hr pt32 pb32">
                         <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>
                     </div>

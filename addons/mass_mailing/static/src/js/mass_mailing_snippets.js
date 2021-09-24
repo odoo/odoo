@@ -63,7 +63,7 @@ options.registry.mass_mailing_sizing_x = options.Class.extend({
         return def;
     },
     change_width: function (event, target, target_width, offset, grow) {
-        target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
+        target.css("width", Math.round(grow ? (event.pageX - offset) : (offset + target_width - event.pageX)));
         this.trigger_up('cover_update');
     },
     get_int_width: function (el) {
