@@ -28,28 +28,6 @@ QUnit.module('mrp', {
     },
 }, function () {
 
-    QUnit.test("bullet_state: basic rendering", async function (assert) {
-        assert.expect(2);
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            res_id: 1,
-            arch:
-                '<form>' +
-                    '<field name="state" widget="bullet_state" options="{\'classes\': {\'waiting\': \'danger\'}}"/>' +
-                '</form>',
-        });
-
-        assert.strictEqual(form.$('.o_field_widget').text(), "Waiting Materials",
-            "the widget should be correctly named");
-        assert.containsOnce(form, '.o_field_widget .badge-danger',
-            "the badge should be danger");
-
-        form.destroy();
-    });
-
     QUnit.test("mrp_time_counter: basic rendering", async function (assert) {
         assert.expect(2);
         var data = {
