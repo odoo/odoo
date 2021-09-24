@@ -159,7 +159,8 @@
                 </header>
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_parent_task" type="object" special="cancel" class="oe_stat_button o_debounce_disabled" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                        <field name="display_parent_task_button" invisible="1"/>
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('display_parent_task_button', '=', False)]}"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pr-0">

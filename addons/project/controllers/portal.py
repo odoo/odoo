@@ -147,19 +147,22 @@ class ProjectCustomerPortal(CustomerPortal):
         return request.render("project.portal_my_projects", values)
 
     @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
-    def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kw):
+    def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, task_id=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
         if project_sudo.with_user(request.env.user)._check_project_sharing_access():
-            return request.render("project.project_sharing_portal", {'project_id': project_id})
+            values = {'project_id': project_id}
+            if task_id:
+                values['task_id'] = task_id
+            return request.render("project.project_sharing_portal", values)
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
         values['task_url'] = 'project/%s/task' % project_id
         return request.render("project.portal_my_project", values)
 
-    def _prepare_project_sharing_session_info(self, project):
+    def _prepare_project_sharing_session_info(self, project, task=None):
         session_info = request.env['ir.http'].session_info()
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
@@ -188,17 +191,19 @@ class ProjectCustomerPortal(CustomerPortal):
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
             currencies=request.env['ir.http'].get_currencies(),
         )
+        if task:
+            session_info['open_task_action'] = task.action_project_sharing_open_task()
         return session_info
 
     @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
-    def render_project_backend_view(self, project_id):
+    def render_project_backend_view(self, project_id, task_id=None):
         project = request.env['project.project'].sudo().browse(project_id)
         if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
             return request.not_found()
-
+        task = task_id and request.env['project.task'].browse(int(task_id))
         return request.render(
             'project.project_sharing_embed',
-            {'session_info': self._prepare_project_sharing_session_info(project)},
+            {'session_info': self._prepare_project_sharing_session_info(project, task)},
         )
 
     @http.route('/my/project/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
