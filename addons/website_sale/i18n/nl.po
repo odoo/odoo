@@ -34,7 +34,7 @@ msgstr "\" categorie."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
 msgid "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
-msgstr ""
+msgstr "#{'Ontvouwen' if c.id in category.parents_and_self.ids else 'Vouwen'}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -81,7 +81,7 @@ msgstr "<b>Verzending: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr "<b>Jouw order: </b>"
+msgstr "<b>Je bestelling: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -171,7 +171,7 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Vind hier de niet achtergelaten winkelmandjes, bijv. de winkelmandjes welke zijn aangemaakt door jouw website bezoekers, meer dan en uur geleden en niet bevestigd.</p>\n"
+"                        Vind hier de niet achtergelaten winkelmandjes, bijv. de winkelmandjes welke zijn aangemaakt door je website bezoekers, meer dan en uur geleden en niet bevestigd.</p>\n"
 "                        <p>Stuur ze een e-mail om ze te overtuigen!</p>\n"
 "                    "
 
@@ -310,8 +310,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Geef ons jouw feedback</span>"
+msgstr "<span class=\"s_website_form_label_content\">Geef ons je feedback</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -506,6 +505,99 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Jouw winkelmandje</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">ER ZIT IETS IN JE WINKELMANDJE.</h1>\n"
+"                    Wilt je je bestelling afronden??<br/><br/>\n"
+"                    % if object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        % endfor\n"
+"                        <hr/>\n"
+"                    % endif\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Bestelling hervatten\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"text-align: center;\"><strong>Bedankt voor het winkelen bij ${company.name}!</strong></div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${company.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${company.phone}\n"
+"                    % if company.email\n"
+"                        | <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
+"                    % endif\n"
+"                    % if company.website\n"
+"                        | <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -518,8 +610,8 @@ msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
 msgstr ""
-"Een product kan een fysiek product zijn of een dienst die je verkoopt aan "
-"jouw klanten."
+"Een product kan een fysiek product zijn of een dienst die je verkoopt aan je"
+" klanten."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -798,7 +890,7 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
-"Verhoog jouw verkopen met twee soorten kortingsprogramma's: promoties en "
+"Verhoog je verkopen met twee soorten kortingsprogramma's: promoties en "
 "coupon codes. Specifieke condities kunnen worden ingesteld (producten, "
 "klanten, minimaal bestel bedrag, periode). Beloningen kunnen kortingen (% of"
 " bedrag) of gratis producten zijn."
@@ -905,7 +997,7 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "            touchscreen interface."
 msgstr ""
-"Categorieën worden gebruikt om door jouw producten te navigeren via de\n"
+"Categorieën worden gebruikt om door je producten te navigeren via de\n"
 "touchscreen interface."
 
 #. module: website_sale
@@ -943,7 +1035,7 @@ msgid ""
 "your account. Please contact us directly for this operation."
 msgstr ""
 "Het wijzigen van een BTW nummer is niet toegestaan zodra document(en) zijn "
-"uitgegeven voor jouw account. Neem direct contact met ons op voor deze "
+"uitgegeven voor je account. Neem direct contact met ons op voor deze "
 "bewerking."
 
 #. module: website_sale
@@ -953,8 +1045,8 @@ msgid ""
 "your account. Please contact us directly for this operation."
 msgstr ""
 "Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor "
-"jouw account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze"
-" bewerking."
+"je account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
+"bewerking."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -981,8 +1073,8 @@ msgstr "Plaats"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
-"Klik op <i>'Nieuw'</i> in de rechter bovenhoek om jouw eerste product aan te"
-" maken."
+"Klik op <i>'Nieuw'</i> in de rechter bovenhoek om je eerste product aan te "
+"maken."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -1001,7 +1093,7 @@ msgstr "Klik op <em>Doorgaan</em> om een product aan te maken."
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Click on this button so your customers can see it."
-msgstr "Klik op deze knop zodat jouw klanten deze kan zien."
+msgstr "Klik op deze knop zodat je klanten deze kan zien."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1319,7 +1411,7 @@ msgstr "Gereed"
 #, python-format
 msgid "Double click here to set an image describing your product."
 msgstr ""
-"Dubbelklik hier om een afbeelding in te stellen die jouw product omschrijft."
+"Dubbelklik hier om een afbeelding in te stellen die je product omschrijft."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1331,7 +1423,7 @@ msgstr "Sleep bouwblokken hierheen om de kop aan te passen voor \""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
-msgstr "Sleep dit website blok en laat het los op jouw pagina."
+msgstr "Sleep dit website blok en laat het los op je pagina."
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1422,7 +1514,7 @@ msgstr "Code insluiten"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Enter a name for your new product"
-msgstr "Geef een naam in voor jouw nieuw product"
+msgstr "Geef een naam in voor je nieuw product"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_misc.py:0
@@ -1747,7 +1839,7 @@ msgstr "Laat de klant een afleverdadres ingeven"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Let's create your first product."
-msgstr "Laten we jouw eerste product aanmaken."
+msgstr "Laten we je eerste product aanmaken."
 
 #. module: website_sale
 #. openerp-web
@@ -1757,8 +1849,8 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
-"Laten we nu kijken naar jouw administratie dashboard om jouw webshop "
-"eenvoudig klaar te maken."
+"Laten we nu kijken naar je administratie dashboard om je webshop eenvoudig "
+"klaar te maken."
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -2000,7 +2092,7 @@ msgstr "Open source e-commerce"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Open your website app here."
-msgstr "Open jouw website app hier."
+msgstr "Open je website app hier."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2008,8 +2100,8 @@ msgid ""
 "Optimization required! Reduce the image size or increase your compression "
 "settings."
 msgstr ""
-"Optimalisatie vereist! Verklein de grootte van de afbeelding op vergroot "
-"jouw compressie instellingen."
+"Optimalisatie vereist! Verklein de grootte van de afbeelding op vergroot je "
+"compressie instellingen."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -2036,7 +2128,7 @@ msgstr "Gekoppelde opties"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr "Of scan met jouw bank app."
+msgstr "Of scan met je bank app."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2202,7 +2294,7 @@ msgstr "Stel een geldige video URL in."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr "Ga door met jouw huidige order"
+msgstr "Ga door met je huidige order"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:0
@@ -2480,7 +2572,7 @@ msgstr "Naar boven duwen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Qty:"
-msgstr "Hvh:"
+msgstr "Aantal:"
 
 #. module: website_sale
 #. openerp-web
@@ -2489,7 +2581,7 @@ msgstr "Hvh:"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: website_sale
 #. openerp-web
@@ -2732,7 +2824,7 @@ msgid ""
 "your sales."
 msgstr ""
 "Selecteer <b>Nieuw product</b> om het aan te maken en beheer zijn "
-"eigenschappen om jouw verkoop te boosten."
+"eigenschappen om je verkoop te boosten."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2989,8 +3081,8 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
-"Stel alternatieven voor aan jouw klanten (upselling strategie). Deze "
-"producten worden zichtbaar op de productpagina."
+"Stel alternatieven voor aan je klanten (upselling strategie). Deze producten"
+" worden zichtbaar op de productpagina."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -3005,7 +3097,7 @@ msgstr "Voorgestelde accessoires in het eCommerce-winkelmandje"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr "Btw"
+msgstr "BTW nummer"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3030,7 +3122,7 @@ msgstr "Algemene voorwaarden"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Bedankt voor je order."
+msgstr "Bedankt voor je bestelling."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -3140,7 +3232,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr "Dit is jouw huidige mandje."
+msgstr "Dit is je huidige mandje."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3209,7 +3301,7 @@ msgstr "URL"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
-msgstr "URL van een video die jouw product onder de aandacht brengt"
+msgstr "URL van een video die je product onder de aandacht brengt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3260,7 +3352,7 @@ msgstr "Totaal excl. BTW verkocht"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr "Upload een bestand vanuit jouw lokale bibliotheek."
+msgstr "Upload een bestand vanuit je lokale bibliotheek."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3488,8 +3580,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
-"Je past jouw <b>factuur- en aflever</b> adressen tegelijk aan!<br/>\n"
-"                                            Als je alleen jouw afleveradres wilt aanpassen, maak dan een"
+"Je past je <b>factuur- en aflever</b> adressen tegelijk aan!<br/>\n"
+"                                            Als je alleen je afleveradres wilt aanpassen, maak dan een"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -3505,7 +3597,7 @@ msgstr "Je hebt geen orders om te factureren vanuit de website"
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr "Je hebt nog producten in jouw winkelmandje!"
+msgstr "Je hebt nog producten in je winkelmandje!"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3610,7 +3702,7 @@ msgstr "uren."
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
 msgstr ""
-"Als je jouw oude winkelmandje wilt samenvoegen met het nieuwe winkelmandje."
+"Als je je oude winkelmandje wilt samenvoegen met het nieuwe winkelmandje."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3618,8 +3710,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
-"Als je jouw vorige winkelmandje wilt herstellen. Jouw huidige winkelmandje "
-"wordt vervangen door jouw vorige."
+"Als je je vorige winkelmandje wilt herstellen. Jouw huidige winkelmandje "
+"wordt vervangen door je vorige."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3644,7 +3736,7 @@ msgstr "algemene voorwaarden"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr "om jouw order te volgen."
+msgstr "om je bestelling te volgen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

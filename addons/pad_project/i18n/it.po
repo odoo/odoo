@@ -3,13 +3,14 @@
 # 	* pad_project
 # 
 # Translators:
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -20,9 +21,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__pad_availability
+#: model:ir.model.fields,field_description:pad_project.field_project_task__pad_availability
+msgid "Availability of collaborative pads"
+msgstr "Disponibilità di pad collaborativi"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Available to:"
+msgstr "Disponibili per:"
+
+#. module: pad_project
 #: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
 msgid "Collaborative Pads"
 msgstr "Pad collaborativi"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Edit"
+msgstr "Modifica"
 
 #. module: pad_project
 #: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
@@ -34,6 +51,16 @@ msgstr ""
 "                            Il testo di ciascun autore ha un colore distinto."
 
 #. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__internal
+msgid "Internal Users"
+msgstr "Utenti interni"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__portal
+msgid "Internal Users & Portal Users"
+msgstr "Utenti interni e utenti del portale"
+
+#. module: pad_project
 #: model:ir.model.fields,field_description:pad_project.field_project_project__description_pad
 #: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
 msgid "Pad URL"
@@ -43,6 +70,11 @@ msgstr "URL del pad"
 #: model:ir.model,name:pad_project.model_project_project
 msgid "Project"
 msgstr "Progetto"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Save"
+msgstr "Salva"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task

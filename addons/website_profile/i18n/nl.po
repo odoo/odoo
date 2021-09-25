@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -19,6 +19,26 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "#{user.name}"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "#{user.partner_id.city or ''}"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "#{user.partner_id.email}"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "#{user.partner_id.website or ''}"
+msgstr ""
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
@@ -287,14 +307,14 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                            Hallo ${object.name},<br/><br/>\n"
-"                            Je bent uitgenodigd om jouw e-mail te bevestigen om toegang te krijgen tot  \"${object.company_id.name}\" zijn website.\n"
-"                            Klik op de volgende link om jouw profiel te bevestigen:\n"
+"                            Je bent uitgenodigd om je e-mail te bevestigen om toegang te krijgen tot  \"${object.company_id.name}\" zijn website.\n"
+"                            Klik op de volgende link om je profiel te bevestigen:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Bevestig mijn account\n"
 "                                </a>\n"
 "                            </div>\n"
-"                            Bedankt voor jouw medewerking!\n"
+"                            Bedankt voor je medewerking!\n"
 "                        </p>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -447,7 +467,7 @@ msgstr "Is gepubliceerd"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "It appears your email has not been verified.<br/>"
-msgstr "Het lijkt erop alsof jouw e-mailadres nog niet gecontroleerd is.<br/>"
+msgstr "Het lijkt erop alsof je e-mailadres nog niet gecontroleerd is.<br/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main

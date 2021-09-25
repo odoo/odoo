@@ -78,7 +78,7 @@ msgstr ""
 "                <br/><br/>\n"
 "                Ga naar de volgende link om te bevestigen: <strong t-if=\"ctx.get('token_url')\"><a href=\"${ctx['token_url']}\">${ctx['token_url'] }</a></strong>.\n"
 "                <br/><br/>\n"
-"                Als dit een vergissing was of als je deze actie niet heeft aangevraagd, negeert u dit bericht.\n"
+"                Als dit een vergissing was of als je deze actie niet heeft aangevraagd, negeer je dit bericht.\n"
 "            </div>\n"
 "        "
 
@@ -93,7 +93,7 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"                <p>Hallo ${object.partner_id.name of ''},</p>\n"
+"                <p>Hallo ${object.partner_id.name or ''},</p>\n"
 "                <p>Hieronder vindt je de richtlijnen van de ${object.mail_group_id.name} mailinglijst.</p>\n"
 "                <p>${object.mail_group_id.moderation_guidelines_msg}</p>\n"
 "            </div>\n"
@@ -725,7 +725,7 @@ msgstr "Verlof"
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
-"Laat mensen zich online abonneren op uw lijst of voeg ze hier handmatig toe."
+"Laat mensen zich online abonneren op je lijst of voeg ze hier handmatig toe."
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
@@ -1457,7 +1457,7 @@ msgstr "Verkeerde status (%s)"
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
 msgstr ""
-"U kunt slechts één regel maken voor een bepaald e-mailadres in een groep."
+"Je kunt slechts één regel maken voor een bepaald e-mailadres in een groep."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1543,4 +1543,4 @@ msgstr "afgemeld van"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
-msgstr "jouw e-mail..."
+msgstr "je e-mail..."

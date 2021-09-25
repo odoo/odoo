@@ -233,6 +233,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certificering: ${object.survey_id.display_name}\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Beste <span>${object.partner_id.name or 'participant'}</span></p>\n"
+"                <p>\n"
+"                    Hier is, in bijlage, je certificeringsdocument voor:\n"
+"                        <strong>${object.survey_id.display_name}</strong>\n"
+"                </p>\n"
+"                <p>Gefeliciteerd met het slagen voor de test!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -282,7 +307,7 @@ msgstr ""
 "   % if object.deadline:\n"
 "       Beantwoord de enquête voor ${format_date(object.deadline)}.<br/> <br/>\n"
 "        % endif\n"
-"        Hartelijk dank voor jouw deelname.\n"
+"        Hartelijk dank voor je deelname.\n"
 "      </p>\n"
 "</div>"
 
@@ -509,12 +534,12 @@ msgid ""
 "    Filling it helps us improving your experience.</p>"
 msgstr ""
 "<p>Met deze enquête kun je feedback geven over je ervaring met onze producten.\n"
-"    Door het in te vullen, kunnen we jouw ervaring verbeteren.</p>"
+"    Door het in te vullen, kunnen we je ervaring verbeteren.</p>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p5
 msgid "<p>We may be interested by your input.</p>"
-msgstr "<p>Mogelijk zijn we geïnteresseerd in jouw input.</p>"
+msgstr "<p>Mogelijk zijn we geïnteresseerd in je input.</p>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1623,7 +1648,7 @@ msgstr "Omschrijving"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Design easily your survey, send invitations and analyze answers."
 msgstr ""
-"Ontwerp gemakkelijk jouw enquêtes, verstuur uitnodigingen en analyseer "
+"Ontwerp gemakkelijk je enquêtes, verstuur uitnodigingen en analyseer "
 "antwoorden."
 
 #. module: survey
@@ -2115,7 +2140,7 @@ msgstr ""
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten jouw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
@@ -2816,7 +2841,7 @@ msgstr "Nee, het is te klein voor het menselijk oog."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr "Nog niemand heeft geantwoord op jouw enquêtes "
+msgstr "Nog niemand heeft geantwoord op je enquêtes "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug2
@@ -3120,9 +3145,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
-"Zorg ervoor dat je ten minste één vraag in jouw enquête heeft. Je hebt ook "
-"ten minste één sectie nodig als je de lay-out \"Pagina per sectie\" "
-"kiest.<br/>"
+"Zorg ervoor dat je ten minste één vraag in je enquête heeft. Je hebt ook ten"
+" minste één sectie nodig als je de lay-out \"Pagina per sectie\" kiest.<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -3991,7 +4015,7 @@ msgid ""
 "start it."
 msgstr ""
 "De beschrijving wordt weergegeven op de startpagina van de enquête. Je kunt "
-"dit gebruiken om het doel en de richtlijnen aan jouw kandidaten te geven "
+"dit gebruiken om het doel en de richtlijnen aan je kandidaten te geven "
 "voordat ze eraan beginnen."
 
 #. module: survey
@@ -4263,7 +4287,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest !"
-msgstr "De enquête is nu afgesloten. Bedankt voor jouw interesse!"
+msgstr "De enquête is nu afgesloten. Bedankt voor je interesse!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -4610,7 +4634,7 @@ msgstr "Wanneer is Mitchell Admin geboren?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
 msgid "When is your date of birth ?"
-msgstr "Wat is jouw geboortedatum?"
+msgstr "Wat is je geboortedatum?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q3
@@ -4736,9 +4760,9 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
-"Je kunt enquêtes aanmaken voor verschillende doeleinden: klanten hun mening,"
-" diensten feedback, aanwervingsinterviews, periodieke "
-"personeelsbeoordelingen, marketing campagnes, etc."
+"Je kunt enquêtes maken voor verschillende doeleinden: de mening van klanten,"
+" feedback van diensten, sollicitatiegesprekken, periodieke evaluaties van "
+"werknemers, marketingcampagnes, enz."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_certification_check
@@ -4877,7 +4901,7 @@ msgstr "pagina's"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "review your answers"
-msgstr "controleer jouw antwoorden"
+msgstr "controleer je antwoorden"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired

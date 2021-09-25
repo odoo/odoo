@@ -3,16 +3,17 @@
 # 	* iap
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Felix Yuen <fyu@odoo.com>, 2021
+# 黎伟杰 <674416404@qq.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr "账户令牌"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
@@ -40,7 +41,7 @@ msgstr "购买信用"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Cancel"
 msgstr "取消"
@@ -105,6 +106,13 @@ msgstr "ID"
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/js/crash_manager.js:0
+#, python-format
+msgid "Insufficient Balance"
+msgstr "余额不足"
+
+#. module: iap
+#. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Insufficient credit to perform this service."
@@ -113,7 +121,7 @@ msgstr "额度不足，无法执行此服务。"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -142,7 +150,7 @@ msgstr "服务名称"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
 msgstr "在odoo中开始试用"

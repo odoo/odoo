@@ -161,6 +161,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Hallo ${object.partner_id.name},</p><br/>\n"
+"                        <p><b>Gefeliciteerd!</b></p>\n"
+"                        <p>Je hebt de cursus afgerond <b>${object.channel_id.name}</b></p>\n"
+"                        <p>Bekijk de andere beschikbare cursussen.</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Cursussen verkennen\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Geniet van deze exclusieve inhoud!\n"
+"                        % if object.channel_id.user_id.signature\n"
+"                            <br/>\n"
+"                            ${object.channel_id.user_id.signature | safe}\n"
+"                        % endif\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -185,6 +205,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        ${user.name} heeft de ${object.slide_type} <strong>${object.name}</strong> met je gedeeld!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijk <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -213,6 +252,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        Er is iets nieuws in de cursus <strong>${object.channel_id.name}</strong> die je volgt:<br/><br/>\n"
+"                        <center><strong>${object.name}</strong></center>\n"
+"                        % if object.image_1024\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        % endif\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijk inhoud</a>\n"
+"                        </div>\n"
+"                        Geniet van deze exclusieve inhoud!\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -878,8 +940,8 @@ msgid ""
 "A good course has a structure. Pick a name for your first section and click "
 "<b>Save</b> to create it."
 msgstr ""
-"Een goede cursus heeft een structuur. Kies een naam voor jouw eerste sectie "
-"en klik op <b>Opslaan</b> om deze te maken."
+"Een goede cursus heeft een structuur. Kies een naam voor je eerste sectie en"
+" klik op <b>Opslaan</b> om deze te maken."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1103,7 +1165,7 @@ msgid ""
 "Add quizzes at the end of your lessons to evaluate what your students "
 "understood."
 msgstr ""
-"Voeg quizzes toe aan het einde van jouw lessen om te evalueren wat jouw "
+"Voeg quizzes toe aan het einde van je lessen om te evalueren wat je "
 "studenten hebben geleerd."
 
 #. module: website_slides
@@ -1543,7 +1605,7 @@ msgstr "Bekijk antwoorden"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check your answers"
-msgstr "Controleer jouw antwoorden"
+msgstr "Controleer je antwoorden"
 
 #. module: website_slides
 #. openerp-web
@@ -1569,7 +1631,7 @@ msgstr "Kies een lay-out."
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
 msgid "Choose your wood !"
-msgstr "Kies jouw hout!"
+msgstr "Kies je hout!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1596,7 +1658,7 @@ msgstr "Klik hier om de cursus te starten."
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Click on \"New\" in the top-right corner to write your first course."
 msgstr ""
-"Klik op 'Nieuw' in de rechterbovenhoek om jouw eerste cursus te schrijven."
+"Klik op 'Nieuw' in de rechterbovenhoek om je eerste cursus te schrijven."
 
 #. module: website_slides
 #. openerp-web
@@ -1705,7 +1767,7 @@ msgstr "Voltooi een cursus"
 #: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
 #: model_terms:gamification.badge,description:website_slides.badge_data_profile
 msgid "Complete your profile"
-msgstr "Voltooi jouw profiel"
+msgstr "Voltooi je profiel"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
@@ -2465,7 +2527,7 @@ msgstr "Aantal insluitingen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in your website"
-msgstr "In jouw website insluiten"
+msgstr "In je website insluiten"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
@@ -2524,14 +2586,14 @@ msgstr "Voer je <b>vraag</b> in. Wees duidelijk en beknopt."
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Enter your answer"
-msgstr "Geef jouw antwoord in"
+msgstr "Geef je antwoord in"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Enter your question"
-msgstr "Vul jouw vraag in"
+msgstr "Vul je vraag in"
 
 #. module: website_slides
 #. openerp-web
@@ -2549,7 +2611,7 @@ msgstr "Evalueer en certificeer je studenten."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Evaluate your students and certify them"
-msgstr "Evalueer jouw studenten and certificeer hen"
+msgstr "Evalueer je studenten and certificeer hen"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_exercises
@@ -2734,7 +2796,7 @@ msgstr "Tuinieren: de knowhow"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Generate revenues thanks to your courses"
-msgstr "Genereer omzet dankzij jouw cursussen"
+msgstr "Genereer omzet dankzij je cursussen"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
@@ -2945,7 +3007,7 @@ msgid ""
 " * post comment and review on training course;"
 msgstr ""
 "Indien aangevinkt staat het leden toe om:\n"
-"* content te liken en nieuwe reacties te plaatsen op jouw documentatie;\n"
+"* content te liken en nieuwe reacties te plaatsen op je documentatie;\n"
 "* reacties en reviews te plaatsen op trainingen;"
 
 #. module: website_slides
@@ -2954,7 +3016,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten jouw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
@@ -3110,7 +3172,7 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
-"Interne serverfout, probeer het later nog een keer of neem contact op met jouw beheerder.\n"
+"Interne serverfout, probeer het later nog een keer of neem contact op met je beheerder.\n"
 "Foutmelding: %s"
 
 #. module: website_slides
@@ -3361,7 +3423,7 @@ msgid ""
 "Learn how to take care of your favorite trees. Learn when to plant, how to "
 "manage potted trees, ..."
 msgstr ""
-"Leer hoe je voor jouw favoriete bomen kan zorgen. Leer wanneer je best kan "
+"Leer hoe je voor je favoriete bomen kan zorgen. Leer wanneer je best kan "
 "planten, hoe bomen in potten te verzorgen,"
 
 #. module: website_slides
@@ -3704,17 +3766,17 @@ msgstr "Nog geen voltooide cursussen!"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "No content was found using your search"
-msgstr "Er is geen inhoud gevonden met jouw zoekopdracht"
+msgstr "Er is geen inhoud gevonden met je zoekopdracht"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search"
-msgstr "Geen cursus gevonden die voldoet aan jouw zoekopdracht"
+msgstr "Geen cursus gevonden die voldoet aan je zoekopdracht"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search."
-msgstr "Geen cursus gevonden die voldoet aan jouw zoekopdracht"
+msgstr "Geen cursus gevonden die voldoet aan je zoekopdracht"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
@@ -4642,7 +4704,7 @@ msgstr "Korte omschrijving"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_4
 msgid "Show your newly mastered knowledge !"
-msgstr "Toon jouw nieuwe kennis!"
+msgstr "Toon je nieuwe kennis!"
 
 #. module: website_slides
 #. openerp-web
@@ -4950,13 +5012,13 @@ msgstr "Test jezelf"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_4
 msgid "Test your knowledge"
-msgstr "Test jouw kennis"
+msgstr "Test je kennis"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_3
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_3
 msgid "Test your knowledge !"
-msgstr "Test jouw kennis!"
+msgstr "Test je kennis!"
 
 #. module: website_slides
 #. openerp-web
@@ -5525,7 +5587,7 @@ msgstr "Wat is een aardbei?"
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_1
 msgid "What is the best tool to dig a hole for your plants ?"
-msgstr "Wat is het beste gereedschap om een kuil te graven voor jouw planten?"
+msgstr "Wat is het beste gereedschap om een kuil te graven voor je planten?"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_2
@@ -5603,8 +5665,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. <br>To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
-"Schrijf een of twee alinea's die jouw product of diensten beschrijven. "
-"<br>Om succesvol te zijn, moet jouw inhoud nuttig zijn voor jouw lezers."
+"Schrijf een of twee alinea's die je product of diensten beschrijven. <br>Om "
+"succesvol te zijn, moet je inhoud nuttig zijn voor je lezers."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -5615,9 +5677,9 @@ msgid ""
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
-"Schrijf één of twee paragrafen die jouw product, dienst of een specifiek "
-"kenmerk omschrijven. <br> Om succesvol te zijn moet jouw inhoud handig zijn "
-"voor jouw gebruikers."
+"Schrijf één of twee paragrafen die je product, dienst of een specifiek "
+"kenmerk omschrijven. <br> Om succesvol te zijn moet je inhoud handig zijn "
+"voor je gebruikers."
 
 #. module: website_slides
 #. openerp-web
@@ -5856,7 +5918,7 @@ msgstr "bijv. Computerwetenschappen voor kinderen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. How to grow your business with Odoo?"
-msgstr "Bijv. Hoe jouw onderneming doen groeien met Odoo?"
+msgstr "Bijv. Hoe je onderneming doen groeien met Odoo?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5864,9 +5926,8 @@ msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
 msgstr ""
-"bijv. In deze video, geven we de sleutels om jouw bedrijf te doen groeien "
-"met Odoo. Aan het einde, zullen we een quiz voorstellen om jouw kennis te "
-"testen."
+"bijv. In deze video, geven we de sleutels om je bedrijf te doen groeien met "
+"Odoo. Aan het einde, zullen we een quiz voorstellen om je kennis te testen."
 
 #. module: website_slides
 #. openerp-web
@@ -5995,7 +6056,7 @@ msgstr "xp"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "your-friend@domain.com"
-msgstr "jouw-vriend@domein.com"
+msgstr "je-vriend@domein.com"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 11:06+0000\n"
+"POT-Creation-Date: 2021-09-24 06:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Geoffrey_GMF <gmf@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1218,6 +1218,27 @@ msgid ""
 msgstr ""
 "\n"
 "Ce module apporte le cœur de Odoo Mobile App. "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_es_edi_sii
+msgid ""
+"\n"
+"        This module sends the taxes information (mostly VAT) of the \n"
+"        vendor bills and customer invoices to the SII.  It is called \n"
+"        Procedimiento G417 - IVA. Llevanza de libros registro.  It is \n"
+"        required for every company with a turnover of +6M€ and others can \n"
+"        already make use of it.  The invoices are automatically \n"
+"        sent after validation.  \n"
+"        \n"
+"        How the information is sent to the SII depends on the \n"
+"        configuration that is put in the taxes.  The taxes \n"
+"        that were in the chart template (l10n_es) are automatically \n"
+"        configured to have the right type.  It is possible however \n"
+"        that extra taxes need to be created for certain exempt/no sujeta reasons.   \n"
+"        \n"
+"        You need to configure your certificate and the tax agency.  \n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -6698,7 +6719,7 @@ msgid ""
 "This module consists of:\n"
 " - Generic Israel Chart of Accounts\n"
 " - Taxes and tax report\n"
-" - Fiscal position for Palestina\n"
+" - Multiple Fiscal positions\n"
 " "
 msgstr ""
 
@@ -24554,7 +24575,6 @@ msgid "Profiling results"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project
 #: model:ir.module.category,name:base.module_category_services_project
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project"
@@ -25999,6 +26019,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Configurateur de salaire (Belgique)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_group_insurance
+msgid "Salary Configurator (Belgium) - Group Insurance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "Configurateur de salaire - Congés"
@@ -26012,6 +26037,11 @@ msgstr "Configurateur de salaire - Paie"
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
 msgid "Salary Package Configurator"
 msgstr "Configurateur de régime de rémunération"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_group_insurance
+msgid "Salary Package Configurator - Group Insurance"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
@@ -27123,6 +27153,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
 msgid "Spain - Real Estates"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_sii
+msgid "Spain - SII EDI Suministro de Libros"
 msgstr ""
 
 #. module: base
@@ -31315,8 +31350,8 @@ msgid "_Import"
 msgstr "_Importer"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_account
-#: model:ir.module.category,name:base.module_category_project_payroll_account
+#: model:ir.module.category,name:base.module_category_services_account
+#: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
 
@@ -31349,7 +31384,7 @@ msgid "and"
 msgstr "et"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_assets
+#: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
 msgstr ""
 
@@ -31535,7 +31570,7 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_expenses
+#: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr ""
 
@@ -31702,7 +31737,7 @@ msgid "one2many"
 msgstr "one2many"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_payroll
+#: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
 msgstr ""
 
@@ -31775,7 +31810,7 @@ msgid "sale"
 msgstr "vente"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_sales
+#: model:ir.module.category,name:base.module_category_services_sales
 msgid "sales"
 msgstr "ventes"
 
@@ -31796,7 +31831,7 @@ msgid "snailmail_account"
 msgstr "snailmail_account"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_sales_subscriptions
+#: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
 msgstr ""
 

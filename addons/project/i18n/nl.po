@@ -5,14 +5,13 @@
 # Translators:
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Bert Burggraaf, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-09-24 05:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -263,7 +262,7 @@ msgstr "<b><u>Milestones</u></b>"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr "<b>Versleep </b> de kaart om jouw taak van fase te veranderen."
+msgstr "<b>Versleep </b> de kaart om je taak van fase te veranderen."
 
 #. module: project
 #. openerp-web
@@ -372,7 +371,7 @@ msgstr ""
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Vertel ons wat u van onze service vindt</strong><br/>\n"
+"                    <strong>Vertel ons wat je van onze service vindt</strong><br/>\n"
 "                    <span style=\"text-color: #888888\">(klik op een van deze smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -399,9 +398,9 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Wij waarderen uw feedback. Het helpt ons om continu te verbeteren.\n"
+"            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            % if object.project_id.rating_status == 'stage':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden omdat uw taak naar de fase <b>${object.stage_id.name}</b> is verplaatst</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden omdat je taak naar de fase <b>${object.stage_id.name}</b> is verplaatst</span>\n"
 "            % endif\n"
 "            % if object.project_id.rating_status == 'periodic':\n"
 "                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenonderzoek wordt verzonden <b>${object.project_id.rating_status_period}</b> zolang de taak in de <b>${object.stage_id.name}</b> fase is.</span>\n"
@@ -576,6 +575,11 @@ msgstr ""
 "                            </span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">Blocking</span>"
+msgstr "<span class=\"o_stat_text\">Blokkerend</span>"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
 msgstr "<span class=\"o_stat_text\">Bruto marge</span>"
@@ -616,8 +620,8 @@ msgstr "<strong class=\"d-block mb-2\">Bijlagen</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<strong>Assigned to</strong>"
-msgstr "<strong>Toegewezen aan</strong>"
+msgid "<strong>Assignees</strong>"
+msgstr "<strong>Toegewezen personen</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -782,8 +786,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Voeg kolommen toe om jouw taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw -"
-" In uitvoering - Gereed</i>."
+"Voeg kolommen toe om je taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw - "
+"In uitvoering - Gereed</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -890,7 +894,7 @@ msgid ""
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
 "Kostenplaats waaraan dit project is gekoppeld voor financieel beheer. "
-"Gebruik een kostenplaats g om de kosten en opbrengsten van jouw project te "
+"Gebruik een kostenplaats g om de kosten en opbrengsten van je project te "
 "registreren."
 
 #. module: project
@@ -996,25 +1000,20 @@ msgid "Assigned Tasks"
 msgstr "Toegewezen taken"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Assigned To"
-msgstr "Toegewezen aan"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_id
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
 msgstr "Toegewezen personen"
@@ -1711,6 +1710,13 @@ msgid "Delivered"
 msgstr "Geleverd"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
+#, python-format
+msgid "Dependent Tasks"
+msgstr "Afhankelijke taken"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
 #: model:ir.model.fields,field_description:project.field_project_task__description
 #: model:ir.model.fields,field_description:project.field_project_task_type__description
@@ -1853,6 +1859,7 @@ msgstr "Bijv.: Productlancering"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Wijzigen"
@@ -1928,7 +1935,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr "Fout! U kunt geen recursieve hiërarchie van taken maken."
+msgstr "Fout! Je kunt geen recursieve hiërarchie van taken maken."
 
 #. module: project
 #. openerp-web
@@ -2075,7 +2082,7 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
-"Krijg een momentopname van de status van uw project en deel de voortgang met"
+"Krijg een momentopname van de status van je project en deel de voortgang met"
 " de belangrijkste belanghebbenden."
 
 #. module: project
@@ -2115,7 +2122,7 @@ msgstr "Grijs kanban label"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Gross Margin"
-msgstr "Bruto gewicht marge"
+msgstr "Bruto marge"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2257,7 +2264,7 @@ msgstr "Ideeën"
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 #: model:ir.model.fields,help:project.field_project_update__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten jouw aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2664,14 +2671,14 @@ msgstr "Laatste beoordeling: tevreden"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "Maak jouw eerste <b>project</b> aan."
+msgstr "Maak je eerste <b>project</b> aan."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "Maak jouw eerste <b>taak</b> aan."
+msgstr "Maak je eerste <b>taak</b> aan."
 
 #. module: project
 #. openerp-web
@@ -2681,7 +2688,7 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
-"Laten we teruggaan naar de <b>kanban-weergave</b> voor een overzicht van uw "
+"Laten we teruggaan naar de <b>kanban-weergave</b> voor een overzicht van je "
 "volgende taken."
 
 #. module: project
@@ -2689,7 +2696,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's start working on your task."
-msgstr "Laten we aan jouw taak beginnen."
+msgstr "Laten we aan je taak beginnen."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -2756,7 +2763,7 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
-"Beheer de levenscyclus van jouw project met de kanbanweergave. Voeg nieuw "
+"Beheer de levenscyclus van je project met de kanbanweergave. Voeg nieuw "
 "verworven projecten toe, wijs ze toe en gebruik de %s en %s om te bepalen of"
 " het project klaar is voor de volgende stap. %s"
 
@@ -3501,7 +3508,6 @@ msgstr "Voortgangspercentage"
 #. openerp-web
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
 #: code:addons/project/static/src/js/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_project
@@ -4183,11 +4189,6 @@ msgid "Security Token"
 msgstr "Veiligheidstoken"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "See More"
-msgstr "Zie meer"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send"
 msgstr "Verzenden"
@@ -4282,7 +4283,7 @@ msgstr "Specificaties"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr "Deel jouw taken op, om zo jouw werk op te delen in sub-milestones"
+msgstr "Deel je taken op, om zo je werk op te delen in sub-milestones"
 
 #. module: project
 #. openerp-web
@@ -4988,7 +4989,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the costs and revenues linked to your projects"
-msgstr "Volg de kosten en omzet die aan uw projecten zijn gekoppeld"
+msgstr "Volg de kosten en omzet die aan je projecten zijn gekoppeld"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5005,7 +5006,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr "Volg de voortgang van uw taken vanaf het maken tot het sluiten."
+msgstr "Volg de voortgang van je taken vanaf het maken tot het sluiten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5046,7 +5047,6 @@ msgstr "Dearchiveren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
 msgstr "Niet toegewezen"
@@ -5156,7 +5156,7 @@ msgstr "Gebruik dit voor mijn project"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr "Gebruik labels om uw taken te categoriseren."
+msgstr "Gebruik labels om je taken te categoriseren."
 
 #. module: project
 #. openerp-web
@@ -5194,7 +5194,7 @@ msgstr "Zichtbaarheid"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Wil je een betere manier om jouw <b>projecten te beheren</b>? <i>Het begint "
+"Wil je een betere manier om je <b>projecten te beheren</b>? <i>Het begint "
 "hier.</i>"
 
 #. module: project
@@ -5246,7 +5246,7 @@ msgstr "Weken"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr "Of dit project getoond moet worden op jouw dashboard of niet."
+msgstr "Of dit project getoond moet worden op je dashboard of niet."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5312,8 +5312,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Je kunt ook een omschrijving toevoegen om jouw medewerkers te helpen "
-"begrijpen wat de bedoeling is van de fase."
+"Je kunt ook een omschrijving toevoegen om je medewerkers te helpen begrijpen"
+" wat de bedoeling is van de fase."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5343,7 +5343,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr "U kunt geen cyclische afhankelijkheid maken."
+msgstr "Je kunt geen cyclische afhankelijkheid maken."
 
 #. module: project
 #: code:addons/project/models/project.py:0
