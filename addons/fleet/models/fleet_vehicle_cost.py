@@ -111,7 +111,7 @@ class FleetVehicleLogContract(models.Model):
         self.compute_next_year_date(fields.Date.context_today(self)),
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
-    insurer_id = fields.Many2one('res.partner', 'Vendor')
+    insurer_id = fields.Many2one('res.partner', 'Insurer')
     purchaser_id = fields.Many2one('res.partner', 'Driver', default=lambda self: self.env.user.partner_id.id,
         help='Person to which the contract is signed for')
     ins_ref = fields.Char('Contract Reference', size=64, copy=False)
