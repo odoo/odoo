@@ -16,6 +16,7 @@ function factory(dependencies) {
          */
         _created() {
             super._created();
+            this.onVideoTrackMute = this.onVideoTrackMute.bind(this);
             this._timeoutId = undefined;
         }
 
@@ -32,6 +33,19 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Since WebRTC "unified plan", the local track is tied to the
+         * remote transceiver.sender and not the remote track. Therefore
+         * when the remote track is 'ended' the local track is not 'ended'
+         * but only 'muted'. This is why we do not stop the local track and
+         * listen to the 'mute' event of the transceiver.receiver track.
+         *
+         * @param {event} ev
+         */
+        onVideoTrackMute(ev) {
+            this.update({ videoStream: clear() });
+        }
+
+        /**
          * restores the session to its default values
          */
         reset() {
@@ -46,14 +60,11 @@ function factory(dependencies) {
 
         /**
          * cleanly removes the video stream of the session
-         *
-         * @param {Object} [param0]
-         * @param {Object} [param0.stopTracks] true if tracks have to be stopped,
-         * it is optional as tracks can be removed but still necessary for transceivers.
          */
-        removeVideo({ stopTracks = true } = {}) {
-            if (this.videoStream && stopTracks) {
+        removeVideo() {
+            if (this.videoStream) {
                 for (const track of this.videoStream.getTracks() || []) {
+                    track.removeEventListener('mute', this.onVideoTrackMute);
                     track.stop();
                 }
             }
