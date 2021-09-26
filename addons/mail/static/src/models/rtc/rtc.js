@@ -638,7 +638,14 @@ function factory(dependencies) {
                 });
             }
             if (type === 'video' && isSendingVideo === false) {
-                rtcSession.removeVideo({ stopTracks: false });
+                /**
+                 * Since WebRTC "unified plan", the local track is tied to the
+                 * remote transceiver.sender and not the remote track. Therefore
+                 * when the remote track is 'ended' the local track is not 'ended'
+                 * but only 'muted'. This is why we do not stop the local track
+                 * until the peer is completely removed.
+                 */
+                rtcSession.update({ videoStream: clear() });
             }
         }
 
@@ -890,23 +897,9 @@ function factory(dependencies) {
             for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
                 await this._updateRemoteTrack(peerConnection, 'video', { token });
             }
-            const isScreenSharingOn = !!this.sendDisplay;
-            const isCameraOn = !!this.sendUserVideo;
             this.currentRtcSession.updateAndBroadcast({
-                isScreenSharingOn,
-                isCameraOn,
-            });
-            if (isScreenSharingOn || isCameraOn) {
-                // the peer already gets notified through RTC transaction.
-                return;
-            }
-            this._notifyPeers(Object.keys(this._peerConnections), {
-                event: 'trackChange',
-                type: 'peerToPeer',
-                payload: {
-                    type: 'video',
-                    state: { isSendingVideo: false },
-                },
+                isScreenSharingOn: !!this.sendDisplay,
+                isCameraOn: !!this.sendUserVideo,
             });
         }
 
@@ -958,7 +951,6 @@ function factory(dependencies) {
                 });
             }
             if (track.kind === 'video') {
-                rtcSession.removeVideo({ stopTracks: false });
                 rtcSession.update({
                     videoStream: stream,
                 });
@@ -1034,7 +1026,7 @@ function factory(dependencies) {
             if (videoTrack) {
                 videoTrack.addEventListener('ended', async () => {
                     await this.async(() =>
-                        this._toggleLocalVideoTrack({ force: false, type })
+                        this._toggleVideoBroadcast({ force: false, type })
                     );
                 });
             }
@@ -1089,6 +1081,16 @@ function factory(dependencies) {
                 transceiver.direction = transceiverDirection;
             } catch (e) {
                 // ignored, the transceiver is probably already removed
+            }
+            if (trackKind === 'video') {
+                this._notifyPeers([token], {
+                    event: 'trackChange',
+                    type: 'peerToPeer',
+                    payload: {
+                        type: 'video',
+                        state: { isSendingVideo: false },
+                    },
+                });
             }
         }
 
