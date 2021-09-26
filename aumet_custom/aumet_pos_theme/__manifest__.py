@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 {
     'name': "aumet_pos_theme",
-
     'summary': """
        """,
-
     'description': """
-        
     """,
-
     'website': "",
-
     'category': 'Point of Sale',
     'version': '14.0.0.3',
-
     # any module necessary for this one to work correctly
     'depends': ['point_of_sale', 'flexipharmacy', 'pos_hr', 'pos_discount'],
 
