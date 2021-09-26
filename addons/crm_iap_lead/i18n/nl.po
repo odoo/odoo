@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Dirk van Donkelaar <dirk@vdde.nl>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Antoine Gilard <ang@odoo.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-03-20 14:55+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,9 @@ msgid ""
 "request did not return any result (no credits were used). Try removing some "
 "filters.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Uw "
+"verzoek heeft geen resultaat opgeleverd (er zijn geen credits gebruikt). "
+"Probeer enkele filters te verwijderen.</span>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -86,27 +89,27 @@ msgstr "Automobiel & Onderdelen"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
 msgid "Available State"
-msgstr ""
+msgstr "Beschikbare staat:"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69_157
 msgid "Banks & Insurance"
-msgstr ""
+msgstr "Banken en verzekeringen"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Buy credits."
-msgstr ""
+msgstr "Koop tegoed."
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
 msgid "CEO"
-msgstr ""
+msgstr "Directeur"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
 msgid "CRM IAP Lead Industry"
-msgstr ""
+msgstr "CRM IAP leidende industrie"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
@@ -225,7 +228,7 @@ msgstr "Weergavenaam"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158_159
 msgid "Diversified Financials & Financial Services"
-msgstr ""
+msgstr "Gediversifieerde financiële en financiële diensten"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
@@ -247,7 +250,7 @@ msgstr "E-mail"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138_156
 msgid "Energy & Utilities "
-msgstr ""
+msgstr "Energie en nutsvoorzieningen "
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
@@ -258,7 +261,7 @@ msgstr "Fout"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error_type
 msgid "Error Type"
-msgstr ""
+msgstr "Fouttype"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
@@ -348,12 +351,12 @@ msgstr "Industrie"
 #. module: crm_iap_lead
 #: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
 msgid "Industry name already exists!"
-msgstr ""
+msgstr "Branchenaam bestaat al!"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__credits
 msgid "Insufficient Credits"
-msgstr ""
+msgstr "Onvoldoende credits"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
@@ -428,7 +431,7 @@ msgstr "Leads"
 #. module: crm_iap_lead
 #: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
 msgid "List of available states based on selected countries"
-msgstr ""
+msgstr "Lijst met beschikbare staten op basis van geselecteerde landen"
 
 #. module: crm_iap_lead
 #. openerp-web
@@ -472,7 +475,7 @@ msgstr "Nieuw"
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__no_result
 msgid "No Result"
-msgstr ""
+msgstr "Geen resultaat"
 
 #. module: crm_iap_lead
 #. openerp-web
@@ -652,7 +655,7 @@ msgstr "Telecommunicatie diensten"
 #. module: crm_iap_lead
 #: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
 msgid "The list of reveal_ids for this industry, separated with ','"
-msgstr ""
+msgstr "De lijst met reveal_ids voor deze branche, gescheiden door ','"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -696,13 +699,13 @@ msgstr "Op welke branche wil je je richten?"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "You do not have enough credits to submit this request."
-msgstr ""
+msgstr "U heeft niet genoeg tegoeden om dit verzoek in te dienen."
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Your request could not be executed: %s"
-msgstr ""
+msgstr "Uw verzoek kon niet worden uitgevoerd: %s"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2

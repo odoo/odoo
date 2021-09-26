@@ -71,6 +71,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* De status 'Concept' wordt gebruikt wanneer een gebruiker een nieuwe en onbevestigde reparatieopdracht codeert.\n"
+"* De status 'Bevestigd' wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigt.\n"
+"* De status 'Klaar voor reparatie' wordt gebruikt om te beginnen met repareren. De gebruiker kan pas beginnen met repareren nadat de reparatieopdracht is bevestigd.\n"
+"* De status 'Under Repair' wordt gebruikt wanneer de reparatie bezig is.\n"
+"* De status 'Te factureren' wordt gebruikt om de factuur te genereren voor of nadat de reparatie is uitgevoerd.\n"
+"* De status 'Gereed' wordt ingesteld wanneer de reparatie is voltooid.\n"
+"* De status 'Geannuleerd' wordt gebruikt wanneer de gebruiker de reparatieopdracht annuleert."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -103,6 +110,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"marge: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hallo ${object.partner_id.name},<br/>\n"
+"        Hier is uw reparatieopdracht ${doc_name} <strong>${object.name}</strong>\n"
+"        % als object.oorsprong:\n"
+"            (met referentie: ${object.origin} )\n"
+"        % stop als\n"
+"        % if object.invoice_method != 'none':\n"
+"            bedrag in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % anders:\n"
+"            .<br/>\n"
+"        % stop als\n"
+"        U kunt deze e-mail beantwoorden als u vragen heeft.\n"
+"        <br/><br/>\n"
+"        Bedankt,\n"
+"        % als gebruiker.handtekening\n"
+"            <br/>\n"
+"            ${gebruiker.handtekening | veilig}\n"
+"        % stop als\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -911,7 +939,7 @@ msgstr "Repareer"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Reparatiebeschrijving:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -936,7 +964,7 @@ msgstr "Reparatie regel (onderdelen)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Reparatieopmerkingen"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -977,7 +1005,7 @@ msgstr "Reparatie offerte #:"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "Reparatieofferte: per e-mail verzenden"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1061,7 +1089,7 @@ msgstr "Verkooporder"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Verkooporder waaruit het te repareren product afkomstig is."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1089,7 +1117,7 @@ msgstr "Offerte versturen"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "Serienummer is vereist voor bedieningslijnen met producten: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form

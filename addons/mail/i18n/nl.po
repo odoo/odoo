@@ -161,12 +161,12 @@ msgstr ", vervalt op"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid ".<br/>"
-msgstr ""
+msgstr ".<br/>"
 
 #. module: mail
 #. openerp-web
@@ -207,6 +207,10 @@ msgid ""
 "            Type <b>#channel</b> to mention a channel.<br>\n"
 "            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
+"<br><br>\n"
+"            Typ <b>@gebruikersnaam</b> om iemand te noemen en zijn aandacht te trekken.<br>\n"
+"            Typ <b>#channel</b> om een kanaal te vermelden.<br>\n"
+"            Typ <b>/command</b> om een commando uit te voeren.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -395,7 +399,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -600,7 +604,7 @@ msgstr "Activiteit Mixin"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Activity Settings"
-msgstr ""
+msgstr "Activiteitsinstellingen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -733,6 +737,8 @@ msgid ""
 "Adding followers on channels is not possible. Consider adding members "
 "instead."
 msgstr ""
+"Volgers toevoegen op kanalen is niet mogelijk. Overweeg in plaats daarvan "
+"leden toe te voegen."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -832,7 +838,7 @@ msgstr "Een email is vereist om zoek_of_creëer te laten functioneren"
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #, python-format
 msgid "An error occured while fetching messages."
-msgstr ""
+msgstr "Er is een fout opgetreden bij het ophalen van berichten."
 
 #. module: mail
 #. openerp-web
@@ -1029,6 +1035,8 @@ msgstr "Automatische notificatie"
 msgid ""
 "Automatically schedule this activity once the current one is marked as done."
 msgstr ""
+"Plan deze activiteit automatisch zodra de huidige als voltooid is "
+"gemarkeerd."
 
 #. module: mail
 #. openerp-web
@@ -1249,7 +1257,7 @@ msgstr "CC"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Type ketting"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -1354,7 +1362,7 @@ msgstr "Kies een voorbeeld"
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #, python-format
 msgid "Click here to retry"
-msgstr ""
+msgstr "Klik hier om opnieuw te proberen"
 
 #. module: mail
 #. openerp-web
@@ -1503,7 +1511,7 @@ msgstr "Connectie mislukt (uitgaande e-mailserver probleem)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Beschouwt antwoorden als een nieuwe thread"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1737,7 +1745,7 @@ msgstr "Standaard"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
 msgid "Default Note"
-msgstr ""
+msgstr "Standaard Opmerking:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -2239,7 +2247,7 @@ msgstr "E-mailadres geweigerd door bestemmeling"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to which replies will be redirected"
-msgstr ""
+msgstr "E-mailadres waarnaar antwoorden worden doorgestuurd"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2247,6 +2255,8 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
 msgstr ""
+"E-mailadres waarnaar antwoorden worden doorgestuurd bij het massaal "
+"verzenden van e-mails"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -2255,6 +2265,9 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
+"E-mailadres waarnaar antwoorden worden doorgestuurd bij massale verzending "
+"van e-mails; alleen gebruikt als het antwoord niet is vastgelegd in de "
+"originele discussiethread."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -2272,6 +2285,8 @@ msgid ""
 "Email alias %(alias_name)s cannot be used on %(count)d records at the same "
 "time. Please update records one by one."
 msgstr ""
+"E-mailalias %(alias_name)s kan niet tegelijkertijd worden gebruikt voor "
+"%(count)d records. Werk de records één voor één bij."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -2407,13 +2422,13 @@ msgstr "Mislukt"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render QWeb template : %s)"
-msgstr ""
+msgstr "Kon QWeb-sjabloon niet weergeven: %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
-msgstr ""
+msgstr "Kan sjabloon niet weergeven: %(xml_id)s (%(view_id)d)"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -2960,6 +2975,10 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
+"Indien waar, komen de antwoorden niet in de discussiethread van het "
+"originele document. In plaats daarvan zal het controleren op de reply_to in "
+"het bijhouden van de bericht-id en dienovereenkomstig worden omgeleid. Dit "
+"heeft invloed op de gegenereerde message-id."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3089,6 +3108,8 @@ msgstr "Foutief primair e-mailadres op model %s"
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
 msgstr ""
+"Ongeldige waarde bij het maken van een kanaal met leden, slechts 4 of 6 zijn"
+" toegestaan."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -3096,6 +3117,8 @@ msgstr ""
 msgid ""
 "Invalid value when creating a channel with memberships, only 0 is allowed."
 msgstr ""
+"Ongeldige waarde bij het maken van een kanaal met lidmaatschappen, slechts 0"
+" is toegestaan."
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -3425,7 +3448,7 @@ msgstr "Log een interne notitie ..."
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Log in the original discussion thread"
-msgstr ""
+msgstr "Log in op de originele discussiethread"
 
 #. module: mail
 #. openerp-web
@@ -3486,7 +3509,7 @@ msgstr "Mailkanaal formulier"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
 msgid "Mail Composer Mixin"
-msgstr ""
+msgstr "Mail Composer Mixin"
 
 #. module: mail
 #. openerp-web
@@ -3581,6 +3604,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Beheer antwoorden als nieuwe inkomende e-mails in plaats van antwoorden die "
+"naar dezelfde thread gaan."
 
 #. module: mail
 #. openerp-web
@@ -4645,6 +4670,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Oorspronkelijke discussie: antwoorden komen in de discussiethread van het originele document.\n"
+"  Een ander e-mailadres: antwoorden gaan naar het e-mailadres dat wordt vermeld in de trackingbericht-id in plaats van de discussiethread van het originele document.\n"
+"  Dit heeft invloed op de gegenereerde message-id."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -4931,6 +4959,8 @@ msgid ""
 "Posting a message should be done on a business document. Use message_notify "
 "to send a notification to an user."
 msgstr ""
+"Het plaatsen van een bericht moet op een zakelijk document gebeuren. Gebruik"
+" message_notify om een melding naar een gebruiker te sturen."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -4939,6 +4969,8 @@ msgid ""
 "Posting a message with channels as listeners is not supported since Odoo "
 "14.3+. Please update code accordingly."
 msgstr ""
+"Het plaatsen van een bericht met kanalen als luisteraars wordt niet "
+"ondersteund sinds Odoo 14.3+. Werk de code dienovereenkomstig bij."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -5154,7 +5186,7 @@ msgstr "Records:"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Redirect to another email address"
-msgstr ""
+msgstr "Omleiden naar een ander e-mailadres"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -5285,12 +5317,12 @@ msgstr "Conversatie hernoemen"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Weergavemodel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Antwoorden"
 
 #. module: mail
 #. openerp-web
@@ -5924,17 +5956,18 @@ msgstr "Subtypes"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "Voorstellen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
 msgid "Suggest Next Activity"
-msgstr ""
+msgstr "Volgende activiteit voorstellen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest these activities once the current one is marked as done."
 msgstr ""
+"Stel deze activiteiten voor zodra de huidige als voltooid is gemarkeerd."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -6013,7 +6046,7 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering should be called on a valid record IDs."
-msgstr ""
+msgstr "Sjabloonweergave moet worden aangeroepen op een geldig record-ID's."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6027,6 +6060,8 @@ msgstr ""
 #, python-format
 msgid "Template rendering supports only raw jinja or qweb (view or raw)."
 msgstr ""
+"Het renderen van sjablonen ondersteunt alleen raw jinja of qweb (view of "
+"raw)."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -6067,6 +6102,9 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already linked with "
 "%(alias_model_name)s. Choose another alias or change it on the linked model."
 msgstr ""
+"De e-mailalias %(matching_alias_name)s is al gekoppeld aan "
+"%(alias_model_name)s. Kies een andere alias of wijzig deze op het gekoppelde"
+" model."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6075,6 +6113,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already used as "
 "%(alias_duplicate)s alias. Please choose another alias."
 msgstr ""
+"De e-mailalias %(matching_alias_name)s wordt al gebruikt als "
+"%(alias_duplicate)s alias. Kies een andere alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6084,6 +6124,9 @@ msgid ""
 "%(document_name)s %(model_name)s. Choose another alias or change it on the "
 "other document."
 msgstr ""
+"De e-mailalias %(matching_alias_name)s wordt al gebruikt door de "
+"%(document_name)s %(model_name)s. Kies een andere alias of wijzig deze in "
+"het andere document."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_moderation_channel_email_uniq
@@ -6254,7 +6297,7 @@ msgstr "Dit record heeft een activiteit met uitzondering."
 #: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "This user can not be added in this channel"
-msgstr ""
+msgstr "Deze gebruiker kan niet worden toegevoegd in dit kanaal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -6628,6 +6671,7 @@ msgstr "Gebruik sjabloon"
 #: model:ir.model.fields,help:mail.field_mail_tracking_value__currency_id
 msgid "Used to display the currency when tracking monetary values"
 msgstr ""
+"Wordt gebruikt om de valuta weer te geven bij het volgen van geldwaarden"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
@@ -6989,6 +7033,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address (%s)."
 msgstr ""
+"U kunt niets anders gebruiken dan Latijnse tekens zonder accent in het "
+"aliasadres (%s)."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7125,7 +7171,7 @@ msgstr "Uitzoomen (-)"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after completion date"
-msgstr ""
+msgstr "na voltooiingsdatum"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
@@ -7147,7 +7193,7 @@ msgstr "heeft u een activiteit toegewezen"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
-msgstr ""
+msgstr "stuiteren"
 
 #. module: mail
 #. openerp-web
@@ -7171,7 +7217,7 @@ msgstr ""
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "catchall"
-msgstr ""
+msgstr "vangst"
 
 #. module: mail
 #. openerp-web
@@ -7206,12 +7252,12 @@ msgstr "gereed"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. \"mycompany.com\""
-msgstr ""
+msgstr "bijv. \"mijnbedrijf.com\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. Calendar: Reminder"
-msgstr ""
+msgstr "bijv. Kalender: Herinnering"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -7222,17 +7268,17 @@ msgstr "Bijv. Bespreken van de offerte"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
-msgstr ""
+msgstr "bijv. Een vergadering plannen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. Users"
-msgstr ""
+msgstr "bijv. Gebruikers"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "e.g. support"
-msgstr ""
+msgstr "bijv. steun"
 
 #. module: mail
 #. openerp-web
@@ -7287,6 +7333,8 @@ msgid ""
 "message_post does not support model and res_id parameters anymore. Please "
 "call message_post on record."
 msgstr ""
+"message_post ondersteunt geen model- en res_id-parameters meer. Bel "
+"message_post op record."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -7295,12 +7343,15 @@ msgid ""
 "message_post does not support subtype parameter anymore. Please give a valid"
 " subtype_id or subtype_xmlid value instead."
 msgstr ""
+"message_post ondersteunt geen subtype parameter meer. Geef in plaats daarvan"
+" een geldige waarde voor subtype_id of subtype_xmlid op."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "message_post partner_ids and must be integer list, not commands."
 msgstr ""
+"message_post partner_ids en moet een gehele lijst zijn, geen commando's."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

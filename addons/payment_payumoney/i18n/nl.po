@@ -3,9 +3,9 @@
 # 	* payment_payumoney
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid shasign: received %(sign)s, computed %(computed)s."
-msgstr ""
+msgstr "Ongeldige shasign: ontvangen %(sign)s, berekend %(computed)s."
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
@@ -41,7 +41,7 @@ msgstr "Handelaar salt"
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_payumoney
 #: model:account.payment.method,name:payment_payumoney.payment_method_payumoney
@@ -74,19 +74,24 @@ msgstr "Provider"
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
 msgstr ""
+"Ontvangen gegevens met ontbrekende referentie (%(ref)s) of shasign "
+"(%(sign)s)"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
+"De betalingsdienstaanbieder die bij deze acquirer moet worden gebruikt"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "The key solely used to identify the account with PayU money"
 msgstr ""
+"De sleutel die uitsluitend wordt gebruikt om de rekening met PayU-geld te "
+"identificeren"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "The payment encountered an error with code %s"
-msgstr ""
+msgstr "Er is een fout opgetreden bij de betaling met de code %s"

@@ -3,22 +3,24 @@
 # 	* base_import
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Cas Vissers <c.vissers@brahoo.nl>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,29 +32,22 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
+msgid "%d records successfully imported"
+msgstr "%d records succesvol geïmporteerd..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d records succesvol geïmporteerd..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
-msgstr "%d records zijn succesvol geïmporteerd"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "(%d more)"
-msgstr "(%d meer)"
+msgstr "%d records getest..."
 
 #. module: base_import
 #. openerp-web
@@ -64,6 +59,27 @@ msgid ""
 msgstr ""
 "In het bestand is een enkele kolom gevonden. Dit betekent meestal dat het "
 "scheidingsteken niet juist is."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Additional Fields"
+msgstr "Extra velden"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Allow matching with subfields"
+msgstr "Matching met subvelden toestaan"
 
 #. module: base_import
 #. openerp-web
@@ -100,22 +116,22 @@ msgstr "Basis importconfiguratie"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Batch limit"
-msgstr ""
+msgid "Batch Import"
+msgstr "Batch-import"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Between rows %d and %d"
-msgstr ""
+msgid "Batch limit"
+msgstr "Batch limiet"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: base_import
 #. openerp-web
@@ -123,6 +139,7 @@ msgstr "Annuleren"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Klik op 'Hervatten' om door te gaan met het importeren, hervat op regel"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -150,6 +167,13 @@ msgid "Comma"
 msgstr "Komma"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Comments"
+msgstr "Opmerkingen"
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -162,8 +186,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Create if doesn't exist"
-msgstr "Maak wanneer niet bestaat"
+msgid "Create new values"
+msgstr "Nieuwe waarden maken"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -206,20 +230,6 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid ""
-"Creates new records if they can't be found (instead of failing to import). "
-"Note that the value in the column will be used as the new record's 'name', "
-"and assumes this is sufficient to create the record."
-msgstr ""
-"Creëert nieuwe records als deze niet kunnen worden gevonden (in plaats van "
-"niet te importeren). Merk op dat de waarde in de kolom zal worden gebruikt "
-"als de 'naam' van de nieuwe record, en gaat ervan uit dat dit voldoende is "
-"om de record te creëren."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -280,34 +290,30 @@ msgstr "Schermnaam"
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "Don't import"
-msgstr "Niet importeren"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
 msgid "Dot"
 msgstr "Punt"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Downloaden"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
-msgid "Dt"
-msgstr "Dt"
-
-#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgid "Download Template"
+msgstr "Sjabloon downloaden"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
+msgid "Dt"
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -333,10 +339,8 @@ msgstr "Alle velden lijken geldig."
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
-"Excel bestanden zijn aangeraden aangezien velden automatisch geformatteerd "
-"worden. "
+msgid "Excel files are recommended as formatting is automatic."
+msgstr "Excel-bestanden worden aanbevolen omdat de opmaak automatisch is."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -354,6 +358,16 @@ msgstr "Veldnaam"
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
 msgstr "Bestand"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "File Column"
+msgstr "Bestandskolom"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -389,8 +403,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Formatting Options…"
-msgstr "Opmaak opties.."
+msgid "Formatting"
+msgstr "Opmaak"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -399,6 +413,22 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Foutieve afbeelding data gevonden, afbeeldingen moeten geïmporteerd worden "
+"als URL's of base64-geëncodeerde data."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Go to Import FAQ"
+msgstr "Ga naar Veelgestelde vragen over importeren"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Help"
+msgstr "Help"
 
 #. module: base_import
 #. openerp-web
@@ -434,14 +464,14 @@ msgstr "ID"
 #, python-format
 msgid ""
 "If the file contains\n"
-"                the column names, Odoo can try auto-detecting the\n"
-"                field corresponding to the column. This makes imports\n"
-"                simpler especially when the file has many columns."
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
 msgstr ""
-"Als het bestand kolomnamen bevat, \n"
-"                kan Odoo proberen automatisch het bijbehorende\n"
-"                veld proberen te vinden. Hiermee wordt het importeren\n"
-"                eenvoudiger, zeker als er veel kolommen zijn."
+"Als het bestand bevat\n"
+"                    de kolomnamen, kan Odoo proberen de . automatisch te detecteren\n"
+"                    veld dat overeenkomt met de kolom. Dit maakt invoer\n"
+"                    eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
 
 #. module: base_import
 #. openerp-web
@@ -451,14 +481,25 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Als het model openchatter gebruikt, historische tracking zal abonnementen "
+"instellen en meldingen verzenden tijdens het importeren, maar dit leidt tot "
+"een langzamere import."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Afbeeldingsgrootte te groot, geïmporteerde afbeeldingen moeten kleiner zijn "
+"dan 42 miljoen pixels"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
-msgstr "Importeer"
+msgstr "Importeren"
 
 #. module: base_import
 #. openerp-web
@@ -475,11 +516,10 @@ msgid "Import a File"
 msgstr "Een bestand importeren"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Import completed"
-msgstr "Import compleet"
+msgid "Import file has no content or is corrupt"
+msgstr "Importbestand heeft geen inhoud of is beschadigd"
 
 #. module: base_import
 #. openerp-web
@@ -487,6 +527,13 @@ msgstr "Import compleet"
 #, python-format
 msgid "Import preview failed due to:"
 msgstr "Import voorbeeld mislukt omdat:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Import records"
+msgstr "Importeer records"
 
 #. module: base_import
 #. openerp-web
@@ -503,10 +550,31 @@ msgstr ""
 "importeren)."
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Imported file"
+msgstr "Geïmporteerd bestand"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Importing..."
+msgstr ""
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
+msgstr "Foutieve celwaarde op rij %(row)s, kolom %(col)s: %(cell_value)s"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Label"
+msgstr "Omschrijving"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -573,13 +641,6 @@ msgstr "Laatst bijgewerkt op"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Load File"
-msgstr "Laad bestand"
-
-#. module: base_import
-#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Load New File"
@@ -587,19 +648,32 @@ msgstr "Laad nieuw bestand"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Loading file..."
+msgstr "Bestand laden..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+#, python-format
+msgid "Model"
+msgstr "Model"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Map your columns to import"
-msgstr "Map uw kolommen om te importeren"
+msgid "Multiple errors occured"
+msgstr "Er zijn meerdere fouten opgetreden"
 
 #. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
-msgid "Model"
-msgstr "Type"
-
-#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
+#, python-format
 msgid "Name"
 msgstr "Naam"
 
@@ -619,10 +693,24 @@ msgstr "Geen scheidingsteken"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Normal Fields"
-msgstr "Normale velden"
+msgid "No matching records found for"
+msgstr "Geen overeenkomende records gevonden voor"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "No matching records found for the following"
+msgstr "Geen overeenkomende records gevonden voor het volgende:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Odoo Field"
+msgstr "Odoo-veld"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -636,17 +724,17 @@ msgstr "Bovenliggend"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Prevent import"
+msgstr "Import voorkomen"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
 msgstr "Relatie velden"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Reload File"
-msgstr "Opnieuw laden bestand"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -658,29 +746,29 @@ msgstr "Res Model"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
-msgstr "CV"
+msgstr "Hervatten"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "Row %d%s"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "See possible values"
-msgstr ""
+msgid "Search for a field..."
+msgstr "Zoek een veld..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Select a CSV or Excel file to import."
-msgstr "Selecteer CSV of Excel bestand voor importeren."
+msgid "See possible values"
+msgstr "Bekijk mogelijke waardes"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr "Geselecteerd blad:"
 
 #. module: base_import
 #. openerp-web
@@ -700,8 +788,36 @@ msgstr "Scheidingsteken:"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Show fields of relation fields (advanced)"
-msgstr "Laat velden van relationele velden zien (geavanceerd)"
+msgid "Set to:"
+msgstr "Instellen op:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Set to: False"
+msgstr "Instellen op: False"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Set to: True"
+msgstr "Instellen op: Waar"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Sheet:"
+msgstr "Vel:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Skip unknown values"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -717,10 +833,24 @@ msgstr "Spatie"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Standard Fields"
+msgstr "Standaardvelden"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Start vanaf lijn"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Suggested Fields"
+msgstr "Voorgestelde velden"
 
 #. module: base_import
 #. openerp-web
@@ -735,6 +865,13 @@ msgstr "Tab"
 #, python-format
 msgid "Test"
 msgstr "Test"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Testing..."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -820,19 +957,38 @@ msgstr "Tekstscheidingsteken:"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "The file contains blocking errors (see below)"
+msgstr "Het bestand bevat blokkeringsfouten (zie hieronder)"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "The file contains non-blocking warnings (see below)"
+msgstr "Het bestand bevat niet-blokkerende waarschuwingen (zie hieronder)"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid ""
-"The first row\n"
-"                         contains the label of the column"
+msgid "The file will be imported by batches."
 msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "This column will be concatenated in field"
+msgstr "Deze kolom wordt aaneengeschakeld in veld"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "Het bestand is succesvol geïmporteerd tot en met lijn %d."
 
 #. module: base_import
 #. openerp-web
@@ -845,8 +1001,29 @@ msgstr "Scheidingsteken voor duizendtallen:"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
+msgid "To import multiple values, separate them by a comma"
+msgstr "Om meerdere waarden te importeren, scheidt u ze door een komma"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "To import, select a field..."
+msgstr "Selecteer een veld om te importeren..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
 msgid "Track history during import"
 msgstr "Volg geschiedenis tijdens importeren"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
+msgid "Type"
+msgstr "Soort"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -864,6 +1041,34 @@ msgid ""
 msgstr ""
 "Bestandsformaat \"{}\" wordt niet ondersteund, enkel CSV, ODS, XLS en XLSX "
 "worden bij het importeren ondersteund."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Untitled"
+msgstr "Geen titel"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Upload bestand"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Upload an Excel or CSV file to import"
+msgstr "Upload een Excel- of CSV-bestand om te importeren"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Use first row as header"
+msgstr "Gebruik de eerste rij als kop"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -897,9 +1102,18 @@ msgstr "Waarde2"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid ""
-"Warning: ignores the labels line, empty lines and"
-"                             lines composed only of empty cells"
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
 msgstr ""
+"Waarschuwing: negeert de labelsregel, lege regels en regels die alleen uit "
+"lege cellen bestaan"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "When a value cannot be matched:"
+msgstr "Wanneer een waarde niet kan worden gevonden:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -917,6 +1131,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"U kan een bestand niet testen of opnieuw laden voordat de import hervat is."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -926,24 +1141,32 @@ msgstr "U dient minstens een veld te confituren om te importeren"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "at %d different rows:"
-msgstr ""
+msgid "at multiple rows"
+msgstr "op meerdere rijen"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "at row %d%s"
-msgstr ""
+msgid "at row"
+msgstr "op rij"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "between rows %d and %d"
-msgstr "Tussen regel %d en %d"
+msgid "in field"
+msgstr "in het veld"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "more)"
+msgstr "meer)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

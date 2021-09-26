@@ -288,6 +288,175 @@ msgid ""
 "% endif\n"
 "</div>"
 msgstr ""
+"<div style=\"marge: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Hallo,\n"
+"        <br/><br/>\n"
+"        % set transactie = object.get_portal_last_transaction()\n"
+"        Uw bestelling <strong>${object.name}</strong> voor een bedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        % if object.state == 'sale' or (transactie en transaction.state in ('done', 'authorized')) :\n"
+"            is bevestigd.<br/>\n"
+"            Bedankt voor je vertrouwen!\n"
+"        % elif transactie en transaction.state == 'in behandeling' :\n"
+"            is in afwachting van. Het wordt bevestigd wanneer de betaling is ontvangen.\n"
+"            % als object.referentie:\n"
+"                Uw betalingskenmerk is <strong>${object.reference}</strong>.\n"
+"            % stop als\n"
+"        % stop als\n"
+"        <br/><br/>\n"
+"        Aarzel niet om ons te contacteren indien u vragen heeft.\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"% als object.website_id:\n"
+"    <div style=\"marge: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"            <tr style=\"border-bottom: 2px effen #dee2e6;\">\n"
+"                <td style=\"width: 150px;\"><strong>Producten</strong></td>\n"
+"                <td/>\n"
+"                <td width=\"15%\" align=\"center\"><strong>Hoeveelheid</strong></td>\n"
+"                <td width=\"20%\" align=\"right\"><strong>\n"
+"                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
+"                    excl. btw\n"
+"                % anders\n"
+"                    incl. btw\n"
+"                % stop als\n"
+"                </strong></td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        % voor regel in object.order_line:\n"
+"            % indien niet line.is_delivery en line.display_type in ['line_section', 'line_note']:\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <tr style=\"${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}\">\n"
+"                        <td colspan=\"4\">\n"
+"                            % if line.display_type == 'line_section':\n"
+"                                <strong>${line.name}</strong>\n"
+"                            % elif line.display_type == 'line_note':\n"
+"                                <i>${line.name}</i>\n"
+"                            % stop als\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            % elif niet line.is_delivery\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
+"                    <tr style=\"${loop.cycle('background-color: #f2f2f2', 'background-color: #ffffff')}\">\n"
+"                        <td style=\"width: 150px;\">\n"
+"                            <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Productafbeelding\"/>\n"
+"                        </td>\n"
+"                        <td align=\"left\">${line.product_id.name}</td>\n"
+"                        <td width=\"15%\" align=\"center\">${line.product_uom_qty}</td>\n"
+"                        <td width=\"20%\" align=\"right\"><strong>\n"
+"                        % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):\n"
+"                            ${format_amount(line.price_reduce_taxexcl, object.currency_id)}\n"
+"                        % anders\n"
+"                            ${format_amount(line.price_reduce_taxinc, object.currency_id)}\n"
+"                        % stop als\n"
+"                        </strong></td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            % stop als\n"
+"        % eindvoor\n"
+"    </div>\n"
+"    % als object.carrier_id:\n"
+"    <div style=\"marge: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"breedte: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Levering:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_delivery, object.currency_id)}</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"breedte: 60%\"/>\n"
+"                <td style=\"breedte: 30%;\" align=\"right\"><strong>Subtotaal:</strong></td>\n"
+"                <td style=\"breedte: 10%;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    % anders:\n"
+"    <div style=\"marge: 0px; opvulling: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"breedte: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Subtotaal:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_untaxed, object.currency_id)}</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    % stop als\n"
+"    <div style=\"marge: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
+"            <tr>\n"
+"                <td style=\"breedte: 60%\"/>\n"
+"                <td style=\"breedte: 30%;\" align=\"right\"><strong>Belastingen:</strong></td>\n"
+"                <td style=\"breedte: 10%;\" align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"breedte: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><strong>Totaal:</strong></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\">${format_amount(object.amount_total, object.currency_id)}</td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    % als object.partner_invoice_id:\n"
+"    <div style=\"marge: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td style=\"padding-top: 10px;\">\n"
+"                    <strong>Factureren aan:</strong>\n"
+"                    ${object.partner_invoice_id.street of ''}\n"
+"                    ${object.partner_invoice_id.city of ''}\n"
+"                    ${object.partner_invoice_id.state_id.name of ''}\n"
+"                    ${object.partner_invoice_id.zip of ''}\n"
+"                    ${object.partner_invoice_id.country_id.name of ''}\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <strong>Betaalmethode:</strong>\n"
+"                    % als transactie.token_id:\n"
+"                        ${transactie.token_id.name}\n"
+"                    % anders:\n"
+"                        ${transaction.acquirer_id.sudo().name}\n"
+"                    % stop als\n"
+"                     (${format_amount(transactie.bedrag, object.currency_id)})\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    % stop als\n"
+"    % als object.partner_shipping_id en niet object.only_services:\n"
+"    <div style=\"marge: 0px; padding: 0px;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <br/>\n"
+"                    <strong>Verzenden naar:</strong>\n"
+"                    ${object.partner_shipping_id.street of ''}\n"
+"                    ${object.partner_shipping_id.city of ''}\n"
+"                    ${object.partner_shipping_id.state_id.name of ''}\n"
+"                    ${object.partner_shipping_id.zip of ''}\n"
+"                    ${object.partner_shipping_id.country_id.name of ''}\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        % als object.carrier_id:\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <strong>Verzendmethode:</strong>\n"
+"                    ${object.carrier_id.name}\n"
+"                    % als object.carrier_id.fixed_price == 0.0:\n"
+"                        (Vrij)\n"
+"                    % anders:\n"
+"                        (${format_amount(object.carrier_id.fixed_price, object.currency_id)})\n"
+"                    % stop als\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"        % stop als\n"
+"    </div>\n"
+"    % stop als\n"
+"% stop als\n"
+"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -428,6 +597,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
 "'percentage')]}\" class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -589,6 +760,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Geen geschikte betalingsoptie gevonden.</strong><br/>\n"
+"                                        Als je denkt dat het een fout is, neem dan contact op met de beheerder van de website."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1837,7 +2010,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "Indien waar, kan de verpakking worden gebruikt voor verkooporders"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2651,7 +2824,7 @@ msgstr "Verpakking"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Verpakkingshoeveelheid:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3144,17 +3317,17 @@ msgstr "Omzet gegenereerd via deze campagne"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Review, Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Beoordelen, accepteren &amp; Offerte betalen:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Review, Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "Beoordelen, accepteren &amp; Onderteken offerte"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Review, Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Herzien, ondertekenen &amp; Offerte betalen:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3295,12 +3468,12 @@ msgstr "Verkooporder(s)"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales Order: Confirmation Email"
-msgstr ""
+msgstr "Verkooporder: bevestigingsmail"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales Order: Send by email"
-msgstr ""
+msgstr "Verkooporder: per e-mail verzenden"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3751,14 +3924,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Algemene voorwaarden formaat"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Algemene voorwaarden: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3768,7 +3941,7 @@ msgstr "Algemene Voorwaarden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr ""
+msgstr "Voorwaarden &amp; Voorwaarden:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -3927,7 +4100,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "De opgegeven parameters zijn ongeldig."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -4280,7 +4453,7 @@ msgstr "Prijzen updaten"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Upsell %(order)s voor klant %(klant)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling

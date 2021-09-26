@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2019-08-12 11:51+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,8 @@ msgid ""
 "* Cross-border: For the overseas seller \n"
 "* Express Checkout: For the Chinese Seller"
 msgstr ""
+"* Grensoverschrijdend: Voor de overzeese verkoper\n"
+"* Express Checkout: voor de Chinese verkoper"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
@@ -53,12 +55,12 @@ msgstr "Grensoverschrijdend"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Expected signature %(sc) but received %(sign)s."
-msgstr ""
+msgstr "Verwachte handtekening %(sc) maar ontvangen %(sign)s."
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Express Checkout (alleen voor Chinese handelaren)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -74,7 +76,7 @@ msgstr "Handelaar relatie ID"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
@@ -100,7 +102,7 @@ msgstr "Provider"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Gegevens ontvangen met ontbrekende referentie %(r)s of txn_id %(t)s."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -109,6 +111,8 @@ msgid ""
 "Received notification data not acknowledged by Alipay:\n"
 "%s"
 msgstr ""
+"Ontvangen meldingsgegevens niet bevestigd door Alipay:\n"
+"%s"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/controllers/main.py:0
@@ -117,17 +121,20 @@ msgid ""
 "Received notification data with unknown reference:\n"
 "%s"
 msgstr ""
+"Ontvangen meldingsgegevens met onbekende referentie:\n"
+"%s"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
+"De betalingsdienstaanbieder die bij deze acquirer moet worden gebruikt"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The amount does not match the total + fees."
-msgstr ""
+msgstr "Het bedrag komt niet overeen met het totaal + kosten."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
@@ -136,25 +143,31 @@ msgid ""
 "The currency returned by Alipay %(rc)s does not match the transaction "
 "currency %(tc)s."
 msgstr ""
+"De valuta die wordt geretourneerd door Alipay %(rc)s komt niet overeen met "
+"de transactievaluta %(tc)s."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Het openbare e-mailadres van de Alipay-partner"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"De openbare partner-ID die uitsluitend wordt gebruikt om het account bij "
+"Alipay te identificeren"
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "The seller email does not match the configured Alipay account."
 msgstr ""
+"Het e-mailadres van de verkoper komt niet overeen met het geconfigureerde "
+"Alipay-account."
 
 #. module: payment_alipay
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "ongeldige transactiestatus ontvangen: %s"

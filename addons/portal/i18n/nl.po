@@ -7,10 +7,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Wynand Tastenhoye <wta@odoo.com>, 2019
 # Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Volluta <volluta@tutanota.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "%1d dagen vervallen"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -75,6 +75,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Het wijzigen van de bedrijfsnaam of "
+"het btw-nummer is niet toegestaan zodra document(en) zijn uitgegeven voor uw"
+" account. <br/>Neem voor deze operatie rechtstreeks contact met ons "
+"op.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -508,7 +512,7 @@ msgstr "Documenten"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "Vervalt over %1d dagen"
 
 #. module: portal
 #. openerp-web
@@ -600,12 +604,12 @@ msgstr "Uitnodigingsbericht invoeren"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Is intern"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Is portaal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -631,7 +635,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Laatste authenticatie"
 
 #. module: portal
 #. openerp-web
@@ -802,7 +806,7 @@ msgstr "Gepubliceerd op %s"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Opnieuw uitnodigen"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -822,7 +826,7 @@ msgstr "Gerelateerde document model"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Toegang intrekken"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -889,6 +893,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Sommige velden zijn verplicht. Zorg ervoor dat u een bericht schrijft of een"
+" document bijvoegt"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -948,13 +954,15 @@ msgstr "De bijlage bestaat niet of u heeft geen rechten om ze te bekijken."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "De contactpersoon \"%s\" heeft geen geldig e-mailadres."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
 msgstr ""
+"Het contact \"%s\" heeft hetzelfde e-mailadres en heeft een bestaande "
+"gebruiker (%s)."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -982,13 +990,13 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "De partner \"%s\" heeft al toegang tot de portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access."
-msgstr ""
+msgstr "De partner \"%s\" heeft geen toegang tot de portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -997,6 +1005,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"De sjabloon \"Portal: nieuwe gebruiker\" niet gevonden voor het verzenden "
+"van e-mail naar de portalgebruiker."
 
 #. module: portal
 #. openerp-web
@@ -1033,6 +1043,8 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Deze partner is gekoppeld aan een interne Gebruiker en heeft al toegang tot "
+"de Portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1198,7 +1210,7 @@ msgstr "U moet zijn"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "U moet eerst de portal toegang verlenen aan de partner \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

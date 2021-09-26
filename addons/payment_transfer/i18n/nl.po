@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: payment_transfer
 #: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
 msgid "<strong>Communication: </strong>"
-msgstr ""
+msgstr "<strong>Communicatie: </strong>"
 
 #. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__qr_code
@@ -34,13 +35,13 @@ msgstr "QR codes inschakelen"
 #. module: payment_transfer
 #: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "Schakel het gebruik van QR-codes in bij betaling via overschrijving."
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_transfer
 #: model_terms:ir.ui.view,arch_db:payment_transfer.transfer_transaction_status
@@ -66,12 +67,14 @@ msgstr "Provider"
 #: model:ir.model.fields,help:payment_transfer.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
+"De betalingsdienstaanbieder die bij deze acquirer moet worden gebruikt"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_transaction.py:0
 #, python-format
 msgid "The customer has selected %(acq_name)s to make the payment."
 msgstr ""
+"De klant heeft ervoor gekozen %(acq_name)s om de betaling uit te voeren."
 
 #. module: payment_transfer
 #: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
