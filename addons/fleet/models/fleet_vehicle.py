@@ -49,8 +49,8 @@ class FleetVehicle(models.Model):
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
     next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     acquisition_date = fields.Date('Immatriculation Date', required=False,
-        default=fields.Date.today, help='Date when the vehicle has been immatriculated')
-    first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
+        default=fields.Date.context_today, help='Date when the vehicle has been immatriculated')
+    first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.context_today)
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_stage_ids',
@@ -239,14 +239,14 @@ class FleetVehicle(models.Model):
             ('vehicle_id', 'in', self.ids),
             ('driver_id', 'in', self.mapped('driver_id').ids),
             ('date_end', '=', False)
-        ]).write({'date_end': fields.Date.today()})
+        ]).write({'date_end': fields.Date.context_today(self)})
 
     def create_driver_history(self, driver_id):
         for vehicle in self:
             self.env['fleet.vehicle.assignation.log'].create({
                 'vehicle_id': vehicle.id,
                 'driver_id': driver_id,
-                'date_start': fields.Date.today(),
+                'date_start': fields.Date.context_today(self),
             })
 
     def action_accept_driver_change(self):
