@@ -46,13 +46,9 @@ function factory(dependencies) {
 
         /**
          * cleanly removes the video stream of the session
-         *
-         * @param {Object} [param0]
-         * @param {Object} [param0.stopTracks] true if tracks have to be stopped,
-         * it is optional as tracks can be removed but still necessary for transceivers.
          */
-        removeVideo({ stopTracks = true } = {}) {
-            if (this.videoStream && stopTracks) {
+        removeVideo() {
+            if (this.videoStream) {
                 for (const track of this.videoStream.getTracks() || []) {
                     track.stop();
                 }
