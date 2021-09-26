@@ -14,7 +14,7 @@ class HrDepartureWizard(models.TransientModel):
         ('retired', 'Retired')
     ], string="Departure Reason", default="fired")
     departure_description = fields.Text(string="Additional Information")
-    departure_date = fields.Date(string="Departure Date", required=True, default=fields.Date.today)
+    departure_date = fields.Date(string="Departure Date", required=True, default=fields.Date.context_today)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_id', None),
