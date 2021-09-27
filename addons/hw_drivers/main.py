@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from traceback import format_exc
 
 from dbus.mainloop.glib import DBusGMainLoop
 import json
@@ -90,10 +91,14 @@ class Manager(Thread):
         # list to the connected DB.
         self.previous_iot_devices = []
         while 1:
-            if iot_devices != self.previous_iot_devices:
-                self.send_alldevices()
-                self.previous_iot_devices = iot_devices.copy()
-            time.sleep(3)
+            try:
+                if iot_devices != self.previous_iot_devices:
+                    self.send_alldevices()
+                    self.previous_iot_devices = iot_devices.copy()
+                time.sleep(3)
+            except:
+                # No matter what goes wrong, the Manager loop needs to keep running
+                _logger.error(format_exc())
 
 
 # Must be started from main thread

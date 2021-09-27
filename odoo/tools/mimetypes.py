@@ -5,6 +5,7 @@ Mimetypes-related utilities
 # TODO: reexport stdlib mimetypes?
 """
 import collections
+import functools
 import io
 import logging
 import re
@@ -168,15 +169,22 @@ except ImportError:
     magic = None
 else:
     # There are 2 python libs named 'magic' with incompatible api.
-
     # magic from pypi https://pypi.python.org/pypi/python-magic/
-    if hasattr(magic,'from_buffer'):
-        guess_mimetype = lambda bin_data, default=None: magic.from_buffer(bin_data, mime=True)
+    if hasattr(magic, 'from_buffer'):
+        _guesser = functools.partial(magic.from_buffer, mime=True)
     # magic from file(1) https://packages.debian.org/squeeze/python-magic
-    elif hasattr(magic,'open'):
+    elif hasattr(magic, 'open'):
         ms = magic.open(magic.MAGIC_MIME_TYPE)
         ms.load()
-        guess_mimetype = lambda bin_data, default=None: ms.buffer(bin_data)
+        _guesser = ms.buffer
+
+    def guess_mimetype(bin_data, default=None):
+        mimetype = _guesser(bin_data)
+        # upgrade incorrect mimetype to official one, fixed upstream
+        # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
+        if mimetype == 'image/svg':
+            return 'image/svg+xml'
+        return mimetype
 
 def neuter_mimetype(mimetype, user):
     wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
