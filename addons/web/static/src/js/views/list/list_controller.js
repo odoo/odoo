@@ -99,6 +99,24 @@ var ListController = BasicController.extend({
             return record.res_id;
         });
     },
+
+    /**
+     * Returns the list of currently selected res_ids (with the check boxes on
+     * the left) or the whole domain res_ids if it is selected
+     *
+     * This method should be the implementation of getSelectedIds but it is kept for compatibility reasons
+     *
+     * @returns {Promise<integer[]>}
+     */
+    getSelectedIdsWithDomain: async function () {
+        if (this.isDomainSelected) {
+            const state = this.model.get(this.handle, {raw: true});
+            return await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+        } else {
+            return Promise.resolve(this.model.localIdsToResIds(this.selectedRecords));
+        }
+    },
+
     /**
      * Returns the list of currently selected records (with the check boxes on
      * the left)
@@ -581,20 +599,14 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _toggleArchiveState: async function (archive) {
-        let resIds;
-        let displayNotif = false;
-        const state = this.model.get(this.handle, {raw: true});
-        if (this.isDomainSelected) {
-            resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
-            displayNotif = (resIds.length === session.active_ids_limit);
-        } else {
-            resIds = this.model.localIdsToResIds(this.selectedRecords);
-        }
+        const resIds = await this.getSelectedIdsWithDomain()
+        const notif = this.isDomainSelected;
         await this._archive(resIds, archive);
-        if (displayNotif) {
+        const total = this.model.get(this.handle, {raw: true}).count;
+        if (notif && resIds.length === session.active_ids_limit && resIds.length < total) {
             const msg = _.str.sprintf(
                 _t("Of the %d records selected, only the first %d have been archived/unarchived."),
-                state.count, resIds.length
+                total, resIds.length
             );
             this.do_notify(_t('Warning'), msg);
         }
@@ -858,13 +870,7 @@ var ListController = BasicController.extend({
         this._disableButtons();
         const state = this.model.get(this.handle);
         try {
-            let resIds;
-            if (this.isDomainSelected) {
-                const limit = session.active_ids_limit;
-                resIds = await this._domainToResIds(state.getDomain(), limit);
-            } else {
-                resIds = this.getSelectedIds();
-            }
+            const resIds = await this.getSelectedIdsWithDomain();
             // add the context of the button node (in the xml) and our custom one
             // (active_ids and domain) to the action's execution context
             const actionData = Object.assign({}, node.attrs, {
