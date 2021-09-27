@@ -1352,7 +1352,8 @@ var FieldFloatToggle = AbstractField.extend({
         if (this.mode === 'edit') {
             ev.stopPropagation(); // only stop propagation in edit mode
             var next_val = this._nextValue();
-            next_val = field_utils.format['float'](next_val);
+            var options = _.extend({}, this.nodeOptions, this.formatOptions);
+            next_val = field_utils.format['float'](next_val, this.field, options);
             this._setValue(next_val); // will be parsed in _setValue
         }
     },
