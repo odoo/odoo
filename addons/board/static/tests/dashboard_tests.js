@@ -1061,7 +1061,7 @@ QUnit.test('click on a cell of pivot view inside dashboard', async function (ass
 
     assert.verifySteps([]);
 
-    await testUtils.dom.click(form.$('.o_pivot .o_pivot_cell_value'));
+    await testUtils.dom.click(form.$('.o_legacy_pivot .o_pivot_cell_value'));
 
     assert.verifySteps(['do action']);
 
@@ -1183,7 +1183,7 @@ QUnit.test('correctly display the time range descriptions of a reporting view in
     });
 
     assert.deepEqual(
-        [...form.el.querySelectorAll('div.o_pivot th.o_pivot_origin_row')].map(el => el.innerText),
+        [...form.el.querySelectorAll('div.o_legacy_pivot th.o_pivot_origin_row')].map(el => el.innerText),
         ['June 2020', 'July 2020', 'Variation']
     );
 

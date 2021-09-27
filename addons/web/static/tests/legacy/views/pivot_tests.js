@@ -197,7 +197,7 @@ QUnit.module('Views', {
                         '<field name="fubar" string="fubar" type="measure"/>' +
                 '</pivot>',
         });
-        assert.containsOnce(pivot, '.o_pivot', 'Non stored fields can have a string attribute');
+        assert.containsOnce(pivot, '.o_legacy_pivot', 'Non stored fields can have a string attribute');
         pivot.destroy();
     });
 
@@ -622,24 +622,24 @@ QUnit.module('Views', {
 
         // click on closed header to open dropdown
         await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
-        assert.containsOnce(pivot, ".o_pivot .o_dropdown_menu");
+        assert.containsOnce(pivot, ".o_legacy_pivot .o_dropdown_menu");
         assert.strictEqual(
-            pivot.el.querySelector(".o_pivot .o_dropdown_menu").innerText.replace(/\s/g, ""),
+            pivot.el.querySelector(".o_legacy_pivot .o_dropdown_menu").innerText.replace(/\s/g, ""),
             "CompanyTypeCustomerDateOtherProductProductbar"
         );
 
         // open the Date sub dropdown
-        await testUtils.dom.click(pivot.el.querySelector(".o_pivot .o_dropdown_menu .o_dropdown_toggler.o_menu_item"));
+        await testUtils.dom.click(pivot.el.querySelector(".o_legacy_pivot .o_dropdown_menu .o_dropdown_toggler.o_menu_item"));
         assert.strictEqual(
             pivot.el
-                .querySelector(".o_pivot .o_dropdown_menu .o_dropdown_menu")
+                .querySelector(".o_legacy_pivot .o_dropdown_menu .o_dropdown_menu")
                 .innerText.replace(/\s/g, ""),
             "YearQuarterMonthWeekDay"
         );
 
         await testUtils.dom.click(
             pivot.el.querySelectorAll(
-                ".o_pivot .o_dropdown_menu .o_dropdown_menu .o_dropdown_item"
+                ".o_legacy_pivot .o_dropdown_menu .o_dropdown_menu .o_dropdown_item"
             )[2]
         );
 
@@ -2664,7 +2664,7 @@ QUnit.module('Views', {
         await cpHelpers.toggleComparisonMenu(pivot.el);
         await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
-        assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
+        assert.strictEqual(pivot.$('.o_legacy_pivot p.o_view_nocontent_empty_folder').length, 1);
 
         await cpHelpers.toggleFilterMenu(pivot.el);
         await cpHelpers.toggleMenuItem(pivot.el, 'Date');
@@ -2672,7 +2672,7 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', '2016');
         await cpHelpers.toggleMenuItemOption(pivot.el, 'Date', '2015');
 
-        assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
+        assert.containsN(pivot, '.o_legacy_pivot thead tr:last th', 9,
             "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]");
         var values = [
             "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%"
@@ -2680,7 +2680,7 @@ QUnit.module('Views', {
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // with data, with row groupby
-        await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_header_cell_closed').eq(2));
+        await testUtils.dom.click(pivot.$('.o_legacy_pivot .o_pivot_header_cell_closed').eq(2));
         await testUtils.dom.click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
         values = [
             "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%",
@@ -2708,7 +2708,7 @@ QUnit.module('Views', {
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
-        await testUtils.dom.clickFirst(pivot.$('.o_pivot .o_pivot_header_cell_opened'));
+        await testUtils.dom.clickFirst(pivot.$('.o_legacy_pivot .o_pivot_header_cell_opened'));
         values = [
             "2", "2", "0%",
             "2", "1", "-50%",
@@ -2789,7 +2789,7 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItem(pivot.el, 'Date: Previous period');
 
         // With the data above, the time ranges contain no record.
-        assert.strictEqual(pivot.$('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
+        assert.strictEqual(pivot.$('.o_legacy_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
         // export data should be impossible since the pivot buttons
         // are deactivated (exception: the 'Measures' button).
         assert.ok(pivot.$('.o_control_panel button.o_pivot_download').prop('disabled'));

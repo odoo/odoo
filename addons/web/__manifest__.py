@@ -116,7 +116,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/file_upload.scss',
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/graph_view.scss',
             'web/static/src/legacy/scss/form_view.scss',
             'web/static/src/legacy/scss/list_view.scss',
             'web/static/src/legacy/scss/kanban_dashboard.scss',
@@ -186,7 +185,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
             ("remove", 'web/static/src/legacy/js/views/graph/**/*'),
-            ("remove", 'web/static/src/legacy/scss/graph_view.scss'),
             ("remove", 'web/static/src/legacy/js/views/pivot/**/*'),
         ],
         "web.assets_backend_legacy_lazy": [
@@ -198,6 +196,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/graph_view.scss',
             # pivot
             'web/static/src/legacy/js/views/pivot/**/*',
+            'web/static/src/legacy/scss/pivot_view.scss',
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/public/lazyloader.js',

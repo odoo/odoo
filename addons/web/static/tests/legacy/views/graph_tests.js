@@ -196,7 +196,7 @@ QUnit.module('Views', {
                 </graph>`,
         });
 
-        assert.strictEqual(graph.$('.o_graph_renderer label').text(), "Partners",
+        assert.strictEqual(graph.$('.o_legacy_graph_renderer label').text(), "Partners",
             "should have 'Partners as title'");
 
         graph.destroy();
