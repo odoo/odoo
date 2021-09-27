@@ -190,8 +190,10 @@ class MrpUnbuild(models.Model):
             if unbuild.mo_id:
                 finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
                 factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
-                for finished_move in finished_moves:
-                    moves += unbuild._generate_move_from_existing_move(finished_move, factor, finished_move.location_dest_id, finished_move.location_id)
+                for product in finished_moves.product_id:
+                    product_moves = finished_moves.filtered(lambda m: m.product_id == product)
+                    qty = sum(product_moves.mapped('product_uom_qty'))
+                    moves += unbuild._generate_move_from_existing_move_with_qty(product_moves[0], factor * qty, product_moves[0].location_dest_id, product_moves[0].location_id)
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)
@@ -206,8 +208,10 @@ class MrpUnbuild(models.Model):
             if unbuild.mo_id:
                 raw_moves = unbuild.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
                 factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
-                for raw_move in raw_moves:
-                    moves += unbuild._generate_move_from_existing_move(raw_move, factor, raw_move.location_dest_id, self.location_dest_id)
+                for product in raw_moves.product_id:
+                    product_moves = raw_moves.filtered(lambda m: m.product_id == product)
+                    qty = sum(product_moves.mapped('product_uom_qty'))
+                    moves += unbuild._generate_move_from_existing_move_with_qty(product_moves[0], factor * qty, product_moves[0].location_dest_id, self.location_dest_id)
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
@@ -216,11 +220,14 @@ class MrpUnbuild(models.Model):
         return moves
 
     def _generate_move_from_existing_move(self, move, factor, location_id, location_dest_id):
+        return self._generate_move_from_existing_move_with_qty(move, move.product_uom_qty * factor, location_id, location_dest_id)
+
+    def _generate_move_from_existing_move_with_qty(self, move, qty, location_id, location_dest_id):
         return self.env['stock.move'].create({
             'name': self.name,
             'date': self.create_date,
             'product_id': move.product_id.id,
-            'product_uom_qty': move.product_uom_qty * factor,
+            'product_uom_qty': qty,
             'product_uom': move.product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,

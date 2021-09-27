@@ -460,10 +460,14 @@ class ProductProduct(models.Model):
         product_template_ids = self.sudo().mapped('product_tmpl_id').ids
 
         if partner_ids:
-            supplier_info = self.env['product.supplierinfo'].sudo().search([
-                ('product_tmpl_id', 'in', product_template_ids),
-                ('name', 'in', partner_ids),
-            ])
+            # name_get() of product with different quantities of the same supplier will be ambiguous, so
+            # we can pass a supplier_info in the context if we already know which one we want
+            supplier_info = self.env.context.get('supplier_info', False)
+            if not supplier_info:
+                supplier_info = self.env['product.supplierinfo'].sudo().search([
+                    ('product_tmpl_id', 'in', product_template_ids),
+                    ('name', 'in', partner_ids),
+                ])
             # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
             # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
             supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)

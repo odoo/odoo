@@ -16,6 +16,7 @@ FormRenderer.include({
         this._super.apply(this, arguments);
         this.mailFields = params.mailFields;
         this.chatter = undefined;
+        this.isFromFormViewDialog = params.isFromFormViewDialog;
     },
 
     //--------------------------------------------------------------------------
@@ -52,6 +53,9 @@ FormRenderer.include({
     _renderNode: function (node) {
         var self = this;
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
+            if(this.isFromFormViewDialog) {
+                return $('<div/>');
+            }
             if (!this.chatter) {
                 this.chatter = new Chatter(this, this.state, this.mailFields, {
                     isEditable: this.activeActions.edit,

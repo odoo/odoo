@@ -22,8 +22,6 @@
         <template id="l10n_ch_swissqr_template">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <t t-call="web.external_layout">
-                <!-- add class to body tag -->
-                <script>document.body.className += " l10n_ch_qr";</script>
                 <!-- add default margin for header (matching A4 European margin) -->
                 <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
 
@@ -94,7 +92,7 @@
                             <span>Payment Part</span>
                         </div>
 
-                        <img class="swissqr" t-att-src="o.invoice_partner_bank_id.build_swiss_code_url(o.amount_residual, o.currency_id.name, None, o.partner_id, None, o.invoice_payment_ref, o.ref or o.name)"/>
+                        <img class="swissqr" t-att-src="o.invoice_partner_bank_id.build_swiss_code_base64(o.amount_residual, o.currency_id.name, None, o.partner_id, None, o.invoice_payment_ref, o.ref or o.name)"/>
                         <img class="ch_cross" src="/l10n_ch/static/src/img/CH-Cross_7mm.png"/>
 
                         <div id="indications_zone" class="swissqr_column_right indication_zone">
