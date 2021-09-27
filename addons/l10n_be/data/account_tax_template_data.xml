@@ -42,47 +42,6 @@
             ]"/>
         </record>
 
-        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
-            <field name="sequence">11</field>
-            <field name="description">TVA 21%</field>
-            <field name="name">21% S.</field>
-            <field name="price_include" eval="0"/>
-            <field name="amount">21</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
-            <field name="active" eval="False"/>
-            <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field name="tax_group_id" ref="tax_group_tva_21"/>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_03')],
-                }),
-
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('a451'),
-                    'plus_report_line_ids': [ref('tax_report_line_54')]
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('tax_report_line_49')],
-                }),
-
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('a451'),
-                    'plus_report_line_ids': [ref('tax_report_line_64')],
-                }),
-            ]"/>
-        </record>
-
         <record id="attn_VAT-OUT-12-S" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="description">TVA 12%</field>
