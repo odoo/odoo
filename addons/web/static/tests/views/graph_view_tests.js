@@ -3478,4 +3478,43 @@ QUnit.module("Views", (hooks) => {
         ]);
         checkDatasets(assert, graph, "data", { data: [56, 26, 4, 105, 48] });
     });
+
+    QUnit.test("fill_temporal is true by default", async function (assert) {
+        assert.expect(1);
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            mockRPC: function (route, args) {
+                if (args.method === "web_read_group") {
+                    assert.strictEqual(
+                        args.kwargs.context.fill_temporal,
+                        true,
+                        "The observal state of fill_temporal should be true"
+                    );
+                }
+            },
+        });
+    });
+
+    QUnit.test("fill_temporal can be changed throught the context", async function (assert) {
+        assert.expect(1);
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            context: { fill_temporal: false },
+            mockRPC: function (route, args) {
+                if (args.method === "web_read_group") {
+                    assert.strictEqual(
+                        args.kwargs.context.fill_temporal,
+                        false,
+                        "The observal state of fill_temporal should be false"
+                    );
+                }
+            },
+        });
+    });
 });
