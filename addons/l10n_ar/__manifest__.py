@@ -74,6 +74,7 @@ Master Data:
     ],
     'data': [
         'security/ir.model.access.csv',
+        'wizards/account_move_change_rate_views.xml',
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ar_afip_responsibility_type_data.xml',
         'data/account_chart_template_data.xml',

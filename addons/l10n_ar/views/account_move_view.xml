@@ -21,7 +21,12 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-			<group id="other_tab_group" position="inside">
+			<field name="currency_id" position="after">
+                <field name="l10n_ar_computed_currency_rate" string="Currency Rate (preview)" attrs="{'invisible': ['|', ('l10n_ar_currency_rate', '!=', 0.0), ('l10n_ar_computed_currency_rate', '=', 1.0)]}"/>
+                <field name="l10n_ar_currency_rate" attrs="{'invisible': ['|', '|', ('l10n_ar_currency_rate', '=', False), ('l10n_ar_currency_rate', '=', 0.0), ('l10n_ar_currency_rate', '=', 1.0)]}"/>
+                <button name="%(action_account_move_change_rate)d" type="action" string="(change rate)" attrs="{'invisible':['|', ('state','!=','draft'), ('l10n_ar_computed_currency_rate', '=', 1.0)]}" class="oe_link"/>
+            </field>
+            <group id="other_tab_group" position="inside">
                 <group name="afip_group" string="AFIP">
                     <field name='l10n_ar_afip_concept' attrs="{'invisible': ['|', ('country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False)]}"/>
                     <label for="l10n_ar_afip_service_start" attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" string="Service Date"/>

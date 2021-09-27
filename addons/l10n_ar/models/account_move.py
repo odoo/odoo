@@ -34,6 +34,19 @@ class AccountMove(models.Model):
         " different type if required.")
     l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date', readonly=True, states={'draft': [('readonly', False)]})
+    l10n_ar_computed_currency_rate = fields.Float(
+        compute='_compute_l10n_ar_computed_currency_rate', string='Currency Rate (preview)', digits=(16, 6))
+
+    @api.depends('currency_id', 'company_id', 'invoice_date')
+    def _compute_l10n_ar_computed_currency_rate(self):
+        for rec in self:
+            if rec.currency_id and rec.company_id and (rec.currency_id != rec.company_id.currency_id):
+                rec.l10n_ar_computed_currency_rate = rec.currency_id._convert(
+                    1.0, rec.company_id.currency_id, rec.company_id,
+                    date=rec.invoice_date or fields.Date.context_today(rec),
+                    round=False)
+            else:
+                rec.l10n_ar_computed_currency_rate = 1.0
 
     @api.constrains('move_type', 'journal_id')
     def _check_moves_use_documents(self):
@@ -158,7 +171,10 @@ class AccountMove(models.Model):
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
 
     def _post(self, soft=True):
+
         ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
+        posted = super(AccountMove, self - ar_invoices)._post(soft)
+
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
             if rec.company_id.currency_id == rec.currency_id:
@@ -167,11 +183,13 @@ class AccountMove(models.Model):
                 rec.l10n_ar_currency_rate = rec.currency_id._convert(
                     1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
 
-        # We make validations here and not with a constraint because we want validation before sending electronic
-        # data on l10n_ar_edi
-        ar_invoices._check_argentinean_invoice_taxes()
-        posted = super()._post(soft)
-        posted._set_afip_service_dates()
+            # We make validations here and not with a constraint because we want validation before sending electronic
+            # data on l10n_ar_edi
+            ar_invoices._check_argentinean_invoice_taxes()
+            posted += super(AccountMove, rec.with_context(
+                force_rate=rec.currency_id != rec.company_id.currency_id and rec.l10n_ar_currency_rate))._post(soft)
+            rec._set_afip_service_dates()
+
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
