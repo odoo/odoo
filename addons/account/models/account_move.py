@@ -1255,9 +1255,9 @@ class AccountMove(models.Model):
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
-            reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
+            reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name or self.search(domain, order='date asc', limit=1).name
             if not reference_move_name:
-                reference_move_name = self.search(domain, order='date asc', limit=1).name
+                return "WHERE FALSE", {}
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
