@@ -1,6 +1,7 @@
 odoo.define('web_tour.tour_manager_tests', async function (require) {
     "use strict";
 
+    const core = require("web.core");
     const KanbanView = require('web.KanbanView');
     const TourManager = require('web_tour.TourManager');
     const testUtils = require('web.test_utils');
@@ -70,6 +71,42 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
                 "content should be that of the third tour");
 
             tourManager.destroy();
+        });
+
+        QUnit.test("Displays a rainbow man by default at the end of tours", async function (assert) {
+            assert.expect(3);
+
+            function onShowEffect(params) {
+                assert.deepEqual(params, {
+                    fadeout: "medium",
+                    message: "<strong><b>Good job!</b> You went through all steps of this tour.</strong>",
+                    messageIsHtml: true,
+                    type: "rainbow_man"
+                });
+            }
+            core.bus.on("show-effect", null, onShowEffect);
+
+            const tourManager = await createTourManager({
+                data: { 'web_tour.tour': {  fields: {}, consume() {} } },
+                template: `<button class="btn anchor">Anchor</button>`,
+                tours: [{
+                    name: "Some tour",
+                    options: {},
+                    steps: [{ trigger: '.anchor', content: "anchor" }],
+                }],
+                // Use this test in "debug" mode because the tips need to be in
+                // the viewport to be able to test their normal content
+                // (otherwise, the tips would indicate to the users that they
+                // have to scroll).
+                debug: true,
+            });
+
+            assert.containsOnce(document.body, '.o_tooltip');
+            await testUtils.dom.click($('.anchor'));
+            assert.containsNone(document.body, '.o_tooltip');
+
+            tourManager.destroy();
+            core.bus.off("show-effect", onShowEffect);
         });
 
         QUnit.test("Click on invisible tip consumes it", async function (assert) {
