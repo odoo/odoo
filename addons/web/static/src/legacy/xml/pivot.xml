@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <div t-name="web.legacy.PivotRenderer" class="o_pivot" owl="1">
+    <div t-name="web.legacy.PivotRenderer" class="o_legacy_pivot" owl="1">
         <t t-if="!(props.hasData and props.measures.length) or (props.isSample and !props.isEmbedded)">
             <t t-if="props.noContentHelp" t-call="web.ActionHelper" >
                 <t t-set="noContentHelp" t-value="props.noContentHelp"/>
