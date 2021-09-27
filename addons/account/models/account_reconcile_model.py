@@ -802,26 +802,43 @@ class AccountReconcileModel(models.Model):
         new_treated_aml_ids = set()
         candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
 
-        # Special case: the amounts are the same, submit the line directly.
         st_line_currency = st_line.foreign_currency_id or st_line.currency_id
         candidate_currencies = set(candidate['aml_currency_id'] or st_line.company_id.currency_id.id for candidate in candidates)
+        kept_candidates = candidates
         if candidate_currencies == {st_line_currency.id}:
+            kept_candidates = []
+            sum_kept_candidates = 0
             for candidate in candidates:
-                residual_amount = candidate['aml_currency_id'] and candidate['aml_amount_residual_currency'] or candidate['aml_amount_residual']
-                if st_line_currency.is_zero(residual_amount + st_line.amount_residual):
-                    candidates, priorities = self._filter_candidates([candidate], aml_ids_to_exclude, reconciled_amls_ids)
+                candidate_residual = candidate['aml_amount_residual_currency'] if candidate['aml_currency_id'] else candidate['aml_amount_residual']
+
+                if st_line_currency.compare_amounts(candidate_residual, -st_line.amount_residual) == 0:
+                    # Special case: the amounts are the same, submit the line directly.
+                    kept_candidates = [candidate]
                     break
 
+                elif st_line_currency.compare_amounts(abs(sum_kept_candidates), abs(st_line.amount_residual)) < 0:
+                    # Candidates' and statement line's balances have the same sign, thanks to _get_invoice_matching_query.
+                    # We hence can compare their absolute value without any issue.
+                    # Here, we still have room for other candidates ; so we add the current one to the list we keep.
+                    # Then, we continue iterating, even if there is no room anymore, just in case one of the following candidates
+                    # is an exact match, which would then be preferred on the current candidates.
+                    kept_candidates.append(candidate)
+                    sum_kept_candidates += candidate_residual
+
+        # It is possible kept_candidates now contain less different priorities; update them
+        kept_candidates_by_priority = self._sort_reconciliation_candidates_by_priority(kept_candidates, aml_ids_to_exclude, reconciled_amls_ids)
+        priorities = set(kept_candidates_by_priority.keys())
+
         # We check the amount criteria of the reconciliation model, and select the
-        # candidates if they pass the verification.
-        matched_candidates_values = self._process_matched_candidates_data(st_line, candidates)
+        # kept_candidates if they pass the verification.
+        matched_candidates_values = self._process_matched_candidates_data(st_line, kept_candidates)
         status = self._check_rule_propositions(matched_candidates_values)
         if 'rejected' in status:
             rslt = None
         else:
             rslt = {
                 'model': self,
-                'aml_ids': [candidate['aml_id'] for candidate in candidates],
+                'aml_ids': [candidate['aml_id'] for candidate in kept_candidates],
             }
             new_treated_aml_ids = set(rslt['aml_ids'])
 
@@ -843,7 +860,7 @@ class AccountReconcileModel(models.Model):
             if 'allow_auto_reconcile' in status:
 
                 # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
-                aml_ids = [candidate['aml_id'] for candidate in candidates]
+                aml_ids = [candidate['aml_id'] for candidate in kept_candidates]
                 lines_vals_list = [{'id': aml_id} for aml_id in aml_ids]
 
                 if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:

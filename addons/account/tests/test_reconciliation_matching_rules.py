@@ -893,7 +893,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         })
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': [payment_bnk_line.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
-            self.bank_line_2.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_1.id, self.invoice_line_2.id, self.invoice_line_3.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
         }, statements=self.bank_st)
 
     def test_match_different_currencies(self):
@@ -1238,3 +1238,33 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': (pmt_line_1 + pmt_line_2).ids, 'model': self.rule_1, 'partner': payment_partner},
         }, statements=self.bank_line_1.statement_id)
+
+    def test_no_amount_check_keep_first(self):
+        """ In case the reconciliation model doesn't check the total amount of the candidates,
+        we still don't want to suggest more than are necessary to match the statement.
+        For example, if a statement line amounts to 250 and is to be matched with three invoices
+        of 100, 200 and 300 (retrieved in this order), only 100 and 200 should be proposed.
+        """
+        self.rule_1.allow_payment_tolerance = False
+        self.bank_line_2.amount = 250
+        self.bank_line_1.partner_id = None
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_1.id, self.invoice_line_2.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
+        }, statements=self.bank_st)
+
+    def test_no_amount_check_exact_match(self):
+        """ If a reconciliation model finds enough candidates for a full reconciliation,
+        it should still check the following candidates, in case one of them exactly
+        matches the amount of the statement line. If such a candidate exist, all the
+        other ones are disregarded.
+        """
+        self.rule_1.allow_payment_tolerance = False
+        self.bank_line_2.amount = 300
+        self.bank_line_1.partner_id = None
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_3.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
+        }, statements=self.bank_st)
