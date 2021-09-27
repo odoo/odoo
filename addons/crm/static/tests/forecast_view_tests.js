@@ -1,24 +1,23 @@
 /** @odoo-module **/
 
-import { _lt } from "@web/core/l10n/translation";
-import AbstractView from "web.AbstractView";
-import AbstractModel from "web.AbstractModel";
-import { controlPanel as cpHelpers } from "web.test_utils";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import legacyViewRegistry from "web.view_registry";
-import { makeView } from "@web/../tests/views/helpers";
-import { mock } from "web.test_utils";
-import { registry } from "@web/core/registry";
 import {
     setupControlPanelServiceRegistry,
     switchView,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
-    toggleMenuItemOption,
+    toggleMenuItemOption
 } from "@web/../tests/search/helpers";
+import { makeView } from "@web/../tests/views/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import AbstractModel from "web.AbstractModel";
+import AbstractView from "web.AbstractView";
+import { controlPanel as cpHelpers, mock } from "web.test_utils";
+import legacyViewRegistry from "web.view_registry";
 
 const patchDate = mock.patchDate;
 
@@ -88,7 +87,7 @@ QUnit.module("Views", (hooks) => {
 
         const forecastGraph = await makeView({
             resModel: "foo",
-            type: "forecast_graph",
+            type: "graph",
             serverData,
             searchViewId: false,
             context: {
@@ -133,7 +132,7 @@ QUnit.module("Views", (hooks) => {
 
             await makeView({
                 resModel: "foo",
-                type: "forecast_graph",
+                type: "graph",
                 serverData,
                 searchViewId: false,
                 context: {
