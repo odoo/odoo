@@ -414,7 +414,7 @@ export class GraphModel extends Model {
                         measures,
                         groupBy.map((gb) => gb.spec),
                         { lazy: false }, // what is this thing???
-                        { fill_temporal: true } // + old this.chart.context
+                        { fill_temporal: true, ...this.searchParams.context }
                     )
                     .then((data) => {
                         const dataPoints = [];
