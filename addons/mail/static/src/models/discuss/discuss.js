@@ -197,7 +197,13 @@ function factory(dependencies) {
             }
             thread.open();
             if (this.messaging.device.isMobile && thread.channel_type) {
-                this.update({ activeMobileNavbarTabId: thread.channel_type });
+                const channelTypeTab = {
+                    chat: 'chat',
+                    group: 'chat',
+                    channel: 'channel',
+                    livechat: 'livechat',
+                };
+                this.update({ activeMobileNavbarTabId: channelTypeTab[thread.channel_type] });
             }
         }
 
