@@ -228,15 +228,15 @@ class ir_cron(models.Model):
 
                     locked_job = lock_cr.fetchone()
                     if not locked_job:
-                        _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['cron_name'])
+                        _logger.warning("Job `%s` already executed by another process/thread. skipping it", job['cron_name'])
                         continue
                     # Got the lock on the job row, run its code
-                    _logger.info('Starting job `%s`.', job['cron_name'])
+                    _logger.warning('Starting job `%s`.', job['cron_name'])
                     job_cr = db.cursor()
                     try:
                         registry = odoo.registry(db_name)
                         registry[cls._name]._process_job(job_cr, job, lock_cr)
-                        _logger.info('Job `%s` done.', job['cron_name'])
+                        _logger.warning('Job `%s` done.', job['cron_name'])
                     except Exception:
                         _logger.exception('Unexpected exception while processing cron job %r', job)
                     finally:
@@ -245,7 +245,7 @@ class ir_cron(models.Model):
                 except psycopg2.OperationalError as e:
                     if e.pgcode == '55P03':
                         # Class 55: Object not in prerequisite state; 55P03: lock_not_available
-                        _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['cron_name'])
+                        _logger.warning('Another process/thread is already busy executing job `%s`, skipping it.', job['cron_name'])
                         continue
                     else:
                         # Unexpected OperationalError
