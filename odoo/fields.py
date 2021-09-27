@@ -2347,6 +2347,8 @@ class Selection(Field):
               deleted along with the option itself.
             - 'set default' -- all records with this option will be
               set to the default of the field definition
+            - 'set VALUE' -- all records with this option will be
+              set to the given value
             - <callable> -- a callable whose first and only argument will be
               the set of records containing the specified Selection option,
               for custom processing
@@ -2444,12 +2446,17 @@ class Selection(Field):
                             "as it does not define a default! Either define one in the base "
                             "field, or change the chosen ondelete policy" % self
                         )
-                        continue
-                    raise ValueError(
-                        "%r: ondelete policy %r for selection value %r is not a valid ondelete "
-                        "policy, please choose one of 'set null', 'set default', 'cascade' or "
-                        "a callable" % (self, val, key)
-                    )
+                    elif val.startswith('set '):
+                        assert val[4:] in values, (
+                            "%s: ondelete policy of type 'set %%' must be either 'set null', "
+                            "'set default', or 'set value' where value is a valid selection value."
+                        ) % self
+                    else:
+                        raise ValueError(
+                            "%r: ondelete policy %r for selection value %r is not a valid ondelete"
+                            " policy, please choose one of 'set null', 'set default', "
+                            "'set [value]', 'cascade' or a callable" % (self, val, key)
+                        )
 
                 values = merge_sequences(values, [kv[0] for kv in selection_add])
                 labels.update(kv for kv in selection_add if len(kv) == 2)

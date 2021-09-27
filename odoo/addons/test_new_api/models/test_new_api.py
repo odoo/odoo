@@ -1179,7 +1179,7 @@ class SelectionRequiredLiteral(models.Model):
 
     my_selection = fields.Selection(selection_add=[
         ('bacon', "Bacon"),
-    ], ondelete={'bacon': lambda r: r.write({'my_selection': 'bar'})})
+    ], ondelete={'bacon': 'set bar'})
 
 
 class SelectionRequiredMultiple(models.Model):

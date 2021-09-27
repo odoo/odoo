@@ -1435,6 +1435,8 @@ class IrModelSelection(models.Model):
             elif ondelete == 'set default':
                 value = field.convert_to_write(field.default(Model), Model)
                 safe_write(selection._get_records(), field.name, value)
+            elif ondelete.startswith('set '):
+                safe_write(selection._get_records(), field.name, ondelete[4:])
             elif ondelete == 'cascade':
                 selection._get_records().unlink()
             else:
