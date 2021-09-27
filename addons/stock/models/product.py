@@ -602,6 +602,18 @@ class Product(models.Model):
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
+    def _get_only_qty_available(self):
+        """ Get only quantities available, it is equivalent to read qty_available 
+        but avoid fetching other qty fields (avoid costly read group on moves)
+
+        :rtype: defaultdict(float)
+        """
+        domain_quant = expression.AND([self._get_domain_locations()[0], [('product_id', 'in', self.ids)]])
+        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+        currents = defaultdict(float)
+        for c in quants_groupby:
+            currents[c['product_id'][0]] = c['quantity']
+        return currents
 
     def _filter_to_unlink(self):
         domain = [('product_id', 'in', self.ids)]

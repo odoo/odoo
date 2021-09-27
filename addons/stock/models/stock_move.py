@@ -1943,10 +1943,10 @@ class StockMove(models.Model):
 
         ids_in_self = set(self.ids)
         product_ids = self.product_id
-        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id)]).ids
+        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
 
         in_domain, out_domain = self.env['report.stock.report_product_product_replenishment']._move_confirmed_domain(
-            None, product_ids.ids, wh_location_ids
+            None, product_ids.ids, wh_location_query
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
         reserved_outs = self.env['stock.move'].search(
@@ -1956,7 +1956,8 @@ class StockMove(models.Model):
         # Prefetch data to avoid future request
         (outs - self).read(['product_id', 'product_uom', 'product_qty', 'state'], load=False)  # remove self because data is already fetch
         ins.read(['product_id', 'product_qty', 'date', 'move_dest_ids'], load=False)
-        currents = {c['id']: c['qty_available'] for c in product_ids.with_context(warehouse=warehouse.id).read(['qty_available'])}
+
+        currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
 
         outs_per_product = defaultdict(list)
         reserved_outs_per_product = defaultdict(list)
