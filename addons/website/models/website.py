@@ -294,6 +294,13 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    @api.model
+    def get_theme_snippet_lists(self, theme_name):
+        default_snippet_lists = http.addons_manifest['theme_default'].get('snippet_lists', {})
+        theme_snippet_lists = http.addons_manifest[theme_name].get('snippet_lists', {})
+        snippet_lists = {**default_snippet_lists, **theme_snippet_lists}
+        return snippet_lists
+
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
@@ -415,13 +422,13 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
+                    view_id = self.env['website'].with_context(website_id=website.id).viewref('website.' + snippet)
                     if view_id:
                         el = html.fromstring(view_id._render(values=cta_data))
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
-                        el.attrib['data-snippet'] = snippet.split('.', 1)[-1]
+                        el.attrib['data-snippet'] = snippet
 
                         # Tweak the shape of the first snippet to connect it
                         # properly with the header color in some themes
@@ -460,8 +467,8 @@ class Website(models.Model):
                     })
 
         website = self.get_current_website()
-
-        theme = self.env['ir.module.module'].search([('name', '=', kwargs['theme_name'])])
+        theme_name = kwargs['theme_name']
+        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         url = theme.button_choose_theme()
 
         # Force to refresh env after install of module
@@ -557,16 +564,16 @@ class Website(models.Model):
                 logger.warning(e)
 
         # Load suggestion from iap for selected pages
-        requested_pages = list(pages_views.keys()) + ['homepage']
-        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), {
-            'theme': kwargs.get('theme_name'),
-            'pages': requested_pages,
-        })
+        custom_resources = self._website_api_rpc(
+            '/api/website/2/configurator/custom_resources/%s' % kwargs['industry_id'],
+            {'theme': theme_name, }
+        )
 
         # Update pages
-        pages = custom_resources.get('pages', {})
-        for page_code, snippet_list in pages.items():
-            configure_page(page_code, snippet_list, pages_views, cta_data)
+        requested_pages = list(pages_views.keys()) + ['homepage']
+        snippet_lists = website.get_theme_snippet_lists(theme_name)
+        for page_code in requested_pages:
+            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data)
 
         images = custom_resources.get('images', {})
         set_images(images)
