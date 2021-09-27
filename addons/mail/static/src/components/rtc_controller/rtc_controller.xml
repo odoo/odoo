@@ -3,7 +3,7 @@
 
     <t t-name="mail.RtcController" owl="1">
         <div class="o_RtcController">
-            <t t-if="rtcController">
+            <t t-if="rtcController and messaging">
                 <div class="o_RtcController_buttons">
                     <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
                         <t t-if="messaging.rtc.currentRtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
