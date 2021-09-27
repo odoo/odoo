@@ -818,12 +818,14 @@ class AccountChartTemplate(models.Model):
         for account_reconcile_model in account_reconcile_models:
             vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
-        # Create a default rule for the reconciliation widget matching invoices automatically.
+
+        # Create default rules for the reconciliation widget matching invoices automatically.
+
         self.env['account.reconcile.model'].sudo().create({
-            "name": _('Invoices Matching Rule'),
+            "name": _('Invoices/Bills Perfect Match'),
             "sequence": '1',
             "rule_type": 'invoice_matching',
-            "auto_reconcile": False,
+            "auto_reconcile": True,
             "match_nature": 'both',
             "match_same_currency": True,
             "allow_payment_tolerance": True,
@@ -832,6 +834,19 @@ class AccountChartTemplate(models.Model):
             "match_partner": True,
             "company_id": company.id,
         })
+
+        self.env['account.reconcile.model'].sudo().create({
+            "name": _('Invoices/Bills Partial Match if Underpaid'),
+            "sequence": '2',
+            "rule_type": 'invoice_matching',
+            "auto_reconcile": False,
+            "match_nature": 'both',
+            "match_same_currency": True,
+            "allow_payment_tolerance": False,
+            "match_partner": True,
+            "company_id": company.id,
+        })
+
         return True
 
     def _get_fp_vals(self, company, position):
