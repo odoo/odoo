@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
-import { GraphView } from "@web/views/graph/graph_view";
-import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { registry } from "@web/core/registry";
+import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
+import { GraphView } from "@web/views/graph/graph_view";
 
 const viewRegistry = registry.category("views");
 
@@ -29,6 +29,6 @@ class ProjectRatingArchParser extends GraphArchParser {
 // Would it be not better achiedved by using a proper arch directly?
 
 class ProjectRatingGraphView extends GraphView {}
-ProjectRatingGraphView.archParser = ProjectRatingArchParser;
+ProjectRatingGraphView.ArchParser = ProjectRatingArchParser;
 
 viewRegistry.add("project_rating_graph", ProjectRatingGraphView);
