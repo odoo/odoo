@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -37,6 +39,9 @@ class Survey(models.Model):
     # ---------------------------------------------------------
 
     def action_survey_view_slide_channels(self):
+        """ Redirect to the channels using the survey as a certification. Open
+        in no-create as link between those two comes through a slide, hard to
+        keep as default values. """
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_action_overview")
         action['display_name'] = _("Courses")
         if self.slide_channel_count == 1:
@@ -45,6 +50,10 @@ class Survey(models.Model):
         else:
             action.update({'views': [[False, 'tree'], [False, 'form']],
                            'domain': [('id', 'in', self.slide_channel_ids.ids)]})
+        action['context'] = dict(
+            ast.literal_eval(action.get('context') or '{}'),  # sufficient in most cases
+            create=False
+        )
         return action
 
     # ---------------------------------------------------------

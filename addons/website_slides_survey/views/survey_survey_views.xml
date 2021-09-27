@@ -32,7 +32,7 @@
     </record>
 
     <record id="survey_survey_view_form" model="ir.ui.view">
-        <field name="name">survey.survey.view.form.inherit.website_slides</field>
+        <field name="name">survey.survey.view.form.inherit.website.slides</field>
         <field name="model">survey.survey</field>
         <field name="inherit_id" ref="survey.survey_survey_view_form"/>
         <field name="arch" type="xml">
@@ -45,6 +45,28 @@
                     groups="website_slides.group_website_slides_officer">
                     <field string="Courses" name="slide_channel_count" widget="statinfo"/>
                 </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban.inherit.website.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_state']" position="after">
+                <field name="slide_channel_count"/>
+            </xpath>
+            <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
+                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                    <a t-if="record.slide_channel_count.raw_value"
+                       type="object"
+                       name="action_survey_view_slide_channels"
+                       class="font-weight-bold">
+                        <field name="slide_channel_count"/><br />
+                        <span class="text-muted">Courses</span>
+                    </a>
+                </div>
             </xpath>
         </field>
     </record>
