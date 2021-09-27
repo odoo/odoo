@@ -101,10 +101,11 @@ class Sponsor(models.Model):
     def _compute_image_512(self):
         self._synchronize_with_partner('image_512')
 
-    @api.depends('image_256', 'partner_id.image_256')
+    @api.depends('image_512', 'partner_id.image_256')
     def _compute_website_image_url(self):
         for sponsor in self:
-            if sponsor.image_256:
+            if sponsor.image_512:
+                # image_512 is stored, image_256 is derived from it dynamically
                 sponsor.website_image_url = self.env['website'].image_url(sponsor, 'image_256', size=256)
             elif sponsor.partner_id.image_256:
                 sponsor.website_image_url = self.env['website'].image_url(sponsor.partner_id, 'image_256', size=256)
