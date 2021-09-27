@@ -211,8 +211,9 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap'),
 
             'web/static/src/env.js',
-            'web/static/src/core/utils/transitions.scss', # included early because used by other files
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/commands/**/*'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',
