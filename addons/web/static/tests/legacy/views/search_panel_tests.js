@@ -2393,7 +2393,7 @@ QUnit.module('Views', {
         assert.containsNone(webClient, '.o_content .o_search_panel');
 
         await switchView(webClient, 'pivot');
-        assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_pivot');
+        assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_legacy_pivot');
         assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_search_panel');
     });
 
@@ -2517,7 +2517,7 @@ QUnit.module('Views', {
         // switch to pivot
         await switchView(webClient, 'pivot');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content .o_pivot');
+        assert.containsOnce(webClient, '.o_content .o_legacy_pivot');
         assert.containsNone(webClient, '.o_content .o_search_panel');
         assert.strictEqual($(webClient.el).find('.o_pivot_cell_value').text(), '15');
 
