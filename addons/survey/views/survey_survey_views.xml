@@ -192,73 +192,162 @@
         <field name="name">survey.survey.view.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
-                <field name="title" />
-                <field name="answer_done_count" />
-                <field name="certification" />
-                <field name="scoring_type" />
-                <field name="color" />
-                <field name="access_mode"/>
-                <field name="activity_ids" />
-                <field name="activity_state" />
-                <field name="success_count"/>
+            <kanban class="o_survey_survey_view_kanban" sample="1">
+                <field name="active"/>
+                <field name="certification"/>
+                <field name="color"/>
+                <field name="create_date"/>
+                <field name="scoring_type"/>
+                <field name="session_state"/>
                 <field name="success_ratio"/>
-                <field name='active'/>
                 <templates>
                     <div t-name="kanban-box" 
-                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
-                            #{record.certification.raw_value ? 'o_kanban_card_survey_successed' : ''}">
-                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
-
-                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                <span class="fa fa-ellipsis-v"/>
-                            </a>
-                            <div class="dropdown-menu" role="menu">
-                                <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
-                                <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
-                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                <div role="separator" class="dropdown-divider"/>
-                                <div role="separator" class="dropdown-item-text">Color</div>
-                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
+                                      oe_kanban_card oe_kanban_global_click
+                                      o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}">
+                        <!-- displayed in ungrouped mode -->
+                        <div class="o_survey_kanban_card_ungrouped row mx-0">
+                            <div class="col-lg-2 col-sm-8 col-12 py-0 my-2 my-lg-0">
+                                <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
+                                    <span class="font-weight-bold"><field name="title"/></span>
+                                    <span>
+                                        <field name="user_id" widget="many2one_avatar_user"
+                                            options="{'display_avatar_name': True}"/>
+                                        -
+                                        <t t-esc="moment(record.create_date.raw_value).format('MMM YYYY')"/>
+                                    </span>
+                                </div>
                             </div>
+                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                                <span class="font-weight-bold"><field name="question_count"/></span><br />
+                                <span class="text-muted">Questions</span>
+                            </div>
+                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                                <span class="font-weight-bold">
+                                    <field name="answer_duration_avg" widget="float_time"/>
+                                </span><br />
+                                <span class="text-muted">Average Duration</span>
+                            </div>
+                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                                <a type="object"
+                                   name="action_survey_user_input"
+                                   class="font-weight-bold">
+                                    <field name="answer_count"/><br />
+                                    <span class="text-muted">Registered</span>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                                <a type="object"
+                                   name="action_survey_user_input_completed"
+                                   class="font-weight-bold">
+                                    <field name="answer_done_count"/><br />
+                                    <span class="text-muted">Completed</span>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2"
+                                 name="o_survey_kanban_card_section_success">
+                                 <a t-if="record.scoring_type.raw_value != 'no_scoring'"
+                                   type="object"
+                                   name="action_survey_user_input_certified"
+                                   class="font-weight-bold">
+                                    <field name="success_ratio" widget="progressbar"
+                                           options="{'current_value': 'success_ratio',
+                                                     'max_value': 100,
+                                                     'editable': false}"/>
+                                    <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
+                                    <span class="text-muted" t-else="">Certified</span>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-sm-12 py-0 my-2 ml-auto text-lg-right">
+                                <button name="action_send_survey"
+                                        string="Share" type="object"
+                                        class="btn btn-secondary border"
+                                        attrs="{'invisible': [('active', '=', False)]}">
+                                    Share
+                                </button>
+                                <button name="action_test_survey"
+                                        string="Test" type="object"
+                                        class="btn btn-secondary border"
+                                        attrs="{'invisible': [('active', '=', False)]}">
+                                    Test
+                                </button>
+                                <button name="action_result_survey"
+                                        string="See results" type="object"
+                                        class="btn btn-secondary border"
+                                        attrs="{'invisible': [('active', '=', False)]}">
+                                    See results
+                                </button>
+                                <button name="action_start_session"
+                                        string="Start Live Session" type="object"
+                                        class="btn btn-secondary border"
+                                        attrs="{'invisible': ['|', '|', ('session_state', '!=', False), ('certification', '=', True), ('active', '=', False)]}">
+                                    Start Live Session
+                                </button>
+                                <button name="action_end_session"
+                                        string="End Live Session" type="object"
+                                        class="btn btn-secondary border"
+                                        attrs="{'invisible': ['|', ('session_state', 'not in', ['ready', 'in_progress']), ('active', '=', False)]}">
+                                    End Live Session
+                                </button>
+                            </div>
+                            <widget name="web_ribbon" title="Archived"
+                                bg_color="bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
                         </div>
-                        <div class="o_kanban_record_top">
+                        <!-- displayed in grouped mode -->
+                        <div class="o_survey_kanban_card_grouped">
+                            <widget name="web_ribbon" title="Archived"
+                                bg_color="bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
+                            <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+                                <a href="#" role="button"
+                                    class="dropdown-toggle o-no-caret btn"
+                                    data-toggle="dropdown" data-display="static"
+                                    aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                    <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <div role="separator" class="dropdown-item-text">Color</div>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-10 p-0 pb-1">
+                                    <div class="container o_kanban_card_content" t-if="record.answer_count.raw_value != 0">
+                                        <div class="row mt-4 ml-5">
+                                            <div class="col-4 p-0">
+                                                <a name="action_survey_user_input" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"><field name="answer_count"/></span>
+                                                    <span class="text-muted">Registered</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-4 p-0 border-left">
+                                                <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"><field name="answer_done_count"/></span>
+                                                    <span class="text-muted">Completed</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                                <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                    <span class="text-muted" >Success</span>
+                                                </a> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-10 p-0 pb-1">
-                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0">
-                                    <div class="row mt-4 ml-5">
-                                        <div class="col-4 p-0">
-                                            <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="answer_done_count"/></span>
-                                                <span class="text-muted">Answers</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
-                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="success_count"/></span>
-                                                <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
-                                                <span class="text-muted" t-else="">Certified</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
-                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
-                                                <span class="text-muted" >Success</span>
-                                            </a> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2 align-self-end">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left"/>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Generic -->
+                        <div class="o_survey_kanban_card_bottom">
+                            <field name="activity_ids" widget="kanban_activity"/>
                         </div>
                     </div>
                 </templates>
@@ -282,6 +371,10 @@
                     domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="group_by_responsible"
+                        context="{'group_by': 'user_id'}"/>
+                </group>
             </search>
         </field>
     </record>
