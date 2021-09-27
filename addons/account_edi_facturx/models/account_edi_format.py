@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 from datetime import datetime
 from lxml import etree
-from PyPDF2 import PdfFileReader
 import base64
 import markupsafe
 
