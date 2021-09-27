@@ -967,18 +967,24 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         self.ensure_one()
-        return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
+        keys = (self.group_id, self.location_id, self.location_dest_id, self.picking_type_id)
+        if self.partner_id and (self.location_id.usage == 'transit' or self.location_dest_id.usage == 'transit'):
+            keys += (self.partner_id, )
+        return keys
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
-        picking = self.env['stock.picking'].search([
-                ('group_id', '=', self.group_id.id),
-                ('location_id', '=', self.location_id.id),
-                ('location_dest_id', '=', self.location_dest_id.id),
-                ('picking_type_id', '=', self.picking_type_id.id),
-                ('printed', '=', False),
-                ('immediate_transfer', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+        domain = [
+            ('group_id', '=', self.group_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('location_dest_id', '=', self.location_dest_id.id),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('printed', '=', False),
+            ('immediate_transfer', '=', False),
+            ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
+        if self.partner_id and (self.location_id.usage == 'transit' or self.location_dest_id.usage == 'transit'):
+            domain += [('partner_id', '=', self.partner_id.id)]
+        picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
 
     def _assign_picking(self):

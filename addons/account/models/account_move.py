@@ -1824,6 +1824,8 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         for line in self.line_ids:
+            analytic_account = line.analytic_account_id
+
             # Do something only on invoice lines.
             if line.exclude_from_invoice_tab:
                 continue
@@ -1848,7 +1850,8 @@ class AccountMove(models.Model):
             line.date = self.date
             line.recompute_tax_line = True
             line.currency_id = self.currency_id
-
+            if analytic_account:
+                line.analytic_account_id = analytic_account
 
         self.line_ids._onchange_price_subtotal()
         self._recompute_dynamic_lines(recompute_all_taxes=True)

@@ -444,7 +444,8 @@ class PurchaseOrderLine(models.Model):
 
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
-        if warehouse_loc and self.orderpoint_id and not warehouse_loc.parent_path in self.orderpoint_id.location_id.parent_path:
+        dest_loc = self.move_dest_ids.location_id or self.orderpoint_id.location_id
+        if warehouse_loc and dest_loc and not warehouse_loc.parent_path in dest_loc[0].parent_path:
             raise UserError(_('For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation.',
                               self.product_id.display_name, self.order_id.picking_type_id.display_name, self.orderpoint_id.location_id.display_name, self.orderpoint_id.display_name))
 

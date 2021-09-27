@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,7 @@ msgstr "Купон вже застосовується за таку ж вина
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
+"Щоб отримати винагороду потрібно придбати мінімум %(amount)s %(currency)s "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -47,17 +48,17 @@ msgstr "Використані купони"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
 msgid "Applied Immediate Promo Programs"
-msgstr "Застосовані невідкладні промо-програми"
+msgstr "Застосовані невідкладні акції"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
 msgid "Applied Promo Program"
-msgstr "Застосовані промо-програми"
+msgstr "Застосовані акції"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
 msgid "Applied program code"
-msgstr "Застосований код програми"
+msgstr "Застосований код акції"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -112,20 +113,20 @@ msgstr "Створив"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
-msgstr ""
+msgstr "Знижка: %(program)s - На товарі з наступними податками: %(taxes)s"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
-msgstr ""
+msgstr "Знижка: %s"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
@@ -186,7 +187,7 @@ msgstr "Чи є рядок програми винагороди"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
@@ -343,30 +344,30 @@ msgstr ""
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has already been used (%s)."
-msgstr ""
+msgstr "Цей купон вже використано (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has been cancelled (%s)."
-msgstr ""
+msgstr "Цей купон скасовано (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr ""
+msgstr "Цей купон протермінований (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr ""
+msgstr "Цей купон недійсний (%s)."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr ""
+msgstr "Використовується в"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
