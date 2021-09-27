@@ -233,8 +233,13 @@ class StockRule(models.Model):
         product_lang = product_id.with_prefetch().with_context(
             lang=partner.lang,
             partner_id=partner.id,
+            supplier_info=seller,
         )
-        name = product_lang.display_name
+        name_product_description = product_lang.name_get()
+        if not name_product_description:
+            name = product_lang.display_name  # Fallback to original behavior in case of problem
+        else:
+            name = name_product_description[0][1]  # name_product_description will be of the form list[tuple(product_id, name)]
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
