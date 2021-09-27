@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.tools.pdf import OdooPdf
 from odoo.osv import expression
 from odoo.tools import html_escape
 
@@ -239,7 +239,7 @@ class AccountEdiFormat(models.Model):
         """ Create a new invoice with the data inside a pdf.
 
         :param filename: The name of the pdf.
-        :param reader:   The OdooPdfFileReader of the pdf to import.
+        :param reader:   The OdooPdf of the pdf to import.
         :returns:        The created invoice.
         """
         # TO OVERRIDE
@@ -251,7 +251,7 @@ class AccountEdiFormat(models.Model):
         """ Update an existing invoice with the data inside the pdf.
 
         :param filename: The name of the pdf.
-        :param reader:   The OdooPdfFileReader of the pdf to import.
+        :param reader:   The OdooPdf of the pdf to import.
         :param invoice:  The invoice to update.
         :returns:        The updated invoice.
         """
@@ -303,17 +303,11 @@ class AccountEdiFormat(models.Model):
 
         if attachments:
             # Add the attachments to the pdf file
-            reader_buffer = io.BytesIO(pdf_content)
-            reader = OdooPdfFileReader(reader_buffer, strict=False)
-            writer = OdooPdfFileWriter()
-            writer.cloneReaderDocumentRoot(reader)
-            for vals in attachments:
-                writer.addAttachment(vals['name'], vals['datas'])
-            buffer = io.BytesIO()
-            writer.write(buffer)
-            pdf_content = buffer.getvalue()
-            reader_buffer.close()
-            buffer.close()
+            with OdooPdf.open(io.BytesIO(pdf_content)) as pdf, io.BytesIO() as _buffer:
+                for vals in attachments:
+                    pdf.add_attachment(vals['name'], vals['datas'])
+                pdf.save(_buffer)
+                pdf_content = _buffer.getvalue()
         return pdf_content
 
     ####################################################
@@ -361,18 +355,15 @@ class AccountEdiFormat(models.Model):
         to_process = []
         try:
             buffer = io.BytesIO(content)
-            pdf_reader = OdooPdfFileReader(buffer, strict=False)
+            pdf_reader = OdooPdf.open(buffer)
         except Exception as e:
-            # Malformed pdf
+            # Malformed or encrypted pdf
             _logger.exception("Error when reading the pdf: %s" % e)
             return to_process
 
         # Process embedded files.
-        try:
-            for xml_name, content in pdf_reader.getAttachments():
-                to_process.extend(self._decode_xml(xml_name, content))
-        except NotImplementedError as e:
-            _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
+        for xml_name, content in pdf_reader.get_attachments():
+            to_process.extend(self._decode_xml(xml_name, content))
 
         # Process the pdf itself.
         to_process.append({
