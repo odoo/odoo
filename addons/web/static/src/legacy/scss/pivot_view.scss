@@ -1,4 +1,5 @@
-.o_pivot {
+.o_legacy_pivot {
+
     .o_pivot_cell_value {
         font-size: 1em;
         .o_comparison {
@@ -15,11 +16,6 @@
     }
 
     table {
-        th > .o_dropdown > .o_dropdown_toggler {
-            background: none!important;
-            border: none!important;
-            padding: 0!important;
-        }
         background-color: $o-view-background-color;
         width: auto;  // bootstrap override
 
@@ -37,27 +33,22 @@
             text-align: center;
         }
 
-        th, td {
-            border-color: gray('200');
-            border-width: $border-width $border-width $border-width $border-width;
-        }
-
         th {
-            font-weight: $font-weight-normal;  // bootstrap override
-            background-color: gray('100');
+            font-weight: normal;  // bootstrap override
+            background-color: lighten($o-brand-secondary, 40%);
         }
 
         @mixin o-pivot-header-cell {
+            background-color: lighten($o-brand-secondary, 40%);
             cursor: pointer;
             white-space: nowrap;
             user-select: none;
             &:hover {
-                background-color: gray('200');
-                color: $headings-color;
+                background-color: lighten($o-brand-secondary, 30%);
             }
         }
 
-        .o_pivot_measure_row, .o_pivot_origin_row {
+        .o_pivot_measure_row {
             @include o-pivot-header-cell;
         }
 
@@ -103,11 +94,11 @@
         @include o-caret-right;
         position: absolute;
         right: 6px;
-        top: 8px;
+        top: 9px;
     }
 
-    .show > .o_pivot_field_selection::after {
-        @include o-caret-down;
-        top: 10px;
+    .o_pivot_field_menu .dropdown-item.disabled {
+        color: $text-muted;
+        cursor: default;
     }
 }
