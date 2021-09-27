@@ -176,7 +176,7 @@ class ReplenishmentReport(models.AbstractModel):
                 'move': in_,
                 'move_dests': in_._rollup_move_dests(set())
             })
-        currents = {c['id']: c['qty_available'] for c in outs.product_id.read(['qty_available'])}
+        currents = outs.product_id._get_only_qty_available()
 
         lines = []
         for product in (ins | outs).product_id:
