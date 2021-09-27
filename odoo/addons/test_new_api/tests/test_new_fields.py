@@ -315,10 +315,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -3126,6 +3126,20 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
             my_selection = fields.Selection(selection_add=[
                 ('corona', "Corona beers suck"),
             ], ondelete={'corona': 'set default'})
+
+        Foo._build_model(self.registry, self.env.cr)
+
+        with self.assertRaises(AssertionError):
+            self.registry.setup_models(self.env.cr)
+
+    def test_ondelete_value_no_valid(self):
+        class Foo(models.Model):
+            _module = None
+            _inherit = self.MODEL_BASE
+
+            my_selection = fields.Selection(selection_add=[
+                ('westvleteren', "Westvleteren beers is overrated"),
+            ], ondelete={'westvleteren': 'set foooo'})
 
         Foo._build_model(self.registry, self.env.cr)
 
