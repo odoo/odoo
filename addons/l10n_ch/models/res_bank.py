@@ -9,7 +9,6 @@ from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import mod10r
 
-import werkzeug.urls
 
 ISR_SUBSCRIPTION_CODE = {'CHF': '01', 'EUR': '03'}
 CLEARING = "09000"
@@ -236,14 +235,6 @@ class ResPartnerBank(models.Model):
             return self._pretty_postal_num(iban[-9:])
         return None
 
-    def _get_qr_code_url(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
-        if qr_method == 'ch_qr':
-            qr_code_vals = self._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
-
-            return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1&mask=ch_cross' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
-
-        return super()._get_qr_code_url(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
-
     def _l10n_ch_get_qr_vals(self, amount, currency, debtor_partner, free_communication, structured_communication):
         comment = ""
         if free_communication:
@@ -300,6 +291,23 @@ class ResPartnerBank(models.Model):
             comment,                                              # Unstructured Message
             'EPD',                                                # Mandatory trailer part
         ]
+
+    def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        if qr_method == 'ch_qr':
+            return self._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
+        return super()._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+
+    def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        if qr_method == 'ch_qr':
+            return {
+                'barcode_type': 'QR',
+                'width': 256,
+                'height': 256,
+                'quiet': 1,
+                'mask': 'ch_cross',
+                'value': self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication),
+            }
+        return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     def _get_partner_address_lines(self, partner):
         """ Returns a tuple of two elements containing the address lines to use
