@@ -441,20 +441,6 @@ class PosSession(models.Model):
 
         self.cash_register_id.balance_end_real = counted_cash
 
-        # No need to check cash_control because it should be True at this point
-        if self.config_id.set_maximum_difference and abs(self.cash_register_difference) > self.config_id.amount_authorized_diff:
-            if not self.user_has_groups("point_of_sale.group_pos_manager"):
-                # We are not raising this as an error because we want the details to persist.
-                # It will become the starting point on next attempt to close the session.
-                return {
-                    'successful': False,
-                    'message': _(
-                        "Your ending balance is too different from the theoretical cash closing (%.2f), "
-                        "the maximum allowed is: %.2f.\n You can contact your manager to force it."
-                    ) % (self.cash_register_difference, self.config_id.amount_authorized_diff),
-                    'redirect': False
-                }
-
         return {'successful': True}
 
     def _cannot_close_session(self):
@@ -506,12 +492,17 @@ class PosSession(models.Model):
                                              sum(self.cash_register_id.line_ids.mapped('amount')),
                 'opening': self.cash_register_id.balance_start,
                 'payment_amount': total_default_cash_payment_amount,
-                'moves': cash_in_out_list
+                'moves': cash_in_out_list,
+                'id': default_cash_payment_method_id.id
             } if default_cash_payment_method_id else None,
             'other_payment_methods': [{
                 'name': pm.name,
-                'amount': sum(orders.payment_ids.filtered(lambda p: p.payment_method_id == pm).mapped('amount'))
-            } for pm in other_payment_method_ids]
+                'amount': sum(orders.payment_ids.filtered(lambda p: p.payment_method_id == pm).mapped('amount')),
+                'id': pm.id,
+                'type': pm.type,
+            } for pm in other_payment_method_ids],
+            'is_manager': self.user_has_groups("point_of_sale.group_pos_manager"),
+            'amount_authorized_diff': self.config_id.amount_authorized_diff if self.config_id.set_maximum_difference else None
         }
 
     def _create_picking_at_end_of_session(self):
