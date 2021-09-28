@@ -125,7 +125,7 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
         self.sms_template = self.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': self.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is an SMS.',
+            'body': 'Dear {{ object.display_name }} this is an SMS.',
         })
 
     @mute_logger('odoo.addons.sms.models.sms_sms')

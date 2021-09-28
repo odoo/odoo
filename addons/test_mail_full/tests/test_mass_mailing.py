@@ -68,7 +68,7 @@ class TestMassMailing(TestMailFullCommon):
                 recipient_info['email'] = recipient.email_from  # normalized is False but email should be falsymail
             else:
                 email = self._find_sent_mail_wemail(recipient.email_normalized)
-                # preview correctly integrated rendered jinja
+                # preview correctly integrated rendered qweb
                 self.assertIn(
                     'Hi %s :)' % recipient.name,
                     email['body'])

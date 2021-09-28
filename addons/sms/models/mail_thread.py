@@ -180,7 +180,7 @@ class MailThread(models.AbstractModel):
 
         :param template: a valid sms.template record;
         :param template_xmlid: XML ID of an sms.template (if no template given);
-        :param template_fallback: plaintext (jinja-enabled) in case template
+        :param template_fallback: plaintext (inline_template-enabled) in case template
           and template xml id are falsy (for example due to deleted data);
         """
         self.ensure_one()
