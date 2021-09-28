@@ -799,7 +799,7 @@ QUnit.module("Search", (hooks) => {
 
         const evaluatedDomains = [
             [["datetime", "=", "2021-09-16 22:00:00"]],
-            [["date", "=", "2020-09-17 00:00:00"]],
+            [["date", "=", "2020-09-17"]],
             [["create_date", ">", "2021-09-16"]],
             [["date_deadline", "<", "2021-09-17"]],
         ];
