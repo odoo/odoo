@@ -55,5 +55,7 @@ class AccountMoveLine(models.Model):
             # is linked to it ; we know that the invoice type tells us whether it's a refund
             return rslt
 
+        sessions_count = self.env['pos.session'].search_count([('move_id', '=', aml.move_id.id)])
         pos_orders_count = self.env['pos.order'].search_count([('account_move', '=', aml.move_id.id)])
-        return rslt or (pos_orders_count and aml.debit > 0)
+
+        return rslt or (sessions_count + pos_orders_count and aml.debit > 0)
