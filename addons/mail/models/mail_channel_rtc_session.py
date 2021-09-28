@@ -75,7 +75,7 @@ class MailRtcSession(models.Model):
             this can happen when the server or the user's browser crash
             or when the user's odoo session ends.
         """
-        rtc_sessions = self.search([('write_date', '<', fields.Datetime.now() - relativedelta(days=1))])
+        rtc_sessions = self.search([('write_date', '<', fields.Datetime.now() - relativedelta(minutes=1))])
         rtc_sessions._disconnect()
 
     def action_disconnect(self):
