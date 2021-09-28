@@ -319,6 +319,7 @@ var Dialog = Widget.extend({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
                     disabled: buttonData.disabled,
+                    'data-hotkey': buttonData.hotkey,
                 },
                 icon: buttonData.icon,
                 text: buttonData.text,

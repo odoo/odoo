@@ -9,6 +9,12 @@ var ListView = require('web.ListView');
 var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
+const core = require('web.core');
+const makeTestEnvironment = require("web.test_env");
+const { makeLegacyCommandService } = require("@web/legacy/utils");
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+const { triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { registry } = require("@web/core/registry");
 
 const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
 
@@ -1017,6 +1023,48 @@ QUnit.module('relational_fields', {
         assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
 
         form.destroy();
+    });
+
+    // TODO: Once the code base is converted with wowl, replace webclient by formview.
+    QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
+        assert.expect(3);
+
+        const legacyEnv = makeTestEnvironment({ bus: core.bus });
+        const serviceRegistry = registry.category("services");
+        serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+        const views = {
+            'partner,false,form': '<form>' +
+                    '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
+                  '</form>',
+            'partner,false,search': '<search></search>',
+        };
+        const serverData = { models: this.data, views}
+        const webClient = await createWebClient({serverData});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'partner',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
+        });
+        assert.containsOnce(webClient, ".o_field_widget")
+
+        triggerHotkey("control+k")
+        await nextTick();
+        const movestage = webClient.el.querySelectorAll(".o_command");
+        const idx = [...movestage].map(el => el.textContent).indexOf("Move to Trululu...ALT + SHIFT + X")
+        assert.ok(idx >= 0);
+
+        await click(movestage[idx])
+        await nextTick();
+        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+            "first record",
+            "second record",
+            "aaa",
+          ])
+        await click(webClient.el, "#o_command_2")
     });
 
     QUnit.module('FieldSelection');
