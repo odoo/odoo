@@ -78,8 +78,9 @@
                                 <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
                                     <td t-esc="pm.name"/>
                                     <td t-esc="env.pos.format_currency(pm.amount)"/>
-                                    <td t-if="pm.type === 'bank'" t-on-input="handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
-                                    <td t-if="pm.type === 'bank'" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
+                                    <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
+                                    <td t-if="_showDiff" t-on-input="handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
+                                    <td t-if="_showDiff" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                                 </tr>
                             </tbody>
                         </table>
