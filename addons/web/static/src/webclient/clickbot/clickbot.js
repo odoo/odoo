@@ -295,7 +295,9 @@
                     triggerClick(target, `${viewType} view switcher`);
                 }
             }, 250);
-            await waitForCondition(() => document.querySelector(`.o_${viewType}_view`) !== null);
+            await waitForCondition(() => {
+                return document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null;
+            });
             await testFilters();
         }
     }
