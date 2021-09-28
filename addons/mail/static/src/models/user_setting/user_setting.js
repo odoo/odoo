@@ -127,7 +127,9 @@ function factory(dependencies) {
         setDelayValue(value) {
             const voiceActiveDuration = parseInt(value, 10);
             this.update({ voiceActiveDuration });
-            this._saveSettings();
+            if (!this.messaging.isCurrentUserGuest) {
+                this._saveSettings();
+            }
         }
 
         /**
@@ -136,7 +138,9 @@ function factory(dependencies) {
         async setPushToTalkKey(ev) {
             const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
             this.update({ pushToTalkKey });
-            this._saveSettings();
+            if (!this.messaging.isCurrentUserGuest) {
+                this._saveSettings();
+            }
         }
 
         /**
@@ -172,7 +176,9 @@ function factory(dependencies) {
         async togglePushToTalk() {
             this.update({ usePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
-            this._saveSettings();
+            if (!this.messaging.isCurrentUserGuest) {
+                this._saveSettings();
+            }
         }
 
         toggleLayoutSettingsWindow() {
