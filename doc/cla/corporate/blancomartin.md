@@ -10,7 +10,7 @@ Signed,
 
 Daniel Blanco daniel@blancomartin.cl https://github.com/danisan
 
-Corporation name: Blanco Martin & Asociados EIRL
+Corporation name: Blanco Martin y Asociados SpA
 Corporation address: Av. Apoquindo 6410
                      Of. 212 Las Condes, (RM)
 Country: Chile
@@ -26,3 +26,4 @@ List of contributors:
 * Albert Nieriz albert@blancomartin.cl https://github.com/aln-bmya
 * Bruno Figares bruno@blancomartin.cl https://github.com/brf-bmya
 * Susana Vazquez susana@blancomartin.cl https://github.com/suv-bmya
+* Hector Aular hector@blancomartin.cl https://github.com/hea-bmya
