@@ -1,7 +1,14 @@
 /** @odoo-module **/
 
 import { BUILTINS } from "./py_builtin";
-import { PyDate, PyDateTime, PyRelativeDelta, PyTime } from "./py_date";
+import {
+    NotSupportedError,
+    PyDate,
+    PyDateTime,
+    PyRelativeDelta,
+    PyTime,
+    PyTimeDelta,
+} from "./py_date";
 import { parseArgs, PY_DICT, toPyDict } from "./py_utils";
 
 // -----------------------------------------------------------------------------
@@ -26,14 +33,17 @@ const isTrue = BUILTINS.bool;
  * @returns {any}
  */
 function applyUnaryOp(ast, context) {
-    const expr = evaluate(ast.right, context);
+    const value = evaluate(ast.right, context);
     switch (ast.op) {
         case "-":
-            return -expr;
+            if (value instanceof Object && value.negate) {
+                return value.negate();
+            }
+            return -value;
         case "+":
-            return expr;
+            return value;
         case "not":
-            return !isTrue(expr);
+            return !isTrue(value);
     }
     throw new EvaluationError(`Unknown unary operator: ${ast.op}`);
 }
@@ -57,6 +67,14 @@ function pytypeIndex(val) {
             return 4;
     }
     throw new EvaluationError(`Unknown type: ${typeof val}`);
+}
+
+/**
+ * @param {Object} obj
+ * @returns {boolean}
+ */
+function isConstructor(obj) {
+    return !!obj.prototype && !!obj.prototype.constructor.name;
 }
 
 /**
@@ -99,6 +117,9 @@ function isEqual(left, right) {
         }
         return false;
     }
+    if (left instanceof Object && left.isEqual) {
+        return left.isEqual(right);
+    }
     return left === right;
 }
 
@@ -127,13 +148,34 @@ function applyBinaryOp(ast, context) {
     const right = evaluate(ast.right, context);
     switch (ast.op) {
         case "+": {
-            const isLeftDelta = left instanceof PyRelativeDelta;
-            const isRightDelta = right instanceof PyRelativeDelta;
-            if (isLeftDelta || isRightDelta) {
-                const date = isLeftDelta ? right : left;
-                const delta = isLeftDelta ? left : right;
+            const relativeDeltaOnLeft = left instanceof PyRelativeDelta;
+            const relativeDeltaOnRight = right instanceof PyRelativeDelta;
+            if (relativeDeltaOnLeft || relativeDeltaOnRight) {
+                const date = relativeDeltaOnLeft ? right : left;
+                const delta = relativeDeltaOnLeft ? left : right;
                 return PyRelativeDelta.add(date, delta);
             }
+
+            const timeDeltaOnLeft = left instanceof PyTimeDelta;
+            const timeDeltaOnRight = right instanceof PyTimeDelta;
+            if (timeDeltaOnLeft && timeDeltaOnRight) {
+                return left.add(right);
+            }
+            if (timeDeltaOnLeft) {
+                if (right instanceof PyDate || right instanceof PyDateTime) {
+                    return right.add(left);
+                } else {
+                    throw NotSupportedError();
+                }
+            }
+            if (timeDeltaOnRight) {
+                if (left instanceof PyDate || left instanceof PyDateTime) {
+                    return left.add(right);
+                } else {
+                    throw NotSupportedError();
+                }
+            }
+
             return left + right;
         }
         case "-": {
@@ -141,15 +183,41 @@ function applyBinaryOp(ast, context) {
             if (isRightDelta) {
                 return PyRelativeDelta.substract(left, right);
             }
+
+            const timeDeltaOnRight = right instanceof PyTimeDelta;
+            if (timeDeltaOnRight) {
+                if (left instanceof PyTimeDelta) {
+                    return left.substract(right);
+                } else if (left instanceof PyDate || left instanceof PyDateTime) {
+                    return left.substract(right);
+                } else {
+                    throw NotSupportedError();
+                }
+            }
+
+            if (left instanceof PyDate) {
+                return left.substract(right);
+            }
             return left - right;
         }
         case "*":
+            const timeDeltaOnLeft = left instanceof PyTimeDelta;
+            const timeDeltaOnRight = right instanceof PyTimeDelta;
+            if (timeDeltaOnLeft || timeDeltaOnRight) {
+                const number = timeDeltaOnLeft ? right : left;
+                const delta = timeDeltaOnLeft ? left : right;
+                return delta.multiply(number); // check number type?
+            }
+
             return left * right;
         case "/":
             return left / right;
         case "%":
             return left % right;
         case "//":
+            if (left instanceof PyTimeDelta) {
+                return left.divide(right); // check number type?
+            }
             return Math.floor(left / right);
         case "**":
             return left ** right;
@@ -262,7 +330,8 @@ export function evaluate(ast, context = {}) {
                     fnValue === PyDate ||
                     fnValue === PyDateTime ||
                     fnValue === PyTime ||
-                    fnValue === PyRelativeDelta
+                    fnValue === PyRelativeDelta ||
+                    fnValue === PyTimeDelta
                 ) {
                     return fnValue.create(...args, kwargs);
                 }
@@ -285,11 +354,11 @@ export function evaluate(ast, context = {}) {
                     // this is a dictionary => need to apply dict methods
                     return DICT[ast.key](left);
                 }
-                if (left instanceof PyDate || left instanceof PyDateTime) {
-                    const result = left[ast.key];
-                    return typeof result === "function" ? result.bind(left) : result;
+                const result = left[ast.key];
+                if (typeof result === "function" && !isConstructor(result)) {
+                    return result.bind(left);
                 }
-                return left[ast.key];
+                return result;
             }
         }
         throw new EvaluationError(`AST of type ${ast.type} cannot be evaluated`);
