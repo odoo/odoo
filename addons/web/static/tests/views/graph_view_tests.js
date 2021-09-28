@@ -1735,7 +1735,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <graph type="pie">
                     <field name="product_id"/>
-                <graph/>
+                </graph>
             `,
             comparison: {
                 domains: [
@@ -1830,7 +1830,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <graph>
                     <field name="id"/>
-                <graph/>
+                </graph>
             `,
         });
         checkLabels(assert, graph, ["Total"]);
@@ -1954,7 +1954,7 @@ QUnit.module("Views", (hooks) => {
                 <field name="bar" invisible="1" string="My invisible field"/>
                 <field name="id"/>
                 <field name="fighters" string="FooFighters"/>
-            <graph/>
+            </graph>
         `;
         let propsFromArch = new GraphArchParser().parse(arch, fields);
         assert.deepEqual(propsFromArch, {
