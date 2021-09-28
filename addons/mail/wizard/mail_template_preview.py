@@ -59,7 +59,7 @@ class MailTemplatePreview(models.TransientModel):
     def _compute_mail_template_fields(self):
         """ Preview the mail template (body, subject, ...) depending of the language and
         the record reference, more precisely the record id for the defined model of the mail template.
-        If no record id is selectable/set, the jinja placeholders won't be replace in the display information. """
+        If no record id is selectable/set, the inline_template placeholders won't be replace in the display information. """
         copy_depends_values = {'lang': self.lang}
         mail_template = self.mail_template_id.with_context(lang=self.lang)
         try:

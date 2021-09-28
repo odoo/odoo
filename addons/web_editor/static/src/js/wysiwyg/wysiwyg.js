@@ -108,6 +108,7 @@ const Wysiwyg = Widget.extend({
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
+            plugins: options.editorPlugins,
         }, editorCollaborationOptions));
 
         const $wrapwrap = $('#wrapwrap');
@@ -553,6 +554,7 @@ const Wysiwyg = Widget.extend({
         $editable.find('[data-original-title=""]').removeAttr('data-original-title');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
+        this.odooEditor.cleanForSave($editable[0]);
         return $editable.html();
     },
     /**
@@ -685,6 +687,7 @@ const Wysiwyg = Widget.extend({
      */
     setValue: function (value) {
         this.$editable.html(value);
+        this.odooEditor.sanitize();
     },
     /**
      * Undo one step of change in the editor.

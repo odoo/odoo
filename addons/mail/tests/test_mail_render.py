@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
@@ -28,38 +30,26 @@ class TestMailRender(common.MailCommon):
         })
 
         # some jinja templates
-        cls.base_jinja_bits = [
+        cls.base_inline_template_bits = [
             '<p>Hello</p>',
-            '<p>Hello ${object.name}</p>',
+            '<p>Hello {{ object.name }}</p>',
             """<p>
-% set english = object.lang == 'en_US'
-% if english
-    <span>English Speaker</span>
-% else
-    <span>Other Speaker</span>
-% endif
+    {{ '<span>English Speaker</span>' if object.lang == 'en_US' else '<span>Other Speaker</span>' }}
 </p>""",
             """
-            <p>${13 + 13}</p>
+            <p>{{ 13 + 13 }}</p>
             <h1>This is a test</h1>
             """,
             """
             <b>Test</b>
-            % if False:
-                <b>Code not executed</b>
-            % endif
+            {{ '' if True else '<b>Code not executed</b>' }}
             """,
         ]
-        cls.base_jinja_bits_fr = [
+        cls.base_inline_template_bits_fr = [
             '<p>Bonjour</p>',
-            '<p>Bonjour ${object.name}</p>',
+            '<p>Bonjour {{ object.name }}</p>',
             """<p>
-% set english = object.lang == 'en_US'
-% if english
-    <span>Narrateur Anglais</span>
-% else
-    <span>Autre Narrateur</span>
-% endif
+    {{ '<span>Narrateur Anglais</span>' if object.lang == 'en_US' else '<span>Autre Narrateur</span>' }}
 </p>"""
         ]
 
@@ -70,6 +60,14 @@ class TestMailRender(common.MailCommon):
             """<p>
     <span t-if="object.lang == 'en_US'">English Speaker</span>
     <span t-else="">Other Speaker</span>
+</p>"""
+        ]
+        cls.base_qweb_bits_fr = [
+            '<p>Bonjour</p>',
+            '<p>Bonjour <t t-esc="object.name"/></p>',
+            """<p>
+    <span t-if="object.lang == 'en_US'">Narrateur Anglais</span>
+    <span t-else="">Autre Narrateur</span>
 </p>"""
         ]
         cls.base_qweb_templates = cls.env['ir.ui.view'].create([
@@ -105,12 +103,12 @@ class TestMailRender(common.MailCommon):
         ]
 
         # link to mail template
-        cls.test_template_jinja = cls.env['mail.template'].create({
+        cls.test_template = cls.env['mail.template'].create({
             'name': 'Test Template',
-            'subject': cls.base_jinja_bits[0],
-            'body_html': cls.base_jinja_bits[1],
+            'subject': cls.base_inline_template_bits[0],
+            'body_html': cls.base_qweb_bits[1],
             'model_id': cls.env['ir.model']._get('res.partner').id,
-            'lang': '${object.lang}'
+            'lang': '{{ object.lang }}'
         })
 
         # some translations
@@ -118,23 +116,23 @@ class TestMailRender(common.MailCommon):
             'type': 'model',
             'name': 'mail.template,subject',
             'lang': 'fr_FR',
-            'res_id': cls.test_template_jinja.id,
-            'src': cls.test_template_jinja.subject,
-            'value': cls.base_jinja_bits_fr[0],
+            'res_id': cls.test_template.id,
+            'src': cls.test_template.subject,
+            'value': cls.base_qweb_bits_fr[0],
         })
         cls.env['ir.translation'].create({
             'type': 'model',
             'name': 'mail.template,body_html',
             'lang': 'fr_FR',
-            'res_id': cls.test_template_jinja.id,
-            'src': cls.test_template_jinja.body_html,
-            'value': cls.base_jinja_bits_fr[1],
+            'res_id': cls.test_template.id,
+            'src': cls.test_template.body_html,
+            'value': cls.base_qweb_bits_fr[1],
         })
         cls.env['ir.model.data'].create({
             'name': 'test_template_xmlid',
             'module': 'mail',
-            'model': cls.test_template_jinja._name,
-            'res_id': cls.test_template_jinja.id,
+            'model': cls.test_template._name,
+            'res_id': cls.test_template.id,
         })
 
         # Enable group-based template management
@@ -145,7 +143,7 @@ class TestMailRender(common.MailCommon):
             cls.env, login='user_rendering_restricted',
             groups='base.group_user',
             company_id=cls.company_admin.id,
-            name='Jinja Restricted User',
+            name='Code Template Restricted User',
             notification_type='inbox',
             signature='--\nErnest'
         )
@@ -162,9 +160,9 @@ class TestMailRender(common.MailCommon):
             'custom_value': 'Custom Render Value'
         }
         srces = [
-            '<b>I am ${user.name}</b>',
-            '<span>Datetime is ${format_datetime(datetime.datetime(2021, 6, 1), dt_format="MM - d - YYY")}</span>',
-            '<span>Context ${ctx.get("custom_ctx")}, value ${custom_value}</span>',
+            '<b>I am {{ user.name }}</b>',
+            '<span>Datetime is {{ format_datetime(datetime.datetime(2021, 6, 1), dt_format="MM - d - YYY") }}</span>',
+            '<span>Context {{ ctx.get("custom_ctx") }}, value {{ custom_value }}</span>',
         ]
         results = [
             '<b>I am %s</b>' % self.env.user.name,
@@ -172,7 +170,7 @@ class TestMailRender(common.MailCommon):
             '<span>Context Custom Context Value, value Custom Render Value</span>'
         ]
         for src, expected in zip(srces, results):
-            for engine in ['jinja']:
+            for engine in ['inline_template']:
                 result = MailRenderMixin.with_context(**custom_ctx)._render_template(
                     src, partner._name, partner.ids,
                     engine=engine, add_context=add_context
@@ -180,8 +178,8 @@ class TestMailRender(common.MailCommon):
                 self.assertEqual(expected, result)
 
     @users('employee')
-    def test_render_mail_template_jinja(self):
-        template = self.env['mail.template'].browse(self.test_template_jinja.ids)
+    def test_render_field(self):
+        template = self.env['mail.template'].browse(self.test_template.ids)
         partner = self.env['res.partner'].browse(self.render_object.ids)
         for fname, expected in zip(['subject', 'body_html'], self.base_rendered):
             rendered = template._render_field(
@@ -201,14 +199,26 @@ class TestMailRender(common.MailCommon):
             self.assertEqual(rendered, expected)
 
     @users('employee')
-    def test_render_template_jinja(self):
+    def test_render_template_inline_template(self):
         partner = self.env['res.partner'].browse(self.render_object.ids)
-        for source, expected in zip(self.base_jinja_bits, self.base_rendered):
+        for source, expected in zip(self.base_inline_template_bits, self.base_rendered):
             rendered = self.env['mail.render.mixin']._render_template(
                 source,
                 partner._name,
                 partner.ids,
-                engine='jinja',
+                engine='inline_template',
+            )[partner.id]
+            self.assertEqual(rendered, expected)
+
+    @users('employee')
+    def test_render_template_qweb(self):
+        partner = self.env['res.partner'].browse(self.render_object.ids)
+        for source, expected in zip(self.base_qweb_bits, self.base_rendered):
+            rendered = self.env['mail.render.mixin']._render_template(
+                source,
+                partner._name,
+                partner.ids,
+                engine='qweb',
             )[partner.id]
             self.assertEqual(rendered, expected)
 
@@ -228,9 +238,9 @@ class TestMailRender(common.MailCommon):
     def test_template_rendering_impersonate(self):
         """ Test that the use of SUDO do not change the current user. """
         partner = self.env['res.partner'].browse(self.render_object.ids)
-        src = '${user.name} - ${object.name}'
+        src = '{{ user.name }} - {{ object.name }}'
         expected = '%s - %s' % (self.env.user.name, partner.name)
-        result = self.env['mail.render.mixin'].sudo()._render_template_jinja(
+        result = self.env['mail.render.mixin'].sudo()._render_template_inline_template(
             src, partner._name, partner.ids
         )[partner.id]
         self.assertIn(expected, result)
@@ -255,20 +265,20 @@ class TestMailRender(common.MailCommon):
         cust_function.call = False
 
         src = """<h1>This is a test</h1>
-<p>${cust_function()}</p>"""
+<p>{{ cust_function() }}</p>"""
         expected = """<h1>This is a test</h1>
 <p>return value</p>"""
         context = {'cust_function': cust_function}
 
-        result = self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_jinja(
+        result = self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_inline_template(
             src, partner._name, partner.ids,
             add_context=context
         )[partner.id]
         self.assertEqual(expected, result)
         self.assertTrue(cust_function.call)
 
-        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
-            MailRenderMixin._render_template_jinja(src, model, res_ids, add_context=context)
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render dynamic code'):
+            MailRenderMixin._render_template_inline_template(src, model, res_ids, add_context=context)
 
     @users('user_rendering_restricted')
     def test_template_render_static(self):
@@ -277,22 +287,22 @@ class TestMailRender(common.MailCommon):
         res_ids = self.env[model].search([], limit=1).ids
         MailRenderMixin = self.env['mail.render.mixin']
 
-        result = MailRenderMixin._render_template_jinja(self.base_jinja_bits[0], model, res_ids)[res_ids[0]]
-        self.assertEqual(result, self.base_jinja_bits[0])
+        result = MailRenderMixin._render_template_inline_template(self.base_inline_template_bits[0], model, res_ids)[res_ids[0]]
+        self.assertEqual(result, self.base_inline_template_bits[0])
 
     @users('user_rendering_restricted')
     def test_template_rendering_restricted(self):
         """Test if we correctly detect static template."""
         res_ids = self.env['res.partner'].search([], limit=1).ids
-        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
-            self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[3], 'res.partner', res_ids)
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render dynamic code'):
+            self.env['mail.render.mixin']._render_template_inline_template(self.base_inline_template_bits[3], 'res.partner', res_ids)
 
     @users('employee')
     def test_template_rendering_unrestricted(self):
         """Test if we correctly detect static template."""
         res_ids = self.env['res.partner'].search([], limit=1).ids
-        result = self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[3], 'res.partner', res_ids)[res_ids[0]]
-        self.assertIn('26', result, 'Template Editor should be able to render Jinja code')
+        result = self.env['mail.render.mixin']._render_template_inline_template(self.base_inline_template_bits[3], 'res.partner', res_ids)[res_ids[0]]
+        self.assertIn('26', result, 'Template Editor should be able to render inline_template code')
 
     @users('employee')
     def test_template_rendering_various(self):
@@ -303,25 +313,25 @@ class TestMailRender(common.MailCommon):
         # static string
         src = 'This is a string'
         expected = 'This is a string'
-        for engine in ['jinja']:
+        for engine in ['inline_template']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
             self.assertEqual(expected, result)
 
         # code string
-        src = 'This is a string with a number ${13+13}'
+        src = 'This is a string with a number {{ 13+13 }}'
         expected = 'This is a string with a number 26'
-        for engine in ['jinja']:
+        for engine in ['inline_template']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
             self.assertEqual(expected, result)
 
         # block string
-        src = "This is a string with a block ${'hidden' if False else 'displayed'}"
+        src = "This is a string with a block {{ 'hidden' if False else 'displayed' }}"
         expected = 'This is a string with a block displayed'
-        for engine in ['jinja']:
+        for engine in ['inline_template']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
@@ -330,62 +340,109 @@ class TestMailRender(common.MailCommon):
         # static xml
         src = '<p class="text-muted"><span>This is a string</span></p>'
         expected = '<p class="text-muted"><span>This is a string</span></p>'
-        for engine in ['jinja', 'qweb']:
+        for engine in ['inline_template', 'qweb']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result if engine == 'jinja' else result)  # tde: checkme
+            self.assertEqual(expected, result)  # tde: checkme
 
         # code xml
         srces = [
-            '<p class="text-muted"><span>This is a string with a number ${13+13}</span></p>',
+            '<p class="text-muted"><span>This is a string with a number {{ 13+13 }}</span></p>',
             '<p class="text-muted"><span>This is a string with a number <t t-out="13+13"/></span></p>',
         ]
         expected = '<p class="text-muted"><span>This is a string with a number 26</span></p>'
-        for engine, src in zip(['jinja', 'qweb'], srces):
+        for engine, src in zip(['inline_template', 'qweb'], srces):
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result if engine == 'jinja' else result)  # tde: checkme
-
-        # condition block xml
-        src = """<b>Test</b>
-% if False:
-    <b>Code not executed</b>
-% endif"""
-        expected = "<b>Test</b>\n"  # TDE: to check
-        for engine in ['jinja']:
-            result = MailRenderMixin._render_template(
-                src, partner._name, partner.ids, engine=engine,
-            )[partner.id]
-            self.assertEqual(expected, result)
-
-        # complete block xml
+            self.assertEqual(expected, str(result))
         src = """<p>
-% set line_statement_variable = 3
-<span>We have ${line_statement_variable} cookies in stock</span>
-<span>We have <% set block_variable = 4 %>${block_variable} cookies in stock</span>
+<t t-set="line_statement_variable" t-value="3" />
+<span>We have <t t-out="line_statement_variable" /> cookies in stock</span>
+<span>We have <t t-set="block_variable" t-value="4" /><t t-out="block_variable" /> cookies in stock</span>
 </p>"""
         expected = """<p>
 <span>We have 3 cookies in stock</span>
 <span>We have 4 cookies in stock</span>
 </p>"""
-        for engine in ['jinja']:
+        for engine in ['qweb']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
             self.assertEqual(result, expected)
 
     @users('user_rendering_restricted')
-    def test_is_jinja_template_condition_block_restricted(self):
+    def test_security_inline_template_restricted(self):
         """Test if we correctly detect condition block (which might contains code)."""
         res_ids = self.env['res.partner'].search([], limit=1).ids
-        with self.assertRaises(AccessError, msg='Simple user should not be able to render Jinja code'):
-            self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[4], 'res.partner', res_ids)
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render dynamic code'):
+            self.env['mail.render.mixin']._render_template_inline_template(self.base_inline_template_bits[4], 'res.partner', res_ids)
 
     @users('employee')
-    def test_is_jinja_template_condition_block_unrestricted(self):
+    def test_is_inline_template_condition_block_unrestricted(self):
         """Test if we correctly detect condition block (which might contains code)."""
         res_ids = self.env['res.partner'].search([], limit=1).ids
-        result = self.env['mail.render.mixin']._render_template_jinja(self.base_jinja_bits[4], 'res.partner', res_ids)[res_ids[0]]
+        result = self.env['mail.render.mixin']._render_template_inline_template(self.base_inline_template_bits[4], 'res.partner', res_ids)[res_ids[0]]
         self.assertNotIn('Code not executed', result, 'The condition block did not work')
+
+    @users('user_rendering_restricted')
+    def test_security_qweb_template_restricted(self):
+        """Test if we correctly detect condition block (which might contains code)."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render qweb code'):
+            self.env['mail.render.mixin']._render_template_qweb(self.base_qweb_bits[1], 'res.partner', res_ids)
+
+    @users('user_rendering_restricted')
+    def test_security_qweb_template_restricted_cached(self):
+        """Test if we correctly detect condition block (which might contains code)."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+
+        # Render with the admin first to fill the cache
+        self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_qweb(
+            self.base_qweb_bits[1], 'res.partner', res_ids)
+
+        # Check that it raise even when rendered previously by an admin
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render qweb code'):
+            self.env['mail.render.mixin']._render_template_qweb(
+                self.base_qweb_bits[1], 'res.partner', res_ids)
+
+    @users('employee')
+    def test_security_qweb_template_unrestricted(self):
+        """Test if we correctly detect condition block (which might contains code)."""
+        res_ids = self.env['res.partner'].search([], limit=1).ids
+        result = self.env['mail.render.mixin']._render_template_qweb(self.base_qweb_bits[1], 'res.partner', res_ids)[res_ids[0]]
+        self.assertNotIn('Code not executed', result, 'The condition block did not work')
+
+    @users('user_rendering_restricted')
+    def test_template_rendering_static_inline_template(self):
+        model = 'res.partner'
+        res_ids = self.env[model].search([], limit=1).ids
+        partner = self.env[model].browse(res_ids)
+
+        src = """<h1>This is a static template</h1>"""
+
+        result = self.env['mail.render.mixin']._render_template_inline_template(
+            src, model, res_ids)[partner.id]
+        self.assertEqual(src, str(result))
+
+    @users('user_rendering_restricted')
+    def test_template_rendering_static_qweb(self):
+        model = 'res.partner'
+        res_ids = self.env[model].search([], limit=1).ids
+        partner = self.env[model].browse(res_ids)
+
+        src = """<h1>This is a static template</h1>"""
+
+        result = self.env['mail.render.mixin']._render_template_qweb(src, model, res_ids)[
+            partner.id]
+        self.assertEqual(src, str(result))
+
+    @users('employee')
+    def test_prepend_preview_inline_template_to_qweb(self):
+        body = 'body'
+        preview = 'foo{{"false" if 1 > 2 else "true"}}bar'
+        result = self.env['mail.render.mixin']._prepend_preview(Markup(body), preview)
+        self.assertEqual(result, '''<div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+                    foo<t t-out="&#34;false&#34; if 1 &gt; 2 else &#34;true&#34;"/>bar
+                </div>body''')

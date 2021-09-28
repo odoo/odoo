@@ -34,9 +34,9 @@ class TestMassMailing(models.TransientModel):
         record = self.env[mailing.mailing_model_real].search([], limit=1)
 
         # If there is atleast 1 record for the model used in this mailing, then we use this one to render the template
-        # Downside: Jinja syntax is only tested when there is atleast one record of the mailing's model
+        # Downside: Qweb syntax is only tested when there is atleast one record of the mailing's model
         if record:
-            # Returns a proper error if there is a syntax error with jinja
+            # Returns a proper error if there is a syntax error with Qweb
             body = mailing._render_field('body_html', record.ids, post_process=True)[record.id]
             preview = mailing._render_field('preview', record.ids, post_process=True)[record.id]
             full_body = mailing._prepend_preview(body, preview)

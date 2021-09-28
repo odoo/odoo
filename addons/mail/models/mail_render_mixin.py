@@ -11,12 +11,12 @@ from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
+from odoo.addons.base.models.qweb import QWebCodeFound
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import is_html_empty, safe_eval
-from odoo.tools.jinja import jinja_safe_template_env, jinja_template_env, template_env_globals
+from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
 
 _logger = logging.getLogger(__name__)
-
 
 def format_date(env, date, pattern=False, lang_code=False):
     try:
@@ -37,7 +37,6 @@ def format_time(env, time, tz=False, time_format='medium', lang_code=False):
     except babel.core.UnknownLocaleError:
         return time
 
-
 class MailRenderMixin(models.AbstractModel):
     _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
@@ -51,7 +50,7 @@ class MailRenderMixin(models.AbstractModel):
         'Language',
         help="Optional translation language (ISO code) to select when sending out an email. "
              "If not set, the english version will be used. This should usually be a placeholder expression "
-             "that provides the appropriate language, e.g. ${object.partner_id.lang}.")
+             "that provides the appropriate language, e.g. {{ object.partner_id.lang }}.")
     # rendering context
     render_model = fields.Char("Rendering Model", compute='_compute_render_model', store=False)
     # expression builder
@@ -112,12 +111,12 @@ class MailRenderMixin(models.AbstractModel):
         :return: final placeholder expression """
         expression = ''
         if field_name:
-            expression = "${object." + field_name
+            expression = "{{ object." + field_name
             if sub_field_name:
                 expression += "." + sub_field_name
             if null_value:
                 expression += " or '''%s'''" % null_value
-            expression += "}"
+            expression += " }}"
         return expression
 
     # ------------------------------------------------------------
@@ -203,28 +202,29 @@ class MailRenderMixin(models.AbstractModel):
         if preview:
             preview = preview.strip()
 
+        preview_markup = convert_inline_template_to_qweb(preview)
+
         if preview:
             html_preview = Markup("""
                 <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
-                   {}
+                    {}
                 </div>
-            """).format(preview)
+            """).format(preview_markup)
             return tools.prepend_html_content(html, html_preview)
         return html
-
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
 
     @api.model
-    def _get_common_eval_context(self):
+    def _render_eval_context(self):
         """ Evaluation context used in all rendering engines. Contains
 
           * ``user``: current user browse record;
           * ``ctx```: current context;
           * various formatting tools;
         """
-        return {
+        render_context = {
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
@@ -234,12 +234,6 @@ class MailRenderMixin(models.AbstractModel):
             'ctx': self._context,
             'is_html_empty': is_html_empty,
         }
-
-    @api.model
-    def _render_qweb_eval_context(self):
-        """ Prepare qweb evaluation context, containing common context with
-        some specific values for Qweb. """
-        render_context = self._get_common_eval_context()
         render_context.update(copy.copy(template_env_globals))
         return render_context
 
@@ -254,7 +248,7 @@ class MailRenderMixin(models.AbstractModel):
 
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
-          by ``MailRenderMixin._render_qweb_eval_context()``;
+          by ``MailRenderMixin._render_eval_context()``;
         :param dict options: options for rendering (not used currently);
 
         :return dict: {res_id: string of rendered template based on record}
@@ -262,16 +256,26 @@ class MailRenderMixin(models.AbstractModel):
         :notice: Experimental. Use at your own risks only.
         """
         results = dict.fromkeys(res_ids, u"")
+        if not template_src:
+            return results
 
         # prepare template variables
-        variables = self._render_qweb_eval_context()
+        variables = self._render_eval_context()
         if add_context:
             variables.update(**add_context)
+
+        is_restricted = not self._unrestricted_rendering and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = self.env['ir.qweb']._render(html.fragment_fromstring(template_src), variables)
+                render_result = self.env['ir.qweb']._render(html.fragment_fromstring(
+                    template_src, create_parent='div'), variables, raise_on_code=is_restricted)
+                # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
+                render_result = render_result[5:-6]
+            except QWebCodeFound:
+                group = self.env.ref('mail.group_mail_template_editor')
+                raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
             except Exception as e:
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
                 raise UserError(_("Failed to render QWeb template : %s)", e))
@@ -295,7 +299,7 @@ class MailRenderMixin(models.AbstractModel):
 
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
-          by ``MailRenderMixin._render_qweb_eval_context()``;
+          by ``MailRenderMixin._render_eval_context()``;
         :param dict options: options for rendering (not used currently);
 
         :return dict: {res_id: string of rendered template based on record}
@@ -310,7 +314,7 @@ class MailRenderMixin(models.AbstractModel):
             return results
 
         # prepare template variables
-        variables = self._render_qweb_eval_context()
+        variables = self._render_eval_context()
         if add_context:
             variables.update(**add_context)
         safe_eval.check_values(variables)
@@ -329,14 +333,10 @@ class MailRenderMixin(models.AbstractModel):
         return results
 
     @api.model
-    def _render_jinja_eval_context(self):
-        return self._get_common_eval_context()
-
-    @api.model
-    def _render_template_jinja(self, template_txt, model, res_ids,
-                               add_context=None, options=None):
+    def _render_template_inline_template(self, template_txt, model, res_ids,
+                                         add_context=None, options=None):
         """ Render a string-based template on records given by a model and a list
-        of IDs, using jinja.
+        of IDs, using inline_template.
 
         In addition to the generic evaluation context available, some other
         variables are added:
@@ -348,7 +348,7 @@ class MailRenderMixin(models.AbstractModel):
 
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
-          by ``MailRenderMixin._render_jinja_eval_context()``;
+          by ``MailRenderMixin._render_inline_template_eval_context()``;
         :param dict options: options for rendering;
 
         :return dict: {res_id: string of rendered template based on record}
@@ -357,53 +357,39 @@ class MailRenderMixin(models.AbstractModel):
         if any(r is None for r in res_ids):
             raise ValueError(_('Template rendering should be called on a valid record IDs.'))
 
-        # TDE note: support 'safe' context key as backward compatibility for 6dde919bb9850912f618b561cd2141bffe41340c
-        if options is None:
-            options = {}
-        no_autoescape = options.get('render_safe') or self._context.get('safe')
-
         results = dict.fromkeys(res_ids, u"")
         if not template_txt:
             return results
 
-        # try to load the template
-        try:
-            jinja_env = jinja_safe_template_env if no_autoescape else jinja_template_env
-            template = jinja_env.from_string(tools.ustr(template_txt))
-        except Exception:
-            _logger.info("Failed to load template %r", template_txt, exc_info=True)
-            return results
+        template_instructions = parse_inline_template(str(template_txt))
+        is_dynamic = len(template_instructions) > 1 or template_instructions[0][1]
 
-        if (not self._unrestricted_rendering and template.is_dynamic and not self.env.is_admin() and
+        if (not self._unrestricted_rendering and is_dynamic and not self.env.is_admin() and
            not self.env.user.has_group('mail.group_mail_template_editor')):
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
 
-        if not template.is_dynamic:
+        if not is_dynamic:
             # Either the content is a raw text without placeholders, either we fail to
             # detect placeholders code. In both case we skip the rendering and return
             # the raw content, so even if we failed to detect dynamic code,
             # non "mail_template_editor" users will not gain rendering tools available
             # only for template specific group users
-            return {record_id: template_txt for record_id in res_ids}
+            return {record_id: template_instructions[0][0] for record_id in res_ids}
 
         # prepare template variables
-        variables = self._render_jinja_eval_context()
+        variables = self._render_eval_context()
         if add_context:
             variables.update(**add_context)
-        safe_eval.check_values(variables)
-
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
+
             try:
-                render_result = template.render(variables)
+                results[record.id] = render_inline_template(template_instructions, variables)
             except Exception as e:
-                _logger.info("Failed to render template : %s", e, exc_info=True)
-                raise UserError(_("Failed to render template : %s", e))
-            if render_result == u"False":
-                render_result = u""
-            results[record.id] = Markup(render_result)
+                _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
+                raise UserError(_("Failed to render inline_template template : %s)", e))
 
         return results
 
@@ -422,18 +408,18 @@ class MailRenderMixin(models.AbstractModel):
         return rendered
 
     @api.model
-    def _render_template(self, template_src, model, res_ids, engine='jinja',
+    def _render_template(self, template_src, model, res_ids, engine='inline_template',
                          add_context=None, options=None, post_process=False):
         """ Render the given string on records designed by model / res_ids using
-        the given rendering engine. Currently only jinja or qweb are supported.
+        the given rendering engine. Possible engine are small_web, qweb, or
+        qweb_view.
 
-        :param str template_src: template text to render (jinja) or xml id of
-          view (qweb);
+        :param str template_src: template text to render or xml id of a qweb view;
         :param str model: model name of records on which we want to perform
           rendering (aka 'crm.lead');
         :param list res_ids: list of ids of records. All should belong to the
           Odoo model given by model;
-        :param string engine: jinja or qweb_view;
+        :param string engine: inline_template, qweb or qweb_view;
 
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
@@ -446,8 +432,8 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
-        if engine not in ('jinja', 'qweb', 'qweb_view'):
-            raise ValueError(_('Template rendering supports only raw jinja or qweb (view or raw).'))
+        if engine not in ('inline_template', 'qweb', 'qweb_view'):
+            raise ValueError(_('Template rendering supports only inline_template, qweb, or qweb_view (view or raw).'))
 
         if engine == 'qweb_view':
             rendered = self._render_template_qweb_view(template_src, model, res_ids,
@@ -456,21 +442,21 @@ class MailRenderMixin(models.AbstractModel):
             rendered = self._render_template_qweb(template_src, model, res_ids,
                                                   add_context=add_context, options=options)
         else:
-            rendered = self._render_template_jinja(template_src, model, res_ids,
-                                                   add_context=add_context, options=options)
+            rendered = self._render_template_inline_template(template_src, model, res_ids,
+                                                             add_context=add_context, options=options)
         if post_process:
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
 
-    def _render_lang(self, res_ids, engine='jinja'):
+    def _render_lang(self, res_ids, engine='inline_template'):
         """ Given some record ids, return the lang for each record based on
         lang field of template or through specific context-based key. Lang is
         computed by performing a rendering on res_ids, based on self.render_model.
 
         :param list res_ids: list of ids of records. All should belong to the
           Odoo model given by model;
-        :param string engine: jinja or qweb_view;
+        :param string engine: inline_template or qweb_view;
 
         :return dict: {res_id: lang code (i.e. en_US)}
         """
@@ -484,13 +470,13 @@ class MailRenderMixin(models.AbstractModel):
             for res_id, lang in rendered_langs.items()
         )
 
-    def _classify_per_lang(self, res_ids, engine='jinja'):
+    def _classify_per_lang(self, res_ids, engine='inline_template'):
         """ Given some record ids, return for computed each lang a contextualized
         template and its subset of res_ids.
 
         :param list res_ids: list of ids of records (all belonging to same model
           defined by self.render_model)
-        :param string engine: jinja or qweb_view;
+        :param string engine: inline_template, qweb, or qweb_view;
 
         :return dict: {lang: (template with lang=lang_code if specific lang computed
           or template, res_ids targeted by that language}
@@ -509,7 +495,7 @@ class MailRenderMixin(models.AbstractModel):
             for lang, lang_res_ids in lang_to_res_ids.items()
         )
 
-    def _render_field(self, field, res_ids, engine='jinja',
+    def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
                       add_context=None, options=None, post_process=False):
         """ Given some record ids, render a template located on field on all
@@ -520,7 +506,7 @@ class MailRenderMixin(models.AbstractModel):
         :param field: a field name existing on self;
         :param list res_ids: list of ids of records (all belonging to same model
           defined by ``self.render_model``)
-        :param string engine: jinja or qweb_view;
+        :param string engine: inline_template, qweb, or qweb_view;
 
         :param boolean compute_lang: compute language to render on translated
           version of the template instead of default (probably english) one.

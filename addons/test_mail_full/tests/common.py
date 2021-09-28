@@ -19,7 +19,7 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
             'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'mailing_type': 'sms',
             'mailing_domain': '%s' % repr([('name', 'ilike', 'SMSTest')]),
-            'body_plaintext': 'Dear ${object.display_name} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/${object.id}',
+            'body_plaintext': 'Dear {{ object.display_name }} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/{{ object.id }}',
             'sms_force_send': True,
             'sms_allow_unsubscribe': True,
         })

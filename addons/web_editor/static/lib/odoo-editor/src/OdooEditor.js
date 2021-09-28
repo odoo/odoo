@@ -153,6 +153,7 @@ export class OdooEditor extends EventTarget {
                 isRootEditable: true,
                 placeholder: false,
                 defaultLinkAttributes: {},
+                plugins: [],
                 getContentEditableAreas: () => [],
                 getPowerboxElement: () => {
                     const selection = document.getSelection();
@@ -201,6 +202,12 @@ export class OdooEditor extends EventTarget {
         // Map that from an node id to the dom node.
         this._idToNodeMap = new Map();
 
+        // Instanciate plugins.
+        this._plugins = [];
+        for (const plugin of this.options.plugins) {
+            this._pluginAdd(plugin);
+        }
+
         // -------------------
         // Alter the editable
         // -------------------
@@ -229,6 +236,8 @@ export class OdooEditor extends EventTarget {
         this.idSet(editable);
         this._historyStepsActive = true;
         this.historyReset();
+
+        this._pluginCall('sanitizeElement', [editable]);
 
         this._createCommandBar();
 
@@ -329,6 +338,7 @@ export class OdooEditor extends EventTarget {
         this._collabSelectionsContainer.remove();
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
+        this._pluginCall('destroy', []);
     }
 
     sanitize() {
@@ -347,6 +357,7 @@ export class OdooEditor extends EventTarget {
 
         // sanitize and mark current position as sanitized
         sanitize(commonAncestor);
+        this._pluginCall('sanitizeElement', [commonAncestor]);
     }
 
     addDomListener(element, eventName, callback) {
@@ -408,9 +419,11 @@ export class OdooEditor extends EventTarget {
     }
     observerUnactive(label) {
         this._observerUnactiveLabels.add(label);
-        clearTimeout(this.observerTimeout);
-        this.observer.disconnect();
-        this.observerFlush();
+        if (this.observer) {
+            clearTimeout(this.observerTimeout);
+            this.observer.disconnect();
+            this.observerFlush();
+        }
     }
     observerFlush() {
         this.observerApply(this.observer.takeRecords());
@@ -2237,7 +2250,11 @@ export class OdooEditor extends EventTarget {
             hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
             hint.removeAttribute('placeholder');
         }
+        this.cleanForSave();
         this.observerActive();
+    }
+    cleanForSave(element = this.editable) {
+        this._pluginCall('cleanForSave', [element]);
     }
     /**
      * Handle the hint preview for the commandbar.
@@ -2814,6 +2831,16 @@ export class OdooEditor extends EventTarget {
                 fixedSelection.focusOffset,
                 false,
             );
+        }
+    }
+    _pluginAdd(Plugin) {
+        this._plugins.push(new Plugin(this));
+    }
+    _pluginCall(method, args) {
+        for (const plugin of this._plugins) {
+            if (plugin[method]) {
+                plugin[method](...args);
+            }
         }
     }
 }

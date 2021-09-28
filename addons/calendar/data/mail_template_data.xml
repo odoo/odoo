@@ -4,392 +4,393 @@
         <record id="calendar_template_meeting_invitation" model="mail.template">
             <field name="name">Calendar: Meeting Invitation</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
-            <field name="subject">Invitation to ${object.event_id.name}</field>
-            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
-            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
-            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">Invitation to {{ object.event_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
-    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
-    % set customer = object.event_id.find_partner_customer()
-    % set target_responsible = object.partner_id == object.event_id.partner_id
-    % set target_customer = object.partner_id == customer
+    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
+    <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
+    <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
+    <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
+    <t t-set="target_customer" t-value="object.partner_id == customer"/>
+
     <p>
-        Hello ${object.common_name},<br/><br/>
+        Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
 
-        % if is_online and target_customer:
-        Your appointment <strong>${object.event_id.appointment_type_id.name}</strong> with ${object.event_id.user_id.name} has been booked.
+        <t t-if="is_online and target_customer">
+            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> with <t t-out="object.event_id.user_id.name or ''">Ready Mat</t> has been booked.
+        </t>
+        <t t-elif="is_online and target_responsible">
+            <t t-if="customer">
+                <t t-out="customer.name or ''"></t> scheduled the following appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> with you.
+            </t>
+            <t t-else="">
+                Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> has been booked.
+            </t>
+        </t>
+        <t t-elif="not target_responsible">
+            <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> invited you for the <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> meeting.
+        </t>
+        <t t-else="">
+            Your meeting <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> has been booked.
+        </t>
 
-        % elif is_online and target_responsible:
-        % if customer
-        ${customer.name} scheduled the following appointment <strong>${object.event_id.appointment_type_id.name}</strong> with you.
-        % else
-        Your appointment <strong>${object.event_id.appointment_type_id.name}</strong> has been booked.
-        % endif
-
-        % elif not target_responsible:
-        ${object.event_id.user_id.partner_id.name} invited you for the <strong>${object.event_id.name}</strong> meeting.
-
-        % else:
-        Your meeting <strong>${object.event_id.name}</strong> has been booked.
-        % endif
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        % if not is_online or object.state != 'accepted':
-        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
-            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-            Accept</a>
-        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
-            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-            Decline</a>
-        % endif
-        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
-            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-            ${'Reschedule' if is_online and target_customer else 'View'}
-        </a>
+        <t t-if="not is_online or object.state != 'accepted'">
+            <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                Accept</a>
+            <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                Decline</a>
+        </t>
+        <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+            style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"
+            ><t t-out="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang)}
+                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                ${str(object.event_id.start.day)}
+                <t t-out="str(object.event_id.start.day) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang)}
+                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
             </div>
             <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
-                % if not object.event_id.allday
+                <t t-if="not object.event_id.allday">
                     <div>
-                        ${format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang)}
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
                     </div>
-                    % if object.mail_tz
-                    <div style="font-size: 10px; font-weight: normal">
-                        (${object.mail_tz})
-                    </div>
-                    % endif
-                %endif
+                    <t t-if="object.mail_tz">
+                        <div style="font-size: 10px; font-weight: normal">
+                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                        </div>
+                    </t>
+                </t>
             </div>
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
-                % if is_online:
-                    <li>Appointment Type: ${object.event_id.appointment_type_id.name}</li>
-                % endif
-                % if object.event_id.location:
-                    <li>Location: ${object.event_id.location}
-                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                <t t-if="is_online">
+                    <li>Appointment Type: <t t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</t></li>
+                </t>
+                <t t-if="object.event_id.location">
+                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
+                        (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">View Map</a>)
                     </li>
-                % endif
-                % if recurrent:
-                    <li>When: ${object.recurrence_id.name}</li>
-                % endif
-                % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
-                % endif
+                </t>
+                <t t-if="recurrent">
+                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                </t>
+                <t t-if="not object.event_id.allday and object.event_id.duration">
+                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
+                </t>
                 <li>Attendees
                 <ul>
-                % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};"> </div>
-                        % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
-                        % else:
+                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
+                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
+                        <t t-if="attendee.common_name != object.common_name">
+                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+                        </t>
+                        <t t-else="">
                             <span style="margin-left:5px">You</span>
-                        % endif
+                        </t>
                     </li>
-                % endfor
                 </ul></li>
-                % if object.event_id.videocall_location:
-                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
-                % endif
-                % if not is_html_empty(object.event_id.description):
+                <t t-if="object.event_id.videocall_location">
+                    <li>Meeting URL: <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                </t>
+                <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
-                    ${object.event_id.description | safe}</li>
-                % endif
+                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
+                </t>
             </ul>
         </td>
     </tr></table>
     <br/>
     Thank you,
-    % if object.event_id.user_id.signature:
+    <t t-if="object.event_id.user_id.signature">
         <br />
-        ${object.event_id.user_id.signature | safe}
-    % endif
+        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
 </div>
             </field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="calendar_template_meeting_changedate" model="mail.template">
             <field name="name">Calendar: Date updated</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
-            <field name="subject">${object.event_id.name}: Date updated</field>
-            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
-            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
-            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">{{ object.event_id.name }}: Date updated</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
-    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
-    % set customer = object.event_id.find_partner_customer()
-    % set target_responsible = object.partner_id == object.event_id.partner_id
-    % set target_customer = object.partner_id == customer
+
+    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
+    <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
+    <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
+    <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
+    <t t-set="target_customer" t-value="object.partner_id == customer"/>
     <p>
-        Hello ${object.common_name},<br/><br/>
-        % if is_online and target_responsible:
-        % if customer:
-        The date of your appointment with ${customer.name} has been updated.
-        % else
-        Your appointment has been updated.
-        % endif
-        The appointment <strong>${object.event_id.appointment_type_id.name}</strong> is now scheduled for
-        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
-
-        % elif is_online and target_customer:
-        The date of your appointment with ${object.event_id.user_id.partner_id.name} has been updated.
-        The appointment <strong>${object.event_id.appointment_type_id.name}</strong> is now scheduled for
-        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
-
-        % else:
-        The date of the meeting has been updated.
-        The meeting <strong>${object.event_id.name}</strong> created by ${object.event_id.user_id.partner_id.name} is now scheduled for
-        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
-        % endif
+        Hello <t t-out="object.common_name or ''">Ready Mat</t>,<br/><br/>
+        <t t-if="is_online and target_responsible">
+            <t t-if="customer">
+                The date of your appointment with <t t-out="customer.name or ''">Jesse Brown</t> has been updated.
+            </t>
+            <t t-else="">
+                Your appointment has been updated.
+            </t>
+            The appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> is now scheduled for
+            <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>
+        </t>
+        <t t-elif="is_online and target_customer">
+            The date of your appointment with <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> has been updated.
+            The appointment <strong t-out="object.event_id.appointment_type_id.name or ''"></strong> is now scheduled for
+            <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
+        </t>
+        <t t-else="">
+            The date of the meeting has been updated.
+            The meeting <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> created by <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> is now scheduled for
+            <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
+        </t>
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a t-attf-href="/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a t-attf-href="/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
-        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang)}
+                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                ${str(object.event_id.start.day)}
+                <t t-out="str(object.event_id.start.day) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang)}
+                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
             </div>
             <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
-                 % if not object.event_id.allday
+                 <t t-if="not object.event_id.allday">
                     <div>
-                        ${format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang)}
+                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang) or ""'>11:00 AM</t>
                     </div>
-                    % if object.mail_tz
-                    <div style="font-size: 10px; font-weight: normal">
-                        (${object.mail_tz})
-                    </div>
-                    % endif
-                %endif
+                    <t t-if="object.mail_tz">
+                        <div style="font-size: 10px; font-weight: normal">
+                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                        </div>
+                    </t>
+                </t>
             </div>
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
-                % if object.event_id.location:
-                    <li>Location: ${object.event_id.location}
-                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                <t t-if="object.event_id.location">
+                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
+                        (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}">View Map</a>)
                     </li>
-                % endif
-                % if recurrent:
-                    <li>When: ${object.recurrence_id.name}</li>
-                % endif
-                % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
-                % endif
+                </t>
+                <t t-if="recurrent">
+                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                </t>
+                <t t-if="not object.event_id.allday and object.event_id.duration">
+                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
+                </t>
                 <li>Attendees
                 <ul>
-                % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};"> </div>
-                        % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
-                        % else:
+                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
+                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: {{ colors.get(attendee.state) or 'white' }};"> </div>
+                        <t t-if="attendee.common_name != object.common_name">
+                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+                        </t>
+                        <t t-else="">
                             <span style="margin-left:5px">You</span>
-                        % endif
+                        </t>
                     </li>
-                % endfor
                 </ul></li>
-                % if object.event_id.videocall_location:
-                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
-                % endif
-                % if not is_html_empty(object.event_id.description):
+                <t t-if="object.event_id.videocall_location">
+                    <li>Meeting URL: <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                </t>
+                <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
-                    ${object.event_id.description | safe}</li>
-                % endif
+                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
+                </t>
             </ul>
         </td>
     </tr></table>
     <br/>
     Thank you,
-    % if object.event_id.user_id.signature:
+    <t t-if="object.event_id.user_id.signature">
         <br />
-        ${object.event_id.user_id.signature | safe}
-    % endif
+        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
 </div>
             </field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="calendar_template_meeting_reminder" model="mail.template">
             <field name="name">Calendar: Reminder</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
-            <field name="subject">${object.event_id.name} - Reminder</field>
-            <field name="email_from">${(object.event_id.user_id.email_formatted or user.email_formatted or '') | safe}</field>
-            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
-            <field name="partner_to">${object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False}</field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">{{ object.event_id.name }} - Reminder</field>
+            <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
-    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
-    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
+    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
+    <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
+    <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <p>
-        Hello ${object.common_name},<br/><br/>
+        Hello <t t-out="object.common_name or ''">Gemini Furniture</t>,<br/><br/>
         This is a reminder for the below event :
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <a href="/calendar/${'recurrence' if recurrent else 'meeting'}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/${'recurrence' if recurrent else 'meeting'}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
-        <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}" 
+        <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}" 
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang)}
+                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                ${str(object.event_id.start.day)}
+                <t t-out="str(object.event_id.start.day) or ''">4</t>
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                ${format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang)}
+                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
             </div>
             <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
-                % if not object.event_id.allday
+                <t t-if="not object.event_id.allday">
                     <div>
-                        ${format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang)}
+                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang) or ""'>11:00 AM</t>
                     </div>
-                    % if object.mail_tz
-                    <div style="font-size: 10px; font-weight: normal">
-                        (${object.mail_tz})
-                    </div>
-                    % endif
-                %endif
+                    <t t-if="object.mail_tz">
+                        <div style="font-size: 10px; font-weight: normal">
+                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                        </div>
+                    </t>
+                </t>
             </div>
         </td>
         <td width="20px;"/>
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
-                % if object.event_id.location:
-                    <li>Location: ${object.event_id.location}
-                        (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
+                <t t-if="object.event_id.location">
+                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
+                        (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{ object.event_id.location }}">View Map</a>)
                     </li>
-                % endif
-                % if recurrent:
-                    <li>When: ${object.recurrence_id.name}</li>
-                % endif
-                % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
-                % endif
+                </t>
+                <t t-if="recurrent">
+                    <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
+                </t>
+                <t t-if="not object.event_id.allday and object.event_id.duration">
+                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
+                </t>
                 <li>Attendees
                 <ul>
-                % for attendee in object.event_id.attendee_ids:
-                    <li>
-                        <div style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};"> </div>
-                        % if attendee.common_name != object.common_name:
-                            <span style="margin-left:5px">${attendee.common_name}</span>
-                        % else:
+                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
+                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
+                        <t t-if="attendee.common_name != object.common_name">
+                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+                        </t>
+                        <t t-else="">
                             <span style="margin-left:5px">You</span>
-                        % endif
+                        </t>
                     </li>
-                % endfor
                 </ul></li>
-                % if object.event_id.videocall_location:
-                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
-                % endif
-                % if not is_html_empty(object.event_id.description):
+                <t t-if="object.event_id.videocall_location">
+                    <li>Meeting URL: <a t-attf-href="{{ object.event_id.videocall_location }}" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                </t>
+                <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
-                    ${object.event_id.description | safe}</li>
-                % endif
+                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
+                </t>
             </ul>
         </td>
     </tr></table>
     <br/>
     Thank you,
-    % if object.event_id.user_id.signature:
+    <t t-if="object.event_id.user_id.signature">
         <br />
-        ${object.event_id.user_id.signature | safe}
-    % endif
+        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
 </div>
             </field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="calendar_template_meeting_update" model="mail.template">
             <field name="name">Calendar: Event Update</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>
-            <field name="subject">${object.name}: Event update</field>
-            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted or '') | safe}</field>
-            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="subject">{{object.name}}: Event update</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
-    % set is_online = 'appointment_type_id' in object and object.appointment_type_id
-    % set target_responsible = object.partner_id == object.partner_id
-    % set target_customer = object.partner_id == customer
-    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
-    % set mail_tz = ctx.get('mail_tz')
+    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
+    <t t-set="is_online = 'appointment_type_id' in object and object.appointment_type_id" />
+    <t t-set="target_responsible = object.partner_id == object.partner_id" />
+    <t t-set="target_customer = object.partner_id == customer" />
+    <t t-set="recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'" />
+    <t t-set="mail_tz = ctx.get('mail_tz')" />
     <div>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td width="130px;">
                     <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="EEEE", lang_code=object.env.lang)}
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) "></t>
                     </div>
                     <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="d", lang_code=object.env.lang)}
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)"></t>
                     </div>
                     <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="MMMM y", lang_code=object.env.lang)}
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)"></t>
                     </div>
                     <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
-                        % if not object.allday
-                        <div>
-                            ${format_time(time=object.start, tz=mail_tz, time_format="short", lang_code=object.env.lang)}
-                        </div>
-                        % if mail_tz
-                        <div style="font-size: 10px; font-weight: normal">
-                            (${mail_tz})
-                        </div>
-                        % endif
-                        %endif
+                        <t t-if="not object.allday">
+                            <div>
+                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)"></t>
+                            </div>
+                            <t t-if="mail_tz">
+                                <div style="font-size: 10px; font-weight: normal">
+                                    (<t t-out="mail_tz"></t>)
+                                </div>
+                            </t>
+                        </t>
                     </div>
                 </td>
                 <td width="20px;"/>
@@ -398,39 +399,40 @@
                         <strong>Details of the event</strong>
                     </p>
                     <ul>
-                        % if not is_online and object.display_description :
-                        <li>Description: ${object.description}</li>
-                        % elif is_online and object.description:
-                        % set splitted_description = object.description_to_html_lines()
-                        <li>Description:
-                            <ul>
-                                % for description_line in splitted_description:
-                                <li>${description_line | safe}</li>
-                                % endfor
-                            </ul>
-                        </li>
-                        % endif
-                        % if object.videocall_location:
-                        <li>Meeting URL:
-                            <a href="${object.videocall_location}" target="_blank">
-                                ${object.videocall_location}
-                            </a>
-                        </li>
-                        % endif
-                        % if object.location:
-                        <li>Location: ${object.location}
-                            (<a target="_blank"
-                                href="http://maps.google.com/maps?oi=map&amp;q=${object.location}">View Map</a>)
-                        </li>
-                        % endif
-                        % if recurrent:
-                        <li>When: ${object.recurrence_id.name}</li>
-                        % endif
-                        % if not object.allday and object.duration
-                        <li>Duration:
-                            ${('%dH%02d' % (object.duration,round(object.duration*60)%60))}
-                        </li>
-                        % endif
+                        <t t-if="not is_online and object.display_description">
+                            <li>Description: <t t-out="object.description or ''" /></li>
+                        </t>
+                        <t t-elif="is_online and object.description">
+                            <t t-set="splitted_description" t-value="object.description_to_html_lines()" />
+                            <li>Description:
+                                <ul>
+                                    <t t-foreach="splitted_description" t-as="description_line">
+                                        <li t-out="description_line or ''"></li>
+                                    </t>
+                                </ul>
+                            </li>
+                        </t>
+                        <t t-if="object.videocall_location">
+                            <li>Meeting URL:
+                                <a t-att-href="object.videocall_location" target="_blank">
+                                    <t t-out="object.videocall_location or ''"></t>
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="object.location">
+                            <li>Location: <t t-out="object.location or ''"></t>
+                                (<a target="_blank"
+                                    t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.location}}">View Map</a>)
+                            </li>
+                        </t>
+                        <t t-if="recurrent">
+                            <li>When: <t t-out="object.recurrence_id.name or ''"></t></li>
+                        </t>
+                        <t t-if="not object.allday and object.duration">
+                            <li>Duration:
+                                <t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))"></t>
+                            </li>
+                        </t>
                     </ul>
                 </td>
             </tr>

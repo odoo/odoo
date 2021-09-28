@@ -6,14 +6,13 @@ var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
 var field_registry = require('web.field_registry');
+const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 require('web._field_registry');
 
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
-
-var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -50,6 +49,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     willStart: async function () {
+        console.log("this:", this);
         this.isRendered = false;
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
         await this._super();
@@ -67,6 +67,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         delete window.top[this._onUpdateIframeId];
         if (this.$iframe) {
             this.$iframe.remove();
+        }
+        if (this._qwebPlugin) {
+            this._qwebPlugin.destroy();
         }
         this._super();
     },
@@ -96,6 +99,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             return this._super();
         }
         var _super = this._super.bind(this);
+        this.wysiwyg.odooEditor.clean();
         return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
             this._isDirty = this.wysiwyg.isDirty();
             _super();
@@ -208,6 +212,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             tabsize: 0,
             height: this.nodeOptions.height || 110,
             resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
+            editorPlugins: [QWebPlugin],
         });
     },
     /**
@@ -367,6 +372,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         } else {
             this.$content = $('<div class="o_readonly"/>').html(value);
             this.$content.appendTo(this.$el);
+            this._qwebPlugin = new QWebPlugin();
+            this._qwebPlugin.sanitizeElement(this.$content[0]);
             resolver();
         }
 
@@ -381,9 +388,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (jinjaRegex.test(value)) { // is jinja
-            return value;
-        }
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
         } catch (e) {

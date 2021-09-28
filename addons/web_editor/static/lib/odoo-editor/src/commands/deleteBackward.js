@@ -75,6 +75,10 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
             leftNode.remove();
             return;
         }
+        if (leftNode.getAttribute && leftNode.getAttribute('contenteditable') === 'false') {
+            leftNode.remove();
+            return;
+        }
         if (!isBlock(leftNode) || isVisibleEmpty(leftNode)) {
             /**
              * Backspace just after an inline node, convert to backspace at the

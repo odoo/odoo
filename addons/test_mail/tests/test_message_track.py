@@ -144,7 +144,7 @@ class TestTracking(TestMailCommon):
             'name': 'AutoTemplate',
             'subject': 'autoresponse',
             'email_from': self.env.user.email_formatted,
-            'email_to': "${object.email_from}",
+            'email_to': "{{ object.email_from }}",
             'body_html': "<div>A nice body</div>",
         })
 

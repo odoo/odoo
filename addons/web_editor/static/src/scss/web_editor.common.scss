@@ -816,3 +816,59 @@ section, .oe_img_bg, [data-oe-shape-data] {
         -webkit-text-fill-color: inherit;
     }
 }
+
+/* QWEB */
+
+.odoo-editor, .o_readonly {
+    t,
+    [t-if],
+    [t-elif],
+    [t-else],
+    [t-foreach] {
+        background-color: rgba(0, 0, 102, 0.1) !important;
+    }
+    t,
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        border-radius: 2px;
+    }
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        background-color: rgba(36, 154, 255, 0.16) !important;
+    }
+    [t-esc]:empty::before {
+        content: attr(t-esc);
+    }
+    [t-raw]:empty::before {
+        content: attr(t-raw);
+    }
+    [t-out]:empty::before {
+        content: attr(t-out);
+    }
+    t[t-set] {
+        display: none;
+    }
+    t[data-oe-t-inline] {
+        display: inline;
+    }
+    t:not([data-oe-t-inline]) {
+        display: block;
+    }
+    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+        display: unset;
+    }
+    [data-oe-t-group]:not([data-oe-t-group-active]) {
+        display: none !important;
+    }
+    [data-oe-t-group][data-oe-t-selectable] {
+        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+    }
+}
+
+.oe-qweb-select {
+    position: absolute;
+    z-index: 1051;
+    background-color: white;
+}
