@@ -809,6 +809,9 @@ function factory(dependencies) {
          * @private
          */
         _onChangeUpdateSuggestionList() {
+            if (this.messaging.isCurrentUserGuest) {
+                return;
+            }
             // Update the suggestion list immediately for a reactive UX...
             this._updateSuggestionList();
             // ...and then update it again after the server returned data.
