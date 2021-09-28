@@ -208,15 +208,15 @@
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"
                                            domain="['|', ('parent_id','=', False), ('is_company','=',True)]"/>
                                     <field name="ref" optional="hidden"/>
-                                    <field name="transaction_type" optional="hidden"/>
                                     <field name="narration" string="Notes" optional="hidden"/>
-                                    <field name="amount"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="transaction_type" optional="hidden"/>
                                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="account_number" optional="hidden"/>
                                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"
                                            attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="amount"
+                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                    <field name="account_number" optional="hidden"/>
 
                                     <!-- Buttons -->
                                     <button name="button_undo_reconciliation" type="object"
@@ -290,6 +290,7 @@
                     <field name="transaction_type"/>
                     <field name="move_id"/>
                     <field name="amount"/>
+                    <filter name="statement" string="Statement" context="{'group_by':'statement_id'}"/>
                 </search>
             </field>
         </record>
@@ -342,14 +343,14 @@
                     <field name="move_id"/>
                     <field name="date"/>
                     <field name="payment_ref"/>
-                    <field name="ref" groups="base.group_no_one"/>
                     <field name="partner_id"/>
-                    <field name="amount"/>
+                    <field name="ref" groups="base.group_no_one" optional="hidden"/>
+                    <field name="narration" string="Notes" optional="hidden"/>
+                    <field name="transaction_type" optional="hidden"/>
                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="amount"/>
                     <field name="account_number" optional="hidden"/>
-                    <field name="transaction_type" optional="hidden"/>
-                    <field name="narration" optional="hidden"/>
 
                     <!-- Buttons -->
                     <button name="button_undo_reconciliation" type="object"
