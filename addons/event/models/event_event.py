@@ -131,22 +131,22 @@ class EventEvent(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
     # Seats and computation
     seats_max = fields.Integer(
-        string='Maximum Attendees Number',
+        string='Maximum Attendees',
         compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
-    seats_limited = fields.Boolean('Maximum Attendees', required=True, compute='_compute_seats_limited',
+    seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
                                    readonly=False, store=True)
     seats_reserved = fields.Integer(
-        string='Reserved Seats',
+        string='Number of Registrations',
         store=True, readonly=True, compute='_compute_seats')
     seats_available = fields.Integer(
         string='Available Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_unconfirmed = fields.Integer(
-        string='Unconfirmed Seat Reservations',
+        string='Unconfirmed Registrations',
         store=True, readonly=True, compute='_compute_seats')
     seats_used = fields.Integer(
-        string='Number of Participants',
+        string='Number of Attendees',
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
