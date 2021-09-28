@@ -30,7 +30,7 @@ function factory(dependencies) {
             this.audio.currentTime = 0;
             this.audio.loop = loop;
             this.audio.volume = volume;
-            this.audio.play().catch(()=>{});
+            Promise.resolve(this.audio.play()).catch(()=>{});
         }
 
         /**
