@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     def recompute_coupon_lines(self):
         for order in self:
             order._remove_invalid_reward_lines()
-            order._create_new_no_code_promo_reward_lines()
+            if order.state != 'cancel':
+                order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
 
     @api.multi
