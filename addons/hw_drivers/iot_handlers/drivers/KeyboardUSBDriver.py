@@ -83,7 +83,10 @@ class KeyboardUSBDriver(Driver):
             pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
             server = server + '/iot/keyboard_layouts'
             try:
-                pm.request('POST', server, fields={'available_layouts': json.dumps(cls.available_layouts)})
+                pm.request('POST', server, fields={
+                    'available_layouts': json.dumps(cls.available_layouts),
+                    'mac': helpers.get_mac_address(),
+                    })
             except Exception as e:
                 _logger.error('Could not reach configured server')
                 _logger.error('A error encountered : %s ' % e)
@@ -123,8 +126,15 @@ class KeyboardUSBDriver(Driver):
                 'layout': data.get('layout'),
                 'variant': data.get('variant'),
             }
-            self._change_keyboard_layout(layout)
-            self.save_layout(layout)
+            for available_layout in KeyboardUSBDriver.available_layouts:
+                if available_layout.get('layout') == data.get('layout'):
+                    if available_layout.get('variant'):
+                        if available_layout.get('variant') == data.get('variant'):
+                            self._change_keyboard_layout(layout)
+                            self.save_layout(layout)
+                    else:
+                        self._change_keyboard_layout(layout)
+                        self.save_layout(layout)
         elif data.get('action', False) == 'update_is_scanner':
             is_scanner = {'is_scanner': data.get('is_scanner')}
             self.save_is_scanner(is_scanner)
