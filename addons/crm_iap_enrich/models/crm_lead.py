@@ -36,7 +36,7 @@ class Lead(models.Model):
         leads = self.search([
             ('iap_enrich_done', '=', False),
             ('reveal_id', '=', False),
-            ('probability', '<', 100),
+            '|', ('probability', '<', 100), ('probability', '=', False),
             ('create_date', '>', timeDelta)
         ])
         leads.iap_enrich(from_cron=True)
