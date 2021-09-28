@@ -30,75 +30,19 @@ class ProjectCustomerPortal(CustomerPortal):
     # My Project
     # ------------------------------------------------------------
     def _project_get_page_view_values(self, project, access_token, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kwargs):
-        # TODO: refactor this because most of this code is duplicated from portal_my_tasks method
-        values = self._prepare_portal_layout_values()
-        searchbar_sortings = self._task_get_searchbar_sortings()
-
-        searchbar_inputs = self._task_get_searchbar_inputs()
-        searchbar_groupby = self._task_get_searchbar_groupby()
-
-        # default sort by value
-        if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
-
         # default filter by value
         domain = [('project_id', '=', project.id)]
-
-        # default group by value
-        if not groupby:
-            groupby = 'project'
-
-        if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-
-        # search
-        if search and search_in:
-            domain += self._task_get_search_domain(search_in, search)
-
-        Task = request.env['project.task']
-        if access_token:
-            Task = Task.sudo()
-
-        # task count
-        task_count = Task.search_count(domain)
         # pager
         url = "/my/projects/%s" % project.id
-        pager = portal_pager(
-            url=url,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
-            total=task_count,
-            page=page,
-            step=self._items_per_page
-        )
-        # content according to pager and archive selected
-        order = self._task_get_order(order, groupby)
-
-        tasks = Task.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_project_tasks_history'] = tasks.ids[:100]
-
-        groupby_mapping = self._task_get_groupby_mapping()
-        group = groupby_mapping.get(groupby)
-        if group:
-            grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
-        else:
-            grouped_tasks = [tasks]
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token))
+        pager = portal_pager(**values['pager'])
 
         values.update(
-            date=date_begin,
-            date_end=date_end,
-            grouped_tasks=grouped_tasks,
+            grouped_tasks=values['grouped_tasks'](pager['offset']),
             page_name='project',
-            default_url=url,
             pager=pager,
-            searchbar_sortings=searchbar_sortings,
-            searchbar_groupby=searchbar_groupby,
-            searchbar_inputs=searchbar_inputs,
-            search_in=search_in,
-            search=search,
-            sortby=sortby,
-            groupby=groupby,
             project=project,
+            task_url=f'projects/{project.id}/task',
         )
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
@@ -172,7 +116,6 @@ class ProjectCustomerPortal(CustomerPortal):
             return request.render("project.project_sharing_portal", values)
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
-        values['task_url'] = 'project/%s/task' % project_id
         return request.render("project.portal_my_project", values)
 
     def _prepare_project_sharing_session_info(self, project, task=None):
@@ -338,19 +281,87 @@ class ProjectCustomerPortal(CustomerPortal):
             ])
         return OR(search_domain)
 
-    @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+    def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False):
         values = self._prepare_portal_layout_values()
-        searchbar_sortings = self._task_get_searchbar_sortings()
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings().items(),
                                          key=lambda item: item[1]["sequence"]))
+        searchbar_inputs = self._task_get_searchbar_inputs()
+        searchbar_groupby = self._task_get_searchbar_groupby()
 
+        Task = request.env['project.task']
+        if su:
+            Task = Task.sudo()
+
+        if not domain:
+            domain = []
+
+        # default sort by value
+        if not sortby:
+            sortby = 'date'
+        order = searchbar_sortings[sortby]['order']
+
+        # default group by value
+        if not groupby:
+            groupby = 'project'
+
+        if date_begin and date_end:
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            domain += self._task_get_search_domain(search_in, search)
+
+        # content according to pager and archive selected
+        order = self._task_get_order(order, groupby)
+
+        def get_grouped_tasks(pager_offset):
+            tasks = Task.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
+            request.session['my_project_tasks_history' if url.startswith('/my/projects') else 'my_tasks_history'] = tasks.ids[:100]
+
+            groupby_mapping = self._task_get_groupby_mapping()
+            group = groupby_mapping.get(groupby)
+            if group:
+                grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
+            else:
+                grouped_tasks = [tasks]
+
+            task_states = dict(Task._fields['kanban_state']._description_selection(request.env))
+            if sortby == 'status':
+                if groupby == 'none' and grouped_tasks:
+                    grouped_tasks[0] = grouped_tasks[0].sorted(lambda tasks: task_states.get(tasks.kanban_state))
+                else:
+                    grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].kanban_state))
+            return grouped_tasks
+
+        values.update({
+            'date': date_begin,
+            'date_end': date_end,
+            'grouped_tasks': get_grouped_tasks,
+            'page_name': 'task',
+            'default_url': url,
+            'task_url': 'tasks',
+            'pager': {
+                "url": url,
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
+                "total": Task.search_count(domain),
+                "page": page,
+                "step": self._items_per_page
+            },
+            'searchbar_sortings': searchbar_sortings,
+            'searchbar_groupby': searchbar_groupby,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
+            'search': search,
+            'sortby': sortby,
+            'groupby': groupby,
+        })
+        return values
+
+    @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
         }
-
-        searchbar_inputs = self._task_get_searchbar_inputs()
-        searchbar_groupby = self._task_get_searchbar_groupby()
 
         # extends filterby criteria with project the customer has access to
         projects = request.env['project.project'].search([])
@@ -370,72 +381,20 @@ class ProjectCustomerPortal(CustomerPortal):
                 str(proj_id): {'label': proj_name, 'domain': [('project_id', '=', proj_id)]}
             })
 
-        # default sort by value
-        if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
-
-        # default filter by value
         if not filterby:
             filterby = 'all'
         domain = searchbar_filters.get(filterby, searchbar_filters.get('all'))['domain']
 
-        # default group by value
-        if not groupby:
-            groupby = 'project'
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, domain=domain)
 
-        if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-
-        # search
-        if search and search_in:
-            domain += self._task_get_search_domain(search_in, search)
-
-        # task count
-        task_count = request.env['project.task'].search_count(domain)
         # pager
-        pager = portal_pager(
-            url="/my/tasks",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby, 'groupby': groupby, 'search_in': search_in, 'search': search},
-            total=task_count,
-            page=page,
-            step=self._items_per_page
-        )
-        # content according to pager and archive selected
-        order = self._task_get_order(order, groupby)
-
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_tasks_history'] = tasks.ids[:100]
-
-        groupby_mapping = self._task_get_groupby_mapping()
-        group = groupby_mapping.get(groupby)
-        if group:
-            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
-        else:
-            grouped_tasks = [tasks]
-
-        task_states = dict(request.env['project.task']._fields['kanban_state']._description_selection(request.env))
-        if sortby == 'status':
-            if groupby == 'none' and grouped_tasks:
-                grouped_tasks[0] = grouped_tasks[0].sorted(lambda tasks: task_states.get(tasks.kanban_state))
-            else:
-                grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].kanban_state))
+        pager_vals = values['pager']
+        pager_vals['url_args'].update(filterby=filterby)
+        pager = portal_pager(**pager_vals)
 
         values.update({
-            'date': date_begin,
-            'date_end': date_end,
-            'grouped_tasks': grouped_tasks,
-            'page_name': 'task',
-            'default_url': '/my/tasks',
-            'task_url': 'tasks',
+            'grouped_tasks': values['grouped_tasks'](pager['offset']),
             'pager': pager,
-            'searchbar_sortings': searchbar_sortings,
-            'searchbar_groupby': searchbar_groupby,
-            'searchbar_inputs': searchbar_inputs,
-            'search_in': search_in,
-            'search': search,
-            'sortby': sortby,
-            'groupby': groupby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
         })
