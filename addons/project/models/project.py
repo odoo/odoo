@@ -1417,11 +1417,6 @@ class Task(models.Model):
             else:
                 task.stage_id = False
 
-    @api.constrains('recurring_task')
-    def _check_recurring_task(self):
-        if self.filtered(lambda task: task.parent_id and task.recurring_task):
-            raise ValidationError(_("A sub-task cannot be a recurring task. Please consider making its parent task, a recurring task."))
-
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
