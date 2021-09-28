@@ -42,4 +42,15 @@
         </field>
     </record>
 
+    <record id="event_event_view_search" model="ir.ui.view">
+        <field name="name">event.event.search.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='upcoming']" position="after">
+                <separator/>
+                <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
