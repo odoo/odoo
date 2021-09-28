@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, Command, _
+from odoo.exceptions import UserError
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -21,6 +22,8 @@ class AccountInvoiceSend(models.TransientModel):
     @api.depends('invoice_ids')
     def _compute_invalid_addresses(self):
         for wizard in self:
+            if any(not invoice.partner_id for invoice in wizard.invoice_ids):
+                raise UserError(_('You cannot send an invoice which has no partner assigned.'))
             invalid_invoices = wizard.invoice_ids.filtered(lambda i: not self.env['snailmail.letter']._is_valid_address(i.partner_id))
             wizard.invalid_invoices = len(invalid_invoices)
             invalid_partner_ids = invalid_invoices.partner_id.ids
