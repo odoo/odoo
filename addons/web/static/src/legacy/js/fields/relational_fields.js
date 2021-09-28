@@ -3163,6 +3163,47 @@ var FieldStatus = AbstractField.extend({
     isEmpty: function () {
         return false;
     },
+    /**
+     * Set the legacy command for statusbar to CommandPalette.
+     *
+     * @override
+     */
+    on_attach_callback() {
+        if (this.isClickable && this.viewType === 'form') {
+            const provide = () => {
+                return this.status_information.map((value) => ({
+                    name: value['display_name'],
+                    action: () => {
+                        this._setValue(value['id']);
+                    }
+                }));
+            };
+            const statusLabel = sprintf(_t(`Move to %s...`), escape(this.string));
+            const getCommandDefinition = (env) => ({
+                name: statusLabel,
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(this.el),
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                },
+                action() {
+                    return env.services.command.openPalette({
+                        placeholder: statusLabel,
+                        providers: [{ provide }],
+                    });
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.FieldStatus.moveToStage", getCommandDefinition);
+        }
+    },
+    /**
+     * Remove the legacy command from CommandPalette.
+     *
+     * @override
+     */
+    on_detach_callback() {
+        core.bus.trigger("remove_legacy_command", "web.FieldStatus.moveToStage");
+    },
 
     //--------------------------------------------------------------------------
     // Private

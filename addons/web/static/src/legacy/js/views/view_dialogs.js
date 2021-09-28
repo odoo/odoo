@@ -119,6 +119,7 @@ var FormViewDialog = ViewDialog.extend({
                 text: options.close_text || (readonly ? _t("Close") : _t("Discard")),
                 classes: "btn-secondary o_form_button_cancel",
                 close: true,
+                hotkey: 'j',
                 click: function () {
                     if (!readonly) {
                         self.form_view.model.discardChanges(self.form_view.handle, {
@@ -132,6 +133,7 @@ var FormViewDialog = ViewDialog.extend({
                 options.buttons.unshift({
                     text: options.save_text || (multi_select ? _t("Save & Close") : _t("Save")),
                     classes: "btn-primary",
+                    hotkey: 'c',
                     click: function () {
                         self._save().then(self.close.bind(self));
                     }
@@ -141,6 +143,7 @@ var FormViewDialog = ViewDialog.extend({
                     options.buttons.splice(1, 0, {
                         text: _t("Save & New"),
                         classes: "btn-primary",
+                        hotkey: 'n',
                         click: function () {
                             self._save()
                                 .then(function () {
@@ -298,6 +301,7 @@ var FormViewDialog = ViewDialog.extend({
         options.buttons.push({
             text: options.removeButtonText || _t("Remove"),
             classes: 'btn-secondary ' + btnClasses,
+            hotkey: 'x',
             click: function() {
                 self._remove().then(self.close.bind(self));
             }
@@ -452,12 +456,14 @@ var SelectCreateDialog = ViewDialog.extend({
             text: _t("Cancel"),
             classes: 'btn-secondary o_form_button_cancel',
             close: true,
+            hotkey: 'z'
         }];
         if (!this.options.no_create) {
             this.__buttons.unshift({
                 text: _t("Create"),
                 classes: 'btn-primary',
-                click: this.create_edit_record.bind(this)
+                click: this.create_edit_record.bind(this),
+                hotkey: 'c'
             });
         }
         if (!this.options.disable_multiple_selection) {
@@ -466,6 +472,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 classes: 'btn-primary o_select_button',
                 disabled: true,
                 close: true,
+                hotkey: 'v',
                 click: async () => {
                     const resIds = await this.viewController.getSelectedIdsWithDomain();
                     const values = resIds.map(e => ({id: e}));
