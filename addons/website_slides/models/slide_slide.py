@@ -6,7 +6,6 @@ import datetime
 import io
 import re
 import requests
-import PyPDF2
 import json
 
 from dateutil.relativedelta import relativedelta
@@ -19,6 +18,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import html2plaintext, sql
+from odoo.tools.pdf import OdooPdf
 
 
 class SlidePartnerRelation(models.Model):
@@ -381,8 +381,8 @@ class Slide(models.Model):
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
-                self.completion_time = (5 * len(pdf.pages)) / 60
+                with OdooPdf.open(io.BytesIO(data)) as pdf:
+                    self.completion_time = (5 * len(pdf.pages)) / 60
             else:
                 self.slide_type = 'infographic'
                 self.image_1920 = self.datas
