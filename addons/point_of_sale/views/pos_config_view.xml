@@ -442,7 +442,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('cash_control', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <field name="cash_control" invisible="1" />
                             <div class="o_setting_left_pane">
                                 <field name="set_maximum_difference" />
@@ -450,7 +450,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="set_maximum_difference" />
                                 <div class="text-muted">
-                                    Set a maximum difference allowed between the expected and counted cash during the closing of the session
+                                    Set a maximum difference allowed between the expected and counted money during the closing of the session
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('set_maximum_difference', '=', False)]}">
                                     <label for="amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>

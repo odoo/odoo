@@ -104,7 +104,7 @@
     text-align: left;
 }
 
-.pos .close-pos-popup .accept-closing.invisible {
+.pos .close-pos-popup .invisible {
     visibility: hidden;
 }
 
@@ -112,9 +112,19 @@
     cursor: pointer;
 }
 
+.pos .close-pos-popup .accept-closing label.disabled {
+    cursor: default;
+    color: grey;
+}
+
 .pos .close-pos-popup #accept {
     all: revert;
     margin-right: 10px;
+}
+
+.pos .close-pos-popup .accept-closing .warning {
+    color: red;
+    font-style: italic;
 }
 
 .pos .close-pos-popup .footer .button {
