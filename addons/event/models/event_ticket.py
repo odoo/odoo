@@ -19,10 +19,10 @@ class EventTemplateTicket(models.Model):
     event_type_id = fields.Many2one(
         'event.type', string='Event Category', ondelete='cascade', required=True)
     # seats
-    seats_limited = fields.Boolean(string='Seats Limit', readonly=True, store=True,
+    seats_limited = fields.Boolean(string='Limit Attendees', readonly=True, store=True,
                                    compute='_compute_seats_limited')
     seats_max = fields.Integer(
-        string='Maximum Seats',
+        string='Maximum Attendees',
         help="Define the number of available tickets. If you have too many registrations you will "
              "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
 

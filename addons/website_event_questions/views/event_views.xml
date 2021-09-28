@@ -27,7 +27,7 @@
             <data>
                 <page name="event_notes" position="before">
                     <page string="Questions" name="questions">
-                        <field name="question_ids" nolabel="1">
+                        <field name="question_ids" string="Question" nolabel="1">
                             <tree>
                                 <field name="sequence" widget="handle" />
                                 <field name="title"/>
@@ -42,7 +42,7 @@
                                 We need this because we create questions and answers when the event type changes. -->
                             <form string="Question">
                                 <sheet>
-                                    <h1><field name="title" /></h1>
+                                    <h1><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' /></h1>
                                     <group class="mb-0">
                                         <group class="mb-0">
                                             <div colspan="2">

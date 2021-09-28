@@ -119,7 +119,8 @@
                     <notebook>
                         <page string="Description"
                             attrs="{'invisible': [('exhibitor_type', '=', 'sponsor')]}">
-                            <field name="website_description" nolabel="1" options="{'noVideos': False}"/>
+                            <field name="website_description" nolabel="1" options="{'noVideos': False}" 
+                                placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
                         <page string="Online"
                             attrs="{'invisible': [('exhibitor_type', '!=', 'online')]}">

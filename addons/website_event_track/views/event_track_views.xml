@@ -112,6 +112,8 @@
                 <field name="partner_id"/>
                 <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
                 <separator/>
+                <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
                 <filter string="Always Wishlisted" name="filter_wishlisted_by_default" domain="[('wishlisted_by_default', '=', True)]"/>
@@ -212,11 +214,11 @@
                                 </group>
                             </group>
                             <group>
-                                <field name="partner_biography" string="Biography"/>
+                                <field name="partner_biography" string="Biography" placeholder='e.g. "John Doe was born in..."'/>
                             </group>
                         </page>
                         <page string="Description" name="description">
-                            <field name="description"/>
+                            <field name="description" placeholder='e.g. "This talk will be about..."'/>
                         </page>
                         <page string="Interactivity" name="interactivity">
                             <group>
@@ -276,6 +278,8 @@
             <graph string="Tracks" sample="1">
                 <field name="location_id"/>
                 <field name="duration" operator="+"/>
+                <field name="website_cta_delay" invisible="1"/>
+                <field name="color" invisible="1"/>
             </graph>
         </field>
     </record>
