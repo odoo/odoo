@@ -55,6 +55,9 @@ class Lead(models.Model):
                         # If lead is lost, active == False, but is anyway removed from the search in the cron.
                         if lead.probability == 100 or lead.iap_enrich_done:
                             continue
+                        # Skip if no email (different from wrong email leading to no email_normalized)
+                        if not lead.email_from:
+                            continue
 
                         normalized_email = tools.email_normalize(lead.email_from)
                         if not normalized_email:
