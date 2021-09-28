@@ -300,12 +300,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFlagAlertClick: function (ev) {
-        var self = this;
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
             route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.closest('form').attr('action'),
-        }).then(function (data) {
+        }).then(data => {
             if (data.error) {
                 var message;
                 if (data.error === 'anonymous_user') {
@@ -342,12 +341,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onVotePostClick: function (ev) {
-        var self = this;
         ev.preventDefault();
         var $btn = $(ev.currentTarget);
         this._rpc({
             route: $btn.data('href'),
-        }).then(function (data) {
+        }).then(data => {
             if (data.error) {
                 var message;
                 if (data.error === 'own_post') {
