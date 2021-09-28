@@ -468,7 +468,13 @@ function factory(dependencies) {
             };
             peerConnection.onnegotiationneeded = async (event) => {
                 const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
+                try {
+                    await peerConnection.setLocalDescription(offer);
+                } catch (e) {
+                    // Possibly already have a remote offer here: cannot set local description
+                    this._addLogEntry(token, `couldn't setLocalDescription`);
+                    return;
+                }
                 this._addLogEntry(token, `sending notification: offer`, { step: 'sending offer' });
                 await this._notifyPeers([token], {
                     event: 'offer',
@@ -488,14 +494,21 @@ function factory(dependencies) {
                  * FIXME? it appears that the track yielded by the peerConnection's 'ontrack' event is always enabled,
                  * even when it is disabled on the sender-side.
                  */
-                await this._notifyPeers([token], {
-                    event: 'trackChange',
-                    type: 'peerToPeer',
-                    payload: {
-                        type: 'audio',
-                        state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
-                    },
-                });
+                try {
+                    await this._notifyPeers([token], {
+                        event: 'trackChange',
+                        type: 'peerToPeer',
+                        payload: {
+                            type: 'audio',
+                            state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
+                        },
+                    });
+                } catch (e) {
+                    if (!(e instanceof DOMException) || e.name !== "OperationError") {
+                        throw e;
+                    }
+                    this._addLogEntry(token, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`);
+                }
             };
             this._peerConnections[token] = peerConnection;
             this._dataChannels[token] = dataChannel;
@@ -812,6 +825,31 @@ function factory(dependencies) {
                     }
                 }
             }
+        }
+
+        /**
+         * Returns a string representation of a data channel for logging and
+         * debugging purposes.
+         *
+         * @private
+         * @param {RTCDataChannel} dataChannel
+         * @returns string
+         */
+        _serializeRTCDataChannel(dataChannel) {
+            const toLog = [
+                "binaryType",
+                "bufferedAmount",
+                "bufferedAmountLowThreshold",
+                "id",
+                "label",
+                "maxPacketLifeTime",
+                "maxRetransmits",
+                "negotiated",
+                "ordered",
+                "protocol",
+                "readyState",
+            ];
+            return JSON.stringify(Object.fromEntries(toLog.map(p => [p, dataChannel[p]])));
         }
 
         /**
