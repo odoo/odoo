@@ -13,7 +13,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     class ClosePosPopup extends AbstractAwaitablePopup {
         constructor() {
             super(...arguments);
-            this.manualInputCashCount = true;
+            this.manualInputCashCount = false;
             this.cashControl = this.env.pos.config.cash_control;
             this.moneyDetailsRef = useRef('moneyDetails');
             this.closeSessionClicked = false;
@@ -33,15 +33,19 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 this.openingNotes = closingData.opening_notes;
                 this.defaultCashDetails = closingData.default_cash_details;
                 this.otherPaymentMethods = closingData.other_payment_methods;
+                this.isManager = closingData.is_manager;
+                this.amountAuthorizedDiff = closingData.amount_authorized_diff;
 
                 // component state and refs definition
-                const state = {notes: '', acceptClosing: false};
+                const state = {notes: '', acceptClosing: false, payments: {}};
                 if (this.cashControl) {
-                    state[this.defaultCashDetails.name] = {counted: 0, difference: -this.defaultCashDetails.amount};
+                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount};
                 }
                 if (this.otherPaymentMethods.length > 0) {
                     this.otherPaymentMethods.forEach(pm => {
-                        state[pm.name] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0}
+                        if (pm.type === 'bank') {
+                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0}
+                        }
                     })
                 }
                 Object.assign(this.state, state);
@@ -68,32 +72,48 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         openDetailsPopup() {
             if (this.moneyDetailsRef.comp.isClosed()){
                 this.moneyDetailsRef.comp.openPopup();
-                this.state[this.defaultCashDetails.name].counted = 0;
+                this.state.payments[this.defaultCashDetails.id].counted = 0;
+                this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
                 this.state.notes = '';
                 if (this.manualInputCashCount) {
                     this.moneyDetailsRef.comp.reset();
                 }
             }
         }
-        handleInputChange() {
-            this.manualInputCashCount = true;
-            this.state.notes = '';
-            this.state[this.defaultCashDetails.name].difference =
-                this.env.pos.round_decimals_currency(this.state[this.defaultCashDetails.name].counted - this.defaultCashDetails.amount);
+        handleInputChange(paymentId) {
+            let expectedAmount;
+            if (paymentId === this.defaultCashDetails.id) {
+                this.manualInputCashCount = true;
+                this.state.notes = '';
+                expectedAmount = this.defaultCashDetails.amount;
+            } else {
+                expectedAmount = this.otherPaymentMethods.find(pm => paymentId === pm.id).amount;
+            }
+            this.state.payments[paymentId].difference =
+                this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
+            this.state.acceptClosing = false;
         }
         updateCountedCash(event) {
             const { total, moneyDetailsNotes, moneyDetails } = event.detail;
-            this.state[this.defaultCashDetails.name].counted = total;
-            this.state[this.defaultCashDetails.name].difference =
-                this.env.pos.round_decimals_currency(this.state[[this.defaultCashDetails.name]].counted - this.defaultCashDetails.amount);
+            this.state.payments[this.defaultCashDetails.id].counted = total;
+            this.state.payments[this.defaultCashDetails.id].difference =
+                this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
+            this.state.acceptClosing = false;
+        }
+        hasDifference() {
+            return Object.entries(this.state.payments).find(pm => pm[1].difference != 0);
+        }
+        hasUserAuthority() {
+            const absDifferences = Object.entries(this.state.payments).map(pm => Math.abs(pm[1].difference));
+            return this.isManager || this.amountAuthorizedDiff == null || Math.max(...absDifferences) <= this.amountAuthorizedDiff;
         }
         canCloseSession() {
-            return !this.cashControl || !this.state[this.defaultCashDetails.name].difference || this.state.acceptClosing;
+            return !this.cashControl || !this.hasDifference() || this.state.acceptClosing;
         }
         closePos() {
             this.trigger('close-pos');
@@ -108,7 +128,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                         method: 'post_closing_cash_details',
                         args: [this.env.pos.pos_session.id],
                         kwargs: {
-                            counted_cash: this.state[this.defaultCashDetails.name].counted,
+                            counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
                         }
                     })
                     if (!response.successful) {

@@ -40,13 +40,13 @@
                                     <tr>
                                         <td t-esc="defaultCashDetails.name"/>
                                         <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
-                                        <td class="flex" t-on-input="handleInputChange()">
-                                            <input class="pos-input" type="number" t-model.number="state[defaultCashDetails.name].counted"/>
+                                        <td class="flex" t-on-input="handleInputChange(defaultCashDetails.id)">
+                                            <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
                                             <div class="button icon" t-on-click="openDetailsPopup()">
                                                 <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                                             </div>
                                         </td>
-                                        <td t-esc="env.pos.format_currency(state[defaultCashDetails.name].difference)" t-att-class="{'warning': state[defaultCashDetails.name].difference}"/>
+                                        <td t-esc="env.pos.format_currency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
                                     </tr>
                                 </tbody>
                                 <tbody class="cash-overview">
@@ -75,17 +75,21 @@
                                 </tbody>
                             </t>
                             <tbody t-if="otherPaymentMethods.length &gt; 0">
-                                <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.name">
+                                <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
                                     <td t-esc="pm.name"/>
                                     <td t-esc="env.pos.format_currency(pm.amount)"/>
+                                    <td t-if="pm.type === 'bank'" t-on-input="handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
+                                    <td t-if="pm.type === 'bank'" t-esc="env.pos.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <textarea placeholder="Notes" class="closing-notes" t-model="state.notes"/>
-                    <div t-if="cashControl" class="accept-closing" t-att-class="{invisible: !state[defaultCashDetails.name].difference}">
-                        <input type="checkbox" id="accept" t-model="state.acceptClosing"/>
-                        <label for="accept">Accept <t t-esc="defaultCashDetails.name"/> difference and post a profit/loss journal entry</label>
+                    <div class="accept-closing" t-att-class="{invisible: !hasDifference()}">
+                        <t t-set="_hasUserAuthority" t-value="hasUserAuthority()" />
+                        <input t-att-disabled="!_hasUserAuthority" type="checkbox" id="accept" t-model="state.acceptClosing"/>
+                        <label t-att-class="{disabled: !_hasUserAuthority}" for="accept">Accept payments difference and post a profit/loss journal entry</label>
+                        <div class="warning" t-att-class="{invisible: _hasUserAuthority}">The maximum difference allowed is <t t-esc="env.pos.format_currency(amountAuthorizedDiff)"/>. Please contact your manager to accept the closing difference.</div>
                     </div>
                 </main>
                 <footer class="footer">
