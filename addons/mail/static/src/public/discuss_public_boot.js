@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { insert, link } from '@mail/model/model_field_command';
+import { data } from 'mail.discuss_public_channel_template';
+
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -25,7 +26,7 @@ import * as legacySession from 'web.session';
 
 owl.Component.env = legacyEnv;
 
-export async function boot() {
+(async function boot() {
     await owl.utils.whenReady();
     owl.config.mode = owl.Component.env.isDebug() ? 'dev' : 'prod';
     AbstractService.prototype.deployServices(owl.Component.env);
@@ -60,51 +61,21 @@ export async function boot() {
         },
     }));
     await owl.mount(MainComponentsContainer, { env, target: document.body });
+    createAndMountDiscussPublicView();
+})();
 
-    async function createThreadViewFromChannelData(channelData) {
-        const messaging = await owl.Component.env.services.messaging.get();
-        const threadViewer = messaging.models['mail.thread_viewer'].create({
-            extraClass: 'flex-grow-1',
-            hasMemberList: true,
-            hasThreadView: true,
-            hasTopbar: true,
-            thread: insert(messaging.models['mail.thread'].convertData(channelData)),
-        });
-        const ThreadView = getMessagingComponent('ThreadView');
-        const threadViewComponent = new ThreadView(null, {
-            composerAttachmentsDetailsMode: 'card',
-            hasComposer: true,
-            hasComposerThreadTyping: true,
-            hasSquashCloseMessages: true,
-            threadViewLocalId: threadViewer.threadView.localId,
-        });
-        await threadViewComponent.mount(document.body);
-        if (threadViewer.thread.defaultDisplayMode === 'video_full_screen') {
-            await threadViewer.thread.toggleCall({ startWithVideo: true });
-            // TODO full screen not possible until the user actually makes an action on the page
-        }
+async function createAndMountDiscussPublicView() {
+    const messaging = await owl.Component.env.services.messaging.get();
+    messaging.models['mail.thread'].insert(messaging.models['mail.thread'].convertData(data.channelData));
+    const discussPublicView = messaging.models['mail.discuss_public_view'].create(data.discussPublicViewData);
+    if (discussPublicView.shouldDisplayWelcomeViewInitially) {
+        discussPublicView.switchToWelcomeView();
+    } else {
+        discussPublicView.switchToThreadView();
     }
-
-    async function createWelcomeView(channelData) {
-        const messaging = await owl.Component.env.services.messaging.get();
-        const channel = messaging.models['mail.thread'].insert(
-            messaging.models['mail.thread'].convertData(channelData)
-        );
-        const WelcomeView = getMessagingComponent('WelcomeView');
-        const welcomeView = messaging.models['mail.welcome_view'].create({
-            channel: link(channel),
-            isDoFocusGuestNameInput: true,
-            pendingGuestName: messaging.currentGuest && messaging.currentGuest.name,
-        });
-        const welcomeViewComponent = new WelcomeView(null, {
-            localId: welcomeView.localId,
-        });
-        await welcomeViewComponent.mount(document.body);
-        if (welcomeView.channel.defaultDisplayMode === 'video_full_screen') {
-            welcomeView.mediaPreview.enableMicrophone();
-            welcomeView.mediaPreview.enableVideo();
-        }
-    }
-
-    return { createThreadViewFromChannelData, createWelcomeView };
+    const DiscussPublicView = getMessagingComponent('DiscussPublicView');
+    const discussPublicViewComponent = new DiscussPublicView(null, {
+        localId: discussPublicView.localId,
+    });
+    await discussPublicViewComponent.mount(document.body);
 }

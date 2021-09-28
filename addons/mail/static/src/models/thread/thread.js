@@ -2079,10 +2079,10 @@ function factory(dependencies) {
         futureActivities: one2many('mail.activity', {
             compute: '_computeFutureActivities',
         }),
-        guestMembers: many2many('mail.guest'),
         group_based_subscription: attr({
             default: false,
         }),
+        guestMembers: many2many('mail.guest'),
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */

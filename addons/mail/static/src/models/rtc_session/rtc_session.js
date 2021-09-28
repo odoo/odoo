@@ -171,6 +171,9 @@ function factory(dependencies) {
             }
             this.update(data);
             this._debounce(async () => {
+                if (!this.exists()) {
+                    return;
+                }
                 await this.async(() => {
                     this.env.services.rpc(
                         {

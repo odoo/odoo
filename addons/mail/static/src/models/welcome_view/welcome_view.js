@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
 import { attr, one2one } from '@mail/model/model_field';
-import { browser } from "@web/core/browser/browser";
 import { create } from '@mail/model/model_field_command';
 import { registerNewModel } from '@mail/model/model_core';
 
 function factory(dependencies) {
 
-    const getNextGuestNameInputId = (function() {
+    const getNextGuestNameInputId = (function () {
         let id = 0;
         return () => ++id;
     })();
@@ -31,9 +30,9 @@ function factory(dependencies) {
 
         /**
          * @static
-         * @param {string} name 
+         * @param {string} name
          */
-        static async updateGuestNameServerSide(name) {
+        static async performRpcGuestUpdateName(name) {
             await this.env.services.rpc({
                 route: '/mail/guest/update_name',
                 params: { name },
@@ -41,10 +40,24 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {MouseEvent} ev 
+         * Updates guest if needed then displays the thread view instead of the
+         * welcome view.
          */
-        async onClickJoinButton(ev) {
-            this.updateGuestNameIfAnyThenJoinChannel();
+        async joinChannel() {
+            if (this.hasGuestNameChanged) {
+                await this.messaging.models['mail.welcome_view'].performRpcGuestUpdateName(this.pendingGuestName.trim());
+            }
+            if (this.discussPublicView.shouldAddGuestAsMemberOnJoin) {
+                await this.performRpcAddGuestAsMember();
+            }
+            this.discussPublicView.switchToThreadView();
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickJoinButton(ev) {
+            this.joinChannel();
         }
 
         /**
@@ -55,30 +68,33 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {KeyboardEvent} ev 
+         * @param {KeyboardEvent} ev
          */
         onInputGuestNameInput(ev) {
             this._updateGuestNameWithInputValue();
         }
 
         /**
-         * @param {KeyboardEvent} ev 
+         * @param {KeyboardEvent} ev
          */
         onKeydownGuestNameInput(ev) {
             if (ev.key === 'Enter') {
-                this.updateGuestNameIfAnyThenJoinChannel();
+                this.joinChannel();
             }
         }
 
         /**
-         * Redirects users to the related channel. If the current user is a
-         * guest, first updates their username with the value of guestNameInput.
+         * Adds the current guest to members of the channel linked to this
+         * welcome view.
          */
-        async updateGuestNameIfAnyThenJoinChannel() {
-            if (this.messaging.currentGuest) {
-                await this.messaging.models['mail.welcome_view'].updateGuestNameServerSide(this.pendingGuestName.trim());
-            }
-            browser.location.href = `/discuss/channel/${this.channel.id}`;
+        async performRpcAddGuestAsMember() {
+            await this.env.services.rpc({
+                route: '/mail/channel/add_guest_as_member',
+                params: {
+                    channel_id: this.channel.id,
+                    channel_uuid: this.channel.uuid,
+                },
+            });
         }
 
         //----------------------------------------------------------------------
@@ -87,11 +103,35 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string}
+         */
+        _computeGuestNameInputUniqueId() {
+            return `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasGuestNameChanged() {
+            return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsJoinButtonDisabled() {
+            return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
+        }
+
+        /**
+         * @private
          */
         _handleFocus() {
             if (this.isDoFocusGuestNameInput) {
                 if (!this.guestNameInputRef.el) {
-                    return
+                    return;
                 }
                 this.update({ isDoFocusGuestNameInput: false });
                 this.guestNameInputRef.el.focus();
@@ -102,40 +142,59 @@ function factory(dependencies) {
         }
 
         /**
+         * Updates `pendingGuestName` with the value of the input element
+         * referred by `guestNameInputRef`.
+         *
          * @private
          */
         _updateGuestNameWithInputValue() {
             this.update({ pendingGuestName: this.guestNameInputRef.el.value });
         }
 
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsJoinButtonDisabled() {
-            return Boolean(this.messaging.currentGuest && !this.pendingGuestName.trim());
-        }
-
     }
 
     WelcomeView.fields = {
         /**
-         * The channel to redirect to once the user clicks on the 'joinButton'.
+         * States the channel to redirect to once the user clicks on the
+         * 'joinButton'.
          */
         channel: one2one('mail.thread', {
+            readonly: true,
             required: true,
         }),
         /**
-         * Used as a value for `id`, `for`, and `name` attributes of the guest
-         * name input and its label. Necessary to ensure the uniqueness.
+         * States discuss public view on which this welcome view is displayed.
          */
-        guestNameInputUniqueId: attr({
-            default: `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`,
+        discussPublicView: one2one('mail.discuss_public_view', {
+            inverse: 'welcomeView',
+            readonly: true,
+            required: true,
         }),
         /**
-         * Ref the to input element containing the 'pendingGuestName'.
+         * States the OWL ref the to input element containing the
+         * 'pendingGuestName'.
          */
         guestNameInputRef: attr(),
+        /**
+         * States the value to use for `id`, `for`, and `name` attributes of
+         * the guest name input and its label.
+         *
+         * Necessary to ensure the uniqueness.
+         */
+        guestNameInputUniqueId: attr({
+            compute: '_computeGuestNameInputUniqueId',
+            readonly: true,
+        }),
+        /**
+         * Determines whether the guest's name has been updated.
+         *
+         * Useful to determine whether a RPC should be done to update the name
+         * server side.
+         */
+        hasGuestNameChanged: attr({
+            compute: '_computeHasGuestNameChanged',
+            readonly: true,
+        }),
         /**
          * Determines whether the 'guestNameInput' should be focused the next
          * time the component is updated.
@@ -143,7 +202,7 @@ function factory(dependencies) {
         isDoFocusGuestNameInput: attr(),
         /**
          * Determines whether the 'joinButton' is disabled.
-         * 
+         *
          * Shall be disabled when 'pendingGuestName' is an empty string while
          * the current user is a guest.
          */
@@ -151,7 +210,7 @@ function factory(dependencies) {
             compute: '_computeIsJoinButtonDisabled'
         }),
         /**
-         * The MediaPreview linked to the current WelcomeView.
+         * States the media preview embedded in this welcome view.
          */
         mediaPreview: one2one('mail.media_preview', {
             default: create(),
@@ -160,8 +219,14 @@ function factory(dependencies) {
             required: true,
         }),
         /**
-         * The value of the 'guestNameInput'.
-         * 
+         * States the name the guest had when landing on the welcome view.
+         *
+         * Useful to determine whether the name has changed.
+         */
+        originalGuestName: attr(),
+        /**
+         * Determines the value of the 'guestNameInput'.
+         *
          * Will be used to update the current guest's name when joining the
          * channel by clicking on the 'joinButton'.
          */
