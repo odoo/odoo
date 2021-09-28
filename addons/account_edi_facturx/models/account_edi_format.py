@@ -149,7 +149,7 @@ class AccountEdiFormat(models.Model):
 
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             invoice_form.partner_id = self_ctx._retrieve_partner(
-                name=_find_value(f"/ram:{partner_type}/ram:Name"),
+                name=_find_value(f"//ram:{partner_type}/ram:Name"),
                 mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
                 vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
             )
