@@ -119,7 +119,7 @@ Wysiwyg.include({
                 const $utilsZone = $('<div class="iframe-utils-zone">');
                 self.$utilsZone = $utilsZone;
 
-                const $iframeWrapper = $('<div class="iframe-editor-wrapper">');
+                const $iframeWrapper = $('<div class="iframe-editor-wrapper odoo-editor">');
                 const $codeview = $('<textarea class="o_codeview d-none"/>');
                 self.$editable.addClass('o_editable oe_structure');
 
