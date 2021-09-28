@@ -103,7 +103,7 @@ class ProjectCustomerPortal(CustomerPortal):
         """ Redirect the outdated routes to the new routes. """
         return request.redirect(request.httprequest.path.replace('/my/task', '/my/tasks'))
 
-    @http.route(['/my/projects/<int:project_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/projects/<int:project_id>', '/my/projects/<int:project_id>/page/<int:page>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, task_id=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
