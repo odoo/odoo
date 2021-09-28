@@ -149,7 +149,7 @@ class AccountEdiFormat(models.Model):
                                        account_predictive_bills_disable_prediction=True)) as invoice_form:
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             invoice_form.partner_id = self._retrieve_partner(
-                name=_find_value(f"/ram:{partner_type}/ram:Name"),
+                name=_find_value(f"//ram:{partner_type}/ram:Name"),
                 mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
                 vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
             )
