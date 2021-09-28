@@ -151,7 +151,7 @@ function factory(dependencies) {
             if (!this.isClientRtcCompatible) {
                 return;
             }
-            if (!this._peerConnections[sender] && (!channelId || channelId !== this.channel.id)) {
+            if (!this._peerConnections[sender] && (!channelId || !this.channel || channelId !== this.channel.id)) {
                 return;
             }
             switch (event) {
