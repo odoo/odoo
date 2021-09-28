@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { PyDate, PyDateTime, PyRelativeDelta, PyTime } from "./py_date";
+import { PyDate, PyDateTime, PyRelativeDelta, PyTime, PyTimeDelta } from "./py_date";
 
 export const BUILTINS = {
     /**
@@ -16,7 +16,13 @@ export const BUILTINS = {
             case "boolean":
                 return value;
             case "object":
-                return value !== null;
+                if (value === null) {
+                    return false;
+                }
+                if (value.isTrue) {
+                    return value.isTrue();
+                }
+                return true;
         }
         return true;
     },
@@ -46,7 +52,7 @@ export const BUILTINS = {
 
     datetime: {
         time: PyTime,
-        timedelta: PyRelativeDelta,
+        timedelta: PyTimeDelta,
         datetime: PyDateTime,
         date: PyDate,
     },
