@@ -1293,6 +1293,8 @@ class Task(models.Model):
         task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
+        customer_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(tools.email_split(defaults['email_from']), records=task) if p]
+        partner_ids += customer_ids
         task.message_subscribe(partner_ids)
         return task
 
