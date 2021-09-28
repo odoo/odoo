@@ -25,16 +25,39 @@ class DiscussController(http.Controller):
         '/chat/<string:create_token>',
         '/chat/<string:create_token>/<string:channel_name>',
     ], methods=['GET'], type='http', auth='public')
-    def discuss_channel_from_token(self, create_token, channel_name=None, **kwargs):
+    def discuss_channel_chat_from_token(self, create_token, channel_name=None, **kwargs):
+        return self._response_discuss_channel_from_token(create_token=create_token, channel_name=channel_name)
+
+    @http.route([
+        '/meet/<string:create_token>',
+        '/meet/<string:create_token>/<string:channel_name>',
+    ], methods=['GET'], type='http', auth='public')
+    def discuss_channel_meet_from_token(self, create_token, channel_name=None, **kwargs):
+        return self._response_discuss_channel_from_token(create_token=create_token, channel_name=channel_name, default_display_mode='video_full_screen')
+
+    @http.route('/chat/<int:channel_id>/<string:invitation_token>', methods=['GET'], type='http', auth='public')
+    def discuss_channel_invitation(self, channel_id, invitation_token, **kwargs):
+        channel_sudo = request.env['mail.channel'].browse(channel_id).sudo().exists()
+        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
+            raise NotFound()
+        return self._response_discuss_channel_invitation(channel_sudo=channel_sudo)
+
+    @http.route('/discuss/channel/<int:channel_id>', methods=['GET'], type='http', auth='public')
+    def discuss_channel(self, channel_id, **kwargs):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        return self._response_discuss_public_channel_template(channel_sudo=channel_partner_sudo.channel_id)
+
+    def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         if not request.env['ir.config_parameter'].sudo().get_param('mail.chat_from_token'):
             raise NotFound()
         channel_sudo = request.env['mail.channel'].sudo().search([('uuid', '=', create_token)])
         if not channel_sudo:
             try:
                 channel_sudo = channel_sudo.create({
-                    'uuid': create_token,
+                    'default_display_mode': default_display_mode,
                     'name': channel_name or create_token,
                     'public': 'public',
+                    'uuid': create_token,
                 })
             except IntegrityError as e:
                 if e.pgcode != UNIQUE_VIOLATION:
@@ -43,50 +66,54 @@ class DiscussController(http.Controller):
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
                 channel_sudo = channel_sudo.search([('uuid', '=', create_token)])
-        return request.redirect(f'/chat/{channel_sudo.id}/{channel_sudo.uuid}')
+        return self._response_discuss_channel_invitation(channel_sudo=channel_sudo, is_channel_token_secret=False)
 
-    @http.route('/chat/<int:channel_id>/<string:invitation_token>', methods=['GET'], type='http', auth='public')
-    def discuss_channel_invitation(self, channel_id, invitation_token, **kwargs):
-        channel_sudo = request.env['mail.channel'].browse(int(channel_id)).sudo().exists()
-        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
-            raise NotFound()
-        if channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=int(channel_id)):
-            return request.redirect(f'/discuss/channel/{channel_sudo.id}')
+    def _response_discuss_channel_invitation(self, channel_sudo, is_channel_token_secret=True):
         if channel_sudo.channel_type == 'chat':
             raise NotFound()
-        response = request.redirect(f'/discuss/channel/{channel_sudo.id}/welcome')
-        if not channel_sudo.env.user._is_public():
-            channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
-            return response
-        guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
-        if not guest:
-            guest = channel_sudo.env['mail.guest'].create({
-                'country_id': channel_sudo.env['res.country'].search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
-                'lang': get_lang(channel_sudo.env).code,
-                'name': _("Guest"),
-                'timezone': channel_sudo.env['mail.guest']._get_timezone_from_request(request),
-            })
+        discuss_public_view_data = {
+            'isChannelTokenSecret': is_channel_token_secret,
+        }
+        add_guest_cookie = False
+        if not channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_sudo.id):
+            if not channel_sudo.env.user._is_public():
+                channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
+            else:
+                guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
+                if guest:
+                    channel_sudo.add_members(guest_ids=[guest.id])
+                else:
+                    guest = channel_sudo.env['mail.guest'].create({
+                        'country_id': channel_sudo.env['res.country'].search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
+                        'lang': get_lang(channel_sudo.env).code,
+                        'name': _("Guest"),
+                        'timezone': channel_sudo.env['mail.guest']._get_timezone_from_request(request),
+                    })
+                    add_guest_cookie = True
+                    discuss_public_view_data.update({
+                        'shouldAddGuestAsMemberOnJoin': True,
+                        'shouldDisplayWelcomeViewInitially': True,
+                    })
+                channel_sudo = channel_sudo.with_context(guest=guest)
+        response = self._response_discuss_public_channel_template(channel_sudo=channel_sudo, discuss_public_view_data=discuss_public_view_data)
+        if add_guest_cookie:
             # Discuss Guest ID: every route in this file will make use of it to authenticate
             # the guest through `_get_as_sudo_from_request` or `_get_as_sudo_from_request_or_raise`.
             expiration_date = datetime.now() + timedelta(days=365)
             response.set_cookie(guest._cookie_name, f"{guest.id}{guest._cookie_separator}{guest.access_token}", httponly=True, expires=expiration_date)
-        channel_sudo.add_members(guest_ids=[guest.id])
         return response
 
-    @http.route('/discuss/channel/<int:channel_id>', methods=['GET'], type='http', auth='public')
-    def discuss_channel(self, channel_id, **kwargs):
-        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+    def _response_discuss_public_channel_template(self, channel_sudo, discuss_public_view_data=None):
+        discuss_public_view_data = discuss_public_view_data or {}
         return request.render('mail.discuss_public_channel_template', {
-            'channel_sudo': channel_partner_sudo.channel_id,
-            'session_info': channel_partner_sudo.env['ir.http'].session_info(),
-        })
-
-    @http.route('/discuss/channel/<int:channel_id>/welcome', methods=['GET'], type='http', auth='public')
-    def discuss_channel_welcome(self, channel_id):
-        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        return request.render('mail.discuss_public_welcome_template', {
-            'channel_sudo': channel_partner_sudo.channel_id,
-            'session_info': channel_partner_sudo.env['ir.http'].session_info(),
+            'data': {
+                'channelData': channel_sudo.channel_info()[0],
+                'discussPublicViewData': dict({
+                    'channel': [('insert', {'id': channel_sudo.id, 'model': 'mail.channel'})],
+                    'shouldDisplayWelcomeViewInitially': channel_sudo.default_display_mode == 'video_full_screen',
+                }, **discuss_public_view_data),
+            },
+            'session_info': channel_sudo.env['ir.http'].session_info(),
         })
 
     # --------------------------------------------------------------------------
@@ -303,6 +330,22 @@ class DiscussController(http.Controller):
     # Channel API
     # --------------------------------------------------------------------------
 
+    @http.route('/mail/channel/add_guest_as_member', methods=['POST'], type='json', auth='public')
+    def mail_channel_add_guest_as_member(self, channel_id, channel_uuid, **kwargs):
+        channel_sudo = request.env['mail.channel'].browse(int(channel_id)).sudo().exists()
+        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, channel_uuid):
+            raise NotFound()
+        if channel_sudo.channel_type == 'chat':
+            raise NotFound()
+        guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
+        # Only guests should take this route.
+        if not guest:
+            raise NotFound()
+        channel_partner = channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_id)
+        # Do not add the guest to channel members if they are already member.
+        if not channel_partner:
+            channel_sudo.add_members(guest_ids=[guest.id])
+
     @http.route('/mail/channel/messages', methods=['POST'], type='json', auth='public')
     def mail_channel_messages(self, channel_id, max_id=None, min_id=None, limit=30, **kwargs):
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
@@ -434,7 +477,7 @@ class DiscussController(http.Controller):
                 if session and session.guest_id == guest:
                     session._update_and_broadcast(values)
                     return
-            raise NotFound()
+            return
         session = request.env['mail.channel.rtc.session'].sudo().browse(int(session_id)).exists()
         if session and session.partner_id == request.env.user.partner_id:
             session._update_and_broadcast(values)
