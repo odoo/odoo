@@ -36,9 +36,9 @@ function divmod(a, b, fn) {
     return fn(Math.floor(a / b), mod);
 }
 
-function assert(bool) {
+function assert(bool, message = "AssertionError") {
     if (!bool) {
-        throw new AssertionError("AssertionError");
+        throw new AssertionError(message);
     }
 }
 
@@ -532,72 +532,187 @@ export class PyTime extends PyDate {
     }
 }
 
-const argsSpec = "year month day hour minute second years months weeks days hours minutes seconds weekday".split(
+/*
+ * This list is intended to be of that shape (32 days in december), it is used by
+ * the algorithm that computes "relativedelta yearday". The algorithm was adapted
+ * from the one in python (https://github.com/dateutil/dateutil/blob/2.7.3/dateutil/relativedelta.py#L199)
+ */
+const DAYS_IN_YEAR = [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 366];
+
+const TIME_PERIODS = ["hour", "minute", "second"];
+const PERIODS = ["year", "month", "day", ...TIME_PERIODS];
+
+const RELATIVE_KEYS = "years months weeks days hours minutes seconds microseconds leapdays".split(
+    " "
+);
+const ABSOLUTE_KEYS = "year month day hour minute second microsecond weekday nlyearday yearday".split(
     " "
 );
 
+const argsSpec = ["dt1", "dt2"]; // all other arguments are kwargs
 export class PyRelativeDelta {
     /**
      * @param  {...any} args
      * @returns {PyRelativeDelta}
      */
     static create(...args) {
-        const delta = new PyRelativeDelta();
-        const namedArgs = parseArgs(args, argsSpec);
-        delta.year = (namedArgs.year || 0) + (namedArgs.years || 0);
-        delta.month = (namedArgs.month || 0) + (namedArgs.months || 0);
-        delta.day = (namedArgs.day || 0) + (namedArgs.days || 0);
-        delta.hour = (namedArgs.hour || 0) + (namedArgs.hours || 0);
-        delta.minute = (namedArgs.minute || 0) + (namedArgs.minutes || 0);
-        delta.second = (namedArgs.second || 0) + (namedArgs.seconds || 0);
-        delta.day += 7 * (namedArgs.weeks || 0);
-        if (namedArgs.weekday) {
-            throw new NotSupportedError("weekday is not supported");
+        const params = parseArgs(args, argsSpec);
+        if ("dt1" in params) {
+            throw new Error("relativedelta(dt1, dt2) is not supported for now");
         }
-        return delta;
+        for (const period of PERIODS) {
+            if (period in params) {
+                const val = params[period];
+                assert(val >= 0, `${period} ${val} is out of range`);
+            }
+        }
+
+        for (const key of RELATIVE_KEYS) {
+            params[key] = params[key] || 0;
+        }
+        for (const key of ABSOLUTE_KEYS) {
+            params[key] = key in params ? params[key] : null;
+        }
+        params.days += 7 * params.weeks;
+
+        let yearDay = 0;
+        if (params.nlyearday) {
+            yearDay = params.nlyearday;
+        } else if (params.yearday) {
+            yearDay = params.yearday;
+            if (yearDay > 59) {
+                params.leapDays = -1;
+            }
+        }
+
+        if (yearDay) {
+            for (let monthIndex = 0; monthIndex < DAYS_IN_YEAR.length; monthIndex++) {
+                if (yearDay <= DAYS_IN_YEAR[monthIndex]) {
+                    params.month = monthIndex + 1;
+                    if (monthIndex === 0) {
+                        params.day = yearDay;
+                    } else {
+                        params.day = yearDay - DAYS_IN_YEAR[monthIndex - 1];
+                    }
+                    break;
+                }
+            }
+        }
+
+        return new PyRelativeDelta(params);
     }
 
     /**
-     * @param {PyDate} date
+     * @param {PyDateTime|PyDate} date
      * @param {PyRelativeDelta} delta
-     * @returns {PyDateTime}
+     * @returns {PyDateTime|PyDate}
      */
     static add(date, delta) {
+        if (!(date instanceof PyDate || date instanceof PyDateTime)) {
+            throw NotSupportedError();
+        }
+
+        // First pass: we want to determine which is our target year and if we will apply leap days
         const s = tmxxx(
-            date.year,
-            date.month,
-            date.day + delta.day,
-            delta.hour,
-            delta.minute,
-            delta.second
+            (delta.year || date.year) + delta.years,
+            (delta.month || date.month) + delta.months,
+            delta.day || date.day,
+            delta.hour || date.hour || 0,
+            delta.minute || date.minute || 0,
+            delta.second || date.seconds || 0,
+            delta.microseconds || date.microseconds || 0
         );
-        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, 0);
+
+        const newDateTime = new PyDateTime(
+            s.year,
+            s.month,
+            s.day,
+            s.hour,
+            s.minute,
+            s.second,
+            s.microsecond
+        );
+
+        let leapDays = 0;
+        if (delta.leapDays && newDateTime.month > 2 && isLeap(newDateTime.year)) {
+            leapDays = delta.leapDays;
+        }
+
+        // Second pass: apply the difference in days, and the difference in time values
+        const temp = newDateTime.add(
+            PyTimeDelta.create({
+                days: delta.days + leapDays,
+                hours: delta.hours,
+                minutes: delta.minutes,
+                seconds: delta.seconds,
+                microseconds: delta.microseconds,
+            })
+        );
+
+        // Determine the right return type:
+        // First we look at the type of the incoming date object,
+        // then we look at the actual time values held by the computed date.
+        const hasTime = Boolean(temp.hour || temp.minute || temp.second || temp.microsecond);
+        const returnDate =
+            !hasTime && date instanceof PyDate ? new PyDate(temp.year, temp.month, temp.day) : temp;
+
+        // Final pass: target the wanted day of the week (if necessary)
+        if (delta.weekday !== null) {
+            const wantedDow = delta.weekday + 1; // python: Monday is 0 ; JS: Monday is 1;
+            const _date = new Date(returnDate.year, returnDate.month - 1, returnDate.day);
+            const days = (7 - _date.getDay() + wantedDow) % 7;
+            return returnDate.add(new PyTimeDelta(days, 0, 0));
+        }
+        return returnDate;
     }
 
     /**
-     * @param {PyDate} date
+     * @param {PyDateTime|PyDate} date
      * @param {PyRelativeDelta} delta
-     * @returns {PyDateTime}
+     * @returns {PyDateTime|PyDate}
      */
     static substract(date, delta) {
-        const s = tmxxx(
-            date.year,
-            date.month,
-            date.day - delta.day,
-            -delta.hour,
-            -delta.minute,
-            -delta.second
-        );
-        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, 0);
+        return PyRelativeDelta.add(date, delta.negate());
     }
 
-    constructor() {
-        this.year = 0;
-        this.month = 0;
-        this.day = 0;
-        this.hour = 0;
-        this.minute = 0;
-        this.second = 0;
+    /**
+     * @param {Object} params
+     * @param {+1|-1} sign
+     */
+    constructor(params = {}, sign = +1) {
+        this.years = sign * params.years;
+        this.months = sign * params.months;
+        this.days = sign * params.days;
+        this.hours = sign * params.hours;
+        this.minutes = sign * params.minutes;
+        this.seconds = sign * params.seconds;
+        this.microseconds = sign * params.microseconds;
+
+        this.leapDays = params.leapDays;
+
+        this.year = params.year;
+        this.month = params.month;
+        this.day = params.day;
+        this.hour = params.hour;
+        this.minute = params.minute;
+        this.second = params.second;
+        this.microsecond = params.microsecond;
+
+        this.weekday = params.weekday;
+    }
+
+    /**
+     * @returns {PyRelativeDelta}
+     */
+    negate() {
+        return new PyRelativeDelta(this, -1);
+    }
+
+    isEqual(other) {
+        // For now we don't do normalization in the constructor (or create method).
+        // That is, we only compute the overflows at the time we add or substract.
+        // This is why we can't support isEqual for now.
+        throw new NotSupportedError();
     }
 }
 
