@@ -45,9 +45,10 @@ import odoo
 from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
+from odoo.modules.registry import Registry
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
-from odoo.sql_db import Cursor
+from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -695,6 +696,10 @@ class TransactionCase(BaseCase):
     fields. If a test modifies the registry (custom models and/or fields), it
     should prepare the necessary cleanup (`self.registry.reset_changes()`).
     """
+    registry: Registry = None
+    env: api.Environment = None
+    cr: Cursor = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1378,21 +1383,41 @@ class ChromeBrowser():
         return replacer
 
 
+class Opener(requests.Session):
+    """
+    Flushes and clears the current transaction when starting a request.
+
+    This is likely necessary when we make a request to the server, as the
+    request is made with a test cursor, which uses a different cache than this
+    transaction.
+    """
+    def __init__(self, cr: BaseCursor):
+        super().__init__()
+        self.cr = cr
+
+    def request(self, *args, **kwargs):
+        self.cr.flush(); self.cr.clear()
+        return super().request(*args, **kwargs)
+
+
+class Transport(xmlrpclib.Transport):
+    """ see :class:`Opener` """
+    def __init__(self, cr: BaseCursor):
+        self.cr = cr
+        super().__init__()
+
+    def request(self, *args, **kwargs):
+        self.cr.flush(); self.cr.clear()
+        return super().request(*args, **kwargs)
+
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
 
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
-        # v8 api with correct xmlrpc exception handling.
-        self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
-        self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
-        self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
-        self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
-        cls = type(self)
-        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+    _logger: logging.Logger = None
 
     @classmethod
     def setUpClass(cls):
@@ -1401,14 +1426,21 @@ class HttpCase(TransactionCase):
         ICP = cls.env['ir.config_parameter']
         ICP.set_param('web.base.url', cls.base_url())
         ICP.flush()
+        # v8 api with correct xmlrpc exception handling.
+        cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
+        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
         super().setUp()
         if self.registry_test_mode:
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
+
+        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
+        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
+        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
-        self.opener = requests.Session()
+        self.opener = Opener(self.cr)
 
     @classmethod
     def start_browser(cls):
@@ -1424,11 +1456,6 @@ class HttpCase(TransactionCase):
             cls.browser = None
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True, head=False):
-        # Flush and clear the current transaction.  This is useful in case we
-        # make a request to the server, as the request is made with a test
-        # cursor, which uses a different cache than this transaction.
-        self.cr.flush()
-        self.cr.clear()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
         if head:
@@ -1499,7 +1526,7 @@ class HttpCase(TransactionCase):
         #
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
-        self.opener = requests.Session()
+        self.opener = Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
         if self.browser:
             self._logger.info('Setting session cookie in browser')
