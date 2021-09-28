@@ -104,6 +104,7 @@ class ChannelPartner(models.Model):
         self.ensure_one()
         self.channel_id._rtc_cancel_invitations(partner_ids=self.partner_id.ids, guest_ids=self.guest_id.ids)
         self.rtc_session_ids._disconnect()
+        self.env['mail.channel.rtc.session']._gc_inactive_sessions()
         rtc_session = self.env['mail.channel.rtc.session'].create({'channel_partner_id': self.id})
         res = {
             'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,

@@ -439,6 +439,19 @@ class DiscussController(http.Controller):
         if session and session.partner_id == request.env.user.partner_id:
             session._update_and_broadcast(values)
 
+    @http.route('/mail/rtc/session/ping', methods=['POST'], type='json', auth='public')
+    def rtc_session_ping(self, rtc_session_id):
+        rtc_session_sudo = request.env['mail.channel.rtc.session'].sudo().browse(int(rtc_session_id)).exists()
+        if not rtc_session_sudo:
+            return
+        if request.env.user._is_public():
+            guest = request.env['mail.guest']._get_guest_from_request(request)
+            if not guest or guest != rtc_session_sudo.guest_id:
+                return
+        elif rtc_session_sudo.env.user.partner_id != rtc_session_sudo.partner_id:
+            return
+        rtc_session_sudo.write({})  # update write_date
+
     @http.route('/mail/rtc/channel/join_call', methods=['POST'], type="json", auth="public")
     def channel_call_join(self, channel_id):
         """ Joins the RTC call of a channel if the user is a member of that channel
