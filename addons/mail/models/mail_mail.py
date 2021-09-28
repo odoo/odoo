@@ -98,6 +98,8 @@ class MailMail(models.Model):
         # To remove when automatic context propagation is removed in web client
         if self._context.get('default_type') not in type(self).message_type.base_field.selection:
             self = self.with_context(dict(self._context, default_type=None))
+        if self._context.get('default_state') not in type(self).state.base_field.selection:
+            self = self.with_context(dict(self._context, default_state='outgoing'))
         return super(MailMail, self).default_get(fields)
 
     def mark_outgoing(self):
