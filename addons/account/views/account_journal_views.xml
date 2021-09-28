@@ -65,8 +65,8 @@
                                         <field name="suspense_account_id"
                                                attrs="{'required': [('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
                                                groups="account.group_account_readonly"/>
-                                        <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="profit_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
+                                        <field name="loss_account_id" attrs="{'invisible': ['!', ('type', 'in', ('cash', 'bank'))]}"/>
                                         <!-- Sales -->
                                         <field name="default_account_id" string="Default Income Account"
                                                attrs="{'required': [('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
