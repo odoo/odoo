@@ -39,12 +39,12 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 // component state and refs definition
                 const state = {notes: '', acceptClosing: false, payments: {}};
                 if (this.cashControl) {
-                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount};
+                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount, number: 0};
                 }
                 if (this.otherPaymentMethods.length > 0) {
                     this.otherPaymentMethods.forEach(pm => {
                         if (pm.type === 'bank') {
-                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0}
+                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
                         }
                     })
                 }
@@ -141,10 +141,13 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                     args: [this.env.pos.pos_session.id, this.state.notes]
                 })
                 try {
+                    const bankPaymentMethodDiffPairs = this.otherPaymentMethods
+                        .filter((pm) => pm.type == 'bank')
+                        .map((pm) => [pm.id, this.state.payments[pm.id].difference]);
                     response = await this.rpc({
                         model: 'pos.session',
                         method: 'close_session_from_ui',
-                        args: [this.env.pos.pos_session.id],
+                        args: [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs],
                     });
                     if (!response.successful) {
                         return this.handleClosingError(response);
@@ -175,6 +178,9 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             if (response.redirect) {
                 window.location = '/web#action=point_of_sale.action_client_pos_menu';
             }
+        }
+        _getShowDiff(pm) {
+            return pm.type == 'bank' && pm.number !== 0;
         }
     }
 

@@ -629,9 +629,9 @@ class AccountJournal(models.Model):
                 default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
-            if journal_type == 'cash' and not has_profit_account:
+            if journal_type in ('cash', 'bank') and not has_profit_account:
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
-            if journal_type == 'cash' and not has_loss_account:
+            if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
         # === Fill missing refund_sequence ===
