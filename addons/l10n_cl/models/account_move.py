@@ -3,7 +3,6 @@
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
 from odoo.osv import expression
-from odoo.tools.misc import formatLang
 
 SII_VAT = '60805000-0'
 
@@ -125,72 +124,14 @@ class AccountMove(models.Model):
             return 'l10n_cl.report_invoice_document'
         return super()._get_name_invoice_report()
 
-    def _l10n_cl_amount_and_taxes(self):
+    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
+        if self.company_id.account_fiscal_country_id.code == 'CL' and self._l10n_cl_include_sii() and (
+                'commit_assetsbundle' in self.env.context or not self.env.context.get('params', {}).get('view_type') == 'form'):
+            tax_ids_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
+            tax_line_id_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
+        return super()._prepare_tax_lines_data_for_totals_from_invoice(
+            tax_line_id_filter=tax_line_id_filter, tax_ids_filter=tax_ids_filter)
+
+    def _l10n_cl_include_sii(self):
         self.ensure_one()
-        res = {}
-        if self.is_invoice():
-            tax_lines = self.line_ids.filtered('tax_line_id')
-            included_taxes = self.l10n_latam_document_type_id and \
-                self.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
-            if not included_taxes:
-                amount_untaxed = self.amount_untaxed
-                not_included_invoice_taxes = tax_lines
-            else:
-                included_invoice_taxes = tax_lines.filtered(lambda x: x.tax_line_id in included_taxes)
-                not_included_invoice_taxes = tax_lines - included_invoice_taxes
-                sign = -1 if self.is_inbound() else 1
-                amount_untaxed = self.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
-            res['amount_untaxed'] = amount_untaxed
-            res['tax_lines'] = not_included_invoice_taxes
-        else:
-            res['amount_untaxed'] = False
-            res['tax_lines'] = self.env['account.move.line']
-        return res
-
-    def _compute_invoice_taxes_by_group(self):
-        report_or_portal_view = 'commit_assetsbundle' in self.env.context or \
-            not self.env.context.get('params', {}).get('view_type') == 'form'
-        if not report_or_portal_view:
-            return super()._compute_invoice_taxes_by_group()
-
-        move_with_doc_type = self.filtered('l10n_latam_document_type_id')
-        for move in move_with_doc_type:
-            lang_env = move.with_context(lang=move.partner_id.lang).env
-            tax_lines = move._l10n_cl_amount_and_taxes()['tax_lines']
-            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
-            res = {}
-            # There are as many tax line as there are repartition lines
-            done_taxes = set()
-            for line in tax_lines:
-                res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
-                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
-                    else:
-                        amount = line.tax_base_amount
-                    res[line.tax_line_id.tax_group_id]['base'] += amount
-                    # The base should be added ONCE
-                    done_taxes.add(tax_key_add_base)
-
-            # At this point we only want to keep the taxes with a zero amount since they do not
-            # generate a tax line.
-            zero_taxes = set()
-            for line in move.line_ids:
-                for tax in line._l10n_cl_prices_and_taxes()['taxes'].flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res or tax.id in zero_taxes:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                        zero_taxes.add(tax.id)
-
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            move.amount_by_group = [(
-                group.name, amounts['amount'],
-                amounts['base'],
-                formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
-                formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
-                len(res),
-                group.id
-            ) for group, amounts in res]
-        super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
+        return self.l10n_latam_document_type_id.code in ['39', '41', '110', '111', '112', '34']
