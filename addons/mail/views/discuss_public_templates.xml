@@ -38,24 +38,10 @@
         <t t-call="mail.discuss_public_layout">
             <t t-set="head">
                 <script>
-                    odoo.define('mail.discuss_public_boot_channel', async function(require) {
-                        const { boot } = require('@mail/public/discuss_public_boot');
-                        const { createThreadViewFromChannelData } = await boot();
-                        createThreadViewFromChannelData(<t t-out="json.dumps(channel_sudo.channel_info()[0])"/>);
-                    });
-                </script>
-            </t>
-        </t>
-    </template>
-
-    <template id="mail.discuss_public_welcome_template" name="Discuss Public Welcome Template">
-        <t t-call="mail.discuss_public_layout">
-            <t t-set="head">
-                <script>
-                    odoo.define('mail.discuss_public_boot_welcome_view', async function(require) {
-                        const { boot } = require('@mail/public/discuss_public_boot');
-                        const { createWelcomeView } = await boot();
-                        createWelcomeView(<t t-out="json.dumps(channel_sudo.channel_info()[0])"/>);
+                    odoo.define('mail.discuss_public_channel_template', function() {
+                        return {
+                            data: <t t-out="json.dumps(data)"/>,
+                        };
                     });
                 </script>
             </t>
