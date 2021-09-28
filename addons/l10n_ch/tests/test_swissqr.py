@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
+from unittest.mock import patch
 
+from odoo.addons.account.models.res_bank import ResPartnerBank
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -111,7 +113,23 @@ class TestSwissQR(AccountTestInvoicingCommon):
         else:
             struct_ref = ''
             unstr_msg = invoice.payment_reference or invoice.ref or invoice.name or ''
-        unstr_msg = (unstr_msg or invoice.number).replace('/', '%2F')
+        unstr_msg = unstr_msg or invoice.number
+
+        # Check QR generation flow + QR-code base64 result
+
+        params = invoice.partner_bank_id._get_qr_code_generation_params(
+            'ch_qr', 42.0, invoice.currency_id, invoice.partner_id, unstr_msg, struct_ref
+        )
+
+        def mock_get_qr_code_base64(self2, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+            params2 = self2._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+            self.assertEqual(params, params2)
+            return None
+
+        with patch.object(ResPartnerBank, '_get_qr_code_base64', mock_get_qr_code_base64):
+            invoice.generate_qr_code()
+
+        # Check QR-code url result
 
         payload = (
             "SPC%0A"
@@ -141,13 +159,13 @@ class TestSwissQR(AccountTestInvoicingCommon):
             iban=invoice.partner_bank_id.sanitized_acc_number,
             ref_type=ref_type,
             struct_ref=struct_ref or '',
-            unstr_msg=unstr_msg,
+            unstr_msg=unstr_msg.replace('/', '%2F'),
         )
 
-        expected_url = ("/report/barcode/?type=QR&value={}"
-                        "&width=256&height=256&quiet=1&mask=ch_cross").format(payload)
-
-        url = invoice.generate_qr_code()
+        expected_url = ("/report/barcode/?width=256&height=256&quiet=1&mask=ch_cross&value={}&type=QR").format(payload)
+        url = invoice.partner_bank_id.build_qr_code_url(
+            42.0, unstr_msg, struct_ref, invoice.currency_id, invoice.partner_id, 'ch_qr'
+        )
         self.assertEqual(url, expected_url)
 
     def test_swissQR_missing_bank(self):
