@@ -146,7 +146,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _getValue: function () {
-        var value = this.wysiwyg.getValue();
+        let value;
+        if (!this._$codeview || this._$codeview.hasClass('d-none')) {
+           value = this.wysiwyg.getValue();
+        } else {
+            value = this._$codeview.val();
+        }
         if (this.nodeOptions.wrapper) {
             return this._unWrap(value);
         }
@@ -520,10 +525,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     </button>
                 </div>
             `);
-            const $codeview = $('<textarea class="o_codeview d-none"/>');
-            this.wysiwyg.$editable.after($codeview);
+            this._$codeview = $('<textarea class="o_codeview d-none"/>');
+            this.wysiwyg.$editable.after(this._$codeview);
             this.wysiwyg.toolbar.$el.append($codeviewButton);
-            $codeviewButton.click(() => this._toggleCodeView($codeview, $codeviewButton));
+            $codeviewButton.click(() => this._toggleCodeView(this._$codeview, $codeviewButton));
         }
     },
     /**
