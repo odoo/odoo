@@ -77,7 +77,13 @@ function factory(dependencies) {
              * connection that were established but failed or timed out.
              */
             this._intervalId = browser.setInterval(() => {
-                this.channel && this.currentRtcSession && this._callSessions();
+                if (!this.currentRtcSession) {
+                    return;
+                }
+                this._pingServer();
+                if (this.channel) {
+                    this._callSessions();
+                }
             }, 30000); // 30 seconds
         }
 
@@ -662,6 +668,18 @@ function factory(dependencies) {
                     }));
                 }
             }
+        }
+
+        /**
+         * Pings the server to ensure this session is kept alive.
+         */
+        async _pingServer() {
+            await this.env.services.rpc({
+                route: '/mail/rtc/session/ping',
+                params: {
+                    'rtc_session_id': this.currentRtcSession.id,
+                },
+            }, { shadow: true });
         }
 
         /**
