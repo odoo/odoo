@@ -2,6 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { PyDate, PyTimeDelta } from "@web/core/py_js/py_date";
 
 QUnit.module("py", {}, () => {
     QUnit.module("date stuff", () => {
@@ -87,7 +88,47 @@ QUnit.module("py", {}, () => {
             );
         });
 
-        // datetime.datetime.combine(context_today(), datetime.time(23,59,59))
+        QUnit.test("datetime + timedelta", function (assert) {
+            assert.expect(6);
+
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.datetime(2017, 2, 15, 1, 7, 31) + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+                "2017-02-16 01:07:31"
+            );
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.datetime(2012, 2, 15, 1, 7, 31) - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+                "2012-02-15 00:07:31"
+            );
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(hours=-1)).strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+                "2012-02-15 00:07:31"
+            );
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(minutes=100)).strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+                "2012-02-15 02:47:31"
+            );
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.date(day=3,month=4,year=2001) + datetime.timedelta(days=-1)).strftime('%Y-%m-%d')"
+                ),
+                "2001-04-02"
+            );
+            assert.strictEqual(
+                evaluateExpr(
+                    "(datetime.timedelta(days=-1) + datetime.date(day=3,month=4,year=2001)).strftime('%Y-%m-%d')"
+                ),
+                "2001-04-02"
+            );
+        });
+
         QUnit.module("datetime.date");
 
         QUnit.test("datetime.date.today", (assert) => {
@@ -106,6 +147,84 @@ QUnit.module("py", {}, () => {
                 JSON.stringify(evaluateExpr("datetime.date(year=1997,month=5,day=18)")),
                 `"1997-05-18"`
             );
+        });
+
+        QUnit.test("basic operations with dates", function (assert) {
+            assert.expect(19);
+
+            let ctx = {
+                d1: PyDate.create(2002, 1, 31),
+                d2: PyDate.create(1956, 1, 31),
+            };
+
+            assert.strictEqual(evaluateExpr("(d1 - d2).days", ctx), 46 * 365 + 12);
+            assert.strictEqual(evaluateExpr("(d1 - d2).seconds", ctx), 0);
+            assert.strictEqual(evaluateExpr("(d1 - d2).microseconds", ctx), 0);
+
+            ctx = {
+                a: PyDate.create(2002, 3, 2),
+                day: PyTimeDelta.create({ days: 1 }),
+                week: PyTimeDelta.create({ days: 7 }),
+                date: PyDate,
+            };
+
+            assert.ok(evaluateExpr("a + day == date(2002, 3, 3)", ctx));
+            assert.ok(evaluateExpr("day + a == date(2002, 3, 3)", ctx)); // 5
+            assert.ok(evaluateExpr("a - day == date(2002, 3, 1)", ctx));
+            assert.ok(evaluateExpr("-day + a == date(2002, 3, 1)", ctx));
+            assert.ok(evaluateExpr("a + week == date(2002, 3, 9)", ctx));
+            assert.ok(evaluateExpr("a - week == date(2002, 2, 23)", ctx));
+            assert.ok(evaluateExpr("a + 52*week == date(2003, 3, 1)", ctx)); // 10
+            assert.ok(evaluateExpr("a - 52*week == date(2001, 3, 3)", ctx));
+            assert.ok(evaluateExpr("(a + week) - a == week", ctx));
+            assert.ok(evaluateExpr("(a + day) - a == day", ctx));
+            assert.ok(evaluateExpr("(a - week) - a == -week", ctx));
+            assert.ok(evaluateExpr("(a - day) - a == -day", ctx)); // 15
+            assert.ok(evaluateExpr("a - (a + week) == -week", ctx));
+            assert.ok(evaluateExpr("a - (a + day) == -day", ctx));
+            assert.ok(evaluateExpr("a - (a - week) == week", ctx));
+            assert.ok(evaluateExpr("a - (a - day) == day", ctx));
+
+            // assert.throws(function () {
+            //     evaluateExpr("a + 1", ctx);
+            // }, /^Error: TypeError:/); //20
+            // assert.throws(function () {
+            //     evaluateExpr("a - 1", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("1 + a", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("1 - a", ctx);
+            // }, /^Error: TypeError:/);
+
+            // // delta - date is senseless.
+            // assert.throws(function () {
+            //     evaluateExpr("day - a", ctx);
+            // }, /^Error: TypeError:/);
+            // // mixing date and (delta or date) via * or // is senseless
+            // assert.throws(function () {
+            //     evaluateExpr("day * a", ctx);
+            // }, /^Error: TypeError:/); // 25
+            // assert.throws(function () {
+            //     evaluateExpr("a * day", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("day // a", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("a // day", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("a * a", ctx);
+            // }, /^Error: TypeError:/);
+            // assert.throws(function () {
+            //     evaluateExpr("a // a", ctx);
+            // }, /^Error: TypeError:/); // 30
+            // // date + date is senseless
+            // assert.throws(function () {
+            //     evaluateExpr("a + a", ctx);
+            // }, /^Error: TypeError:/);
         });
 
         QUnit.module("datetime.time");
@@ -161,20 +280,6 @@ QUnit.module("py", {}, () => {
             const expr4 =
                 "(datetime.date(day=3,month=4,year=2001) - relativedelta(weeks=1)).strftime('%Y-%m-%d')";
             assert.strictEqual(evaluateExpr(expr4), "2001-03-27");
-        });
-
-        QUnit.module("datetime.timedelta");
-
-        QUnit.test("adding date and time delta", (assert) => {
-            const expr =
-                "(datetime.date(day=3,month=4,year=2001) + datetime.timedelta(days=-1)).strftime('%Y-%m-%d')";
-            assert.strictEqual(evaluateExpr(expr), "2001-04-02");
-        });
-
-        QUnit.test("adding time delta and date", (assert) => {
-            const expr =
-                "(datetime.timedelta(days=-1) + datetime.date(day=3,month=4,year=2001)).strftime('%Y-%m-%d')";
-            assert.strictEqual(evaluateExpr(expr), "2001-04-02");
         });
 
         QUnit.module("misc");

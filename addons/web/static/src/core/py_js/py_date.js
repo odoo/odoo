@@ -231,6 +231,11 @@ export class PyDate {
         return new PyDate(year, month, day);
     }
 
+    /**
+     * @param {integer} year
+     * @param {integer} month
+     * @param {integer} day
+     */
     constructor(year, month, day) {
         this.year = year;
         this.month = month; // 1-indexed => 1 = january, 2 = february, ...
@@ -244,6 +249,26 @@ export class PyDate {
     static create(...args) {
         const { year, month, day } = parseArgs(args, ["year", "month", "day"]);
         return new PyDate(year, month, day);
+    }
+
+    /**
+     * @param {PyTimeDelta} timedelta
+     * @returns {PyDate}
+     */
+    add(timedelta) {
+        const s = tmxxx(this.year, this.month, this.day + timedelta.days);
+        return new PyDate(s.year, s.month, s.day);
+    }
+
+    /**
+     * @param {any} other
+     * @returns {boolean}
+     */
+    isEqual(other) {
+        if (!(other instanceof PyDate)) {
+            return false;
+        }
+        return this.year === other.year && this.month === other.month && this.day === other.day;
     }
 
     /**
@@ -264,8 +289,32 @@ export class PyDate {
         });
     }
 
+    /**
+     * @param {PyTimeDelta | PyDate} other
+     * @returns {PyDate | PyTimeDelta}
+     */
+    substract(other) {
+        if (other instanceof PyTimeDelta) {
+            return this.add(other.negate());
+        }
+        if (other instanceof PyDate) {
+            return PyTimeDelta.create(this.toordinal() - other.toordinal());
+        }
+        throw NotSupportedError();
+    }
+
+    /**
+     * @returns {string}
+     */
     toJSON() {
         return this.strftime("%Y-%m-%d");
+    }
+
+    /**
+     * @returns {integer}
+     */
+    toordinal() {
+        return ymd2ord(this.year, this.month, this.day);
     }
 }
 
@@ -325,14 +374,60 @@ export class PyDateTime {
         );
     }
 
-    constructor(year, month, day, hour, minute, second, millisecond) {
+    /**
+     * @param {integer} year
+     * @param {integer} month
+     * @param {integer} day
+     * @param {integer} hour
+     * @param {integer} minute
+     * @param {integer} second
+     * @param {integer} microsecond
+     */
+    constructor(year, month, day, hour, minute, second, microsecond) {
         this.year = year;
         this.month = month; // 1-indexed => 1 = january, 2 = february, ...
         this.day = day; // 1-indexed => 1 = first day of month, ...
         this.hour = hour;
         this.minute = minute;
         this.second = second;
-        this.millisecond = millisecond;
+        this.microsecond = microsecond;
+    }
+
+    /**
+     * @param {PyTimeDelta} timedelta
+     * @returns {PyDate}
+     */
+    add(timedelta) {
+        const s = tmxxx(
+            this.year,
+            this.month,
+            this.day + timedelta.days,
+            this.hour,
+            this.minute,
+            this.second + timedelta.seconds,
+            this.microsecond + timedelta.microseconds
+        );
+        // does not seem to closely follow python implementation.
+        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, s.microsecond);
+    }
+
+    /**
+     * @param {any} other
+     * @returns {boolean}
+     */
+    isEqual(other) {
+        if (!(other instanceof PyDateTime)) {
+            return false;
+        }
+        return (
+            this.year === other.year &&
+            this.month === other.month &&
+            this.day === other.day &&
+            this.hour === other.hour &&
+            this.minute === other.minute &&
+            this.second === other.second &&
+            this.microsecond === other.microsecond
+        );
     }
 
     /**
@@ -359,23 +454,28 @@ export class PyDateTime {
         });
     }
 
+    /**
+     * @param {PyTimeDelta} timedelta
+     * @returns {PyDateTime}
+     */
+    substract(timedelta) {
+        return this.add(timedelta.negate());
+    }
+
+    /**
+     * @returns {string}
+     */
     toJSON() {
         return this.strftime("%Y-%m-%d %H:%M:%S");
     }
 
+    /**
+     * @returns {PyDateTime}
+     */
     to_utc() {
         const d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
-        const offset = d.getTimezoneOffset();
-        // previous implementation did use timedelta
-        const s = tmxxx(
-            this.year,
-            this.month,
-            this.day,
-            this.hour,
-            this.minute,
-            this.second + 60 * offset
-        );
-        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second);
+        const timedelta = PyTimeDelta.create({ minutes: d.getTimezoneOffset() });
+        return this.add(timedelta);
     }
 }
 
@@ -498,5 +598,167 @@ export class PyRelativeDelta {
         this.hour = 0;
         this.minute = 0;
         this.second = 0;
+    }
+}
+
+const TIME_DELTA_KEYS = "weeks days hours minutes seconds milliseconds microseconds".split(" ");
+
+/**
+ * Returns a "pair" with the fractional and integer parts of x
+ * @param {float}
+ * @returns {[float,integer]}
+ */
+function modf(x) {
+    const mod = x % 1;
+    return [mod < 0 ? mod + 1 : mod, Math.floor(x)];
+}
+
+export class PyTimeDelta {
+    /**
+     * @param  {...any} args
+     * @returns {PyTimeDelta}
+     */
+    static create(...args) {
+        const namedArgs = parseArgs(args, ["days", "seconds", "microseconds"]);
+        for (const key of TIME_DELTA_KEYS) {
+            namedArgs[key] = namedArgs[key] || 0;
+        }
+
+        // a timedelta can be created using TIME_DELTA_KEYS with float/integer values
+        // but only days, seconds, microseconds are kept internally.
+        // --> some normalization occurs here
+
+        let d = 0;
+        let s = 0;
+        let us = 0; // ~ μs standard notation for microseconds
+
+        const days = namedArgs.days + namedArgs.weeks * 7;
+        let seconds = namedArgs.seconds + 60 * namedArgs.minutes + 3600 * namedArgs.hours;
+        let microseconds = namedArgs.microseconds + 1000 * namedArgs.milliseconds;
+
+        const [dFrac, dInt] = modf(days);
+        d = dInt;
+        let daysecondsfrac = 0;
+        if (dFrac) {
+            const [dsFrac, dsInt] = modf(dFrac * 24 * 3600);
+            s = dsInt;
+            daysecondsfrac = dsFrac;
+        }
+
+        const [sFrac, sInt] = modf(seconds);
+        seconds = sInt;
+        const secondsfrac = sFrac + daysecondsfrac;
+
+        divmod(seconds, 24 * 3600, (days, seconds) => {
+            d += days;
+            s += seconds;
+        });
+
+        microseconds += secondsfrac * 1e6;
+        divmod(microseconds, 1000000, (seconds, microseconds) => {
+            divmod(seconds, 24 * 3600, (days, seconds) => {
+                d += days;
+                s += seconds;
+                us += Math.round(microseconds);
+            });
+        });
+
+        return new PyTimeDelta(d, s, us);
+    }
+
+    /**
+     * @param {integer} days
+     * @param {integer} seconds
+     * @param {integer} microseconds
+     */
+    constructor(days, seconds, microseconds) {
+        this.days = days;
+        this.seconds = seconds;
+        this.microseconds = microseconds;
+    }
+
+    /**
+     * @param {PyTimeDelta} other
+     * @returns {PyTimeDelta}
+     */
+    add(other) {
+        return PyTimeDelta.create({
+            days: this.days + other.days,
+            seconds: this.seconds + other.seconds,
+            microseconds: this.microseconds + other.microseconds,
+        });
+    }
+
+    /**
+     * @param {integer} n
+     * @returns {PyTimeDelta}
+     */
+    divide(n) {
+        const us = (this.days * 24 * 3600 + this.seconds) * 1e6 + this.microseconds;
+        return PyTimeDelta.create({ microseconds: Math.floor(us / n) });
+    }
+
+    /**
+     * @param {any} other
+     * @returns {boolean}
+     */
+    isEqual(other) {
+        if (!(other instanceof PyTimeDelta)) {
+            return false;
+        }
+        return (
+            this.days === other.days &&
+            this.seconds === other.seconds &&
+            this.microseconds === other.microseconds
+        );
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isTrue() {
+        return this.days !== 0 || this.seconds !== 0 || this.microseconds !== 0;
+    }
+
+    /**
+     * @param {float} n
+     * @returns {PyTimeDelta}
+     */
+    multiply(n) {
+        return PyTimeDelta.create({
+            days: n * this.days,
+            seconds: n * this.seconds,
+            microseconds: n * this.microseconds,
+        });
+    }
+
+    /**
+     * @returns {PyTimeDelta}
+     */
+    negate() {
+        return PyTimeDelta.create({
+            days: -this.days,
+            seconds: -this.seconds,
+            microseconds: -this.microseconds,
+        });
+    }
+
+    /**
+     * @param {PyTimeDelta} other
+     * @returns {PyTimeDelta}
+     */
+    substract(other) {
+        return PyTimeDelta.create({
+            days: this.days - other.days,
+            seconds: this.seconds - other.seconds,
+            microseconds: this.microseconds - other.microseconds,
+        });
+    }
+
+    /**
+     * @returns {float}
+     */
+    total_seconds() {
+        return this.days * 86400 + this.seconds + this.microseconds / 1000000;
     }
 }
