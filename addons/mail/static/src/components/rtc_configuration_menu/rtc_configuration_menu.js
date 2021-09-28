@@ -32,7 +32,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeDelay(ev) {
-        this.messaging.rtcConfigurationMenu.onChangeDelay(ev.target.value);
+        this.messaging.userSetting.rtcConfigurationMenu.onChangeDelay(ev.target.value);
     }
 
     /**
@@ -40,7 +40,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangePushToTalk(ev) {
-        this.messaging.rtcConfigurationMenu.onChangePushToTalk();
+        this.messaging.userSetting.rtcConfigurationMenu.onChangePushToTalk();
     }
 
     /**
@@ -48,7 +48,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeSelectAudioInput(ev) {
-        this.messaging.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
+        this.messaging.userSetting.rtcConfigurationMenu.onChangeSelectAudioInput(ev.target.value);
     }
 
     /**
@@ -56,7 +56,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {Event} ev
      */
     _onChangeThreshold(ev) {
-        this.messaging.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
+        this.messaging.userSetting.rtcConfigurationMenu.onChangeThreshold(ev.target.value);
     }
 
     /**
@@ -64,7 +64,7 @@ export class RtcConfigurationMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickRegisterKeyButton() {
-        this.messaging.rtcConfigurationMenu.onClickRegisterKeyButton();
+        this.messaging.userSetting.rtcConfigurationMenu.onClickRegisterKeyButton();
     }
 }
 
