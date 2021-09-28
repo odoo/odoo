@@ -31,7 +31,7 @@
                                     <t t-esc="threadViewTopBar.thread.description"/>
                                 </div>
                             </t>
-                            <t t-if="!threadViewTopBar.thread.description and threadViewTopBar.thread.isChannelDescriptionChangeable">
+                            <t t-if="!messaging.isCurrentUserGuest and !threadViewTopBar.thread.description and threadViewTopBar.thread.isChannelDescriptionChangeable">
                                 <div class="o_ThreadViewTopbar_threadAddDescriptionEmptyLabel text-truncate" t-on-click="threadViewTopBar.onClickTopbarThreadDescription">
                                     Add a description
                                 </div>
