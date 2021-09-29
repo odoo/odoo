@@ -76,7 +76,7 @@ function factory(dependencies) {
                 1: secondUser,
                 2: thirdUser,
             } = [
-                ...this.partners.map(partner => partner.name),
+                ...this.partners.map(partner => partner.nameOrDisplayName),
                 ...this.guests.map(guest => guest.name),
             ];
             switch (length) {
