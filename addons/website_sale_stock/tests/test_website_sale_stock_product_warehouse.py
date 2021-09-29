@@ -78,3 +78,24 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueSetup):
 
             # Check available quantity of product is according to warehouse
             self.assertEqual(combination_info['virtual_available'], qty_b, "%s units of Product B should be available in warehouse %s" % (qty_b, wh))
+
+    def test_02_update_cart_with_multi_warehouses(self):
+        """ When the user updates his cart and increases a product quantity, if
+        this quantity is not available in the SO's warehouse, a warning should
+        be returned and the quantity updated to its maximum. """
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': self.product_A.name,
+                'product_id': self.product_A.id,
+                'product_uom_qty': 5,
+                'product_uom': self.product_A.uom_id.id,
+                'price_unit': self.product_A.list_price,
+            })]
+        })
+
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+            values = so._cart_update(product_id=self.product_A.id, line_id=so.order_line.id, set_qty=20)
+            self.assertTrue(values.get('warning', False))
+            self.assertEqual(values.get('quantity'), 10)
