@@ -29,6 +29,10 @@
         min-height: $o-cp-breadcrumb-height;
     }
 
+    .o_cp_bottom .btn-group .btn {
+        align-self: baseline;
+    }
+
     .o_cp_bottom_left {
         display: flex;
         flex-wrap: wrap;
@@ -69,9 +73,14 @@
     .o_cp_bottom_right {
         display: flex;
 
+        > .o_search_options {
+            margin: unset;
+            flex-wrap: wrap;
+        }
+
         > .o_cp_pager {
-            margin: auto 0 auto auto;
-            padding-left: 5px;
+            margin-left: auto;
+            padding-left: $o-horizontal-padding;
             text-align: center;
             user-select: none;
 
@@ -85,10 +94,18 @@
             }
         }
 
-        > .o_cp_switch_buttons > .btn:first-child {
-            margin-left: $o-horizontal-padding;
+        > .o_cp_switch_buttons {
+            padding-left: $o-horizontal-padding;
+            min-width: 100px;
+            flex-wrap: wrap;
+
             @include media-breakpoint-down(sm) {
-                margin-left: 0;
+                padding-left: 0;
+                min-width: unset;
+            }
+
+            > .btn {
+                flex: 0 0 auto;
             }
         }
     }
