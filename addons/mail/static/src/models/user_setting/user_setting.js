@@ -299,7 +299,7 @@ function factory(dependencies) {
          * Normalized volume at which the voice activation system must consider the user as "talking".
          */
         voiceActivationThreshold: attr({
-            default: 0.2,
+            default: 0.05,
         }),
         /**
          * how long the voice remains active after releasing the push-to-talk key in ms
