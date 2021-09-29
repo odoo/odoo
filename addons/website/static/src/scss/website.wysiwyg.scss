@@ -114,20 +114,33 @@ $i: 1;
 
 #oe_snippets > .o_we_customize_panel {
     .o_we_user_value_widget.o_palette_color_preview_button {
+        display: inline-flex;
+        margin: 1% 0;
+        padding-right: 0.3rem;
+        width: 50%;
+        background: transparent;
+
+        &.active, &:hover {
+            background: transparent;
+
+            > div {
+                box-shadow: 0 0 0 2px $o-we-bg-darkest, 0 0 0 3px $o-we-accent;
+            }
+        }
+
         > div {
             display: flex;
             flex: 1 1 auto;
             align-items: stretch;
+            justify-content: flex-end;
+            margin: 3px;
+            min-height: $o-we-sidebar-content-field-dropdown-grid-item-height * .5;
+            border-radius: $o-we-sidebar-content-field-dropdown-grid-item-height;
+            box-shadow: 0 0 0 1px $o-we-bg-darkest;
         }
+
         .o_palette_color_preview {
             flex: 1 0 0;
-            margin: 1px 0;
-            transition: flex 150ms ease 0s;
-        }
-        &:not(:hover) .o_palette_color_preview {
-            &:nth-child(4), &:nth-child(5) {
-                flex: 0 0 0;
-            }
         }
     }
 
@@ -183,7 +196,11 @@ $i: 1;
         .o_we_so_color_palette.o_we_user_value_widget {
 
             + .o_we_so_color_palette {
-                margin-left: 10px;
+                margin-left: $o-we-item-spacing * .5;
+
+                &:nth-child(4) {
+                    margin-left: $o-we-item-spacing * 3;
+                }
             }
             .o_we_color_preview {
                 width: $o-we-sidebar-content-field-colorpicker-size-large;
@@ -203,6 +220,12 @@ $i: 1;
 
             > div, we-toggler {
                 height: 100%;
+            }
+
+            we-selection-items {
+                padding-top: $o-we-dropdown-item-height * .5;
+                padding-bottom: $o-we-dropdown-item-height * .5;
+                background: $o-we-dropdown-item-active-bg;
             }
         }
         we-toggler {
