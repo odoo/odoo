@@ -79,6 +79,8 @@ function factory(dependencies) {
                 }
                 if (typeof message === 'object') {
                     switch (message.type) {
+                        case 'mail.attachment_delete':
+                            return this._handleNotificationAttachmentDelete(message.payload);
                         case 'mail.channel_description_change':
                             return this._handleNotificationChannelDescriptionChanged(message.payload);
                         case 'mail.channel_joined':
@@ -124,6 +126,19 @@ function factory(dependencies) {
                 }
             });
             await this.async(() => Promise.all(proms));
+        }
+
+
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {integer} [payload.id]
+         */
+        _handleNotificationAttachmentDelete(payload) {
+            const attachment = this.messaging.models['mail.attachment'].findFromIdentifyingData(payload);
+            if (attachment) {
+                attachment.delete();
+            }
         }
 
         /**
