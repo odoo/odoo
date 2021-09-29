@@ -97,7 +97,7 @@ class HolidaysRequest(models.Model):
             user_tz = self.env.user.tz or 'UTC'
             localized_dt = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
             global_from = localized_dt.time().hour == 7 and localized_dt.time().minute == 0
-            new_values['request_date_from'] = localized_dt.date()
+            new_values['request_date_from_full_day'] = localized_dt.date()
         if values.get('date_to'):
             user_tz = self.env.user.tz or 'UTC'
             localized_dt = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
@@ -209,8 +209,10 @@ class HolidaysRequest(models.Model):
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
-    request_date_from = fields.Date('Request Start Date')
-    request_date_to = fields.Date('Request End Date')
+    request_date_from = fields.Date(compute='_compute_request_date_from', store=True, readonly=False)
+    request_date_from_half_day = fields.Date('Request Start Date')
+    request_date_from_full_day = fields.Date('Date From')
+    request_date_to = fields.Date('Date To')
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Selection([
         ('0', '12:00 AM'), ('0.5', '12:30 AM'),
@@ -630,6 +632,14 @@ class HolidaysRequest(models.Model):
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
             holiday.attachment_ids = holiday.supported_attachment_ids
+
+    @api.depends('request_date_from_half_day', 'request_date_from_full_day', 'request_unit_half', 'request_unit_hours')
+    def _compute_request_date_from(self):
+        for holiday in self:
+            if holiday.request_unit_half or holiday.request_unit_hours:
+                holiday.request_date_from = holiday.request_date_from_half_day
+            else:
+                holiday.request_date_from = holiday.request_date_from_full_day
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -1076,7 +1086,6 @@ class HolidaysRequest(models.Model):
                     date=holiday.date_from
                 ),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
-
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()

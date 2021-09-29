@@ -236,16 +236,37 @@
                         <div>
                             <field name="date_from" invisible="1" widget="daterange"/>
                             <field name="date_to" invisible="1"/>
+                            <field name="request_date_from" invisible="1"/>
                             <div class="o_row o_row_readonly">
                                 <span class="oe_inline"
                                     attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                     From
                                 </span>
-                                <field name="request_date_from" class="oe_inline" nolabel="1"
+                                <field name="request_date_from_full_day" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                            'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                            'required': [
+                                                '&amp;',
+                                                '&amp;',
+                                                ('request_unit_half', '=', False),
+                                                ('request_unit_hours', '=', False),
+                                                '|',
+                                                ('date_from', '=', False), ('date_to', '=', False)],
+                                            'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]
                                             }"
                                     widget="daterange" options="{'related_end_date': 'request_date_to'}"/>
+                                <field name="request_date_from_half_day" class="oe_inline" nolabel="1"
+                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                            'required': [
+                                                '&amp;',
+                                                '|',
+                                                ('request_unit_half', '=', True),
+                                                ('request_unit_hours', '=', True),
+                                                '|',
+                                                ('date_from', '=', False),
+                                                ('date_to', '=', False)],
+                                            'invisible': [('request_unit_half', '=', False), ('request_unit_hours', '=', False)]
+                                            }"
+                                    widget="date"/>
                                 <span class="oe_inline"
                                     attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                     To
@@ -254,7 +275,13 @@
                                     attrs="{
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                         'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
-                                        'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                        'required': [
+                                            '&amp;',
+                                            '&amp;',
+                                            ('request_unit_half', '=', False),
+                                            ('request_unit_hours', '=', False),
+                                            '|',
+                                            ('date_from', '=', False), ('date_to', '=', False)]
                                             }"
                                     widget="daterange" options="{'related_end_date': 'request_date_from'}"/>
                                 <field name="request_date_from_period" class="oe_inline"

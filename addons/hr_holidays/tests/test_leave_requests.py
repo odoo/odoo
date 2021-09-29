@@ -180,7 +180,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_type = 'department'
         leave_form.department_id = self.hr_dept
         leave_form.holiday_status_id = self.holidays_type_1
-        leave_form.request_date_from = date(2019, 5, 6)
+        leave_form.request_date_from_full_day = date(2019, 5, 6)
         leave_form.request_date_to = date(2019, 5, 6)
         leave = leave_form.save()
         leave.action_approve()
@@ -221,7 +221,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.holidays_type_1.id,
             'request_unit_hours': True,
-            'request_date_from': date(2019, 5, 6),
+            'request_date_from_half_day': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
             'request_hour_from': '8',  # 8:00 AM in the employee's timezone
             'request_hour_to': '17',  # 5:00 PM in the employee's timezone
@@ -240,7 +240,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_unit_hours': True,
             'holiday_type': 'company',
             'mode_company_id': company.id,
-            'request_date_from': date(2019, 5, 6),
+            'request_date_from_half_day': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
             'request_hour_from': '8',  # 8:00 AM in the company's timezone
             'request_hour_to': '17',  # 5:00 PM in the company's timezone
@@ -258,7 +258,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_type = 'company'
         leave_form.mode_company_id = company
         leave_form.holiday_status_id = self.holidays_type_1
-        leave_form.request_date_from = date(2019, 5, 6)
+        leave_form.request_date_from_full_day = date(2019, 5, 6)
         leave_form.request_date_to = date(2019, 5, 6)
         leave = leave_form.save()
         leave.state = 'confirm'
@@ -281,7 +281,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_unit_hours': True,
             'holiday_type': 'department',
             'department_id': department.id,
-            'request_date_from': date(2019, 5, 6),
+            'request_date_from_half_day': date(2019, 5, 6),
             'request_date_to': date(2019, 5, 6),
             'request_hour_from': '8',  # 8:00 AM in the department's timezone
             'request_hour_to': '17',  # 5:00 PM in the department's timezone
@@ -422,7 +422,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         values.update(self.env['hr.leave'].with_user(self.user_employee_id)._default_get_request_parameters(values))
 
         # Dates should be local to the user
-        self.assertEqual(values['request_date_from'], local_date_from.date())
+        self.assertEqual(values['request_date_from_full_day'], local_date_from.date())
         self.assertEqual(values['request_date_to'], local_date_to.date())
 
         values.update({
