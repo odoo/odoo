@@ -683,7 +683,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
             if (elem === event.currentTarget) {
                 ischild = false;
             }
-            var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== 'bs.tooltip');
+            var test_event = events && events.click && !elem.classList.contains('o_quick_editable') && (events.click.length > 1 || events.click[0].namespace !== 'bs.tooltip');
             var testLinkWithHref = elem.nodeName.toLowerCase() === 'a' && elem.href;
             if (ischild) {
                 children.push(elem);
