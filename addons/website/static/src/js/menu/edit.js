@@ -69,7 +69,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @override
      */
-    start: function () {
+    start() {
         var def = this._super.apply(this, arguments);
 
         // If we auto start the editor, do not show a welcome message
@@ -205,6 +205,13 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.editModeEnable) {
             return;
         }
+
+        $.blockUI({overlayCSS: {
+            backgroundColor: '#000',
+            opacity: 0,
+            zIndex: 1050
+        }, message: false});
+
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
@@ -227,6 +234,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if ($loader) {
             $loader.remove();
         }
+
+        $.unblockUI();
 
         return res;
     },
