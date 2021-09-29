@@ -115,11 +115,11 @@ class StockPicking(models.Model):
 
     def _compute_description(self):
         for rec in self:
-            rec.shipment_description = self.sale_id.order_line.product_id[0].categ_id.name if self.sale_id else ""
+            rec.shipment_description = rec.sale_id.order_line.product_id[0].categ_id.name if rec.sale_id else ""
 
     def _compute_declared_value(self):
         for rec in self:
-            rec.shipment_declared_value = self.sale_id.amount_total if self.sale_id else 0.0
+            rec.shipment_declared_value = rec.sale_id.amount_total if rec.sale_id else 0.0
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
