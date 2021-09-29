@@ -104,6 +104,46 @@ class TestSurveyInternals(common.TestSurveyCommon):
             {}
         )
 
+    def test_partial_scores_simple_choice(self):
+        """" Check that if partial scores are given for partially correct answers, in the case of a multiple
+        choice question with single choice, choosing the answer with max score gives 100% of points. """
+
+        partial_scores_survey = self.env['survey.survey'].create({
+            'title': 'How much do you know about words?',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 90.0,
+        })
+        [a_01, a_02, a_03] = self.env['survey.question.answer'].create([{
+            'value': 'A thing full of letters.',
+            'answer_score': 1.0
+        }, {
+            'value': 'A unit of language, [...], carrying a meaning.',
+            'answer_score': 4.0,
+            'is_correct': True
+        }, {
+            'value': '42',
+            'answer_score': -4.0
+        }])
+        q_01 = self.env['survey.question'].create({
+            'survey_id': partial_scores_survey.id,
+            'title': 'What is a word?',
+            'sequence': 1,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03).ids)]
+        })
+
+        user_input = self.env['survey.user_input'].create({'survey_id': partial_scores_survey.id})
+        self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': q_01.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': a_02.id
+        })
+
+        # Check that scoring is correct and survey is passed
+        self.assertEqual(user_input.scoring_percentage, 100)
+        self.assertTrue(user_input.scoring_success)
+
     @users('survey_manager')
     def test_skipped_values(self):
         """ Create one question per type of questions.
