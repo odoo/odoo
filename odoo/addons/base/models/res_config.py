@@ -356,7 +356,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             The attribute 'group' may contain several xml ids, separated by commas.
 
         *   For a selection field like 'group_XXX' composed of 2 integers values ('0' and '1'),
-            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group', 
+            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group',
             depending on the field's value.
             By default 'group' is the group Employee.  Groups are given by their xml id.
             The attribute 'group' may contain several xml ids, separated by commas.
@@ -364,8 +364,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
-        *   For a selection field like 'module_XXX' composed of 2 integers values ('0' and '1'), 
-            ``execute`` triggers the immediate installation of the module named 'XXX' 
+        *   For a selection field like 'module_XXX' composed of 2 integers values ('0' and '1'),
+            ``execute`` triggers the immediate installation of the module named 'XXX'
             if the field has the integer value ``1``.
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
@@ -606,7 +606,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # other fields: execute method 'set_values'
         # Methods that start with `set_` are now deprecated
         for method in dir(self):
-            if method.startswith('set_') and method is not 'set_values':
+            if method.startswith('set_') and method != 'set_values':
                 _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
 
     @api.multi
