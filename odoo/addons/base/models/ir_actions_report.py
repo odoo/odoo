@@ -26,10 +26,10 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+from pikepdf import PasswordError
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -650,9 +650,9 @@ class IrActionsReport(models.Model):
                     # In case of multiple docs, we need to split the pdf according the records.
                     # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
                     # An outline is a <h?> html tag found on the document. To retrieve this table,
-                    # we look on the pdf structure using pypdf to compute the outlines_pages from
+                    # we look on the pdf structure using pikepdf to compute the outlines_pages from
                     # the top level heading in /Outlines.
-                    reader = PdfFileReader(pdf_content_stream)
+                    reader = OdooPdf.open(pdf_content_stream)
                     root = reader.trailer['/Root']
                     if '/Outlines' in root and '/First' in root['/Outlines']:
                         outlines_pages = []
@@ -668,12 +668,12 @@ class IrActionsReport(models.Model):
                         # There should be a top-level heading on first page
                         assert outlines_pages[0] == 0
                         for i, num in enumerate(outlines_pages):
-                            to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                            attachment_writer = PdfFileWriter()
+                            to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else len(reader.pages)
+                            attachment_writer = OdooPdf.new()
                             for j in range(num, to):
-                                attachment_writer.addPage(reader.getPage(j))
+                                attachment_writer.pages.extend(reader.pages[j])
                             stream = io.BytesIO()
-                            attachment_writer.write(stream)
+                            attachment_writer.save(stream)
                             if res_ids[i] and res_ids[i] not in save_in_attachment:
                                 new_stream = self._postprocess_pdf_report(record_map[res_ids[i]], stream)
                                 # If the buffer has been modified, mark the old buffer to be closed as well.
@@ -681,10 +681,10 @@ class IrActionsReport(models.Model):
                                     close_streams([stream])
                                     stream = new_stream
                             streams.append(stream)
-                        close_streams([pdf_content_stream])
                     else:
                         # If no outlines available, do not save each record
                         streams.append(pdf_content_stream)
+            close_streams([pdf_content_stream])
 
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
@@ -699,22 +699,23 @@ class IrActionsReport(models.Model):
         else:
             try:
                 result = self._merge_pdfs(streams)
-            except utils.PdfReadError:
+            except PasswordError as e:
                 raise UserError(_("One of the documents, you try to merge is encrypted"))
+            except Exception as e:
+                raise UserError(e)
 
-        # We have to close the streams after PdfFileWriter's call to write()
+        # We have to close the streams after OdooPdf's call to save()
         close_streams(streams)
         return result
 
     def _get_unreadable_pdfs(self, streams):
         unreadable_streams = []
 
-        writer = PdfFileWriter()
         for stream in streams:
             try:
-                reader = PdfFileReader(stream)
-                writer.appendPagesFromReader(reader)
-            except utils.PdfReadError:
+                with OdooPdf.open(stream) as reader:
+                    reader.check()
+            except Exception:
                 unreadable_streams.append(stream)
 
         return unreadable_streams
