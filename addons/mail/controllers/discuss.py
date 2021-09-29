@@ -258,7 +258,8 @@ class DiscussController(http.Controller):
             raise NotFound()
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
-            return attachment_sudo.sudo(False).unlink()
+            attachment_sudo.sudo(False)._delete_and_notify()
+            return
         # For non-internal users 2 cases are supported:
         #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).
         #   - Either a valid access token is given: also verify the message is pending (because unfortunately in portal a token is also provided to guest for viewing others' attachments).
@@ -272,7 +273,7 @@ class DiscussController(http.Controller):
                 raise NotFound()
             if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
                 raise NotFound()
-        return attachment_sudo.unlink()
+        attachment_sudo._delete_and_notify()
 
     @http.route('/mail/message/add_reaction', methods=['POST'], type='json', auth='public')
     def mail_message_add_reaction(self, message_id, content):
