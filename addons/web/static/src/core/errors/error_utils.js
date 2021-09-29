@@ -64,7 +64,14 @@ export async function annotateTraceback(error) {
         error.stack = error.stack.replace(regex, subst);
     }
     // eslint-disable-next-line no-undef
-    const frames = await StackTrace.fromError(error);
+    let frames;
+    try {
+        frames = await StackTrace.fromError(error);
+    } catch (e) {
+        // This can crash if the originalError has no stack/stacktrace property
+        console.warn("The following error could not be annotated:", error, e);
+        return traceback;
+    }
     const lines = traceback.split("\n");
     if (lines[lines.length - 1].trim() === "") {
         // firefox traceback have an empty line at the end
