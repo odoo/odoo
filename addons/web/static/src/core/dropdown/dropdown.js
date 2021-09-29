@@ -87,7 +87,7 @@ export class Dropdown extends Component {
         }
 
         // Setup positioning only when in desktop
-        if (!this.env.isSmall) {
+        if (!this.env.isSmall || this.props.forceUsePosition) {
             /** @type {string} **/
             let position =
                 this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
@@ -315,6 +315,10 @@ Dropdown.props = {
     },
     position: {
         type: String,
+        optional: true,
+    },
+    forceUsePosition: {
+        type: Boolean,
         optional: true,
     },
 };
