@@ -75,7 +75,10 @@ class DiscussController(http.Controller):
             'isChannelTokenSecret': is_channel_token_secret,
         }
         add_guest_cookie = False
-        if not channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_sudo.id):
+        channel_partner_sudo = channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_sudo.id)
+        if channel_partner_sudo:
+            channel_sudo = channel_partner_sudo.channel_id  # ensure guest is in context
+        else:
             if not channel_sudo.env.user._is_public():
                 channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
             else:
