@@ -707,6 +707,43 @@ foo3,US,0,persons\n""",
         # if results empty, no errors
         self.assertItemsEqual(results['messages'], [])
 
+    def test_existing_module_record_import(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': 'base.record_1,foo',
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.validate_import(
+            {
+                'quoting': '"',
+                'separator': ',',
+            },
+            ['id', 'name'],
+        )
+
+        warning = '''We do not recommend prefixing your IDs with a module name and dot (e.g. base.record_1), as the imported records might be overwritten or deleted at module upgrade.
+                To prevent this issue, simply use underscores instead of dots in IDs (e.g. base_record_1).'''
+
+        self.assertEqual(results.strip(), warning.strip(), "Should have warning when try to use existing module in external ID")
+
+    def test_no_module_record_import(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': 'base_record_1,foo',
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.validate_import(
+            {
+                'quoting': '"',
+                'separator': ',',
+            },
+            ['id', 'name'],
+        )
+
+        self.assertFalse(results, "Should not have warning when using _ in External ID")
+
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
