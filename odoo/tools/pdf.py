@@ -1,22 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from PyPDF2 import PdfFileWriter, PdfFileReader
 
 import io
 
 from pikepdf import Pdf, AttachedFileSpec
-
-
-class BrandedFileWriter(PdfFileWriter):
-    def __init__(self):
-        super().__init__()
-        self.addMetadata({
-            '/Creator': "Odoo",
-            '/Producer': "Odoo",
-        })
-
-
-PdfFileWriter = BrandedFileWriter
 
 
 class OdooPdf(Pdf):
@@ -70,10 +57,3 @@ def rotate_pdf(pdf_data):
             page.rotate(90, relative=True)
         pdf.save(_buffer)
         return _buffer.getvalue()
-
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-old_init = PdfFileReader.__init__
-PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
-    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
