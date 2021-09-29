@@ -6,7 +6,7 @@
         <div class="container">
             <div class="s_tabs_main">
                 <div class="s_tabs_nav mb-3 o_no_link_popover">
-                    <ul class="nav nav-pills justify-content-center" role="tablist">
+                    <ul class="nav nav-pills" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="nav_tabs_link_1" data-toggle="tab" href="#nav_tabs_content_1" role="tab" aria-controls="nav_tabs_content_1" aria-selected="true">Home</a>
                         </li>
@@ -21,17 +21,29 @@
                 <div class="s_tabs_content tab-content">
                     <div class="tab-pane fade show active" id="nav_tabs_content_1" role="tabpanel" aria-labelledby="nav_tabs_link_1">
                         <div class="oe_structure oe_empty">
-                            <t t-snippet-call="website.s_text_block"/>
+                            <section class="s_text_block">
+                                <div class="container s_allow_columns">
+                                    <p>Write one or two paragraphs describing your product or services.</p>
+                                </div>
+                            </section>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav_tabs_content_2" role="tabpanel" aria-labelledby="nav_tabs_link_2">
                         <div class="oe_structure oe_empty">
-                            <t t-snippet-call="website.s_text_block"/>
+                            <section class="s_text_block">
+                                <div class="container s_allow_columns">
+                                    <p>To be successful your content needs to be useful to your readers.</p>
+                                </div>
+                            </section>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav_tabs_content_3" role="tabpanel" aria-labelledby="nav_tabs_link_3">
                         <div class="oe_structure oe_empty">
-                            <t t-snippet-call="website.s_text_block"/>
+                            <section class="s_text_block">
+                                <div class="container s_allow_columns">
+                                    <p>Start with the customer – find out what they want and give it to them.</p>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </div>
