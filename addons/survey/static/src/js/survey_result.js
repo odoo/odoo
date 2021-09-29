@@ -93,6 +93,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
 
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
+            self.rightAnswers = self.$el.data("rightAnswers") || [];
 
             if (self.graphData && self.graphData.length !== 0) {
                 switch (self.$el.data("graphType")) {
@@ -131,9 +132,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'bar',
             data: {
-                labels: this.graphData[0].values.map(function (value) {
-                    return value.text;
-                }),
+                labels: this.graphData[0].values.map(this._markIfCorrect, this),
                 datasets: this.graphData.map(function (group, index) {
                     var data = group.values.map(function (value) {
                         return value.count;
@@ -178,9 +177,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'bar',
             data: {
-                labels: this.graphData[0].values.map(function (value) {
-                    return value.text;
-                }),
+                labels: this.graphData[0].values.map(this._markIfCorrect, this),
                 datasets: this.graphData.map(function (group) {
                     var data = group.values.map(function (value) {
                         return value.count;
@@ -230,9 +227,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'pie',
             data: {
-                labels: this.graphData.map(function (point) {
-                    return point.text;
-                }),
+                labels: this.graphData.map(this._markIfCorrect, this),
                 datasets: [{
                     label: '',
                     data: counts,
@@ -253,9 +248,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return {
             type: 'doughnut',
             data: {
-                labels: totalsGraphData.map(function (point) {
-                    return point.text;
-                }),
+                labels: totalsGraphData.map(this._markIfCorrect, this),
                 datasets: [{
                     label: '',
                     data: counts,
@@ -398,16 +391,31 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         var $canvas = this.$('canvas');
         var ctx = $canvas.get(0).getContext('2d');
         return new Chart(ctx, this.chartConfig);
-    }
+    },
+
+    /**
+     * Adds a unicode 'check' mark if the answer's text is among the question's right answers.
+     * @private
+     * @param  {Object} value
+     * @param  {String} value.text The original text of the answer
+     */
+    _markIfCorrect: function (value) {
+        return `${value.text}${this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713": ''}`;
+    },
+
 });
 
 publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
-        'click td.survey_answer i.fa-filter': '_onSurveyAnswerFilterClick',
-        'click .clear_survey_filter': '_onClearFilterClick',
-        'click span.filter-all': '_onFilterAllClick',
-        'click span.filter-finished': '_onFilterFinishedClick',
+        'click .o_survey_results_topbar_clear_filters': '_onClearFiltersClick',
+        'click i.filter-add-answer': '_onFilterAddAnswerClick',
+        'click i.filter-remove-answer': '_onFilterRemoveAnswerClick',
+        'click a.filter-finished-or-not': '_onFilterFinishedOrNotClick',
+        'click a.filter-finished': '_onFilterFinishedClick',
+        'click a.filter-failed': '_onFilterFailedClick',
+        'click a.filter-passed': '_onFilterPassedClick',
+        'click a.filter-passed-and-failed': '_onFilterPassedAndFailedClick',
     },
 
     //--------------------------------------------------------------------------
@@ -455,19 +463,30 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-    /**
+     /**
+     * Add an answer filter by updating the URL and redirecting.
      * @private
      * @param {Event} ev
      */
-    _onSurveyAnswerFilterClick: function (ev) {
-        var cell = $(ev.target);
-        var row_id = cell.data('row_id') | 0;
-        var answer_id = cell.data('answer_id');
+    _onFilterAddAnswerClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('filters', this._prepareAnswersFilters(params.get('filters'), 'add', ev));
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
 
-        var params = new URLSearchParams(window.location.search);
-        var filters = params.get('filters') ? params.get('filters') + "|" + row_id + ',' + answer_id : row_id + ',' + answer_id;
-        params.set('filters', filters);
-
+    /**
+     * Remove an answer filter by updating the URL and redirecting.
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterRemoveAnswerClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        let filters = this._prepareAnswersFilters(params.get('filters'), 'remove', ev);
+        if (filters) {
+            params.set('filters', filters);
+        } else {
+            params.delete('filters')
+        }
         window.location.href = window.location.pathname + '?' + params.toString();
     },
 
@@ -475,10 +494,12 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onClearFilterClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
+    _onClearFiltersClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
         params.delete('filters');
         params.delete('finished');
+        params.delete('failed');
+        params.delete('passed');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
 
@@ -486,8 +507,8 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onFilterAllClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
+    _onFilterFinishedOrNotClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
         params.delete('finished');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
@@ -497,10 +518,70 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFilterFinishedClick: function (ev) {
-        var params = new URLSearchParams(window.location.search);
-        params.set('finished', true);
+        let params = new URLSearchParams(window.location.search);
+        params.set('finished', 'true');
         window.location.href = window.location.pathname + '?' + params.toString();
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterFailedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('failed', 'true');
+        params.delete('passed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterPassedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.set('passed', 'true');
+        params.delete('failed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFilterPassedAndFailedClick: function (ev) {
+        let params = new URLSearchParams(window.location.search);
+        params.delete('failed');
+        params.delete('passed');
+        window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * Returns the modified pathname string for filters after adding or removing an
+     * answer filter (from click event). Filters are formatted as `"rowX,ansX", where
+     * the row is used for matrix-type questions and set to 0 otherwise.
+     * @private
+     * @param {String} filters Existing answer filters, formatted as `rowX,ansX|rowY,ansY...`.
+     * @param {"add" | "remove"} operation Whether to add or remove the filter.
+     * @param {Event} ev Event defining the filter.
+     * @returns {String} Updated filters.
+     */
+    _prepareAnswersFilters(filters, operation, ev) {
+        const cell = $(ev.target);
+        const eventFilter = `${cell.data('rowId') || 0},${cell.data('answerId')}`;
+
+        if (operation === 'add') {
+            filters = filters ? filters + `|${eventFilter}` : eventFilter;
+        } else if (operation === 'remove') {
+            filters = filters
+                .split("|")
+                .filter(filterItem => filterItem !== eventFilter)
+                .join("|");
+        } else {
+            throw new Error('`operation` parameter for `_prepareAnswersFilters` must be either "add" or "remove".')
+        }
+        return filters;
+    }
 });
 
 return {

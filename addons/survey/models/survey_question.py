@@ -570,7 +570,7 @@ class SurveyQuestion(models.Model):
         return {
             'common_lines': collections.Counter(
                 user_input_lines.filtered(lambda line: not line.skipped).mapped('value_%s' % self.question_type)
-            ).most_common(5) if self.question_type != 'datetime' else [],
+            ).most_common(5),
             'right_inputs_count': len(user_input_lines.filtered(lambda line: line.answer_is_correct).mapped('user_input_id'))
         }
 
