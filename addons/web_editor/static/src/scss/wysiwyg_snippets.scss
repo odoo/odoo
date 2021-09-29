@@ -726,6 +726,7 @@ body.editor_enable.editor_has_snippets {
             + * {
                 display: none !important;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+                border-radius: $o-we-item-border-radius;
                 background-color: $o-we-sidebar-content-field-dropdown-bg;
                 box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
             }
@@ -1015,6 +1016,7 @@ body.editor_enable.editor_has_snippets {
                     background-clip: padding-box;
                     background-color: $o-we-sidebar-content-field-dropdown-item-bg;
                     color: $o-we-sidebar-content-field-dropdown-item-color;
+                    border-radius: 0;
 
                     > we-title {
                         flex-grow: 1;
@@ -1140,10 +1142,10 @@ body.editor_enable.editor_has_snippets {
                     + we-button {
                         border-left: none;
                     }
-                    &:first-child {
+                    &:first-child, .active:first-child {
                         @include border-left-radius($o-we-sidebar-content-field-border-radius);
                     }
-                    &:last-child {
+                    &:last-child, .active:last-child {
                         @include border-right-radius($o-we-sidebar-content-field-border-radius);
                     }
                 }
