@@ -52,22 +52,21 @@
                 </t>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
-                <div class="col mx-2">
-                    <b>
-                        <field name="session_count"/>
-                    </b>
+                <div class="col-lg col-sm-4 col-6 py-0 my-2">
+                    <b><field name="session_count"/></b>
                     <div>Chats</div>
                 </div>
-                <div class="col mx-2">
-                    <div t-if="record.livechat_operator_id.raw_value" class="font-weight-bold">
+                <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
+                    <div>
                         <img name="livechat_operator_id"
                             class="oe_avatar rounded-circle" width="19" height="19"
                             t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                             alt="Operator Avatar"/>
-                        <field name="livechat_operator_name"/>
+                        <b><field name="livechat_operator_name"/></b>
                     </div>
-                    <div t-if="record.livechat_operator_id.raw_value">Speaking With</div>
+                    <div>Speaking With</div>
                 </div>
+                <div t-else="" class="col-lg d-none d-lg-block"/>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_chat_request" type="object"
