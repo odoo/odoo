@@ -12,12 +12,17 @@ class MailResendMessage(models.TransientModel):
     mail_message_id = fields.Many2one('mail.message', 'Message', readonly=True)
     partner_ids = fields.One2many('mail.resend.partner', 'resend_wizard_id', string='Recipients')
     notification_ids = fields.Many2many('mail.notification', string='Notifications', readonly=True)
-    has_cancel = fields.Boolean(compute='_compute_has_cancel')
+    can_cancel = fields.Boolean(compute='_compute_can_cancel')
+    can_resend = fields.Boolean(compute='_compute_can_resend')
     partner_readonly = fields.Boolean(compute='_compute_partner_readonly')
 
     @api.depends("partner_ids")
-    def _compute_has_cancel(self):
-        self.has_cancel = self.partner_ids.filtered(lambda p: not p.resend)
+    def _compute_can_cancel(self):
+        self.can_cancel = self.partner_ids.filtered(lambda p: not p.resend)
+
+    @api.depends('partner_ids.resend')
+    def _compute_can_resend(self):
+        self.can_resend = any([partner.resend for partner in self.partner_ids])
 
     def _compute_partner_readonly(self):
         self.partner_readonly = not self.env['res.partner'].check_access_rights('write', raise_exception=False)
@@ -91,8 +96,8 @@ class PartnerResend(models.TransientModel):
     _description = 'Partner with additional information for mail resend'
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete='cascade')
-    name = fields.Char(related="partner_id.name", related_sudo=False, readonly=False)
-    email = fields.Char(related="partner_id.email", related_sudo=False, readonly=False)
-    resend = fields.Boolean(string="Send Again", default=True)
+    name = fields.Char(related='partner_id.name', string='Recipient Name', related_sudo=False, readonly=False)
+    email = fields.Char(related='partner_id.email', string='Email Address', related_sudo=False, readonly=False)
+    resend = fields.Boolean(string='Try Again', default=True)
     resend_wizard_id = fields.Many2one('mail.resend.message', string="Resend wizard")
-    message = fields.Char(string="Help message")
+    message = fields.Char(string='Error message')
