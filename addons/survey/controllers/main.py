@@ -646,6 +646,8 @@ class Survey(http.Controller):
             'survey_data'= see ``SurveySurvey._prepare_statistics()``
             'search_filters': [],
             'search_finished': either filter on finished inputs only or not,
+            'search_passed': either filter on passed inputs only or not,
+            'search_failed': either filter on failed inputs only or not,
         }
         """
         user_input_lines, search_filters = self._extract_filters_data(survey, post)
@@ -660,6 +662,8 @@ class Survey(http.Controller):
             # search
             'search_filters': search_filters,
             'search_finished': post.get('finished') == 'true',
+            'search_failed': post.get('failed') == 'true',
+            'search_passed': post.get('passed') == 'true',
         }
 
         if survey.session_show_leaderboard:
@@ -694,6 +698,11 @@ class Survey(http.Controller):
             user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
         else:
             user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        if post.get('failed'):
+            user_input_domain = expression.AND([[('scoring_success', '=', False)], user_input_domain])
+        elif post.get('passed'):
+            user_input_domain = expression.AND([[('scoring_success', '=', True)], user_input_domain])
+
         return user_input_domain
 
     def _extract_filters_data(self, survey, post):
@@ -717,6 +726,8 @@ class Survey(http.Controller):
                 if answer_id:
                     question_id = answers[0].matrix_question_id or answers[0].question_id
                     search_filters.append({
+                        'row_id': row_id,
+                        'answer_id': answer_id,
                         'question': question_id.title,
                         'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
                     })
