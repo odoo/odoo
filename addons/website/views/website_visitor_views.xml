@@ -95,45 +95,47 @@
                         <div class="oe_kanban_global_click o_wvisitor_kanban_card">
                             <!-- displayed in ungrouped mode -->
                             <div class="o_kanban_detail_ungrouped row mx-0">
-                                <div class="o_wvisitor_kanban_image">
-                                     <img t-if="record.partner_image.raw_value"
-                                        t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)"
-                                        width="54px" height="54px" alt="Visitor"/>
-                                     <img t-else=""
-                                        t-attf-src="/base/static/img/avatar_grey.png"
-                                        width="54px" height="54px" alt="Visitor"/>
-                                </div>
-                                <div class="col o_wvisitor_name mr-2">
-                                    <div>
-                                        <b><field name="display_name"/></b>
-                                        <div class="float-right">
-                                            <span class="fa fa-circle text-success" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
-                                            <span class="fa fa-circle text-danger" t-else="" aria-label="Offline" title="Offline"/>
+                                <div class="col-lg-2 col-sm-8 col-12 py-0 my-2 my-lg-0">
+                                    <div class="d-flex">
+                                        <div class="o_wvisitor_kanban_image mr-3">
+                                            <img t-if="record.partner_image.raw_value"
+                                                t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)"
+                                                width="54px" height="54px" alt="Visitor"/>
+                                            <img t-else=""
+                                                t-attf-src="/base/static/img/avatar_grey.png"
+                                                width="54px" height="54px" alt="Visitor"/>
                                         </div>
-                                        <!-- Double check is necessary for sample view (or error image are shown) -->
-                                        <div t-if="record.country_id.raw_value and record.country_flag.raw_value">
-                                            <img t-att-src="record.country_flag.raw_value"
-                                               class="o_country_flag" alt="Country"/>
+                                        <div class="o_wvisitor_name d-flex flex-grow-1 flex-column my-0 my-lg-2">
+                                            <div class="d-flex align-items-start">
+                                                <b><field name="display_name"/></b>
+                                                <span t-if="record.is_connected.raw_value" class="fa fa-circle text-success ml-2 my-1" aria-label="Online" title="Online"/>
+                                                <span t-else="" class="fa fa-circle text-danger ml-2 my-1" aria-label="Offline" title="Offline"/>
+                                            </div>
+                                            <!-- Double check is necessary for sample view (or error image are shown) -->
+                                            <div t-if="record.country_id.raw_value and record.country_flag.raw_value">
+                                                <img t-att-src="record.country_flag.raw_value"
+                                                    class="o_country_flag" alt="Country"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col mx-2">
+                                <div class="col-lg col-sm-4 col-6 py-0 my-2">
                                     <b><field name="time_since_last_action"/></b>
                                     <div>Last Action</div>
                                 </div>
-                                <div class="col mx-2">
+                                <div class="col-lg col-sm-4 col-6 py-0 my-2">
                                     <b><field name="visit_count"/></b>
                                     <div>Visits</div>
                                 </div>
-                                <div class="col mx-2">
+                                <div class="col-lg col-sm-4 col-6 py-0 my-2">
                                     <b><field name="last_visited_page_id"/></b>
                                     <div>Last Page</div>
                                 </div>
-                                <div id="wvisitor_visited_page" class="col mx-2">
+                                <div id="wvisitor_visited_page" class="col-lg col-sm-4 col-6 py-0 my-2">
                                     <b><field name="page_count"/></b>
                                     <div>Visited Pages</div>
                                 </div>
-                                <div class="col-3 w_visitor_kanban_actions_ungrouped">
+                                <div class="w_visitor_kanban_actions_ungrouped col-lg-3 col-sm-12 py-0 my-2 text-lg-right">
                                     <button name="action_send_mail" type="object"
                                             class="btn btn-secondary border" attrs="{'invisible': [('email', '=', False)]}">
                                             Email
