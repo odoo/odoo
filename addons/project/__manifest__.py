@@ -87,7 +87,9 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/**/*.xml',
+            'project/static/src/xml/**/*',
+            'project/static/src/burndown_chart/**/*.xml',
+            'project/static/src/project_control_panel/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
