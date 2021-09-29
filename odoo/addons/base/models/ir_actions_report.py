@@ -430,13 +430,14 @@ class IrActionsReport(models.Model):
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
-        :param bodies: The html bodies of the report, one per page.
-        :param header: The html header of the report containing all headers.
-        :param footer: The html footer of the report containing all footers.
+        :param list[str] bodies: The html bodies of the report, one per page.
+        :param str header: The html header of the report containing all headers.
+        :param str footer: The html footer of the report containing all footers.
         :param landscape: Force the pdf to be rendered under a landscape format.
         :param specific_paperformat_args: dict of prioritized paperformat arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
-        :return: Content of the pdf as a string
+        :return: Content of the pdf as bytes
+        :rtype: bytes
         '''
         paperformat_id = self.get_paperformat()
 
@@ -572,6 +573,7 @@ class IrActionsReport(models.Model):
         render but embellish it with some variables/methods used in reports.
         :param values: additional methods/variables used in the rendering
         :returns: html representation of the template
+        :rtype: bytes
         """
         if values is None:
             values = {}
@@ -740,6 +742,9 @@ class IrActionsReport(models.Model):
         return result_stream.getvalue()
 
     def _render_qweb_pdf(self, res_ids=None, data=None):
+        """
+        :rtype: bytes
+        """
         if not data:
             data = {}
         data.setdefault('report_type', 'pdf')
@@ -833,6 +838,9 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _render_qweb_text(self, docids, data=None):
+        """
+        :rtype: bytes
+        """
         if not data:
             data = {}
         data.setdefault('report_type', 'text')
@@ -843,6 +851,8 @@ class IrActionsReport(models.Model):
     @api.model
     def _render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
+
+        :rtype: bytes
         """
         if not data:
             data = {}
@@ -887,7 +897,9 @@ class IrActionsReport(models.Model):
         """Return an action of type ir.actions.report.
 
         :param docids: id/ids/browse record of the records to print (if not used, pass an empty list)
-        :param report_name: Name of the template to generate an action for
+        :param data:
+        :param bool config:
+        :rtype: bytes
         """
         context = self.env.context
         if docids:
