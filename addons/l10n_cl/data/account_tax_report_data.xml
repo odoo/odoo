@@ -36,6 +36,13 @@
         <field name="parent_id" ref="tax_report_base_imponible_ventas"/>
     </record>
 
+    <record id="tax_report_retencion_total_compras" model="account.tax.report.line">
+        <field name="name">Retención Total (compras)</field>
+        <field name="tag_name">Retención Total (compras)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
     <record id="tax_report_impuestos_originados_venta" model="account.tax.report.line">
         <field name="name">Impuesto Originado por la Venta</field>
         <field name="tag_name">Impuesto Originado por la Venta</field>
