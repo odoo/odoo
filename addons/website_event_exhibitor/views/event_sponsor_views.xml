@@ -183,8 +183,8 @@
                                     <h1 class="o_kanban_record_title"><field name="name"/></h1>
                                     <strong>Level: <field name="sponsor_type_id"/></strong>
                                     <span class="text-muted"><field name="exhibitor_type"/></span>
-                                    <span class="o_text_overflow" t-esc="record.partner_email.value"/>
-                                    <span class="o_text_overflow" t-esc="record.url.value"/>
+                                    <span class="o_text_overflow" t-out="record.partner_email.value"/>
+                                    <span class="o_text_overflow" t-out="record.url.value"/>
                                 </div>
                             </div>
                         </div>

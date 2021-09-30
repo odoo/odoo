@@ -34,15 +34,15 @@
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
-                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/> is over.
+                The event <span t-out="meeting_room.event_id.name" class="font-weight-bold"/> is over.
                 <br/>
-                <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+                <span>Join us next time to chat about <b t-out="meeting_room.name"/>!</span>
             </div>
             <div t-else="" class="alert alert-warning text-center">
-                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
+                The event <span t-out="meeting_room.event_id.name" class="font-weight-bold"/>
                 <span t-if="meeting_room.event_id.start_today">
                     starts in
-                    <span t-if="meeting_room.event_id.start_remaining &gt;= 1" t-esc="meeting_room.event_id.start_remaining"
+                    <span t-if="meeting_room.event_id.start_remaining &gt;= 1" t-out="meeting_room.event_id.start_remaining"
                         t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
                     <t t-else="">
                         a few seconds
@@ -51,10 +51,10 @@
                 <span class="my-0" t-else="meeting_room.event_id.start_today">
                     starts on
                     <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
+                        t-options="{'format': 'medium'}"/> (<t t-out="meeting_room.event_id.date_tz"/>).
                 </span>
                 <br/>
-                <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
+                <span>Join us there to chat about <b t-out="meeting_room.name"/> !</span>
             </div>
         </t>
         <!-- ROOM CONTENT -->
@@ -86,9 +86,9 @@
         </div>
         <!-- ROOM DESCRIPTION -->
         <div class="mx-3">
-            <div class="h5 my-3" t-esc="meeting_room.name"/>
+            <div class="h5 my-3" t-out="meeting_room.name"/>
             <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
-                A chat among <t t-esc="meeting_room.room_participant_count"/> <span class="font-weight-bold" t-esc="meeting_room.target_audience"/>
+                A chat among <t t-out="meeting_room.room_participant_count"/> <span class="font-weight-bold" t-out="meeting_room.target_audience"/>
             </div>
         </div>
         <hr class="my-0"/>
@@ -114,14 +114,14 @@
                     <a class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">
-                            <div class="text-truncate" t-esc="meeting_room_other.name"/>
-                            <span class="text-muted" t-esc="meeting_room_other.summary"></span>
+                            <div class="text-truncate" t-out="meeting_room_other.name"/>
+                            <span class="text-muted" t-out="meeting_room_other.summary"></span>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="text-muted">
                                     <b>&amp;#9900;&amp;nbsp;</b>
-                                    <small><t t-esc="meeting_room_other.room_participant_count"/> <t t-esc="meeting_room_other.target_audience"/></small>
+                                    <small><t t-out="meeting_room_other.room_participant_count"/> <t t-out="meeting_room_other.target_audience"/></small>
                                 </div>
-                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-esc="meeting_room_other.room_lang_id.name"/></small>
+                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-out="meeting_room_other.room_lang_id.name"/></small>
                             </div>
                         </div>
                     </a>

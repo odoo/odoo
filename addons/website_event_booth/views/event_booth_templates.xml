@@ -59,7 +59,7 @@
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id"
                                                t-att-disabled="booth_category_unavailable"/>
                                         <div>
-                                            <h5 name="booth_category_name" class="m-0 text-truncate" t-esc="booth_category.name"/>
+                                            <h5 name="booth_category_name" class="m-0 text-truncate" t-out="booth_category.name"/>
                                             <span class="img img-responsive">
                                                 <div t-field="booth_category.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'mt-2'}"/>
                                             </span>

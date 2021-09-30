@@ -31,11 +31,11 @@
             <div class="dropdown">
                 <a class="dropdown-toggle o-no-caret btn p-0" title="Languages Menu"
                     aria-label="Dropdown menu" data-display="static" data-toggle="dropdown" href="#" role="button">
-                    <span t-esc="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
+                    <span t-out="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
                 <div class="dropdown-menu" role="menu">
                     <a class="dropdown-item" role="menuitem" t-attf-href="/event/#{slug(event)}/community">All Languages
                        </a>
-                    <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community?lang=#{language.id}" t-esc="language.name" t-foreach="available_languages"/>
+                    <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/community?lang=#{language.id}" t-out="language.name" t-foreach="available_languages"/>
                 </div>
             </div>
         </h2>
@@ -78,9 +78,9 @@
                         to have a chat with us!
                     </t>
                     <t t-else="">
-                        Event <span t-esc="event.name" class="font-weight-bold"/> is over.
+                        Event <span t-out="event.name" class="font-weight-bold"/> is over.
                         <br/>
-                        <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+                        <span>Join us next time to chat about <b t-out="meeting_room.name"/>!</span>
                     </t>
                 </div>
 
@@ -89,8 +89,8 @@
                         <div class="w-100" t-attf-style="background-image: #{json.loads(event.cover_properties).get('background-image')}; min-height: 5rem; background-size: cover;"/>
                     </div>
                     <div class="col">
-                        <h5 t-esc="meeting_room.name"/>
-                        <div class="text-muted mb-2"><i class="fa fa-globe"/> <span t-esc="meeting_room.room_lang_id.name"/></div>
+                        <h5 t-out="meeting_room.name"/>
+                        <div class="text-muted mb-2"><i class="fa fa-globe"/> <span t-out="meeting_room.room_lang_id.name"/></div>
                         <span t-if="meeting_room.summary" t-field="meeting_room.summary"/>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
             <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">Full</div>
             <div class="d-flex flex-column">
                 <div class="d-flex flex-row">
-                    <h4 t-att-class="'text-break text-uppercase %s' % ('w-75' if meeting_room.website_published else 'w-50')" t-esc="meeting_room.name"/>
+                    <h4 t-att-class="'text-break text-uppercase %s' % ('w-75' if meeting_room.website_published else 'w-50')" t-out="meeting_room.name"/>
                     <div t-if="not meeting_room.is_published" class="w-25">
                         <span class="badge badge-danger">Unpublished</span>
                     </div>
@@ -134,11 +134,11 @@
                 <span class="text-muted" t-field="meeting_room.summary"/>
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <span class="h6 m-0 row">
-                        <span t-esc="meeting_room.room_participant_count"/>&amp;nbsp;
+                        <span t-out="meeting_room.room_participant_count"/>&amp;nbsp;
                         <span t-if="meeting_room.target_audience" class="text-uppercase" t-field="meeting_room.target_audience"/>
                         <span t-else="" class="text-uppercase">participant(s)</span>
                     </span>
-                    <div class="d-inline border py-1 px-2 bg-secondary" t-esc="meeting_room.room_lang_id.name"/>
+                    <div class="d-inline border py-1 px-2 bg-secondary" t-out="meeting_room.room_lang_id.name"/>
                 </div>
             </div>
         </div>
