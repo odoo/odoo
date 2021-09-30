@@ -15,6 +15,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
     jsLibs: [
         '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
         '/mass_mailing/static/src/js/mass_mailing_snippets.js',
+        '/mass_mailing/static/src/snippets/s_blockquote/options.js',
+        '/mass_mailing/static/src/snippets/s_masonry_block/options.js',
+        '/mass_mailing/static/src/snippets/s_media_list/options.js',
+        '/mass_mailing/static/src/snippets/s_showcase/options.js',
+        '/mass_mailing/static/src/snippets/s_rating/options.js',
     ],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
@@ -67,18 +72,26 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self._isDirty = self.wysiwyg.isDirty();
             self._doAction();
 
+            // fix outlook image rendering bug (this change will be kept in both
+            // fields)
+            _.each(['width', 'height'], function (attribute) {
+                $editable.find('img').attr(attribute, function () {
+                    return $(this)[attribute]();
+                }).css(attribute, function () {
+                    return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : 'auto';
+                });
+            });
+
             convertInline.attachmentThumbnailToLinkImg($editable);
             convertInline.fontToImg($editable);
             convertInline.classToStyle($editable);
-
-            // fix outlook image rendering bug
-            _.each(['width', 'height'], function (attribute) {
-                $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function () {
-                    return $(this)[attribute]();
-                }).css(attribute, function () {
-                    return $(this).get(0).style[attribute] || 'auto';
-                });
-            });
+            convertInline.bootstrapToTable($editable);
+            convertInline.cardToTable($editable);
+            convertInline.listGroupToTable($editable);
+            convertInline.addTables($editable);
+            convertInline.formatTables($editable);
+            convertInline.normalizeColors($editable);
+            convertInline.normalizeRem($editable);
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
@@ -111,6 +124,17 @@ var MassMailingFieldHtml = FieldHtml.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+     _createWysiwygIntance: async function () {
+        await this._super(...arguments);
+        // Data is removed on save but we need the mailing and its body to be
+        // named so they are handled properly by the snippets menu.
+        this.$content.find('.o_layout').addBack().data('name', 'Mailing');
+        // We don't want to drop snippets directly within the wysiwyg.
+        this.$content.removeClass('o_editable').addClass('o_not_editable')
+    },
     /**
      * Returns true if the editable area is empty.
      *
@@ -223,6 +247,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             $img.attr("src", src);
         });
+        $container.find('.o_mail_block_cover .oe_img_bg').each(function () {
+            $(this).css('background-image', `url('/mass_mailing_themes/static/src/img/theme_${themeParams.name}/s_default_image_block_banner.jpg')`);
+        });
     },
     /**
      * Switch themes or import first theme.
@@ -252,26 +279,17 @@ var MassMailingFieldHtml = FieldHtml.extend({
         } else {
             // This wrapper structure is the only way to have a responsive
             // and centered fixed-width content column on all mail clients
-            $new_wrapper = $('<table/>', {
-                class: 'o_mail_wrapper'
+            $new_wrapper = $('<div/>', {
+                class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
             });
-            $newWrapperContent = $('<td/>', {
-                class: 'o_mail_no_options o_mail_wrapper_td oe_structure'
+            $newWrapperContent = $('<div/>', {
+                class: 'col o_mail_no_options o_mail_wrapper_td oe_structure o_editable'
             });
-            $new_wrapper.append($('<tr/>').append(
-                $('<td/>', {
-                    class: 'o_mail_no_resize o_not_editable',
-                    contenteditable: 'false'
-                }),
-                $newWrapperContent,
-                $('<td/>', {
-                    class: 'o_mail_no_resize o_not_editable',
-                    contenteditable: 'false'
-                })
-            ));
+            $new_wrapper.append($('<div class="row"/>').append($newWrapperContent));
         }
         var $newLayout = $('<div/>', {
-            class: 'o_layout ' + themeParams.className
+            class: 'o_layout oe_unremovable oe_unmovable bg-200 ' + themeParams.className,
+            'data-name': 'Mailing',
         }).append($new_wrapper);
 
         var $contents;

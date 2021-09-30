@@ -63,7 +63,7 @@ options.registry.mass_mailing_sizing_x = options.Class.extend({
         return def;
     },
     change_width: function (event, target, target_width, offset, grow) {
-        target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
+        target.css("width", Math.round(grow ? (event.pageX - offset) : (offset + target_width - event.pageX)));
         this.trigger_up('cover_update');
     },
     get_int_width: function (el) {
@@ -77,52 +77,6 @@ options.registry.mass_mailing_sizing_x = options.Class.extend({
 
         if (this.$target.is("td, th")) {
             this.$overlay.find(".o_handle.e, .o_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
-        }
-    },
-});
-
-options.registry.mass_mailing_table_item = options.Class.extend({
-    onClone: function (options) {
-        this._super.apply(this, arguments);
-
-        // If we cloned a td or th element...
-        if (options.isCurrent && this.$target.is("td, th")) {
-            // ... and that the td or th element was alone on its row ...
-            if (this.$target.siblings().length === 1) {
-                var $tr = this.$target.parent();
-                $tr.clone().empty().insertAfter($tr).append(this.$target); // ... move the clone in a new row instead
-                return;
-            }
-
-            // ... if not, if the clone neighbor is an empty cell, remove this empty cell (like if the clone content had been put in that cell)
-            var $next = this.$target.next();
-            if ($next.length && $next.text().trim() === "") {
-                $next.remove();
-                return;
-            }
-
-            // ... if not, insert an empty col in each other row, at the index of the clone
-            var width = this.$target.width();
-            var $trs = this.$target.closest("table").children("thead, tbody, tfoot").addBack().children("tr").not(this.$target.parent());
-            _.each($trs.children(":nth-child(" + this.$target.index() + ")"), function (col) {
-                $(col).after($("<td/>", {style: "width: " + width + "px;"}));
-            });
-        }
-    },
-    onRemove: function () {
-        this._super.apply(this, arguments);
-
-        // If we are removing a td or th element which was not alone on its row ...
-        if (this.$target.is("td, th") && this.$target.siblings().length > 0) {
-            var $trs = this.$target.closest("table").children("thead, tbody, tfoot").addBack().children("tr").not(this.$target.parent());
-            if ($trs.length) { // ... if there are other rows in the table ...
-                var $last_tds = $trs.children(":last-child");
-                if (_.reduce($last_tds, function (memo, td) { return memo + (td.innerHTML || ""); }, "").trim() === "") {
-                    $last_tds.remove(); // ... remove the potential full empty column in the table
-                } else {
-                    this.$target.parent().append("<td/>"); // ... else, if there is no full empty column, append an empty col in the current row
-                }
-            }
         }
     },
 });

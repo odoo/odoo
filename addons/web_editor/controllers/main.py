@@ -35,13 +35,17 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>/<color>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
             :param icon : decimal encoding of unicode character
             :param color : RGB code of the color
+            :param bg : RGB code of the background color
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
             :param font : font path
@@ -56,6 +60,11 @@ class Web_Editor(http.Controller):
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
+
+        # Background standardization
+        if bg is not None and bg.startswith('rgba'):
+            bg = bg.replace('rgba', 'rgb')
+            bg = ','.join(bg.split(',')[:-1])+')'
 
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
@@ -78,8 +87,8 @@ class Web_Editor(http.Controller):
         iconimage.putalpha(imagemask)
 
         # Create output image
-        outimage = Image.new("RGBA", (boxw, size), (0, 0, 0, 0))
-        outimage.paste(iconimage, (left, top))
+        outimage = Image.new("RGBA", (boxw, size), bg or (0, 0, 0, 0))
+        outimage.paste(iconimage, (left, top), iconimage)
 
         # output image
         output = io.BytesIO()
