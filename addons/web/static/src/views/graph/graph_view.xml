@@ -46,31 +46,26 @@
     </t>
 
     <t t-name="web.GraphView" owl="1">
-        <div class="o_graph_view" t-att-class="{ o_view_sample_data: model.useSampleModel }">
-            <ControlPanel t-if="env.searchModel.display.controlPanel" t-props="props.info">
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
+        <Layout viewType="'graph'" useSampleModel="model.useSampleModel">
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}"/>
+            </t>
+            <t t-if="model.data">
+                <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                 </t>
-            </ControlPanel>
-            <div class="o_content">
-                <SearchPanel t-if="env.searchModel.display.searchPanel" />
-                <t t-if="model.data">
-                    <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
-                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
-                    </t>
-                    <Renderer
-                        class="o_renderer"
-                        model="model"
-                        t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
-                        onGraphClicked="(domain) => onGraphClicked(domain)"
-                    />
-                </t>
-                <t t-else="" t-call="web.NoContentHelper">
-                    <t t-set="title">Invalid data</t>
-                    <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
-                </t>
-            </div>
-        </div>
+                <Renderer
+                    class="o_renderer"
+                    model="model"
+                    t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
+                    onGraphClicked="(domain) => onGraphClicked(domain)"
+                />
+            </t>
+            <t t-else="" t-call="web.NoContentHelper">
+                <t t-set="title">Invalid data</t>
+                <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
+            </t>
+        </Layout>
     </t>
 
 </templates>

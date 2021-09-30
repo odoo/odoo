@@ -1,13 +1,7 @@
 /** @odoo-module **/
 
-import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
-import { registry } from "@web/core/registry";
-import { makeView } from "./helpers";
-import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
@@ -22,6 +16,12 @@ import {
     toggleMenuItemOption,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
+import { makeView } from "@web/../tests/views/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { registry } from "@web/core/registry";
+import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
+import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 
 const serviceRegistry = registry.category("services");
 
@@ -30,7 +30,8 @@ function getGraphModelMetaData(graph) {
 }
 
 export function getGraphRenderer(graph) {
-    return Object.values(graph.__owl__.children).find((c) => c.chart);
+    const layout = Object.values(graph.__owl__.children)[0];
+    return Object.values(layout.__owl__.children).find((c) => c.chart);
 }
 
 function getChart(graph) {
@@ -2031,26 +2032,9 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             noContentHelp: '<p class="abc">This helper should not be displayed in graph views</p>',
-            views: [[false, "search"]],
-        });
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, "div.o_view_nocontent");
-        assert.containsNone(graph, ".abc");
-        await toggleFilterMenu(graph);
-        await toggleMenuItem(graph, "False Domain");
-        assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
-        assert.containsNone(graph, "div.o_view_nocontent");
-        assert.containsNone(graph, ".abc");
-    });
-
-    QUnit.test("no content helper after update", async function (assert) {
-        assert.expect(6);
-        const graph = await makeView({
-            serverData,
-            type: "graph",
-            resModel: "foo",
-            noContentHelp: '<p class="abc">This helper should not be displayed in graph views</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
         assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
         assert.containsNone(graph, "div.o_view_nocontent");
@@ -2719,7 +2703,9 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 groupBy: ["date:year", "product_id", "date", "date:quarter"],
                 arch: `<graph type="line"/>`,
-                views: [[false, "search"]],
+                config: {
+                    views: [[false, "search"]],
+                },
             });
             checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
             // mockReadGroup does not always sort groups -> May 2016 is before April 2016 for that reason.
@@ -2748,7 +2734,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             type: "graph",
             resModel: "foo",
-            displayName: "Glou glou",
+            config: {
+                displayName: "Glou glou",
+            },
         });
         assert.strictEqual(
             graph.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
@@ -2851,10 +2839,12 @@ QUnit.module("Views", (hooks) => {
                         <field name="bar"/>
                     </graph>
                 `,
-                views: [
-                    [364, "list"],
-                    [29, "form"],
-                ],
+                config: {
+                    views: [
+                        [364, "list"],
+                        [29, "form"],
+                    ],
+                },
             });
             checkModeIs(assert, graph, "pie");
             checkDatasets(assert, graph, ["domains"], {
@@ -3093,7 +3083,7 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             arch: `
-                <graph> 
+                <graph>
                     <field name="date"/>
                     <field name="product_id"/>
                 </graph>

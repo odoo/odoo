@@ -17,30 +17,26 @@
     </t>
 
     <t t-name="web.PivotView" owl="1">
-        <div class="o_pivot_view" t-att-class="{o_view_sample_data: model.useSampleModel }">
-            <ControlPanel t-if="env.searchModel.display.controlPanel" t-props="props.info">
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
+        <Layout viewType="'pivot'" useSampleModel="model.useSampleModel">
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}"/>
+            </t>
+            <t t-set="displayNoContent" t-value="
+                props.info.noContentHelp !== false and (
+                    !(model.hasData() and model.metaData.activeMeasures.length) or
+                    model.useSampleModel
+                )"
+            />
+            <t t-if="displayNoContent">
+                <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                 </t>
-            </ControlPanel>
-            <div class="o_content">
-                <SearchPanel t-if="env.searchModel.display.searchPanel" />
-                <t t-set="displayNoContent" t-value="
-                    props.info.noContentHelp !== false and (
-                        !(model.hasData() and model.metaData.activeMeasures.length) or
-                        model.useSampleModel
-                    )" />
-                <t t-if="displayNoContent">
-                    <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
-                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
-                    </t>
-                    <t t-else="" t-call="web.NoContentHelper"/>
-                </t>
-                <t t-if="model.hasData() and model.metaData.activeMeasures.length">
-                    <Renderer model="model" onCellClicked="cell => onOpenView(cell)"/>
-                </t>
-            </div>
-        </div>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+            <t t-if="model.hasData() and model.metaData.activeMeasures.length">
+                <Renderer model="model" onCellClicked="cell => onOpenView(cell)"/>
+            </t>
+        </Layout>
     </t>
 
 </templates>
