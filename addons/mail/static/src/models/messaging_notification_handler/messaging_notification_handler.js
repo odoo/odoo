@@ -278,6 +278,9 @@ function factory(dependencies) {
                 id: channelId,
                 model: 'mail.channel',
             });
+            if (!channel && this.messaging.isCurrentUserGuest) {
+                return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
+            }
             const wasChannelExisting = !!channel;
             const convertedData = this.messaging.models['mail.message'].convertData(messageData);
 
