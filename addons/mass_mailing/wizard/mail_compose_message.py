@@ -9,7 +9,7 @@ class MailComposeMessage(models.TransientModel):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign')
-    mass_mailing_name = fields.Char(string='Mass Mailing Name')
+    mass_mailing_name = fields.Char(string='Mass Mailing Name', help='If set, a mass mailing will be created so that you can track its results in the Email Marketing app.')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
 
     def get_mail_values(self, res_ids):
