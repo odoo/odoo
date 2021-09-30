@@ -363,6 +363,16 @@ class DiscussController(http.Controller):
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
         return channel_partner_sudo.channel_id._channel_seen(int(last_message_id))
 
+    @http.route('/mail/channel/ping', methods=['POST'], type='json', auth='public')
+    def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
+        channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        if rtc_session_id:
+            channel_partner_sudo.channel_id.rtc_session_ids.filtered_domain([
+                ('id', '=', int(rtc_session_id)),
+                ('channel_partner_id', '=', channel_partner_sudo.id),
+            ]).write({})  # update write_date
+        return {'rtcSessions': channel_partner_sudo._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)}
+
     # --------------------------------------------------------------------------
     # Chatter API
     # --------------------------------------------------------------------------
@@ -485,26 +495,13 @@ class DiscussController(http.Controller):
         if session and session.partner_id == request.env.user.partner_id:
             session._update_and_broadcast(values)
 
-    @http.route('/mail/rtc/session/ping', methods=['POST'], type='json', auth='public')
-    def rtc_session_ping(self, rtc_session_id):
-        rtc_session_sudo = request.env['mail.channel.rtc.session'].sudo().browse(int(rtc_session_id)).exists()
-        if not rtc_session_sudo:
-            return
-        if request.env.user._is_public():
-            guest = request.env['mail.guest']._get_guest_from_request(request)
-            if not guest or guest != rtc_session_sudo.guest_id:
-                return
-        elif rtc_session_sudo.env.user.partner_id != rtc_session_sudo.partner_id:
-            return
-        rtc_session_sudo.write({})  # update write_date
-
     @http.route('/mail/rtc/channel/join_call', methods=['POST'], type="json", auth="public")
-    def channel_call_join(self, channel_id):
+    def channel_call_join(self, channel_id, check_rtc_session_ids=None):
         """ Joins the RTC call of a channel if the user is a member of that channel
             :param int channel_id: id of the channel to join
         """
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
-        return channel_partner_sudo._rtc_join_call()
+        return channel_partner_sudo._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
 
     @http.route('/mail/rtc/channel/leave_call', methods=['POST'], type="json", auth="public")
     def channel_call_leave(self, channel_id):
