@@ -61,7 +61,7 @@
                                         <div>
                                             <h5 name="booth_category_name" class="m-0 text-truncate" t-esc="booth_category.name"/>
                                             <span class="img img-responsive">
-                                                <img class="img img-fluid mt-2" t-att-title="booth_category.name" t-att-src="image_data_uri(booth_category.image_256)"/>
+                                                <div t-field="booth_category.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256', 'class': 'mt-2'}"/>
                                             </span>
                                         </div>
                                         <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">
