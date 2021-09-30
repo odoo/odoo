@@ -4,6 +4,14 @@
 from odoo import models
 
 
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        res['analytic_account_id'] = self.sale_line_id.order_id.analytic_account_id
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
