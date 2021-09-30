@@ -4262,6 +4262,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
          * its props.
          */
         async render(force = false) {
+            await Promise.resolve();
             const __owl__ = this.__owl__;
             const currentFiber = __owl__.currentFiber;
             if (!__owl__.vnode && !currentFiber) {

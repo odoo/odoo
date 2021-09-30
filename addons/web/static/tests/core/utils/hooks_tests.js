@@ -41,6 +41,11 @@ QUnit.module("utils", () => {
 
         QUnit.module("useEffect");
 
+        let afterRender = async () => {
+            await Promise.resolve();
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+        };
+
         QUnit.test(
             "useEffect: effect runs on mount, is reapplied on patch, and is cleaned up on unmount and before reapplying",
             async function (assert) {
@@ -72,7 +77,7 @@ QUnit.module("utils", () => {
                 assert.step("before state mutation");
                 component.state.value++;
                 // Wait for an owl render
-                await new Promise((resolve) => requestAnimationFrame(resolve));
+                await afterRender();
                 assert.step("after state mutation");
                 await component.unmount();
 
@@ -136,13 +141,13 @@ QUnit.module("utils", () => {
                 assert.step("before state mutation: a");
                 component.state.a++;
                 // Wait for an owl render
-                await new Promise((resolve) => requestAnimationFrame(resolve));
+                await afterRender();
                 assert.step("after state mutation: a");
 
                 assert.step("before state mutation: b");
                 component.state.b++;
                 // Wait for an owl render
-                await new Promise((resolve) => requestAnimationFrame(resolve));
+                await afterRender();
                 assert.step("after state mutation: b");
                 await component.unmount();
 
@@ -211,7 +216,7 @@ QUnit.module("utils", () => {
                 assert.step("before state mutation");
                 component.state.value++;
                 // Wait for an owl render
-                await new Promise((resolve) => requestAnimationFrame(resolve));
+                await afterRender();
                 assert.equal(
                     component.el.textContent,
                     1,
