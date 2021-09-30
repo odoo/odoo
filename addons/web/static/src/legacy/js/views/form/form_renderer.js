@@ -52,6 +52,9 @@ var FormRenderer = BasicRenderer.extend({
         // display them (e.g. in Studio, in "show invisible" mode). This flag
         // allows to disable this optimization.
         this.renderInvisible = false;
+        // Keeps track of buttons that are disabled momentarily and need to be renabled.
+        // Needed to compare with buttons that have to stay disabled all the time.
+        this.manuallyDisabledButtons = new Set();
     },
     /**
      * @override
@@ -182,16 +185,24 @@ var FormRenderer = BasicRenderer.extend({
      *
      */
     disableButtons: function () {
-        this.$('.o_statusbar_buttons button, .oe_button_box button')
-            .attr('disabled', true);
+        const allButtons = this.$el[0].querySelectorAll('.o_statusbar_buttons button, .oe_button_box button');
+        for (const button of allButtons) {
+            if (!button.getAttribute("disabled")) {
+                this.manuallyDisabledButtons.add(button)
+                button.setAttribute("disabled", true)
+            }
+        }
     },
     /**
      * Enable statusbar buttons and stat buttons so they can be clicked again
      *
      */
     enableButtons: function () {
-        this.$('.o_statusbar_buttons button, .oe_button_box button')
-            .removeAttr('disabled');
+        const allButtons = this.$el[0].querySelectorAll('.o_statusbar_buttons button, .oe_button_box button');
+        this.manuallyDisabledButtons.forEach((button) => {
+            button.removeAttribute("disabled");
+        });
+        this.manuallyDisabledButtons.clear();
     },
     /**
      * Put the focus on the last activated widget.
@@ -814,11 +825,20 @@ var FormRenderer = BasicRenderer.extend({
         var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: 'oe_stat_button',
         });
+
+        // If there is no type nor name, it will not bind a click listener and will set the button as disabled
+        const buttonDoesStartAnAction = node.attrs.type || node.attrs.name;
+        if (!buttonDoesStartAnAction) {
+            $button[0].setAttribute("disabled", true);
+        }
+
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         if (node.attrs.help) {
             this._addButtonTooltip(node, $button);
         }
-        this._addOnClickAction($button, node);
+        if (buttonDoesStartAnAction) {
+            this._addOnClickAction($button, node);
+        }
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
         return $button;
@@ -1109,6 +1129,7 @@ var FormRenderer = BasicRenderer.extend({
         return Promise.all(defs).then(() => this.__renderView()).then(function () {
             self._postProcessLabels();
             self._updateView($form.contents());
+            self.manuallyDisabledButtons.clear();
             if (self.state.res_id in self.alertFields) {
                 self.displayTranslationAlert();
             }
