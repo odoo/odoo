@@ -2,7 +2,7 @@
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { click, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { click, makeDeferred, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
 import {
     editSearch,
     getFacetTexts,
@@ -696,5 +696,44 @@ QUnit.module("Search", (hooks) => {
         await validateSearch(controlPanel);
 
         assert.deepEqual(getDomain(controlPanel), [["ref", "ilike", "ref002"]]);
+    });
+
+    QUnit.test("check that the menu is correctly expanded", async function (assert) {
+        assert.expect(2);
+        const def = makeDeferred();
+        const mockRPC = async (route) => {
+            console.log("route ", route);
+            if (route.includes("/partner/name_search")) {
+                await def;
+            }
+        };
+        const controlPanel = await makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="foo"/>
+                        <field name="birthday"/>
+                        <field name="birth_datetime"/>
+                        <field name="bar" operator="child_of"/>
+                    </search>
+                `,
+        });
+        await editSearch(controlPanel, "rec");
+        await click(controlPanel.el.querySelector(".o_expand"));
+        await triggerEvent(
+            controlPanel.el,
+            ".o_searchview_autocomplete li.o_menu_item:first-child",
+            "mousemove"
+        );
+        assert.containsNone(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent");
+
+        def.resolve();
+        await nextTick();
+        assert.containsN(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent", 5);
     });
 });
