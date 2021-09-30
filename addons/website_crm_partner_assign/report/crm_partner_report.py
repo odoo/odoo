@@ -37,7 +37,7 @@ class CrmPartnerReportAssign(models.Model):
         """
         return """
                 SELECT
-                    coalesce(i.id, p.id - 1000000000) as id,
+                    COALESCE(2 * i.id, 2 * p.id + 1) AS id,
                     p.id as partner_id,
                     (SELECT country_id FROM res_partner a WHERE a.parent_id=p.id AND country_id is not null limit 1) as country_id,
                     p.grade_id,
