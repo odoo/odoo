@@ -42,7 +42,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             });
 
             assert.strictEqual(dropdown.el.querySelector('button').innerText.trim(), "Dropdown");
-            assert.containsNone(dropdown, 'ul.o_dropdown_menu');
+            assert.containsNone(dropdown, '.dropdown-menu');
 
             await testUtils.dom.click(dropdown.el.querySelector('button'));
 
@@ -57,12 +57,12 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             for (const dropdownEl of dropdownElements) {
                 await testUtils.dom.click(dropdownEl);
             }
-            assert.containsOnce(dropdown, 'ul.o_dropdown_menu',
+            assert.containsOnce(dropdown, '.dropdown-menu',
                 "Clicking on any item of the dropdown should not close it");
 
             await testUtils.dom.click(document.body);
 
-            assert.containsNone(dropdown, 'ul.o_dropdown_menu',
+            assert.containsNone(dropdown, '.dropdown-menu',
                 "Clicking outside of the dropdown should close it");
 
             dropdown.destroy();
@@ -349,7 +349,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
 
             await navigate('Escape', true); // Close the dropdown
 
-            assert.containsNone(dropdown, 'ul.o_dropdown_menu', "Dropdown should be folded");
+            assert.containsNone(dropdown, '.dropdown-menu', "Dropdown should be folded");
 
             dropdown.destroy();
         });
@@ -373,25 +373,25 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             const parent = new Parent();
             await parent.mount(testUtils.prepareTarget(), { position: 'first-child' });
 
-            const [menu1, menu2] = parent.el.querySelectorAll('.o_dropdown');
+            const [menu1, menu2] = parent.el.querySelectorAll('.dropdown');
 
-            assert.containsNone(parent, '.o_dropdown_menu');
+            assert.containsNone(parent, '.dropdown-menu');
 
             await testUtils.dom.click(menu1.querySelector('button'));
 
-            assert.containsOnce(parent, '.o_dropdown_menu');
-            assert.containsOnce(parent, '.o_dropdown.first .o_dropdown_menu');
+            assert.containsOnce(parent, '.dropdown-menu');
+            assert.containsOnce(parent, '.dropdown.first .dropdown-menu');
 
             await testUtils.dom.click(menu2.querySelector('button'));
 
-            assert.containsOnce(parent, '.o_dropdown_menu');
-            assert.containsOnce(parent, '.o_dropdown.second .o_dropdown_menu');
+            assert.containsOnce(parent, '.dropdown-menu');
+            assert.containsOnce(parent, '.dropdown.second .dropdown-menu');
 
             await testUtils.dom.click(menu2.querySelector('.o_menu_item a'));
             await testUtils.dom.click(menu1.querySelector('button'));
 
-            assert.containsOnce(parent, '.o_dropdown_menu');
-            assert.containsOnce(parent, '.o_dropdown.first .o_dropdown_menu');
+            assert.containsOnce(parent, '.dropdown-menu');
+            assert.containsOnce(parent, '.dropdown.first .dropdown-menu');
 
             parent.destroy();
         });
@@ -419,7 +419,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             const parent = new Parent();
             await parent.mount(testUtils.prepareTarget(), { position: "first-child" });
 
-            const menu = parent.el.querySelector(".o_dropdown");
+            const menu = parent.el.querySelector(".dropdown");
             assert.doesNotHaveClass(menu, "show", "dropdown should not be open");
 
             await testUtils.dom.click(menu.querySelector("button"));

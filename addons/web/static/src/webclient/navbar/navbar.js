@@ -17,8 +17,7 @@ export class MenuDropdown extends Dropdown {
         useEffect(
             () => {
                 if (this.props.xmlid) {
-                    const toggler = this.el.querySelector("button.o_dropdown_toggler");
-                    toggler.dataset.menuXmlid = this.props.xmlid;
+                    this.togglerRef.el.dataset.menuXmlid = this.props.xmlid;
                 }
             },
             () => []
@@ -35,6 +34,9 @@ export class MenuItem extends DropdownItem {
         super.setup();
         useEffect(
             () => {
+                if (this.props.payload.id) {
+                    this.el.dataset.section = this.props.payload.id;
+                }
                 if (this.props.payload.xmlid) {
                     this.el.dataset.menuXmlid = this.props.payload.xmlid;
                 }
@@ -148,9 +150,9 @@ export class NavBar extends Component {
                         // Hide from normal menu
                         s.classList.add("d-none");
                         // Show inside "more" menu
-                        const sectionId = s
-                            .querySelector("[data-section]")
-                            .getAttribute("data-section");
+                        const sectionId =
+                            s.dataset.section ||
+                            s.querySelector("[data-section]").getAttribute("data-section");
                         const currentAppSection = this.currentAppSections.find(
                             (appSection) => appSection.id.toString() === sectionId
                         );

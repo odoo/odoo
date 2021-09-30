@@ -47,7 +47,7 @@
     </t>
 
     <t t-name="web.SearchBar.Items" owl="1">
-        <ul class="o_dropdown_menu o_searchview_autocomplete dropdown-menu show" role="menu">
+        <ul class="dropdown-menu o_searchview_autocomplete dropdown-menu show" role="menu">
             <t t-foreach="items" t-as="item" t-key="item.id">
                 <li class="o_menu_item"
                     t-att-class="{ o_indent: item.isChild, o_selection_focus: item_index === state.focusedIndex}"

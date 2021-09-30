@@ -10,6 +10,8 @@ var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
+const { browser } = require('@web/core/browser/browser');
+const { patchWithCleanup } = require('@web/../tests/helpers/utils');
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
@@ -544,6 +546,12 @@ QUnit.module('fields', {}, function () {
                     display_name: "Partner 9",
                 });
             this.data.partner.fields.datetime.searchable = true;
+
+            // add custom filter needs this
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
+
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -3126,21 +3134,21 @@ QUnit.module('fields', {}, function () {
             let filterMenuCss = '.o_search_options > .o_filter_menu';
             let groupByMenuCss = '.o_search_options > .o_group_by_menu';
 
-            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler`));
+            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .dropdown-toggle`));
 
             assert.hasClass(document.querySelector(filterMenuCss), 'show');
-            assert.isVisible(document.querySelector(`${filterMenuCss} > .o_dropdown_menu`),
+            assert.isVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
                 "the filter dropdown menu should be visible");
             assert.doesNotHaveClass(document.querySelector(groupByMenuCss), 'show');
-            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .o_dropdown_menu`),
+            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
                 "the Group by dropdown menu should be not visible");
 
-            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler`));
+            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .dropdown-toggle`));
             assert.hasClass(document.querySelector(groupByMenuCss), 'show');
-            assert.isVisible(document.querySelector(`${groupByMenuCss} > .o_dropdown_menu`),
+            assert.isVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
                 "the group by dropdown menu should be visible");
             assert.doesNotHaveClass(document.querySelector(filterMenuCss), 'show');
-            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .o_dropdown_menu`),
+            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
                 "the filter dropdown menu should be not visible");
 
             $fakeDialog.remove();

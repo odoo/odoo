@@ -340,7 +340,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
     }, {
         content: "switch to the second form view to test one2many with editable list (open submenu)",
-        trigger: 'li[data-menu-xmlid="test_new_api.menu_discussions_2"]',
+        trigger: '.dropdown-item[data-menu-xmlid="test_new_api.menu_discussions_2"]',
     }, {
         content: "select previous created record",
         trigger: 'td:contains(test_trigger):last',
@@ -457,7 +457,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
     }, {
         content: "switch to the thied form view to test onchange changing one2many (open submenu)",
-        trigger: 'li[data-menu-xmlid="test_new_api.menu_discussions_3"]',
+        trigger: '.dropdown-item[data-menu-xmlid="test_new_api.menu_discussions_3"]',
     }, {
         content: "wait web client",
         trigger: '.breadcrumb:contains(Discussions 3)',

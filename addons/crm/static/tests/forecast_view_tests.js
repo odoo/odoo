@@ -7,7 +7,7 @@ import {
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
-    toggleMenuItemOption
+    toggleMenuItemOption,
 } from "@web/../tests/search/helpers";
 import { makeView } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -18,6 +18,7 @@ import AbstractModel from "web.AbstractModel";
 import AbstractView from "web.AbstractView";
 import { controlPanel as cpHelpers, mock } from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
+import { browser } from "@web/core/browser/browser";
 
 const patchDate = mock.patchDate;
 
@@ -72,6 +73,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Forecast graph view", async function (assert) {
         assert.expect(5);
 
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         const unpatchDate = patchDate(2021, 8, 16, 16, 54, 0);
 
         const expectedDomains = [
@@ -167,6 +169,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(16);
 
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
             const unpatchDate = patchDate(2021, 8, 16, 16, 54, 0);
 
             const expectedDomains = [

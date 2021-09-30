@@ -161,7 +161,7 @@ tour.register('totp_login_device', {
     run: 'click',
 }, {
     content: "click the Log out button",
-    trigger: 'li[data-menu=logout] > a',
+    trigger: '.dropdown-item[data-menu=logout]',
 }, {
     content: "check that we're back on the login page or go to it",
     trigger: 'input#login, a:contains(Log in)'
@@ -280,7 +280,7 @@ tour.register('totp_admin_disables', {
     }
 }, {
     content: "Open Actions menu",
-    trigger: 'button.o_dropdown_toggler:contains("Action")'
+    trigger: 'button.dropdown-toggle:contains("Action")'
 }, {
     content: "Select totp remover",
     trigger: 'a.dropdown-item:contains(Disable two-factor authentication)'

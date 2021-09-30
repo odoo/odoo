@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { patchWithCleanup } from "../helpers/utils";
 import {
     applyGroup,
     getFacetTexts,
@@ -34,6 +36,10 @@ QUnit.module("Search", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("CustomGroupByItem");
@@ -54,12 +60,12 @@ QUnit.module("Search", (hooks) => {
         const customGroupByItem = controlPanel.el.querySelector(".o_add_custom_group_menu");
         assert.strictEqual(customGroupByItem.innerText.trim(), "Add Custom Group");
 
-        assert.containsOnce(customGroupByItem, "button.o_dropdown_toggler");
-        assert.containsNone(customGroupByItem, "ul.o_dropdown_menu");
+        assert.containsOnce(customGroupByItem, "button.dropdown-toggle");
+        assert.containsNone(customGroupByItem, ".dropdown-menu");
 
         await toggleAddCustomGroup(controlPanel);
 
-        assert.containsOnce(customGroupByItem, "ul.o_dropdown_menu");
+        assert.containsOnce(customGroupByItem, ".dropdown-menu");
 
         assert.deepEqual(
             [...controlPanel.el.querySelectorAll(".o_add_custom_group_menu select option")].map(
@@ -92,7 +98,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(
                 [
                     ...controlPanel.el.querySelectorAll(
-                        ".o_add_custom_group_menu .o_dropdown_menu select option"
+                        ".o_add_custom_group_menu .dropdown-menu select option"
                     ),
                 ].map((el) => el.innerText),
                 ["Foo"]
@@ -156,16 +162,16 @@ QUnit.module("Search", (hooks) => {
         await toggleAddCustomGroup(controlPanel);
 
         // Single select node with a single option
-        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu select");
+        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .dropdown-menu select");
         assert.strictEqual(
             controlPanel.el
-                .querySelector(".o_add_custom_group_menu .o_dropdown_menu select option")
+                .querySelector(".o_add_custom_group_menu .dropdown-menu select option")
                 .innerText.trim(),
             "Super Date"
         );
 
         // Button apply
-        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu .btn");
+        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .dropdown-menu .btn");
     });
 
     QUnit.test(
@@ -192,8 +198,8 @@ QUnit.module("Search", (hooks) => {
             await applyGroup(controlPanel);
 
             assert.containsOnce(controlPanel, ".o_group_by_menu .o_menu_item");
-            assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_toggler");
-            assert.containsNone(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu");
+            assert.containsOnce(controlPanel, ".o_add_custom_group_menu .dropdown-toggle");
+            assert.containsOnce(controlPanel, ".o_add_custom_group_menu .dropdown-menu");
             assert.deepEqual(getFacetTexts(controlPanel), ["Candlelight"]);
         }
     );

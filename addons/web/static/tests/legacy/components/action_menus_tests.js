@@ -56,16 +56,16 @@ odoo.define('web.action_menus_tests', function (require) {
                 props: this.props,
             });
 
-            const dropdowns = actionMenus.el.getElementsByClassName('o_dropdown');
+            const dropdowns = actionMenus.el.getElementsByClassName('dropdown');
             assert.strictEqual(dropdowns.length, 2, "ActionMenus should contain 2 menus");
             assert.strictEqual(dropdowns[0].querySelector('.o_dropdown_title').innerText.trim(), "Print");
             assert.strictEqual(dropdowns[1].querySelector('.o_dropdown_title').innerText.trim(), "Action");
-            assert.containsNone(actionMenus, '.o_dropdown_menu');
+            assert.containsNone(actionMenus, '.dropdown-menu');
 
             await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
 
-            assert.containsOnce(actionMenus, '.o_dropdown_menu');
-            assert.containsN(actionMenus, '.o_dropdown_menu .o_menu_item', 4);
+            assert.containsOnce(actionMenus, '.dropdown-menu');
+            assert.containsN(actionMenus, '.dropdown-menu .o_menu_item', 4);
             const actionsTexts = [...dropdowns[1].querySelectorAll('.o_menu_item')].map(el => el.innerText.trim());
             assert.deepEqual(actionsTexts, [
                 "Boil'em",
@@ -76,12 +76,12 @@ odoo.define('web.action_menus_tests', function (require) {
 
             await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
 
-            assert.containsOnce(actionMenus, '.o_dropdown_menu');
-            assert.containsN(actionMenus, '.o_dropdown_menu .o_menu_item', 1);
+            assert.containsOnce(actionMenus, '.dropdown-menu');
+            assert.containsN(actionMenus, '.dropdown-menu .o_menu_item', 1);
 
             await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
 
-            assert.containsNone(actionMenus, '.o_dropdown_menu');
+            assert.containsNone(actionMenus, '.dropdown-menu');
 
             actionMenus.destroy();
         });

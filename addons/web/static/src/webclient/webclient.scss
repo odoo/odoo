@@ -142,6 +142,53 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
   }
 }
 
+// == Boostrap Dropdown
+// ----------------------------------------------------------------------------
+.dropdown-menu {
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
+
+.dropdown-item {
+  &.active, &.selected {
+    position: relative;
+    font-weight: $font-weight-bold;
+
+    &:focus, &:hover {
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    &:not(.dropdown-item_active_noarrow) {
+      &:before {
+        @include o-position-absolute(0);
+        transform: translate(-1.5em, 90%);
+        font: .7em/1em FontAwesome;
+        color: $primary;
+        content: "\f00c";
+      }
+
+      &.disabled:before {
+        color: $dropdown-link-disabled-color;
+      }
+    }
+  }
+}
+
+.dropdown-header {
+  font-weight: $font-weight-bold;
+  padding-bottom: .1em;
+
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
 //== Printing improvements
 @media print {
   .table-responsive {

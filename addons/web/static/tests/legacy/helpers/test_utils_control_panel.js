@@ -14,7 +14,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleMenu(el, menuFinder) {
-        const menu = findItem(el, `.o_dropdown > button`, menuFinder);
+        const menu = findItem(el, `.dropdown > button`, menuFinder);
         await click(menu);
     }
 
@@ -67,7 +67,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {string[]}
      */
     function getMenuItemTexts(el) {
-        return [...getNode(el).querySelectorAll(`.o_dropdown ul .o_menu_item`)].map(
+        return [...getNode(el).querySelectorAll(`.dropdown ul .o_menu_item`)].map(
             e => e.innerText.trim()
         );
     }

@@ -10,6 +10,7 @@ import { scrollTo } from "../utils/scrolling";
  *  el: HTMLElement,
  *  isActive: boolean,
  *  makeOnlyActive: ()=>void,
+ *  navTarget: HTMLElement,
  *  isSubDropdown: boolean,
  *  isSubDropdownOpen: boolean,
  *  closeSubDropdown: ()=>void,
@@ -21,7 +22,7 @@ const { hooks } = owl;
 const { useComponent, useRef } = hooks;
 
 const ACTIVE_MENU_ELEMENT_CLASS = "focus";
-const MENU_ELEMENTS_SELECTORS = [":scope > li.o_dropdown_item", ":scope > li.o_dropdown"];
+const MENU_ELEMENTS_SELECTORS = [":scope > .dropdown-item", ":scope > .dropdown"];
 const NEXT_ACTIVE_INDEX_FNS = {
     FIRST: () => 0,
     LAST: (list) => list.length - 1,
@@ -33,11 +34,29 @@ export function useDropdownNavigation() {
     /** @type {import("./dropdown").Dropdown} */
     const comp = useComponent();
 
-    // As this navigation hook relies on clicking ".o_dropdown_toggler" elements,
+    // As this navigation hook relies on clicking ".dropdown-toggle" elements,
     // it is incompatible with a toggler="parent" strategy for subdropdowns.
     if (comp.hasParentDropdown && comp.props.toggler === "parent") {
         throw new Error("A nested Dropdown must use its standard toggler");
     }
+
+    // Needed to avoid unwanted mouseclick behavior on a subdropdown toggler.
+    const originalOnTogglerClick = comp.onTogglerClick.bind(comp);
+    comp.onTogglerClick = (ev) => {
+        if (comp.hasParentDropdown && !ev.__fromDropdownNavigation) {
+            return;
+        }
+        originalOnTogglerClick();
+    };
+
+    // Needed to avoid unwanted mouseenter behavior on a subdropdown toggler.
+    const originalOnTogglerMouseEnter = comp.onTogglerMouseEnter.bind(comp);
+    comp.onTogglerMouseEnter = () => {
+        if (comp.hasParentDropdown) {
+            return;
+        }
+        originalOnTogglerMouseEnter();
+    };
 
     // Needed to avoid unwanted selection when the mouse pointer is not in use
     // but still somewhere in the middle of the dropdown menu list.
@@ -56,20 +75,17 @@ export function useDropdownNavigation() {
         /** @type {NodeListOf<HTMLElement>} */
         const queryResult = menuRef.el.querySelectorAll(MENU_ELEMENTS_SELECTORS.join());
         for (const el of queryResult) {
-            const isSubDropdown = el.classList.contains("o_dropdown");
+            const isSubDropdown = el.classList.contains("dropdown");
             const isSubDropdownOpen = () => el.classList.contains("show");
-            const togglerClick = () => {
-                const toggler = el.querySelector(":scope > .o_dropdown_toggler");
-                if (toggler) {
-                    toggler.dispatchEvent(new MouseEvent("click", { bubbles: false }));
-                }
-            };
+            const navTarget = isSubDropdown ? el.querySelector(":scope > .dropdown-toggle") : el;
             let subDropdownTimeout;
             const closeSubDropdown = () => {
                 browser.clearTimeout(subDropdownTimeout);
                 subDropdownTimeout = browser.setTimeout(() => {
                     if (isSubDropdownOpen()) {
-                        togglerClick();
+                        const ev = new MouseEvent("click", { bubbles: false });
+                        ev.__fromDropdownNavigation = true;
+                        navTarget.dispatchEvent(ev);
                     }
                 }, 200);
             };
@@ -78,7 +94,9 @@ export function useDropdownNavigation() {
                 subDropdownTimeout = browser.setTimeout(
                     () => {
                         if (!isSubDropdownOpen()) {
-                            togglerClick();
+                            const ev = new MouseEvent("click", { bubbles: false });
+                            ev.__fromDropdownNavigation = true;
+                            navTarget.dispatchEvent(ev);
                         }
                     },
                     immediate ? 0 : 200
@@ -90,22 +108,23 @@ export function useDropdownNavigation() {
                     if (menuElement.el === el) {
                         continue;
                     }
-                    menuElement.el.classList.remove(ACTIVE_MENU_ELEMENT_CLASS);
+                    menuElement.navTarget.classList.remove(ACTIVE_MENU_ELEMENT_CLASS);
                     if (menuElement.isSubDropdown) {
                         menuElement.closeSubDropdown();
                     }
                 }
                 // Make myself active
-                el.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
+                navTarget.classList.add(ACTIVE_MENU_ELEMENT_CLASS);
             };
 
             /** @type {MenuElement} */
             const menuElement = {
                 el,
                 get isActive() {
-                    return el.classList.contains(ACTIVE_MENU_ELEMENT_CLASS);
+                    return navTarget.classList.contains(ACTIVE_MENU_ELEMENT_CLASS);
                 },
                 makeOnlyActive,
+                navTarget,
                 get isSubDropdownOpen() {
                     return isSubDropdownOpen();
                 },
@@ -117,12 +136,11 @@ export function useDropdownNavigation() {
 
             // Set up selection listeners
             const elementListeners = {
-                click: makeOnlyActive,
                 mouseenter: () => {
                     if (!mouseSelectionActive) {
                         mouseSelectionActive = true;
                     } else {
-                        menuElement.makeOnlyActive();
+                        makeOnlyActive();
                         if (isSubDropdown) {
                             openSubDropdown();
                         }
@@ -130,18 +148,18 @@ export function useDropdownNavigation() {
                 },
             };
             for (const [eventType, listener] of Object.entries(elementListeners)) {
-                menuElement.el.addEventListener(eventType, listener);
+                navTarget.addEventListener(eventType, listener);
             }
-            addedListeners.push([menuElement, elementListeners]);
+            addedListeners.push([navTarget, elementListeners]);
         }
         return () => {
             menuElements = [];
             mouseSelectionActive = true;
 
             // Clear mouse selection listeners
-            for (const [menuElement, listeners] of addedListeners) {
+            for (const [navTarget, listeners] of addedListeners) {
                 for (const [eventType, listener] of Object.entries(listeners)) {
-                    menuElement.el.removeEventListener(eventType, listener);
+                    navTarget.removeEventListener(eventType, listener);
                 }
             }
         };
@@ -191,6 +209,16 @@ export function useDropdownNavigation() {
             menuElement.openSubDropdown(true);
         }
     };
+    const selectActiveMenuElement = () => {
+        const menuElement = getActiveMenuElement();
+        if (menuElement) {
+            if (menuElement.isSubDropdown) {
+                menuElement.openSubDropdown(true);
+            } else {
+                menuElement.navTarget.click();
+            }
+        }
+    };
     let hotkeyRemoves = [];
     const hotkeyCallbacks = {
         home: () => setActiveMenuElement("FIRST"),
@@ -201,16 +229,7 @@ export function useDropdownNavigation() {
         arrowup: () => setActiveMenuElement("PREV"),
         arrowleft: localization.direction === "rtl" ? openSubDropdown : closeSubDropdown,
         arrowright: localization.direction === "rtl" ? closeSubDropdown : openSubDropdown,
-        enter: () => {
-            const menuElement = getActiveMenuElement();
-            if (menuElement) {
-                if (menuElement.isSubDropdown) {
-                    menuElement.openSubDropdown(true);
-                } else {
-                    menuElement.el.click();
-                }
-            }
-        },
+        enter: selectActiveMenuElement,
         escape: comp.close,
     };
     useEffect(

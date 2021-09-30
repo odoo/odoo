@@ -11,11 +11,11 @@ tour.register('crm_forecast', {
         trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
         content: "open crm app",
     }, {
-        trigger: '.o_dropdown_toggler[data-menu-xmlid="crm.crm_menu_report"]',
+        trigger: '.dropdown-toggle[data-menu-xmlid="crm.crm_menu_report"]',
         content: 'Open Reporting menu',
         run: 'click',
     }, {
-        trigger: '.o_dropdown_item[data-menu-xmlid="crm.crm_menu_forecast"]',
+        trigger: '.dropdown-item[data-menu-xmlid="crm.crm_menu_forecast"]',
         content: 'Open Forecast menu',
         run: 'click',
     }, {

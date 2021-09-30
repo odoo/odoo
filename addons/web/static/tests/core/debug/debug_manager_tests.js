@@ -103,18 +103,16 @@ QUnit.module("DebugMenu", (hooks) => {
         const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
         let debugManagerEl = debugManager.el;
-        await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
+        await click(debugManager.el.querySelector("button.dropdown-toggle"));
         debugManagerEl = debugManager.el;
-        assert.containsN(debugManagerEl, "ul.o_dropdown_menu li.o_dropdown_item", 3);
-        assert.containsOnce(debugManagerEl, "li.dropdown-divider");
-        const children = [...(debugManagerEl.querySelector("ul.o_dropdown_menu").children || [])];
+        assert.containsN(debugManagerEl, ".dropdown-menu .dropdown-item", 3);
+        assert.containsOnce(debugManagerEl, ".dropdown-divider");
+        const children = [...(debugManagerEl.querySelector(".dropdown-menu").children || [])];
         assert.deepEqual(
             children.map((el) => el.tagName),
-            ["LI", "LI", "LI", "LI"]
+            ["SPAN", "SPAN", "DIV", "SPAN"]
         );
-        const items =
-            [...debugManagerEl.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item span")] ||
-            [];
+        const items = [...debugManagerEl.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
         assert.deepEqual(
             items.map((el) => el.textContent),
             ["Item 2", "Item 1", "Item 3"]
@@ -161,10 +159,8 @@ QUnit.module("DebugMenu", (hooks) => {
         const env = await makeTestEnv(testConfig);
         const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
-        await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
-        const items = [
-            ...debugManager.el.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item span"),
-        ];
+        await click(debugManager.el.querySelector("button.dropdown-toggle"));
+        const items = [...debugManager.el.querySelectorAll(".dropdown-menu .dropdown-item")];
         assert.deepEqual(
             items.map((el) => el.textContent),
             ["Item 1", "Item 2", "Item 3", "Item 4"]
@@ -242,14 +238,10 @@ QUnit.module("DebugMenu", (hooks) => {
             assert.containsOnce(target, ".o_dialog .o_debug_manager .fa-bug");
             await click(target, ".o_dialog .o_debug_manager button");
             const debugManagerEl = target.querySelector(".o_debug_manager");
-            assert.containsN(debugManagerEl, "ul.o_dropdown_menu li.o_dropdown_item", 2);
+            assert.containsN(debugManagerEl, ".dropdown-menu .dropdown-item", 2);
             // Check that global debugManager elements are not displayed (global_1)
             const items =
-                [
-                    ...debugManagerEl.querySelectorAll(
-                        "ul.o_dropdown_menu li.o_dropdown_item span"
-                    ),
-                ] || [];
+                [...debugManagerEl.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
             assert.deepEqual(
                 items.map((el) => el.textContent),
                 ["Item 1", "Item 2"]
@@ -285,9 +277,9 @@ QUnit.module("DebugMenu", (hooks) => {
         const env = await makeTestEnv(testConfig);
         const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
-        await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
-        assert.containsOnce(debugManager.el, "ul.o_dropdown_menu li.o_dropdown_item");
-        const item = debugManager.el.querySelector("ul.o_dropdown_menu li.o_dropdown_item span");
+        await click(debugManager.el.querySelector("button.dropdown-toggle"));
+        assert.containsOnce(debugManager.el, ".dropdown-menu .dropdown-item");
+        const item = debugManager.el.querySelector(".dropdown-menu .dropdown-item");
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/search", "ir.attachment/unlink", "reloadPage"]);
@@ -336,7 +328,7 @@ QUnit.module("DebugMenu", (hooks) => {
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await click(webClient.el.querySelector(".o_debug_manager button"));
-        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await click(webClient.el.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".modal .o_list_view");
 
@@ -380,7 +372,7 @@ QUnit.module("DebugMenu", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1234);
         await click(webClient.el.querySelector(".o_debug_manager button"));
-        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await click(webClient.el.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".modal .o_form_view");
         assert.strictEqual(
@@ -416,7 +408,7 @@ QUnit.module("DebugMenu", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         await click(webClient.el.querySelector(".o_debug_manager button"));
-        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await click(webClient.el.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".modal .o_form_view");
         assert.strictEqual(
@@ -446,7 +438,7 @@ QUnit.module("DebugMenu", (hooks) => {
             // opens a form view in a dialog without a control panel.
             await doAction(webClient, 5);
             await click(webClient.el.querySelector(".o_dialog .o_debug_manager button"));
-            assert.containsNone(webClient, ".o_debug_manager .o_dropdown_item");
+            assert.containsNone(webClient, ".o_debug_manager .dropdown-item");
         }
     );
 });

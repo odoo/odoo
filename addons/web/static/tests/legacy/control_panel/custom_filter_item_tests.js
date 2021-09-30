@@ -10,6 +10,10 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
     const cpHelpers = require('@web/../tests/search/helpers');
     const { createComponent } = testUtils;
 
+    const toggleAddCustomFilterStandalone = async (el) => {
+        await cpHelpers.toggleMenu(el, "Add Custom Filter");
+    };
+
     QUnit.module('Components', {
         beforeEach: function () {
             this.fields = {
@@ -42,7 +46,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.hasClass(cfi.el, 'o_add_custom_filter_menu');
             assert.strictEqual(cfi.el.children.length, 1);
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
 
             // Single condition
             assert.containsOnce(cfi, '.o_filter_condition');
@@ -82,7 +86,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             });
 
             // Open custom filter form
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
 
             // Retrieve second selectable values for field and operator dropdowns
             const fieldSecondValue = cfi.el.querySelector('.o_generator_menu_field option:nth-of-type(2)').value;
@@ -137,7 +141,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 domain: '[["binary_field","!=",False]]',
                 type: 'filter',
             }];
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
             await cpHelpers.applyFilter(cfi);
 
@@ -147,7 +151,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 domain: '[["binary_field","=",False]]',
                 type: 'filter',
             }];
-            await cpHelpers.toggleAddCustomFilter(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
             await cpHelpers.editConditionOperator(cfi, 0, '=');
             await cpHelpers.applyFilter(cfi);
@@ -180,7 +183,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 domain: '[["color","=","black"]]',
                 type: 'filter',
             }];
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
             await cpHelpers.applyFilter(cfi);
 
@@ -190,7 +193,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 domain: '[["color","=","white"]]',
                 type: 'filter',
             }];
-            await cpHelpers.toggleAddCustomFilter(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_value select'), 'white');
             await cpHelpers.applyFilter(cfi);
@@ -199,7 +201,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('adding a simple filter works', async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             delete this.fields.date_field;
 
@@ -221,13 +223,14 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'boolean_field');
             await cpHelpers.applyFilter(cfi);
 
-            // The only thing visible should be the button 'Add Custome Filter';
-            assert.strictEqual(cfi.el.children.length, 1);
-            assert.containsOnce(cfi, 'button.o_dropdown_toggler');
+            // The only things visible should be the button 'Add Custom Filter' and the menu;
+            assert.strictEqual(cfi.el.children.length, 2);
+            assert.containsOnce(cfi, 'button.dropdown-toggle');
+            assert.containsOnce(cfi, '.dropdown-menu');
 
             cfi.destroy();
         });
@@ -262,7 +265,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             async function testValue(operator, value) {
                 // open filter menu generator, select ID field, switch operator, type value, then click apply
-                await cpHelpers.toggleAddCustomFilter(cfi);
                 await cpHelpers.editConditionField(cfi, 0, 'id_field');
                 await cpHelpers.editConditionOperator(cfi, 0, operator);
                 await cpHelpers.editConditionValue(cfi, 0,
@@ -271,6 +273,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 await cpHelpers.applyFilter(cfi);
             }
 
+            await toggleAddCustomFilterStandalone(cfi);
             for (const domain of [...expectedDomains]) {
                 await testValue(domain[0][1], domain[0][2]);
             }
@@ -314,7 +317,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             async function testValue(value) {
                 // open filter menu generator, select trululu field and enter string `a`, then click apply
-                await cpHelpers.toggleAddCustomFilter(cfi);
                 await cpHelpers.editConditionField(cfi, 0, 'many2one_field');
                 await cpHelpers.editConditionValue(cfi, 0,
                     value
@@ -322,6 +324,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 await cpHelpers.applyFilter(cfi);
             }
 
+            await toggleAddCustomFilterStandalone(cfi);
             for (const value of testedValues) {
                 await testValue(value);
             }
@@ -359,7 +362,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
 
             assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
@@ -402,7 +405,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
 
             assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
@@ -428,7 +431,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await cpHelpers.addCondition(cfi);
 
             await cpHelpers.editConditionField(cfi, 0, "float_field");
@@ -477,7 +480,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await cpHelpers.addCondition(cfi);
 
             await cpHelpers.editConditionField(cfi, 0, "float_field");
@@ -542,7 +545,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await cpHelpers.toggleAddCustomFilter(cfi);
+            await toggleAddCustomFilterStandalone(cfi);
             await cpHelpers.addCondition(cfi);
             await cpHelpers.addCondition(cfi);
             await cpHelpers.addCondition(cfi);

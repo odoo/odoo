@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { patchDate } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     getFacetTexts,
@@ -35,6 +36,10 @@ QUnit.module("Search", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("Comparison");
@@ -49,8 +54,8 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter", "comparison"],
             searchViewId: false,
         });
-        assert.containsOnce(controlPanel, ".o_dropdown.o_filter_menu");
-        assert.containsNone(controlPanel, ".o_dropdown.o_comparison_menu");
+        assert.containsOnce(controlPanel, ".dropdown.o_filter_menu");
+        assert.containsNone(controlPanel, ".dropdown.o_comparison_menu");
         await toggleFilterMenu(controlPanel);
         await toggleMenuItem(controlPanel, "Birthday");
         await toggleMenuItemOption(controlPanel, "Birthday", "January");
@@ -63,7 +68,9 @@ QUnit.module("Search", (hooks) => {
             "COMPARISON"
         );
         await toggleComparisonMenu(controlPanel);
-        const comparisonOptions = [...controlPanel.el.querySelectorAll(".o_comparison_menu li")];
+        const comparisonOptions = [
+            ...controlPanel.el.querySelectorAll(".o_comparison_menu .dropdown-item"),
+        ];
         assert.strictEqual(comparisonOptions.length, 2);
         assert.deepEqual(
             comparisonOptions.map((e) => e.innerText.trim()),

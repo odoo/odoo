@@ -7,6 +7,8 @@ odoo.define("board.dashboard_tests", function (require) {
     var testUtils = require("web.test_utils");
     var ListRenderer = require("web.ListRenderer");
     var pyUtils = require("web.py_utils");
+    const { browser } = require("@web/core/browser/browser");
+    const { patchWithCleanup } = require("@web/../tests/helpers/utils");
     const { registry } = require("@web/core/registry");
     const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
     const {
@@ -844,6 +846,7 @@ odoo.define("board.dashboard_tests", function (require) {
             "partner,false,list": '<list><field name="foo"/></list>',
             "partner,false,search": "<search></search>",
         };
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
 
         const mockRPC = (route, args) => {
             if (route === "/board/add_to_dashboard") {
@@ -895,9 +898,9 @@ odoo.define("board.dashboard_tests", function (require) {
         // add this action to dashboard
         await toggleFavoriteMenu(webClient);
 
-        await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
+        await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
         await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
-        await testUtils.dom.click($(".o_add_to_board .o_dropdown_menu button"));
+        await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
 
         testUtils.mock.unpatch(ListController);
     });
@@ -906,6 +909,7 @@ odoo.define("board.dashboard_tests", function (require) {
         // the second search saved should not be influenced by the first
         assert.expect(2);
 
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         serverData.views = {
             "partner,false,list": '<list><field name="foo"/></list>',
             "partner,false,search": "<search></search>",
@@ -951,8 +955,8 @@ odoo.define("board.dashboard_tests", function (require) {
 
         // Add it to dashboard
         await toggleFavoriteMenu(webClient);
-        await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
-        await testUtils.dom.click($(".o_add_to_board .o_dropdown_menu button"));
+        await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
+        await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
 
         // Remove it
         await testUtils.dom.click(webClient.el.querySelector(".o_facet_remove"));
@@ -964,11 +968,12 @@ odoo.define("board.dashboard_tests", function (require) {
         await applyFilter(webClient);
         // Add it to dashboard
         await toggleFavoriteMenu(webClient);
-        await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board button.o_dropdown_toggler")
+        await testUtils.dom.triggerEvent(
+            webClient.el.querySelector(".o_add_to_board button.dropdown-toggle"),
+            "mouseenter"
         );
         await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board .o_dropdown_menu button")
+            webClient.el.querySelector(".o_add_to_board .dropdown-menu button")
         );
     });
 
@@ -976,6 +981,7 @@ odoo.define("board.dashboard_tests", function (require) {
         // View domains are to be added to the dashboard domain
         assert.expect(1);
 
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         var view_domain = ["display_name", "ilike", "a"];
         var filter_domain = ["display_name", "ilike", "b"];
 
@@ -1011,12 +1017,13 @@ odoo.define("board.dashboard_tests", function (require) {
         await applyFilter(webClient);
         // Add it to dashboard
         await toggleFavoriteMenu(webClient);
-        await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board button.o_dropdown_toggler")
+        await testUtils.dom.triggerEvent(
+            webClient.el.querySelector(".o_add_to_board button.dropdown-toggle"),
+            "mouseenter"
         );
         // add
         await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board .o_dropdown_menu button")
+            webClient.el.querySelector(".o_add_to_board .dropdown-menu button")
         );
     });
 
@@ -1255,7 +1262,7 @@ odoo.define("board.dashboard_tests", function (require) {
             // add the view to the dashboard
             await toggleFavoriteMenu(webClient);
 
-            await testUtils.dom.click($(".o_add_to_board button.o_dropdown_toggler"));
+            await testUtils.dom.click($(".o_add_to_board button.dropdown-toggle"));
             await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
             await testUtils.dom.click($(".o_add_to_board div button"));
 

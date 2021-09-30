@@ -228,6 +228,10 @@ export function click(el, selector) {
     return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
 }
 
+export async function mouseEnter(el, selector) {
+    return triggerEvent(el, selector, "mouseenter");
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *

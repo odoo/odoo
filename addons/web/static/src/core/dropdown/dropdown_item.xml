@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
   <t t-name="web.DropdownItem" owl="1">
-    <li
-      class="o_dropdown_item"
+    <t
+      t-tag="props.href ? 'a' : 'span'"
+      t-att-href="props.href"
+      class="dropdown-item"
       t-on-click="onClick"
       t-att-title="props.title"
       t-att-data-hotkey="props.hotkey"
     >
       <t t-slot="default" />
-    </li>
+    </t>
   </t>
 
 </templates>

@@ -3,14 +3,14 @@
     <!-- publish/unpublish button -->
     <template id="website_publisher" name="Website Publisher">
         <t groups="website.group_website_publisher" t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)">
-            <li t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
+            <div t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
                 <label class="o_switch o_switch_danger js_publish_btn m-0" t-att-accesskey="desktop_navbar and 'p'">
                     <input type="checkbox" t-att-checked="main_object.website_published"/>
                     <span/>
                     <span class="css_publish">Unpublished</span>
                     <span class="css_unpublish">Published</span>
                 </label>
-            </li>
+            </div>
         </t>
     </template>
 
@@ -31,22 +31,22 @@
                 </p>
             </div>
             <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar">
-                <ul id="oe_applications">
-                    <li class="dropdown active">
+                <div id="oe_applications">
+                    <div class="dropdown active">
                         <a class="dropdown-toggle full" data-toggle="dropdown" href="#" accesskey="h">
                             <i class="fa fa-th-large mr-2"/> WEBSITE
                         </a>
                         <div class="dropdown-menu" role="menu">
                             <!-- This will be populated on hover in JS -->
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
 
                 <button type="button" class="btn fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu" groups="website.group_website_designer"/>
 
-                <ul class="o_menu_sections" groups="website.group_website_designer">
+                <div class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
-                    <li t-if="editable" class="dropdown" id="content-menu">
+                    <div t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
@@ -54,37 +54,37 @@
                             <div t-if="deletable" role="separator" class="dropdown-divider"/>
                             <a role="menuitem" href="#" data-action="page_properties" class="dropdown-item" t-if="deletable">Page Properties</a>
                         </div>
-                    </li>
+                    </div>
                     <!-- Customize -->
-                    <li class="dropdown" id="customize-menu">
+                    <div class="dropdown" id="customize-menu">
                         <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Customize</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS/JS Editor</a>
                             <a role="menuitem" href="/web#action=website.action_website_add_features" class="dropdown-item" id="install_apps">Add Features</a>
                         </div>
-                    </li>
+                    </div>
                     <!-- Promote -->
-                    <li class="dropdown" id="promote-menu">
+                    <div class="dropdown" id="promote-menu">
                         <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Promote</a>
                         <div class="dropdown-menu oe_promote_menu" role="menu">
                             <a role="menuitem" data-action="promote-current-page" href="#" title="Promote page on the web" class="dropdown-item">Optimize SEO</a>
                         </div>
-                    </li>
+                    </div>
                     <t t-call="website.website_publisher">
                         <t t-set="extra_classes" t-translation="off">d-flex d-sm-flex d-md-none</t>
                     </t>
-                </ul>
+                </div>
 
-                <ul class="o_menu_systray d-none d-md-flex" groups="website.group_website_publisher">
+                <div class="o_menu_systray d-none d-md-flex" groups="website.group_website_publisher">
                     <t t-call="website.website_publisher">
                         <t t-set="extra_classes" t-value=""/>
                         <t t-set="desktop_navbar" t-value="true"/>
                     </t>
                     <!-- Mobile preview -->
-                    <li class="o_mobile_preview" id="mobile-menu">
+                    <div class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
-                    </li>
-                    <li groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher">
+                    </div>
+                    <div groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" accesskey="w">
                             <i class="fa fa-globe d-lg-none"/>
                             <span class="d-none d-lg-inline-block">
@@ -105,10 +105,10 @@
                                 </a>
                             </t>
                         </div>
-                    </li>
+                    </div>
 
                     <!-- Page Edition -->
-                    <li class="o_new_content_menu" id="new-content-menu">
+                    <div class="o_new_content_menu" id="new-content-menu">
                         <a href="#" accesskey="c"><span class="fa fa-plus mr-2"/>New</a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <div class="container pt32 pb32">
@@ -197,11 +197,11 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li t-if="not translatable" id="edit-page-menu">
+                    </div>
+                    <div t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#" accesskey="a"><span class="fa fa-pencil mr-2"/>Edit</a>
-                    </li>
-                    <li t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
+                    </div>
+                    <div t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
                         <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
@@ -209,14 +209,14 @@
                             <a role="menuitem" style="text-align: left;" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{backend_menu_id}"
                                    class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
                         </div>
-                    </li>
-                    <li t-if="translatable">
+                    </div>
+                    <div t-if="translatable">
                         <a data-action="translate" href="#">TRANSLATE</a>
-                    </li>
-                    <li t-if="translatable">
+                    </div>
+                    <div t-if="translatable">
                         <a data-action="edit_master" href="#">or Edit Master</a>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </nav>
         </xpath>
     </template>

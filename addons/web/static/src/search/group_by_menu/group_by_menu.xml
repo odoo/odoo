@@ -3,10 +3,10 @@
 
     <t t-name="web.GroupByMenu" owl="1">
         <Dropdown class="o_group_by_menu btn-group"
-            togglerClass="'btn btn-secondary'"
+            togglerClass="'btn btn-light'"
             t-props="dropdownProps"
             t-on-dropdown-item-selected="onGroupBySelected"
-            >
+        >
             <t t-set-slot="toggler">
                 <i class="small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Group By<t t-if="props.showCaretDown"> <i class="fa fa-caret-down ml-1"/></t></span>
@@ -14,43 +14,41 @@
             <t t-set="currentGroup" t-value="null"/>
             <t t-foreach="items" t-as="item" t-key="item.id">
                 <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
-                    <li class="dropdown-divider" role="separator"/>
+                    <div class="dropdown-divider" role="separator"/>
                 </t>
                 <t t-if="item.options">
-                    <Dropdown tag="'li'" togglerClass="'o_menu_item dropdown-item' + (item.isActive ? ' selected' : '')">
+                    <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
                         <t t-set-slot="toggler">
                             <t t-esc="item.description"/>
                         </t>
                         <t t-set="subGroup" t-value="null"/>
                         <t t-foreach="item.options" t-as="option" t-key="option.id">
                             <t t-if="subGroup !== null and subGroup !== option.groupNumber">
-                                <li class="dropdown-divider" role="separator"/>
+                                <div class="dropdown-divider" role="separator"/>
                             </t>
-                            <DropdownItem class="o_item_option dropdown-item"
+                            <DropdownItem class="o_item_option"
                                 t-att-class="{ selected: option.isActive }"
                                 payload="{ itemId: item.id, optionId: option.id }"
                                 parentClosingMode="'none'"
-                                >
-                                <t t-esc="option.description"/>
-                            </DropdownItem>
+                                t-esc="option.description"
+                            />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
                         </t>
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <DropdownItem class="o_menu_item dropdown-item"
+                    <DropdownItem class="o_menu_item"
                         t-att-class="{ selected: item.isActive }"
                         payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
-                        >
-                        <t t-esc="item.description"/>
-                    </DropdownItem>
+                        t-esc="item.description"
+                    />
                 </t>
                 <t t-set="currentGroup" t-value="item.groupNumber"/>
             </t>
             <t t-if="fields.length">
-                <li t-if="items.length" role="separator" class="dropdown-divider"/>
-                <CustomGroupByItem fields="fields"  t-on-dropdown-item-selected.stop="" t-on-add-custom-group="onAddCustomGroup"/>
+                <div t-if="items.length" role="separator" class="dropdown-divider"/>
+                <CustomGroupByItem fields="fields" t-on-add-custom-group="onAddCustomGroup"/>
             </t>
         </Dropdown>
     </t>

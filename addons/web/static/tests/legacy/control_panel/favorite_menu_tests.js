@@ -1,6 +1,9 @@
 odoo.define('web.favorite_menu_tests', function (require) {
     "use strict";
 
+    const { browser } = require('@web/core/browser/browser');
+    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
+
     const FormView = require('web.FormView');
     const testUtils = require('web.test_utils');
 
@@ -19,6 +22,9 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 float_field: { string: "Float", type: "float", group_operator: 'sum' },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
             };
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
         },
     }, function () {
 
@@ -39,7 +45,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             await cpHelpers.toggleFavoriteMenu(controlPanel);
             assert.containsNone(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_favorite');
-            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > button span').innerText.trim(),
+            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > button').innerText.trim(),
                 "Save current search");
 
             await cpHelpers.toggleSaveFavorite(controlPanel);
@@ -288,7 +294,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             // confirm deletion
             await testUtils.dom.click(document.querySelector('div.o_dialog footer button'));
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
-            const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .o_dropdown_item');
+            const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .dropdown-item');
             assert.deepEqual([...itemEls].map(e => e.innerText.trim()), ["Save current search"]);
 
             controlPanel.destroy();

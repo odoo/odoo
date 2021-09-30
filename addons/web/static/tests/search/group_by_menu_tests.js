@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { patchWithCleanup } from "../helpers/utils";
 import {
     getFacetTexts,
     isItemSelected,
@@ -34,6 +36,10 @@ QUnit.module("Search", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("GroupByMenu");

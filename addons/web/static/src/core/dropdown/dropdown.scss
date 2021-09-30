@@ -1,144 +1,71 @@
-// = Default Boostrap Classes customizations
-// ----------------------------------------------------------------------------
-.dropdown-menu {
-  max-height: 70vh;
-  overflow: auto;
-  background-clip: border-box;
-  box-shadow: $o-dropdown-box-shadow;
-}
-
-.dropdown-item {
-  &.active, &.selected {
-    position: relative;
-    font-weight: $font-weight-bold;
-
-    &:focus, &:hover  {
-      background-color: $dropdown-link-hover-bg;
-    }
-
-    &:not(.o_dropdown_item_active_noarrow) {
-      &:before {
-        @include o-position-absolute(0);
-        transform: translate(-1.5em, 90%);
-        font: .7em/1em FontAwesome;
-        color: $primary;
-        content: "\f00c";
-      }
-
-      &.disabled:before {
-        color: $dropdown-link-disabled-color;
-      }
-    }
-  }
-
-  &.selected { // Legacy
-    // FIXME: does commenting this break anything?
-    // @extend .active;
-  }
-}
-
-.dropdown-header {
-  font-weight: $font-weight-bold;
-  padding-bottom: .1em;
-
-  &:not(:first-child) {
-    margin-top: .3em;
-  }
-}
-
-.dropdown-divider:first-child {
-  display: none;
-}
-
-.o_rtl {
-  .dropdown-menu {
-    @extend .dropdown-menu-right;
-  }
-}
-
-// = Extend Owl custom classes to visually match Boostrap ones
-// ----------------------------------------------------------------------------
-.o_dropdown {
-  @extend .dropdown;
-
-  &_toggler {
-    @extend .dropdown-toggle;
-  }
-
-  &_menu {
-    @extend .dropdown-menu;
-
-    & > li.o_dropdown {
-      &.focus > .o_dropdown_toggler {
-        background-color: $dropdown-link-hover-bg;
-      }
-      & > .o_dropdown_toggler {
-        &:after {
-          @include o-position-absolute($right: 0, $top: 0);
-          transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
-          font: .9em/1em FontAwesome;
-          content: "\f0da";
-        }
-      }
-
-      // Correctly align sub dropdowns items with its parent's
-      & > .o_dropdown_menu {
-        &.o-popper-position {
-          &--rs, &--ls {
-            margin-top: calc(-.5rem - 1px);
-          }
-          &--re, &--le {
-            margin-top: calc(.5rem - 2px);
-          }
-        }
-      }
-    }
-
-    // Since wrapping entry's content is the norm, @extend bootstrap
-    // '.dropdown-item' classes to the inner element (eg. <a> or <span>)
-    // rather that on 'o_dropdown_item'.
-    .o_dropdown_item {
-      > :first-child {
-        @extend .dropdown-item;
-      }
-      &.selected > :first-child {
-        // FIXME: does commenting this break anything?
-        //@extend .active;
-      }
-      &.disabled > :first-child {
-        // FIXME: does commenting this break anything?
-        //@extend .disabled;
-      }
-      &.focus {
-        background-color: $dropdown-link-hover-bg;
-      }
-    }
-  }
-
-  &_menu_group {
-    @extend .dropdown-header;
-  }
-}
-
 // = Owl components specific rules
 // -----------------------------------------------------------------------------
-.o_dropdown_item:not(.disabled):not(:disabled) {
-  // Needed 'cause <DropdownItem> generate <li> html tags that for browsers are
+.dropdown-menu {
+  .dropdown-toggle:focus, .dropdown-item:focus {
+    background-color: transparent;
+  }
+  .dropdown-toggle.focus, .dropdown-item.focus {
+    background-color: $dropdown-link-hover-bg;
+  }
+}
+
+.dropdown-item:not(.disabled):not(:disabled) {
+  // Needed 'cause <DropdownItem> generate <span> html tags that for browsers are
   // normally not clickable.
   cursor: pointer;
 }
 
-button.o_dropdown_toggler {
-  > span {
-    min-width: max-content;
-  }
-
-  &%--state-active {
+button.dropdown-toggle {
+  &.active, &:hover, &:focus, &:active {
     outline: none;
     box-shadow: none !important;
   }
+  &.dropdown-item {
+    &::after, &::before {
+      // Changes the placement of bootstrap dropdown carets for subdropdowns
+      @include o-position-absolute($right: 0, $top: 0);
+      transform: translate(-.6em, .6em) #{"/*rtl:translate(.6em, .6em) scaleX(-1)*/"};
+    }
+  }
+}
 
-  @include hover-focus-active() {
-    @extend %--state-active;
+// = New Owl Dropdown specific rules
+// -----------------------------------------------------------------------------
+.o-dropdown {
+  &--menu {
+    // Makes sure the dropdown menus are already in a
+    // fixed position before the positioning computations begin.
+    position: fixed;
+  }
+  /*!rtl:begin:ignore*/
+  &.dropup > .o-dropdown--menu,
+  &.dropdown > .o-dropdown--menu,
+  &.dropleft > .o-dropdown--menu,
+  &.dropright > .o-dropdown--menu {
+    // Also makes sure that left/right stuffs are not polluted
+    // by bootstrap rules processed by rtlcss
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /*!rtl:end:ignore*/
+
+  &--no-caret {
+    > .dropdown-toggle {
+        &::before, &::after {
+            content: normal;
+        }
+    }
+  }
+
+  // Correctly align sub dropdowns items with its parent's
+  .o-dropdown > .o-dropdown--menu.o-popper-position {
+    &--rs, &--ls {
+      margin-top: calc(-.5rem - 1px);
+    }
+    &--re, &--le {
+      margin-top: calc(.5rem - 2px);
+    }
   }
 }

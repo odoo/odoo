@@ -40,10 +40,10 @@ QUnit.test("Manage Messages", async function (assert) {
     const wc = await createWebClient({ serverData, mockRPC });
     await doAction(wc, 3, { viewType: "form", props: { resId: 5 } });
     await legacyExtraNextTick();
-    await click(wc.el, ".o_debug_manager .o_dropdown_toggler");
+    await click(wc.el, ".o_debug_manager .dropdown-toggle");
 
     const dropdownItems = wc.el.querySelectorAll(
-        ".o_debug_manager .o_dropdown_menu .o_dropdown_item"
+        ".o_debug_manager .dropdown-menu .dropdown-item"
     );
     assert.strictEqual(dropdownItems.length, 1);
     assert.strictEqual(
