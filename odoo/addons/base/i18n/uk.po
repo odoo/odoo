@@ -4503,10 +4503,10 @@ msgid ""
 "for customization purpose.\n"
 msgstr ""
 "\n"
-"Імпортуйте модуль даних користувача\n"
+"Модуль імпорту даних\n"
 "===========================\n"
 "\n"
-"Даний модуль дозволяє авторизованим користувачам імпортувати модуль даних користувача (файли .xml та статичні рахунки)\n"
+"Даний модуль дозволяє авторизованим користувачам імпортувати кастомні дані (файли .xml та статичні рахунки)\n"
 "для налаштування.\n"
 
 #. module: base
@@ -4538,7 +4538,7 @@ msgid ""
 msgstr ""
 "\n"
 "У більшості країн дебетове повернення використовується як збільшення суми існуючого рахунку \n"
-"або у кілька конкретних випадках для закриття сторно. \n"
+"або у кількох конкретних випадках для закриття сторно. \n"
 "Це як звичайний рахунок, але нам необхідно слідкувати за посиланням з оригінальним рахунком.  \n"
 "Використання помічника таке ж, як і для сторно.\n"
 "    "
@@ -4666,7 +4666,7 @@ msgstr ""
 "Інтеграція Github в Обговореннях Odoo.\n"
 "============================\n"
 "\n"
-"Цей модуль об'єднує всі поштові зобов'язання, витягує запити та активність github-проблеми на канали в Odoo.\n"
+"Цей модуль об'єднує всі опубліковані коміти, витягує запити та активність github-проблеми на канали в Odoo.\n"
 "    "
 
 #. module: base
@@ -8437,6 +8437,10 @@ msgid ""
 "=======================================================================\n"
 " "
 msgstr ""
+"\n"
+"Використовуючи цей модуль, ви можете керувати Командами продажу із модуля CRM та/або Продажів\n"
+"=======================================================================\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -9212,6 +9216,9 @@ msgid ""
 "                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'hard')]}\">This view is not coming from a file.</span>\n"
 "                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">You need two views to compare.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reset_mode', '!=', 'soft')]}\">Перегляд немає попередньої версії.</span>\n"
+"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'hard')]}\">Цей перегляд не походить з файлу.</span>\n"
+"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">Для порівняння потрібні два перегляди.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -22456,7 +22463,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo платежі через Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
@@ -28649,7 +28656,7 @@ msgstr "Відстежуйте конвеєр вашого рекрутингу"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr ""
+msgstr "Відстежуйте, визначайте пріоритети та вирішуйте заявки клієнтів"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -28786,7 +28793,7 @@ msgstr "Дерево"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
-msgstr ""
+msgstr "Дочірнє дерево може мати лише один тег %(tags)s (не %(wrong_tag)s)"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -28800,6 +28807,8 @@ msgid ""
 "Trying to access \"%(field)s\" on %(model)s in path %(field_path)r in "
 "%(attribute)s=%(value)r"
 msgstr ""
+"Намагається отримати доступ \"%(field)s\" у %(model)s на шляху "
+"%(field_path)r в %(attribute)s=%(value)r"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
@@ -29164,13 +29173,13 @@ msgstr "Невідома помилка під час імпорту:"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
-msgstr ""
+msgstr "Невідоме поле \"%(field)s\" у значенні \"group_by\" у %(attribute)s=%(value)r"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unknown field \"%(model)s.%(field)s\" in %(attribute)s%(value)r"
-msgstr ""
+msgstr "Невідоме поле \"%(model)s.%(field)s\" в %(attribute)s%(value)r"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -30381,6 +30390,7 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Ви не можете видалити записи '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -30388,7 +30398,7 @@ msgstr ""
 msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "Ви не можете змінити записи '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0

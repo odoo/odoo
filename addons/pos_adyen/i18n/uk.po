@@ -6,7 +6,7 @@
 # Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,16 +29,19 @@ msgid ""
 "company-specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"Values set here are "
+"company-specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Account"
-msgstr "Рахунок"
+msgstr "Обліковий запис"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Додайте чайові через платіжний термінал (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -58,7 +61,7 @@ msgstr "Ключ API Adyen"
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__adyen_account_id
 #: model:ir.ui.menu,name:pos_adyen.menu_pos_adyen_account
 msgid "Adyen Account"
-msgstr "Рахунок Adyen"
+msgstr "Обліковий запис Adyen"
 
 #. module: pos_adyen
 #. openerp-web
@@ -85,12 +88,12 @@ msgstr "Виплата Adyen"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "Adyen Store"
-msgstr ""
+msgstr "Магазин Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_id
 msgid "Adyen Terminal"
-msgstr ""
+msgstr "Термінал Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
@@ -110,12 +113,12 @@ msgstr "Adyen для рахунку платформ"
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_store
 msgid "Adyen for Platforms Store"
-msgstr ""
+msgstr "Магазин Adyen для платформ"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_terminal
 msgid "Adyen for Platforms Terminal"
-msgstr ""
+msgstr "Термінал Adyen для платформ"
 
 #. module: pos_adyen
 #. openerp-web
@@ -127,14 +130,14 @@ msgstr "Виникла несподівана помилка. Повідомле
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr "Попросіть клієнта чайові"
+msgstr "Попросіть у клієнта чайові"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "автентифікація не вдалася. Перевірте ваші облікові дані Adyen."
+msgstr "Автентифікація не вдалася. Перевірте ваші облікові дані Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -161,7 +164,7 @@ msgstr "Код країни"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Create an account in 1 minute"
-msgstr ""
+msgstr "Створіть обліковий запис за хвилину"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
@@ -173,7 +176,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_date
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__display_name
@@ -188,12 +191,12 @@ msgstr "Відобразити назву"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__house_number_or_name
 msgid "House Number Or Name"
-msgstr "Номер будинку або назва"
+msgstr "Номер будинку або ім'я"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "House number or name"
-msgstr "Номер рахунку або назва"
+msgstr "Номер будинку або ім'я"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__id
@@ -213,7 +216,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method____last_update
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_uid
@@ -242,7 +245,7 @@ msgstr "Назва"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Order a Terminal"
-msgstr ""
+msgstr "Замвоити термінал"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__terminal_ids
@@ -267,7 +270,7 @@ msgstr ""
 #: code:addons/pos_adyen/models/adyen_account.py:0
 #, python-format
 msgid "Please create a store first."
-msgstr ""
+msgstr "Спочатку створіть магазин."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -309,7 +312,7 @@ msgstr "Код області"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__store_id
 msgid "Store"
-msgstr ""
+msgstr "Магазин"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
@@ -341,7 +344,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
 msgid "Terminal"
-msgstr ""
+msgstr "Термінал"
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
@@ -352,7 +355,7 @@ msgstr "Термінал %s вже використовується у спос�
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
 msgid "Terminal ID"
-msgstr ""
+msgstr "ID терміналу"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__country_code

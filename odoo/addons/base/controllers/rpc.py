@@ -8,6 +8,7 @@ from odoo.http import Controller, dispatch_rpc, request, route
 from odoo.service import wsgi_server
 from odoo.fields import Date, Datetime
 from odoo.tools import lazy
+from odoo.tools.misc import frozendict
 
 
 class OdooMarshaller(xmlrpc.client.Marshaller):
@@ -18,6 +19,11 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
 
     dispatch = dict(xmlrpc.client.Marshaller.dispatch)
 
+    def dump_frozen_dict(self, value, write):
+        value = dict(value)
+        self.dump_struct(value, write)
+    dispatch[frozendict] = dump_frozen_dict
+    
     def dump_datetime(self, value, write):
         # override to marshall as a string for backwards compatibility
         value = Datetime.to_string(value)

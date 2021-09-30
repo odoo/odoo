@@ -19,7 +19,7 @@
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # JZH-Odoo <jzh@odoo.com>, 2020
 # wangting <39181819@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # 黎伟杰 <674416404@qq.com>, 2020
@@ -30,7 +30,7 @@
 # Jeanphy <hzh0292@qq.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
@@ -38,9 +38,10 @@
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # 洋 任 <1042636194@qq.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
+"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -326,9 +327,9 @@ msgstr ""
 "            已经确认。<br/>\n"
 "            感谢您的信任!\n"
 "        % elif transaction and transaction.state == 'pending' :\n"
-"            is pending. It will be confirmed when the payment is received.\n"
+"            付款等待中。 将在收到付款时确认.\n"
 "            % if object.reference:\n"
-"                付款等待中。 将在收到付款时确认。 <strong>${object.reference}</strong>.\n"
+"                您的付款参考是 <strong>${object.reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
@@ -473,7 +474,7 @@ msgstr ""
 "                    <strong>运输方式:</strong>\n"
 "                    ${object.carrier_id.name}\n"
 "                    % if object.carrier_id.fixed_price == 0.0:\n"
-"                        (Free)\n"
+"                        (免费)\n"
 "                    % else:\n"
 "                        (${format_amount(object.carrier_id.fixed_price, object.currency_id)})\n"
 "                    % endif\n"
@@ -1489,7 +1490,7 @@ msgstr "自定义报价的外观。"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "自定义您的报价和订单."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1690,7 +1691,7 @@ msgstr "显示类型"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "您想将此折扣应用于所有订单行吗?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1718,7 +1719,7 @@ msgstr "预付款总额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "预付款金额 (固定)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1773,7 +1774,7 @@ msgstr "草稿报价单"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr ""
+msgstr "此订单的草稿发票将被取消."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1955,7 +1956,7 @@ msgstr "得到的产品或客户订单的警告"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "干得好，我们继续."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2372,14 +2373,14 @@ msgstr "让你的客户登录查看他们的证件"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "让我们发送报价."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "让我们暂时保留电子签名."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2614,7 +2615,7 @@ msgstr "没有要开票的"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "现在，我们将创建一个示例报价."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2953,7 +2954,7 @@ msgstr "请为公司%s（%s）定义会计销售日记账。"
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "请输入一个整数值"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -3075,7 +3076,7 @@ msgstr "产品变体"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist <b>%s<b> "
-msgstr ""
+msgstr "已根据价目表重新计算产品价格 <b>%s<b> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3256,7 +3257,7 @@ msgstr "重开结算单策略可见"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "根据此价目表重新计算所有价格"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3902,6 +3903,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"技术领域，如果价格表发生变化，则为真:\n"
+"  这将显示一个重新计算按钮"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -4084,6 +4087,12 @@ msgid ""
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
+"没有什么须要发票的!\n"
+"\n"
+"这种行为的原因可能是:\n"
+"- 您应该在开具发票之前交付您的产品：单击 \"卡车\" 图标 (屏幕右上角) 并按照说明进行操作.\n"
+"- 您应该修改产品的发票政策：打开产品，转到 \"销售\" 选项卡，将发票政策从 \"交货数量\" 修改为 \"订购数量\".\n"
+" "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4160,7 +4169,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
-msgstr ""
+msgstr "这将根据当前设置的价目表更新所有单价."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4196,7 +4205,7 @@ msgstr "要在B2B模式下发送邀请，请在列表视图中打开联系人或
 msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
-msgstr ""
+msgstr "为了加快订单确认，我们可以激活电子签名或付款."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4441,14 +4450,14 @@ msgstr "网上沟通记录"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write <b>your own email address</b> here in order to test the flow."
-msgstr ""
+msgstr "在此处填写<b>您自己的电子邮件地址</b>以测试流程."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "写一个公司名称来创建一个，或查看建议."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

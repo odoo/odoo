@@ -8,7 +8,7 @@
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Johannes Croe <jcr@odoo.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# JEK Odoo <jek@odoo.com>, 2020
+# Jérôme JEK <jek@odoo.com>, 2020
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
 # Tobias Arndt, 2020
@@ -283,6 +283,15 @@ msgstr "Ausnahme (n) bei Bestellung (en) aufgetreten"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr "Ausnahme(n):"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
 
 #. module: purchase_stock
 #. openerp-web
