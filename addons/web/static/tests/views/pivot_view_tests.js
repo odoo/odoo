@@ -6,19 +6,21 @@ import { session } from "@web/session";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
     click,
-    nextTick,
     legacyExtraNextTick,
     makeDeferred,
     mockDownload,
+    nextTick,
     patchDate,
     patchWithCleanup,
     triggerEvent,
     triggerEvents,
 } from "../helpers/utils";
-import { makeView } from "./helpers";
 import {
     applyGroup,
     editFavoriteName,
+    removeFacet,
+    saveFavorite,
+    selectGroup,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     toggleAddCustomGroup,
@@ -26,15 +28,13 @@ import {
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
+    toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
-    saveFavorite,
-    selectGroup,
-    removeFacet,
-    toggleMenu,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
+import { makeView } from "./helpers";
 
 const serviceRegistry = registry.category("services");
 
@@ -438,12 +438,14 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             context: { someKey: true, search_default_test: 3 },
-            views: [
-                [2, "form"],
-                [5, "kanban"],
-                [false, "list"],
-                [false, "pivot"],
-            ],
+            config: {
+                views: [
+                    [2, "form"],
+                    [5, "kanban"],
+                    [false, "list"],
+                    [false, "pivot"],
+                ],
+            },
         });
 
         assert.hasClass(pivot.el.querySelector("table"), "o_enable_linking");
@@ -4689,7 +4691,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             context: { search_default_small_than_0: true },
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.containsOnce(pivot, ".o_view_nocontent .abc");
@@ -4720,7 +4724,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             context: { search_default_small_than_0: true },
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.hasClass(pivot.el, "o_view_sample_data");
@@ -4753,7 +4759,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.doesNotHaveClass(pivot.el, "o_view_sample_data");

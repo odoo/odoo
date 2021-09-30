@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 
@@ -15,39 +15,23 @@ export class WithSearch extends Component {
         this.Component = this.props.Component;
 
         if (!this.env.__getContext__) {
-            useSubEnv({
-                __getContext__: new CallbackRecorder(),
-            });
+            useSubEnv({ __getContext__: new CallbackRecorder() });
         }
 
         const SearchModelClass = this.Component.SearchModel || SearchModel;
-        this.searchModel = new SearchModelClass(this.env, {
+        this.env.searchModel = new SearchModelClass(this.env, {
             user: useService("user"),
             orm: useService("orm"),
             view: useService("view"),
         });
-        useBus(this.searchModel, "update", () => this.render());
-        useSubEnv({
-            searchModel: this.searchModel,
-        });
 
+        useBus(this.env.searchModel, "update", this.render);
         useSetupAction({
             getGlobalState: () => {
                 return {
-                    searchModel: JSON.stringify(this.searchModel.exportState()),
+                    searchModel: JSON.stringify(this.env.searchModel.exportState()),
                 };
             },
-        });
-
-        useEffect(() => {
-            if (!this.searchModel.display.searchPanel) {
-                return;
-            }
-            // TODO: add better way to retrieve o_content
-            const [content] = this.el.getElementsByClassName("o_content");
-            if (content) {
-                content.classList.add("o_component_with_search_panel");
-            }
         });
     }
 
@@ -57,7 +41,7 @@ export class WithSearch extends Component {
             config.state = JSON.parse(config.globalState.searchModel);
             delete config.globalState;
         }
-        await this.searchModel.load(config);
+        await this.env.searchModel.load(config);
     }
 
     async willUpdateProps(nextProps) {
@@ -67,7 +51,7 @@ export class WithSearch extends Component {
                 config[key] = nextProps[key];
             }
         }
-        await this.searchModel.reload(config);
+        await this.env.searchModel.reload(config);
     }
 
     //-------------------------------------------------------------------------
@@ -77,45 +61,24 @@ export class WithSearch extends Component {
     get componentProps() {
         const componentProps = { ...this.props.componentProps };
         for (const key of SEARCH_KEYS) {
-            componentProps[key] = this.searchModel[key];
+            componentProps[key] = this.env.searchModel[key];
         }
         componentProps.info = componentProps.info || {};
         for (const key of OTHER_SEARCH_KEYS) {
-            componentProps.info[key] = this.searchModel[key];
+            componentProps.info[key] = this.env.searchModel[key];
         }
         return componentProps;
     }
 }
 
 WithSearch.defaultProps = {
-    action: { id: false, views: [] },
     componentProps: {},
-    view: { id: false },
 };
 WithSearch.props = {
     Component: Function,
     componentProps: { type: Object, optional: true },
 
     resModel: String,
-
-    action: {
-        type: Object,
-        shape: {
-            id: [Number, false],
-            type: { type: [String, false], optional: true },
-            views: { type: Array, element: [Number, String, false], optional: true },
-        },
-        optional: true,
-    },
-    displayName: { type: String, optional: true },
-    view: {
-        type: Object,
-        shape: {
-            id: [Number, false],
-            type: { type: [String, false], optional: true },
-        },
-        optional: true,
-    },
 
     globalState: { type: Object, optional: true },
 

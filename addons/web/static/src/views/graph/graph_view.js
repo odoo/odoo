@@ -1,17 +1,16 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
+import { standardViewProps } from "@web/views/helpers/standard_view_props";
+import { useSetupView } from "@web/views/helpers/view_hook";
+import { Layout } from "@web/views/layout";
+import { useModel } from "../helpers/model";
 import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphRenderer } from "./graph_renderer";
-import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
-import { registry } from "@web/core/registry";
-import { standardViewProps } from "@web/views/helpers/standard_view_props";
-import { useModel } from "../helpers/model";
-import { useService } from "@web/core/utils/hooks";
-import { useSetupView } from "@web/views/helpers/view_hook";
 
 const viewRegistry = registry.category("views");
 
@@ -74,7 +73,7 @@ export class GraphView extends Component {
         const { context, resModel, title } = this.model.metaData;
 
         const views = {};
-        for (const [viewId, viewType] of this.props.info.views || []) {
+        for (const [viewId, viewType] of this.env.config.views || []) {
             views[viewType] = viewId;
         }
         function getView(viewType) {
@@ -131,7 +130,7 @@ export class GraphView extends Component {
 GraphView.template = "web.GraphView";
 GraphView.buttonTemplate = "web.GraphView.Buttons";
 
-GraphView.components = { ControlPanel, GroupByMenu, Renderer: GraphRenderer, SearchPanel };
+GraphView.components = { GroupByMenu, Renderer: GraphRenderer, Layout };
 
 GraphView.defaultProps = {
     additionalMeasures: [],

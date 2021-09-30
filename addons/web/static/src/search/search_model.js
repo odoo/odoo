@@ -4,6 +4,7 @@ import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { sortBy } from "@web/core/utils/arrays";
+import { deepCopy } from "@web/core/utils/objects";
 import { SearchArchParser } from "./search_arch_parser";
 import {
     constructDateDomain,
@@ -15,7 +16,6 @@ import {
     yearSelected,
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
-import { deepCopy } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 const EventBus = owl.core.EventBus;
@@ -190,11 +190,9 @@ export class SearchModel extends EventBus {
      * @param {number|false} [config.searchViewId=false]
      * @param {Object[]} [config.irFilters=[]]
      *
-     * @param {Object} [config.action={id:false,views:[]}]
      * @param {boolean} [config.activateFavorite=true]
      * @param {Object | null} [config.comparison]
      * @param {Object} [config.context={}]
-     * @param {String} [config.displayName=""]
      * @param {Array} [config.domain=[]]
      * @param {Array} [config.dynamicFilters=[]]
      * @param {string[]} [config.groupBy=[]]
@@ -203,7 +201,6 @@ export class SearchModel extends EventBus {
      * @param {string[]} [config.orderBy=[]]
      * @param {string[]} [config.searchMenuTypes=["filter", "groupBy", "favorite"]]
      * @param {Object} [config.state]
-     * @param {Object} [config.view={id:false}]
      */
     async load(config) {
         const { resModel } = config;
@@ -211,12 +208,6 @@ export class SearchModel extends EventBus {
             throw Error(`SearchPanel config should have a "resModel" key`);
         }
         this.resModel = resModel;
-
-        const { action, displayName, view } = config;
-
-        this.action = action || { id: false, views: [] };
-        this.displayName = displayName || "";
-        this.view = view || { id: false };
 
         // used to avoid useless recomputations
         this._reset();
@@ -245,7 +236,7 @@ export class SearchModel extends EventBus {
                     views: [[searchViewId, "search"]],
                 },
                 {
-                    actionId: this.action.id,
+                    actionId: this.env.config.actionId,
                     loadIrFilters: loadIrFilters || false,
                 }
             );
@@ -322,7 +313,6 @@ export class SearchModel extends EventBus {
         const { labels, preSearchItems, searchPanelInfo, sections } = parser.parse();
 
         this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };
-        this.display = this._getDisplay(config.display);
 
         await Promise.all(labels.map((cb) => cb(this.orm)));
 
@@ -355,6 +345,7 @@ export class SearchModel extends EventBus {
 
         /** @type Map<number,Section> */
         this.sections = new Map(sections || []);
+        this.display = this._getDisplay(config.display);
 
         if (this.display.searchPanel) {
             /** @type DomainListRepr */
@@ -1381,11 +1372,14 @@ export class SearchModel extends EventBus {
      */
     _getDisplay(display = {}) {
         const { viewTypes } = this.searchPanelInfo;
+        const { bannerRoute, viewType } = this.env.config;
         return {
             controlPanel: "controlPanel" in display ? display.controlPanel : {},
             searchPanel:
-                (!this.view.type || viewTypes.includes(this.view.type)) &&
+                this.sections.size &&
+                (!viewType || viewTypes.includes(viewType)) &&
                 ("searchPanel" in display ? display.searchPanel : true),
+            banner: Boolean(bannerRoute),
         };
     }
 
@@ -1763,7 +1757,7 @@ export class SearchModel extends EventBus {
         };
         const irFilter = {
             name: description,
-            action_id: this.action.id,
+            action_id: this.env.config.actionId,
             model_id: this.resModel,
             domain,
             is_default: isDefault,

@@ -51,10 +51,11 @@ function registerView(name, LegacyView) {
                 searchPanel = globalState.searchPanel;
             }
 
-            this.viewParams = Object.assign({}, this.props.actionFlags, {
+            const { actionFlags, breadcrumbs = [] } = this.env.config;
+            this.viewParams = Object.assign({}, actionFlags, {
                 action: this.props.action,
                 // legacy views automatically add the last part of the breadcrumbs
-                breadcrumbs: breadcrumbsToLegacy(this.props.breadcrumbs),
+                breadcrumbs: breadcrumbsToLegacy(breadcrumbs),
                 modelName: this.props.resModel,
                 currentId: this.props.resId,
                 controllerState: {
@@ -99,7 +100,7 @@ function registerView(name, LegacyView) {
                 context: this.props.context,
             };
             const options = {
-                actionId: this.props.action.id,
+                actionId: this.env.config.actionId,
                 loadActionMenus: this.props.loadActionMenus,
                 loadIrFilters: this.props.loadIrFilters,
             };
@@ -120,10 +121,11 @@ function registerView(name, LegacyView) {
                     viewFields: result.fields_views.search.fields,
                 });
             }
+            const { viewSwitcherEntries = [] } = this.env.config;
             const views = this.viewParams.action.views
-                .filter(([vid, vtype]) => vtype !== "search")
+                .filter(([, vtype]) => vtype !== "search")
                 .map(([vid, vtype]) => {
-                    const view = this.props.viewSwitcherEntries.find((v) => v.type === vtype);
+                    const view = viewSwitcherEntries.find((v) => v.type === vtype);
                     if (view) {
                         return Object.assign({}, view, { viewID: vid });
                     } else {

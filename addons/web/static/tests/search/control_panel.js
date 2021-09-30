@@ -57,7 +57,7 @@ QUnit.module("Search", (hooks) => {
             serverData,
             resModel: "foo",
             Component: ControlPanel,
-            componentProps: {
+            config: {
                 breadcrumbs: [{ jsId: "controller_7", name: "Previous" }],
                 displayName: "Current",
             },
@@ -83,7 +83,7 @@ QUnit.module("Search", (hooks) => {
             serverData,
             resModel: "foo",
             Component: ControlPanel,
-            componentProps: {
+            config: {
                 viewSwitcherEntries: [
                     { type: "list", active: true, icon: "fa-list-ul", name: "List" },
                     { type: "kanban", icon: "fa-th-large", name: "Kanban" },

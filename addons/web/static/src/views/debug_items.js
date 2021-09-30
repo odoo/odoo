@@ -44,15 +44,12 @@ export function editView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    let type;
-    let { viewId } = component.props.info || {}; // fallback is there for legacy
+    let { viewId, viewType: type } = component.env.config || {}; // fallback is there for legacy
     if ("viewInfo" in component.props) {
         // legacy
         viewId = component.props.viewInfo.view_id;
         type = component.props.viewInfo.type;
         type = type === "tree" ? "list" : type;
-    } else {
-        type = component.constructor.type;
     }
     const displayName = type[0].toUpperCase() + type.slice(1);
     const description = env._t("Edit View: ") + displayName;
