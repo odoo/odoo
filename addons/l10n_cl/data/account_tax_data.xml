@@ -115,6 +115,44 @@
         ]"/>
     </record>
 
+    <record id="I_RTI" model="account.tax.template">
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="name">Retención Total IVA</field>
+        <field name="description">Retención total IVA</field>
+        <field name="amount">-19.00</field>
+        <field name="sequence" eval="2"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_cl_sii_code">15</field>
+        <field name="tax_group_id" ref="tax_group_retenciones"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_retencion_total_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210715'),
+                'plus_report_line_ids': [ref('tax_report_retencion_total_compras')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_retencion_total_compras')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_210715'),
+                'minus_report_line_ids': [ref('tax_report_retencion_total_compras')],
+            }),
+        ]"/>
+    </record>
+
     <record id="especifico_compra" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="name">Específico Compra</field>
