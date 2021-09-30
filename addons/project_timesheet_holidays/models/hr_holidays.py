@@ -75,12 +75,13 @@ class Holidays(models.Model):
     def _timesheet_create_lines(self):
         self.ensure_one()
         vals_list = []
-        work_hours_data = self.employee_id.list_work_time_per_day(
-            self.date_from,
-            self.date_to,
-        )
-        for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-            vals_list.append(self._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
+        if self.employee_id:
+            work_hours_data = self.employee_id.list_work_time_per_day(
+                self.date_from,
+                self.date_to,
+            )
+            for index, (day_date, work_hours_count) in enumerate(work_hours_data):
+                vals_list.append(self._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
         timesheets = self.env['account.analytic.line'].sudo().create(vals_list)
         return timesheets
 
