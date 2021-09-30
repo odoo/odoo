@@ -220,7 +220,7 @@
                     <field name="worksheet_type" invisible="1"/>
                     <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'pdf')]}"/>
                     <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '!=', 'google_slide')]}"/>
-                    <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
+                    <field name="operation_note" options="{'autoresize': false}" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
             </sheet>

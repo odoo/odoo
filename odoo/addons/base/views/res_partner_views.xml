@@ -321,7 +321,7 @@
                                             </group>
                                         </group>
                                         <group>
-                                            <field name="comment" placeholder="Internal notes..."/>
+                                            <field name="comment" options="{'autoresize': false}" placeholder="Internal notes..."/>
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
@@ -344,7 +344,7 @@
                             </group>
                         </page>
                         <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" options="{'height': 70}" placeholder="Internal note..."/>
+                            <field name="comment" options="{'autoresize': false}" placeholder="Internal note..."/>
                         </page>
                     </notebook>
                 </sheet>
