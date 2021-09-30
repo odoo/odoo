@@ -80,11 +80,10 @@ const Link = Widget.extend({
                 }
                 $node = $node.parent();
             }
-            const textLink = this.$link[0] || this.data.range.cloneContents();
-            const [encodedText, images] = this._encodeNodeToText(textLink);
-            this.data.originalText = this._decodeText(encodedText, images);
-            this.data.content = encodedText;
-            this.data.images = images;
+            const linkNode = this.$link[0] || this.data.range.cloneContents();
+            const linkText = linkNode.innerHTML || linkNode.textContent;
+            this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
+            this.data.originalText = this.data.content;
             this.data.url = this.$link.attr('href') || '';
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
@@ -189,8 +188,8 @@ const Link = Widget.extend({
         if (data.content !== this.data.originalText || data.url !== this.data.url) {
             const content = (data.content && data.content.length) ? data.content : data.url;
             // If there is a this.data.originalText, it means that we selected
-            // the text and we could not change the content through the text input.
-            // .html() is needed in case we selected images.
+            // the text and we could not change the content through the text
+            // input.html() is needed in case we selected rich html content.
             if (this.data.originalText) {
                 this.$link.html(content);
             } else {
@@ -262,23 +261,6 @@ const Link = Widget.extend({
         return url;
     },
     /**
-     * Take an HTML string and return an escape HTML string with each instance
-     * of the string "[IMG]" is replaced with the HTML from the given images
-     * respectively.
-     *
-     * @private
-     * @param {string} text
-     * @param {Node[]} images
-     * @returns {string}
-     */
-    _decodeText: function (text, images = []) {
-        text = _.escape(text);
-        for (const img of images) {
-            text = text.replace(/\[IMG\]/, img.outerHTML);
-        }
-        return text;
-    },
-    /**
      * Abstract method: return true if the URL should be stripped of its domain.
      *
      * @abstract
@@ -286,33 +268,6 @@ const Link = Widget.extend({
      * @returns {boolean}
      */
     _doStripDomain: function () {},
-    /**
-     * Take an element and return a tuple with its inner text where each image
-     * is replaced with the string "[IMG]", and a list of the replaced image
-     * elements.
-     *
-     * @param {Node} rootNode
-     * @returns {[string, Node[]]}
-     */
-    _encodeNodeToText: function (rootNode) {
-        const fake = document.createElement('fake');
-        for (const node of [...rootNode.cloneNode(true).childNodes]) {
-            fake.appendChild(node);
-        }
-
-        const nodes = this._getDescendants(fake);
-        const images = [];
-        for (const node of nodes) {
-            if (wysiwygUtils.isImg(node)) {
-                node.before(document.createTextNode('[IMG]'));
-                node.remove();
-                images.push(node);
-            }
-        }
-
-        const text = fake.innerText.replace(/[ \t\r\n]+/g, ' ');
-        return [text, images];
-    },
     /**
      * Get the link's data (url, content and styles).
      *
@@ -323,7 +278,6 @@ const Link = Widget.extend({
         var $url = this.$('input[name="url"]');
         var url = $url.val();
         var content = this.$('input[name="label"]').val() || url;
-        content = this._decodeText(content, this.data.images);
 
         if (!this.isButton && $url.prop('required') && (!url || !$url[0].checkValidity())) {
             return null;
