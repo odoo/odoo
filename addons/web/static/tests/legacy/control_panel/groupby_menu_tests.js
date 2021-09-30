@@ -1,6 +1,8 @@
 odoo.define('web.groupby_menu_tests', function (require) {
     "use strict";
 
+    const { browser } = require('@web/core/browser/browser');
+    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
     const testUtils = require('web.test_utils');
 
     const cpHelpers = require('@web/../tests/search/helpers');
@@ -18,6 +20,9 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
                 m2m: { string: "Many2Many", type: "many2many", store: true},
             };
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
         },
     }, function () {
 
@@ -210,7 +215,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleGroupByMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, 0);
 
-            const optionEls = controlPanel.el.querySelectorAll('li.o_item_option');
+            const optionEls = controlPanel.el.querySelectorAll('span.o_item_option');
 
             // default groupby should be activated with the  default inteval 'week'
             const { groupBy } = controlPanel.getQuery();

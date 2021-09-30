@@ -201,7 +201,7 @@ QUnit.test('basic rendering', async function (assert) {
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     assert.hasClass(
         document.querySelector('.o_MessagingMenu'),
-        "o-is-open",
+        "show",
         "should mark messaging menu as opened"
     );
     assert.strictEqual(
@@ -280,7 +280,7 @@ QUnit.test('basic rendering', async function (assert) {
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     assert.doesNotHaveClass(
         document.querySelector('.o_MessagingMenu'),
-        "o-is-open",
+        "show",
         "should mark messaging menu as closed"
     );
 });

@@ -53,7 +53,6 @@
             }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + getPadding(cell) + 'px;' }}" t-att-data-tooltip="cell.label" data-tooltip-position="right" t-on-click.prevent="onHeaderClick(cell, isXAxis ? 'col' : 'row')">
             <t t-if="cell.isLeaf and !cell.isFolded">
                 <PivotGroupByMenu
-                    tag="'span'"
                     toggler="'parent'"
                     cell="cell"
                     customGroupBys="model.metaData.customGroupBys"

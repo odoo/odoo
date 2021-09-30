@@ -47,7 +47,7 @@ QUnit.test("can be rendered", async (assert) => {
     const navbar = await mount(NavBar, { env, target });
     assert.containsOnce(
         navbar.el,
-        ".o_navbar_apps_menu button.o_dropdown_toggler",
+        ".o_navbar_apps_menu button.dropdown-toggle",
         "1 apps menu toggler present"
     );
     navbar.destroy();
@@ -58,10 +58,10 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
     const target = getFixture();
     const navbar = await mount(NavBar, { env, target });
     const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
-    await click(dropdown, "button.o_dropdown_toggler");
-    assert.containsOnce(dropdown, "ul.o_dropdown_menu");
-    await click(dropdown, "button.o_dropdown_toggler");
-    assert.containsNone(dropdown, "ul.o_dropdown_menu");
+    await click(dropdown, "button.dropdown-toggle");
+    assert.containsOnce(dropdown, ".dropdown-menu");
+    await click(dropdown, "button.dropdown-toggle");
+    assert.containsNone(dropdown, ".dropdown-menu");
     navbar.destroy();
 });
 
@@ -80,8 +80,8 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
 
     // check apps
     const appsMenu = navbar.el.querySelector(".o_navbar_apps_menu");
-    await click(appsMenu, "button.o_dropdown_toggler");
-    const menuItems = appsMenu.querySelectorAll("li");
+    await click(appsMenu, "button.dropdown-toggle");
+    const menuItems = appsMenu.querySelectorAll("a");
     assert.strictEqual(
         menuItems[0].dataset.menuXmlid,
         "wowl",
@@ -96,17 +96,14 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
     // check menus
     env.services.menu.setCurrentMenu(1);
     await nextTick();
-    assert.containsOnce(navbar, ".o_menu_sections .o_dropdown_item[data-menu-xmlid=menu_3]");
+    assert.containsOnce(navbar, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_3]");
 
     // check sub menus toggler
-    assert.containsOnce(
-        navbar,
-        ".o_menu_sections button.o_dropdown_toggler[data-menu-xmlid=menu_4]"
-    );
+    assert.containsOnce(navbar, ".o_menu_sections button.dropdown-toggle[data-menu-xmlid=menu_4]");
 
     // check sub menus
-    await click(navbar.el.querySelector(".o_menu_sections .o_dropdown_toggler"));
-    assert.containsOnce(navbar, ".o_menu_sections .o_dropdown_item[data-menu-xmlid=menu_5]");
+    await click(navbar.el.querySelector(".o_menu_sections .dropdown-toggle"));
+    assert.containsOnce(navbar, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_5]");
 
     navbar.destroy();
 });
@@ -117,10 +114,10 @@ QUnit.test("navbar can display current active app", async (assert) => {
     const navbar = await mount(NavBar, { env, target });
     const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
     // Open apps menu
-    await click(dropdown, "button.o_dropdown_toggler");
+    await click(dropdown, "button.dropdown-toggle");
     assert.containsOnce(
         dropdown,
-        "ul.o_dropdown_menu li.o_dropdown_item:not(.focus)",
+        ".dropdown-menu .dropdown-item:not(.focus)",
         "should not show the current active app as the menus service has not loaded an app yet"
     );
 
@@ -129,7 +126,7 @@ QUnit.test("navbar can display current active app", async (assert) => {
     await nextTick();
     assert.containsOnce(
         dropdown,
-        "ul.o_dropdown_menu li.o_dropdown_item.focus",
+        ".dropdown-menu .dropdown-item.focus",
         "should show the current active app"
     );
     navbar.destroy();
@@ -218,9 +215,9 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         "the displayed menu section should be the 'more' menu"
     );
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".o_dropdown_menu > *")].map((el) => el.textContent),
+        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
         "'more' menu should contain all hidden sections in correct order"
     );
@@ -401,23 +398,23 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
     );
 
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".o_dropdown_menu > *")].map((el) => el.textContent),
+        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
         "'more' menu should contain App1 sections"
     );
     // Close the more menu
-    await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
 
     // Set App2 menu
     env.services.menu.setCurrentMenu(2);
     await nextTick();
 
     // Open the more menu
-    await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+    await click(navbar.el, ".o_menu_sections_more .dropdown-toggle");
     assert.deepEqual(
-        [...navbar.el.querySelectorAll(".o_dropdown_menu > *")].map((el) => el.textContent),
+        [...navbar.el.querySelectorAll(".dropdown-menu > *")].map((el) => el.textContent),
         ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
         "'more' menu should contain App2 sections"
     );

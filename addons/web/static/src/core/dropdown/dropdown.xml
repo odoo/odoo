@@ -2,29 +2,28 @@
 <templates xml:space="preserve">
 
   <t t-name="web.Dropdown" owl="1">
-    <t
-      t-tag="rootTag"
-      class="o_dropdown"
-      t-att-class="{ show: state.open, o_dropdown_item: hasParentDropdown and rootTag === 'li' }"
+    <div
+      class="o-dropdown dropdown"
+      t-att-class="{ show: state.open, 'o-dropdown--no-caret': !hasParentDropdown }"
+      t-attf-class="{{ directionCaretClass || '' }}"
       t-on-dropdown-item-selected="onItemSelected"
     >
       <button
         t-if="props.toggler !== 'parent'"
-        t-attf-class="o_dropdown_toggler {{ props.togglerClass || '' }}"
+        class="dropdown-toggle"
+        t-attf-class="{{props.togglerClass || ''}} {{hasParentDropdown ? 'dropdown-item' : ''}}"
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
         t-att-data-hotkey="props.hotkey"
         t-ref="togglerRef"
       >
-        <span class="d-flex align-items-center">
-          <t t-slot="toggler" />
-        </span>
+        <t t-slot="toggler" />
       </button>
-      <ul t-if="state.open" class="o_dropdown_menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
         <t t-slot="default" />
-      </ul>
-    </t>
+      </div>
+    </div>
   </t>
 
 </templates>

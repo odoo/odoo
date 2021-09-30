@@ -333,6 +333,18 @@ var FieldMany2One = AbstractField.extend({
             html: true,
             minLength: 0,
             delay: this.AUTOCOMPLETE_DELAY,
+            classes: {
+                "ui-autocomplete": "dropdown-menu",
+            },
+            create: function() {
+                $(this).data('ui-autocomplete')._renderMenu = function(ulWrapper, entries) {
+                  var render = this;
+                  $.each(entries, function(index, entry) {
+                    render._renderItemData(ulWrapper, entry);
+                  });
+                  $(ulWrapper).find( "li > a" ).addClass( "dropdown-item" );
+                }
+            },
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;

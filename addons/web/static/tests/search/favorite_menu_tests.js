@@ -84,10 +84,10 @@ QUnit.module("Search", (hooks) => {
             await toggleFavoriteMenu(controlPanel);
             assert.containsOnce(
                 controlPanel,
-                "div.o_favorite_menu > .o_dropdown_menu",
+                "div.o_favorite_menu > .dropdown-menu",
                 "the menu should be opened"
             );
-            assert.containsNone(controlPanel, ".o_dropdown_menu *", "the menu should be empty");
+            assert.containsNone(controlPanel, ".dropdown-menu *", "the menu should be empty");
         }
     );
 
@@ -117,11 +117,11 @@ QUnit.module("Search", (hooks) => {
         await toggleFavoriteMenu(controlPanel);
         assert.containsOnce(
             controlPanel,
-            "div.o_favorite_menu > .o_dropdown_menu",
+            "div.o_favorite_menu > .dropdown-menu",
             "the menu should be opened"
         );
-        assert.containsNone(controlPanel, ".o_dropdown_menu .dropdown-divider");
-        assert.containsOnce(controlPanel, ".o_dropdown_menu .o_add_favorite");
+        assert.containsNone(controlPanel, ".dropdown-menu .dropdown-divider");
+        assert.containsOnce(controlPanel, ".dropdown-menu .o_add_favorite");
     });
 
     QUnit.test(
@@ -182,7 +182,7 @@ QUnit.module("Search", (hooks) => {
 
             assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
             assert.hasClass(
-                webClient.el.querySelector(".o_favorite_menu li.o_menu_item"),
+                webClient.el.querySelector(".o_favorite_menu .o_menu_item"),
                 "selected"
             );
 

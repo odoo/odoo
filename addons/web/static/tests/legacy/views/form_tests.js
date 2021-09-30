@@ -6252,8 +6252,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsNone(form, '.o_cp_action_menus .o_dropdown:contains(Print)');
-        assert.containsOnce(form, '.o_cp_action_menus .o_dropdown:contains(Action)');
+        assert.containsNone(form, '.o_cp_action_menus .dropdown:contains(Print)');
+        assert.containsOnce(form, '.o_cp_action_menus .dropdown:contains(Action)');
 
         await testUtils.controlPanel.toggleActionMenu(form);
 

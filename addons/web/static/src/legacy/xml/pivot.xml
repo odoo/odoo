@@ -93,7 +93,7 @@
                     <li class="dropdown-divider" role="separator"/>
                 </t>
                 <t t-if="(item.fieldType === 'date') || (item.fieldType === 'datetime')">
-                    <Dropdown tag="'li'" togglerClass="'o_menu_item dropdown-item'">
+                    <Dropdown togglerClass="'o_menu_item dropdown-item'">
                         <t t-set-slot="toggler">
                             <t t-esc="item.description"/>
                         </t>
