@@ -40,7 +40,6 @@ const MassMailingFullWidthFormController = FormController.extend({
      * template is picked.
      *
      * @private
-     * @param {JQuery} $iframe
      */
     _resizeMailingEditorIframe() {
         const VERTICAL_OFFSET = 12; // Vertical offset picked for visual design purposes.
@@ -105,7 +104,7 @@ const MassMailingFullWidthFormController = FormController.extend({
      * @private
      */
     _onDomUpdated() {
-        const data = { $iframe: this.$('iframe.wysiwyg_iframe, iframe.o_readonly') };
+        const data = { $iframe: this.$('iframe.wysiwyg_iframe:visible, iframe.o_readonly:visible') };
         this._onIframeUpdated({ data });
     },
     /**

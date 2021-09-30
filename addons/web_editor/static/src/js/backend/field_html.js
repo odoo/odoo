@@ -49,7 +49,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     willStart: async function () {
-        console.log("this:", this);
         this.isRendered = false;
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
         await this._super();
@@ -131,10 +130,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         value = this._textToHtml(value);
         if (!event || event.target !== this) {
-            if (this.cssReadonly) {
-                return Promise.resolve();
-            } else if (this.mode === 'edit') {
+            if (this.mode === 'edit' && this.wysiwyg) {
                 this.wysiwyg.setValue(value);
+            } else if (this.cssReadonly) {
+                return Promise.resolve();
             } else {
                 this.$content.html(value);
             }
@@ -169,9 +168,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {$.Promise}
      */
     _createWysiwygIntance: async function () {
-        if (this.cssReadonly) {
-            return;
-        }
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
         this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
         return this.wysiwyg.appendTo(this.$el).then(() => {
@@ -272,6 +268,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _renderEdit: function () {
+        if (this.nodeOptions.notEditable) {
+            return this._renderReadonly();
+        }
         var value = this._textToHtml(this.value);
         if (this.nodeOptions.wrapper) {
             value = this._wrap(value);
@@ -350,7 +349,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                     return '<style type="text/css">' + cssContent + '</style>';
                                 }).join('\n') + '\n' +
                             '</head>\n' +
-                            '<body class="o_in_iframe o_readonly">\n' +
+                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
                                 '<div id="iframe_target">' + value + '</div>\n' +
                                 '<script type="text/javascript">' +
                                     'if (window.top.' + self._onUpdateIframeId + ') {' +
