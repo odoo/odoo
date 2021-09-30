@@ -1128,6 +1128,7 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
+        'mouseup': '_onMouseUp',
         'mousedown': '_onMouseDown',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
@@ -2363,7 +2364,7 @@ var SnippetsMenu = Widget.extend({
             }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
-                cursor: 'move',
+                cursor: 'grabbing',
                 greedy: true,
                 scroll: false,
             }, options.jQueryDraggableOptions),
@@ -2414,6 +2415,8 @@ var SnippetsMenu = Widget.extend({
                     dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
                         el => el.remove()
                     );
+                    this.classList.remove('o_snippet_clicked');
+                    this.classList.add('o_snippet_dragging');
                     return dragSnip;
                 },
                 start: function () {
@@ -2426,6 +2429,7 @@ var SnippetsMenu = Widget.extend({
 
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
                     self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
+                    self.$el.find('.o_panel_body').addClass('o_dragging');
 
                     dropped = false;
                     $snippet = $(this);
@@ -2502,6 +2506,8 @@ var SnippetsMenu = Widget.extend({
                     const doc = self.options.wysiwyg.odooEditor.document;
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
+                    self.$el.find('.o_panel_body').removeClass('o_dragging');
+                    self.$el.find('.o_snippet_dragging').removeClass('o_snippet_dragging');
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
@@ -3009,6 +3015,15 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * @private
+     */
+    _onMouseUp(ev) {
+        const clickedSnippet = this.el.querySelector('.oe_snippet.o_snippet_clicked');
+        if (clickedSnippet) {
+            clickedSnippet.classList.remove('o_snippet_clicked');
+        }
+    },
+    /**
      * Prevents pointer-events to change the focus when a pointer slide from
      * left-panel to the editable area.
      *
@@ -3032,6 +3047,7 @@ var SnippetsMenu = Widget.extend({
 
         const snippetEl = ev.target.closest('.oe_snippet');
         if (snippetEl && !snippetEl.querySelector('.o_we_already_dragging')) {
+            snippetEl.classList.add('o_snippet_clicked');
             this._showSnippetTooltip($(snippetEl));
         }
     },
