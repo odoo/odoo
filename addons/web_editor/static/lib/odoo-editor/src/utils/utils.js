@@ -1357,6 +1357,8 @@ export function fillEmpty(el) {
         fillers.br = br;
     }
     if (!el.textContent.length && isUnremovable(el) && !isBlock(el)) {
+        // As soon as there is actual content in the node, the zero-width space
+        // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
         el.appendChild(zws);
         fillers.zws = zws;
