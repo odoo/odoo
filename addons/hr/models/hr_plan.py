@@ -9,8 +9,9 @@ class HrPlanActivityType(models.Model):
     _name = 'hr.plan.activity.type'
     _description = 'Plan activity type'
     _rec_name = 'summary'
+    _check_company_auto = True
 
-
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity Type',
         default=lambda self: self.env.ref('mail.mail_activity_data_todo'),
@@ -23,7 +24,7 @@ class HrPlanActivityType(models.Model):
         ('manager', 'Manager'),
         ('employee', 'Employee'),
         ('other', 'Other')], default='employee', string='Responsible', required=True)
-    responsible_id = fields.Many2one('res.users', 'Name', help='Specific responsible of activity if not linked to the employee.')
+    responsible_id = fields.Many2one('res.users', 'Name', help='Specific responsible of activity if not linked to the employee.', check_company=True)
     note = fields.Html('Note')
 
 
@@ -62,5 +63,6 @@ class HrPlan(models.Model):
     _description = 'plan'
 
     name = fields.Char('Name', required=True)
-    plan_activity_type_ids = fields.Many2many('hr.plan.activity.type', string='Activities')
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    plan_activity_type_ids = fields.Many2many('hr.plan.activity.type', string='Activities', domain="[('company_id', '=', company_id)]")
     active = fields.Boolean(default=True)

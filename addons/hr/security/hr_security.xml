@@ -49,5 +49,17 @@
         <field name="model_id" ref="model_hr_job"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
+
+    <record id="hr_plan_company_rule" model="ir.rule">
+        <field name="name">Plan multi-company rule</field>
+        <field name="model_id" ref="model_hr_plan"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="hr_plan_activity_type_company_rule" model="ir.rule">
+        <field name="name">Plan Activity Type multi-company rule</field>
+        <field name="model_id" ref="model_hr_plan_activity_type"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
 </data>
 </odoo>
