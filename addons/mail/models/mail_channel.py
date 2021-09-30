@@ -793,9 +793,9 @@ class Channel(models.Model):
 
             # add RTC sessions info
             info.update({
-                'invitedGuests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in channel_partners.filtered('rtc_inviting_session_id').guest_id])],
-                'invitedPartners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in channel_partners.filtered('rtc_inviting_session_id').partner_id])],
-                'rtcSessions': [('insert-and-replace', rtc_sessions_by_channel.get(channel, []))],
+                'invitedGuests': [('insert', [{'id': guest.id, 'name': guest.name} for guest in channel_partners.filtered('rtc_inviting_session_id').guest_id])],
+                'invitedPartners': [('insert', [{'id': partner.id, 'name': partner.name} for partner in channel_partners.filtered('rtc_inviting_session_id').partner_id])],
+                'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
             })
 
             channel_infos.append(info)
