@@ -4,10 +4,10 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
+import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent } from "../helpers/utils";
@@ -34,16 +34,25 @@ export const setupControlPanelFavoriteMenuRegistry = () => {
 };
 
 export const makeWithSearch = async (params) => {
-    const serverData = params.serverData || undefined;
-    const mockRPC = params.mockRPC || undefined;
     const props = { ...params };
+
+    const serverData = props.serverData || undefined;
+    const mockRPC = props.mockRPC || undefined;
+    const config = props.config || {};
+
     delete props.serverData;
     delete props.mockRPC;
-    const env = await makeTestEnv({ serverData, mockRPC });
+    delete props.config;
+
+    const env = await makeTestEnv({ serverData, mockRPC, config });
+
     const target = getFixture();
     const withSearch = await mount(WithSearch, { env, props, target });
+
     registerCleanup(() => withSearch.destroy());
+
     const component = Object.values(withSearch.__owl__.children)[0];
+
     return component;
 };
 

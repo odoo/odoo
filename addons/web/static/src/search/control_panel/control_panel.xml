@@ -30,9 +30,9 @@
 
                     <div class="o_cp_pager"/>
 
-                    <t t-if="props.viewSwitcherEntries and props.viewSwitcherEntries.length > 1">
+                    <t t-if="(env.config.viewSwitcherEntries or []).length">
                         <nav class="btn-group o_cp_switch_buttons">
-                            <t t-foreach="props.viewSwitcherEntries" t-as="view" t-key="view.type">
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-secondary fa fa-lg o_switch_view "
                                     t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
                                     t-att-data-tooltip="view.name"
@@ -48,7 +48,7 @@
 
     <t t-name="web.Breadcrumbs" owl="1">
         <ol class="breadcrumb">
-            <t t-foreach="props.breadcrumbs or []" t-as="breadcrumb" t-key="breadcrumb.jsId">
+            <t t-foreach="env.config.breadcrumbs or []" t-as="breadcrumb" t-key="breadcrumb.jsId">
                 <li class="breadcrumb-item"
                     t-att-class="{ o_back_button: breadcrumb_last}"
                     t-on-click.prevent="onBreadcrumbClicked(breadcrumb.jsId)"
@@ -59,7 +59,7 @@
                 </li>
             </t>
             <li class="breadcrumb-item active">
-                <t t-if="props.displayName" t-esc="props.displayName"/>
+                <t t-if="env.config.displayName" t-esc="env.config.displayName" />
                 <em t-else="" class="text-warning">Unnamed</em>
             </li>
         </ol>

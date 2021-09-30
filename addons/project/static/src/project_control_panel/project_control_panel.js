@@ -9,7 +9,7 @@ export class ProjectControlPanel extends ControlPanel {
         this.orm = useService("orm");
         this.user = useService("user");
         const { active_id, show_project_update } = this.env.searchModel.globalContext;
-        this.showProjectUpdate = this.env.searchModel.view.type === "form" || show_project_update;
+        this.showProjectUpdate = this.env.config.viewType === "form" || show_project_update;
         this.projectId = this.showProjectUpdate ? active_id : false;
     }
 
@@ -48,4 +48,5 @@ export class ProjectControlPanel extends ControlPanel {
         });
     }
 }
+
 ProjectControlPanel.template = "project.ProjectControlPanel";

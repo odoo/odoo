@@ -652,7 +652,7 @@ QUnit.module("ActionManager", (hooks) => {
         ToyView.searchMenuTypes = ["filter"];
         ToyView.template = owl.tags.xml`
             <div class="o_toy_view">
-                <ControlPanel t-props="props.info"/>
+                <ControlPanel />
             </div>
         `;
         ToyView.type = "toy";
