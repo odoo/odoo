@@ -187,6 +187,23 @@ $-seen-urls: ();
     }
 }
 
+body:not(.o_fullscreen) {
+    #oe_main_menu_navbar:not(.o_hidden) + #wrapwrap {
+        .o_header_affixed, .modal {
+            // For these elements, in #wrapwrap, position top should be size of
+            // the navbar.
+            top: $o-navbar-height;
+        }
+        .modal {
+            // As the default bootstrap style no longer uses 'bottom: 0' and
+            // added 'height: 100%' since the V4.2 because of a bug on Android.
+            // We have to adapt the height of the modal by removing the height
+            // of the navbar.
+            height: calc(100vh - #{$o-navbar-height});
+        }
+    }
+}
+
 .navbar {
 
     .navbar-collapse {
@@ -773,9 +790,6 @@ $-transition-duration: 200ms;
         }
     }
 }
-#oe_main_menu_navbar + #wrapwrap .o_header_affixed {
-    top: $o-navbar-height;
-}
 
 // Navbar
 .navbar .o_extra_menu_items.show > ul {
@@ -1146,9 +1160,13 @@ header {
     }
 }
 .o_mega_menu_container_size {
-    @include media-breakpoint-up(md) {
-        left: 50%;
-        transform: translateX(-50%);
+    $-header-template: o-website-value('header-template');
+    @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
+        $bp: if($-header-template == 'minimalist', md, lg);
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 
     $-mm-max-widths: ();
@@ -1240,7 +1258,12 @@ header {
     @include media-breakpoint-up(lg) {
         #wrapwrap.o_footer_effect_enable {
             > main {
-                background-color: $body-bg;
+                @if o-website-value('layout') == 'full' {
+                    // Ensure a transparent snippet at the end of the content
+                    // still appears with the same background when hovering the
+                    // footer during the scroll effect.
+                    background-color: $body-bg;
+                }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
                 }

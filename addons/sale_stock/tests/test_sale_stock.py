@@ -1018,3 +1018,32 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so.picking_ids.action_cancel()
 
         self.assertEqual(so.invoice_status, 'no')
+
+    def test_16_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        product = self.env.ref('product.product_product_11').copy({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 4.0,
+                    'product_uom': yards_uom.id,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking.move_lines.write({'quantity_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')

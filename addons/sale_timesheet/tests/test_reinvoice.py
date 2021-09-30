@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
+
+from odoo.exceptions import UserError
+from odoo.fields import Date
 from odoo.tests import Form, tagged
 
 
@@ -283,3 +287,90 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertEqual(sale_order_line.qty_delivered, 1, "The delivered quantity of SO line should not have been incremented")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+
+    def test_reversed_invoice_reinvoice_with_period(self):
+        """
+        Tests that when reversing an invoice of timesheet and selecting a time
+        period, the qty to invoice is correctly found
+        Business flow:
+          Create a sale order and deliver some hours (invoiced = 0)
+          Create an invoice
+          Confirm (invoiced = 1)
+          Add Credit Note
+          Confirm (invoiced = 0)
+          Go back to the SO
+          Create an invoice
+          Select a time period [1 week ago, 1 week in the future]
+          Confirm
+          -> Fails if there is nothing to invoice
+        """
+        product = self.env['product.product'].create({
+            'name': "Service delivered, create task in global project",
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'service_policy': 'delivered_timesheet',
+            'invoice_policy': 'delivery',
+            'default_code': 'SERV-DELI2',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'taxes_id': False,
+            'property_account_income_id': self.account_sale.id,
+        })
+        today = Date.context_today(self.env.user)
+
+        # Creates a sales order for quantity 3
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Toto'})
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 3.0
+        sale_order = so_form.save()
+        sale_order.action_confirm()
+
+        # "Deliver" 1 of 3
+        task = sale_order.tasks_ids
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 1,
+            'employee_id': self.employee_user.id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        context = {
+            "active_model": 'sale.order',
+            "active_ids": [sale_order.id],
+            "active_id": sale_order.id,
+            'open_invoices': True,
+        }
+        # Invoice the 1
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered'
+        })
+        invoice_dict = wizard.create_invoices()
+        # Confirm the invoice
+        invoice = self.env['account.move'].browse(invoice_dict['res_id'])
+        invoice.action_post()
+        # Refund the invoice
+        refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=[invoice.id]).create({
+            'reason': 'please reverse :c',
+            'refund_method': 'refund',
+            'date': today,
+        })
+        refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
+        refund_invoice.action_post()
+        # reversing with action_reverse and then action_post does not reset the invoice_status to 'to invoice' in tests
+
+        # Recreate wizard to get the new invoices created
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': today - timedelta(days=7),
+            'date_end_invoice_timesheet': today + timedelta(days=7)
+        })
+
+        # The actual test :
+        wizard.create_invoices()  # No exception should be raised, there is indeed something to be invoiced since it was reversed
+

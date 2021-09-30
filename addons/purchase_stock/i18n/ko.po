@@ -42,13 +42,13 @@ msgstr ""
 msgid ""
 "<p>Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated.</p>"
-msgstr ""
+msgstr "<p>승인된 %s입고건이 이미 승인되었으므로 날짜가 수정될수 없습니다. </p>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "<p>Those dates have been updated accordingly on the receipt %s.</p>"
-msgstr ""
+msgstr "<p>%s입고건에 따라 날짜가 업데이트됩니다.</p>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -156,7 +156,7 @@ msgstr "회사들"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr "첫번째 입고 완료일"
+msgstr "첫번째 입고의 완료일자"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -725,7 +725,7 @@ msgstr "일부 접수가 이미 완료되었으므로 구매 주문 %s을 취소
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "모든 주문 품목의 입고 승인"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id

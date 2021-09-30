@@ -799,3 +799,34 @@ class TestPacking(TestPackingCommon):
         with Form(picking) as picking_form:
             picking_form.package_level_ids.remove(0)
         self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+
+    def test_picking_state_with_null_qty(self):
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=False))
+        picking_type_id = self.warehouse.out_type_id
+        receipt_form.picking_type_id = picking_type_id
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 10
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 10
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'confirmed')
+        receipt.move_ids_without_package[1].product_uom_qty = 0
+        self.assertEqual(receipt.state, 'confirmed')
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        picking_type_id = self.warehouse.out_type_id
+        receipt_form.picking_type_id = picking_type_id
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.quantity_done = 10
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.quantity_done = 10
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'assigned')
+        receipt.move_ids_without_package[1].product_uom_qty = 0
+        self.assertEqual(receipt.state, 'assigned')

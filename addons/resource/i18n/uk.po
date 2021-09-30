@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,7 +122,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
 #: model:ir.model.fields,field_description:resource.field_resource_test__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -257,8 +257,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
-"Якщо порожній, це загальна відпустка для компанії. Якщо ресурс встановлено, "
-"відпустка тільки для цього ресурсу"
+"Якщо порожній, це загальна відпустка для компанії. Якщо співробітник "
+"встановлений, відпустка тільки для цього кадру"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -275,6 +275,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Якщо для активного поля встановлено значення false, це дозволить вам "
+"приховати робочий час, не видаляючи його."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -298,7 +300,7 @@ msgstr "Неактивний"
 #: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_test____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -553,7 +555,7 @@ msgstr "Коефіцієнт ефективності не може бути р�
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "Дата початку відпустки має бути раніше дати завершення."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -576,6 +578,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Це поле використовується для розрахунку очікуваної тривалості робочого "
+"доручення в цьому робочому центрі. Наприклад, якщо робоче замовлення займає "
+"одну годину, а коефіцієнт корисної дії становить 100%, очікувана тривалість "
+"становитиме одну годину. Якщо коефіцієнт корисної дії становить 200%, "
+"орієнтовна тривалість становитиме 30 хвилин."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3

@@ -45,7 +45,6 @@ class CrmLead(models.Model):
             'default_opportunity_id': self.id,
             'search_default_partner_id': self.partner_id.id,
             'default_partner_id': self.partner_id.id,
-            'default_team_id': self.team_id.id,
             'default_campaign_id': self.campaign_id.id,
             'default_medium_id': self.medium_id.id,
             'default_origin': self.name,
@@ -53,6 +52,10 @@ class CrmLead(models.Model):
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]
         }
+        if self.team_id:
+            action['context']['default_team_id'] = self.team_id.id,
+        if self.user_id:
+            action['context']['default_user_id'] = self.user_id.id
         return action
 
     def action_view_sale_quotation(self):

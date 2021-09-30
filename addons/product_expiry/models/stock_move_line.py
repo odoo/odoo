@@ -9,19 +9,20 @@ from odoo import api, fields, models
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    expiration_date = fields.Datetime(string='Expiration Date',
+    expiration_date = fields.Datetime(
+        string='Expiration Date', compute='_compute_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.')
 
-    @api.onchange('product_id', 'product_uom_id')
-    def _onchange_product_id(self):
-        res = super(StockMoveLine, self)._onchange_product_id()
-        if self.picking_type_use_create_lots:
-            if self.product_id.use_expiration_date:
-                self.expiration_date = fields.Datetime.today() + datetime.timedelta(days=self.product_id.expiration_time)
-            else:
-                self.expiration_date = False
-        return res
+    @api.depends('product_id', 'picking_type_use_create_lots')
+    def _compute_expiration_date(self):
+        for move_line in self:
+            if move_line.picking_type_use_create_lots:
+                if move_line.product_id.use_expiration_date:
+                    if not move_line.expiration_date:
+                        move_line.expiration_date = fields.Datetime.today() + datetime.timedelta(days=move_line.product_id.expiration_time)
+                else:
+                    move_line.expiration_date = False
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):
@@ -32,6 +33,16 @@ class StockMoveLine(models.Model):
         else:
             self.expiration_date = False
 
+    @api.onchange('product_id', 'product_uom_id')
+    def _onchange_product_id(self):
+        res = super()._onchange_product_id()
+        if self.picking_type_use_create_lots:
+            if self.product_id.use_expiration_date:
+                self.expiration_date = fields.Datetime.today() + datetime.timedelta(days=self.product_id.expiration_time)
+            else:
+                self.expiration_date = False
+        return res
+
     def _assign_production_lot(self, lot):
         super()._assign_production_lot(lot)
-        self.lot_id._update_date_values(self.expiration_date)
+        self.lot_id._update_date_values(self[0].expiration_date)

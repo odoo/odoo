@@ -325,7 +325,8 @@ class AccountJournal(models.Model):
 
     @api.constrains('active')
     def _check_auto_post_draft_entries(self):
-        for journal in self:
+        # constraint should be tested just after archiving a journal, but shouldn't be raised when unarchiving a journal containing draft entries
+        for journal in self.filtered(lambda j: not j.active):
             pending_moves = self.env['account.move'].search([
                 ('journal_id', '=', journal.id),
                 ('state', '=', 'draft')

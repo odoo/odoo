@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
-# Linkup <link-up@naver.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,25 +26,25 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "전체금액에서 %(amount)s%(currency)s할인"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(product_name)s에서 %(percentage)s%%할인"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr "가장 싼 제품에 대한 %s%% 할인"
+msgstr "가장 싼 품목에 대한 %s%% 할인"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr "제품에 대한 %s%% 할인"
+msgstr "품목에 대한 %s%% 할인"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -61,7 +61,7 @@ msgstr "%s, 쿠폰이 생성되었습니다."
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr "*다음 제품에 대해 유효함 :"
+msgstr "*다음 품목에 대해 유효함 :"
 
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_coupon
@@ -100,7 +100,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>최소구매수량</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -110,18 +110,18 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>품목</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 55px; color: #875A7B\">무료배송</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Active</strong>"
-msgstr "<strong>활성</strong>"
+msgstr "<strong>활성화</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
@@ -396,12 +396,12 @@ msgstr "쿠폰 프로그램"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Coupon Program Name"
-msgstr ""
+msgstr "쿠폰 프로그램명"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Coupon Program Name..."
-msgstr "쿠폰 프로그램 이름..."
+msgstr "쿠폰 프로그램명..."
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
@@ -411,7 +411,7 @@ msgstr "쿠폰 프로그램"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "쿠폰 혜택"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -449,7 +449,7 @@ msgstr "쿠폰 프로그램은 선택된 고객에게만 적용됩니다"
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "쿠폰: 날짜 기준 쿠폰 만료"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -556,7 +556,7 @@ msgstr "할인율은 1-100 사이여야 합니다"
 #: model:ir.model.fields,field_description:coupon.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:coupon.field_report_coupon_report_coupon__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
@@ -890,12 +890,12 @@ msgstr "프로모션 코드"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name"
-msgstr ""
+msgstr "프로모션 프로그램명"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name..."
-msgstr "프로모션 프로그램 이름 ..."
+msgstr "프로모션 프로그램명..."
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
@@ -937,7 +937,7 @@ msgstr "보상 내역 제품"
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr "보상 제품"
+msgstr "보상 품목"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
@@ -1001,7 +1001,7 @@ msgstr "보상 상품 선택"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "쿠폰 발송"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1023,7 +1023,7 @@ msgstr "순차적"
 msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
-msgstr ""
+msgstr "일부 선택된 고객의 이메일주소가 없어서 쿠폰을 받을수 없습니다."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1049,7 +1049,7 @@ msgstr "세금 포함"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "감사합니다,"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
@@ -1066,7 +1066,7 @@ msgstr "고정 금액 할인"
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "할인율, 1 에서 100까지"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1159,14 +1159,14 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on some products*"
-msgstr ""
+msgstr "일부 품목*에서 할인"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on the cheapest product"
-msgstr ""
+msgstr "가장 저렴한 품목에서 할인"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "다음 주문에서"

@@ -77,6 +77,10 @@ class MailComposer(models.TransientModel):
         if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
             result.update(self.get_record_data(result))
 
+        # when being in new mode, create_uid is not granted -> ACLs issue may arise
+        if 'create_uid' in fields and 'create_uid' not in result:
+            result['create_uid'] = self.env.uid
+
         filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
         return filtered_result
 

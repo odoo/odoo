@@ -205,12 +205,12 @@ class MrpBom(models.Model):
             domain += [('type', '=', bom_type)]
 
         if len(products) == 1:
-            bom = self.search(domain, order='sequence, product_id', limit=1)
+            bom = self.search(domain, order='sequence, product_id, id', limit=1)
             if bom:
                 bom_by_product[products] = bom
             return bom_by_product
 
-        boms = self.search(domain, order='sequence, product_id')
+        boms = self.search(domain, order='sequence, product_id, id')
 
         products_ids = set(products.ids)
         for bom in boms:

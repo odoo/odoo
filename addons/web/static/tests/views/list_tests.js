@@ -3113,8 +3113,12 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/><field name="text"/></tree>',
         });
 
-        const fooWidth = list.$('th[data-name="foo"]')[0].offsetWidth;
-        const textWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        const foo = list.el.querySelector('th[data-name="foo"]');
+        const fooWidth = Math.ceil(foo.getBoundingClientRect().width);
+
+        const text = list.el.querySelector('th[data-name="text"]');
+        const textWidth = Math.ceil(text.getBoundingClientRect().width);
+
         assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
 
         const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
@@ -11697,6 +11701,40 @@ QUnit.module('Views', {
         assert.verifySteps(["onchange:bar"], "onchange method should have been called");
         form.destroy();
     });
+
+    QUnit.test('selecting a row after another one containing a table within an html field should be the correct one', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.fields.html = {string: "HTML field", type: "html"}
+        this.data.foo.records[0].html = `
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td><br></td>
+                        <td><br></td>
+                    </tr>
+                     <tr>
+                        <td><br></td>
+                        <td><br></td>
+                    </tr>
+                </tbody>
+            </table>`;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top" multi_edit="1">' +
+                '<field name="html"/>' +
+                '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_cell:eq(1)'))
+        assert.ok($('table.o_list_table > tbody > tr:eq(1)')[0].classList.contains('o_selected_row'), "The second row should be selected")
+
+        list.destroy();
+    });
+
 });
 
 });
