@@ -448,6 +448,9 @@ class TestChannelInternals(MailCommon):
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation
                 (self.cr.dbname, 'mail.channel', channel.id),  # update list of invitations
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
+                (self.cr.dbname, 'mail.channel', channel.id),  # new member (guest) (not asserted below)
             ],
             [
                 {
