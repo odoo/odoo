@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
+=======
+from unittest.mock import patch
+
+>>>>>>> aedddb1cced... temp
 from .common import MockLinkTracker
 from odoo.tests import common
 from odoo.exceptions import UserError
@@ -90,7 +95,13 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         with self.assertRaises(UserError):
             (link_1 | link_2).write({'medium_id': False})
 
+<<<<<<< HEAD
     def test_no_external_tracking(self):
+=======
+    @patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker.get_base_url',
+           return_value='http://example.com')
+    def test_no_external_tracking(self, mocked_get_base_url):
+>>>>>>> aedddb1cced... temp
         self.env['ir.config_parameter'].set_param('link_tracker.no_external_tracking', '1')
 
         campaign = self.env['utm.campaign'].create({'name': 'campaign'})
@@ -120,9 +131,15 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
         # URL to the local website -> UTM parameters should be added since we know we handle them
         # even though the parameter "no_external_tracking" is enabled
+<<<<<<< HEAD
         link.url = 'https://test.odoo.com/test?a=example.com'
         self.assertLinkParams(
             'https://test.odoo.com/test',
+=======
+        link.url = 'http://example.com/test?a=example.com'
+        self.assertLinkParams(
+            'http://example.com/test',
+>>>>>>> aedddb1cced... temp
             link,
             {**expected_utm_params, 'a': 'example.com'}
         )
