@@ -137,14 +137,17 @@
     </template>
 
     <template id="survey_navigation" name="Survey: Navigation">
-        <button t-if="can_go_back"
-            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
-            <i class="border-left fa fa-chevron-left p-2" />
-        </button>
-        <button t-if="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"
-            type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
-            <i class="border-left fa fa-chevron-right p-2" />
-        </button>
+        <!-- Keep this enclosing div so that the template always returns valid HTML content, no matter the use case -->
+        <div class="d-inline-block">
+            <button t-if="can_go_back"
+                type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
+                <i class="border-left fa fa-chevron-left p-2" />
+            </button>
+            <button t-if="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"
+                type="submit" class="btn p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
+                <i class="border-left fa fa-chevron-right p-2" />
+            </button>
+        </div>
     </template>
 
 </data>
