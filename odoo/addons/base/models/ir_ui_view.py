@@ -410,7 +410,7 @@ actual arch.
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         partial_validation = self.env.context.get('ir_ui_view_partial_validation')
-        self = self.with_context(validate_views=(self if partial_validation else True))
+        self = self.with_context(validate_view_ids=(self._ids if partial_validation else True))
 
         for view in self:
             try:
@@ -798,18 +798,18 @@ actual arch.
         :param Element arch: an optional modifying architecture from inheriting
             view ``view``
         """
-        # validate_views is either falsy (no validation), True (full validation)
-        # or a recordset (partial validation)
-        validate_views = self.env.context.get('validate_views')
-        if not validate_views:
+        # validate_view_ids is either falsy (no validation), True (full
+        # validation) or a collection of ids (partial validation)
+        validate_view_ids = self.env.context.get('validate_view_ids')
+        if not validate_view_ids:
             return
 
-        if validate_views is True or self in validate_views:
+        if validate_view_ids is True or self.id in validate_view_ids:
             # optimization, flag the root node
             combined_arch.set('__validate__', '1')
             return
 
-        if view is None or view not in validate_views:
+        if view is None or view.id not in validate_view_ids:
             return
 
         for node in arch.xpath('//*[@position]'):
