@@ -18,7 +18,7 @@ odoo.define("website.tour.backend_dashboard", function (require) {
         trigger: 'button[data-menu-xmlid="website.menu_dashboard"]',
       },
       {
-        trigger: 'li[data-menu-xmlid="website.menu_website_google_analytics"]',
+        trigger: '.dropdown-item[data-menu-xmlid="website.menu_website_google_analytics"]',
       },
       {
         // Visits section should always be present even when empty / not hooked to anything

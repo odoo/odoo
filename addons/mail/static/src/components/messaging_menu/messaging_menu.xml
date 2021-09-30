@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessagingMenu" owl="1">
-        <li class="o_MessagingMenu" t-att-class="{ 'o-is-open': messagingMenu ? messagingMenu.isOpen : false, 'o-mobile': messaging ? messaging.device.isMobile : false }">
-            <a class="o_MessagingMenu_toggler" t-att-class="{ 'o-no-notification': messagingMenu ? !messagingMenu.counter : false }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu and messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
+        <div class="o_MessagingMenu dropdown" t-att-class="{ 'show': messagingMenu ? messagingMenu.isOpen : false, 'o-mobile': messaging ? messaging.device.isMobile : false }">
+            <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': messagingMenu ? !messagingMenu.counter : false }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu and messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
                 <i class="o_MessagingMenu_icon fa fa-comments" role="img" aria-label="Messages"/>
                 <t t-if="!messagingMenu or !messaging.isInitialized">
                     <i class="o_MessagingMenu_loading fa fa-circle-o-notch fa-spin"/>
@@ -65,7 +65,7 @@
                     </t>
                 </div>
             </t>
-        </li>
+        </div>
     </t>
 
     <t t-name="mail.MessagingMenu.newMessageButton" owl="1">

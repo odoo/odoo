@@ -99,25 +99,23 @@ QUnit.test("can be rendered", async (assert) => {
     );
     assert.containsOnce(userMenuEl, "span.oe_topbar_name");
     assert.strictEqual(userMenuEl.querySelector(".oe_topbar_name").textContent, "Sauron");
-    assert.containsNone(userMenuEl, "ul.o_dropdown_menu li.o_dropdown_item");
-    await click(userMenu.el.querySelector("button.o_dropdown_toggler"));
+    assert.containsNone(userMenuEl, ".dropdown-menu .dropdown-item");
+    await click(userMenu.el.querySelector("button.dropdown-toggle"));
     userMenuEl = userMenu.el;
-    assert.containsN(userMenuEl, "ul.o_dropdown_menu li.o_dropdown_item", 3);
+    assert.containsN(userMenuEl, ".dropdown-menu .dropdown-item", 3);
     assert.containsOnce(userMenuEl, "div.dropdown-divider");
-    const children = [...(userMenuEl.querySelector("ul.o_dropdown_menu").children || [])];
+    const children = [...(userMenuEl.querySelector(".dropdown-menu").children || [])];
     assert.deepEqual(
         children.map((el) => el.tagName),
-        ["LI", "LI", "DIV", "LI"]
+        ["SPAN", "SPAN", "DIV", "SPAN"]
     );
-    const items = [...userMenuEl.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item")] || [];
+    const items = [...userMenuEl.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
     assert.deepEqual(
         items.map((el) => el.dataset.menu),
         ["ring", "bad", "eye"]
     );
-    const spans =
-        [...userMenuEl.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item span")] || [];
     assert.deepEqual(
-        spans.map((el) => el.textContent),
+        items.map((el) => el.textContent),
         ["Ring", "Bad", "Eye"]
     );
     for (const item of items) {
@@ -165,9 +163,9 @@ QUnit.test("can execute the callback of settings", async (assert) => {
     env = await makeTestEnv(testConfig);
     userMenuRegistry.add("profile", preferencesItem);
     userMenu = await mount(UserMenu, { env, target });
-    await click(userMenu.el.querySelector("button.o_dropdown_toggler"));
-    assert.containsOnce(userMenu.el, "ul.o_dropdown_menu li.o_dropdown_item");
-    const item = userMenu.el.querySelector("ul.o_dropdown_menu li.o_dropdown_item");
+    await click(userMenu.el.querySelector("button.dropdown-toggle"));
+    assert.containsOnce(userMenu.el, ".dropdown-menu .dropdown-item");
+    const item = userMenu.el.querySelector(".dropdown-menu .dropdown-item");
     assert.strictEqual(item.textContent, "Preferences");
     await click(item);
     assert.verifySteps(["7", "Change My Preferences"]);

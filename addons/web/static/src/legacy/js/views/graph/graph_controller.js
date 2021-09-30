@@ -193,7 +193,7 @@ var GraphController = AbstractController.extend({
             this.groupByMenu.el.classList.add('o_group_by_menu');
         }
         // Update button classes accordingly to the current mode
-        const buttons = actionsContainer.querySelectorAll('.o_dropdown_toggler');
+        const buttons = actionsContainer.querySelectorAll('.dropdown-toggle');
         for (const button of buttons) {
             button.classList.remove('btn-secondary');
             if (this.isEmbedded) {

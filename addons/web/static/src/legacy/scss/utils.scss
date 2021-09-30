@@ -383,9 +383,15 @@
     padding: 0;
 
     > a {
-        @extend .dropdown-item;
         margin: auto auto auto (-$link-padding-gap);
         padding: 3px $link-padding-gap;
+        color: $dropdown-link-color;
+        display: block;
+
+        &:hover {
+            background-color: $dropdown-link-hover-bg;
+            color: $dropdown-link-hover-color;
+        }
     }
 
     &:last-child {

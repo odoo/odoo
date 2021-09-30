@@ -967,8 +967,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".o_dialog_error");
         await click(webClient.el, ".modal-header .close");
         assert.containsNone(webClient, ".o_dialog_error");
-        await click(webClient.el, "nav .o_navbar_apps_menu .o_dropdown_toggler ");
-        assert.containsN(webClient, ".o_dropdown_item.o_app", 3);
+        await click(webClient.el, "nav .o_navbar_apps_menu .dropdown-toggle ");
+        assert.containsN(webClient, ".dropdown-item.o_app", 3);
         assert.containsNone(webClient, ".o_menu_brand");
         assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
         assert.deepEqual(webClient.env.services.router.current.hash, {

@@ -27,8 +27,11 @@ export const ParentClosingMode = {
 export class DropdownItem extends Component {
     /**
      * Triggers a custom DropdownItemSelectedEvent
+     * @param {MouseEvent} ev
      */
-    onClick() {
+    onClick(ev) {
+        ev.preventDefault();
+
         /** @type DropdownItemSelectedEventDetail */
         const detail = {
             payload: this.props.payload,
@@ -51,6 +54,10 @@ DropdownItem.props = {
         optional: true,
     },
     hotkey: {
+        type: String,
+        optional: true,
+    },
+    href: {
         type: String,
         optional: true,
     },

@@ -63,10 +63,10 @@ QUnit.module("Tours", (hooks) => {
         const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
 
-        await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
+        await click(debugManager.el.querySelector("button.dropdown-toggle"));
 
-        assert.containsOnce(debugManager.el, ".o_dropdown_item");
-        await click(debugManager.el.querySelector(".o_dropdown_item"));
+        assert.containsOnce(debugManager.el, ".dropdown-item");
+        await click(debugManager.el.querySelector(".dropdown-item"));
         assert.verifySteps(["consume"]);
     });
 });

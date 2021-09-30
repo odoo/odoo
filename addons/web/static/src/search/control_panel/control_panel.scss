@@ -61,7 +61,7 @@
                 top: 5px;
                 right: 10px;
             }
-            .o_dropdown_toggler {
+            .dropdown-toggle {
                 margin-right: 15px;
             }
         }
@@ -86,10 +86,15 @@
             }
         }
 
-        > .o_cp_switch_buttons > .btn:first-child {
-            margin-left: $o-horizontal-padding;
-            @include media-breakpoint-down(sm) {
-                margin-left: 0;
+        > .o_cp_switch_buttons {
+            > .btn:first-child {
+                margin-left: $o-horizontal-padding;
+                @include media-breakpoint-down(sm) {
+                    margin-left: 0;
+                }
+            }
+            .dropdown-menu {
+                right: 0;
             }
         }
     }
