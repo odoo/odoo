@@ -8,11 +8,16 @@ class HrPlanWizard(models.TransientModel):
     _name = 'hr.plan.wizard'
     _description = 'Plan Wizard'
 
-    plan_id = fields.Many2one('hr.plan', default=lambda self: self.env['hr.plan'].search([], limit=1))
+    def _default_plan_id(self):
+        employee = self.env['hr.employee'].browse(self.env.context.get('active_id'))
+        return self.env['hr.plan'].search([('company_id', '=', employee.company_id.id)], limit=1)
+
+    plan_id = fields.Many2one('hr.plan', default=_default_plan_id, domain="[('company_id', '=', company_id)]")
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_id', None),
     )
+    company_id = fields.Many2one(related='employee_id.company_id')
 
     def action_launch(self):
         for activity_type in self.plan_id.plan_activity_type_ids:
