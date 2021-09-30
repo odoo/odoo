@@ -19,9 +19,10 @@ class HrContract(models.Model):
     _description = 'Employee Contract'
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,
-        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0), copy=False)
+        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False)
     date_generated_to = fields.Datetime(string='Generated To', readonly=True, required=True,
-        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0), copy=False)
+        default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False)
+
 
     def _get_default_work_entry_type(self):
         return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
