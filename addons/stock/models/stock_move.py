@@ -514,6 +514,9 @@ class StockMove(models.Model):
                     move_line_vals['product_uom_id'] = move.product_id.uom_id.id
                     move_line_vals['qty_done'] = 1
                     move_lines_commands.append((0, 0, move_line_vals))
+                else:
+                    move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
+                    move_line.qty_done = 1
             move.write({'move_line_ids': move_lines_commands})
 
     @api.depends('picking_type_id', 'date', 'priority')
