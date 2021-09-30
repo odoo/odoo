@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { annotateTraceback } from "@web/core/errors/error_utils";
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2many, one2one } from '@mail/model/model_field';
@@ -374,14 +373,14 @@ function factory(dependencies) {
          * @param {String} [param2.step] current step of the flow
          * @param {String} [param2.state] current state of the connection
          */
-        async _addLogEntry(token, entry, { step, state } = {}) {
+        _addLogEntry(token, entry, { step, state } = {}) {
             if (!this.env.isDebug()) {
                 return;
             }
             if (!(token in this.logs)) {
                 this.logs[token] = { step: '', state: '', logs: [] };
             }
-            const trace = await annotateTraceback(window.Error());
+            const trace = window.Error().stack || '';
             this.logs[token].logs.push({
                 event: `${window.moment().format('h:mm:ss')}: ${entry}`,
                 trace: trace.split('\n'),
