@@ -17,16 +17,16 @@
                     <div class="o_event_foldable_badge_ticket_wrapper_top page">
                         <h5 class="o_event_foldable_badge_event_name font-weight-bold text-center" t-field="event.name"/>
                         <div class="text-center o_event_foldable_badge_font_small">
-                            <span itemprop="startDate" t-esc="event.date_begin.date()"
+                            <span itemprop="startDate" t-out="event.date_begin.date()"
                                 class="font-weight-bold"/>
-                            <span itemprop="startDateTime" t-esc="event.date_begin"
+                            <span itemprop="startDateTime" t-out="event.date_begin"
                                 class="font-weight-bold"
                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                             <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
                             <span t-if="not event.is_one_day"
-                                itemprop="endDate" t-esc="event.date_end.date()"
+                                itemprop="endDate" t-out="event.date_end.date()"
                                 class="font-weight-bold"/>
-                            <span itemprop="endDateTime" t-esc="event.date_end"
+                            <span itemprop="endDateTime" t-out="event.date_end"
                                 class="font-weight-bold"
                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                         </div>
@@ -38,7 +38,7 @@
                             <h2 t-elif="not attendee"><span>John Doe</span></h2>
                             <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
                             <div t-if="attendee" class="o_event_foldable_badge_font_faded" t-field="attendee.event_ticket_id"/>
-                            <div t-elif="first_ticket" t-esc="first_ticket.name"
+                            <div t-elif="first_ticket" t-out="first_ticket.name"
                                 class="o_event_foldable_badge_font_faded"/>
                         </div>
                     </div>
@@ -115,16 +115,16 @@
                                     Event Ticket For
                                 </div>
                                 <h5 class="o_event_full_page_ticket_event_name font-weight-bold py-0 my-0" t-field="event.name"/>
-                                <span itemprop="startDate" t-esc="event.date_begin.date()"
+                                <span itemprop="startDate" t-out="event.date_begin.date()"
                                     class="font-weight-bold"/>
-                                <span itemprop="startDateTime" t-esc="event.date_begin"
+                                <span itemprop="startDateTime" t-out="event.date_begin"
                                     class="font-weight-bold"
                                     t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                                 <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
                                 <span t-if="not event.is_one_day"
-                                    itemprop="endDate" t-esc="event.date_end.date()"
+                                    itemprop="endDate" t-out="event.date_end.date()"
                                     class="font-weight-bold"/>
-                                <span itemprop="endDateTime" t-esc="event.date_end"
+                                <span itemprop="endDateTime" t-out="event.date_end"
                                     class="font-weight-bold"
                                     t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True}'/>
                                 <div t-if="event.address_id" class="o_event_full_page_ticket_font_faded">
@@ -135,7 +135,7 @@
                                 <h5 t-elif="not attendee"><span>John Doe</span></h5>
                                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
                                 <div t-if="attendee" class="o_event_full_page_ticket_font_faded" t-field="attendee.event_ticket_id"/>
-                                <div t-elif="first_ticket" t-esc="first_ticket.name"
+                                <div t-elif="first_ticket" t-out="first_ticket.name"
                                     class="o_event_full_page_ticket_font_faded"/>
                             </div>
                             <div class="col-4 o_event_full_page_ticket_side_info page">
@@ -184,7 +184,7 @@
                 <span t-if="event.organizer_id.website" t-field="event.organizer_id.website"/>
             </t>
             <t t-else="">
-                <span t-esc="event.name"/> <!-- Force some content to avoid messing the layout -->
+                <span t-out="event.name"/> <!-- Force some content to avoid messing the layout -->
             </t>
         </div>
     </div>
@@ -225,7 +225,7 @@
         <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
         <t t-if="address_bits">
             <t t-set="partner_name" t-value="address_bits[0]"/>
-            <span t-esc="partner_name"/>
+            <span t-out="partner_name"/>
         </t>
         <t t-if="len(address_bits) > 1">
             <br/>
@@ -233,11 +233,11 @@
         <t t-set="remaining_bits" t-value="address_bits[1:]"/>
         <t t-foreach="remaining_bits" t-as="address_bit">
             <t t-if="address_bit and address_bit.strip()">
-                <span t-esc="address_bit"/>
+                <span t-out="address_bit"/>
             </t>
         </t>
     </t>
-    <t t-else="" t-esc="event.address_id.name"/>
+    <t t-else="" t-out="event.address_id.name"/>
 </template>
 
 </odoo>

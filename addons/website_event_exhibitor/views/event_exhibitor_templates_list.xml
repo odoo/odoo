@@ -70,7 +70,7 @@
                         <input class="d-none" type="checkbox" name="sponsor_country" multiple="multiple"
                             t-att-value="sponsor_country.id"
                             t-att-checked="'checked' if sponsor_country.id in search_countries.ids else None"/>
-                        <t t-esc="sponsor_country.name"/>
+                        <t t-out="sponsor_country.name"/>
                     </label>
                 </t>
             </div>
@@ -99,7 +99,7 @@
                         <input class="d-none" type="checkbox" name="sponsor_type" multiple="multiple"
                             t-att-value="sponsor_type.id"
                             t-att-checked="'checked' if sponsor_type.id in search_sponsorships.ids else None"/>
-                        <t t-esc="sponsor_type.name"/>
+                        <t t-out="sponsor_type.name"/>
                     </label>
                 </t>
             </div>
@@ -125,7 +125,7 @@
         <div class="col-12">
             <div class="h2 mb-3">No exhibitor found.</div>
             <div t-if="search_key" class="alert alert-info text-center">
-                <p class="m-0">We did not find any exhibitor matching your <strong t-esc="search_key"/> search.</p>
+                <p class="m-0">We did not find any exhibitor matching your <strong t-out="search_key"/> search.</p>
             </div>
             <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
                 <a target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
@@ -142,7 +142,7 @@
 <template id="exhibitors_display_cards" name="Exhibitors Cards">
     <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
         <div class="col-12">
-            <h2 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
+            <h2 class="m-0" t-out="sponsor_category['sponsorship'].name"/>
             <hr class="mt-2 pb-1 mb-1"/>
         </div>
         <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
@@ -191,7 +191,7 @@
                         </span>
                     </h5>
                     <!-- Catchy sentence -->
-                    <span class="text-muted" t-esc="sponsor.subtitle"/>
+                    <span class="text-muted" t-out="sponsor.subtitle"/>
                 </main>
             </div>
         </div>
@@ -238,7 +238,7 @@
     <span t-att-data-field="field" t-att-data-value="value"
         class="o_search_tag align-items-baseline border d-inline-flex pl-2 mt-3 rounded ml16 mb-2 bg-white">
         <i class="fa fa-tag mr-2 text-muted"/>
-        <t t-esc="label"/>
+        <t t-out="label"/>
         <span class="btn border-0 py-1">&#215;</span>
     </span>
 </template>

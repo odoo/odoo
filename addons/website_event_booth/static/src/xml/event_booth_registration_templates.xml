@@ -5,22 +5,22 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <h3>Booth Registration completed!</h3>
-                    <span class="h4 text-muted" t-esc="event_name"/>
+                    <span class="h4 text-muted" t-out="event_name"/>
                 </div>
             </div>
             <div class="d-flex flex-column">
-                <span t-if="contact.name" t-esc="contact.name" class="font-weight-bold"/>
+                <span t-if="contact.name" t-out="contact.name" class="font-weight-bold"/>
                 <span t-if="contact.email">
                     <i class="fa fa-fw fa-envelope mr-2"/>
-                    <t t-esc="contact.email"/>
+                    <t t-out="contact.email"/>
                 </span>
                 <span t-if="contact.phone">
                     <i class="fa fa-fw fa-phone mr-2"/>
-                    <t t-esc="contact.phone"/>
+                    <t t-out="contact.phone"/>
                 </span>
                 <span t-if="contact.mobile">
                     <i class="fa fa-fw fa-mobile mr-2"/>
-                    <t t-esc="contact.mobile"/>
+                    <t t-out="contact.mobile"/>
                 </span>
             </div>
         </div>
