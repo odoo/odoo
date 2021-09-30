@@ -1121,6 +1121,8 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_website_top_actions button[data-action=mobile]': '_onMobilePreviewClick',
         'click .o_we_website_top_actions button[data-action=undo]': '_onUndo',
         'click .o_we_website_top_actions button[data-action=redo]': '_onRedo',
+        'mousedown .oe_snippet': '_onSnippetMouseDown',
+        'mouseup .oe_snippet': '_onSnippetMouseUp',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -2276,7 +2278,7 @@ var SnippetsMenu = Widget.extend({
             }, options.scrollBoundaries),
             jQueryDraggableOptions: Object.assign({
                 appendTo: this.$body,
-                cursor: 'move',
+                cursor: 'grabbing',
                 greedy: true,
                 scroll: false,
             }, options.jQueryDraggableOptions),
@@ -2324,15 +2326,18 @@ var SnippetsMenu = Widget.extend({
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
-                    dragSnip.querySelectorAll('.o_delete_btn').forEach(
+                    dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
                         el => el.remove()
                     );
+                    this.classList.remove('oe_snippet_clicked');
+                    this.classList.add('oe_snippet_dragging');
                     return dragSnip;
                 },
                 start: function () {
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
                     self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
+                    self.$el.find('.o_panel_body').addClass('o_dragging');
 
                     dropped = false;
                     $snippet = $(this);
@@ -2412,6 +2417,8 @@ var SnippetsMenu = Widget.extend({
                     const doc = self.options.wysiwyg.odooEditor.document;
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
+                    self.$el.find('.o_panel_body').removeClass('o_dragging');
+                    self.$el.find('.oe_snippet_dragging').removeClass('oe_snippet_dragging');
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
@@ -3292,6 +3299,24 @@ var SnippetsMenu = Widget.extend({
                 this.loadingElements[key] = null;
             }
         });
+    },
+    /**
+     * The css selector :active does not work properly on elements initialised
+     * with jquery ui on firefox.
+     *
+     * @private
+     */
+    _onSnippetMouseDown(ev) {
+        const snippet = ev.target.closest('.oe_snippet');
+        if (!snippet.querySelector('.o_we_already_dragging')) {
+            snippet.classList.add('oe_snippet_clicked');
+        }
+    },
+    /**
+     * @private
+     */
+    _onSnippetMouseUp(ev) {
+        ev.target.closest('.oe_snippet').classList.remove('oe_snippet_clicked');
     },
 });
 

@@ -40,15 +40,28 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+@mixin o-snippets-font {
+    font-family: $o-we-font-family;
+    font-size: $o-we-sidebar-font-size;
+    font-weight: 400;
+    color: $o-we-sidebar-color;
+}
+
 .oe_snippet {
     // No root because can be drag and drop (and the helper is in the body)
+    @include o-snippets-font;
     position: relative;
     z-index: $o-we-zindex;
     width: 77px;
     background-color: $o-we-sidebar-blocks-content-snippet-bg;
 
+    &.oe_snippet_clicked {
+        transform: translateY(-10px);
+        transition: transform 0.05s ease-out;
+    }
+
     &.ui-draggable-dragging {
-        transform: rotate(-3deg) scale(1.2);
+        transform: rotate(-12deg) scale(1.1);
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -71,7 +84,9 @@ body.editor_enable.editor_has_snippets {
     }
 
     .oe_snippet_thumbnail_title {
-        display: none;
+        display: block;
+        padding: $o-we-sidebar-blocks-content-spacing / 2;
+        text-align: center;
     }
 
     &:not(:hover):not(.o_disabled):not(.o_snippet_install) {
@@ -225,6 +240,7 @@ body.editor_enable.editor_has_snippets {
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
+    @include o-snippets-font;
 
     @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
     position: fixed;
@@ -235,10 +251,6 @@ body.editor_enable.editor_has_snippets {
 
     border-left: $o-we-sidebar-border-width solid $o-we-sidebar-border-color;
     background-color: $o-we-sidebar-bg;
-    color: $o-we-sidebar-color;
-    font-family: $o-we-font-family;
-    font-size: $o-we-sidebar-font-size;
-    font-weight: 400;
 
     transition: transform 400ms ease 0s;
     transform: translateX(100%);
@@ -363,6 +375,10 @@ body.editor_enable.editor_has_snippets {
             flex-wrap: wrap;
             margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
 
+            &:not(.o_dragging) > .oe_snippet {
+                cursor: url(/web_editor/static/src/img/openhand.cur), default;
+            }
+
             > .oe_snippet {
                 flex: 0 0 auto;
                 width: percentage(1 / 3);
@@ -371,14 +387,8 @@ body.editor_enable.editor_has_snippets {
                 margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
                 user-select: none;
 
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
-
-                .oe_snippet_thumbnail_title {
-                    display: block;
-                    padding: $o-we-sidebar-blocks-content-spacing / 2;
-                    text-align: center;
+                &.oe_snippet_dragging {
+                    opacity: 0;
                 }
 
                 &.o_disabled .o_snippet_undroppable {
