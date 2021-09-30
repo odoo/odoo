@@ -2577,7 +2577,7 @@ var SnippetsMenu = Widget.extend({
         const mutexExecResult = this._mutex.exec(action);
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
-                if (this._loadingEffectDisabled) {
+                if (this._loadingEffectDisabled || this.loadingElements[contentLoading]) {
                     return;
                 }
                 this.loadingElements[contentLoading] = this._createLoadingElement();
