@@ -776,6 +776,7 @@ function factory(dependencies) {
                 route: '/mail/rtc/channel/join_call',
                 params: {
                     channel_id: this.id,
+                    check_rtc_session_ids: this.rtcSessions.map(rtcSession => rtcSession.id),
                 },
             }, { shadow: true }));
             if (!this.exists()) {

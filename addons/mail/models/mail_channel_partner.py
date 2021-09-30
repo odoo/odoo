@@ -74,7 +74,7 @@ class ChannelPartner(models.Model):
         return super(ChannelPartner, self).write(vals)
 
     def unlink(self):
-        self.sudo().rtc_session_ids._disconnect()
+        self.sudo().rtc_session_ids.unlink()
         return super().unlink()
 
     @api.model
@@ -108,15 +108,15 @@ class ChannelPartner(models.Model):
     # RTC (voice/video)
     # --------------------------------------------------------------------------
 
-    def _rtc_join_call(self):
+    def _rtc_join_call(self, check_rtc_session_ids=None):
         self.ensure_one()
+        check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
         self.channel_id._rtc_cancel_invitations(partner_ids=self.partner_id.ids, guest_ids=self.guest_id.ids)
-        self.rtc_session_ids._disconnect()
-        self.env['mail.channel.rtc.session']._gc_inactive_sessions()
+        self.rtc_session_ids.unlink()
         rtc_session = self.env['mail.channel.rtc.session'].create({'channel_partner_id': self.id})
         res = {
             'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,
-            'rtcSessions': [('insert-and-replace', self.channel_id.rtc_session_ids._mail_rtc_session_format_by_channel().get(self.channel_id))],
+            'rtcSessions': self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids),
             'sessionId': rtc_session.id,
         }
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
@@ -134,6 +134,22 @@ class ChannelPartner(models.Model):
             self.rtc_session_ids.unlink()
         else:
             return self.channel_id._rtc_cancel_invitations(partner_ids=self.partner_id.ids, guest_ids=self.guest_id.ids)
+
+    def _rtc_sync_sessions(self, check_rtc_session_ids=None):
+        """Synchronize the RTC sessions for self channel partner.
+            - Inactive sessions of the channel are deleted.
+            - Current sessions are returned.
+            - Sessions given in check_rtc_session_ids that no longer exists
+              are returned as non-existing.
+        Returns a list of JS command for updating rtcSessions field of channel.
+        """
+        self.ensure_one()
+        self.channel_id.rtc_session_ids._delete_inactive_rtc_sessions()
+        check_rtc_sessions = self.env['mail.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
+        return [
+            ('insert', [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in self.channel_id.rtc_session_ids]),
+            ('insert-and-unlink', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in check_rtc_sessions - self.channel_id.rtc_session_ids]),
+        ]
 
     def _rtc_invite_members(self, partner_ids=None, guest_ids=None):
         """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited.
