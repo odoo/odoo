@@ -237,6 +237,7 @@ class Partner(models.Model):
                 WHERE P.name ILIKE %s
                     AND P.id NOT IN %s
                     AND U.active = 't'
+                    AND U.share IS NOT TRUE
                 ORDER BY P.name ASC, P.id ASC
                 LIMIT %s
             """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
