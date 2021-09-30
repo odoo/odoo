@@ -1269,6 +1269,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('disabled stat buttons stays disabled', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button" disabled="disabled">' +
+                                '<field name="int_field"/>' +
+                            '</button>' +
+                            '<button class="oe_stat_button" type="action" name="some_action">' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<button type="action" name="action_to_perform">Run an action</button>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function (event) {
+            if (event.data.action_data.name == "action_to_perform") {
+                assert.containsN(form, 'button.oe_stat_button[disabled]', 2, "While performing the action, both buttons should be disabled.");
+                event.data.on_success();
+            }
+        });
+
+        assert.containsN(form, 'button.oe_stat_button', 2);
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1);
+        await testUtils.dom.click('button[name=action_to_perform]');
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1, "After performing the action, only one button should be disabled.");
+        
+        form.destroy();
+    });
+
     QUnit.test('label uses the string attribute', async function (assert) {
         assert.expect(1);
 
@@ -2951,7 +2992,7 @@ QUnit.module('Views', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<div name="button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7384,7 +7425,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7448,7 +7489,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7561,7 +7602,7 @@ QUnit.module('Views', {
                 'partner,false,form': '<form>' +
                         '<sheet>' +
                             '<div name="button_box" class="oe_button_box">' +
-                                '<button class="oe_stat_button">' +
+                                '<button class="oe_stat_button" name="some_action" type="action">' +
                                     '<field name="bar"/>' +
                                 '</button>' +
                             '</div>' +
