@@ -13,6 +13,34 @@
                     <field name="mass_mailing_name"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
                 </xpath>
+                <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
+                    <!-- 'Log' button -->
+                    <attribute name="attrs">
+                        {'invisible': [
+                            '|',
+                                ('is_log', '=', False),
+                                '&amp;',
+                                    ('mass_mailing_name', '!=', ''),
+                                    ('mass_mailing_name', '!=', False)
+                        ]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[hasclass('o_mail_send')]" position="attributes">
+                    <!-- 'Send' button -->
+                    <attribute name="attrs">
+                        {'invisible': [
+                            '|',
+                                ('is_log', '=', True),
+                                '&amp;',
+                                    ('mass_mailing_name', '!=', ''),
+                                    ('mass_mailing_name', '!=', False)
+                        ]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail']" position="after">
+                    <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"
+                        attrs="{'invisible': ['|', ('mass_mailing_name', '==', ''), ('mass_mailing_name', '==', False)]}" data-hotkey="q"/>
+                </xpath>
             </field>
         </record>
 
