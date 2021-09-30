@@ -198,9 +198,24 @@ var SnippetEditor = Widget.extend({
                     },
                     handle: '.o_move_handle',
                     helper: () => {
-                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
-                        $clone.appendTo(this.$body).removeClass('d-none');
-                        return $clone;
+                        const snippetEl = this.$target[0].closest('[data-snippet]');
+                        let dragEl;
+                        if (snippetEl) {
+                            const snippetName = snippetEl.dataset.snippet;
+                            const oeSnippetEl = this.ownerDocument.querySelector(`#oe_snippets [data-snippet="${snippetName}"]`);
+                            if (oeSnippetEl) {
+                                dragEl = oeSnippetEl.parentElement.cloneNode(true);
+                            }
+                        }
+                        if (!dragEl) {
+                            const defaultSnippetEl = this.ownerDocument.querySelector(`#oe_snippets [data-snippet="s_image_text"]`).parentElement;
+                            dragEl = defaultSnippetEl.cloneNode(true);
+                            dragEl.querySelector('.oe_snippet_thumbnail_title').textContent = _t('Block');
+                        }
+                        dragEl.querySelectorAll('[data-snippet], .o_delete_btn, .o_rename_btn').forEach(el => {
+                            el.remove();
+                        });
+                        return dragEl;
                     },
                     start: this._onDragAndDropStart.bind(this),
                     stop: (...args) => {
@@ -878,8 +893,6 @@ var SnippetEditor = Widget.extend({
             $selectorChildren: $selectorChildren,
         });
 
-        this.$body.addClass('move-important');
-
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
                 if (self.dropped) {
@@ -949,7 +962,6 @@ var SnippetEditor = Widget.extend({
         var $from = $clone.parent();
 
         this.$el.removeClass('d-none');
-        this.$body.removeClass('move-important');
         $clone.remove();
 
         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
