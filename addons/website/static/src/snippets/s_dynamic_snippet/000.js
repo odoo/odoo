@@ -149,9 +149,12 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _prepareContent: function () {
         if (this.$target[0].dataset.numberOfElements && this.$target[0].dataset.numberOfElementsSmallDevices) {
-            this.renderedContent = core.qweb.render(
+            const oldRenderedContent = this.renderedContent;
+            const newRederedContent = core.qweb.render(
                 this.template_key,
                 this._getQWebRenderOptions());
+            this.noRerender = oldRenderedContent.localeCompare(newRederedContent) === 0;
+            this.renderedContent = newRederedContent;
         } else {
             this.renderedContent = '';
         }
@@ -182,6 +185,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         } else {
             this.renderedContent = '';
         }
+        if (this.noRerender) return;
         this._renderContent();
     },
     /**
