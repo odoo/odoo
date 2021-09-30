@@ -28,3 +28,6 @@ class L10nLatamDocumentType(models.Model):
             return False
 
         return document_number.zfill(6)
+
+    def _is_doc_type_vendor(self):
+        return self.code == '46'
