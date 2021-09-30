@@ -118,7 +118,7 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <search string="Search Work Entry Type">
-                <field name="name"/>
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
