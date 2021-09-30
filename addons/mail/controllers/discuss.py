@@ -84,6 +84,7 @@ class DiscussController(http.Controller):
             else:
                 guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
                 if guest:
+                    channel_sudo = channel_sudo.with_context(guest=guest)
                     channel_sudo.add_members(guest_ids=[guest.id])
                 else:
                     guest = channel_sudo.env['mail.guest'].create({
@@ -347,6 +348,7 @@ class DiscussController(http.Controller):
         channel_partner = channel_sudo.env['mail.channel.partner']._get_as_sudo_from_request(request=request, channel_id=channel_id)
         # Do not add the guest to channel members if they are already member.
         if not channel_partner:
+            channel_sudo = channel_sudo.with_context(guest=guest)
             channel_sudo.add_members(guest_ids=[guest.id])
 
     @http.route('/mail/channel/messages', methods=['POST'], type='json', auth='public')
