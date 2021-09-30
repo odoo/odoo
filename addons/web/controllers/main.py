@@ -26,7 +26,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 from lxml import etree, html
 from markupsafe import Markup
-from werkzeug.urls import url_encode, url_decode, iri_to_uri
+from werkzeug.urls import url_encode, url_parse, iri_to_uri
 
 import odoo
 import odoo.modules.registry
@@ -1998,7 +1998,7 @@ class ReportController(http.Controller):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
+                    data = url_parse(url).decode_query(cls=dict)  # decoding the args represented in JSON
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})
