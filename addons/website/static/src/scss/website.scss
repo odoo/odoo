@@ -1258,7 +1258,12 @@ header {
     @include media-breakpoint-up(lg) {
         #wrapwrap.o_footer_effect_enable {
             > main {
-                background-color: $body-bg;
+                @if o-website-value('layout') == 'full' {
+                    // Ensure a transparent snippet at the end of the content
+                    // still appears with the same background when hovering the
+                    // footer during the scroll effect.
+                    background-color: $body-bg;
+                }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
                 }
