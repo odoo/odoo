@@ -19,19 +19,19 @@
     <table class="w-100">
         <tr t-foreach="top3_visitors" t-as="visitor">
             <td><div class="d-flex align-items-center mb-3">
-                <b class="mr-2 text-muted" t-esc="visitor['position']"/>
+                <b class="mr-2 text-muted" t-out="visitor['position']"/>
                 <img class="rounded-circle float-left"
                     style="width: 32px; height: 32px; object-fit: cover;"
                     t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"
                     t-att-alt="visitor['visitor'].display_name"/>
                 <div class="o_we_leaderboard_name">
                     <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].name" class="font-weight-bold">You</span>
-                    <span t-else="" class="font-weight-bold" t-esc="visitor['visitor'].display_name"/>
+                    <span t-else="" class="font-weight-bold" t-out="visitor['visitor'].display_name"/>
                 </div>
             </div></td>
             <td class="text-right">
                 <div class="mb-3">
-                    <span class="text-nowrap"><t t-esc="visitor['points']"/> xp</span>
+                    <span class="text-nowrap"><t t-out="visitor['points']"/> xp</span>
                 </div>
             </td>
         </tr>

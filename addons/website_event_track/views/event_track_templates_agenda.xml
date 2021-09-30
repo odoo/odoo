@@ -63,7 +63,7 @@
     <div class="col-12" t-if="not tracks_by_days">
         <div class="h2 mb-3">No track found.</div>
         <div t-if="search_key" class="alert alert-info text-center">
-            <p class="m-0">We did not find any track matching your <strong t-esc="search_key"/> search.</p>
+            <p class="m-0">We did not find any track matching your <strong t-out="search_key"/> search.</p>
         </div>
         <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
             <a target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
@@ -76,16 +76,16 @@
         <!-- DAY HEADER -->
         <div class="o_we_track_day_header mt-3 w-100 d-flex justify-content-between align-items-center">
             <div class="d-flex">
-                <span class="h1 m-0 font-weight-bold" t-esc="day"
+                <span class="h1 m-0 font-weight-bold" t-out="day"
                     t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
                 <div class="d-flex flex-column ml-2">
-                    <span class="font-weight-bold" t-esc="day"
+                    <span class="font-weight-bold" t-out="day"
                         t-options="{'widget': 'date', 'format': 'MMMM'}"/>
-                    <span class="font-weight-bold" t-esc="day"
+                    <span class="font-weight-bold" t-out="day"
                         t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
             </div>
-            <small class="float-right text-muted align-self-end"><t t-esc="tracks_by_days[day]"/> tracks</small>
+            <small class="float-right text-muted align-self-end"><t t-out="tracks_by_days[day]"/> tracks</small>
         </div>
         <hr class="mt-2 pb-1 mb-1"/>
 
@@ -97,7 +97,7 @@
                 <th class="border-0 bg-white position-sticky"/>
                 <t t-foreach="locations" t-as="location">
                     <th t-if="location" class="active text-center">
-                        <span t-esc="location and location.name or 'Unknown'"/>
+                        <span t-out="location and location.name or 'Unknown'"/>
                     </th>
                 </t>
             </tr>
@@ -110,7 +110,7 @@
 
                 <tr t-att-class="'%s' % ('active' if is_round_hour else '')">
                     <td class="active">
-                        <b t-if="is_round_hour" t-esc="time_slots[day][time_slot]['formatted_time']"/>
+                        <b t-if="is_round_hour" t-out="time_slots[day][time_slot]['formatted_time']"/>
                     </td>
 
                     <t t-foreach="locations" t-as="location">
@@ -177,22 +177,22 @@
             <div class="o_we_agenda_card_title">
                 <t t-if="track.website_published or is_event_user">
                     <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-black text-bold">
-                        <t t-esc="track.name"/>
+                        <t t-out="track.name"/>
                     </a>
                 </t>
                 <t t-else="">
                     <span class="text-muted text-bold">
-                        <t t-esc="track.name"/>
+                        <t t-out="track.name"/>
                     </span>
                 </t>
             </div>
             <div class="text-muted text-center" t-if="track.partner_tag_line">
-                <small t-esc="track.partner_tag_line"/>
+                <small t-out="track.partner_tag_line"/>
             </div>
             <div class="d-flex justify-content-center flex-wrap">
                 <t t-foreach="track.tag_ids" t-as="tag">
                     <span t-if="tag.color" t-att-title="tag.name"
-                          t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"
+                          t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-out="tag.name"
                           t-attf-onclick="
                             var value = '#{tag.name}' ;
                             var target = $('#event_track_search');
