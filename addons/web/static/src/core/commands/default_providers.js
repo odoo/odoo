@@ -4,6 +4,7 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { fuzzyLookup } from "@web/core/utils/search";
 import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
@@ -92,5 +93,48 @@ commandProviderRegistry.add("data-hotkeys", {
             });
         }
         return commands;
+    },
+});
+
+commandProviderRegistry.add("test", {
+    namespace: "!",
+    provide: async (env, options) => {
+        let result = await env.services.orm.searchRead("ir.model", [], ["name", "model", "id"]);
+        result = options.searchValue
+            ? fuzzyLookup(options.searchValue, result, (r) => r.name)
+            : result;
+        return result.map((r) => ({
+            name: `${r.name} (${r.model})`,
+            action: async () => {
+                const provider = {
+                    provide: async (env, options) => {
+                        const ir_model = r.model;
+                        const result = await env.services.orm.searchRead(
+                            ir_model,
+                            [["name", "ilike", `${options.searchValue}`]],
+                            ["name", "id"]
+                        );
+                        return result.map((r) => ({
+                            name: r.name,
+                            action: () => {
+                                env.services.action.doAction({
+                                    name: r.name,
+                                    res_id: r.id,
+                                    res_model: ir_model,
+                                    type: "ir.actions.act_window",
+                                    views: [[false, "form"]],
+                                });
+                            },
+                        }));
+                    },
+                };
+                const commandPaletteConfig = {
+                    emptyMessageByNamespace: { default: `No ${r.name} found` },
+                    placeholder: env._t("Choose a debug command..."),
+                    providers: [provider],
+                };
+                return commandPaletteConfig;
+            },
+        }));
     },
 });
