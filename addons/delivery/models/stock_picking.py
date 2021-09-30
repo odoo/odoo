@@ -90,8 +90,6 @@ class StockPicking(models.Model):
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
-    shipment_description = fields.Char(string='Shipment Description', compute='_compute_description', readonly=False)
-    shipment_declared_value = fields.Float(string='Declared Value', compute='_compute_declared_value', readonly=False)
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -112,14 +110,6 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
-
-    def _compute_description(self):
-        for rec in self:
-            rec.shipment_description = rec.sale_id.order_line.product_id[0].categ_id.name if rec.sale_id else ""
-
-    def _compute_declared_value(self):
-        for rec in self:
-            rec.shipment_declared_value = rec.sale_id.amount_total if rec.sale_id else 0.0
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
