@@ -1,0 +1,64 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="view_partners_form_crml">
+      <field name="name">view.res.partner.form.customer</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field eval="1" name="priority"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//group" position="before">
+            <group>
+                <field name="customer"/>
+            </group>
+          </xpath>
+        </data>
+      </field>
+    </record>
+
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="prova.action_window">
+      <field name="name">prova window</field>
+      <field name="res_model">prova.prova</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="prova.action_server">
+      <field name="name">prova server</field>
+      <field name="model_id" ref="model_prova_prova"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="prova" id="prova.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="prova.menu_1" parent="prova.menu_root"/>
+    <menuitem name="Menu 2" id="prova.menu_2" parent="prova.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="prova.menu_1_list" parent="prova.menu_1"
+              action="prova.action_window"/>
+    <menuitem name="Server to list" id="prova" parent="prova.menu_2"
+              action="prova.action_server"/>
+-->
+  </data>
+</odoo>
