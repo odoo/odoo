@@ -22,6 +22,8 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
+import { browser } from "@web/core/browser/browser";
+import { patchWithCleanup } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -277,6 +279,7 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelServiceRegistry();
         setupControlPanelFavoriteMenuRegistry();
         serviceRegistry.add("dialog", dialogService);
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     });
 
     QUnit.module("GraphView");
@@ -2478,7 +2481,7 @@ QUnit.module("Views", (hooks) => {
         });
         await toggleMenu(graph, "Measures");
         assert.deepEqual(
-            [...graph.el.querySelectorAll(".o_cp_bottom_left li.o_menu_item")].map(
+            [...graph.el.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
                 (el) => el.innerText
             ),
             ["Foo", "Revenue", "Count"]
@@ -2523,7 +2526,7 @@ QUnit.module("Views", (hooks) => {
             });
             await toggleMenu(graph, "Measures");
             assert.deepEqual(
-                [...graph.el.querySelectorAll(".o_cp_bottom_left li.o_menu_item")].map(
+                [...graph.el.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
                     (el) => el.innerText
                 ),
                 ["Bouh", "Foo", "Revenue", "Count"]
@@ -2900,13 +2903,13 @@ QUnit.module("Views", (hooks) => {
         await toggleMenu(graph, "Measures");
         assert.containsN(
             graph,
-            "li.o_menu_item",
+            ".o_menu_item",
             3,
             "there should be three menu item in the measures dropdown (count, revenue and foo)"
         );
-        assert.containsOnce(graph, 'li.o_menu_item:contains("Revenue")');
-        assert.containsOnce(graph, 'li.o_menu_item:contains("Foo")');
-        assert.containsOnce(graph, 'li.o_menu_item:contains("Count")');
+        assert.containsOnce(graph, '.o_menu_item:contains("Revenue")');
+        assert.containsOnce(graph, '.o_menu_item:contains("Foo")');
+        assert.containsOnce(graph, '.o_menu_item:contains("Count")');
     });
 
     QUnit.test("graph view with invisible attribute on field", async function (assert) {
@@ -2924,11 +2927,11 @@ QUnit.module("Views", (hooks) => {
         await toggleMenu(graph, "Measures");
         assert.containsN(
             graph,
-            "li.o_menu_item",
+            ".o_menu_item",
             2,
             "there should be only two menu item in the measures dropdown (count and foo)"
         );
-        assert.containsNone(graph, 'li.o_menu_item:contains("Revenue")');
+        assert.containsNone(graph, '.o_menu_item:contains("Revenue")');
     });
 
     QUnit.test("graph view sort by measure", async function (assert) {

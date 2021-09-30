@@ -13,7 +13,7 @@
 
 <!-- User Navbar - Edit Options -->
 <template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
-    <xpath expr="//li[@id='edit-page-menu']" position="after">
+    <xpath expr="//div[@id='edit-page-menu']" position="after">
         <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'"/>
     </xpath>
 </template>

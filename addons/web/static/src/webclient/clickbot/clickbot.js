@@ -156,12 +156,12 @@
      * Make sure the apps menu is open (community only)
      */
     async function ensureAppsMenu() {
-        const appsMenu = document.querySelector(".o_navbar_apps_menu .o_dropdown_menu");
+        const appsMenu = document.querySelector(".o_navbar_apps_menu .dropdown-menu");
         if (!appsMenu) {
-            const toggler = document.querySelector(".o_navbar_apps_menu .o_dropdown_toggler");
+            const toggler = document.querySelector(".o_navbar_apps_menu .dropdown-toggle");
             await triggerClick(toggler, "apps menu toggle button");
             await waitForCondition(() =>
-                document.querySelector(".o_navbar_apps_menu .o_dropdown_menu")
+                document.querySelector(".o_navbar_apps_menu .dropdown-menu")
             );
         }
     }
@@ -173,14 +173,14 @@
      */
     async function getNextMenu() {
         const menus = document.querySelectorAll(
-            ".o_menu_sections > .o_dropdown > .o_dropdown_toggler, .o_menu_sections > .o_dropdown_item"
+            ".o_menu_sections > .dropdown > .dropdown-toggle, .o_menu_sections > .dropdown-item"
         );
         if (menuIndex === menus.length) {
             menuIndex = 0;
             return; // all menus done
         }
         let menu = menus[menuIndex];
-        if (menu.classList.contains("o_dropdown_toggler")) {
+        if (menu.classList.contains("dropdown-toggle")) {
             // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
             if (!menu.nextSibling) {
                 // might already be opened if the last menu was blacklisted
@@ -191,7 +191,7 @@
                 menuIndex = 0; // empty More menu has no dropdown (FIXME?)
                 return;
             }
-            const items = dropdown.querySelectorAll(".o_dropdown_item");
+            const items = dropdown.querySelectorAll(".dropdown-item");
             menu = items[subMenuIndex];
             if (subMenuIndex === items.length - 1) {
                 // this is the last item, so go to the next menu
@@ -220,7 +220,7 @@
             apps = document.querySelectorAll(".o_apps .o_app");
         } else {
             await ensureAppsMenu();
-            apps = document.querySelectorAll(".o_navbar_apps_menu .o_dropdown_item");
+            apps = document.querySelectorAll(".o_navbar_apps_menu .dropdown-item");
         }
         const app = apps[appIndex];
         appIndex++;
@@ -401,10 +401,10 @@
                     app = document.querySelector(`a.o_app.o_menuitem[data-menu-xmlid="${xmlId}"]`);
                 } else {
                     await triggerClick(
-                        document.querySelector(".o_navbar_apps_menu .o_dropdown_toggler")
+                        document.querySelector(".o_navbar_apps_menu .dropdown-toggle")
                     );
                     app = document.querySelector(
-                        `.o_navbar_apps_menu .o_dropdown_item[data-menu-xmlid="${xmlId}"]`
+                        `.o_navbar_apps_menu .dropdown-item[data-menu-xmlid="${xmlId}"]`
                     );
                 }
                 if (!app) {

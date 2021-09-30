@@ -4,12 +4,12 @@
     <t t-name="board.AddToBoard" owl="1">
         <Dropdown class="o_add_to_board">
             <t t-set-slot="toggler">Add to my dashboard</t>
-            <li class="px-3 py-2">
+            <div class="px-3 py-2">
                 <input type="text" class="o_input" autofocus="" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
-            </li>
-            <li class="px-3 py-2">
+            </div>
+            <div class="px-3 py-2">
                 <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
-            </li>
+            </div>
         </Dropdown>
     </t>
 

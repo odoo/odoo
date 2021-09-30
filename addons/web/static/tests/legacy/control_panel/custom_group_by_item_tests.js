@@ -29,21 +29,21 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
             assert.hasClass(cgi.el, 'o_add_custom_group_menu');
             assert.strictEqual(cgi.el.children.length, 1);
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .o_dropdown_toggler'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .dropdown-toggle'));
 
             // Single select node with a single option
-            assert.containsOnce(cgi, 'li > select');
-            assert.strictEqual(cgi.el.querySelector('li > select option').innerText.trim(),
+            assert.containsOnce(cgi, 'div > select');
+            assert.strictEqual(cgi.el.querySelector('div > select option').innerText.trim(),
                 "Super Date");
 
             // Button apply
-            assert.containsOnce(cgi, 'li > button.btn.btn-primary');
+            assert.containsOnce(cgi, 'div > button.btn.btn-primary');
 
             cgi.destroy();
         });
 
         QUnit.test('select a field name in Add Custom Group menu properly trigger the corresponding field', async function (assert) {
-            assert.expect(4);
+            assert.expect(5);
 
             const fields = [
                 { sortable: true, name: 'candlelight', string: 'Candlelight', type: 'boolean' },
@@ -61,12 +61,13 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .o_dropdown_toggler'));
-            await testUtils.dom.click(cgi.el.querySelector('li > button.btn.btn-primary'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .dropdown-toggle'));
+            await testUtils.dom.click(cgi.el.querySelector('div > button.btn.btn-primary'));
 
-            // The only thing visible should be the button 'Add Custome Group';
-            assert.strictEqual(cgi.el.children.length, 1);
-            assert.containsOnce(cgi, '.o_dropdown_toggler');
+            // The only things visible should be the button 'Add Custome Group' and the dropdown menu;
+            assert.strictEqual(cgi.el.children.length, 2);
+            assert.containsOnce(cgi, '.dropdown-toggle');
+            assert.containsOnce(cgi, '.dropdown-menu');
 
             cgi.destroy();
         });

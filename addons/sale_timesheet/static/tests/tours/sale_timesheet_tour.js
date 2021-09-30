@@ -156,7 +156,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on the Configuration menu.',
     run: 'click',
 }, {
-    trigger: 'li[data-menu-xmlid="project.menu_projects_config"]',
+    trigger: '.dropdown-item[data-menu-xmlid="project.menu_projects_config"]',
     content: 'Select Configuration > Projects.',
     run: 'click',
 }, {
@@ -238,7 +238,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.o_form_button_save',
     content: 'Save Project',
 }, {
-    trigger: 'li[data-menu-xmlid="project.menu_projects"]',
+    trigger: '.dropdown-item[data-menu-xmlid="project.menu_projects"]',
     content: 'Select Projects',
 }, {
     // an invisible element cannot be used as a trigger so this small hack is mandatory for the next step
