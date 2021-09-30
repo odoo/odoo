@@ -63,17 +63,20 @@ class TestChannelInternals(MailCommon):
             res = channel_partner._rtc_join_call()
         self.assertEqual(res, {
             'iceServers': False,
-            'rtcSessions': [('insert-and-replace', [{
-                'id': channel_partner.rtc_session_ids.id,
-                'isCameraOn': False,
-                'isDeaf': False,
-                'isMuted': False,
-                'isScreenSharingOn': False,
-                'partner': [('insert', {
-                    'id': self.user_employee.partner_id.id,
-                    'name': "Ernest Employee",
-                })],
-            }])],
+            'rtcSessions': [
+                ('insert', [{
+                    'id': channel_partner.rtc_session_ids.id,
+                    'isCameraOn': False,
+                    'isDeaf': False,
+                    'isMuted': False,
+                    'isScreenSharingOn': False,
+                    'partner': [('insert', {
+                        'id': self.user_employee.partner_id.id,
+                        'name': "Ernest Employee",
+                    })],
+                }]),
+                ('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id - 1}]),
+            ],
             'sessionId': channel_partner.rtc_session_ids.id,
         })
 
@@ -380,12 +383,19 @@ class TestChannelInternals(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # update invitation
                 (self.cr.dbname, 'mail.channel', channel.id),  # update list of invitations
                 (self.cr.dbname, 'mail.channel', channel.id),  # update sessions
             ],
             [
+                {
+                    'type': 'rtc_session_ended',
+                    'payload': {
+                        'sessionId': channel_partner.rtc_session_ids.id,
+                    },
+                },
                 {
                     'type': 'mail.channel_update',
                     'payload': {
@@ -495,9 +505,16 @@ class TestChannelInternals(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # end session
                 (self.cr.dbname, 'mail.channel', channel.id),  # update list of sessions
             ],
             [
+                {
+                    'type': 'rtc_session_ended',
+                    'payload': {
+                        'sessionId': channel_partner.rtc_session_ids.id,
+                    },
+                },
                 {
                     'type': 'rtc_sessions_update',
                     'payload': {
