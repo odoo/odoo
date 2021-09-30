@@ -1114,7 +1114,7 @@ QUnit.module('Views', {
 
     });
 
-    QUnit.test('rendering stat buttons', async function (assert) {
+    QUnit.test('rendering stat buttons with action', async function (assert) {
         assert.expect(3);
 
         var form = await createView({
@@ -1123,11 +1123,11 @@ QUnit.module('Views', {
             data: this.data,
             arch:'<form string="Partners">' +
                     '<sheet>' +
-                        '<div name="button_box">' +
-                            '<button class="oe_stat_button">' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button" >' +
                                 '<field name="int_field"/>' +
                             '</button>' +
-                            '<button class="oe_stat_button" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
+                            '<button class="oe_stat_button" name="some_action" type="action" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -1147,7 +1147,86 @@ QUnit.module('Views', {
             count++;
         });
         await testUtils.dom.click('.oe_stat_button');
-        assert.strictEqual(count, 1, "should have triggered a execute action");
+        assert.strictEqual(count, 0, "should have triggered an execute_action");
+        form.destroy();
+    });
+
+    QUnit.test('rendering stat buttons without action', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button">' +
+                                '<field name="int_field"/>' +
+                            '</button>' +
+                            '<button class="oe_stat_button" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.containsN(form, 'button.oe_stat_button', 2);
+        assert.containsOnce(form, 'button.oe_stat_button.o_invisible_modifier');
+        assert.containsN(form, 'button.oe_stat_button:disabled', 2);
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function () {
+            count++;
+        });
+        await testUtils.dom.click('.oe_stat_button');
+        assert.strictEqual(count, 0, "should have not triggered an execute_action");
+        form.destroy();
+    });
+
+    QUnit.test('readonly stat buttons stays disabled', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button">' +
+                                '<field name="int_field"/>' +
+                            '</button>' +
+                            '<button class="oe_stat_button" type="action" name="some_action">' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<button type="action" name="action_to_perform">Run an action</button>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function (event) {
+            if (event.data.action_data.name == "action_to_perform") {
+                assert.containsN(form, 'button.oe_stat_button[disabled]', 2, "While performing the action, both buttons should be disabled.");
+                event.data.on_success();
+            }
+        });
+
+        assert.containsN(form, 'button.oe_stat_button', 2);
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1);
+        await testUtils.dom.click('button[name=action_to_perform]');
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1, "After performing the action, only one button should be disabled.");
+        
         form.destroy();
     });
 
@@ -2741,7 +2820,7 @@ QUnit.module('Views', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<div name="button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7137,7 +7216,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7201,7 +7280,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7314,7 +7393,7 @@ QUnit.module('Views', {
                 'partner,false,form': '<form>' +
                         '<sheet>' +
                             '<div name="button_box" class="oe_button_box">' +
-                                '<button class="oe_stat_button">' +
+                                '<button class="oe_stat_button" name="some_action" type="action">' +
                                     '<field name="bar"/>' +
                                 '</button>' +
                             '</div>' +
