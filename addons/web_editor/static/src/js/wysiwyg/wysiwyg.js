@@ -437,7 +437,7 @@ const Wysiwyg = Widget.extend({
                     }
                 }
             },
-        }
+        };
         return editorCollaborationOptions;
     },
     /**
@@ -475,6 +475,14 @@ const Wysiwyg = Widget.extend({
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
 
+        if (this.options.autoresize) {
+            this.$editable.addClass("auto-resize");
+            this.$editable.css("min-height", this.options.minHeight || 10);
+            this.$editable.css("max-height", this.options.maxHeight || 340);
+        } else {
+            this.$editable.css("min-height", this.options.minHeight || 100);
+            this.$editable.css("max-height", this.options.maxHeight || 450);
+        }
         if (this.options.resizable && !device.isMobile) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
             $wrapper.append(this.$editable);

@@ -708,6 +708,16 @@ img::selection {
     color: black;
     height: 100%;
     padding: 5px 10px;
+    &.auto-resize {
+        border-top:0;
+        border-right:0;
+        border-left:0;
+        padding: 3px 0 5px;
+    }
+}
+.oe_bordered_editor .note-editable.auto-resize {
+    border: $o-we-border-width solid $o-we-fg-light;
+    padding: 5px 10px;
 }
 
 .o_we_no_pointer_events {
