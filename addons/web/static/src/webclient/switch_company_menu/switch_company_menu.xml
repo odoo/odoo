@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.SwitchCompanyMenu" owl="1">
-    <Dropdown class="o_switch_company_menu" position="'bottom-end'" tag="'li'">
+    <Dropdown class="o_switch_company_menu" position="'bottom-end'">
         <t t-set-slot="toggler">
             <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
                 <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>

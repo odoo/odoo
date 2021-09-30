@@ -59,7 +59,7 @@
 
 <!-- Website edit page -->
 <template id="slide_edit_options" inherit_id="website.user_navbar" name="Edit Slide Options">
-    <xpath expr="//li[@id='edit-page-menu']" position="after">
+    <xpath expr="//div[@id='edit-page-menu']" position="after">
         <t t-if="main_object._name == 'slide.slide'" t-set="action" t-value="'website_slides.slide_slide_action'"/>
     </xpath>
 </template>

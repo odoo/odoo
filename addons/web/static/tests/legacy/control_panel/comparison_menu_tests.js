@@ -1,6 +1,8 @@
 odoo.define('web.comparison_menu_tests', function (require) {
     "use strict";
 
+    const { browser } = require('@web/core/browser/browser');
+    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
     const cpHelpers = require('@web/../tests/search/helpers');
     const {
         createControlPanel,
@@ -27,6 +29,9 @@ odoo.define('web.comparison_menu_tests', function (require) {
                 fields: this.fields,
                 searchMenuTypes,
             };
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
         },
     }, function () {
 
@@ -42,8 +47,8 @@ odoo.define('web.comparison_menu_tests', function (require) {
             };
             const controlPanel = await createControlPanel(params);
 
-            assert.containsOnce(controlPanel, ".o_dropdown.o_filter_menu");
-            assert.containsNone(controlPanel, ".o_dropdown.o_comparison_menu");
+            assert.containsOnce(controlPanel, ".dropdown.o_filter_menu");
+            assert.containsNone(controlPanel, ".dropdown.o_comparison_menu");
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, "Birthday");
@@ -55,7 +60,7 @@ odoo.define('web.comparison_menu_tests', function (require) {
             await cpHelpers.toggleComparisonMenu(controlPanel);
 
             const comparisonOptions = [...controlPanel.el.querySelectorAll(
-                '.o_comparison_menu li'
+                '.o_comparison_menu .o_menu_item'
             )];
             assert.strictEqual(comparisonOptions.length, 2);
             assert.deepEqual(

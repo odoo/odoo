@@ -48,7 +48,7 @@ tour.register('shop_cart_recovery', {
     },
     {
         content: "click action",
-        trigger: '.o_dropdown_toggler:contains("Action")',
+        trigger: '.dropdown-toggle:contains("Action")',
     },
     {
         content: "click Send a Cart Recovery Email",

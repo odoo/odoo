@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { patchDate } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     getFacetTexts,
@@ -45,6 +46,10 @@ QUnit.module("Search", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("FilterMenu");
@@ -147,7 +152,7 @@ QUnit.module("Search", (hooks) => {
         await toggleFilterMenu(controlPanel);
         await toggleMenuItem(controlPanel, "Date");
 
-        const optionEls = controlPanel.el.querySelectorAll(".o_dropdown .o_item_option");
+        const optionEls = controlPanel.el.querySelectorAll(".dropdown .o_item_option");
 
         // default filter should be activated with the global default period 'this_month'
         assert.deepEqual(getDomain(controlPanel), [

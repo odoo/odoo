@@ -1,6 +1,8 @@
 odoo.define('web.filter_menu_tests', function (require) {
     "use strict";
 
+    const { browser } = require('@web/core/browser/browser');
+    const { patchWithCleanup } = require('@web/../tests/helpers/utils');
     const testUtils = require('web.test_utils');
 
     const cpHelpers = require('@web/../tests/search/helpers');
@@ -15,6 +17,9 @@ odoo.define('web.filter_menu_tests', function (require) {
                 date_field: { string: "Date", type: "date", store: true, sortable: true, searchable: true },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
             };
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
         },
     }, function () {
 
@@ -52,7 +57,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             assert.containsOnce(controlPanel, '.o_menu_item');
             assert.containsOnce(controlPanel, '.dropdown-divider');
-            assert.containsOnce(controlPanel, 'li.o_add_custom_filter_menu');
+            assert.containsOnce(controlPanel, 'div.o_add_custom_filter_menu');
 
             controlPanel.destroy();
         });
@@ -225,7 +230,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, "Date");
 
-            const optionEls = controlPanel.el.querySelectorAll('li.o_item_option');
+            const optionEls = controlPanel.el.querySelectorAll('span.o_item_option');
 
             // default filter should be activated with the global default period 'this_month'
             const { domain } = controlPanel.getQuery();
