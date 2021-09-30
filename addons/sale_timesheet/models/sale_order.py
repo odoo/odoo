@@ -199,10 +199,15 @@ class SaleOrderLine(models.Model):
         """
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        domain = expression.AND([domain, [
+        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
+        timesheet_domain = [
             '|',
             ('timesheet_invoice_id', '=', False),
-            ('timesheet_invoice_id.state', '=', 'cancel')]])
+            ('timesheet_invoice_id.state', '=', 'cancel')]
+        if refund_account_moves:
+            credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
+            timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
+        domain = expression.AND([domain, timesheet_domain])
         if start_date:
             domain = expression.AND([domain, [('date', '>=', start_date)]])
         if end_date:

@@ -128,15 +128,13 @@ QUnit.done(async function (result) {
  */
 QUnit.log(function (result) {
     if (!result.result) {
-        var info = '"QUnit test failed: "' + result.module + ' > ' + result.name + '"';
-        info += ' [message: "' + result.message + '"';
-        if (result.actual !== null) {
-            info += ', actual: "' + result.actual + '"';
+        var info = `QUnit test failed "${result.module} > ${result.name}": ${result.message}`;
+        if (result.actual != null) {
+            info += `\nactual: ${result.actual}`
         }
-        if (result.expected !== null) {
-            info += ', expected: "' + result.expected + '"';
+        if (result.expected != null) {
+            info += `\nexpected: ${result.expected}`;
         }
-        info += ']';
         errorMessages.push(info);
     }
 });
@@ -156,24 +154,19 @@ QUnit.moduleDone(function(result) {
 });
 
 /**
- * After each test, we check that there is no leftover in the DOM.
- *
- * Note: this event is not QUnit standard, we added it for this specific use case.
- * As a payload, an object with keys 'moduleName' and 'testName' is provided. It
- * is used to indicate the test that left elements in the DOM, when it happens.
+ * After each test, we check that there is no leftover in the DOM. If there is
+ * and the test hasn't already failed, trigger a failure
  */
 QUnit.on('OdooAfterTestHook', function (info) {
+    const failed = info.testReport.getStatus() === 'failed';
     const toRemove = [];
     // check for leftover elements in the body
     for (const bodyChild of document.body.children) {
         const tolerated = validElements.find((e) =>
             e.tagName === bodyChild.tagName && bodyChild[e.attr] === e.value
         );
-        if (!tolerated) {
-            console.error(`Test ${info.moduleName} > ${info.testName}`);
-            console.error('Body still contains undesirable elements:' +
-                '\nInvalid element:\n' + bodyChild.outerHTML);
-            QUnit.pushFailure(`Body still contains undesirable elements`);
+        if (!failed && !tolerated) {
+            QUnit.pushFailure(`Body still contains undesirable elements:\n${bodyChild.outerHTML}`);
         }
         if (!tolerated || !tolerated.keep) {
             toRemove.push(bodyChild);
@@ -183,10 +176,9 @@ QUnit.on('OdooAfterTestHook', function (info) {
     // check for leftovers in #qunit-fixture
     const qunitFixture = document.getElementById('qunit-fixture');
     if (qunitFixture.children.length) {
-        console.error(`Test ${info.moduleName} > ${info.testName}`);
-        console.error('#qunit-fixture still contains elements:' +
-            '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
-        QUnit.pushFailure(`#qunit-fixture still contains elements`);
+        if (!failed) {
+            QUnit.pushFailure(`#qunit-fixture still contains elements:\n${qunitFixture.outerHTML}`);
+        }
         toRemove.push(...qunitFixture.children);
     }
 

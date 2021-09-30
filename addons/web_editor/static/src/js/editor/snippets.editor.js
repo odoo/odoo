@@ -315,8 +315,8 @@ var SnippetEditor = Widget.extend({
                     for (var i in editor.styles) {
                         editor.styles[i].onRemove();
                     }
-                    resolve();
                 },
+                onSuccess: resolve,
             });
         });
 
@@ -518,8 +518,8 @@ var SnippetEditor = Widget.extend({
                             isCurrent: ($snippet.is($clone)),
                         });
                     }
-                    resolve();
                 },
+                onSuccess: resolve,
             });
         });
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
@@ -2263,6 +2263,9 @@ var SnippetsMenu = Widget.extend({
         const mutexExecResult = this._mutex.exec(action);
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
+                if (this.loadingElements[contentLoading]) {
+                    return;
+                }
                 this.loadingElements[contentLoading] = this._createLoadingElement();
                 if (contentLoading) {
                     this.$snippetEditorArea.append(this.loadingElements[contentLoading]);
@@ -2325,7 +2328,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onCallForEachChildSnippet: function (ev) {
-        this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+        const prom = this._callForEachChildSnippet(ev.data.$snippet, ev.data.callback);
+        if (ev.data.onSuccess) {
+            prom.then(() => ev.data.onSuccess());
+        }
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.

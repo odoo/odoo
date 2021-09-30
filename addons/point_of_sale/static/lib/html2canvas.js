@@ -1211,7 +1211,7 @@
           textNode.nodeValue = textTransform(textNode.nodeValue, getCSS(el, "textTransform"));
           textAlign = textAlign.replace(["-webkit-auto"],["auto"]);
     
-          textList = (!options.letterRendering && /^(left|right|justify|auto)$/.test(textAlign) && noLetterSpacing(getCSS(el, "letterSpacing"))) ?
+          textList = (!options.letterRendering && /^(left|right|justify|auto|center)$/.test(textAlign) && noLetterSpacing(getCSS(el, "letterSpacing"))) ?
           textNode.nodeValue.split(/(\b| )/)
           : textNode.nodeValue.split("");
     

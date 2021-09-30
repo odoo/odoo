@@ -22,11 +22,11 @@
 			<field name="inherit_id" ref="account.view_tax_form"/>
 			<field name="arch" type="xml">
 				<field position="after" name="price_include">
-					<field name="tax_discount"/>
+					<field name="tax_discount" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
 			    </field>
 			    <field position="after" name="tax_discount">
-					<field name="base_reduction" widget="monetary"/>
-					<field name="amount_mva" widget="monetary"/>
+					<field name="base_reduction" widget="monetary" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
+					<field name="amount_mva" widget="monetary" attrs="{'invisible': [('country_code', '!=', 'BR')]}"/>
 			    </field>
 			</field>
 		</record>

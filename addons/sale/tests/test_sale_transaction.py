@@ -58,3 +58,17 @@ class TestSaleTransaction(AccountTestInvoicingCommon):
         with mute_logger('odoo.addons.sale.models.payment'):
             self.transaction._post_process_after_done()
         self.assertEqual(self.order.state, 'draft', 'a transaction for an incorrect amount should not validate a quote')
+
+    def test_sale_transaction_partial_delivery(self):
+        """Test that with automatic invoice and invoicing policy based on delivered quantity, a transaction for the partial
+        amount does not validate the SO."""
+        # set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        # modify order total
+        self.order.order_line[0].price_unit = 200.0
+        # invoicing policy is based on delivered quantity
+        self.product_a.invoice_policy = 'delivery'
+        self.transaction._set_transaction_done()
+        with mute_logger('odoo.addons.sale.models.payment'):
+            self.transaction.sudo()._post_process_after_done()
+        self.assertEqual(self.order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')

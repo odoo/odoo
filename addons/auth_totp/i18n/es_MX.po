@@ -5,20 +5,27 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2021-08-19 09:43+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_totp
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "%(browser)s on %(platform)s"
+msgstr "%(browser)s en %(platform)s"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -46,13 +53,23 @@ msgstr ""
 "                          Autenticación en dos pasos activada "
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
+"won't be asked for two-factor authentication codes with this device.\"/>"
+msgstr ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"Si se encuentra "
+"seleccionado, no se le solicitarán códigos de autenticación en dos pasos con"
+" este dispositivo.\"/>"
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
 "<i class=\"fa fa-warning\"/>\n"
-"                                 Autenticación en dos pasos desactivada "
+"                                 Autenticación en dos pasos deshabilitada"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -62,10 +79,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
-"<span class=\"alert alert-info\" role=\"status\">\n"
+"<span class=\"alert alert-info\" role=\"estado\">\n"
 "                                <i class=\"fa fa-warning\"/>\n"
-"                                   Autenticación en dos pasos desactivada\n"
-"                              </span> "
+"                                   Autenticación en dos pasos deshabilitada\n"
+"                              </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -81,6 +98,11 @@ msgstr ""
 "                             </span>"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Added On"
+msgstr "Agregado en"
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "After scanning the barcode, the app will display a 6-digit code that you\n"
@@ -88,8 +110,17 @@ msgid ""
 "                                it stays valid a bit longer."
 msgstr ""
 "Después de escanear el código de barras, la aplicación le mostrará un código de 6 dígitos que\n"
-"                          debes registrar en la parte inferior. No se preocupe si el código cambia en la aplicación,\n"
+"                          debe registrar en la parte inferior. No se preocupe si el código cambia en la aplicación,\n"
 "                          es válido por unos segundos más."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? Two-factor authentication will be required again on all your "
+"devices"
+msgstr ""
+"¿Está seguro? La autenticación en dos pasos volverá a ser obligatoria en "
+"todos sus dispositivos"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -98,6 +129,7 @@ msgstr "Código de autenticación (6 dígitos) "
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Cancelar"
@@ -113,6 +145,11 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Device Name"
+msgstr "Nombre del dispositivo"
+
+#. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
 msgstr "Desactivar TOTP para los usuarios"
@@ -122,36 +159,41 @@ msgstr "Desactivar TOTP para los usuarios"
 #: model:ir.model.fields,field_description:auth_totp.field_ir_http__display_name
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again for this device"
+msgstr "No volver a solicitar para este dispositivo"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr "Activar la autenticación de dos pasos"
+msgstr "Habilitar la autenticación en dos pasos"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable two-factor authentication"
-msgstr "Activar la autenticación en dos pasos"
+msgstr "Habilitar la autenticación en dos pasos"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter the 6-digit code from your app"
-msgstr "Introduzca el código de 6 dígitos de tu aplicación"
+msgstr "Introduzca el código de 6 dígitos de su aplicación"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP "
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
 #: model:ir.model.fields,field_description:auth_totp.field_ir_http__id
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: auth_totp
 #: code:addons/auth_totp/controllers/home.py:0
@@ -187,12 +229,22 @@ msgid "Qrcode"
 msgstr "Código QR"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke"
+msgstr "Revocar"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke All"
+msgstr "Revocar todo"
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
-"Escanee la imagen en la parte inferior con la aplicación móvil de autenticador. <br/>\n"
+"Escanee la siguiente imagen con la aplicación móvil de autenticador. <br/>\n"
 "                                      Si no puede escanear el código de barras, le dejamos opciones alternativas:"
 
 #. module: auth_totp
@@ -203,7 +255,7 @@ msgstr "Escanee el código de barras con su aplicación"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
 msgid "Secret"
-msgstr "Secret"
+msgstr "Secreto"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
@@ -215,6 +267,17 @@ msgstr "El código de autenticación únicamente debe contener números"
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
 msgstr "Totp Secret"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Device"
+msgstr "Dispositivo de confianza"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Devices"
+msgstr "Dispositivos de confianza"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
@@ -235,25 +298,25 @@ msgstr "Autenticación en dos pasos"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr "La autenticación en dos pasos ya está activa "
+msgstr "La autenticación en dos pasos ya está habilitada"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "Solo usted puede activar la autenticación en dos pasos "
+msgstr "Solo usted puede habilitar la autenticación en dos pasos "
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr "Autenticación en dos pasos desactivada para usuarios %s"
+msgstr "Autenticación en dos pasos está deshabilitada para los usuarios %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr "La autenticación en dos pasos ha sido activada."
+msgstr "La autenticación en dos pasos ha sido habilitada."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -301,4 +364,4 @@ msgstr "Su secret en dos pasos"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "show the code"
-msgstr "Mostrar el código"
+msgstr "mostrar el código"

@@ -26,6 +26,7 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
@@ -50,7 +51,7 @@ msgstr "# Valmistuneet diat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 msgid "# Views"
-msgstr "# Näyttöä"
+msgstr "# Katselukertaa"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
@@ -70,7 +71,7 @@ msgstr "${user.name} jakoi ${object.slide_type} kanssasi!"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
 msgid "% Completed Slides"
-msgstr ""
+msgstr "% Valmistuneet diat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -90,7 +91,7 @@ msgstr "(tyhjä)"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ". This way, they will be secured."
-msgstr ""
+msgstr ". Tällä tavalla ne ovat turvattu. "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
@@ -101,7 +102,7 @@ msgstr "3 Päämetodologiaa"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
-msgstr ""
+msgstr "<b>%s</b> pyytää pääsyä tälle kurssille."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -120,13 +121,15 @@ msgstr "<b>Järjestä</b>"
 msgid ""
 "<b>Save & Publish</b> your lesson to make it available to your attendees."
 msgstr ""
+"<b>Tallenna & Julkaise</b> oppituntisi, jotta se on osallistujiesi "
+"nähtävillä."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "<b>Save</b> your question."
-msgstr ""
+msgstr "<b>Tallenna</b> kysymyksesi."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -144,6 +147,13 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei<br/><br/>\n"
+"        Sinut on kutsuttu liittymään uudelle kurssille: ${object.channel_id.name}.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -168,6 +178,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hei<br/><br/>\n"
+"                        ${user.name} jakoi ${object.slide_type} <strong>${object.name}</strong> kanssasi!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Näytä <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -196,11 +225,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hei,<br/><br/>\n"
+"                        Kurssilla <strong>${object.channel_id.name}</strong>, jota seuraat on lisätty jotain uutta:<br/><br/>\n"
+"                        <center><strong>${object.name}</strong></center>\n"
+"                        % if object.image_1024\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        % endif\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
+"                        </div>\n"
+"                        Nauti tästä ainutlaatuisesta sisällöstä!\n"
+"                        % if user.signature\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Courses"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Kaikki kurssit"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -233,7 +285,7 @@ msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Lataa...</b>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Luontipäivä\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -257,7 +309,7 @@ msgstr "<i class=\"fa fa-code\"/> Upota"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-comments\"/> Comments ("
-msgstr ""
+msgstr "<i class=\"fa fa-comments\"/> Kommentit ("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -276,7 +328,7 @@ msgstr "<i class=\"fa fa-envelope\"/> Sähköposti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope\"/> Send Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\"/> Lähetä sähköposti"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -300,7 +352,9 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
-msgstr "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
+msgstr ""
+"<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" "
+"title=\"Katselukertoja\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -356,7 +410,7 @@ msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Kysely"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Avaa kansio\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -366,7 +420,7 @@ msgstr "<i class=\"fa fa-folder-o mr-1\"/><span>Lisää osio</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-folder-o mr-1\"/>Add a section"
-msgstr ""
+msgstr "<i class=\"fa fa-folder-o mr-1\"/>Lisää osio"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -398,6 +452,8 @@ msgid ""
 "<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block ml-1\">Back "
 "to course</span>"
 msgstr ""
+"<i class=\"fa fa-home\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Takaisin kurssille</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -405,6 +461,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                    Sosiaalisen jakamisen moduuli avataan, kun valvoja sallii julkaisusi."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -432,7 +490,7 @@ msgstr "<i class=\"fa fa-plus mr-1\"/><span>Lisää sisältöä</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Tag</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus mr-1\"/><span>Lisää tunniste</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -440,6 +498,8 @@ msgid ""
 "<i class=\"fa fa-plus mr-2\"/>\n"
 "            <span>Add Question</span>"
 msgstr ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>Lisää kysymys</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz_add_buttons
@@ -447,6 +507,8 @@ msgid ""
 "<i class=\"fa fa-plus mr-2\"/>\n"
 "            <span>Add Quiz</span>"
 msgstr ""
+"<i class=\"fa fa-plus mr-2\"/>\n"
+"            <span>Lisää kysely</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -488,21 +550,23 @@ msgid ""
 "<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
 "ml-1\">Exit Fullscreen</span>"
 msgstr ""
+"<i class=\"fa fa-sign-out\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Poistu koko näytön tilasta</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star text-black-25\" aria-label=\"Tähti\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star\" aria-label=\"A star\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star\" aria-label=\"Tähti\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-star-half-o\" aria-label=\"Puolikas tähti\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -510,6 +574,8 @@ msgid ""
 "<i class=\"fa fa-tag mr-2 text-muted\"/>\n"
 "                      My Courses"
 msgstr ""
+"<i class=\"fa fa-tag mr-2 text-muted\"/>\n"
+"                      Kurssini"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -536,6 +602,9 @@ msgid ""
 "                                Request already sent\n"
 "                            </small>"
 msgstr ""
+"<small class=\"text-success\">\n"
+"                                Pyyntö on jo lähetetty\n"
+"                            </small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -544,6 +613,9 @@ msgid ""
 "px-2 font-weight-normal\"><i class=\"fa fa-check\"/> "
 "Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge badge-pill badge-success pull-right my-1 py-1 "
+"px-2 font-weight-normal\"><i class=\"fa fa-check\"/> "
+"Suoritettu</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -556,11 +628,13 @@ msgid ""
 "<span class=\"badge badge-info badge-arrow-right font-weight-normal px-2 "
 "py-1 m-1\">New</span>"
 msgstr ""
+"<span class=\"badge badge-info badge-arrow-right font-weight-normal px-2 "
+"py-1 m-1\">Uusi</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid "<span class=\"badge badge-info\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-info\">Esikatselu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -568,6 +642,8 @@ msgid ""
 "<span class=\"badge badge-light badge-hide border font-weight-normal px-2 "
 "py-1 m-1\">Add Quiz</span>"
 msgstr ""
+"<span class=\"badge badge-light badge-hide border font-weight-normal px-2 "
+"py-1 m-1\">Lisää kysely</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -584,6 +660,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
 "=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
+"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Suoritettu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -591,6 +669,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-success py-1 px-2\" style=\"font-size: "
 "1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success py-1 px-2\" style=\"font-size: "
+"1em\"><i class=\"fa fa-check\"/> Suoritettu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -607,6 +687,8 @@ msgid ""
 "<span class=\"badge badge-success font-weight-normal px-2 py-1 "
 "m-1\"><span>Preview</span></span>"
 msgstr ""
+"<span class=\"badge badge-success font-weight-normal px-2 py-1 "
+"m-1\"><span>Esikatselu</span></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -614,6 +696,8 @@ msgid ""
 "<span class=\"badge badge-success font-weight-normal px-2 py-1 "
 "m-1\">Preview</span>"
 msgstr ""
+"<span class=\"badge badge-success font-weight-normal px-2 py-1 "
+"m-1\">Esikatselu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -622,6 +706,9 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
+"<span class=\"badge font-weight-bold px-2 py-1 m-1 badge-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -638,6 +725,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Luo Google -projekti ja hanki avain"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
@@ -681,7 +770,7 @@ msgstr "<span class=\"o_stat_text\">Kurssit</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card_information_arrow
 msgid "<span class=\"o_wslides_arrow\">New Content</span>"
-msgstr ""
+msgstr "<span class=\"o_wslides_arrow\">Uusi sisältö</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
@@ -702,6 +791,7 @@ msgstr "<span class=\"text-muted\">Osallistujat</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr ""
+"<span class=\"text-muted\">Yleisiä tehtäviä tietotekniikan tutkijalle</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -711,7 +801,7 @@ msgstr "<span class=\"text-muted\">Sisältö</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Parts of computer science</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Tietojenkäsittelytieteen osat</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -740,42 +830,42 @@ msgstr "<span>&amp;times;</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 msgid "<span>Add Tag</span>"
-msgstr ""
+msgstr "<span>Lisää tunniste</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Answering Questions</span>"
-msgstr ""
+msgstr "<span>Kysymyksiin vastaaminen</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Asking Question</span>"
-msgstr ""
+msgstr "<span>Kysymyksien kysyminen</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Asking the right question</span>"
-msgstr ""
+msgstr "<span>Oikeiden kysymysten kysyminen</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Logic</span>"
-msgstr ""
+msgstr "<span>Logiikka</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Mathematics</span>"
-msgstr ""
+msgstr "<span>Matematiikka</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "<span>Preview</span>"
-msgstr ""
+msgstr "<span>Esikatselu</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Science</span>"
-msgstr ""
+msgstr "<span>Tiede</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -785,6 +875,7 @@ msgstr "<span>XP</span>"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr "<strong>Kiitos!</strong> Sähköposti on lähetetty"
@@ -804,9 +895,20 @@ msgstr "Hedelmä"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
+"A good course has a structure. Pick a name for your first section and click "
+"<b>Save</b> to create it."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
 "A good course has structure and a table of content. Your first section will "
 "be the <b>Introduction</b>."
 msgstr ""
+"Hyvällä kurssilla on rakenne ja sisällysluettelo. Ensimmäinen osiosi on "
+"<b>Esittely</b>."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -820,6 +922,8 @@ msgid ""
 "A lot of nice documentation: trees, wood, gardens. A gold mine for "
 "references."
 msgstr ""
+"Paljon mukavaa dokumentaatiota: metsää, puita, puutarhoja. Viitteistön "
+"kultakaivos."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_0
@@ -831,6 +935,8 @@ msgstr "Lapio"
 msgid ""
 "A slide is either filled with a document url or HTML content. Not both."
 msgstr ""
+"Dia on täytetty joko asiakirjan URL-osoitteella tai HTML -sisällöllä. Ei "
+"molemmilla."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_1
@@ -840,7 +946,7 @@ msgstr "Lusikka"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_5
 msgid "A summary of know-how: how and what."
-msgstr ""
+msgstr "Yhteenveto osaamisesta: miten ja mitä."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_0
@@ -848,6 +954,7 @@ msgid ""
 "A summary of know-how: how and what. All the basics for this course about "
 "gardening."
 msgstr ""
+"Yhteenveto osaamisesta: miten ja mitä. Kaikki puutarhanhoidon perusasiat."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_0
@@ -855,6 +962,8 @@ msgid ""
 "A summary of know-how: what are the main trees categories and how to "
 "differentiate them."
 msgstr ""
+"Yhteenveto osaamisesta: mitkä ovat tärkeimmät puuluokat ja miten ne voidaan "
+"erottaa toisistaan."
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_2
@@ -880,7 +989,7 @@ msgstr "API Avain"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Granted"
-msgstr ""
+msgstr "Pääsy myönnetty"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_groups
@@ -891,17 +1000,17 @@ msgstr "Käyttöoikeusryhmät"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Refused"
-msgstr ""
+msgstr "Pääsy kielletty"
 
 #. module: website_slides
 #: model:mail.activity.type,name:website_slides.mail_activity_data_access_request
 msgid "Access Request"
-msgstr ""
+msgstr "Pääsypyyntö"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_requested_access
 msgid "Access Requested"
-msgstr ""
+msgstr "Pääsy pyydetty"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -977,7 +1086,7 @@ msgstr "Lisää osio"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Add Tag"
-msgstr ""
+msgstr "Lisää tunniste"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
@@ -997,21 +1106,21 @@ msgstr "Lisää väliotsikko/osio"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #, python-format
 msgid "Add a tag"
-msgstr ""
+msgstr "Lisää tunniste"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Add an answer below this one"
-msgstr ""
+msgstr "Lisää vastaus tämän alle"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Add comment on this answer"
-msgstr ""
+msgstr "Lisää kommentti tähän vastaukseen"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -1024,27 +1133,29 @@ msgid ""
 "Add quizzes at the end of your lessons to evaluate what your students "
 "understood."
 msgstr ""
+"Lisää kyselyitä oppituntien loppuun arvioidaksesi, mitä opiskelijasi "
+"ymmärsivät."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
 msgid "Additional Resource for this slide"
-msgstr ""
+msgstr "Lisämateriaali tälle dialle"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Additional Resources"
-msgstr ""
+msgstr "Lisämateriaalit"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_resource
 msgid "Additional resource for a particular slide"
-msgstr ""
+msgstr "Lisämateriaali tietylle dialle"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_advanced
 msgid "Advanced"
-msgstr "Lisäasetukset"
+msgstr "Vaativa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1056,7 +1167,7 @@ msgstr "Kaikki kurssit"
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "All completed classes and earned karma will be lost."
-msgstr ""
+msgstr "Kaikki suoritetut kurssit ja hankitut pisteet menetetään. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__partner_ids
@@ -1079,7 +1190,7 @@ msgstr "Kaikki mitä täytyy tietää kalusteiden rakentamisesta."
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
 msgid "Allow Download"
-msgstr ""
+msgstr "Salli lataus"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
@@ -1101,12 +1212,12 @@ msgstr "Salli kurssin arviointi"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Allow students to review your course"
-msgstr ""
+msgstr "Anna opiskelijoiden arvioida kurssisi"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_resource_downloadable
 msgid "Allow the user to download the content of the slide."
-msgstr ""
+msgstr "Salli käyttäjän ladata dian sisältö."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_allow_comment
@@ -1117,7 +1228,7 @@ msgstr "Sallii kommentin"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Already Requested"
-msgstr ""
+msgstr "Pyydetty jo"
 
 #. module: website_slides
 #. openerp-web
@@ -1130,7 +1241,7 @@ msgstr "\"%s\" on jo asennettavana."
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Already member"
-msgstr ""
+msgstr "On jo jäsen"
 
 #. module: website_slides
 #. openerp-web
@@ -1161,6 +1272,8 @@ msgid ""
 "Applied directly as ACLs. Allow to hide channels and their content for non "
 "members."
 msgstr ""
+"Käytetään suoraan pääsynvalvontaluettelona. Salli kanavien ja niiden "
+"sisällön piilottaminen muille kuin jäsenille."
 
 #. module: website_slides
 #. openerp-web
@@ -1196,7 +1309,7 @@ msgstr "Oletko varma että haluat arkistoida dian ?"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Are you sure you want to delete this question :"
-msgstr ""
+msgstr "Haluatko varmasti poistaa tämän kysymyksen:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1234,7 +1347,7 @@ msgstr "Osallistujat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_done_count
 msgid "Attendees Done Count"
-msgstr ""
+msgstr "Suorittaneiden osallistujien määrä"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_count
@@ -1250,7 +1363,7 @@ msgstr "%sosallistujat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
 msgid "Auto Enroll Groups"
-msgstr ""
+msgstr "Rekisteröi ryhmät automaattisesti"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
@@ -1277,7 +1390,7 @@ msgstr "Puutarhanhoidon perusteet"
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "Be notified when a new content is added."
-msgstr ""
+msgstr "Vastaanota ilmoitus, kun uutta sisältöä lisätään."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_comment
@@ -1362,7 +1475,7 @@ msgstr "Sertifioitu tietämys"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Change video privacy settings"
-msgstr ""
+msgstr "Muuta videon yksityisyysasetuksia"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_id
@@ -1395,16 +1508,18 @@ msgstr "Kanavan tyyppi"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completed
 msgid "Channel validated, even if slides / lessons are added once done."
 msgstr ""
+"Kanava on vahvistettu, vaikka dioja / oppitunteja lisätään valmistumisen "
+"jälkeen."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag_group
 msgid "Channel/Course Groups"
-msgstr ""
+msgstr "Kanava/kurssiryhmät"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
 msgid "Channel/Course Tag"
-msgstr ""
+msgstr "Kanava/kurssitunnisteet"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__channel_ids
@@ -1415,14 +1530,14 @@ msgstr "Kanavat"
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_cheatsheet
 msgid "CheatSheet"
-msgstr ""
+msgstr "Lunttilappu"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check Profile"
-msgstr ""
+msgstr "Tarkista profiili"
 
 #. module: website_slides
 #. openerp-web
@@ -1444,7 +1559,7 @@ msgstr "Tarkista vastauksesi"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Choose a <b>File</b> on your computer."
-msgstr ""
+msgstr "Valitse <b>tiedosto</b> tietokoneeltasi."
 
 #. module: website_slides
 #. openerp-web
@@ -1458,7 +1573,7 @@ msgstr "Valitse PDF tai kuva"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Choose a layout"
-msgstr ""
+msgstr "Valitse asettelu"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
@@ -1477,11 +1592,13 @@ msgid ""
 "Click here to send a verification email allowing you to participate at the "
 "eLearning."
 msgstr ""
+"Klikkaa tätä lähettääksesi vahvistusviestin, jonka avulla voit osallistua "
+"verkko-oppimiseen."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Click here to start the course"
-msgstr ""
+msgstr "Klikkaa tästä aloittaaksesi kurssin"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1494,21 +1611,21 @@ msgstr "Klikkaa \"Uusi\" oikeassa yläkulmassa luodaksesi ensimmäisen kurssisi.
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Click on <b>Save</b> to apply changes."
-msgstr ""
+msgstr "Klikkaa <b>Tallenna</b> vahvistaaksesi muutokset."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Click on the <b>Create</b> button to create your first course."
-msgstr ""
+msgstr "Klikkaa <b>Luo</b> nappia luodaksesi ensimmäisen kurssisi."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Click on your <b>Course</b> to go back to the table of content."
-msgstr ""
+msgstr "Klikkaa <b>Kurssiasi</b> palataksesi takaisin sisällysluetteloon."
 
 #. module: website_slides
 #. openerp-web
@@ -1532,7 +1649,7 @@ msgstr "Väri-indeksi"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
 msgid "Color to apply to this tag (including in website)."
-msgstr ""
+msgstr "Väri tälle tunnisteelle (myös verkkosivustolla)."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_colorful
@@ -1559,6 +1676,10 @@ msgid ""
 "answering                               questions. In this course, you'll "
 "study those topics with activities about mathematics, science and logic."
 msgstr ""
+"Tietojenkäsittelytieteilijän yleisiä tehtäviä ovat oikeiden kysymysten "
+"esittäminen ja kysymyksiin vastaaminen. Tällä kurssilla opiskelet näitä "
+"aiheita matematiikkaa, luonnontiedettä ja logiikkaa koskevilla "
+"aktiviteeteilla."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1567,6 +1688,10 @@ msgid ""
 "answering questions. In this course, you'll study those topics with "
 "activities about mathematics, science and logic."
 msgstr ""
+"Tietojenkäsittelytieteilijän yleisiä tehtäviä ovat oikeiden kysymysten "
+"esittäminen ja kysymyksiin vastaaminen. Tällä kurssilla opiskelet näitä "
+"aiheita matematiikkaa, luonnontiedettä ja logiikkaa koskevilla "
+"aktiviteeteilla."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1635,12 +1760,13 @@ msgstr "Luo sähköposti"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Computer Science for kids"
-msgstr ""
+msgstr "Tietojenkäsittely lapsille"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
 msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
 msgstr ""
+"Ilmoittautumisen edellytys: kaikki, kutsusta, maksusta (myynti -silta)"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -1661,11 +1787,14 @@ msgid ""
 "available here. The tag \"<b>New</b>\" indicates that this lesson was "
 "created less than 7 days ago."
 msgstr ""
+"Onnittelut! Ensimmäinen oppituntisi on saatavilla. Katsotaanpa vaihtoehtoja "
+"täällä. Tunniste \"<b>Uusi</b>\" osoittaa, että tämä oppitunti luotiin alle "
+"7 päivää sitten."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
-msgstr ""
+msgstr "Onnittelut, olet saavuttanut viimeisen tason!"
 
 #. module: website_slides
 #. openerp-web
@@ -1675,6 +1804,8 @@ msgid ""
 "Congratulations, you've created your first course.<br/>Click on the title of"
 " this content to see it in fullscreen mode."
 msgstr ""
+"Onnittelut, olet luonut ensimmäisen kurssisi.<br/>Klikkaa tämän sisällön "
+"otsikkoa nähdäksesi se koko näytön tilassa."
 
 #. module: website_slides
 #. openerp-web
@@ -1684,6 +1815,8 @@ msgid ""
 "Congratulations, your course has been created, but there isn't any content "
 "yet. First, let's add a <b>Section</b> to give your course a structure."
 msgstr ""
+"Onnittelut, kurssisi on luotu, mutta siinä ei vielä ole sisältöä. Lisäämme "
+"ensin <b>osion</b> antamaan kurssillesi rakenteen."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -1702,19 +1835,19 @@ msgstr "Kontakti"
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_6_furn3
 #, python-format
 msgid "Contact Responsible"
-msgstr ""
+msgstr "Vastuuhenkilö"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Contact all the members of a course via mass mailing"
-msgstr ""
+msgstr "Ota yhteyttä kaikkiin kurssin jäseniin massasähköpostitse"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Contact the responsible to enroll."
-msgstr ""
+msgstr "Ota yhteyttä vastuuhenkilöön ilmoittautuaksesi."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -1743,7 +1876,7 @@ msgstr "Sisällön esikatselu"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_question
 msgid "Content Quiz Question"
-msgstr ""
+msgstr "Sisällön kyselyn kysymys"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
@@ -1786,27 +1919,27 @@ msgstr "Kopioi linkki"
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_1
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_1
 msgid "Correct !"
-msgstr ""
+msgstr "Oikein !"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_0
 msgid "Correct ! A shovel is the perfect tool to dig a hole."
-msgstr ""
+msgstr "Oikein ! Lapio on täydellinen työkalu kuopan kaivamiseen."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_0
 msgid "Correct ! A strawberry is a fruit because it's the product of a tree."
-msgstr ""
+msgstr "Oikein ! Mansikka on hedelmä, koska se kasvaa puussa."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_0
 msgid "Correct ! Congratulations you have time to loose"
-msgstr ""
+msgstr "Oikein ! Onnittelut, sinulla on aikaa hukattavaksi"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_0
 msgid "Correct ! You did it !"
-msgstr ""
+msgstr "Oikein ! Teit sen !"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -1815,6 +1948,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
+"Tietoja ei voitu hakea URL -osoitteesta. Asiakirja tai käyttöoikeus ei ole käytettävissä:\n"
+"%s"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -1836,7 +1971,7 @@ msgstr "Kurssimäärä"
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_config_course_groups
 msgid "Course Groups"
-msgstr ""
+msgstr "Kurssin ryhmät"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
@@ -1875,7 +2010,7 @@ msgstr "Kurssi suoritettu"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Course not published yet"
-msgstr ""
+msgstr "Kurssia ei ole vielä julkaistu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
@@ -1934,12 +2069,12 @@ msgstr "Luo uusi %s '%s'"
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:0
 #, python-format
 msgid "Create new Tag '%s'"
-msgstr ""
+msgstr "Luo uusi tunniste '%s'"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "Create new content for your eLearning"
-msgstr ""
+msgstr "Luo uutta sisältöä verkko-oppimiseen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -2005,7 +2140,7 @@ msgstr "Poista"
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "Delete Question"
-msgstr ""
+msgstr "Poista kysymys"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__promote_strategy
@@ -2017,6 +2152,12 @@ msgid ""
 " * Specific : You choose the slide to appear.\n"
 " * None : No slides will be shown.\n"
 msgstr ""
+"Nostoasetuksesta riippuen dia ilmestyy kurssin sivun yläosaan:\n"
+" * Viimeksi julkaistu : dia, joka luotiin viimeisenä.\n"
+" * Äänestetyin : dia, jolla on eniten ääniä.\n"
+" * Katsotuin : dia, jota on katsottu eniten.\n"
+" * Tietty : Valitset näytettävän dian.\n"
+" * Ei mitään : Dioja ei nosteta.\n"
 
 #. module: website_slides
 #. openerp-web
@@ -2032,7 +2173,7 @@ msgstr "Kuvaus"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_html
 msgid "Detailed Description"
-msgstr ""
+msgstr "Yksityiskohtainen kuvaus"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_1_4_question_1
@@ -2137,7 +2278,7 @@ msgstr "Haluatko vastata oikein ?"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Do you want to request access to this course ?"
-msgstr ""
+msgstr "Haluatko pyytää pääsyä tälle kurssille?"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__document
@@ -2165,7 +2306,7 @@ msgstr "Dokumentaatio"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Documentation Layout"
-msgstr ""
+msgstr "Dokumentaation rakenne"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_document
@@ -2288,7 +2429,7 @@ msgstr "Energiatehokkuusfaktoja"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Enjoy this exclusive content !"
-msgstr ""
+msgstr "Nauti tästä ainutlaatuisesta sisällöstä!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
@@ -2305,28 +2446,28 @@ msgstr "Ilmoittautumiskäytäntö"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Enter at least two possible <b>Answers</b>."
-msgstr ""
+msgstr "Anna vähintään kaksi mahdollista <b>vastausta</b>."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Enter your <b>Question</b>. Be clear and concise."
-msgstr ""
+msgstr "Kirjoita <b>kysymyksesi</b>. Ole selkeä ja ytimekäs."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Enter your answer"
-msgstr ""
+msgstr "Anna vastauksesi"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Enter your question"
-msgstr ""
+msgstr "Anna kysymyksesi"
 
 #. module: website_slides
 #. openerp-web
@@ -2339,7 +2480,7 @@ msgstr "Arvioitu dian valmistumisaika"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Evaluate and certify your students."
-msgstr ""
+msgstr "Arvioi ja sertifioi opiskelijasi."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -2415,20 +2556,23 @@ msgid ""
 "First, create your lesson, then edit it with the website builder. You'll be "
 "able to drop building blocks on your page and edit them."
 msgstr ""
+"Luo ensin oppitunti ja muokkaa sitä sitten verkkosivuston "
+"rakennustyökalulla. Voit pudottaa rakennuspalikoita sivullesi ja muokata "
+"niitä."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "First, let's add a <b>Presentation</b>. It can be a .pdf or an image."
-msgstr ""
+msgstr "Lisäämme ensin <b>esityksen</b>. Se voi olla .pdf tai kuva."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload your videos on YouTube and mark them as"
-msgstr ""
+msgstr "Lataa ensin videosi YouTubeen ja merkitse ne"
 
 #. module: website_slides
 #: code:addons/website_slides/models/res_partner.py:0
@@ -2473,7 +2617,7 @@ msgstr "Neljännen yrityksen jälkeiset yritykset"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_2
 msgid "From a piece of wood to a fully functional furniture, step by step."
-msgstr ""
+msgstr "Vaihe vaiheelta puukappaleesta täysin toimivaan huonekaluun."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -2508,7 +2652,7 @@ msgstr "Puutarhanhoito: Tietotaito"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Generate revenues thanks to your courses"
-msgstr ""
+msgstr "Ansaitse tuloja kurssiesi ansiosta"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_certification
@@ -2528,14 +2672,14 @@ msgstr "Aloita"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Give your course a helpful <b>Description</b>."
-msgstr ""
+msgstr "Anna kurssillesi hyödyllinen <b>kuvaus</b>."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Give your course an engaging <b>Title</b>."
-msgstr ""
+msgstr "Anna kurssillesi kiinnostava <b>otsikko</b>."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -2546,7 +2690,7 @@ msgstr "Google Doc-avain"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API avain"
 
 #. module: website_slides
 #. openerp-web
@@ -2554,12 +2698,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Grant Access"
-msgstr ""
+msgstr "Anna pääsy"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
 msgid "Graph of Contents"
-msgstr ""
+msgstr "Sisällysluettelo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_id
@@ -2580,12 +2724,12 @@ msgstr "Ryhmän nimi"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid "Group of users allowed to publish contents on a documentation course."
-msgstr ""
+msgstr "Käyttäjäryhmä saa julkaista sisältöä dokumentaatiokurssilla."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
 msgid "Group sequence"
-msgstr ""
+msgstr "Ryhmäjärjestys"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
@@ -2600,13 +2744,14 @@ msgstr "HTTP-reititys"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
 msgid "Hand on !"
-msgstr ""
+msgstr "Tismalleen !"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_3
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_6
 msgid "Here is How to get the Sweetest Strawberries you ever tasted!"
 msgstr ""
+"Tässä on kuinka saada makeimmat mansikat, joita olet koskaan maistanut!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -2621,59 +2766,60 @@ msgstr "Puutarhanhoito kotona"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
 msgid "How to Grow and Harvest The Best Strawberries | Basics"
-msgstr ""
+msgstr "Parhaiden mansikoiden kasvatus ja sato | Perusasiat"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_6
 msgid ""
 "How to Grow and Harvest The Best Strawberries | Gardening Tips and Tricks"
-msgstr ""
+msgstr "Parhaiden mansikoiden kasvatus ja sato | Puutarhanhoidon vinkkejä"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to create a Lesson as a Web Page?"
-msgstr ""
+msgstr "Kuinka luoda oppitunti verkkosivuna?"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How to create your own piece of furniture"
-msgstr ""
+msgstr "Kuinka luoda oma huonekalu"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_1
 msgid "How to find quality wood"
-msgstr ""
+msgstr "Kuinka löytää laadukasta puuta"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted tree"
-msgstr ""
+msgstr "Kuinka istuttaa ruukkukasvi"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to upload your PowerPoint Presentations or Word Documents?"
-msgstr ""
+msgstr "Kuinka ladata PowerPoint -esitykset tai Word -asiakirjat?"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to upload your videos ?"
-msgstr ""
+msgstr "Kuinka ladata videosi?"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_2
 msgid "How to wall decorating by tree planting in hanging plastic bottles."
 msgstr ""
+"Kuinka koristella seinät roikkuviin muovipulloihin istutetuilla puilla."
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_howto
 msgid "HowTo"
-msgstr ""
+msgstr "Kuinka"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
@@ -2717,6 +2863,9 @@ msgid ""
 " * like content and post comments on documentation course;\n"
 " * post comment and review on training course;"
 msgstr ""
+"Jos valittuna, jäsenet voivat joko:\n"
+" * tykätä sisällöstä ja lähettää kommentteja dokumentaatiokurssille;\n"
+" * tai kommentoida ja arvostella koulutusta;"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
@@ -2740,7 +2889,7 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 msgid ""
 "If you are looking for technical specifications, have a look at this "
 "documentation."
-msgstr ""
+msgstr "Jos etsit teknisiä tietoja, tutustu tähän dokumentaatioon."
 
 #. module: website_slides
 #. openerp-web
@@ -2750,6 +2899,8 @@ msgid ""
 "If you want to be sure that attendees have understood and memorized the "
 "content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
 msgstr ""
+"Jos haluat olla varma, että osallistujat ovat ymmärtäneet ja sisäistäneet "
+"sisällön, voit lisätä oppituntiin kyselyn. Klikkaa <b>Lisää kysely</b>."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1920
@@ -2786,42 +2937,42 @@ msgstr "Kuva 512"
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_0
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_0
 msgid "Incorrect !"
-msgstr ""
+msgstr "Väärin !"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_1
 msgid "Incorrect ! A strawberry is not a vegetable."
-msgstr ""
+msgstr "Väärin ! Mansikka ei ole vihannes."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_2
 msgid "Incorrect ! A table is a piece of furniture."
-msgstr ""
+msgstr "Väärin ! Pöytä on huonekalu."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_1
 msgid "Incorrect ! Good luck digging a hole with a spoon..."
-msgstr ""
+msgstr "Väärin ! Onnea lusikalla kuopan kaivamiseen ..."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_2
 msgid "Incorrect ! Seriously ?"
-msgstr ""
+msgstr "Väärin ! Oletko tosissasi ?"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_1
 msgid "Incorrect ! You better think twice..."
-msgstr ""
+msgstr "Väärin ! Kannattaa miettiä kahdesti..."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_1
 msgid "Incorrect ! You really should read it."
-msgstr ""
+msgstr "Väärin ! Sinun kannattaisi todella lukea se."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_2
 msgid "Incorrect ! of course not ..."
-msgstr ""
+msgstr "Väärin ! Ei tietenkään ..."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__infographic
@@ -2850,22 +3001,22 @@ msgstr "Asennetaan \"%s\"."
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_0
 msgid "Interesting Facts"
-msgstr ""
+msgstr "Mielenkiintoisia faktoja"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting Tree Facts"
-msgstr ""
+msgstr "Mielenkiintoisia faktoja puista"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_1
 msgid "Interesting information about home gardening. Keep it close !"
-msgstr ""
+msgstr "Mielenkiintoista tietoa kotipuutarhanhoidosta. Pidä se tallessa!"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
 msgid "Intermediate"
-msgstr ""
+msgstr "Keskitaso"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -2874,6 +3025,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"Sisäinen palvelinvirhe, yritä myöhemmin uudestaan tai ota yhteyttä järjestelmän hallinnoijjaan.\n"
+"Tässä on virheilmoitus: %s"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_4_0
@@ -2885,7 +3038,7 @@ msgstr "Esittely"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr ""
+msgstr "Väärä tiedostotyyppi. Valitse pdf- tai kuvatiedosto"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -2896,7 +3049,7 @@ msgstr "Kutsu"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed
 msgid "Is Completed"
-msgstr ""
+msgstr "On suoritettu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -2907,12 +3060,12 @@ msgstr "On seuraaja"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "On jäsen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_new_slide
 msgid "Is New Slide"
-msgstr ""
+msgstr "On uusi dia"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
@@ -2924,12 +3077,12 @@ msgstr "On julkaistu"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
 msgid "Is a category"
-msgstr ""
+msgstr "On kategoria"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__is_correct
 msgid "Is correct answer"
-msgstr ""
+msgstr "On oikea vastaus"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_3
@@ -2937,13 +3090,15 @@ msgid ""
 "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
 "Landscaping. Narrated by Leif Knecht, owner."
 msgstr ""
+"Jim ja Todd istuttavat ruukkukuusen Knecht's Nurseries and Landscaping "
+"-asiakkaalle. Kertojana Leif Knecht, omistaja."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "Join & Submit"
-msgstr ""
+msgstr "Liity ja lähetä"
 
 #. module: website_slides
 #. openerp-web
@@ -2952,7 +3107,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 #, python-format
 msgid "Join Course"
-msgstr ""
+msgstr "Liity kurssille"
 
 #. module: website_slides
 #. openerp-web
@@ -2960,7 +3115,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Join the Course"
-msgstr ""
+msgstr "Liity kurssille"
 
 #. module: website_slides
 #. openerp-web
@@ -2968,21 +3123,22 @@ msgstr ""
 #, python-format
 msgid "Join the course to take the quiz and verify your answers!"
 msgstr ""
+"Liity kurssille osallistuaksesi kyselyyn ja varmistaaksesi vastauksesi."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_2
 msgid "Just some basics Energy Efficiency Facts."
-msgstr ""
+msgstr "Vain muutamia perusasioita energiatehokkuudesta."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_1
 msgid "Just some basics Interesting Tree Facts."
-msgstr ""
+msgstr "Vain muutamia perusasioita Mielenkiintoisista puufaktoista."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_0
 msgid "Just some basics Tree Infographic."
-msgstr ""
+msgstr "Vain muutamia perusasioita puuinfograafeista."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2992,24 +3148,26 @@ msgstr "Karma"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr ""
+msgstr "Pisteet, jotka vaaditaan lisätäkseen kommentti tämän kurssin diaan. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr ""
+msgstr "Pisteet, jotka vaaditaan lisätäkseen arvio tästä kurssista. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
 msgstr ""
+"Pisteet, jotka vaaditaan peukuttaakseen/alapeukuttaakseen dia tällä "
+"kurssilla. "
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr ""
+msgstr "Tunne itsesi"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_3_furn0
@@ -3018,6 +3176,8 @@ msgid ""
 "Knowing which kind of wood to use depending on your application is important. In this course you\n"
 "will learn the basics of wood characteristics."
 msgstr ""
+"On tärkeää tietää, millaista puuta käytetään sovelluksesta riippuen. Tällä kurssilla sinä\n"
+"opit puun ominaisuuksien perusteet."
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_3
@@ -3025,6 +3185,8 @@ msgid ""
 "Knowing wood characteristics is a requirement in order to know which kind of"
 " wood to use in a given situation."
 msgstr ""
+"Puun ominaisuuksien tunteminen on vaatimus, jotta voidaan tietää, millaista "
+"puuta käytetään tietyssä tilanteessa."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge____last_update
@@ -3103,12 +3265,12 @@ msgstr "Viimeisin julkaistu"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
-msgstr ""
+msgstr "Viimeisimmät saavutukset"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "Leaderboard"
-msgstr ""
+msgstr "Tulostaulu"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_1_gard1
@@ -3117,6 +3279,8 @@ msgid ""
 "Learn how to take care of your favorite trees. Learn when to plant, how to "
 "manage potted trees, ..."
 msgstr ""
+"Opi pitämään huolta suosikkipuistasi. Opi milloin istuttaa, kuinka hallita "
+"ruukkupuita, ..."
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_0_gard_0
@@ -3128,6 +3292,7 @@ msgstr "Opi puutarhanhoidon perusteet !"
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_1
 msgid "Learn to identify quality wood in order to create solid furnitures."
 msgstr ""
+"Opi tunnistamaan laadukas puu, jotta voit luoda laadukkaita huonekaluja."
 
 #. module: website_slides
 #. openerp-web
@@ -3145,12 +3310,12 @@ msgstr "Oppitunti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Lesson Nav"
-msgstr ""
+msgstr "Oppitunnin navigaatio"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
 msgid "Lesson voted"
-msgstr ""
+msgstr "Oppitunti äänestetty"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -3163,7 +3328,7 @@ msgstr "Oppitunnit"
 #: code:addons/website_slides/static/src/js/slides_course_quiz_finish.js:0
 #, python-format
 msgid "Level up!"
-msgstr ""
+msgstr "Nousit tason!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
@@ -3190,7 +3355,7 @@ msgstr "Pääliite"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
-msgstr ""
+msgstr "Puiden pääluokat"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -3202,7 +3367,7 @@ msgstr "Päällikkö"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Mark the correct answer by checking the <b>correct</b> mark."
-msgstr ""
+msgstr "Merkitse oikea vastaus valitsemalla <b>oikein</b> merkin."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -3218,7 +3383,7 @@ msgstr "Jäsenet"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_ids
 msgid "Members Information"
-msgstr ""
+msgstr "Jäsenten tiedot"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__members
@@ -3228,19 +3393,19 @@ msgstr "Vain jäsenet"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Members Views"
-msgstr ""
+msgstr "Jäsenten katselukerrat"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_group_ids
 msgid ""
 "Members of those groups are automatically added as members of the channel."
-msgstr ""
+msgstr "Näiden ryhmien jäsenet lisätään automaattisesti kanavan jäseniksi."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
-msgstr ""
+msgstr "Valikon syöte"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -3251,7 +3416,7 @@ msgstr "Ongelma viestin toimituksessa"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_msg
 msgid "Message explaining the enroll process"
-msgstr ""
+msgstr "Ilmoittautumisprosessia selittävä viesti"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
@@ -3262,12 +3427,12 @@ msgstr "Viestit"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_1
 msgid "Methods"
-msgstr ""
+msgstr "Menetelmät"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_2
 msgid "Mighty Carrots"
-msgstr ""
+msgstr "Mahtavat porkkanat"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_1
@@ -3275,6 +3440,8 @@ msgid ""
 "Mighty forest just don't appear in a few weeks. Learn how time made our "
 "forests mighty and mysterious."
 msgstr ""
+"Mahtavat metsät ei ilmesty muutamassa viikossa. Opi kuinka aika teki "
+"metsistämme mahtavia ja salaperäisiä."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
@@ -3292,12 +3459,12 @@ msgstr "Minuutit"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
-msgstr ""
+msgstr "\"Tunnisteryhmä\" puuttuu uuden \"tunnisteen\" luomiseksi."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "Mobiilin ala-navigaatio"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -3321,7 +3488,7 @@ msgstr "Äänestetyin"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
-msgstr ""
+msgstr "Suosituimmat kurssit"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3356,18 +3523,19 @@ msgstr "Uusi"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
+"Uusi ${object.slide_type} julkaistu kanavalla ${object.channel_id.name}"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "New Certification"
-msgstr ""
+msgstr "Uusi sertifikaatti"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "New Content Email"
-msgstr ""
+msgstr "Uuden sisällön sähköposti"
 
 #. module: website_slides
 #. openerp-web
@@ -3384,7 +3552,7 @@ msgstr "Uusimmat"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr ""
+msgstr "Uusimmat kurssit"
 
 #. module: website_slides
 #. openerp-web
@@ -3411,7 +3579,7 @@ msgstr "Seuraavan toimenpiteen tyyppi"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Next rank:"
-msgstr ""
+msgstr "Seuraava taso:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -3434,42 +3602,42 @@ msgstr "Ei"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "No Course created yet."
-msgstr ""
+msgstr "Kursseja ei ole vielä luotu."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No completed courses yet!"
-msgstr ""
+msgstr "Ei vielä suoritettuja kursseja!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "No content was found using your search"
-msgstr ""
+msgstr "Hakusi avulla ei löytynyt sisältöä"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search"
-msgstr ""
+msgstr "Hakua vastaavaa kurssia ei löytynyt"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search."
-msgstr ""
+msgstr "Hakua vastaavaa kurssia ei löytynyt."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr ""
+msgstr "Ei vielä tietoja!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "No followed courses yet!"
-msgstr ""
+msgstr "Ei vielä seurattuja kursseja!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "No leaderboard currently :("
-msgstr ""
+msgstr "Ei tulostaulukkoa tällä hetkellä :("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3485,13 +3653,13 @@ msgstr "Ei mitään"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Not enough karma to comment"
-msgstr ""
+msgstr "Ei tarpeeksi pisteitä kommentoidaksesi"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Not enough karma to review"
-msgstr ""
+msgstr "Ei tarpeeksi pisteitä arvioidaksesi"
 
 #. module: website_slides
 #. openerp-web
@@ -3525,7 +3693,7 @@ msgstr "Esitysten määrä"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_quiz
 msgid "Number of Quizs"
-msgstr ""
+msgstr "Kyselyiden määrä"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_video
@@ -3535,12 +3703,12 @@ msgstr "Videoiden määrä"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_webpage
 msgid "Number of Webpages"
-msgstr ""
+msgstr "Verkkosivujen määrä"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__comments_count
 msgid "Number of comments"
-msgstr ""
+msgstr "Kommenttien määrä"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
@@ -3569,7 +3737,7 @@ msgstr "Lukemattomia viestejä"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__questions_count
 msgid "Numbers of Questions"
-msgstr ""
+msgstr "Kysymysten määrä"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -3590,21 +3758,21 @@ msgstr "Toimihenkilö"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
 msgid "On Invitation"
-msgstr ""
+msgstr "Kutsusta"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Once you're done, don't forget to <b>Publish</b> your course."
-msgstr ""
+msgstr "Kun olet valmis, älä unohda <b>julkaista</b> kurssiasi."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Only JPG, PNG, PDF, files types are supported"
-msgstr ""
+msgstr "Vain JPG, PNG, PDF, tiedostotyypit ovat tuettuja"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3620,7 +3788,7 @@ msgstr "Kumppani"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
 msgid "Partner Has New Content"
-msgstr ""
+msgstr "Kumppanilla on uutta sisältöä"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3629,6 +3797,8 @@ msgid ""
 "People already took this quiz. To keep course progression it should not be "
 "deleted."
 msgstr ""
+"Kyselyssä on jo vastauksia. Kurssin etenemisen säilyttämiseksi sitä ei tule "
+"poistaa. "
 
 #. module: website_slides
 #. openerp-web
@@ -3646,6 +3816,8 @@ msgstr "Ole hyvä"
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
 msgstr ""
+"<a href=\"/web/login?redirect=%s\">Kirjaudu</a> sisään liittyäksesi tähän "
+"kurssiin"
 
 #. module: website_slides
 #. openerp-web
@@ -3653,6 +3825,8 @@ msgstr ""
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
 msgstr ""
+"<a href=\"/web/login?redirect=%s\">Kirjaudu</a> sisään äänestääksesi tätä "
+"oppituntia"
 
 #. module: website_slides
 #. openerp-web
@@ -3662,6 +3836,7 @@ msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to join "
 "this course"
 msgstr ""
+"<a href=\"/web/signup?redirect=%s\">Luo tili</a> liittyäksesi tähän kurssiin"
 
 #. module: website_slides
 #. openerp-web
@@ -3671,33 +3846,35 @@ msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
 "this lesson"
 msgstr ""
+"<a href=\"/web/signup?redirect=%s\">Luo tili</a> äänestääksesi tätä "
+"oppituntia"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr ""
+msgstr "Anna voimassa oleva Youtube- tai Google -dokumentin URL -osoite"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr ""
+msgstr "Anna voimassa oleva Youtube- tai Google -dokumentin URL -osoite"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
 #, python-format
 msgid "Please fill in the question"
-msgstr ""
+msgstr "Täytä kysymys"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
-msgstr ""
+msgstr "Täytä tämä kenttä"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -3754,12 +3931,12 @@ msgstr "Edistyminen"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Promoted Content"
-msgstr ""
+msgstr "Nostettu sisältö"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Promoted Slide"
-msgstr ""
+msgstr "Nostettu dia"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
@@ -3771,7 +3948,7 @@ msgstr "Julkinen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Public Views"
-msgstr "Julkiset katselut"
+msgstr "Julkiset katselukerrat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
@@ -3797,6 +3974,8 @@ msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
 msgstr ""
+"Julkaiseminen on rajoitettu vain koulutuksen vastuuhenkilölle tai "
+"dokumentaatiokurssin julkaisijaryhmän jäsenille"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
@@ -3807,13 +3986,14 @@ msgstr "Kysymys"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer"
-msgstr ""
+msgstr "Kysymyksellä \"%s\" täytyy olla 1 oikea vastaus"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
+"Kysymyksellä \"%s\" täytyy olla 1 oikea vastaus ja ainakin 1 väärä vastaus"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -3843,12 +4023,12 @@ msgstr "Kysely"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Quiz Demo Data"
-msgstr ""
+msgstr "Kyselyn demo data"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
 msgid "Quiz attempts count"
-msgstr ""
+msgstr "Kyselyn yritysten määrä"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_question_action_report
@@ -3870,38 +4050,38 @@ msgstr "Arvostelu"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_graph_slide_channel
 msgid "Rating Average"
-msgstr ""
+msgstr "Keskimääräinen arvio"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_stars
 msgid "Rating Average (Stars)"
-msgstr ""
+msgstr "Keskimääräinen arvio (Tähdet)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Arvion viimeisin palaute"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Arvion viimeisin kuva"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Arvion viimeisin arvo"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Arvioiden määrä"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Rating of %s"
-msgstr ""
+msgstr "Arvio %s"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_karma
@@ -3912,12 +4092,12 @@ msgstr "Saavuta 2000 XP"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Reach new heights"
-msgstr ""
+msgstr "Saavuta uusia korkeuksia"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Syy arvostelulle"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__partner_ids
@@ -3930,13 +4110,13 @@ msgstr "Vastaanottajat"
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Refuse Access"
-msgstr ""
+msgstr "Estä pääsy"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_register
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
 msgid "Register to the platform"
-msgstr ""
+msgstr "Rekisteröidy alustalle"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3953,14 +4133,14 @@ msgstr "Poista"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Remove the answer comment"
-msgstr ""
+msgstr "Poista vastauskommentti"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Remove this answer"
-msgstr ""
+msgstr "Poista tämä vastaus"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report
@@ -3972,14 +4152,14 @@ msgstr "Raportointi"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request Access."
-msgstr ""
+msgstr "Pyydä pääsy."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Request sent !"
-msgstr ""
+msgstr "Pyyntö lähetetty !"
 
 #. module: website_slides
 #. openerp-web
@@ -4014,7 +4194,7 @@ msgstr "Vastuuhenkilö"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Responsible already contacted."
-msgstr ""
+msgstr "Vastuuhenkilöön on jo otettu yhteyttä. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
@@ -4032,7 +4212,7 @@ msgstr "Yritä uudelleen"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.private_profile
 msgid "Return to the course."
-msgstr ""
+msgstr "Palaa kurssille."
 
 #. module: website_slides
 #. openerp-web
@@ -4044,7 +4224,7 @@ msgstr "Tarkasta"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Review Course"
-msgstr ""
+msgstr "Arvostele kurssi"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_reviews
@@ -4058,22 +4238,22 @@ msgstr "Arvostelut"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
 msgid "Reward: every attempt after the third try"
-msgstr ""
+msgstr "Palkinto: jokainen yritys kolmannen yrityksen jälkeen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
 msgid "Reward: first attempt"
-msgstr ""
+msgstr "Palkinto: ensimmäinen yritys"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
 msgid "Reward: second attempt"
-msgstr ""
+msgstr "Palkinto: toinen yritys"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
 msgid "Reward: third attempt"
-msgstr ""
+msgstr "Palkinto: kolmas yritys"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4116,7 +4296,7 @@ msgstr "Tallenna ja julkaise"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Save your presentations or documents as PDF files and upload them."
-msgstr ""
+msgstr "Tallenna esitykset tai asiakirjat PDF -tiedostoina ja lähetä ne."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -4129,24 +4309,24 @@ msgstr "Haku"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Search Contents"
-msgstr ""
+msgstr "Hae sisältöä"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Search courses"
-msgstr ""
+msgstr "Hae kursseja"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Search in content"
-msgstr ""
+msgstr "Hae sisällöstä"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Second attempt"
-msgstr ""
+msgstr "Toinen yritys"
 
 #. module: website_slides
 #. openerp-web
@@ -4168,7 +4348,7 @@ msgstr "Kappaleen alaotsikko"
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Section name"
-msgstr ""
+msgstr "Osion nimi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
@@ -4180,7 +4360,7 @@ msgstr "Turvatunnus"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Select <b>Course</b> to create it and manage it."
-msgstr ""
+msgstr "Valitse <b>kurssi</b> luodaksesi ja hallinnoidaksesi sitä."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -4192,12 +4372,12 @@ msgstr "Valitse aloitussivu"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Select the correct answer below :"
-msgstr ""
+msgstr "Valitse oikea vastaus alta :"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
 msgid "Sell on eCommerce"
-msgstr ""
+msgstr "Myy verkkokaupassa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -4248,7 +4428,7 @@ msgstr "Jaa"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Share Channel"
-msgstr ""
+msgstr "Jaa kanava"
 
 #. module: website_slides
 #. openerp-web
@@ -4261,7 +4441,7 @@ msgstr "Jaa linkki"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Share Template"
-msgstr ""
+msgstr "Jaa malli"
 
 #. module: website_slides
 #. openerp-web
@@ -4269,7 +4449,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Share by mail"
-msgstr ""
+msgstr "Jaa sähköpostitse"
 
 #. module: website_slides
 #. openerp-web
@@ -4310,19 +4490,19 @@ msgstr "Jaa Twitterissä"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_short
 msgid "Short Description"
-msgstr ""
+msgstr "Lyhyt kuvaus"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_4
 msgid "Show your newly mastered knowledge !"
-msgstr ""
+msgstr "Näytä äskettäin oppimasi tiedot!"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Sign Up !"
-msgstr ""
+msgstr "Rekisteröidy !"
 
 #. module: website_slides
 #. openerp-web
@@ -4336,7 +4516,7 @@ msgstr "Kirjaudu sisään"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Sign in and join the course to verify your answers!"
-msgstr ""
+msgstr "Kirjaudu sisään ja liity kurssille vahvistaaksesi vastauksesi!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4349,6 +4529,7 @@ msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
 msgstr ""
+"Osaa ja vaikuta! Liiketoimintasi alkaa tästä.<br/>Aika aloittaa kurssi."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
@@ -4360,12 +4541,12 @@ msgstr "Dia"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "Dia / Kumppani m2m kenttä"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
-msgstr ""
+msgstr "Dian kysymyksen vastaus"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -4375,12 +4556,12 @@ msgstr "Esityksen tunniste"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
 msgid "Slide User Data"
-msgstr ""
+msgstr "Dian käyttäjätiedot"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_id
 msgid "Slide channel"
-msgstr ""
+msgstr "Dian kanava"
 
 #. module: website_slides
 #. openerp-web
@@ -4397,6 +4578,8 @@ msgid ""
 "Slide with questions must be marked as done when submitting all good answers"
 " "
 msgstr ""
+"Dia, jossa on kysymyksiä, on merkittävä valmiiksi, kun lähetät kaikki hyvät "
+"vastaukset"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide
@@ -4408,13 +4591,13 @@ msgstr "Diat"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
 msgid "Slides and categories"
-msgstr ""
+msgstr "Diat ja kategoriat"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_6_furn3
 #: model:slide.channel,description_short:website_slides.slide_channel_demo_6_furn3
 msgid "So much amazing certification."
-msgstr ""
+msgstr "Niin paljon mahtavia sertifikaatteja."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -4424,28 +4607,28 @@ msgstr "Järjestä"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Specific"
-msgstr ""
+msgstr "Tietty"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Start Course"
-msgstr ""
+msgstr "Aloita kurssi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Start Course Channel"
-msgstr ""
+msgstr "Aloita kurssin kanava"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 msgid "Start with the customer – find out what they want and give it to them."
-msgstr ""
+msgstr "Aloita asiakkaasta – selvitä, mitä hän haluaa ja anna se hänelle."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Start your online course today!"
-msgstr ""
+msgstr "Aloita verkkokurssi tänään!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4485,22 +4668,22 @@ msgstr "Tilaa"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information"
-msgstr ""
+msgstr "Tilaajan tiedot"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information for the current logged in user"
-msgstr ""
+msgstr "Nykyisen kirjautuneen käyttäjän tilaajatiedot"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
 msgid "Subscribers"
-msgstr ""
+msgstr "Tilaajat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_partner_ids
 msgid "Subscribers information"
-msgstr ""
+msgstr "Tilaajien tiedot"
 
 #. module: website_slides
 #. openerp-web
@@ -4512,7 +4695,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Succeed and gain karma"
-msgstr ""
+msgstr "Menesty ja hanki pisteitä"
 
 #. module: website_slides
 #. openerp-web
@@ -4528,14 +4711,14 @@ msgstr "Tunniste"
 #: code:addons/website_slides/static/src/xml/website_slides_channel_tag.xml:0
 #, python-format
 msgid "Tag Group"
-msgstr ""
+msgstr "Tunnisteryhmä"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #, python-format
 msgid "Tag Group (required for new tags)"
-msgstr ""
+msgstr "Tunnisteryhmä (vaaditaan uusille tunnisteille)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -4566,30 +4749,30 @@ msgstr "Tunnisteet..."
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
 msgid "Taking care of Trees"
-msgstr ""
+msgstr "Puiden hoitaminen"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_2
 msgid "Test Yourself"
-msgstr ""
+msgstr "Testaa itseäsi"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_4
 msgid "Test your knowledge"
-msgstr ""
+msgstr "Testaa tietosi"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_3
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_3
 msgid "Test your knowledge !"
-msgstr ""
+msgstr "Testaa tietosi !"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Test your students with small Quizzes"
-msgstr ""
+msgstr "Testaa opiskelijoitasi pienten kyselyiden avulla"
 
 #. module: website_slides
 #. openerp-web
@@ -4600,6 +4783,8 @@ msgid ""
 "document. You can change this number if your attendees will need more time "
 "to assimilate the content."
 msgstr ""
+"Oppitunnin <b>kesto</b> perustuu asiakirjasi sivumäärään. Voit muuttaa tätä "
+"numeroa, jos osallistujat tarvitsevat enemmän aikaa sisällön omaksumiseen. "
 
 #. module: website_slides
 #. openerp-web
@@ -4610,6 +4795,9 @@ msgid ""
 "you want.</br>A <b>Preview</b> of your file is available on the right side "
 "of the screen."
 msgstr ""
+"Oppitunnin <b>otsikko</b> täytetään automaattisesti, mutta voit muuttaa sitä"
+" halutessasi.</br>Tiedoston<b>esikatselu</b> on käytettävissä näytön "
+"oikeassa reunassa."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
@@ -4617,18 +4805,20 @@ msgid ""
 "The course is accessible by anyone : the users don't need to join the "
 "channel to access the content of the course."
 msgstr ""
+"Kurssi on kaikkien saatavilla: käyttäjien ei tarvitse liittyä kanavaan "
+"päästäkseen kurssin sisältöön."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
 msgid "The description that is displayed on the course card"
-msgstr ""
+msgstr "Kuvaus, joka näkyy kurssikortilla"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description
 msgid ""
 "The description that is displayed on top of the course page, just below the "
 "title"
-msgstr ""
+msgstr "Kuvaus, joka näkyy kurssisivun yläpuolella, otsikon alapuolella"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -4636,11 +4826,14 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Asiakirjatyyppi asetetaan automaattisesti asiakirjan URL -osoitteen ja "
+"ominaisuuksien perusteella (esim. Esityksen ja asiakirjan korkeus ja "
+"leveys)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__completion_time
 msgid "The estimated completion time for this slide"
-msgstr ""
+msgstr "Tämän dian arvioitu suoritusaika"
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
@@ -4649,6 +4842,8 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external sign up in configuration."
 msgstr ""
+"Seuraavilla vastaanottajilla ei ole käyttäjätiliä: %s. Sinun tulee luoda "
+"heille käyttäjätilit tai sallia rekisteröinti asetuksista."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -4660,74 +4855,75 @@ msgstr "Dokumentin URL-osoite verkkosivustolla."
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_theory
 msgid "Theory"
-msgstr ""
+msgstr "Teoria"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "There are no quizzes"
-msgstr ""
+msgstr "Kyselyitä ei ole"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel_report
 msgid "There are no ratings for these courses at the moment"
-msgstr ""
+msgstr "Näille kursseille ei ole tällä hetkellä arvioita"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr ""
+msgstr "Tämän kyselyn vahvistamisessa tapahtui virhe."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
-msgstr ""
+msgstr "Kolmannen osapuolen verkkosivuston URL -osoite"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Third attempt"
-msgstr ""
+msgstr "Kolmas yritys"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
 msgid "This comment will be displayed to the user if he selects this answer"
 msgstr ""
+"Tämä kommentti näytetään käyttäjälle, jos hän valitsee tämän vastauksen"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "This course is private."
-msgstr ""
+msgstr "Tämä kurssi on yksityinen."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "This is the correct answer"
-msgstr ""
+msgstr "Tämä on oikea vastaus"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "This is the correct answer, congratulations"
-msgstr ""
+msgstr "Tämä on oikea vastaus, onnittelut"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr ""
+msgstr "Tämä kysely on jo suoritettu. Et voi suorittaa sitä uudelleen."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This video already exists in this channel on the following slide: %s"
-msgstr ""
+msgstr "Tämä video on jo olemassa tällä kanavalla seuraavassa diassa: %s"
 
 #. module: website_slides
 #. openerp-web
@@ -4755,12 +4951,12 @@ msgstr "Työkalut"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_0
 msgid "Tools and Methods"
-msgstr ""
+msgstr "Työkalut ja menetelmät"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_0
 msgid "Tools you will need to complete this course."
-msgstr ""
+msgstr "Työkalut, jotka tarvitset tämän kurssin suorittamiseen."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4770,12 +4966,12 @@ msgstr "Yhteensä"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
 msgid "Total Slides"
-msgstr ""
+msgstr "Diat yhteensä"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Total Views"
-msgstr ""
+msgstr "Katselukertoja yhteensä"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__training
@@ -4787,27 +4983,27 @@ msgstr "Koulutus"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Training Layout"
-msgstr ""
+msgstr "Koulutusasettelu"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "Tree Infographic"
-msgstr ""
+msgstr "Puu infografia"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "Tree planting in hanging bottles on wall"
-msgstr ""
+msgstr "Puiden istutus roikkuviin pulloihin seinälle"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_0
 msgid "Trees"
-msgstr ""
+msgstr "Puut"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
 msgid "Trees, Wood and Gardens"
-msgstr ""
+msgstr "Puut, puu ja puutarhat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
@@ -4825,7 +5021,7 @@ msgstr "Poikkeusaktiviteetin tyyppi tietueella"
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr ""
+msgstr "Viestin lähettäminen ei onnistu, määritä lähettäjän sähköpostiosoite."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -4838,13 +5034,13 @@ msgstr "Luokittelemattomat"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_0
 msgid "Unforgettable Tools"
-msgstr ""
+msgstr "Unohtumattomia työkaluja"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Unknown document"
-msgstr ""
+msgstr "Tuntematon asiakirja"
 
 #. module: website_slides
 #. openerp-web
@@ -4859,7 +5055,7 @@ msgstr "Tuntematon virhe"
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
-msgstr ""
+msgstr "Tuntematon virhe, yritä uudelleen."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -4889,13 +5085,13 @@ msgstr "Päivitä"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "Lataajaryhmät"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "Upload Presentation"
-msgstr ""
+msgstr "Lataa esitys"
 
 #. module: website_slides
 #. openerp-web
@@ -4903,19 +5099,19 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Upload a document"
-msgstr ""
+msgstr "Lataa asiakirja"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
 msgid "Uploaded by"
-msgstr ""
+msgstr "Lataaja"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Uploading document ..."
-msgstr ""
+msgstr "Ladataan asiakirjaa ..."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
@@ -4926,16 +5122,17 @@ msgstr "Käytä mallia"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr ""
+"Käytetään näytettyjen kanavien/kurssien luokitteluun ja suodattamiseen"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__color
 msgid "Used to decorate kanban view"
-msgstr ""
+msgstr "Käytetään kanban -näkymän koristamiseen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
 msgid "User vote"
-msgstr ""
+msgstr "Käyttäjän ääni"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_users
@@ -4966,17 +5163,17 @@ msgstr "Näytä"
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
-msgstr ""
+msgstr "Näytä kaikki"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "View course"
-msgstr ""
+msgstr "Näytä kurssi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "View fullscreen"
-msgstr ""
+msgstr "Näytä koko näytössä"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
@@ -4984,12 +5181,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Views"
-msgstr "Näkymät"
+msgstr "Katselukerrat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_card
 msgid "Views •"
-msgstr ""
+msgstr "Katselukerrat •"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -5025,7 +5222,7 @@ msgstr "Ääniä"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "Votes and comments are disabled for this course"
-msgstr ""
+msgstr "Äänestys ja kommentointi on poistettu käytöstä tällä kurssilla"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -5035,7 +5232,7 @@ msgstr "Odottaa validointia"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_3_1
 msgid "Watching the master(s) at work"
-msgstr ""
+msgstr "Katsotaan mestareita työssä"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_1_4
@@ -5043,6 +5240,8 @@ msgid ""
 "We had a little chat with Harry Potted, sure he had interesting things to "
 "say !"
 msgstr ""
+"Keskustelimme vähän Harry Pottedin kanssa, hänellä oli mielenkiintoista "
+"sanottavaa!"
 
 #. module: website_slides
 #. openerp-web
@@ -5055,7 +5254,7 @@ msgstr "Verkkosivu"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage
 msgid "Webpages"
-msgstr ""
+msgstr "Verkkosivut"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -5067,7 +5266,7 @@ msgstr "Verkkosivu"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
 msgid "Website / Slides"
-msgstr ""
+msgstr "Verkkosivu / Diat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -5120,28 +5319,30 @@ msgid ""
 "Welcome on your course's home page. It's still empty for now. Click on "
 "\"<b>New</b>\" to write your first course."
 msgstr ""
+"Tervetuloa kurssin kotisivulle. Se on vielä toistaiseksi tyhjä. Klikkaa "
+"\"<b>Uusi</b>\" luodaksesi ensimmäisen kurssisi."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr ""
+msgstr "Mitä tekee"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
 msgid "What is a strawberry ?"
-msgstr ""
+msgstr "Mikä on mansikka?"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_1
 msgid "What is the best tool to dig a hole for your plants ?"
-msgstr ""
+msgstr "Mikä on paras työkalu kaivaa kuoppa kasveillesi?"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_2
 msgid "What was the question again ?"
-msgstr ""
+msgstr "Mikä olikaan kysymys ?"
 
 #. module: website_slides
 #. openerp-web
@@ -5151,26 +5352,28 @@ msgid ""
 "With Quizzes you can keep your students focused and motivated by answering "
 "some questions and gaining some karma points"
 msgstr ""
+"Kyselyiden avulla voit pitää opiskelijasi keskittyneinä ja motivoituneina "
+"vastaamalla kysymyksiin ja hankkimalla pisteitä"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_1
 msgid "Wood"
-msgstr ""
+msgstr "Puu"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_3_1
 msgid "Wood Bending With Steam Box"
-msgstr ""
+msgstr "Puun taivutus höyrylaatikolla"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_3
 msgid "Wood Characteristics"
-msgstr ""
+msgstr "Puun ominaisuudet"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_3_0
 msgid "Working with Wood"
-msgstr ""
+msgstr "Puun kanssa työskentely"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -5179,6 +5382,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. <br>To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"Kirjoita yksi tai kaksi kappaletta kuvaamaan tuotettasi tai palveluitasi. "
+"<br>Menestyäkseen sisältösi on oltava hyödyllistä lukijoille."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -5188,6 +5393,9 @@ msgid ""
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
+"Kirjoita yksi tai kaksi kappaletta kuvaamaan tuotettasi, palveluitasi tai "
+"tiettyä ominaisuutta.<br> Menestyäkseen sisältösi on oltava hyödyllistä "
+"lukijoille."
 
 #. module: website_slides
 #. openerp-web
@@ -5197,7 +5405,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "XP"
-msgstr ""
+msgstr "XP"
 
 #. module: website_slides
 #. openerp-web
@@ -5220,31 +5428,33 @@ msgid ""
 "You can add <b>comments</b> on answers. This will be visible with the "
 "results if the user select this answer."
 msgstr ""
+"Voit lisätä <b>kommentteja</b> vastauksiin. Tämä näkyy tuloksissa, jos "
+"käyttäjä valitsee tämän vastauksen."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "You can not upload password protected file."
-msgstr ""
+msgstr "Et voi ladata salasanalla suojattua tiedostoa."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot add tags to this course."
-msgstr ""
+msgstr "Et voi lisätä tunnisteita tähän kurssiin."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr ""
+msgstr "Et voi merkitä diaa suoritetuksi, jos et ole sen jäsenten joukossa."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr ""
+msgstr "Et voi merkitä diaa katsotuksi, jos et ole sen osallistujissa."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5252,88 +5462,89 @@ msgstr ""
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
 msgstr ""
+"Et voi merkitä dian kyselyä valmiiksi jos et ole sen jäsenten joukossa."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot upload on this channel."
-msgstr ""
+msgstr "Et voi ladata tälle kanavalle."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have access to this lesson"
-msgstr ""
+msgstr "Sinulla ei ole pääsyä tähän oppituntiin"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have enough karma to vote"
-msgstr ""
+msgstr "Sinulla ei ole tarpeeksi pisteitä äänestääksesi"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "You gained"
-msgstr ""
+msgstr "Ansaitsit"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #, python-format
 msgid "You have already joined this channel"
-msgstr ""
+msgstr "Olet jo liittynyt tähän kanavaan"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You have already voted for this lesson"
-msgstr ""
+msgstr "Olet jo äänestänyt tätä oppituntia"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join ${object.channel_id.name}"
-msgstr ""
+msgstr "Sinut on kutsuttu liittymään kanavaan ${object.channel_id.name}"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "You have to sign in before"
-msgstr ""
+msgstr "Sinun on kirjauduttava sisään ennen kuin "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "You may now participate in our eLearning."
-msgstr ""
+msgstr "Voit nyt osallistua verkko-oppimiseen."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "You must be logged to submit the quiz."
-msgstr ""
+msgstr "Sinun on oltava kirjautuneena sisään lähettääksesi kyselyn."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You must be member of this course to vote"
-msgstr ""
+msgstr "Sinun on oltava tämän kurssin jäsen, jotta voit äänestää"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_2
 msgid "You won't believe those facts about carrots."
-msgstr ""
+msgstr "Et voi uskoa niitä faktoja porkkanoista."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "You're enrolled"
-msgstr ""
+msgstr "Olet ilmoittautunut"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -5347,16 +5558,18 @@ msgid ""
 "Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
+"Google -sovellusliittymäavaimesi on virheellinen. Päivitä se asetuksissa.\n"
+"Asetukset > Verkkosivu > Ominaisuudet > API Avain"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
 msgid "Your Level"
-msgstr ""
+msgstr "Tasosi"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_role
 msgid "Your Role"
-msgstr ""
+msgstr "Sinun roolisi"
 
 #. module: website_slides
 #. openerp-web
@@ -5367,13 +5580,16 @@ msgid ""
 "Click on <b>Add Content</b> to upload a document, create a web page or link "
 "a video."
 msgstr ""
+"Ensimmäinen osiosi on luotu, nyt on aika lisätä oppitunteja kurssillesi. "
+"Klikkaa <b>Lisää sisältöä</b> ladataksesi asiakirjan, luodaksesi verkkosivun"
+" tai linkittääksesi videon."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Youtube Link"
-msgstr ""
+msgstr "Youtube -linkki"
 
 #. module: website_slides
 #. openerp-web
@@ -5395,7 +5611,7 @@ msgstr "Youtube tai Google Document URL"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr ""
+msgstr "saavutettu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -5408,18 +5624,28 @@ msgstr "murupolku"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "by email."
-msgstr ""
+msgstr "sähkopostilla."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. How to grow your business with Odoo?"
-msgstr ""
+msgstr "esim. Kuinka kasvattaa liiketoimintaasi Odoon avulla?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
+msgstr ""
+"esim. Tässä videossa annamme sinulle avaimet kuinka Odoo voi auttaa sinua "
+"kasvattamaan liiketoimintaasi. Lopuksi ehdotamme sinulle kyselyn, jolla voit"
+" testata tietosi."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "e.g. Introduction"
 msgstr ""
 
 #. module: website_slides
@@ -5431,19 +5657,19 @@ msgstr "esim. https://www.odoo.com"
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "eLearning"
-msgstr ""
+msgstr "Verkko-oppiminen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_ids
 msgid "eLearning Courses"
-msgstr ""
+msgstr "Verkko-oppimisen kurssit"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
-msgstr ""
+msgstr "Verkko-oppimisen yleiskatsaus"
 
 #. module: website_slides
 #. openerp-web
@@ -5462,13 +5688,16 @@ msgid ""
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
+"tarkoittaa? YouTuben \"piilotettu\" tarkoittaa, että se on video, jota "
+"voivat katsoa vain käyttäjät, joilla on siihen linkki. Videosi ei koskaan "
+"tule hakutuloksiin eikä kanavallesi."
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "or Leave the course"
-msgstr ""
+msgstr "tai poistu kurssilta"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -5481,29 +5710,29 @@ msgstr "arvostelut"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #, python-format
 msgid "sign in"
-msgstr ""
+msgstr "kirjaudu sisään"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid "steps"
-msgstr ""
+msgstr "osiota"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "to contact responsible."
-msgstr ""
+msgstr "ottaaksesi yhteyttä vastuuhenkilöön."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to download resources"
-msgstr ""
+msgstr "ladataksesi resursseja"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "to enroll."
-msgstr ""
+msgstr "ilmoittautuaksesi. "
 
 #. module: website_slides
 #. openerp-web
@@ -5511,7 +5740,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "to share this"
-msgstr ""
+msgstr "jakaaksesi tämän"
 
 #. module: website_slides
 #. openerp-web
@@ -5519,14 +5748,14 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "unlisted"
-msgstr ""
+msgstr "listaamattomiksi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "xp"
-msgstr ""
+msgstr "xp"
 
 #. module: website_slides
 #. openerp-web
@@ -5539,4 +5768,4 @@ msgstr "kaverisi@domain.com"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ml-1\">Uncategorized</span>"
-msgstr ""
+msgstr "└<span class=\"ml-1\">Luokittelematon</span>"

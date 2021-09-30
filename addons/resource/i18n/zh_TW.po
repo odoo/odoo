@@ -4,6 +4,7 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (副本)"
+msgstr "%s (備份)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -40,27 +41,27 @@ msgstr "下午"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Archived"
-msgstr "封存"
+msgstr "已封存"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
-msgstr "是否確實要將此日曆切換到單週日曆？目前的所有項目都將刪除"
+msgstr "是否確實要將此日曆切換到單週日曆? 目前的所有分錄都將刪除"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
-msgstr "是否確實要將此日曆切換到雙週日曆？目前的所有項目都將刪除"
+msgstr "是否確實要將此日曆切換到雙週日曆? 目前的所有分錄都將刪除"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr "出勤時間不能重疊。"
+msgstr "出勤時間不能重疊."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -71,13 +72,13 @@ msgstr "每天平均小時數"
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
-msgstr "資產應該與此日曆一起使用的平均每天小時數。"
+msgstr "資源應該使用此日曆的平均每天小時數."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr "二週模式下的日曆"
+msgstr "雙週模式下的日曆"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -107,7 +108,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_test__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立者"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
@@ -121,12 +122,12 @@ msgstr "建立於"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr "日期"
+msgstr "期間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
 msgid "Day of Week"
-msgstr "周"
+msgstr "星期"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -207,13 +208,13 @@ msgstr "週五上午"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr "顯示資源日曆時提供此行的順序。"
+msgstr "顯示資源日曆時提供此明細的序列."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Time Off"
-msgstr "公司休假/大修時間"
+msgstr "公眾休假"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -248,33 +249,33 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
-msgstr "如果為空，則這是公司的一般休假。如果選擇了特定資源，則休假時間僅針對此資源"
+msgstr "如果為空，則這是公司的一般休假時間. 如果設定了資源，則休假僅針對該資源"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "如果這有效字段設為否，它將隱藏而無須刪除。"
+msgstr "如果啟用欄位設定為未啟用，它將允許您隱藏資源記錄而不刪除它."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
-msgstr ""
+msgstr "如果啟用欄位設定為未啟用，它將允許您隱藏工作時間而不將其刪除."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
-msgstr ""
+msgstr "在雙週模式的日曆中，所有時期都需要在分區中."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "停用"
+msgstr "未啟用"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company____last_update
@@ -355,7 +356,7 @@ msgstr "名稱"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
 msgid "Odd week"
-msgstr "奇數週"
+msgstr "單數週"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
@@ -372,7 +373,7 @@ msgstr "原因"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "用於管理資源訪問權限的使用者名"
+msgstr "用於管理其訪問與資源相關的使用者名稱."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -390,19 +391,19 @@ msgstr "資源"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr "資源裝飾"
+msgstr "資源混入"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr "休假/維修時間"
+msgstr "資源關閉時間"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "資源休假詳細資訊"
+msgstr "資源關閉時間詳情"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
@@ -432,7 +433,7 @@ msgstr "資源"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr "休假/維修時間"
+msgstr "資源關閉時間"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -441,7 +442,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "資源允許您創建和管理資源參與的特定的計劃階段。您還能在其每週工作時間基礎上設定其效率和工作量。"
+msgstr "資源允許您創建和管理資源參與的特定的計劃階段. 您還能在其每週工作時間基礎上設定其效率和工作量."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -466,18 +467,18 @@ msgstr "搜尋工作時間"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
 msgid "Section"
-msgstr "部分"
+msgstr "分區"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列號"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:0
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr "標準40小時/周"
+msgstr "標準40小時/週"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
@@ -490,8 +491,8 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
-"工作的開始和結束時間。\n"
-"        24：00的特定值被解釋為23︰59: 59.999999。"
+"工作的開始和結束時間.\n"
+"        24:00的特定值被解釋為23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
@@ -521,7 +522,7 @@ msgstr "切換到雙週日曆"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr "UX用途的技術領域。"
+msgstr "UX用途的技術欄位."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
@@ -532,13 +533,13 @@ msgstr "測試資源模型"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr "效率因子不能等於0。"
+msgstr "效率因子不能等於0."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "休假的開始日期必須早於結束日期."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -548,7 +549,7 @@ msgstr ""
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr "此欄位用於定義資源在哪個時區工作"
+msgstr "此欄位用於定義資源在哪個時區工作."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -559,6 +560,8 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"此欄位用於計算此工作中心的工單的預期工期. 例如，如果工單耗時一小時，而效率係數為 100%，則預期工期將為一小時. 如果效率係數為 "
+"200%，則預計持續時間為 30 分鐘."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -662,7 +665,7 @@ msgstr "奇數/偶數週"
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
-msgstr "是否應計算為休假或工作時間（例如：formation）"
+msgstr "應該計算為休息時間還是工作時間"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -697,7 +700,7 @@ msgstr "工作時間"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Working Hours of %s"
-msgstr "%s的工作時間"
+msgstr "%s 的工作時間"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -725,16 +728,16 @@ msgstr "工作時間"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr "不能刪除週之間的分區。"
+msgstr "不能刪除週與週之間的分區."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "even"
-msgstr "偶數週"
+msgstr "偶數"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "odd"
-msgstr "奇數週"
+msgstr "奇數"

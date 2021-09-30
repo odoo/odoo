@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report_vat" model="account.tax.report">
+        <field name="name">VAT Report</field>
+        <field name="country_id" ref="base.it"/>
+    </record>
+
+    <record id="tax_report_line_operazione_imponibile" model="account.tax.report.line">
+        <field name="name">Operazione Imponibile</field>
+        <field name="code">h1</field>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp2" model="account.tax.report.line">
+        <field name="name">VP2 - Totale operazioni attive</field>
+        <field name="code">VP2</field>
+        <field name="parent_id" ref="tax_report_line_operazione_imponibile"/>
+        <field name="tag_name">02</field>
+        <field name="sequence">1</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp3" model="account.tax.report.line">
+        <field name="name">VP3 - Totale operazioni passive</field>
+        <field name="code">VP3</field>
+        <field name="parent_id" ref="tax_report_line_operazione_imponibile"/>
+        <field name="tag_name">03</field>
+        <field name="sequence">2</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_iva" model="account.tax.report.line">
+        <field name="name">IVA</field>
+        <field name="code">h2</field>
+        <field name="sequence">2</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp4" model="account.tax.report.line">
+        <field name="name">VP4 - IVA esigibile</field>
+        <field name="code">VP4</field>
+        <field name="parent_id" ref="tax_report_line_iva"/>
+        <field name="tag_name">4v</field>
+        <field name="sequence">1</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp5" model="account.tax.report.line">
+        <field name="name">VP5 - IVA detraibile</field>
+        <field name="code">VP5</field>
+        <field name="parent_id" ref="tax_report_line_iva"/>
+        <field name="tag_name">5v</field>
+        <field name="sequence">2</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_saldi_riporti_e_interessi" model="account.tax.report.line">
+        <field name="name">Saldi, riporti e interessi</field>
+        <field name="code">h3</field>
+        <field name="sequence">3</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp6" model="account.tax.report.line">
+        <field name="name">VP6 - IVA dovuta</field>
+        <field name="code">VP6</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+    <record id="tax_report_line_vp6a" model="account.tax.report.line">
+        <field name="name">VP6a - IVA dovuta (debito)</field>
+        <field name="code">VP6a</field>
+        <field name="parent_id" ref="tax_report_line_vp6"/>
+        <field name="formula">VP4&gt;VP5 and VP4-VP5 or 0</field>
+        <field name="sequence">1</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+    <record id="tax_report_line_vp6b" model="account.tax.report.line">
+        <field name="name">VP6b - IVA dovuta (credito)</field>
+        <field name="code">VP6b</field>
+        <field name="parent_id" ref="tax_report_line_vp6"/>
+        <field name="formula">VP5&gt;VP4 and VP5-VP4 or 0</field>
+        <field name="sequence">2</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp7" model="account.tax.report.line">
+        <field name="name">VP7 - Debito periodo precedente non superiore 25,82</field>
+        <field name="code">VP7</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">2</field>
+        <field name="tag_name">vp7</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp8" model="account.tax.report.line">
+        <field name="name">VP8 - Credito periodo precedente</field>
+        <field name="code">VP8</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">3</field>
+        <field name="tag_name">vp8</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp9" model="account.tax.report.line">
+        <field name="name">VP9 - Credito anno precedente</field>
+        <field name="code">VP9</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">4</field>
+        <field name="tag_name">vp9</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp10" model="account.tax.report.line">
+        <field name="name">VP10 - Versamenti auto UE</field>
+        <field name="code">VP10</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">5</field>
+        <field name="tag_name">vp10</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp11" model="account.tax.report.line">
+        <field name="name">VP11 - Credito d'imposta</field>
+        <field name="code">VP11</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">6</field>
+        <field name="tag_name">vp11</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp12" model="account.tax.report.line">
+        <field name="name">VP12 - Interessi dovuti per liquidazioni trimestrali</field>
+        <field name="code">VP12</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">7</field>
+        <field name="tag_name">vp12</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_vp13" model="account.tax.report.line">
+        <field name="name">VP13 - Acconto dovuto</field>
+        <field name="code">VP13</field>
+        <field name="parent_id" ref="tax_report_line_saldi_riporti_e_interessi"/>
+        <field name="sequence">8</field>
+        <field name="tag_name">vp13</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+    <record id="tax_report_line_conto_corrente_iva" model="account.tax.report.line">
+        <field name="name">Conto corrente IVA</field>
+        <field name="code">h4</field>
+        <field name="sequence">4</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+    <record id="tax_report_line_vp14" model="account.tax.report.line">
+        <field name="name">VP14 - IVA da versare</field>
+        <field name="code">VP14</field>
+        <field name="parent_id" ref="tax_report_line_conto_corrente_iva"/>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+    <record id="tax_report_line_vp14a" model="account.tax.report.line">
+        <field name="name">VP14a - IVA da versare (debito)</field>
+        <field name="code">VP14a</field>
+        <field name="parent_id" ref="tax_report_line_vp14"/>
+        <field name="sequence">1</field>
+        <field name="formula">max(((VP4&gt;VP5 and VP4-VP5 or 0) + VP7 + VP12) - ((VP5&gt;VP4 and VP5-VP4 or 0) + VP8 + VP9 + VP10 + VP11 + VP13), 0)</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+    <record id="tax_report_line_vp14b" model="account.tax.report.line">
+        <field name="name">VP14b - IVA da versare (credito)</field>
+        <field name="code">VP14b</field>
+        <field name="parent_id" ref="tax_report_line_vp14"/>
+        <field name="sequence">2</field>
+        <field name="formula">max(((VP5&gt;VP4 and VP5-VP4 or 0) + VP8 + VP9 + VP10 + VP11 + VP13) - ((VP4&gt;VP5 and VP4-VP5 or 0) + VP7 + VP12), 0)</field>
+        <field name="report_id" ref="tax_report_vat"/>
+    </record>
+
+</odoo>

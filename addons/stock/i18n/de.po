@@ -34,7 +34,6 @@
 # Johannes Croe <jcr@odoo.com>, 2020
 # Jérôme JEK <jek@odoo.com>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
-# Florian Pose <fp@igh.de>, 2020
 # Tobias Arndt, 2020
 # TomTietze <t.tietze94@web.de>, 2020
 # Gab_Odoo <gab@odoo.com>, 2020
@@ -44,6 +43,7 @@
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
+# Florian Pose <fp@igh.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
+"Last-Translator: Florian Pose <fp@igh.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1031,7 +1031,7 @@ msgstr "Strichcode"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Barcode Nomenkaltur"
+msgstr "Barcode-Nomenklatur"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -4802,7 +4802,7 @@ msgstr "Schnelleres Arbeiten mit Barcodes "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr ""
+msgstr "Verarbeiten Sie Lagerbewegungen im Stapel pro Mitarbeiter"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
@@ -5016,7 +5016,7 @@ msgstr "Produkt mit Tracking"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__production
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Production"
-msgstr "Produktivbetrieb"
+msgstr "Produktion"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
@@ -5944,11 +5944,15 @@ msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
 msgstr ""
+"Sende eine automatische Bestätigungs-SMS wenn die Lageraufträge erledigt "
+"sind"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
+"Sende eine automatische Bestätigungsmail wenn die Lageraufträge erledigt "
+"sind"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -6661,6 +6665,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"Die Kombination von Seriennummer und Produkt muss in einem Unternehmen "
+"eindeutig sein. Die folgenden Kombinationen enthalten Dubletten:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -6781,6 +6787,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %s, Serial Number: %s"
 msgstr ""
+"Diese Seriennummer wurde bereits zugewiesen:\n"
+"Produkt: %s, Seriennummer: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

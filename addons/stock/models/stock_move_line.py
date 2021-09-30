@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import Counter
+from collections import Counter, defaultdict
 
 from odoo import _, api, fields, tools, models
 from odoo.exceptions import UserError, ValidationError
@@ -271,7 +271,8 @@ class StockMoveLine(models.Model):
             ('lot_id', 'stock.production.lot'),
             ('package_id', 'stock.quant.package'),
             ('result_package_id', 'stock.quant.package'),
-            ('owner_id', 'res.partner')
+            ('owner_id', 'res.partner'),
+            ('product_uom_id', 'uom.uom')
         ]
         updates = {}
         for key, model in triggers:
@@ -332,7 +333,7 @@ class StockMoveLine(models.Model):
                 mls = mls.filtered(lambda ml: not float_is_zero(ml.qty_done - vals['qty_done'], precision_rounding=ml.product_uom_id.rounding))
             for ml in mls:
                 # undo the original move line
-                qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                qty_done_orig = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.result_package_id, owner_id=ml.owner_id)[1]
                 Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
@@ -347,7 +348,8 @@ class StockMoveLine(models.Model):
                 package_id = updates.get('package_id', ml.package_id)
                 result_package_id = updates.get('result_package_id', ml.result_package_id)
                 owner_id = updates.get('owner_id', ml.owner_id)
-                quantity = ml.move_id.product_uom._compute_quantity(qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                product_uom_id = updates.get('product_uom_id', ml.product_uom_id)
+                quantity = product_uom_id._compute_quantity(qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 if not ml._should_bypass_reservation(location_id):
                     ml._free_reservation(product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
                 if not float_is_zero(quantity, precision_digits=precision):
@@ -533,20 +535,28 @@ class StockMoveLine(models.Model):
 
     def _create_and_assign_production_lot(self):
         """ Creates and assign new production lots for move lines."""
-        lot_vals = [{
-            'company_id': ml.move_id.company_id.id,
-            'name': ml.lot_name,
-            'product_id': ml.product_id.id,
-        } for ml in self]
+        lot_vals = []
+        # It is possible to have multiple time the same lot to create & assign,
+        # so we handle the case with 2 dictionaries.
+        key_to_index = {}  # key to index of the lot
+        key_to_mls = defaultdict(lambda: self.env['stock.move.line'])  # key to all mls
+        for ml in self:
+            key = (ml.company_id.id, ml.product_id.id, ml.lot_name)
+            key_to_mls[key] |= ml
+            if ml.tracking != 'lot' or key not in key_to_index:
+                key_to_index[key] = len(lot_vals)
+                lot_vals.append({
+                    'company_id': ml.company_id.id,
+                    'name': ml.lot_name,
+                    'product_id': ml.product_id.id
+                })
+
         lots = self.env['stock.production.lot'].create(lot_vals)
-        for ml, lot in zip(self, lots):
-            ml._assign_production_lot(lot)
+        for key, mls in key_to_mls.items():
+            mls._assign_production_lot(lots[key_to_index[key]].with_prefetch(lots._ids))  # With prefetch to reconstruct the ones broke by accessing by index
 
     def _assign_production_lot(self, lot):
-        self.ensure_one()
-        self.write({
-            'lot_id': lot.id
-        })
+        self.write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()
@@ -674,3 +684,7 @@ class StockMoveLine(models.Model):
             else:
                 aggregated_move_lines[line_key]['qty_done'] += move_line.qty_done
         return aggregated_move_lines
+
+    def _compute_sale_price(self):
+        # To Override
+        pass

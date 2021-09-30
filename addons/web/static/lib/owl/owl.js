@@ -1454,12 +1454,12 @@
                 return result;
             }
             // this is already an object, but we may need to split keys:
-            // {'a': true, 'b c': true} should become {a: true, b: true, c: true}
+            // {'a b': true, 'a c': false} should become {a: true, b: true, c: false}
             for (let key in expr) {
                 const value = expr[key];
                 const words = key.split(/\s+/);
                 for (let word of words) {
-                    result[word] = value;
+                    result[word] = result[word] || value;
                 }
             }
             return result;
@@ -5544,9 +5544,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.utils = utils;
 
 
-    __info__.version = '1.4.3';
-    __info__.date = '2021-07-08T09:54:52.593Z';
-    __info__.hash = '9fe2da7';
+    __info__.version = '1.4.4';
+    __info__.date = '2021-09-03T08:19:48.452Z';
+    __info__.hash = 'b3181f1';
     __info__.url = 'https://github.com/odoo/owl';
 
 
