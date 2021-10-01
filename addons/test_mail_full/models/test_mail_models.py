@@ -50,6 +50,19 @@ class MailTestSMSBL(models.Model):
         return ['phone_nbr', 'mobile_nbr']
 
 
+class MailTestSMSBLActivity(models.Model):
+    """ A model inheriting from mail.thread.phone allowing to test auto formatting
+    of phone numbers, blacklist, ... as well as activities management. """
+    _description = 'SMS Mailing Blacklist Enabled with activities'
+    _name = 'mail.test.sms.bl.activity'
+    _inherit = [
+        'mail.test.sms.bl',
+        'mail.activity.mixin',
+    ]
+    _mailing_enabled = True
+    _order = 'name asc, id asc'
+
+
 class MailTestSMSOptout(models.Model):
     """ Model using blacklist mechanism and a hijacked opt-out mechanism for
     mass mailing features. """
