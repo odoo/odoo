@@ -42,8 +42,8 @@
                         <group>
                             <field name="auto_apply"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
-                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="foreign_vat"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_id"
                                 attrs="{'required': [('foreign_vat', '!=', False)]}"
                                 options="{'no_open': True, 'no_create': True}"/>
