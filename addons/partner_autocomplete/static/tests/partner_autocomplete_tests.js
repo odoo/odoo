@@ -375,6 +375,63 @@ odoo.define('partner_autocomplete.tests', function (require) {
         });
     });
 
+    QUnit.test("Partner autocomplete : Name search shows maximum 16 items in autocomplete dropdown", async function (assert) {
+        assert.expect(3);
+
+        const fieldsToPatch = [PartnerField, AutocompleteField];
+        fieldsToPatch.forEach(fieldToPatch => {
+            testUtils.mock.patch(fieldToPatch, {
+                _getOdooSuggestions: function (value, isVAT) {
+                    const suggestions = [];
+                    for (let i = 0; i < 20; i++) {
+                        suggestions.push({
+                            name: "Odoo" + i,
+                            website: "odoo.com",
+                            domain: "odoo.com",
+                            logo: "odoo.com/logo.png",
+                            vat: "BE0477472701"
+                        });
+                    }
+                    return Promise.resolve(suggestions);
+                },
+            });
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: 'res.partner',
+            data: this.data,
+            arch:
+                `<form>
+                    <field name="name"/>
+                    <field name="parent_id" widget="res_partner_many2one"/>
+                </form>`,
+            mockRPC: function (route) {
+                if (route === "/web/static/img/placeholder.png"
+                    || route === "odoo.com/logo.png"
+                    || route === "data:image/png;base64,odoobase64") { // land here as it is not valid base64 content
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // Check input exists
+        const $input = form.$(".o_field_many2one[name='parent_id'] input:visible");
+        assert.strictEqual($input.length, 1, "there should be an <input/> for the field");
+
+        // Change input val and assert changes
+        await testUtils.fields.editInput($input, "odoo");
+        await testUtils.nextTick();
+        const $dropdown = $(".o_partner_autocomplete_dropdown:visible");
+        assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
+        // maximum 17 suggestions can be displayed
+        assert.ok($dropdown.children().length < 18,
+            "if suggestions are more than all suggestions should not be didplayed");
+
+        form.destroy();
+    });
+
     QUnit.test("Partner autocomplete : Notify not enough credits", async function (assert) {
         assert.expect(2);
 

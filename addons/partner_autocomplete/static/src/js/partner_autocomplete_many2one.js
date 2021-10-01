@@ -31,6 +31,21 @@ var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    _concatenateAutocompleteResults() {
+        let result = this._super(...arguments);
+
+        const documentHeight = document.documentElement.clientHeight;
+        if (documentHeight <= 570) {
+            result = result.slice(0, 9);
+        } else if (documentHeight <= 620) {
+            result = result.slice(0, 10);
+        } else if (documentHeight <= 700) {
+            result = result.slice(0, 11);
+        } else {
+            result = result.slice(0, 14);
+        }
+        return result;
+    },
     /**
      * Action : create popup form with pre-filled values from Autocomplete
      *
