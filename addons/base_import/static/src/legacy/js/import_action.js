@@ -459,6 +459,14 @@ var DataImport = AbstractAction.extend({
         this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
+        if (result.preview_warnings) {
+            this.onresults(null, null, null, {
+                'messages': [{
+                    type: 'warning o_preview_external_id_warning',
+                    message: result.preview_warnings
+                }]
+            });
+        }
         this.$('.oe_import_grid .o_import_preview').each((index, element) => {
             $(element).popover({
                 title: _t("Preview"),
@@ -768,31 +776,31 @@ var DataImport = AbstractAction.extend({
             });
         });
 
-        var fields = this.$('input.oe_import_match_field').map(function (index, el) {
-            return $(el).select2('val') || false;
-        }).get();
-        var $previewWarning = this.$el.find('.o_preview_external_id_warning');
-        if (fieldInfo.id === 'id') {
-            this._rpc({
-                model: 'base_import.import',
-                method: 'validate_import',
-                args: [this.id],
-                kwargs: {options: this.import_options(), fields: fields}
-            }, {
-                shadow: true,
-            }).then((preview_warning) => {
-                if (preview_warning) {
-                    this.onresults(null, null, null, {'messages': [{
-                        type: 'warning o_preview_external_id_warning',
-                        message: preview_warning
-                    }]});
-                } else {
-                    $previewWarning.remove();
-                }
-            });
-        } else if (!fields.includes('id') && $previewWarning.length) {
-            $previewWarning.remove();
-        }
+        // var fields = this.$('input.oe_import_match_field').map(function (index, el) {
+        //     return $(el).select2('val') || false;
+        // }).get();
+        // var $previewWarning = this.$el.find('.o_preview_external_id_warning');
+        // if (fieldInfo.id === 'id') {
+        //     this._rpc({
+        //         model: 'base_import.import',
+        //         method: 'validate_import',
+        //         args: [this.id],
+        //         kwargs: {options: this.import_options(), fields: fields}
+        //     }, {
+        //         shadow: true,
+        //     }).then((preview_warning) => {
+        //         if (preview_warning) {
+        //             this.onresults(null, null, null, {'messages': [{
+        //                 type: 'warning o_preview_external_id_warning',
+        //                 message: preview_warning
+        //             }]});
+        //         } else {
+        //             $previewWarning.remove();
+        //         }
+        //     });
+        // } else if (!fields.includes('id') && $previewWarning.length) {
+        //     $previewWarning.remove();
+        // }
     },
 
     _generate_fields_completion: function (root, index) {

@@ -978,6 +978,8 @@ class Import(models.TransientModel):
                         None
                     ))
 
+            preview_warnings = self.validate_import(options, matches)
+
             return {
                 'fields': fields_tree,
                 'matches': matches or False,
@@ -988,7 +990,8 @@ class Import(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.user_has_groups('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'file_length': file_length,
+                'preview_warnings': preview_warnings,
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
@@ -1014,7 +1017,11 @@ class Import(models.TransientModel):
             raise ImportValidationError(_("Import file has no content or is corrupt"))
 
         preview_warning = False
-        id_index = fields.index('id')
+        id_index = -1
+        for key, val in fields.items():
+            if val[0] == "id":
+                id_index = key
+                break
         external_ids = [data[id_index] for data in rows[:100]]
         rec_modules_dict = {}
         for e_id in external_ids:
