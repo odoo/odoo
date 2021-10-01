@@ -76,15 +76,29 @@ class AccountFiscalPosition(models.Model):
     @api.constrains('country_id', 'state_ids', 'foreign_vat')
     def _validate_foreign_vat_country(self):
         for record in self:
-            if record.foreign_vat and record.country_id == record.company_id.account_fiscal_country_id:
-                if record.foreign_vat == record.company_id.vat:
-                    raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
+            if record.foreign_vat:
+                if record.country_id == record.company_id.account_fiscal_country_id:
+                    if record.foreign_vat == record.company_id.vat:
+                        raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
 
-                if not record.state_ids:
-                    if record.company_id.account_fiscal_country_id.state_ids:
-                        raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
-                    else:
-                        raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
+                    if not record.state_ids:
+                        if record.company_id.account_fiscal_country_id.state_ids:
+                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
+                        else:
+                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
+
+                similar_fpos_domain = [
+                    ('foreign_vat', '!=', False),
+                    ('country_id', '=', record.country_id.id),
+                    ('company_id', '=', record.company_id.id),
+                    ('id', '!=', record.id),
+                ]
+                if record.state_ids:
+                    similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
+
+                similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
+                if similar_fpos_count:
+                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
 
     def map_tax(self, taxes):
         if not self:
