@@ -17,7 +17,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
+DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
 TIMEOUT = 30
 
 
@@ -129,12 +129,14 @@ class AccountEdiProxyClientUser(models.Model):
             response = {'id_client': 'demo', 'refresh_token': 'demo'}
         else:
             try:
-                response = self._make_request(SERVER_URL + '/iap/account_edi/1/create_user', params={
+                # b64encode returns a bytestring, we need it as a string
+                server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+                response = self._make_request(server_url + '/iap/account_edi/1/create_user', params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
                     'edi_format_code': edi_format.code,
                     'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem)
+                    'public_key': base64.b64encode(public_pem).decode()
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
@@ -157,7 +159,8 @@ class AccountEdiProxyClientUser(models.Model):
         that multiple database use the same credentials. When receiving an error for an expired refresh_token,
         This method makes a request to get a new refresh token.
         '''
-        response = self._make_request(SERVER_URL + '/iap/account_edi/1/renew_token')
+        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+        response = self._make_request(server_url + '/iap/account_edi/1/renew_token')
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
             # we don't want two database to be able to query the proxy with the same user
