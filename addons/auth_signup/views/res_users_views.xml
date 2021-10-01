@@ -38,11 +38,9 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-info">state == 'new'</attribute>
-                </xpath>
-                <xpath expr="//field[@name='login_date']" position="after">
-                    <field name="state" invisible="1"/>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
                 </xpath>
             </field>
         </record>

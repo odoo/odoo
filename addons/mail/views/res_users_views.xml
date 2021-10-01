@@ -27,7 +27,8 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="signature" position="before">
-                        <field name="notification_type" widget="radio"/>
+                        <field name="notification_type" widget="radio"
+                            attrs="{'invisible': [('share', '=', True)]}"/>
                     </field>
                 </data>
             </field>
