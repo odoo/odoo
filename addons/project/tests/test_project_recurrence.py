@@ -526,3 +526,167 @@ class TestProjectrecurrence(TransactionCase):
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
             self.assertTrue(tasks[0][f] == tasks[1][f] == tasks[2][f], "Field %s should have been copied" % f)
+
+    def test_recurrence_cron_repeat_after_subsubtasks(self):
+        """
+        Tests how the recurrence is working when a task has subtasks that have recurrence too
+        We have at the beginning:
+        index	Task name	            Recurrent	                        parent
+            0	Parent Task	            no	                                no
+            1	Subtask 1	            no                                  Parent task
+            2	Subtask 2 	            Montly, 15, for 2 tasks 	        Parent task
+            3	Grand child task 1	    Daily, 5 tasks                      Subtask 2 that has recurrence
+            4	Grand child task 2	    no                                  Subtask 2 that has recurrence
+            5	Grand child task 3	    no                                  Grand child task 2
+            6	Grand child task 4	    no                                  Grand child task 3
+            7	Grand child task 5	    no                                  Grand child task 4
+        1) After 5 days (including today), there will be 5 occurences of *task index 3*.
+        2) After next 15th of the month, there will be 2 occurences of *task index 2* and a *copy of tasks 3, 4, 5, 6* (not 7)
+        3) 5 days afterwards, there will be 5 occurences of the *copy of task index 3*
+        4) The 15th of the next month, there won't be any other new occurence since all recurrences have been consumed.
+        """
+
+        def get_task_and_subtask_counts(domain):
+            tasks = self.env['project.task'].search(domain)
+            return len(tasks), len(tasks.filtered('parent_id'))
+
+        # Phase 0 : Initialize test case
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': self.project_recurring.id
+        })
+        domain = [('project_id', '=', self.project_recurring.id)]
+        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Child task 1'
+        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Child task 2 that have recurrence'
+        with freeze_time("2020-01-01"):
+            recurrent_subtask = parent_task.child_ids[0]
+            with Form(recurrent_subtask.with_context(tracking_disable=True)) as task_form:
+                task_form.recurring_task = True
+                task_form.repeat_interval = 1
+                task_form.repeat_unit = 'month'
+                task_form.repeat_type = 'after'
+                task_form.repeat_number = 1
+                task_form.repeat_on_month = 'date'
+                task_form.repeat_day = '15'
+                task_form.date_deadline = datetime(2020, 2, 1)
+                with task_form.child_ids.new() as subtask_form:
+                    subtask_form.name = 'Grandchild task 1 (recurrent)'
+                with task_form.child_ids.new() as subtask_form:
+                    subtask_form.name = 'Grandchild task 2'
+
+            # configure recurring subtask
+            recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 1 (recurrent)')
+            non_recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 2')
+            with Form(recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
+                subtask_form.recurring_task = True
+                subtask_form.repeat_interval = 1
+                subtask_form.repeat_unit = 'day'
+                subtask_form.repeat_type = 'after'
+                subtask_form.repeat_number = 4
+                subtask_form.date_deadline = datetime(2020, 2, 3)
+
+            # create non-recurring grandchild subtasks
+            with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
+                with subtask_form.child_ids.new() as subsubtask_form:
+                    subsubtask_form.name = 'Grandchild task 3'
+            non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
+            with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
+                with subtask_form.child_ids.new() as subsubtask_form:
+                    subsubtask_form.name = 'Grandchild task 4'
+            non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
+            with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
+                with subtask_form.child_ids.new() as subsubtask_form:
+                    subsubtask_form.name = 'Grandchild task 5'
+
+            self.assertTrue(recurrent_subtask.recurrence_id)
+            self.assertEqual(recurrent_subtask.recurrence_id.next_recurrence_date, date(2020, 1, 15))
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 8)
+            self.assertEqual(project_subtask_count, 7)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 8, 'no extra task should be created')
+            all_tasks = self.env['project.task'].search(domain)
+            task_names = all_tasks.parent_id.mapped('name')
+            self.assertEqual(task_names.count('Parent Task'), 1)
+            self.assertEqual(task_names.count('Child task 2 that have recurrence'), 1)
+            self.assertEqual(task_names.count('Grandchild task 2'), 1)
+            self.assertEqual(task_names.count('Grandchild task 3'), 1)
+            self.assertEqual(task_names.count('Grandchild task 4'), 1)
+
+        # Phase 1 : Verify recurrences of Grandchild task 1 (recurrent)
+        n = 8
+        for i in range(1, 5):
+            with freeze_time("2020-01-%02d" % (i + 1)):
+                self.env['project.task.recurrence']._cron_create_recurring_tasks()
+                project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+                self.assertEqual(project_task_count, n + i)  # + 1 occurence of task 3
+                self.assertEqual(project_subtask_count, n + i - 1)
+        with freeze_time("2020-01-11"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 12)  # total = 5 occurences of task 3
+            self.assertEqual(project_subtask_count, 11)
+
+        # Phase 2 : Verify recurrences of Child task 2 that have recurrence
+        with freeze_time("2020-01-15"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            all_tasks = self.env['project.task'].search(domain)
+            task_names = all_tasks.parent_id.mapped('name')
+            self.assertEqual(task_names.count('Parent Task'), 1)
+            self.assertEqual(task_names.count('Child task 2 that have recurrence'), 2)
+            self.assertEqual(task_names.count('Grandchild task 2'), 2)
+            self.assertEqual(task_names.count('Grandchild task 3'), 2)
+            self.assertEqual(task_names.count('Grandchild task 4'), 1)
+            self.assertEqual(len(task_names), 8)
+            self.assertEqual(project_task_count, 12 + 1 + 4)  # 12 + the recurring task 5 + the 2 childs (3, 4) + 1 grandchild (5) + 1 grandgrandchild (6)
+            self.assertEqual(project_subtask_count, 16)
+            bottom_genealogy = all_tasks.filtered(lambda t: not t.child_ids.exists())
+            bottom_genealogy_name = bottom_genealogy.mapped('name')
+            self.assertEqual(bottom_genealogy_name.count('Child task 1'), 1)
+            self.assertEqual(bottom_genealogy_name.count('Grandchild task 1 (recurrent)'), 6)
+            # Grandchild task 5 should not be copied !
+            self.assertEqual(bottom_genealogy_name.count('Grandchild task 5'), 1)
+
+        # Phase 3 : Verify recurrences of the copy of Grandchild task 1 (recurrent)
+        n = 17
+        for i in range(1, 5):
+            with freeze_time("2020-01-%02d" % (i + 15)):
+                self.env['project.task.recurrence']._cron_create_recurring_tasks()
+                project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+                self.assertEqual(project_task_count, n + i)
+                self.assertEqual(project_subtask_count, n + i - 1)
+        with freeze_time("2020-01-25"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 21)
+            self.assertEqual(project_subtask_count, 20)
+
+        # Phase 4 : No more recurrence
+        with freeze_time("2020-02-15"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 21)
+            self.assertEqual(project_subtask_count, 20)
+
+        all_tasks = self.env['project.task'].search(domain)
+        self.assertEqual(len(all_tasks), 21)
+        deadlines = all_tasks.sorted('create_date').mapped('date_deadline')
+        self.assertTrue(bool(deadlines[-4]))
+        self.assertTrue(bool(deadlines[-3]))
+        del deadlines[-4]
+        del deadlines[-3]
+        self.assertTrue(not any(deadlines), "Deadline should not be copied")
+
+        bottom_genealogy = all_tasks.filtered(lambda t: not t.child_ids.exists())
+        bottom_genealogy_name = bottom_genealogy.mapped('name')
+        self.assertEqual(bottom_genealogy_name.count('Child task 1'), 1)
+        self.assertEqual(bottom_genealogy_name.count('Grandchild task 1 (recurrent)'), 10)
+        self.assertEqual(bottom_genealogy_name.count('Grandchild task 5'), 1)
+
+        for f in self.env['project.task.recurrence']._get_recurring_fields():
+            self.assertTrue(all_tasks[0][f] == all_tasks[1][f] == all_tasks[2][f], "Field %s should have been copied" % f)
