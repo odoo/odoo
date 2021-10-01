@@ -27,7 +27,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
             params: {'redirect_url': $element.data('redirect_url')},
         }).then(function (data) {
             if (data) {
-                self.$('button.validation_email_close').click();
+                window.location = $element.data('redirect_url');
             }
         });
     },

@@ -179,6 +179,7 @@ class CustomerPortal(Controller):
                     except:
                         values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
+                self.on_account_update(values, partner)
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
@@ -199,6 +200,9 @@ class CustomerPortal(Controller):
         response = request.render("portal.portal_my_details", values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
+
+    def on_account_update(self, values, partner):
+        pass
 
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
