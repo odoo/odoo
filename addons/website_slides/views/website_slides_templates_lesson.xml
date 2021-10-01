@@ -552,7 +552,10 @@
     <div class="oe_slide_js_embed_code_widget mt-4">
         <h5 class="mt0">Embed in your website</h5>
         <div class="form-group">
-            <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
+            <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();">
+                <!-- Use the external embedding URL here, see python controller '_slide_embed' method for more details. -->
+                <t t-esc="slide.embed_code_external"/>
+            </textarea>
         </div>
         <div class="form-group d-flex" t-if="slide.slide_type in ('presentation', 'document')">
             <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>

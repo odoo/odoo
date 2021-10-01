@@ -10,6 +10,7 @@ import PyPDF2
 import json
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from PIL import Image
 from werkzeug import urls
 
@@ -165,6 +166,8 @@ class Slide(models.Model):
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
+    embed_code_external = fields.Html('External Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False,
+        help="Same as 'Embed Code' but used to embed the content on an external website.")
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
@@ -320,25 +323,33 @@ class Slide(models.Model):
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root
+
         for record in self:
+            embed_code_external = False
+
             if not base_url:
                 base_url = record.get_base_url()
             if base_url[-1] == '/':
                 base_url = base_url[:-1]
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
-                record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
+                slide_url_external = base_url + url_for('/slides/embed_external/%s?page=1' % record.id)
+                base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>')
+                record.embed_code = base_embed_code % (slide_url, 315, 420)
+                embed_code_external = base_embed_code % (slide_url_external, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    record.embed_code = Markup('<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>') % (record.document_id, query)
                 else:
                     # embed google doc video
-                    record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    record.embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>') % (record.document_id)
             else:
                 record.embed_code = False
+
+            record.embed_code_external = embed_code_external or record.embed_code
 
     @api.onchange('url')
     def _on_change_url(self):
