@@ -171,3 +171,28 @@ class TestUsers2(TransactionCase):
         user.write({fname: group2.id})
         self.assertEqual(user.groups_id & groups, groups)
         self.assertEqual(user.read([fname])[0][fname], group2.id)
+
+    def test_reified_groups_on_change(self):
+        """Test that a change on a reified fields trigger the onchange of groups_id."""
+        group_public = self.env.ref('base.group_public')
+        group_portal = self.env.ref('base.group_portal')
+        group_user = self.env.ref('base.group_user')
+
+        # Build the reified group field name
+        user_groups = group_public | group_portal | group_user
+        user_groups_ids = [str(group_id) for group_id in sorted(user_groups.ids)]
+        group_field_name = f"sel_groups_{'_'.join(user_groups_ids)}"
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Test"
+        user_form.login = "Test"
+        self.assertFalse(user_form.share)
+
+        setattr(user_form, group_field_name, group_portal.id)
+        self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+
+        setattr(user_form, group_field_name, group_user.id)
+        self.assertFalse(user_form.share, 'The groups_id onchange should have been triggered')
+
+        setattr(user_form, group_field_name, group_public.id)
+        self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')

@@ -1236,6 +1236,8 @@ class GroupsView(models.Model):
                     user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
                     attrs['groups'] = 'base.group_no_one'
+                    # Trigger the on_change of this "virtual field"
+                    attrs['on_change'] = '1'
                     xml1.append(E.field(name=field_name, **attrs))
                     xml1.append(E.newline())
 
@@ -1431,6 +1433,22 @@ class UsersView(models.Model):
         return values
 
     def onchange(self, values, field_name, field_onchange):
+        # field_name can be either a string, a list or Falsy
+        if isinstance(field_name, list):
+            names = field_name
+        elif field_name:
+            names = [field_name]
+        else:
+            names = []
+
+        if any(is_reified_group(field) for field in names):
+            field_name = (
+                ['groups_id']
+                + [field for field in names if not is_reified_group(field)]
+            )
+            values.pop('groups_id', None)
+            values.update(self._remove_reified_groups(values))
+
         field_onchange['groups_id'] = ''
         result = super().onchange(values, field_name, field_onchange)
         if not field_name: # merged default_get
