@@ -26,6 +26,13 @@ for (const snippet of snippetsNames) {
     }, {
         content: `click on 'BLOCKS' tab (${snippet})`,
         trigger: ".o_we_add_snippet_btn",
+        run: function (actions) {
+            // FIXME cannot find the reason why this setTimeout is needed to
+            // after reverting ab7508393376075f95d6dd5925e7f4462936d2, to check
+            // (this commit is however reverted temporarily until a better
+            // solution is found).
+            setTimeout(() => actions.auto(), 0);
+        },
     }];
 
     if (snippet === 's_google_map') {
