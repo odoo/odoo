@@ -17,6 +17,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+# IAP Server address.
+# Customize this address if you want to use the IAP Test Server
 SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
 TIMEOUT = 30
 
@@ -129,12 +131,13 @@ class AccountEdiProxyClientUser(models.Model):
             response = {'id_client': 'demo', 'refresh_token': 'demo'}
         else:
             try:
+                # b64encode returns a bytestring, we need it as a string
                 response = self._make_request(SERVER_URL + '/iap/account_edi/1/create_user', params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
                     'edi_format_code': edi_format.code,
                     'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem)
+                    'public_key': base64.b64encode(public_pem).decode()
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
