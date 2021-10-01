@@ -1234,7 +1234,11 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector('br');
+    return (
+        isEmptyBlock(blockEl) &&
+        !blockEl.querySelector('br') &&
+        blockEl.nodeName !== "IMG"
+    );
 }
 
 /**
