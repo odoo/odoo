@@ -17,7 +17,7 @@
                 <body>
                     <div id="PDFViewer" class="o_wslides_fs_pdf_viewer d-flex flex-column h-100">
                         <!-- PDF Viewer Header : contains the name, and the share links -->
-                        <div t-if="is_embedded" class="oe_slides_share_bar">
+                        <div t-if="is_external_embed" class="oe_slides_share_bar">
                             <div class="container-fluid">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -41,7 +41,7 @@
                                 t-attf-data-slideurl="/slides/slide/#{slug(slide)}/pdf_content"
                                 t-attf-data-downloadable="#{False}"
                                 t-att-data-defaultpage="page">
-                            <t t-if="is_embedded">
+                            <t t-if="is_external_embed">
                                 <div id="slide_share" class="oe_slide_embed_option" style="display: none;">
                                     <t t-call="website_slides.slide_share_modal">
                                         <t t-set="record" t-value="slide"/>
