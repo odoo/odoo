@@ -186,27 +186,6 @@ class HrLeave(models.Model):
         self.env['hr.work.entry'].create(vals_list)
         return res
 
-    def _get_number_of_days(self, date_from, date_to, employee_id):
-        """ If an employee is currently working full time but asks for time off next month
-            where he has a new contract working only 3 days/week. This should be taken into
-            account when computing the number of days for the leave (2 weeks leave = 6 days).
-            Override this method to get number of days according to the contract's calendar
-            at the time of the leave.
-        """
-        days = super(HrLeave, self)._get_number_of_days(date_from, date_to, employee_id)
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            # Use sudo otherwise base users can't compute number of days
-            contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open'])
-            contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
-            calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
-            result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar)[employee.id]
-            if self.request_unit_half and result['hours'] > 0:
-                result['days'] = 0.5
-            return result
-
-        return days
-
     def _get_calendar(self):
         self.ensure_one()
         if self.date_from and self.date_to:
