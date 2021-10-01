@@ -11,6 +11,9 @@
  * can take => the overflowing (foldable) items are added in the dropdown-menu.
  * @param {string} [options.minSize] the menu auto-hide option will be disabled
  * if viewport is smaller than minSize.
+ * @param {Array} [options.images=[]] images to wait for before menu update.
+ * @param {Array} [options.loadingStyleClasses=[]] list of CSS classes to add while
+ * updating the menu.
 */
 export async function initAutoMoreMenu(el, options) {
     if (!el) {
@@ -20,6 +23,8 @@ export async function initAutoMoreMenu(el, options) {
         unfoldable: 'none',
         maxWidth: false,
         minSize: '767',
+        images: [],
+        loadingStyleClasses: [],
     }, options || {});
 
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
@@ -28,6 +33,11 @@ export async function initAutoMoreMenu(el, options) {
     var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
     var extraItemsToggle = null;
     let debounce;
+
+    if (options.images.length) {
+        await _afterImagesLoading(options.images);
+        _adapt();
+    }
 
     const debouncedAdapt = () => {
         clearTimeout(debounce);
@@ -171,6 +181,26 @@ export async function initAutoMoreMenu(el, options) {
         _restore();
         window.removeEventListener('resize', debouncedAdapt);
         el.removeEventListener('dom:autoMoreMenu:adapt', _adapt);
+    }
+
+    function _afterImagesLoading(images) {
+        const defs = images.map((image) => {
+            if (image.complete || !image.getClientRects().length) {
+                return null;
+            }
+            return new Promise(function (resolve, reject) {
+                if (!image.width) {
+                    // The purpose of the 'o_menu_image_placeholder' class is to add a default
+                    // size to non loaded images (on the first update) to prevent flickering.
+                    image.classList.add('o_menu_image_placeholder');
+                }
+                image.addEventListener('load', () => {
+                    image.classList.remove('o_menu_image_placeholder');
+                    resolve();
+                });
+            });
+        });
+        return Promise.all(defs);
     }
 
     function _endAutoMoreMenu() {

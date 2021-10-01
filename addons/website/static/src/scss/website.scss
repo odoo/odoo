@@ -207,20 +207,19 @@ body:not(.o_fullscreen) {
     .navbar-collapse {
         min-width: 0; // Allows it to shrink during loading
     }
-    .nav-item {
-        transition: opacity 1000ms ease 0s;
-    }
     .btn {
         // This was a default bootstrap style before but it was removed from
         // the library at some point. It seems important in the header so that
         // the header does not flicker during loading.
         white-space: nowrap;
     }
-    .o_menu_loading {
+    .o_menu_image_placeholder {
+        width: 80px !important;
+    }
+    #top_menu {
         flex-wrap: nowrap !important;
-        overflow: hidden !important;
-
-        .nav-item {
+        &.o_menu_loading {
+            overflow: hidden !important;
             opacity: 0 !important;
         }
     }
