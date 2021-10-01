@@ -28,7 +28,7 @@ class Digest(models.Model):
                                     ('monthly', 'Monthly'),
                                     ('quarterly', 'Quarterly')],
                                    string='Periodicity', default='daily', required=True)
-    next_run_date = fields.Date(string='Next Send Date')
+    next_run_date = fields.Date(string='Next Mailing Date')
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     available_fields = fields.Char(compute='_compute_available_fields')
@@ -37,7 +37,7 @@ class Digest(models.Model):
     # First base-related KPIs
     kpi_res_users_connected = fields.Boolean('Connected Users')
     kpi_res_users_connected_value = fields.Integer(compute='_compute_kpi_res_users_connected_value')
-    kpi_mail_message_total = fields.Boolean('Messages')
+    kpi_mail_message_total = fields.Boolean('Messages Sent')
     kpi_mail_message_total_value = fields.Integer(compute='_compute_kpi_mail_message_total_value')
 
     @api.depends('user_ids')
