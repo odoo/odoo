@@ -35,6 +35,25 @@ div.col:not([align]) {
     text-align: inherit;
 }
 
+.btn {
+    &.rounded-circle {
+        border-radius: 100px !important;
+        padding: 0.45rem 1.35rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    &.flat {
+        border: 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0;
+    }
+}
+
 // ===== Layout =====
 .o_layout {
     overflow: hidden;
