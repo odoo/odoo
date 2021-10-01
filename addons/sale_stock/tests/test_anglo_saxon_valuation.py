@@ -553,6 +553,67 @@ class TestAngloSaxonValuation(SavepointCase):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
+    def test_avco_ordered_return_and_receipt(self):
+        """ Sell and deliver some products before the user encodes the products receipt """
+        product = self.product
+        product.invoice_policy = 'order'
+        product.type = 'product'
+        product.categ_id.property_cost_method = 'average'
+        product.categ_id.property_valuation = 'real_time'
+        product.list_price = 100
+        product.standard_price = 50
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'partner_invoice_id': self.customer.id,
+            'partner_shipping_id': self.customer.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
+        })
+        so.action_confirm()
+
+        pick = so.picking_ids
+        pick.move_lines.write({'quantity_done': 5})
+        pick.button_validate()
+
+        product.standard_price = 40
+
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0], active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 1
+        return_wiz.product_return_moves.to_refund = False
+        res = return_wiz.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_lines.write({'quantity_done': 1})
+        return_pick.button_validate()
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env['stock.warehouse'].search([], limit=1).in_type_id.id,
+        })
+        # We don't set the price_unit so that the `standard_price` will be used (see _get_price_unit()):
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_1',
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'quantity_done': 1,
+        })
+        picking.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
+
     # -------------------------------------------------------------------------
     # AVCO Delivered
     # -------------------------------------------------------------------------
