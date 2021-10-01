@@ -851,7 +851,7 @@
     </div>
 
     <!-- H-ALIGN -->
-    <div id="so_text_align" data-selector=".s_text_highlight">
+    <div id="so_text_align" data-selector=".s_mail_text_highlight">
         <we-button-group string="Alignment">
             <we-button title="Left" data-select-class="text-left"><i class="fa fa-fw fa-align-left"/></we-button>
             <we-button title="Center" data-select-class="text-center"><i class="fa fa-fw fa-align-center"/></we-button>
@@ -859,7 +859,7 @@
         </we-button-group>
     </div>
 
-    <div id="so_width" data-selector=".s_alert, .s_blockquote, .s_text_highlight">
+    <div id="so_width" data-selector=".s_mail_alert, .s_mail_blockquote, .s_mail_text_highlight">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
             <we-button data-select-class="w-50">50%</we-button>
@@ -868,7 +868,7 @@
         </we-select>
     </div>
 
-    <div id="so_block_align" data-selector=".s_alert, .s_blockquote, .s_text_highlight">
+    <div id="so_block_align" data-selector=".s_mail_alert, .s_mail_blockquote, .s_mail_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
             <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
             <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
@@ -927,7 +927,7 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">.s_blockquote, .s_alert, .s_rating, .s_hr, .s_text_highlight</t>
+    <t t-set="so_content_addition_selector" t-translation="off">.s_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_text_highlight</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
