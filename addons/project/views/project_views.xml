@@ -1099,7 +1099,7 @@
                                         </t>
                                         <t t-else="">
                                             <br/>
-                                            <span class="fa fa-lock text-muted"/><span class="text-muted"> Private</span>
+                                            <span class="font-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                         </t> 
                                         <br />
                                         <t t-if="record.partner_id.value">
@@ -1171,7 +1171,7 @@
                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
                     <field name="name" widget="name_with_subtask_count"/>
                     <field name="child_text" invisible="1"/>
-                    <field name="project_id" optional="show" readonly="1"/>
+                    <field name="project_id" widget="project_private_task" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
@@ -1209,7 +1209,7 @@
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_ids" event_limit="5"
                           hide_time="true" js_class="project_calendar" event_open_popup="true" quick_add="false">
-                    <field name="project_id" filters="1"/>
+                    <field name="project_id" widget="project_private_task" filters="1"/>
                     <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
@@ -1257,6 +1257,7 @@
             <field name="arch" type="xml">
                 <activity string="Project Tasks" js_class="project_activity">
                     <field name="user_ids"/>
+                    <field name="project_id"/>
                     <templates>
                         <div class="justify-content-between" t-name="activity-box">
                             <field name="user_ids" widget="many2many_avatar_user"/>
@@ -1265,7 +1266,8 @@
                                     <field name="name" display="full"/>
                                 </span>
                                 <span t-att-title="record.project_id.value">
-                                    <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
+                                    <field t-if="record.project_id.value" name="project_id" muted="1" display="full"/>
+                                    <span t-else="" class="font-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
                         </div>
