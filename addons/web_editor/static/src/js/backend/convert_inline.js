@@ -118,6 +118,14 @@ function getMatchedCSSRules(a) {
         return a*100 + b*10 + c;
     }
     css.sort(function (a, b) { return specificity(a[0]) - specificity(b[0]); });
+    // Add inline styles at the highest specificity.
+    if (a.style.length) {
+        const inlineStyles = {};
+        for (const styleName of a.style) {
+            inlineStyles[styleName] = a.style[styleName];
+        }
+        css.push([a, inlineStyles]);
+    }
 
     style = {};
     _.each(css, function (v,k) {
@@ -210,10 +218,10 @@ function getMatchedCSSRules(a) {
             const camelCased = styleName.replace(/-(\w)/g, match => match[1].toUpperCase());
             node.style[camelCased] = style[styleName];
             for (const child of $(node).children()) {
-                const childStyle = $(child).css(styleName);
-                if (childStyle && childStyle !== 'inherit') {
-                    _styleDescendants(child, styleName);
+                if (child.style[camelCased] !== style[styleName]) {
+                    break;
                 }
+                _styleDescendants(child, styleName);
             }
         }
         if (style.color) {
