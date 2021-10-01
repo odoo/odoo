@@ -82,7 +82,9 @@
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
+    <xpath expr="." position="inside">
+        <div data-drop-in="#wrap" data-selector=".s_newsletter_popup"/>
+    </xpath>
     <xpath expr="//div" position="after">
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"

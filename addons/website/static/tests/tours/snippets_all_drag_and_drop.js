@@ -15,7 +15,7 @@ for (const snippet of snippetsNames) {
         run: "drag_and_drop #wrap",
     }, {
         content: `Edit ${snippet} snippet`,
-        trigger: `#wrap.o_editable [data-snippet='${snippet}']`,
+        trigger: `#wrap.o_editable [data-snippet='${snippet}']:not(.o_drag_preview)`,
     }, {
         content: `check ${snippet} setting are loaded, wait panel is visible`,
         trigger: ".o_we_customize_panel",
@@ -41,6 +41,7 @@ for (const snippet of snippetsNames) {
             trigger: ".modal-footer .btn-secondary",
         });
     } else if (['s_popup', 's_newsletter_subscribe_popup'].includes(snippet)) {
+        snippetSteps[1]['in_modal'] = false;
         snippetSteps[2]['in_modal'] = false;
         snippetSteps.splice(3, 2, {
             content: `Hide the ${snippet} popup`,

@@ -17,10 +17,10 @@ const FacebookPageWidget = publicWidget.Widget.extend({
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
 
         var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
-        if (!params.href) {
-            return def;
-        }
         params.width = utils.confine(Math.floor(this.$el.width()), 180, 500);
+        params.height = params.height || 70;
+        params.hide_cover = params.hide_cover || true;
+        params.href = params.href || 'https://www.facebook.com/Odoo';
 
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {

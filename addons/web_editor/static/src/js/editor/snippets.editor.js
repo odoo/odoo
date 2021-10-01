@@ -2324,8 +2324,8 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} $snippets
      */
     _makeSnippetDraggable: function ($snippets) {
-        var self = this;
-        var $toInsert, dropped, $snippet;
+        const self = this;
+        let $toInsert, dropped, $snippet, $modal;
 
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.ownerDocument);
@@ -2369,6 +2369,15 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     $toInsert = $baseBody.clone();
+                    $toInsert.addClass('o_drag_preview');
+                    // The associated snippet widget should be started so that
+                    // the user visualizes the final version of the snippet
+                    // that is being dragged.
+                    self.trigger_up('widgets_start_request', {
+                        $target: $toInsert,
+                        editableMode: true,
+                    });
+
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
@@ -2386,22 +2395,31 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    $modal = $toInsert.find('.modal');
+                    if ($modal.length) {
+                        const {width} = $('#wrapwrap')[0].getBoundingClientRect();
+                        self._insertDropzone($('<we-hook/>').appendTo($('#wrap')), false, {position: 'fixed', width, height: '100%', top: 0, margin: 0});
+                    } else {
+                        self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    }
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
                             if (dropped) {
+                                $modal.modal('hide');
                                 $toInsert.detach();
                                 $toInsert.addClass('oe_snippet_body');
                                 $('.oe_drop_zone').removeClass('invisible');
                             }
                             dropped = true;
                             $(this).first().after($toInsert).addClass('invisible');
+                            $modal.modal('show');
                             $toInsert.removeClass('oe_snippet_body');
                         },
                         out: function () {
                             var prev = $toInsert.prev();
                             if (this === prev[0]) {
+                                $modal.modal('hide');
                                 dropped = false;
                                 $toInsert.detach();
                                 $(this).removeClass('invisible');
@@ -2459,6 +2477,7 @@ var SnippetsMenu = Widget.extend({
                     let prev;
                     let next;
                     if (dropped) {
+                        $toInsert.find('.s_preview').remove();
                         prev = $toInsert.first()[0].previousSibling;
                         next = $toInsert.last()[0].nextSibling;
 
@@ -2523,6 +2542,7 @@ var SnippetsMenu = Widget.extend({
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                            $toInsert.removeClass('o_drag_preview');
                         });
                     } else {
                         $toInsert.remove();

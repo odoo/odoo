@@ -14,7 +14,7 @@ tour.register('newsletter_popup_edition', {
     }),
     {
         content: "Check the modal is opened for edition",
-        trigger: '.o_newsletter_popup .modal:visible',
+        trigger: '.o_newsletter_popup:not(.o_drag_preview) .modal:visible',
         in_modal: false,
         run: () => null,
     },
