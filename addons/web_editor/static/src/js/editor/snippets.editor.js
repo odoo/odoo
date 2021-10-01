@@ -430,19 +430,8 @@ var SnippetEditor = Widget.extend({
      */
     removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-
-        // First enable a surrounding snippet (or just disable the current
-        // snippet if there is nothing around).
-        const parent = this.$target[0].parentElement;
-        const nextSibling = this.$target[0].nextElementSibling;
-        const previousSibling = this.$target[0].previousElementSibling;
-        await new Promise(resolve => {
-            this.trigger_up('activate_snippet', {
-                $snippet: $(previousSibling || nextSibling || parent),
-                onSuccess: () => resolve(),
-            });
-        });
-
+        this.toggleOverlay(false);
+        await this.toggleOptions(false);
         // If it is an invisible element, we must close it before deleting it
         // (e.g. modal).
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
@@ -458,6 +447,18 @@ var SnippetEditor = Widget.extend({
                 },
                 onSuccess: resolve,
             });
+        });
+
+        // TODO this should probably be awaited but this is not possible right
+        // now as removeSnippet can be called in a locked editor mutex context
+        // and would thus produce a deadlock. Also, this awaited
+        // 'activate_snippet' call would allow to remove the 'toggleOverlay' and
+        // 'toggleOptions' calls at the start of this function.
+        const parent = this.$target[0].parentElement;
+        const nextSibling = this.$target[0].nextElementSibling;
+        const previousSibling = this.$target[0].previousElementSibling;
+        this.trigger_up('activate_snippet', {
+            $snippet: $(previousSibling || nextSibling || parent)
         });
 
         // Actually remove the snippet and its option UI.
