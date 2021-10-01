@@ -45,7 +45,7 @@ export class DebugMenu extends Component {
                     categoriesByNamespace: {
                         default: defaultCategories,
                     },
-                    emptyMessageByNamespace: { default: "No commands found" },
+                    emptyMessageByNamespace: { default: this.env._t("No commands found") },
                     placeholder: this.env._t("Choose a debug command..."),
                     providers: [provider],
                 };
