@@ -16,14 +16,14 @@ class TestLivechatLead(TestCrmCommon):
             cls.env, login='user_anonymous',
             name='Anonymous Website', email=False,
             company_id=cls.company_main.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_public',
         )
         cls.user_portal = mail_new_test_user(
             cls.env, login='user_portal',
             name='Paulette Portal', email='user_portal@test.example.com',
             company_id=cls.company_main.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_portal',
         )
 
