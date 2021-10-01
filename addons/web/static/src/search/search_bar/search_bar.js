@@ -324,7 +324,7 @@ export class SearchBar extends Component {
      * @param {number} index
      */
     onItemMousemove(focusedIndex) {
-        this.computeState({ focusedIndex }); /** @todo review that */
+        this.state.focusedIndex = focusedIndex;
         this.inputRef.el.focus();
     }
 
@@ -342,7 +342,7 @@ export class SearchBar extends Component {
             case "ArrowDown":
                 ev.preventDefault();
                 if (this.items.length) {
-                    if (this.state.focusedIndex === this.items.length - 1) {
+                    if (this.state.focusedIndex >= this.items.length - 1) {
                         focusedIndex = 0;
                     } else {
                         focusedIndex = this.state.focusedIndex + 1;
@@ -354,7 +354,10 @@ export class SearchBar extends Component {
             case "ArrowUp":
                 ev.preventDefault();
                 if (this.items.length) {
-                    if (this.state.focusedIndex === 0) {
+                    if (
+                        this.state.focusedIndex === 0 ||
+                        this.state.focusedIndex > this.items.length - 1
+                    ) {
                         focusedIndex = this.items.length - 1;
                     } else {
                         focusedIndex = this.state.focusedIndex - 1;
@@ -421,7 +424,7 @@ export class SearchBar extends Component {
         }
 
         if (focusedIndex !== undefined) {
-            this.computeState({ focusedIndex });
+            this.state.focusedIndex = focusedIndex;
         }
     }
 
