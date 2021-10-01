@@ -143,8 +143,10 @@ class AccountMove(models.Model):
         else:
             document_type = 'TD0X'
 
+        # b64encode returns a bytestring, the template tries to turn it to string,
+        # but only gets the repr(pdf) --> "b'<base64_data>'"
         pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
-        pdf = base64.b64encode(pdf)
+        pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         # tax map for 0% taxes which have no tax_line_id

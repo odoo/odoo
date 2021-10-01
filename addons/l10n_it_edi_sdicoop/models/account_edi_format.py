@@ -116,7 +116,7 @@ class AccountEdiFormat(models.Model):
                 'name': filename,
                 'res_id': invoice.id,
                 'res_model': invoice._name,
-                'datas': base64.encodebytes(xml),
+                'datas': base64.b64encode(xml.encode()),
                 'description': _('Italian invoice: %s', invoice.move_type),
                 'type': 'binary',
             })
@@ -130,7 +130,7 @@ class AccountEdiFormat(models.Model):
             else:
                 to_send[filename] = {
                     'invoice': invoice,
-                    'data': {'filename': filename, 'xml': base64.b64encode(xml)}}
+                    'data': {'filename': filename, 'xml': base64.b64encode(xml.encode()).decode()}}
 
         company = invoices.company_id
         proxy_user = self._get_proxy_user(company)
