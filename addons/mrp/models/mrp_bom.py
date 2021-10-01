@@ -354,7 +354,7 @@ class MrpBomLine(models.Model):
         help="BOM Product Variants needed to apply this line.")
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
-        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        domain="[('workcenter_id.active', '=', True), ('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         help="The operation where the components are consumed, or the finished products created.")
     child_bom_id = fields.Many2one(
         'mrp.bom', 'Sub BoM', compute='_compute_child_bom_id')
