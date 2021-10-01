@@ -83,7 +83,7 @@
     <xpath expr="." position="inside">
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
             <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
-            <t t-call="web_editor.snippet_options_border_line_widgets">
+            <t t-call="website.snippet_options_border_line_widgets">
                 <t t-set="label">&#8985; Separator</t>
                 <t t-set="direction" t-value="'top'"/>
                 <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
