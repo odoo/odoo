@@ -346,7 +346,8 @@
             <field name="arch" type="xml">
                 <notebook colspan="4" position="inside">
                     <!-- Placeholder container to hold information about external accounts (Google calendar, Microsoft calendar, ...) -->
-                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system">
+                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system"
+                         attrs="{'invisible': [('share', '=', True)]}">
                         <group name="calendar_accounts"/>
                     </page>
                 </notebook>

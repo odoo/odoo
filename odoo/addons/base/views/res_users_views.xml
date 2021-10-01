@@ -223,6 +223,7 @@
                             <group>
                                 <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
                                         attrs="{'invisible': [('id', '=', False)]}"/>
+                                <field name="share" invisible="1"/>
                             </group>
                         </div>
                         <notebook colspan="4">
@@ -251,7 +252,8 @@
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one">
+                                    <group string="Menus Customization" groups="base.group_no_one"
+                                        attrs="{'invisible': [('share', '=', True)]}">
                                         <field name="action_id"/>
                                     </group>
                                 </group>
@@ -320,7 +322,8 @@
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
-                    <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <filter name="filter_no_share" string="Internal Users" domain="[('share', '=', False)]"/>
+                    <filter name="filter_share" string="Portal Users" domain="[('share', '=', True)]"/>
                     <separator/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
@@ -453,6 +456,7 @@
                                     <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                                     <field name="tz_offset" invisible="1"/>
                                 </group>
+                                <field name="share" invisible="1"/>
                             </group>
                             <group name="signature">
                                 <field name="signature" readonly="0" options="{'style-inline': true}"/>

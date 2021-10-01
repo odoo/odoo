@@ -32,7 +32,7 @@ class TestWebsiteBlogCommon(common.TransactionCase):
             'name': 'Cedric Public',
             'login': 'cedric',
             'email': 'cedric.public@example.com',
-            'notification_type': 'inbox',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [group_public_id])]
         })
 
