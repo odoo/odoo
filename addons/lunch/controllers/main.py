@@ -103,7 +103,7 @@ class LunchController(http.Controller):
         has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
 
         if not user_location or not has_multi_company_access:
-            user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1)
+            user.last_lunch_location_id = user_location = request.env['lunch.location'].search([], limit=1) or user_location
 
         alert_domain = expression.AND([
             [('available_today', '=', True)],
