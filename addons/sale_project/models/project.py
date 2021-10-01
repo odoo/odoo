@@ -33,17 +33,17 @@ class Project(models.Model):
                 )
         ).update({'sale_line_id': False})
 
-    @api.depends('sale_order_id')
+    @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
     def _compute_has_any_so_to_invoice(self):
         """Has any Sale Order whose invoice_status is set as To Invoice"""
-        if not self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
-            self.has_any_so_to_invoice = False
-        else:
-            for project in self:
-                has_any_so_to_invoice = project.sale_order_id and project.sale_order_id.invoice_status == "to invoice"
-                for task in project.task_ids:
-                    has_any_so_to_invoice = has_any_so_to_invoice or (task.sale_order_id and task.sale_order_id.invoice_status == "to invoice")
-                project.has_any_so_to_invoice = has_any_so_to_invoice
+        project_to_invoice = self.env['project.project'].search([
+            '|',
+                ('sale_order_id.invoice_status', '=', 'to invoice'),
+                ('tasks.sale_order_id.invoice_status', '=', 'to invoice'),
+            ('id', 'in', self.ids)
+        ])
+        project_to_invoice.has_any_so_to_invoice = True
+        (self - project_to_invoice).has_any_so_to_invoice = False
 
     def action_view_so(self):
         self.ensure_one()
