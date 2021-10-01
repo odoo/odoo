@@ -278,7 +278,9 @@ class AccountReconcileModel(models.Model):
         self.ensure_one()
         balance = base_line_dict['balance']
 
-        res = tax.compute_all(balance)
+        tax_type = tax.type_tax_use
+        is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        res = tax.compute_all(balance, is_refund=is_refund)
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
