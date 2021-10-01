@@ -87,7 +87,9 @@ function getMatchedCSSRules(a) {
     var style;
     a.matches = a.matches || a.webkitMatchesSelector || a.mozMatchesSelector || a.msMatchesSelector || a.oMatchesSelector;
     for (r = 0; r < rulesCache.length; r++) {
-        if (a.matches(rulesCache[r].selector)) {
+        // The top element of a mailing has the class 'o_layout'. Give it the
+        // body's styles so they can trickle down.
+        if (a.matches(rulesCache[r].selector) || (a.classList.contains('o_layout') && rulesCache[r].selector === 'body')) {
             style = rulesCache[r].style;
             if (style.parentRule) {
                 var style_obj = {};
@@ -363,15 +365,27 @@ const tableAttributes = {
 const tableStyles = {
     'border-collapse': 'collapse',
     'text-align': 'inherit',
+    'font-size': 'unset',
+    'line-height': 'unset',
 };
 function _createTable(attributes = []) {
     const $table = $('<table/>');
-    $table.attr(tableAttributes).css(tableStyles);
+    $table.attr(tableAttributes);
     $table[0].style.setProperty('width', '100%', 'important');
     for (const attr of attributes) {
-        if (attr.name !== 'width' && attr.value !== '100%') {
+        if (!(attr.name === 'width' && attr.value === '100%')) {
             $table.attr(attr.name, attr.value);
         }
+    }
+    if ($table.hasClass('o_layout')) {
+        // The top mailing element inherits the body's font size and line-height
+        // and should keep them.
+        const layoutStyles = {...tableStyles};
+        delete layoutStyles['font-size'];
+        delete layoutStyles['line-height'];
+        $table.css(layoutStyles);
+    } else {
+        $table.css(tableStyles);
     }
     return $table;
 }
