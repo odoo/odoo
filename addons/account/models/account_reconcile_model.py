@@ -803,13 +803,13 @@ class AccountReconcileModel(models.Model):
         candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
 
         st_line_currency = st_line.foreign_currency_id or st_line.currency_id
-        candidate_currencies = set(candidate['aml_currency_id'] or st_line.company_id.currency_id.id for candidate in candidates)
+        candidate_currencies = set(candidate['aml_currency_id'] for candidate in candidates)
         kept_candidates = candidates
         if candidate_currencies == {st_line_currency.id}:
             kept_candidates = []
             sum_kept_candidates = 0
             for candidate in candidates:
-                candidate_residual = candidate['aml_amount_residual_currency'] if candidate['aml_currency_id'] else candidate['aml_amount_residual']
+                candidate_residual = candidate['aml_amount_residual_currency']
 
                 if st_line_currency.compare_amounts(candidate_residual, -st_line.amount_residual) == 0:
                     # Special case: the amounts are the same, submit the line directly.
