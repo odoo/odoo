@@ -1212,65 +1212,63 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     _renderCustomXML: async function (uiFragment) {
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
-        if (selectDependencyEl) {
-            const existingDependencyNames = [];
-            for (const el of this.formEl.querySelectorAll('.s_website_form_field:not(.s_website_form_dnone)')) {
-                const inputEl = el.querySelector('.s_website_form_input');
-                if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
-                        && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
-                        && !existingDependencyNames.includes(inputEl.name)) {
-                    const button = document.createElement('we-button');
-                    button.textContent = el.querySelector('.s_website_form_label_content').textContent;
-                    button.dataset.setVisibilityDependency = inputEl.name;
-                    selectDependencyEl.append(button);
-                    existingDependencyNames.push(inputEl.name);
-                }
+        const existingDependencyNames = [];
+        for (const el of this.formEl.querySelectorAll('.s_website_form_field:not(.s_website_form_dnone)')) {
+            const inputEl = el.querySelector('.s_website_form_input');
+            if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
+                    && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
+                    && !existingDependencyNames.includes(inputEl.name)) {
+                const button = document.createElement('we-button');
+                button.textContent = el.querySelector('.s_website_form_label_content').textContent;
+                button.dataset.setVisibilityDependency = inputEl.name;
+                selectDependencyEl.append(button);
+                existingDependencyNames.push(inputEl.name);
             }
+        }
 
-            const comparator = this.$target[0].dataset.visibilityComparator;
-            const dependencyEl = this._getDependencyEl();
-            if (dependencyEl) {
-                if ((['radio', 'checkbox'].includes(dependencyEl.type) || dependencyEl.nodeName === 'SELECT')) {
-                    // Update available visibility options
-                    const selectOptEl = uiFragment.querySelectorAll('we-select[data-name="hidden_condition_no_text_opt"]')[1];
-                    const inputContainerEl = this.$target[0];
-                    const dependencyEl = this._getDependencyEl();
-                    if (dependencyEl.nodeName === 'SELECT') {
-                        for (const option of dependencyEl.querySelectorAll('option')) {
-                            const button = document.createElement('we-button');
-                            button.textContent = option.value;
-                            button.dataset.selectDataAttribute = option.value;
-                            selectOptEl.append(button);
-                        }
-                        if (!inputContainerEl.dataset.visibilityCondition) {
-                            inputContainerEl.dataset.visibilityCondition = dependencyEl.querySelector('option').value;
-                        }
-                    } else { // DependecyEl is a radio or a checkbox
-                        const dependencyContainerEl = dependencyEl.closest('.s_website_form_field');
-                        const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll('.s_website_form_input');
-                        for (const el of inputsInDependencyContainer) {
-                            const button = document.createElement('we-button');
-                            button.textContent = el.value;
-                            button.dataset.selectDataAttribute = el.value;
-                            selectOptEl.append(button);
-                        }
-                        if (!inputContainerEl.dataset.visibilityCondition) {
-                            inputContainerEl.dataset.visibilityCondition = inputsInDependencyContainer[0].value;
-                        }
+        const comparator = this.$target[0].dataset.visibilityComparator;
+        const dependencyEl = this._getDependencyEl();
+        if (dependencyEl) {
+            if ((['radio', 'checkbox'].includes(dependencyEl.type) || dependencyEl.nodeName === 'SELECT')) {
+                // Update available visibility options
+                const selectOptEl = uiFragment.querySelectorAll('we-select[data-name="hidden_condition_no_text_opt"]')[1];
+                const inputContainerEl = this.$target[0];
+                const dependencyEl = this._getDependencyEl();
+                if (dependencyEl.nodeName === 'SELECT') {
+                    for (const option of dependencyEl.querySelectorAll('option')) {
+                        const button = document.createElement('we-button');
+                        button.textContent = option.value;
+                        button.dataset.selectDataAttribute = option.value;
+                        selectOptEl.append(button);
                     }
-                    if (!inputContainerEl.dataset.visibilityComparator) {
-                        inputContainerEl.dataset.visibilityComparator = 'selected';
+                    if (!inputContainerEl.dataset.visibilityCondition) {
+                        inputContainerEl.dataset.visibilityCondition = dependencyEl.querySelector('option').value;
                     }
-                    this.rerender = comparator ? this.rerender : true;
+                } else { // DependecyEl is a radio or a checkbox
+                    const dependencyContainerEl = dependencyEl.closest('.s_website_form_field');
+                    const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll('.s_website_form_input');
+                    for (const el of inputsInDependencyContainer) {
+                        const button = document.createElement('we-button');
+                        button.textContent = el.value;
+                        button.dataset.selectDataAttribute = el.value;
+                        selectOptEl.append(button);
+                    }
+                    if (!inputContainerEl.dataset.visibilityCondition) {
+                        inputContainerEl.dataset.visibilityCondition = inputsInDependencyContainer[0].value;
+                    }
                 }
-                if (!comparator) {
-                    // Set a default comparator according to the type of dependency
-                    if (dependencyEl.dataset.target) {
-                        this.$target[0].dataset.visibilityComparator = 'after';
-                    } else if (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
-                            || dependencyEl.nodeName === 'TEXTAREA') {
-                        this.$target[0].dataset.visibilityComparator = 'equal';
-                    }
+                if (!inputContainerEl.dataset.visibilityComparator) {
+                    inputContainerEl.dataset.visibilityComparator = 'selected';
+                }
+                this.rerender = comparator ? this.rerender : true;
+            }
+            if (!comparator) {
+                // Set a default comparator according to the type of dependency
+                if (dependencyEl.dataset.target) {
+                    this.$target[0].dataset.visibilityComparator = 'after';
+                } else if (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
+                        || dependencyEl.nodeName === 'TEXTAREA') {
+                    this.$target[0].dataset.visibilityComparator = 'equal';
                 }
             }
         }
@@ -1312,11 +1310,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             await this._fetchFieldRecords(field);
             list.dataset.availableRecords = JSON.stringify(field.records);
         }
-        if (selectDependencyEl) {
-            uiFragment.insertBefore(list, uiFragment.querySelector('we-select[string="Visibility"]'));
-        } else {
-            uiFragment.appendChild(list);
-        }
+        uiFragment.insertBefore(list, uiFragment.querySelector('we-select[string="Visibility"]'));
     },
     /**
      * Replaces the target content with the field provided.
