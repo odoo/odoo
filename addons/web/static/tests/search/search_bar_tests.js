@@ -2,7 +2,7 @@
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { click, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { click, makeDeferred, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
 import {
     editSearch,
     getFacetTexts,
@@ -696,5 +696,136 @@ QUnit.module("Search", (hooks) => {
         await validateSearch(controlPanel);
 
         assert.deepEqual(getDomain(controlPanel), [["ref", "ilike", "ref002"]]);
+    });
+
+    QUnit.test(
+        "expand an asynchronous menu and change the selected item with the mouse during expansion",
+        async function (assert) {
+            assert.expect(2);
+
+            const def = makeDeferred();
+            const mockRPC = async (route) => {
+                if (route.includes("/partner/name_search")) {
+                    await def;
+                }
+            };
+            const controlPanel = await makeWithSearch({
+                serverData,
+                mockRPC,
+                resModel: "partner",
+                Component: ControlPanel,
+                searchMenuTypes: [],
+                searchViewId: false,
+                searchViewArch: `
+                    <search>
+                        <field name="bar" operator="child_of"/>
+                    </search>
+                `,
+            });
+            await editSearch(controlPanel, "rec");
+            await click(controlPanel.el.querySelector(".o_expand"));
+            await triggerEvent(
+                controlPanel.el,
+                ".o_searchview_autocomplete li.o_menu_item:first-child",
+                "mousemove"
+            );
+            assert.containsNone(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent");
+
+            def.resolve();
+            await nextTick();
+            assert.containsN(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent", 5);
+        }
+    );
+
+    QUnit.test(
+        "expand an asynchronous menu and change the selected item with the arrow during expansion",
+        async function (assert) {
+            assert.expect(2);
+
+            const def = makeDeferred();
+            const mockRPC = async (route) => {
+                if (route.includes("/partner/name_search")) {
+                    await def;
+                }
+            };
+            const controlPanel = await makeWithSearch({
+                serverData,
+                mockRPC,
+                resModel: "partner",
+                Component: ControlPanel,
+                searchMenuTypes: [],
+                searchViewId: false,
+                searchViewArch: `
+                    <search>
+                        <field name="bar" operator="child_of"/>
+                    </search>
+                `,
+            });
+            await editSearch(controlPanel, "rec");
+            await click(controlPanel.el.querySelector(".o_expand"));
+            const searchInput = controlPanel.el.querySelector(".o_searchview input");
+            await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+            assert.containsNone(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent");
+
+            def.resolve();
+            await nextTick();
+            assert.containsN(controlPanel, ".o_searchview_autocomplete li.o_menu_item.o_indent", 5);
+        }
+    );
+
+    QUnit.test("checks that an arrowDown always selects an item", async function (assert) {
+        assert.expect(1);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="bar" operator="child_of"/>
+                    </search>
+                `,
+        });
+        await editSearch(controlPanel, "rec");
+        await click(controlPanel.el.querySelector(".o_expand"));
+        click(controlPanel.el.querySelector(".o_expand"));
+        triggerEvent(
+            controlPanel.el,
+            ".o_searchview_autocomplete li.o_menu_item.o_indent:last-child",
+            "mousemove"
+        );
+        const searchInput = controlPanel.el.querySelector(".o_searchview input");
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        assert.containsOnce(controlPanel, ".o_selection_focus");
+    });
+
+    QUnit.test("checks that an arrowUp always selects an item", async function (assert) {
+        assert.expect(1);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="bar" operator="child_of"/>
+                    </search>
+                `,
+        });
+        await editSearch(controlPanel, "rec");
+        await click(controlPanel.el.querySelector(".o_expand"));
+        click(controlPanel.el.querySelector(".o_expand"));
+        triggerEvent(
+            controlPanel.el,
+            ".o_searchview_autocomplete li.o_menu_item.o_indent:last-child",
+            "mousemove"
+        );
+        const searchInput = controlPanel.el.querySelector(".o_searchview input");
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowUp" });
+        assert.containsOnce(controlPanel, ".o_selection_focus");
     });
 });
