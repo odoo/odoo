@@ -360,9 +360,9 @@ class TestStockProductionLot(TestStockCommon):
             msg="Must be define even if the product's `expiration_time` isn't set.")
         self.assertAlmostEqual(
             apple_lot.use_date, expiration_date + timedelta(days=5), delta=time_gap)
-        self.assertEqual(
-            apple_lot.removal_date, False,
-            "Must be false as the `removal_time` isn't set on product.")
+        self.assertAlmostEqual(
+            apple_lot.removal_date, expiration_date + timedelta(days=self.apple_product.removal_time), delta=time_gap,
+            msg="`removal_date` should always be calculated when an expiration date is defined")
         self.assertAlmostEqual(
             apple_lot.alert_date, expiration_date + timedelta(days=4), delta=time_gap)
 
