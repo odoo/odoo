@@ -230,6 +230,8 @@
                     <field name="property_advance_tax_payment_account_id"
                         domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
                     />
+
+                    <field name="preceding_subtotal" optional="hide"/>
                 </tree>
             </field>
         </record>
