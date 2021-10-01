@@ -142,12 +142,8 @@ class MailChannel(models.Model):
         message_body = _('No history found')
         if page_history:
             html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (page, page) for page in page_history]
-            message_body = '<span class="o_mail_notification"><ul>%s</ul></span>' % (''.join(html_links))
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', pid), {
-            'body': message_body,
-            'channel_ids': self.ids,
-            'info': 'transient_message',
-        })
+            message_body = '<ul>%s</ul>' % (''.join(html_links))
+        self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor has left the conversation.')
