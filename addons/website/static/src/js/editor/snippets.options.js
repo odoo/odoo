@@ -6,7 +6,6 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-const dom = require('web.dom');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
