@@ -8,7 +8,7 @@ from odoo.exceptions import AccessError
 class Digest(models.Model):
     _inherit = 'digest.digest'
 
-    kpi_crm_lead_created = fields.Boolean('New Leads/Opportunities')
+    kpi_crm_lead_created = fields.Boolean('New Leads')
     kpi_crm_lead_created_value = fields.Integer(compute='_compute_kpi_crm_lead_created_value')
     kpi_crm_opportunities_won = fields.Boolean('Opportunities Won')
     kpi_crm_opportunities_won_value = fields.Integer(compute='_compute_kpi_crm_opportunities_won_value')
