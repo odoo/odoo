@@ -309,7 +309,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             resolver = resolve;
         });
         if (this.nodeOptions.cssReadonly) {
-            this.$iframe = $('<iframe class="o_readonly"/>');
+            this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
 
             var avoidDoubleLoad = 0; // this bug only appears on some computers with some chrome version.
@@ -378,6 +378,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
         def.then(function () {
             self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            if (self.$iframe) {
+                // Iframe is hidden until fully loaded to avoid glitches.
+                self.$iframe.removeClass('d-none');
+            }
         });
     },
     /**
