@@ -113,14 +113,13 @@
             </t>
             <!-- Scoring info -->
             <t t-if="question_scoring">
-                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                <t t-if="question.question_type in ['simple_choice', 'multiple_choice'] or question.is_scored_question">
                     <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
+                </t>
+                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
                     <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
                         <span t-esc="question_data['partial_inputs_count']"></span> Partial
                     </span>
-                </t>
-                <t t-if="question.is_scored_question">
-                    <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
                 </t>
             </t>
             <!-- Inputs info -->
