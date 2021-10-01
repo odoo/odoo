@@ -5,7 +5,7 @@ import dom from 'web.dom';
 import publicWidget from 'web.public.widget';
 import concurrency from 'web.concurrency';
 import Widget from 'web.Widget';
-
+import { initAutoMoreMenu } from '@web/legacy/js/core/menu';
 import { registry } from "@web/core/registry";
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
@@ -40,14 +40,16 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      */
     start: function () {
         var self = this;
-        dom.initAutoMoreMenu(this.el.querySelector('ul.o_menu_sections'), {
-            // The navbar contains different elements in community and
-            // enterprise, so we check for both of them here only
-            maxWidth: self.$el.width()
-                - (self.$('.o_menu_systray').outerWidth(true) || 0)
-                - (self.$('ul#oe_applications').outerWidth(true) || 0)
-                - (self.$('.o_menu_toggle').outerWidth(true) || 0)
-                - (self.$('.o_menu_brand').outerWidth(true) || 0),
+        initAutoMoreMenu(this.el.querySelector('ul.o_menu_sections'), {
+            maxWidth: function () {
+                // The navbar contains different elements in community and
+                // enterprise, so we check for both of them here only
+                return self.$el.width()
+                    - (self.$('.o_menu_systray').outerWidth(true) || 0)
+                    - (self.$('ul#oe_applications').outerWidth(true) || 0)
+                    - (self.$('.o_menu_toggle').outerWidth(true) || 0)
+                    - (self.$('.o_menu_brand').outerWidth(true) || 0);
+            },
         });
         return this._super.apply(this, arguments).then(function () {
             self.resolveInit();

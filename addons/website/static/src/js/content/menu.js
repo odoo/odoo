@@ -5,6 +5,7 @@ const config = require('web.config');
 var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var wUtils = require('website.utils');
+const { initAutoMoreMenu, destroyAutoMoreMenu } = require('@web/legacy/js/core/menu');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
 
@@ -440,7 +441,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
                 $window.trigger('resize');
             });
 
-            dom.initAutoMoreMenu(this.$topMenu[0], {unfoldable: '.divider, .divider ~ li, .o_no_autohide_item'});
+            initAutoMoreMenu(this.$topMenu[0], {unfoldable: '.divider, .divider ~ li, .o_no_autohide_item'});
         }
         this.$topMenu.removeClass('o_menu_loading');
         this.$topMenu.trigger('menu_loaded');
@@ -452,7 +453,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
         this._super(...arguments);
         if (!this.noAutohide && this.$topMenu) {
             $(window).off('.autohideMenu');
-            dom.destroyAutoMoreMenu(this.$topMenu[0]);
+            destroyAutoMoreMenu(this.$topMenu[0]);
         }
     },
 });
