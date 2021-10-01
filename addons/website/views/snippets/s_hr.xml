@@ -10,7 +10,7 @@
 <template id="s_hr_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-selector=".s_hr" data-target="hr">
-            <t t-call="web_editor.snippet_options_border_line_widgets">
+            <t t-call="website.snippet_options_border_line_widgets">
                 <t t-set="label">Border</t>
                 <t t-set="direction" t-value="'top'"/>
             </t>
