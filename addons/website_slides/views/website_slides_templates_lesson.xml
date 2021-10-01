@@ -557,7 +557,7 @@
                 <t t-esc="slide.embed_code_external"/>
             </textarea>
         </div>
-        <div class="form-group d-flex" t-if="slide.slide_type in ('presentation', 'document')">
+        <div t-if="slide.slide_type in ('presentation', 'document') and not embed_hide_starting_page" class="form-group d-flex">
             <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>
             <div class="input-group col-xs-3 col-sm-2 col-md-2 col-lg-3">
                 <input type="number" value="1" class="form-control"/>
