@@ -580,8 +580,10 @@ var SnippetEditor = Widget.extend({
                 editorUIsToUpdate.push(editor);
             }
             : async (editor, options) => {
-                for (const opt of options) {
-                    await opt.onBlur();
+                if (this.$target === editor.$target) {
+                    for (const opt of options) {
+                        await opt.onBlur();
+                    }
                 }
             };
         for (const $el of this._customize$Elements) {
