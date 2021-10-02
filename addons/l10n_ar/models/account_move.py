@@ -293,13 +293,24 @@ class AccountMove(models.Model):
             return 'l10n_ar.report_invoice_document'
         return super()._get_name_invoice_report()
 
-    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
-        if self.company_id.account_fiscal_country_id.code == 'AR' and self._l10n_ar_include_vat() and (
-                'commit_assetsbundle' in self.env.context or not self.env.context.get('params', {}).get('view_type') == 'form'):
+    def _l10n_ar_get_invoice_totals_for_report(self):
+        self.ensure_one()
+        tax_ids_filter = tax_line_id_filter = None
+        include_vat = self._l10n_ar_include_vat()
+
+        if include_vat:
             tax_ids_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
             tax_line_id_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
-        return super()._prepare_tax_lines_data_for_totals_from_invoice(
-            tax_line_id_filter=tax_line_id_filter, tax_ids_filter=tax_ids_filter)
+
+        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
+            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
+
+        if include_vat:
+            amount_untaxed = self.currency_id.round(
+                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
+        else:
+            amount_untaxed = self.amount_untaxed
+        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()
