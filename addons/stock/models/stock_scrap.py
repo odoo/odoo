@@ -52,7 +52,7 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
+    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
