@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
+from odoo.addons import decimal_precision as dp
 
 
 class StockScrap(models.Model):
@@ -48,7 +49,7 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
         domain="[('scrap_location', '=', True)]", required=True, states={'done': [('readonly', True)]})
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
+    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]}, digits=dp.get_precision('Product Unit of Measure'))
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default="draft")
