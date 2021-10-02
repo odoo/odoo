@@ -646,6 +646,10 @@ class HomeStaticTemplateHelpers(object):
     def get_qweb_templates(cls, addons, db=None, debug=False):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
 
 class GroupsTreeNode:
     """
@@ -933,7 +937,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
