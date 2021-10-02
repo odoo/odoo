@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -143,8 +146,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Las acciones hijas de servidor que serán ejecutadas. Tenga en cuenta que el "
-"último valor devuelto será usado como valor de retorno global."
+"Las acciones hijas de servidor que se ejecutarán. Tenga en cuenta que el "
+"último valor devuelto se usará como valor de retorno global."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -199,6 +202,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Deshabilitar esta acción automatizada le permitirá con su flujo de trabajo\n"
+"                pero cualquier data creada después de esto podría estar dañada\n"
+"                ya que está deshabilitando la personalización configurada en los\n"
+"                campos importantes o requeridos."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -235,7 +242,7 @@ msgstr "ID externo"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr "Campos que desencadenan el cambio."
+msgstr "Campos que desencadenan el OnChange."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -482,6 +489,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"El error ocurrió durante la ejecución de la acción automatizada.\n"
+"                    \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -491,7 +500,7 @@ msgstr "Activador"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "Fecha activación"
+msgstr "Fecha de activación"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -512,10 +521,10 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "Tipo de acción de servidor. Los valores que están disponibles son:\n"
-"- 'Ejecutar código Python': el bloque de código Python será ejecutado\n"
-"- 'Crear o duplicar un nuevo registro': se creará un nuevo registro con nuevos valores, o duplica uno existente en la base de datos\n"
+"- 'Ejecutar código Python': el bloque de código Python se ejecutará\n"
+"- 'Crear o duplicar un nuevo registro': se creará un nuevo registro con nuevos valores, o se duplicará uno existente en la base de datos\n"
 "- 'Actualizar un registro': se actualizarán los valores de un registro\n"
-"- 'Ejecutar varias acciones': se definirá una acción que lanza otras acciones de servidor\n"
+"- 'Ejecutar varias acciones': se definirá una acción que activará otras acciones de servidor\n"
 "- 'Enviar un correo electrónico': se enviará automáticamente un correo electrónico (Conversaciones)\n"
 "- 'Añadir seguidores': se añadirá seguidores a un registro (Conversaciones)\n"
 "- 'Crear próxima actividad': se creará una actividad (Conversaciones)"
@@ -625,7 +634,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
-"Puedes pedirle a un administrador que desactive o corrija esta acción "
+"Puede pedirle a un administrador que desactive o corrija esta acción "
 "automatizada."
 
 #. module: base_automation
@@ -634,7 +643,7 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
-"Puedes deshabilitar esta acción automatizada o editarla para resolver el "
+"Puede deshabilitar esta acción automatizada o editarla para resolver el "
 "problema."
 
 #. module: base_automation
@@ -644,3 +653,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"No puede enviar un correo, agregar seguidores o crear una actividad para el "
+"registro borrado. Simplemente no funciona."

@@ -64,6 +64,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* El estado \"Borrador\" se utiliza cuando un usuario ha introducido una orden de reparación nueva y no está confirmada.\n"
+"* El estado \"Confirmado\" se utiliza cuando un usuario ha confirmado la orden de reparación.\n"
+"* El estado \"Listo para reparar\" indica que se puede comenzar a reparar, es obligatorio que se haya confirmado previamente.\n"
+"* El estado \"En reparación\" se usa para generar la factura antes o después de que se repare.\n"
+"* El estado 'Para ser facturado' se utiliza para generar la factura antes o después de la reparación.\n"
+"* El estado \"Hecho\" se establece cuando se completa la reparación.\n"
+"* El estado \"Cancelado\" indica que un usuario ha cancelado la orden."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -96,6 +103,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hola ${object.partner_id.name},<br/>\n"
+"        Aquí está su orden de reparación ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            por un importe de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Puede responder a este correo si tiene alguna pregunta.\n"
+"        <br/><br/>\n"
+"        Gracias,\n"
+"        % if user.signature\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -114,7 +142,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Reparaciones</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -518,7 +546,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "Orden de reparaciones importantes"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -925,7 +953,7 @@ msgstr "Reparar"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Descripción de la reparación"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -950,7 +978,7 @@ msgstr "Línea de reparación (partes)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Notas de reparación"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -993,7 +1021,7 @@ msgstr "Presupuesto de reparación nº:"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "Cotización de la reparación: enviado por correo electrónico"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1040,13 +1068,13 @@ msgstr "Debe estar trabajando en la reparación para poder finalizarla."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Cuenta de orden de reparación"
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Órdenes de reparación de %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1094,7 +1122,7 @@ msgstr "Orden de venta"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Orden de venta de la que viene el producto a reparar."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1128,6 +1156,8 @@ msgstr "Enviar cotización"
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
 msgstr ""
+"Se requiere un número de serie para las líneas de operación con los "
+"productos: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
