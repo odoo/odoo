@@ -166,6 +166,9 @@
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
+        <t t-set="tax_totals" position="attributes">
+            <attribute name="t-value">o._l10n_cl_get_invoice_totals_for_report()</attribute>
+        </t>
 
         <xpath expr="//th[@name='th_taxes']" position="replace"/>
         <xpath expr="//span[@id='line_tax_ids']/.." position="replace"/>
