@@ -53,7 +53,7 @@
         <field name="name">Tase: Osuudet saman konsernin yrityksissä</field>
         <field name="applicability">accounts</field>
     </record>
-    <record id="account_tag_receivables_from_associated_companies_investments" model="account.account.tag">
+    <record id="account_tag_receivables_from_group_companies_investments" model="account.account.tag">
         <field name="name">Tase: Saamiset saman konsernin yrityksiltä sijoitukset</field>
         <field name="applicability">accounts</field>
     </record>
@@ -357,6 +357,16 @@
         <field name="name">Tase: Siirtovelat lyhytaikaiset</field>
         <field name="applicability">accounts</field>
     </record>
+    <record id="account_tag_minority_interest" model="account.account.tag">
+        <field name="name">Tase: Vähemmistöosuudet</field>
+        <field name="applicability">accounts</field>
+    </record>
+    <record id="account_tag_group_reserve" model="account.account.tag">
+        <field name="name">Tase: Konsernireservi</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+
     <record id="account_tag_sales" model="account.account.tag">
         <field name="name">Tulos: Myynti</field>
         <field name="applicability">accounts</field>
@@ -481,6 +491,10 @@
         <field name="name">Tulos: Muut kiinteät kulut</field>
         <field name="applicability">accounts</field>
     </record>
+    <record id="account_tag_other_variable_costs" model="account.account.tag">
+        <field name="name">Tulos: Muut muuttuvat kulut</field>
+        <field name="applicability">accounts</field>
+    </record>
     <record id="account_tag_income_from_shares_in_group" model="account.account.tag">
         <field name="name">Tulos: Tuotot osuuksista konserni</field>
         <field name="applicability">accounts</field>
@@ -545,4 +559,32 @@
         <field name="name">Tulos: Muut välittömät verot</field>
         <field name="applicability">accounts</field>
     </record>
+    <record id="account_tag_minority_interests" model="account.account.tag">
+        <field name="name">Tulos: Vähemmistöosuudet</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+
+    <!-- Tax tags that are not in standard report -->
+    <record id="330-triangulation-purchase" model="account.account.tag">
+        <field name="name">+fi_330</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="330-triangulation-purchase-negative" model="account.account.tag">
+        <field name="name">-fi_330</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="333-triangulation-eu" model="account.account.tag">
+        <field name="name">+fi_333</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+    <record id="333-triangulation-eu-negative" model="account.account.tag">
+        <field name="name">-fi_333</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.fi"/>
+    </record>
+
 </odoo>

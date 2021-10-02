@@ -86,3 +86,11 @@ class AccountInvoiceFinnish(models.Model):
     def _get_invoice_reference_fi_partner(self):
         self.ensure_one()
         return self.compute_payment_reference_finnish(str(self.partner_id.id))
+
+    def _auto_compute_invoice_reference(self):
+        ''' Hook to be overridden to set custom conditions for auto-computed invoice references.
+            :return True if the move should get a auto-computed reference else False
+            :rtype bool
+        '''
+        self.ensure_one()
+        return self.move_type in ['out_invoice', 'out_refund'] and not self.payment_reference

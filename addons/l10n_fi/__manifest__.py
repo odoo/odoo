@@ -3,7 +3,7 @@
 
 {
     "name": "Finnish Localization",
-    "version": "13.0.1",
+    "version": "1.4",
     "author": "Avoin.Systems, "
               "Tawasta, "
               "Vizucom, "
@@ -27,14 +27,17 @@ Set the payment reference type from the Sales Journal.
     ],
     "data": [
         'data/account_account_tag_data.xml',
-        'data/account_chart_template_data.xml',
-        'data/account.account.template.csv',
+        'data/account_chart_template_pre.xml', # init chart template
         'data/account_tax_report_line.xml',
-        'data/account_data.xml',
+        'data/account_tax_group.xml',
+
+        'data/account.account.template.csv',
         'data/account_tax_template_data.xml',
-        'data/l10n_fi_chart_post_data.xml',
         'data/account_fiscal_position_template_data.xml',
-        'data/account_chart_template_configuration_data.xml'
+
+        'data/account_chart_template_post.xml',  # set accounts on chart template
+
+        'data/try_loading.xml',
     ],
     "demo": [
         'demo/demo_company.xml',
