@@ -57,6 +57,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
+"<br/>Ningú ha aconseguit tots els objectius. No es concedeix cap insignia "
+"per aquest repte."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -73,6 +75,8 @@ msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
 msgstr ""
+"<br/>S'han enviat recompenses especials als usuaris més competitius. La "
+"classificació per aquest repte és:"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
@@ -641,6 +645,10 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
+"Les insígnies es concedeixen quan un repte ha acabat. Això passa, o bé al "
+"final del període d'execució (per exemple: final del mes per un repte "
+"mensual), a la data final del repte (si no s'ha establert periodicitat) o "
+"quan el repte es tanca manualment. "
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -913,6 +921,7 @@ msgstr ""
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
+"Descriviu el repte: que fa, a qui va destinat, per què és important... "
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -945,7 +954,7 @@ msgstr "Mode de visualització"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom a mostrar"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -1125,7 +1134,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr ""
+msgstr "Objectiu genèric de gamificació pel repte"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
@@ -1335,7 +1344,7 @@ msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr ""
+msgstr "Aquesta insígnia és la recompensa a un repte."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
@@ -1393,6 +1402,9 @@ msgid ""
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
 msgstr ""
+"En el cas d'objectius manuals, s'envien recordatoris si l'objectiu no ha "
+"estat actualitzat per un temps (definit al repte). Ignorat en cas "
+"d'objectius no manuals o objectius no enllaçats amb un repte. "
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1511,7 +1523,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Llista d'usuaris que participen al repte"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_main_attachment_id
@@ -1667,7 +1679,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr ""
+msgstr "Ningú pot resoldre reptes com tu. "
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
@@ -1763,7 +1775,7 @@ msgstr "Propietari"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
-msgstr ""
+msgstr "Propietaris"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
@@ -1946,6 +1958,8 @@ msgstr "Responsable"
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
+"S'està recuperant el progrés per al repte personal sense informació de "
+"l'usuari"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1965,7 +1979,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr ""
+msgstr "Recompenses dels reptes"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
@@ -1975,7 +1989,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
-msgstr ""
+msgstr "Recompenses per reptes"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -1985,7 +1999,7 @@ msgstr "En procés"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "Reptes en curs"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2000,7 +2014,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr ""
+msgstr "Buscar reptes"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
@@ -2173,7 +2187,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "The challenge %s is finished."
-msgstr ""
+msgstr "El repte %s ha finalitzat."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
@@ -2193,6 +2207,8 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
+"Dia en que es tancarà automàticament un nou repte. Si no s'estableix "
+"periodicitat, s'utilitzarà aquesta data com a data final de l'objectiu. "
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -2200,6 +2216,8 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
+"El dia que comença automàticament un nou repte. Si no s'estableix "
+"periodicitat, usarà aquesta data com a data inicial de l'objectiu. "
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:0
@@ -2506,6 +2524,9 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
+"Si s'activa aquesta opció, un usuari només pot rebre una insígnia un cop. "
+"Les insígnies dels 3 millors continuen concedint-se només al final del "
+"repte. "
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
@@ -2534,7 +2555,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
-msgstr ""
+msgstr "No es pot inicialitzar un repte amb objectius no finalitzats."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view

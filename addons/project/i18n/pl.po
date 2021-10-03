@@ -19,7 +19,6 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2020
 # Tomasz Leppich <t.leppich@gmail.com>, 2020
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
-# Maksym <ms@myodoo.pl>, 2020
 # Mariusz, 2020
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2020
 # Piotr Strębski <strebski@gmail.com>, 2021
@@ -29,6 +28,7 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
+# Maksym <ms@myodoo.pl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2021\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -380,6 +380,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Drogi ${object.partner_id.name or 'customer'},<br/>\n"
+"    Dziękujemy za zapytanie.<br/>\n"
+"    W razie pytań prosimy o kontakt.\n"
+"    <br/><br/>\n"
+"    Dziękujemy,\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
