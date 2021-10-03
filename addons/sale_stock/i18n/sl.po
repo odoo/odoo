@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Boris Kodelja <boris@hbs.si>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
 # Jasmina Macur <jasmina@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
+# Nejc G <nejc@luxim.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
+"Last-Translator: Nejc G <nejc@luxim.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +42,8 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"                Morda bodo potrebni ročni ukrepi."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -58,6 +60,8 @@ msgid ""
 "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
+"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Priprava</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -74,6 +78,8 @@ msgid ""
 "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
+"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Delno na voljo</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -134,12 +140,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "Poprodaja"
 
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analitično iz stroškov"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -149,7 +155,7 @@ msgstr "Uveljavljanje posebnih prog v nalogih (npr. dropship, MTO)"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific rotues"
-msgstr ""
+msgstr "Uporabite določene poti"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -159,27 +165,27 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Družbe"
+msgstr "Podjetja"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Datum zaključka prvega dobavnega naloga."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Uredi nastavitve"
+msgstr "Nastavitve"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Dostavi vse izdelke hkrati"
+msgstr "Dostavi vse izdelke skupaj"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Dostavi vsak proizvod, ko je na voljo"
+msgstr "Dostavi vsak izdelek, ko je na voljo"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -206,12 +212,12 @@ msgstr "Prikaz incoterms klavzul v nalogih in računih"
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgstr "Ne pozabite spremeniti partnerja pri naslednjih dobavnih nalogih:%s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "DUR"
+msgstr "Datum začetka veljavnosti"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -226,7 +232,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Pri prodajnih nalogih je prišlo do izjem:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -278,7 +284,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Proge inventarja"
+msgstr "Inventarne poti"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -293,12 +299,12 @@ msgstr "Postavka računa"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "Obračun"
+msgstr "Izdajanje računov"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lot/serijska številka"
+msgstr "Lot/Serijska št."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:418
@@ -314,7 +320,7 @@ msgstr "Ročno"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Morda bodo potrebni ročni ukrepi."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -340,12 +346,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Način za posodabljanje dostavljene količine"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Predvidene datume dostave premakni za"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:280
@@ -356,7 +362,7 @@ msgstr "Ni dovolj zaloge!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr "Za nalog specifične proge"
+msgstr "Za nalog specifične poti"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:294
@@ -372,23 +378,23 @@ msgstr "Pakiranje"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "Pravila komisioniranja"
+msgstr "Pravila nabiranja"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Pickings"
-msgstr "Prevzemi"
+msgstr "Nabiranje"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr "Oskrbovalna skupina"
+msgstr "Skupina za nabavo"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
 msgid "Product Template"
-msgstr "Predloga proizvoda"
+msgstr "Predloga izdelka"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -402,17 +408,17 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr "Proga"
+msgstr "Pot"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Poti za prodajne naloge"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Prodajna postavka"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -514,17 +520,17 @@ msgstr "Premiki zaloge"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Pravilo zaloge"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Poročilo o Pravilih zaloge"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Poročilo o pravilu zaloge"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -549,7 +555,7 @@ msgstr "Časovnice"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Transfer"
+msgstr "Prenos"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -612,7 +618,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "preklicano"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -628,9 +634,9 @@ msgstr "od"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "naročeno namesto"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "obdelano namesto"

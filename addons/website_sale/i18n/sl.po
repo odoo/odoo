@@ -13,6 +13,7 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # Grega Vavtar <grega@hbs.si>, 2020
 # Jasmina Macur <jasmina@hbs.si>, 2020
+# Nejc G <nejc@luxim.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-04 14:42+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2020\n"
+"Last-Translator: Nejc G <nejc@luxim.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "/shop/payment"
-msgstr ""
+msgstr "/trgovina/plačilo"
 
 #. module: website_sale
 #: model:product.template.attribute.value,name:website_sale.product_template_attribute_value_1
@@ -65,6 +66,9 @@ msgid ""
 "                              Free Shipping in U.S.<br/>\n"
 "                              Buy now, get in 2 days"
 msgstr ""
+"30-dnevno jamstvo<br/>\n"
+"                              Brezplačna dostava<br/>\n"
+"                              Kupite zdaj, dobite v 2 dneh"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -457,7 +461,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:37
 #, python-format
 msgid "AT A GLANCE"
-msgstr ""
+msgstr "PREDOGLED"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
@@ -507,7 +511,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
-msgstr "Dodatki proizvodov"
+msgstr "Dodatki izdelkov"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -541,7 +545,7 @@ msgstr "Naslov"
 #: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "All Products"
-msgstr "Vsi proizvodi"
+msgstr "Vsi izdelki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -557,12 +561,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 msgid "Alternative Products"
-msgstr "Alternativni proizvodi"
+msgstr "Alternativni izdelki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.recommended_products
 msgid "Alternative Products:"
-msgstr "Alternativni proizvodi:"
+msgstr "Alternativni izdelki:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -912,7 +916,7 @@ msgstr "Država..."
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "Create a new product"
-msgstr "Ustvari nov proizvod"
+msgstr "Ustvari nov izdelek"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
@@ -938,7 +942,7 @@ msgstr "Valute"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Navodila za plačilo po meri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1080,7 +1084,7 @@ msgstr "Urejanje"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:32
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr "Uredite ceno tega proizvoda s klikom na znesek."
+msgstr "Uredite ceno tega izdelka s klikom na znesek."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -1181,7 +1185,7 @@ msgstr "HTTP usmerjanje"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "I agree to the"
-msgstr ""
+msgstr "Strinjam se z"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
@@ -1271,11 +1275,12 @@ msgstr "Strankam izdajte račune"
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
+"Prepovedano je spreminjanje prodajnega naloga, ki ni v statusu osnutka."
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Ravnokar opravljeno"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -1387,14 +1392,14 @@ msgstr "Metoda"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia
 msgid "Multimedia"
-msgstr ""
+msgstr "Večpredstavnost"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale.js:31
 #, python-format
 msgid "My Cart"
-msgstr ""
+msgstr "Moja košarica"
 
 #. module: website_sale
 #. openerp-web
@@ -1419,7 +1424,7 @@ msgstr "Ime - Z do A"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
-msgstr ""
+msgstr "Kratek naziv"
 
 #. module: website_sale
 #. openerp-web
@@ -1427,7 +1432,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:30
 #, python-format
 msgid "New Product"
-msgstr "Nov proizvod"
+msgstr "Nov izdelek"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1443,7 +1448,7 @@ msgstr "Najdenih ni nobenih zapuščenih vozičkov"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined."
-msgstr "Ni določenega proizvoda."
+msgstr "Ni določenega izdelka."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1504,7 +1509,7 @@ msgstr "Analiza spletne prodaje"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
 msgid "Only Services"
-msgstr ""
+msgstr "Samo storitve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -1516,7 +1521,7 @@ msgstr "Odprto kodni eCommerce"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:71
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "Odprite aplikacijo za spletno mesto."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:236
@@ -1527,7 +1532,7 @@ msgstr "Možnost za:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_price
 msgid "Option not available"
-msgstr ""
+msgstr "Možnost ni na voljo"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:238
@@ -1543,7 +1548,7 @@ msgstr "Povezane opcije"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Ali pa me skenirajte z bančno aplikacijo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1568,7 +1573,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "Order Total"
-msgstr ""
+msgstr "Naročilo skupaj"
 
 #. module: website_sale
 #. openerp-web
@@ -1604,7 +1609,7 @@ msgstr "Nalogi za obračun"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:88
 #, python-format
 msgid "Orders/Day"
-msgstr ""
+msgstr "Naročila/dan"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -1634,17 +1639,17 @@ msgstr "Plačaj s PayPal"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Plačajte z drugim pridobiteljem plačil"
 
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Plačajte s kreditno kartico (preko storitve Stripe)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "PayPal račun (e-pošta)"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
@@ -1659,7 +1664,7 @@ msgstr "Plačilne ikone"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Navodila za plačilo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -1686,7 +1691,7 @@ msgstr "Paypal ID trgovca"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "PayPal PDT Token"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1812,7 +1817,7 @@ msgstr "Cene izdelka"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr "Javne kategorije proizvoda"
+msgstr "Javne kategorije izdelka"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
@@ -1822,17 +1827,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 msgid "Product Template"
-msgstr "Predloga proizvoda"
+msgstr "Predloga izdelka"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
-msgstr "Različice proizvoda"
+msgstr "Različice izdelka"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Product not found!"
-msgstr "Proizvod ni najden!"
+msgstr "Izdelek ni najden!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1926,7 +1931,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
-msgstr ""
+msgstr "Odstranite enega"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_reporting
@@ -1947,7 +1952,7 @@ msgstr "Nazaj v košarico"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Return to the product list."
-msgstr "Vrnitev na seznam proizvodov."
+msgstr "Vrnitev na seznam izdelkov."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -2100,8 +2105,7 @@ msgstr "Storitve"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
-msgstr ""
-"Nastavi lastnosti proizvodov (npr. barva, velikost) za prodajo različic"
+msgstr "Nastavi lastnosti izdelkov (npr. barva, velikost) za prodajo različic"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2216,7 +2220,7 @@ msgstr "Nekatera obvezna polja so prazna."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
 msgid "Sorry, this product is not available anymore."
-msgstr "Ta proizvod žal ni več na voljo."
+msgstr "Ta izdelek žal ni več na voljo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -2256,12 +2260,12 @@ msgstr "Ulica <span class=\"d-none d-md-inline\"> in številka</span>"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe ključ za objavo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe skriti ključ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__name
@@ -2388,7 +2392,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Ta kombinacija ne obstaja."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2413,7 +2417,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Ta izdelek nima veljavne kombinacije."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
