@@ -8,13 +8,13 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2019
 # laznikd <laznik@mentis.si>, 2019
 # matjaz k <matjaz@mentis.si>, 2019
-# Simon Hohler <simon.hohler@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Boris Kodelja <boris@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2019
 # Grega Vavtar <grega@hbs.si>, 2020
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
-# Jasmina Macur <jasmina@hbs.si>, 2021
+# Nejc G <nejc@luxim.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
+"Last-Translator: Nejc G <nejc@luxim.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +242,7 @@ msgstr "<strong>Naš sklic naročila:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Product</strong>"
-msgstr "<strong>Artikel</strong>"
+msgstr "<strong>Izdelek</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -275,7 +275,7 @@ msgstr "<strong>Davki</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "<strong>The ordered quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Naročena količina je bila posodobljena.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -305,6 +305,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Izdelek, ki ga je mogoče shraniti, je izdelek, pri katerem upravljate z zalogami. Namestiti je treba aplikacijo Inventory.\n"
+"Potrošni izdelek je izdelek, pri katerem se zaloge ne upravljajo.\n"
+"Storitev je nematerialni izdelek, ki ga ponujate."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -319,7 +322,7 @@ msgstr "Opozorilo za dostop"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
 msgid "Action Needed"
-msgstr "Potreba po ukrepu"
+msgstr "Potrebno ukrepanje"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
@@ -334,7 +337,7 @@ msgstr "Stanje aktivnosti"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
 msgid "Add Purchase Order"
-msgstr ""
+msgstr "Dodaj nabavni nalog"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:50
@@ -345,7 +348,7 @@ msgstr "Vse"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
-msgstr ""
+msgstr "Dovoli urejanje nabavnih nalogov"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
@@ -356,7 +359,7 @@ msgstr "Znesek"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__account_analytic_id
 msgid "Analytic Account"
-msgstr "Analitični konto"
+msgstr "Analitični račun"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_tag_ids
@@ -413,7 +416,7 @@ msgstr "Število računov"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
 msgid "Bill Lines"
-msgstr ""
+msgstr "Postavke na računu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -444,7 +447,7 @@ msgstr "Prejeti računi"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr "Sporočilo ob blokadi"
+msgstr "Sporočilo o blokiranju"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -453,11 +456,14 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"Cene prodajalcev lahko privzeto nastavite ročno v obrazcu s podrobnostmi o "
+"izdelku. Če vam prodajalci posredujejo datoteke s ceniki, vam ta možnost "
+"omogoča preprost uvoz v sistem iz menija »Nabava > Ceniki dobaviteljev«."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
 msgid "Calendar View"
-msgstr "Koledarski prikaz"
+msgstr "Koledarski pogled"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -467,6 +473,10 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Javni razpisi se uporabljajo, če želite za določen nabor izdelkov ustvariti "
+"zahteve za ponudbe več ponudnikom. Za vsak izdelek lahko konfigurirate, če "
+"neposredno oddate zahtevo za ponudbo enemu prodajalcu ali če želite razpis "
+"za primerjavo ponudb več ponudnikov."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -494,12 +504,12 @@ msgstr "Postavke nabavnega naloga v stanju '%s' ni mogoče brisati."
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Poslovni subjekt"
+msgstr "Komercialni subjekt"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr "Družbe"
+msgstr "Podjetja"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
@@ -508,23 +518,23 @@ msgstr "Družbe"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "Družba"
+msgstr "Podjetje"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
 msgid "Company Currency"
-msgstr "Valuta družbe"
+msgstr "Valuta podjetja"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
 #, python-format
 msgid "Compose Email"
-msgstr "Novo sporočilo"
+msgstr "Sestavi e-pošto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "Uredi nastavitve"
+msgstr "Uredi Nastavitve"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -544,7 +554,7 @@ msgstr "Potrdi nabavne naloge v enem koraku"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr ""
+msgstr "Potrjenih nabavnih nalogov ni mogoče urejati"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -570,7 +580,7 @@ msgstr "Ustvari račun"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "Create a new product"
-msgstr "Ustvari nov proizvod"
+msgstr "Ustvari nov izdelek"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -659,6 +669,7 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Prikazuje datum, ko je treba ponudbo potrditi in pretvoriti v nabavni nalog."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -686,12 +697,12 @@ msgstr "Opravljeno"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Znesek dvojne validacije"
 
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Draft RFQ"
-msgstr ""
+msgstr "Predloga predračuna"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -712,7 +723,7 @@ msgstr "Razširjeni filtri"
 #: code:addons/purchase/models/purchase.py:491
 #, python-format
 msgid "Extra line with %s "
-msgstr "Dodatna vrstica: %s "
+msgstr "Dodatna vrstica z %s "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
@@ -744,18 +755,17 @@ msgstr "Bodoče aktivnosti"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
+msgstr "Pridobite 2 ravni odobritve za potrditev nabavnega naloga"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
-"Prejemanje opozoril pri naročilih proizvodov ali naročilih dobaviteljem"
+msgstr "Prejmite opozorila pri naročilih izdelkov ali dobaviteljev"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
 msgid "Gross Weight"
-msgstr "Bruto masa"
+msgstr "Bruto teža"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -858,7 +868,7 @@ msgstr "Je sledilec"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "It will be converted into a purchase order."
-msgstr ""
+msgstr "Pretvori se v nabavni nalog."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
@@ -883,17 +893,17 @@ msgstr "Zadnjič posodobljeno"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "Aktivnosti z zamudo"
+msgstr "Zamude"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr ""
+msgstr "Ravni odobritev"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
 msgid "Levels of Approvals *"
-msgstr ""
+msgstr "Ravni Odobritev *"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice__purchase_id
@@ -922,7 +932,7 @@ msgstr "Zakljenjeno"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Glavna priponka"
+msgstr "Glavna priloga"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -950,12 +960,12 @@ msgstr "Upravitelj"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Managers must approve orders"
-msgstr "Upravitelji morajo odobriti naloge"
+msgstr "Upravitelj mora odobriti naročila"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr "Ročna faktura"
+msgstr "Ročni obračuni"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -977,7 +987,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Napaka pri dostavi sporočila"
+msgstr "Napaka pri pošiljanju sporočila"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -999,13 +1009,13 @@ msgstr "Sporočila"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr "Minimalni znesek"
+msgstr "Najmanjši znesek"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Najmanjši znesek, za katerega je potrebna dvojna validacija"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1020,7 +1030,7 @@ msgstr "Moje aktivnosti"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Purchases"
-msgstr ""
+msgstr "Moji nakupi"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:41
@@ -1155,12 +1165,12 @@ msgstr "Referenčna številka"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__state
 msgid "Order Status"
-msgstr "Status naloga"
+msgstr "Status naročila"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr ""
+msgstr "Naročena količina:"
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -1218,12 +1228,12 @@ msgstr "Naslov dostopa do portala"
 #: model:ir.model.fields,field_description:purchase.field_product_product__property_account_creditor_price_difference
 #: model:ir.model.fields,field_description:purchase.field_product_template__property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr "Konto razlik v ceni"
+msgstr "Račun razlik v ceni"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Vendor"
-msgstr ""
+msgstr "Cena na dobavitelja"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1266,7 +1276,7 @@ msgstr "Količina"
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
-msgstr "Predloga proizvoda"
+msgstr "Predloga izdelka"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
@@ -1282,7 +1292,7 @@ msgstr "Merska enota izdelka"
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "Različice proizvoda"
+msgstr "Različice izdelka"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -1296,13 +1306,13 @@ msgstr "Izdelki"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_standard
 msgid "Products Value"
-msgstr "Vrednost artiklov"
+msgstr "Vrednost izdelkov"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Zagotovite mehanizem dvojne validacije za nakupe"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1319,7 +1329,7 @@ msgstr "Nabavni sporazumi"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "Analiza Naročila"
+msgstr "Analiza Nakupa"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1333,7 +1343,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
-msgstr "Čas dostave naročila"
+msgstr "Čas nakupa"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:63
@@ -1373,12 +1383,12 @@ msgstr "Potrditev nabavnega naloga #"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr ""
+msgstr "Število nabavnih nalogov"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "Fiskalni položaj naročila"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1399,12 +1409,12 @@ msgstr "Postavke nabavnega naloga"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
 msgid "Purchase Order Modification"
-msgstr ""
+msgstr "Sprememba nabavnega naloga"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
 msgid "Purchase Order Modification *"
-msgstr ""
+msgstr "Sprememba nabavnega naloga *"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lock
@@ -1441,7 +1451,7 @@ msgstr "Statistika nabavnih nalogov"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Poročilo o nabavi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1454,12 +1464,12 @@ msgstr "Nabavni zastopnik"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
 msgid "Purchase Warnings"
-msgstr ""
+msgstr "Opozorila pri nabavi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Nabavni nalogi, ki so bili fakturirani."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1569,7 +1579,7 @@ msgstr "Prejeta količina"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr ""
+msgstr "Prejeta količina:"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1579,7 +1589,7 @@ msgstr "Zapiši nov prejeti račun"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Record a vendor bill related to this purchase"
-msgstr ""
+msgstr "Zapiši nov prejeti račun vezan na ta nakup"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -1605,6 +1615,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Sklic na dokument, ki je ustvaril to zahtevo po naročilu (npr. Prodajni "
+"nalog)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -1724,7 +1736,7 @@ msgstr "Nastavitve"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.model_purchase_order_action_share
 msgid "Share"
-msgstr "Souporaba"
+msgstr "Deli"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1748,7 +1760,7 @@ msgstr "Izvorni dokument"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
-msgstr "Status"
+msgstr "Stanje"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
@@ -1870,12 +1882,12 @@ msgstr "Ta prejeti račun je bil ustvarjen iz: %s"
 #: code:addons/purchase/models/account_invoice.py:170
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Prejeti račun prodajalca je bil spremenjen iz: %s"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr ""
+msgstr "Ta prodajalec nima naročila za nakup. Ustvari nov predračun"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1929,6 +1941,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
 msgstr ""
+"Tega nabavnega naloga ni mogoče preklicati. Najprej morate preklicati "
+"povezane račune dobaviteljev."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -2084,7 +2098,7 @@ msgstr "Opozorilo na nabavnem nalogu"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr "Opozorilo ob nabavi tega proizvoda"
+msgstr "Opozorilo ob nabavi tega izdelka"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2094,12 +2108,12 @@ msgstr "Opozorila"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
 msgid "Website Messages"
-msgstr "Sporočila iz spletne strani"
+msgstr "Sporočila iz spletnega mesta"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
 msgid "Website communication history"
-msgstr "Kronologija komunikacij spletne strani"
+msgstr "Zgodovina komuniciranja na spletnem mestu"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2113,6 +2127,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Dobavitelja lahko najdete po njegovem imenu, TIN, e-pošti ali interni "
+"referenci."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action

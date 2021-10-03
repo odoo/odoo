@@ -12,7 +12,8 @@
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Nicolas Martinelli, 2020
 # Cécile Collart <cco@odoo.com>, 2021
-# Yann Papouin <y.papouin@dec-industrie.com>, 2021
+# Yann Papouin <ypa@decgroupe.com>, 2021
+# Geoffrey_GMF <gmf@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Yann Papouin <y.papouin@dec-industrie.com>, 2021\n"
+"Last-Translator: Geoffrey_GMF <gmf@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,6 +449,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        L'employé est sur un fuseau horaire différen du vôtre! Ici, les heures et dates sont affichées sur le fuseau horaire de l'employé.\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        Le département de la compangie est sur un fuseau horaire différent du vôtre! Ici, les heures et dates sont affichées sur le fuseau horaire de l'employé.\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        La société est sur un fuseau horaire différent du vôtre ! Ici, les heures et dates sont affichées sur le fuseau horaire de l'employé.\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
