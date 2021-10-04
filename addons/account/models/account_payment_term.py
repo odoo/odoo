@@ -2,7 +2,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-
+from odoo.tools import date_utils
 from dateutil.relativedelta import relativedelta
 
 
@@ -61,6 +61,8 @@ class AccountPaymentTerm(models.Model):
                 next_date += relativedelta(day=line.days, months=1)
             elif line.option == 'day_current_month':
                 next_date += relativedelta(day=line.days, months=0)
+            elif line.option == 'day_from_the_week_start':
+                next_date = date_utils.next_weekday(next_date, weekday=line.days, weeks_correction=line.weeks_count)
             result.append((fields.Date.to_string(next_date), amt))
             amount -= amt
         amount = sum(amt for _, amt in result)
@@ -97,11 +99,13 @@ class AccountPaymentTermLine(models.Model):
     value_amount = fields.Float(string='Value', digits='Payment Terms', help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
     day_of_the_month = fields.Integer(string='Day of the month', help="Day of the month on which the invoice must come to its term. If zero or negative, this value will be ignored, and no specific day will be set. If greater than the last day of a month, this number will instead select the last day of this month.")
+    weeks_count = fields.Integer(string='Weeks count', help="How many weeks should pass at least. Default - next week (1).", default=1)
     option = fields.Selection([
             ('day_after_invoice_date', "days after the invoice date"),
             ('after_invoice_month', "days after the end of the invoice month"),
             ('day_following_month', "of the following month"),
             ('day_current_month', "of the current month"),
+            ('day_from_the_week_start', "day after week start"),
         ],
         default='day_after_invoice_date', required=True, string='Options'
         )
@@ -114,13 +118,15 @@ class AccountPaymentTermLine(models.Model):
             if term_line.value == 'percent' and (term_line.value_amount < 0.0 or term_line.value_amount > 100.0):
                 raise ValidationError(_('Percentages on the Payment Terms lines must be between 0 and 100.'))
 
-    @api.constrains('days')
+    @api.constrains('days', 'option')
     def _check_days(self):
         for term_line in self:
             if term_line.option in ('day_following_month', 'day_current_month') and term_line.days <= 0:
                 raise ValidationError(_("The day of the month used for this term must be strictly positive."))
             elif term_line.days < 0:
                 raise ValidationError(_("The number of days used for a payment term cannot be negative."))
+            elif term_line.option == 'day_from_the_week_start' and not 6 >= term_line.days >= 0:
+                raise ValidationError(_("Weekdays numbers should be in range from 0(Monday) to 6(Sunday)."))
 
     @api.onchange('option')
     def _onchange_option(self):

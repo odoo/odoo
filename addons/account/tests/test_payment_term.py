@@ -4,6 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import fields
 from odoo.tests.common import Form
+from odoo.exceptions import ValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -67,6 +68,30 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.pay_term_next_friday = cls.env['account.payment.term'].create({
+            'name': 'Next Friday',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 4,
+                    'option': 'day_from_the_week_start',
+                    'weeks_count': 1,
+                }),
+            ],
+        })
+
+        cls.pay_term_wendsday_three_weeks = cls.env['account.payment.term'].create({
+            'name': 'Wendsday of third week',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 2,
+                    'option': 'day_from_the_week_start',
+                    'weeks_count': 3,
+                }),
+            ],
+        })
+
         cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
     def assertPaymentTerm(self, pay_term, invoice_date, dates):
@@ -97,3 +122,15 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-01', ['2019-02-01'])
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-15', ['2019-02-01'])
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-31', ['2019-02-01'])
+        self.assertPaymentTerm(self.pay_term_next_friday, '2019-01-31', ['2019-02-08'])
+        self.assertPaymentTerm(self.pay_term_wendsday_three_weeks, '2019-01-31', ['2019-02-20'])
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.pay_term_wendsday_three_weeks.write({'line_ids': [
+                (5, 0, 0),
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 10,
+                    'option': 'day_from_the_week_start',
+                    'weeks_count': 1,
+                }),
+            ], })

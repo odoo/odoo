@@ -252,3 +252,49 @@ def date_range(start, end, step=relativedelta(months=1)):
     while dt <= end:
         yield localize(dt)
         dt = dt + step
+
+
+
+WEEKDAYS_MAPPING = [
+    (0, 'M', 'MD', 'Monday'),
+    (1, 'T', 'TD', 'Tuesday'),
+    (2, 'W', 'WD', 'Wednesday'),
+    (3, 'R', 'TH', 'Thursday'),
+    (4, 'F', 'FR', 'Friday'),
+    (5, 'S', 'SA', 'Saturday'),
+    (6, 'U', 'SU', 'Sunday'),
+]
+
+
+def next_weekday(value, weekday, weeks_correction=1):
+    """
+    Return the next needed weekday from ``value``
+    I.e. if you need
+    "Next Week Friday" you should use
+    >> next_weekday(today, 4)
+    "Thursday in 2 weeks":
+    >> next_weekday(today, 'TH', 2)
+
+    :param value: initial date or datetime.
+    :param weekday: choice of
+        ['MD', 'TD', 'WD', 'TH', 'FR', 'SA', 'SU']
+        ['M', 'T', 'W', 'R', 'F', 'S', 'U']
+        [1, 2, 3, 4, 5, 6, 0]
+    :param weeks_correction: how many weeks we should pass. By default - one.
+    :return: the resulting date/datetime.
+    """
+
+    if isinstance(weekday, int):
+        tuple_index = 0
+    elif isinstance(weekday, str) and len(weekday) == 1:
+        tuple_index = 1
+    elif isinstance(weekday, str) and len(weekday) == 2:
+        tuple_index = 2
+    else:
+        raise ValueError("Wrong weekday definition!")
+    if weekday not in (x[tuple_index] for x in WEEKDAYS_MAPPING):
+        raise ValueError("Wrong weekday definition!")
+
+    weekday_tuple = next((x for x in WEEKDAYS_MAPPING if x[tuple_index] == weekday), 0)
+
+    return add(start_of(add(value, weeks=weeks_correction), 'week'), days=weekday_tuple[0])

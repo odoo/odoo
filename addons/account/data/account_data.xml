@@ -82,6 +82,12 @@
                     (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 60, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
+        <record id="account_payment_term_next_thursday" model="account.payment.term">
+            <field name="name">Next week Thursday</field>
+            <field name="note">Payment terms: next Thursday</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 3, 'option': 'day_from_the_week_start', 'weeks_count': 1})]"/>
+        </record>
+
         <!--
         Account Statement Sequences
         -->

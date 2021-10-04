@@ -13,6 +13,7 @@
                     <field name="days"/>
                     <field name="option" string=""/>
                     <field name="day_of_the_month" string="Day of the month"/>
+                    <field name="weeks_count" attrs="{'invisible': [('option', '!=', 'day_from_the_week_start')]}"/>
                 </tree>
             </field>
         </record>
@@ -52,6 +53,12 @@
                         <field name="day_of_the_month" class="oe_inline"/>
                         <span class="o_form_label">of the month</span>
                     </div>
+
+                    <div colspan="2" attrs="{'invisible': [('option','!=', 'day_from_the_week_start')]}">
+                        <label for="weeks_count" string="Weeks to be passed"/>
+                        <field name="weeks_count" class="oe_inline"/>
+                    </div>
+
                 </form>
             </field>
         </record>
