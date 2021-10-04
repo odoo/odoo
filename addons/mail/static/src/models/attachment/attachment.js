@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
+import { human_size } from '@web/core/utils/sizes';
 
 function factory(dependencies) {
 
@@ -49,6 +50,9 @@ function factory(dependencies) {
             }
             if ('originThread' in data) {
                 data2.originThread = data.originThread;
+            }
+            if ('size' in data) {
+                data2.size = data.size;
             }
             return data2;
         }
@@ -152,14 +156,27 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string|undefined}
+         * @returns {string}
          */
         _computeExtension() {
-            const extension = this.filename && this.filename.split('.').pop();
-            if (extension) {
-                return extension;
+            if (this.filename && this.filename.includes('.')){
+                const extension = this.filename.split('.').pop();
+                if (extension) {
+                    return extension;
+                }
             }
             return clear();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeFormattedSize() {
+            if (!this.size) {
+                return clear();
+            }
+            return human_size(this.size);
         }
 
         /**
@@ -339,6 +356,12 @@ function factory(dependencies) {
             compute: '_computeExtension',
         }),
         filename: attr(),
+        /**
+         * States a human-way to display the size of the attachment (e.g. 5 kb).
+         */
+        formattedSize: attr({
+            compute: '_computeFormattedSize',
+        }),
         id: attr({
             readonly: true,
             required: true,

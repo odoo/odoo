@@ -12,24 +12,32 @@
                 >
                     <!-- Image style-->
                     <!-- o_image from mimetype.scss -->
-                    <div class="o_AttachmentCard_image o_image" t-on-click="attachmentCard.onClickImage" t-att-class="{'o-attachment-viewable': attachmentCard.attachment.isViewable,}" t-att-data-mimetype="attachmentCard.attachment.mimetype">
+                    <div class="o_AttachmentCard_image o_image m-2" t-on-click="attachmentCard.onClickImage" t-att-class="{'o-attachment-viewable': attachmentCard.attachment.isViewable,}" t-att-data-mimetype="attachmentCard.attachment.mimetype">
                     </div>
                     <!-- Attachment details -->
-                    <div class="o_AttachmentCard_details d-flex justify-content-center">
+                    <div class="o_AttachmentCard_details d-flex m-2 justify-content-center">
                         <t t-if="attachmentCard.attachment.displayName">
                             <div class="o_AttachmentCard_filename overflow-hidden text-nowrap">
                                 <t t-esc="attachmentCard.attachment.displayName"/>
                             </div>
                         </t>
-                        <t t-if="attachmentCard.attachment.extension">
-                            <div class="o_AttachmentCard_extension text-uppercase">
-                                <t t-esc="attachmentCard.attachment.extension"/>
-                            </div>
-                        </t>
+                        <div class="d-flex mx-1">
+                            <t t-if="attachmentCard.attachment.extension">
+                                <div class="o_AttachmentCard_extension o_AttachmentCard_detailsItem text-uppercase">
+                                    <t t-esc="attachmentCard.attachment.extension"/>
+                                </div>
+                            </t>
+                            <div t-if="attachmentCard.attachment.extension and attachmentCard.attachment.size" class="o_AttachmentCard_detailsItem mx-1">-</div>
+                            <t t-if="attachmentCard.attachment.size">
+                                <div class="o_AttachmentCard_formattedSize o_AttachmentCard_detailsItem text-uppercase">
+                                    <t t-esc="attachmentCard.attachment.formattedSize"/>
+                                </div>
+                            </t>
+                        </div>
                     </div>
                     <!-- Attachment aside -->
                     <t t-if="(!attachmentCard.attachmentList.composerView or attachmentCard.attachment.isEditable)">
-                        <div class="o_AttachmentCard_aside position-relative overflow-hidden" t-att-class="{ 'o-has-multiple-action d-flex flex-column': !attachmentCard.attachmentList.composerView and attachmentCard.attachment.isEditable }">
+                        <div class="o_AttachmentCard_aside position-relative ml-2 overflow-hidden fa-lg" t-att-class="{ 'o-has-multiple-action d-flex flex-column': !attachmentCard.attachmentList.composerView and attachmentCard.attachment.isEditable }">
                             <!-- Uploading icon -->
                             <t t-if="attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerView">
                                 <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploading d-flex justify-content-center align-items-center" title="Uploading">
