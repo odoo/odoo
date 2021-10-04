@@ -6,7 +6,6 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-const dom = require('web.dom');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
@@ -18,6 +17,26 @@ var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+
+options.UserValueWidget.include({
+    loadMethodsData() {
+        this._super(...arguments);
+
+        // Method names are sorted alphabetically by default. Exception here:
+        // we make sure, customizeWebsiteVariable is considered after
+        // customizeWebsiteViews so that the variable is used to show to active
+        // value when both methods are used at the same time.
+        // TODO find a better way.
+        const indexVariable = this._methodsNames.indexOf('customizeWebsiteVariable');
+        if (indexVariable >= 0) {
+            const indexView = this._methodsNames.indexOf('customizeWebsiteViews');
+            if (indexView >= 0) {
+                this._methodsNames[indexVariable] = 'customizeWebsiteViews';
+                this._methodsNames[indexView] = 'customizeWebsiteVariable';
+            }
+        }
+    },
+});
 
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
