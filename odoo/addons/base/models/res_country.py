@@ -3,7 +3,7 @@
 
 import re
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
@@ -96,6 +96,11 @@ class Country(models.Model):
 
         return ids
 
+    @api.model
+    @tools.ormcache('code')
+    def _phone_code_for(self, code):
+        return self.search([('code', '=', code)]).phone_code
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -106,7 +111,11 @@ class Country(models.Model):
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
-        return super(Country, self).write(vals)
+        res = super().write(vals)
+        if ('code' in vals or 'phone_code' in vals):
+            # Intentionally simplified by not clearing the cache in create and unlink.
+            self.clear_caches()
+        return res
 
     def get_address_fields(self):
         self.ensure_one()
