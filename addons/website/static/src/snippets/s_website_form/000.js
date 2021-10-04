@@ -68,7 +68,6 @@ odoo.define('website.s_website_form', function (require) {
                     args: [session.user_id, this._getUserPreFillFields()],
                 }))[0] || {};
             }
-
             return res;
         },
         start: function () {
@@ -140,7 +139,13 @@ odoo.define('website.s_website_form', function (require) {
                     $field.data('website_form_original_default_value', $field.val());
                 });
             }
-
+            if (session.geoip_phone_code) {
+                this.el.querySelectorAll('input[type="tel"]').forEach(telField => {
+                    if (!telField.value) {
+                        telField.value = '+' + session.geoip_phone_code;
+                    }
+                });
+            }
             // Check disabled states
             this.inputEls = this.$target[0].querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
             this._disabledStates = new Map();
