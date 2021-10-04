@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 
 import requests
@@ -25,7 +26,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _auth_oauth_rpc(self, endpoint, access_token):
-        return requests.get(endpoint, params={'access_token': access_token}).json()
+        return requests.get(endpoint, params={'access_token': access_token}, headers={'Authorization': 'Bearer %s' % access_token}).json()
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):
@@ -76,7 +77,7 @@ class ResUsers(models.Model):
         except AccessDenied as access_denied_exception:
             if self.env.context.get('no_user_creation'):
                 return None
-            state = json.loads(params['state'])
+            state = json.loads(base64.b64decode(params['state']).decode())
             token = state.get('t')
             values = self._generate_signup_values(provider, validation, params)
             try:
@@ -99,6 +100,9 @@ class ResUsers(models.Model):
             # Workaround: facebook does not send 'user_id' in Open Graph Api
             if validation.get('id'):
                 validation['user_id'] = validation['id']
+            # Workaround: cognito does not send 'user_id'
+            elif validation.get('sub'):
+                validation['user_id'] = validation['sub']
             else:
                 raise AccessDenied()
 
