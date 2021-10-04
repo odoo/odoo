@@ -25,6 +25,11 @@
             <field name="arch" type="xml">
                 <form string="Message">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_document" string="Open Document"
+                                type="object" class="oe_link" icon="fa-file-text-o"
+                                attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}"/>
+                        </div>
                         <group>
                             <group>
                                 <field name="subject"/>
