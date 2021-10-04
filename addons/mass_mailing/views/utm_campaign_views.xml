@@ -9,7 +9,7 @@
                 <field name="is_mailing_campaign_activated" invisible="1"/>
                 <button name="%(action_create_mass_mailings_from_campaign)d"
                     type="action" class="oe_highlight" attrs="{'invisible': [('is_mailing_campaign_activated', '=', False)]}"
-                    groups="mass_mailing.group_mass_mailing_user" string="Send new Mailing"/>
+                    groups="mass_mailing.group_mass_mailing_user" string="Send Mailing"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
