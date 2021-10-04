@@ -643,6 +643,9 @@ var DataImport = AbstractAction.extend({
                 var fieldInfo = item_finder(changedField.value);
                 updateFieldInformation(fieldInfo);
                 self._handleMappingComments(changedField, fieldInfo);
+                if (fieldInfo.id === "id") {
+                    self._handleExternalIdComments(fieldInfo);
+                }
 
                 if (!event.val) {
                     var $matchingCell = $(changedField).closest('.oe_import_match_cell')
@@ -732,6 +735,29 @@ var DataImport = AbstractAction.extend({
         this.stopImport = true;
     },
 
+    _handleExternalIdComments(fieldInfo) {
+        const fields = this.$('input.oe_import_match_field').map(function (index, el) {
+            return $(el).select2('val') || false;
+        }).get();
+        const $previewWarning = this.$el.find('.o_preview_external_id_warning');
+        this._rpc({
+            model: 'base_import.import',
+            method: 'validate_import',
+            args: [this.id],
+            kwargs: { options: this.import_options(), fields}
+        }, {
+            shadow: true,
+        }).then((previewWarning) => {
+            if (previewWarning) {
+                this.onresults(null, null, null, {'messages': [{
+                    type: 'warning o_preview_external_id_warning',
+                    message: previewWarning
+                }]});
+            } else {
+                $previewWarning.remove();
+            }
+        });
+    },
    /**
     * This method is called when selecting a new mapping field, or when changing/removing an already selected mapping
     * field. It will check if multiple field columns are/were mapped on the same field.
@@ -775,32 +801,6 @@ var DataImport = AbstractAction.extend({
                 $(fieldComment).append(comment);
             });
         });
-
-        // var fields = this.$('input.oe_import_match_field').map(function (index, el) {
-        //     return $(el).select2('val') || false;
-        // }).get();
-        // var $previewWarning = this.$el.find('.o_preview_external_id_warning');
-        // if (fieldInfo.id === 'id') {
-        //     this._rpc({
-        //         model: 'base_import.import',
-        //         method: 'validate_import',
-        //         args: [this.id],
-        //         kwargs: {options: this.import_options(), fields: fields}
-        //     }, {
-        //         shadow: true,
-        //     }).then((preview_warning) => {
-        //         if (preview_warning) {
-        //             this.onresults(null, null, null, {'messages': [{
-        //                 type: 'warning o_preview_external_id_warning',
-        //                 message: preview_warning
-        //             }]});
-        //         } else {
-        //             $previewWarning.remove();
-        //         }
-        //     });
-        // } else if (!fields.includes('id') && $previewWarning.length) {
-        //     $previewWarning.remove();
-        // }
     },
 
     _generate_fields_completion: function (root, index) {
