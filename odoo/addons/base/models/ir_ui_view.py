@@ -2007,6 +2007,7 @@ class NameManager:
                     name=field, use=use,
                 )
                 view.handle_view_error(msg)
+                continue
             if corresponding_field.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
                 msg = _(
                     "Field %(name)s used in %(use)s is present in view but is in select multi.",
