@@ -264,7 +264,7 @@ class SequenceMixin(models.AbstractModel):
         """
         batched = defaultdict(lambda: {'last_rec': self.browse(), 'seq_list': []})
         for record in self:
-            seq_format, format_values = self._get_sequence_format_param(record[record._sequence_field])
+            seq_format, format_values = record._get_sequence_format_param(record[record._sequence_field])
             seq = format_values.pop('seq')
             batch = batched[(seq_format, frozendict(format_values))]
             batch['seq_list'].append(seq)
