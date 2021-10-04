@@ -39,7 +39,7 @@ class PurchaseOrderLine(models.Model):
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
-        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
+        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom' and 'previous_product_qty' in self.env.context:
             return self.env.context['previous_product_qty'].get(self.id, 0.0)
         return super()._get_qty_procurement()
