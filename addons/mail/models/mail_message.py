@@ -691,6 +691,17 @@ class Message(models.Model):
             self.update(attachement_values)
         thread._message_update_content_after_hook(self)
 
+    def action_open_document(self):
+        """ Opens the related record based on the model and ID """
+        self.ensure_one()
+        return {
+            'res_id': self.res_id,
+            'res_model': self.model,
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
+
     # ------------------------------------------------------
     # DISCUSS API
     # ------------------------------------------------------
