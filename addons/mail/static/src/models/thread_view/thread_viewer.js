@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { create, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -65,23 +65,33 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer|undefined}
          */
         _computeThreadView() {
-            if (!this.hasThreadView) {
-                return unlink();
-            }
-            if (this.threadView) {
-                return;
-            }
-            return create();
+            return this.hasThreadView ? insertAndReplace() : clear();
         }
 
     }
 
     ThreadViewer.fields = {
+        chatter: one2one('mail.chatter', {
+            inverse: 'threadViewer',
+            readonly: true,
+        }),
+        chatWindow: one2one('mail.chat_window', {
+            inverse: 'threadViewer',
+            readonly: true,
+        }),
         /**
          * true if the viewer is in a compact format, like in a chat window.
          */
         compact: attr({
             default: false,
+        }),
+        discuss: one2one('mail.discuss', {
+            inverse: 'threadViewer',
+            readonly: true,
+        }),
+        discussPublicView: one2one('mail.discuss_public_view', {
+            inverse: 'threadViewer',
+            readonly: true,
         }),
         /**
          * Determines which extra class this thread view component should have.
@@ -106,6 +116,13 @@ function factory(dependencies) {
          */
         hasTopbar: attr({
             default: false,
+        }),
+        /**
+         * Determines the order mode of the messages on this thread viewer.
+         * Either 'asc', or 'desc'.
+         */
+        order: attr({
+            default: 'asc',
         }),
         /**
          * Determines the selected `mail.message`.
@@ -149,7 +166,7 @@ function factory(dependencies) {
             isCausal: true,
         }),
     };
-
+    ThreadViewer.identifyingFields = [['chatter', 'chatWindow', 'discuss', 'discussPublicView']];
     ThreadViewer.modelName = 'mail.thread_viewer';
 
     return ThreadViewer;

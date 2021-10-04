@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
-import { insert, replace, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, many2one } from '@mail/model/model_field';
+import { replace, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -51,14 +51,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            const { channelId, messageId } = data;
-            return `${this.modelName}_${channelId}_${messageId}`;
-        }
 
         /**
          * Manually called as not always called when necessary
@@ -223,48 +215,11 @@ function factory(dependencies) {
             }
             return replace(otherPartnersThatHaveSeen);
         }
-
-        /**
-         * @private
-         * @returns {mail.message}
-         */
-        _computeMessage() {
-            return insert({ id: this.messageId });
-        }
-
-        /**
-         * @private
-         * @returns {mail.thread}
-         */
-        _computeThread() {
-            return insert({
-                id: this.channelId,
-                model: 'mail.channel',
-            });
-        }
     }
 
     MessageSeenIndicator.modelName = 'mail.message_seen_indicator';
 
     MessageSeenIndicator.fields = {
-        /**
-         * The id of the channel this seen indicator is related to.
-         *
-         * Should write on this field to set relation between the channel and
-         * this seen indicator, not on `thread`.
-         *
-         * Reason for not setting the relation directly is the necessity to
-         * uniquely identify a seen indicator based on channel and message from data.
-         * Relational data are list of commands, which is problematic to deduce
-         * identifying records.
-         *
-         * TODO: task-2322536 (normalize relational data) & task-2323665
-         * (required fields) should improve and let us just use the relational
-         * fields.
-         */
-        channelId: attr({
-            required: true,
-        }),
         hasEveryoneFetched: attr({
             compute: '_computeHasEveryoneFetched',
             default: false,
@@ -288,28 +243,10 @@ function factory(dependencies) {
         }),
         /**
          * The message concerned by this seen indicator.
-         * This is automatically computed based on messageId field.
-         * @see messageId
          */
         message: many2one('mail.message', {
-            compute: '_computeMessage',
-        }),
-        /**
-         * The id of the message this seen indicator is related to.
-         *
-         * Should write on this field to set relation between the channel and
-         * this seen indicator, not on `message`.
-         *
-         * Reason for not setting the relation directly is the necessity to
-         * uniquely identify a seen indicator based on channel and message from data.
-         * Relational data are list of commands, which is problematic to deduce
-         * identifying records.
-         *
-         * TODO: task-2322536 (normalize relational data) & task-2323665
-         * (required fields) should improve and let us just use the relational
-         * fields.
-         */
-        messageId: attr({
+            inverse: 'messageSeenIndicators',
+            readonly: true,
             required: true,
         }),
         partnersThatHaveFetched: many2many('mail.partner', {
@@ -320,15 +257,14 @@ function factory(dependencies) {
         }),
         /**
          * The thread concerned by this seen indicator.
-         * This is automatically computed based on channelId field.
-         * @see channelId
          */
         thread: many2one('mail.thread', {
-            compute: '_computeThread',
-            inverse: 'messageSeenIndicators'
+            inverse: 'messageSeenIndicators',
+            readonly: true,
+            required: true,
         }),
     };
-
+    MessageSeenIndicator.identifyingFields = ['thread', 'message'];
     return MessageSeenIndicator;
 }
 

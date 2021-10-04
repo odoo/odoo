@@ -40,7 +40,7 @@ function factory(dependencies) {
             compute: '_computeTextDirection',
         }),
     };
-
+    Locale.identifyingFields = ['messaging'];
     Locale.modelName = 'mail.locale';
 
     return Locale;

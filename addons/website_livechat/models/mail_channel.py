@@ -36,6 +36,7 @@ class MailChannel(models.Model):
                     'display_name': visitor.display_name,
                     'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
                     'country_id': visitor.country_id.id,
+                    'id': visitor.id,
                     'is_connected': visitor.is_connected,
                     'history': self.sudo()._get_visitor_history(visitor),
                     'website_name': visitor.website_id.name,

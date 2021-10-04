@@ -56,9 +56,10 @@ function factory(dependencies) {
         component: attr(),
         callViewer: one2one('mail.rtc_call_viewer', {
             inverse: 'rtcLayoutMenu',
+            readonly: true,
         }),
     };
-
+    RtcLayoutMenu.identifyingFields = ['callViewer'];
     RtcLayoutMenu.modelName = 'mail.rtc_layout_menu';
 
     return RtcLayoutMenu;

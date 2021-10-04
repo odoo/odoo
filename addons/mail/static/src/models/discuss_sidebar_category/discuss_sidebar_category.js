@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { attr, one2many, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
@@ -78,7 +78,10 @@ function factory(dependencies) {
         _computeActiveItem() {
             const thread = this.messaging.discuss.thread;
             if (thread && this.supportedChannelTypes.includes(thread.channel_type)) {
-                return insertAndReplace({ channelId: thread.id });
+                return insertAndReplace({
+                    channel: replace(thread),
+                    category: replace(this),
+                });
             }
             return clear();
         }
@@ -97,7 +100,7 @@ function factory(dependencies) {
                     return nameVal.includes(qsVal);
                 });
             }
-            return insertAndReplace(channels.map(c => ({ channelId: c.id })));
+            return insertAndReplace(channels.map(c => ({ channel: replace(c) })));
         }
 
         /**
@@ -307,6 +310,8 @@ function factory(dependencies) {
          */
         categoryItems: one2many('mail.discuss_sidebar_category_item', {
             compute: '_computeCategoryItems',
+            inverse: 'category',
+            isCausal: true,
         }),
         /**
          * The total amount unread/action-needed threads in the category.
@@ -320,6 +325,14 @@ function factory(dependencies) {
          */
         counterComputeMethod: attr({
             required: true,
+        }),
+        discussAsChannel: one2one('mail.discuss', {
+            inverse: 'categoryChannel',
+            readonly: true,
+        }),
+        discussAsChat: one2one('mail.discuss', {
+            inverse: 'categoryChat',
+            readonly: true,
         }),
         /**
          * Display name of the category.
@@ -381,7 +394,10 @@ function factory(dependencies) {
         /**
          * The key used in the server side for the category state
          */
-        serverStateKey: attr(),
+        serverStateKey: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          * Determines the sorting method of channels in this category.
          * Must be one of: 'name', 'last_action'.
@@ -397,6 +413,7 @@ function factory(dependencies) {
             readonly: true,
         }),
     };
+    DiscussSidebarCategory.identifyingFields = [['discussAsChannel', 'discussAsChat']];
     DiscussSidebarCategory.onChanges = [
         new OnChange({
             dependencies: ['isServerOpen'],

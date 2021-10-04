@@ -25,12 +25,8 @@ export class AttachmentImage extends Component {
 }
 
 Object.assign(AttachmentImage, {
-    defaultProps: {
-        isEditable: true,
-    },
     props: {
         attachmentImageLocalId: String,
-        isEditable: Boolean,
     },
     template: 'mail.AttachmentImage',
 });

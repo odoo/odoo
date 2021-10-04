@@ -13,13 +13,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @private
          * @returns {string|undefined}
          */
@@ -38,11 +31,12 @@ function factory(dependencies) {
             compute: '_computeFlagUrl',
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         name: attr(),
     };
-
+    Country.identifyingFields = ['id'];
     Country.modelName = 'mail.country';
 
     return Country;

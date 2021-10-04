@@ -97,6 +97,7 @@ function factory(dependencies) {
             default: false,
         }),
     };
+    MessagingMenu.identifyingFields = ['messaging'];
     MessagingMenu.modelName = 'mail.messaging_menu';
 
     return MessagingMenu;

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { attr, one2one } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
 import { registerNewModel } from '@mail/model/model_core';
+import { attr, one2one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -213,7 +213,7 @@ function factory(dependencies) {
          * States the media preview embedded in this welcome view.
          */
         mediaPreview: one2one('mail.media_preview', {
-            default: create(),
+            default: insertAndReplace(),
             isCausal: true,
             readonly: true,
             required: true,
@@ -232,7 +232,7 @@ function factory(dependencies) {
          */
         pendingGuestName: attr(),
     };
-
+    WelcomeView.identifyingFields = ['messaging'];
     WelcomeView.modelName = 'mail.welcome_view';
 
     return WelcomeView;

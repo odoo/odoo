@@ -131,7 +131,6 @@
                                 </button>
                                 <FileUploader
                                     t-if="activity.thread"
-                                    attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
                                     threadLocalId="activity.thread.localId"
                                     t-on-o-attachment-created="_onAttachmentCreated"
                                     t-ref="fileUploader"

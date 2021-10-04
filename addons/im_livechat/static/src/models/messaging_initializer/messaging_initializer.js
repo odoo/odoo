@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerInstancePatchModel } from '@mail/model/model_core';
-import { create, insert } from '@mail/model/model_field_command';
+import { insert, insertAndReplace } from '@mail/model/model_field_command';
 
 registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js', {
     /**
@@ -11,7 +11,7 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
      */
     _initResUsersSettings({ is_discuss_sidebar_category_livechat_open }) {
         this.messaging.discuss.update({
-            categoryLivechat: create({
+            categoryLivechat: insertAndReplace({
                 counterComputeMethod: 'unread',
                 isServerOpen: is_discuss_sidebar_category_livechat_open,
                 name: this.env._t("Livechat"),

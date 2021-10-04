@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { decrement, increment, insert, link, unlink } from '@mail/model/model_field_command';
+import { decrement, increment, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { str_to_datetime } from 'web.time';
@@ -204,13 +204,13 @@ function factory(dependencies) {
                 return;
             }
             this.messaging.models['mail.thread_partner_seen_info'].insert({
-                channelId: channel.id,
                 lastFetchedMessage: insert({ id: last_message_id }),
-                partnerId: partner_id,
+                partner: insertAndReplace({ id: partner_id }),
+                thread: replace(channel),
             });
             this.messaging.models['mail.message_seen_indicator'].insert({
-                channelId: channel.id,
-                messageId: last_message_id,
+                message: insertAndReplace({ id: last_message_id }),
+                thread: replace(channel),
             });
             // FIXME force the computing of message values (cf task-2261221)
             this.messaging.models['mail.message_seen_indicator'].recomputeFetchedValues(channel);
@@ -369,13 +369,13 @@ function factory(dependencies) {
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
             if (shouldComputeSeenIndicators) {
                 this.messaging.models['mail.thread_partner_seen_info'].insert({
-                    channelId: channel.id,
                     lastSeenMessage: link(lastMessage),
-                    partnerId: partner_id,
+                    partner: insertAndReplace({ id: partner_id }),
+                    thread: replace(channel),
                 });
                 this.messaging.models['mail.message_seen_indicator'].insert({
-                    channelId: channel.id,
-                    messageId: lastMessage.id,
+                    message: replace(lastMessage),
+                    thread: replace(channel),
                 });
             }
             if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
@@ -899,7 +899,7 @@ function factory(dependencies) {
         }
 
     }
-
+    MessagingNotificationHandler.identifyingFields = ['messaging'];
     MessagingNotificationHandler.modelName = 'mail.messaging_notification_handler';
 
     return MessagingNotificationHandler;

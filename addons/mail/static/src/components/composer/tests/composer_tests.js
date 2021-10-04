@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { create } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     nextAnimationFrame,
@@ -27,21 +26,14 @@ QUnit.module('composer_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createComposerComponent = async (composer, otherProps) => {
-            const props = Object.assign({ composerLocalId: composer.localId }, otherProps);
-            await createRootMessagingComponent(this, "Composer", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { afterEvent, components, env, widget } = res;
             this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -52,13 +44,13 @@ QUnit.module('composer_tests.js', {
 QUnit.test('composer text input: basic rendering when posting a message', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].create({
-        composer: create({ isLog: false }),
+        composer: insertAndReplace({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -88,13 +80,13 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
 QUnit.test('composer text input: basic rendering when logging note', async function (assert) {
     assert.expect(5);
 
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].create({
-        composer: create({ isLog: true }),
+        composer: insertAndReplace({ isLog: true }),
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -125,12 +117,12 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
     assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -160,12 +152,12 @@ QUnit.test('composer text input placeholder should contain channel name when thr
         id: 20,
         name: 'General',
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
         "Message #General...",
@@ -182,12 +174,12 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
         id: 20,
         members: [this.data.currentPartnerId, 7],
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
         "Message Marc Demo...",
@@ -201,12 +193,12 @@ QUnit.test('add an emoji', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
@@ -230,12 +222,12 @@ QUnit.test('add an emoji after some text', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Blabla");
@@ -267,12 +259,12 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
     await afterNextRender(() => {
         composerTextInputTextArea.focus();
@@ -315,12 +307,12 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -354,12 +346,12 @@ QUnit.test('use a canned response', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -406,12 +398,12 @@ QUnit.test('use a canned response some text', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -466,12 +458,12 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -530,12 +522,12 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         public: "groups",
     });
 
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -565,12 +557,12 @@ QUnit.test('mention a channel', async function (assert) {
         name: "General",
         public: "groups",
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -613,12 +605,12 @@ QUnit.test('mention a channel after some text', async function (assert) {
         name: "General",
         public: "groups",
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -669,12 +661,12 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         name: "General",
         public: "groups",
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -728,12 +720,12 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -759,7 +751,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -771,7 +763,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -788,7 +780,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -800,7 +792,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -828,12 +820,12 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
     assert.expect(3);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -867,12 +859,12 @@ QUnit.test('command suggestion should only open if command is the first characte
     assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
@@ -910,12 +902,12 @@ QUnit.test('add an emoji after a command', async function (assert) {
     assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -980,12 +972,12 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1022,12 +1014,12 @@ QUnit.test('mention a partner', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1082,12 +1074,12 @@ QUnit.test('mention a partner after some text', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1151,12 +1143,12 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1222,12 +1214,12 @@ QUnit.test('composer: add an attachment', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { attachmentsDetailsMode: 'card' });
+    await createComposerComponent(thread.composer);
 
     const file = await createFile({
         content: 'hello, world',
@@ -1256,12 +1248,12 @@ QUnit.test('composer: drop attachments', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const files = [
         await createFile({
             content: 'hello, world',
@@ -1323,12 +1315,12 @@ QUnit.test('composer: paste attachments', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const files = [
         await createFile({
             content: 'hello, world',
@@ -1359,7 +1351,7 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
     assert.expect(5);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1371,7 +1363,7 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, {
+    await createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['ctrl-enter'],
     });
     // Type message
@@ -1414,7 +1406,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
     assert.expect(5);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1426,7 +1418,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, {
+    await createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['meta-enter'],
     });
     // Type message
@@ -1468,7 +1460,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1480,7 +1472,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     // Type message
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1510,12 +1502,12 @@ QUnit.test('composer with thread typing notification status', async function (as
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     assert.containsOnce(
         document.body,
@@ -1535,7 +1527,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -1547,7 +1539,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1566,7 +1558,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1579,7 +1571,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1605,7 +1597,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1618,7 +1610,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1643,7 +1635,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1656,7 +1648,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+    await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "a");
@@ -1691,7 +1683,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -1704,7 +1696,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1762,7 +1754,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
 QUnit.test('warning on send with shortcut when attempting to post message with still-uploading attachments', async function (assert) {
     assert.expect(7);
 
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -1790,11 +1782,11 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
         },
     });
     const thread = this.messaging.models['mail.thread'].create({
-        composer: create({ isLog: false }),
+        composer: insertAndReplace({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer, {
+    await createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['enter'],
     });
     const file = await createFile({
@@ -1840,12 +1832,12 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1884,7 +1876,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -1898,7 +1890,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1941,7 +1933,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -1955,7 +1947,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1989,13 +1981,13 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
 QUnit.test("Show a default status in the recipient status text when the thread doesn't have a name.", async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].create({
-        composer: create({ isLog: false }),
+        composer: insertAndReplace({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    await createComposerComponent(thread.composer, { hasFollowers: true });
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersofthisdocument",
@@ -2006,14 +1998,14 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 QUnit.test("Show a thread name in the recipient status text.", async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    const { createComposerComponent } = await this.start();
     const thread = this.messaging.models['mail.thread'].create({
         name: "test name",
-        composer: create({ isLog: false }),
+        composer: insertAndReplace({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
-    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    await createComposerComponent(thread.composer, { hasFollowers: true });
     assert.strictEqual(
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersof\"testname\"",
@@ -2025,7 +2017,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -2037,7 +2029,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     // Type message
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -2058,7 +2050,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -2070,7 +2062,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer, {
+    await createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['enter'],
     });
     // Type message
@@ -2102,7 +2094,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     this.data['mail.channel'].records.push({
         id: 20,
     });
-    await this.start({
+    const { createComposerComponent } = await this.start({
         async mockFetch(resource) {
             const _super = this._super.bind(this, ...arguments);
             if (resource === '/mail/attachment/upload') {
@@ -2115,7 +2107,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
         id: 20,
         model: 'mail.channel',
     });
-    await this.createComposerComponent(thread.composer);
+    await createComposerComponent(thread.composer);
     const file1 = await createFile({
         name: 'text1.txt',
         content: 'hello, world',

@@ -51,17 +51,6 @@ function factory(dependencies) {
             activity.thread.refresh();
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     MailTemplate.fields = {
@@ -69,11 +58,12 @@ function factory(dependencies) {
             inverse: 'mailTemplates',
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         name: attr(),
     };
-
+    MailTemplate.identifyingFields = ['id'];
     MailTemplate.modelName = 'mail.mail_template';
 
     return MailTemplate;

@@ -38,7 +38,7 @@ function _getEntryFromModelName(modelName) {
  * @param {string} patchName
  * @param {Object} patch
  * @param {Object} [param3={}]
- * @param {string} [param3.type='instance'] 'instance', 'class' or 'field'
+ * @param {string} [param3.type='instance'] 'instance', 'class', 'field' or 'identifyingFields'
  */
 function _registerPatchModel(modelName, patchName, patch, { type = 'instance' } = {}) {
     const entry = _getEntryFromModelName(modelName);
@@ -75,6 +75,17 @@ function registerClassPatchModel(modelName, patchName, patch) {
  */
 function registerFieldPatchModel(modelName, patchName, patch) {
     _registerPatchModel(modelName, patchName, patch, { type: 'field' });
+}
+
+/**
+ * Register a patch for identifyignFields in model.
+ *
+ * @param {string} modelName
+ * @param {string} patchName
+ * @param {function} patch
+ */
+function registerIdentifyingFieldsPatch(modelName, patchName, patch) {
+    _registerPatchModel(modelName, patchName, patch, { type: 'identifyingFields' });
 }
 
 /**
@@ -117,6 +128,7 @@ export {
     registerClassPatchModel,
     registerFieldPatchModel,
     registerInstancePatchModel,
+    registerIdentifyingFieldsPatch,
     registerNewModel,
     registry,
 };

@@ -40,13 +40,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.messageId}_${data.content}`;
-        }
-
-        /**
          * @private
          * @returns {boolean}
          */
@@ -114,6 +107,7 @@ function factory(dependencies) {
         message: many2one('mail.message', {
             compute: '_computeMessage',
             inverse: 'messageReactionGroups',
+            readonly: true,
             required: true,
         }),
         messageId: attr({
@@ -128,7 +122,7 @@ function factory(dependencies) {
             compute: '_computeSummary',
         }),
     };
-
+    MessageReactionGroup.identifyingFields = ['message', 'content'];
     MessageReactionGroup.modelName = 'mail.message_reaction_group';
 
     return MessageReactionGroup;

@@ -2,16 +2,10 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
-import { clear, insert, link, replace } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
-    let nextUploadingId = -1;
-    function getAttachmentNextUploadingId() {
-        const id = nextUploadingId;
-        nextUploadingId -= 1;
-        return id;
-    }
     class Attachment extends dependencies['mail.model'] {
 
         /**
@@ -20,23 +14,6 @@ function factory(dependencies) {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickDownload = this.onClickDownload.bind(this);
-
-            /**
-             * Reconciliation between uploading attachment and real attachment.
-             */
-            if (this.isUploading) {
-                return;
-            }
-            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
-                .find(attachment =>
-                    attachment.filename === this.filename &&
-                    attachment.isUploading
-                );
-            if (relatedUploadingAttachment) {
-                const composers = relatedUploadingAttachment.composers;
-                relatedUploadingAttachment.delete();
-                this.update({ composers: replace(composers) });
-            }
         }
 
 
@@ -77,20 +54,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
-         */
-        static create(data) {
-            const isMulti = typeof data[Symbol.iterator] === 'function';
-            const dataList = isMulti ? data : [data];
-            for (const data of dataList) {
-                if (!data.id) {
-                    data.id = getAttachmentNextUploadingId();
-                }
-            }
-            return super.create(...arguments);
-        }
-
-        /**
          * Send the attachment for the browser to download.
          */
         download() {
@@ -105,35 +68,6 @@ function factory(dependencies) {
         onClickDownload(ev) {
             ev.stopPropagation();
             this.download();
-        }
-
-        /**
-         * View provided attachment(s), with given attachment initially. Prompts
-         * the attachment viewer.
-         *
-         * @static
-         * @param {Object} param0
-         * @param {mail.attachment} [param0.attachment]
-         * @param {mail.attachments[]} param0.attachments
-         * @returns {string|undefined} unique id of open dialog, if open
-         */
-        static view({ attachment, attachments }) {
-            const hasOtherAttachments = attachments && attachments.length > 0;
-            if (!attachment && !hasOtherAttachments) {
-                return;
-            }
-            if (!attachment && hasOtherAttachments) {
-                attachment = attachments[0];
-            } else if (attachment && !hasOtherAttachments) {
-                attachments = [attachment];
-            }
-            if (!attachments.includes(attachment)) {
-                return;
-            }
-            this.messaging.dialogManager.open('mail.attachment_viewer', {
-                attachment: link(attachment),
-                attachments: replace(attachments),
-            });
         }
 
         /**
@@ -165,13 +99,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
 
         /**
          * @private
@@ -239,6 +166,23 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsEditable() {
+            if (!this.messaging) {
+                return;
+            }
+            return this.messages.length
+                ? this.messages.some(message => (
+                    message.canBeDeleted ||
+                    (message.author && message.author === this.messaging.currentPartner) ||
+                    (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
+                ))
+                : true;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsPdf() {
             return this.mimetype === 'application/pdf';
         }
@@ -295,14 +239,6 @@ function factory(dependencies) {
          */
         _computeIsUrl() {
             return this.type === 'url' && this.url;
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsLinkedToComposer() {
-            return this.composers.length > 0;
         }
 
         /**
@@ -373,14 +309,17 @@ function factory(dependencies) {
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentList: many2many('mail.attachment_list', {
-            inverse: 'attachments'
+        attachmentLists: many2many('mail.attachment_list', {
+            inverse: 'attachments',
         }),
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),
         checksum: attr(),
-        composers: many2many('mail.composer', {
+        /**
+         * States on which composer this attachment is currently being created.
+         */
+        composer: many2one('mail.composer', {
             inverse: 'attachments',
         }),
         defaultSource: attr({
@@ -401,7 +340,14 @@ function factory(dependencies) {
         }),
         filename: attr(),
         id: attr({
+            readonly: true,
             required: true,
+        }),
+        /**
+         * States whether this attachment is editable.
+         */
+        isEditable: attr({
+            compute: '_computeIsEditable',
         }),
         /**
          * States id the attachment is an image.
@@ -410,9 +356,6 @@ function factory(dependencies) {
             compute: '_computeIsImage',
         }),
         is_main: attr(),
-        isLinkedToComposer: attr({
-            compute: '_computeIsLinkedToComposer',
-        }),
         /**
          * States if the attachment is a PDF file.
          */
@@ -485,7 +428,7 @@ function factory(dependencies) {
         }),
         url: attr(),
     };
-
+    Attachment.identifyingFields = ['id'];
     Attachment.modelName = 'mail.attachment';
 
     return Attachment;

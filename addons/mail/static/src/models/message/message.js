@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, create, insert, insertAndReplace, link, replace, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
@@ -94,7 +94,7 @@ function factory(dependencies) {
                 if ('module_icon' in data) {
                     originThreadData.moduleIcon = data.module_icon;
                 }
-                data2.originThread = insert(originThreadData);
+                data2.originThread = insertAndReplace(originThreadData);
             }
             if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
@@ -185,8 +185,8 @@ function factory(dependencies) {
                         continue;
                     }
                     this.messaging.models['mail.message_seen_indicator'].insert({
-                        channelId: thread.id,
-                        messageId: message.id,
+                        thread: replace(thread),
+                        message: replace(message),
                     });
                 }
             }
@@ -276,28 +276,6 @@ function factory(dependencies) {
             this.messaging.discuss.replyToMessage(this);
         }
 
-        startEditing() {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(this.body.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
-            const textInputContent = htmlDoc.body.textContent;
-            const composerData = {
-                doFocus: true,
-                isLastStateChangeProgrammatic: true,
-                textInputCursorStart: textInputContent.length,
-                textInputCursorEnd: textInputContent.length,
-                textInputSelectionDirection: 'none',
-                textInputContent,
-            };
-            if (this.composerInEditing) {
-                this.composerInEditing.update(composerData);
-            } else {
-                this.messaging.models['mail.composer'].create({
-                    messageInEditing: link(this),
-                    ...composerData,
-                });
-            }
-            this.update({ isEditing: true });
-        }
         /**
          * Toggle the starred status of the provided message.
          */
@@ -335,13 +313,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @returns {boolean}
          */
         _computeCanBeDeleted() {
@@ -365,6 +336,28 @@ function factory(dependencies) {
          */
         _computeCanStarBeToggled() {
             return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
+        }
+
+        /**
+         * @returns {string}
+         */
+        _computeDateDay() {
+            if (!this.date) {
+                // Without a date, we assume that it's a today message. This is
+                // mainly done to avoid flicker inside the UI.
+                return this.env._t("Today");
+            }
+            const date = this.date.format('YYYY-MM-DD');
+            if (date === moment().format('YYYY-MM-DD')) {
+                return this.env._t("Today");
+            } else if (
+                date === moment()
+                    .subtract(1, 'days')
+                    .format('YYYY-MM-DD')
+            ) {
+                return this.env._t("Yesterday");
+            }
+            return this.date.format('LL');
         }
 
         /**
@@ -552,24 +545,8 @@ function factory(dependencies) {
     }
 
     Message.fields = {
-        actionList: one2one('mail.message_action_list', {
-            default: create(),
-            inverse: 'message',
-            isCausal: true,
-            readonly: true,
-        }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
-        }),
-        /**
-         * Determines the attachment list that will be used to display the attachments.
-         */
-        attachmentList: one2one('mail.attachment_list', {
-            default: create(),
-            inverse: 'message',
-            isCausal: true,
-            readonly: true,
-            required: true,
         }),
         author: many2one('mail.partner', {
             inverse: 'messagesAsAuthor',
@@ -596,16 +573,16 @@ function factory(dependencies) {
             compute: '_computeCanStarBeToggled',
         }),
         /**
-        * The composer in editing mode of a message.
-        */
-        composerInEditing: one2one('mail.composer', {
-            inverse: 'messageInEditing',
-            isCausal: true,
-        }),
-        /**
          * Determines the date of the message as a moment object.
          */
         date: attr(),
+        /**
+         * States the date of this message as a string (either a relative period
+         * in the near past or an actual date for older dates).
+         */
+        dateDay: attr({
+            compute: '_computeDateDay',
+        }),
         /**
          * States the time elapsed since date up to now.
          */
@@ -620,6 +597,7 @@ function factory(dependencies) {
             inverse: 'authoredMessages',
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         isCurrentUserOrGuestAuthor: attr({
@@ -648,12 +626,6 @@ function factory(dependencies) {
          */
         isBodyEqualSubtypeDescription: attr({
             compute: '_computeIsBodyEqualSubtypeDescription',
-            default: false,
-        }),
-        /*
-         * Determines whether the current user is currently editing this message.
-         */
-        isEditing: attr({
             default: false,
         }),
         /**
@@ -732,6 +704,17 @@ function factory(dependencies) {
             isCausal: true,
         }),
         message_type: attr(),
+        messageSeenIndicators: one2many('mail.message_seen_indicator', {
+            inverse: 'message',
+            isCausal: true,
+        }),
+        /**
+         * States the views that are displaying this message.
+         */
+        messageViews: one2many('mail.message_view', {
+            inverse: 'message',
+            isCausal: true,
+        }),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
@@ -765,7 +748,7 @@ function factory(dependencies) {
             default: [],
         }),
     };
-
+    Message.identifyingFields = ['id'];
     Message.modelName = 'mail.message';
 
     return Message;

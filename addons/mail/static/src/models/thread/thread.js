@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle/throttle';
 import Timer from '@mail/utils/timer/timer';
@@ -12,6 +12,14 @@ import * as mailUtils from '@mail/js/utils';
 import { str_to_datetime } from 'web.time';
 
 function factory(dependencies) {
+
+    const getSuggestedRecipientInfoNextTemporaryId = (function () {
+        let tmpId = 0;
+        return () => {
+            tmpId += 1;
+            return tmpId;
+        };
+    })();
 
     class Thread extends dependencies['mail.model'] {
 
@@ -274,20 +282,13 @@ function factory(dependencies) {
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = unlinkAll();
                 } else {
-                    /*
-                     * FIXME: not optimal to write on relation given the fact that the relation
-                     * will be (re)computed based on given fields.
-                     * (here channelId will compute partnerSeenInfo.thread))
-                     * task-2336946
-                     */
                     data2.partnerSeenInfos = insertAndReplace(
                         data.seen_partners_info.map(
                             ({ fetched_message_id, partner_id, seen_message_id }) => {
                                 return {
-                                    channelId: data2.id,
                                     lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : unlinkAll(),
                                     lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : unlinkAll(),
-                                    partnerId: partner_id,
+                                    partner: insertAndReplace({ id: partner_id }),
                             };
                         })
                     );
@@ -302,16 +303,9 @@ function factory(dependencies) {
                             return currentSet;
                         }, new Set());
                         if (messageIds.size > 0) {
-                            /*
-                             * FIXME: not optimal to write on relation given the fact that the relation
-                             * will be (re)computed based on given fields.
-                             * (here channelId will compute messageSeenIndicator.thread))
-                             * task-2336946
-                             */
-                            data2.messageSeenIndicators = insert([...messageIds].map(messageId => {
+                            data2.messageSeenIndicators = insertAndReplace([...messageIds].map(messageId => {
                                 return {
-                                    channelId: data.id || this.id,
-                                    messageId,
+                                    message: insertAndReplace({ id: messageId }),
                                 };
                             }));
                         }
@@ -610,6 +604,7 @@ function factory(dependencies) {
                     const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
                     return {
                         email,
+                        id: getSuggestedRecipientInfoNextTemporaryId(),
                         name,
                         partner: partner_id ? insert({ id: partner_id }) : unlink(),
                         reason,
@@ -1192,20 +1187,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Starts editing the last message of this thread from the current user.
-         */
-        startEditingLastMessageFromCurrentUser() {
-            for (const threadView of this.threadViews) {
-                const messages = threadView.threadCache.orderedMessages;
-                messages.reverse();
-                const message = messages.find(message => message.isCurrentUserOrGuestAuthor && message.canBeDeleted);
-                if (message) {
-                    message.startEditing();
-                }
-            }
-        }
-
-        /**
          * Unfollow current partner from this thread.
          */
         async unfollow() {
@@ -1289,18 +1270,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            const { channel_type, id, model } = data;
-            let threadModel = model;
-            if (!threadModel && channel_type) {
-                threadModel = 'mail.channel';
-            }
-            return `${this.modelName}_${threadModel}_${id}`;
-        }
-
-        /**
          * @private
          * @returns {mail.attachment[]}
          */
@@ -1318,6 +1287,17 @@ function factory(dependencies) {
                     return Math.abs(a2.id) - Math.abs(a1.id);
                 });
             return replace(allAttachments);
+        }
+
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeComposer() {
+            if (this.model === 'mail.box') {
+                return clear();
+            }
+            return insertAndReplace();
         }
 
         /**
@@ -1991,16 +1971,6 @@ function factory(dependencies) {
         allAttachments: many2many('mail.attachment', {
             compute: '_computeAllAttachments',
         }),
-        /**
-         * Determines the attachment list that will be used to display the attachments.
-         */
-        attachmentList: one2one('mail.attachment_list', {
-            default: create(),
-            inverse: 'thread',
-            isCausal: true,
-            readonly: true,
-            required: true,
-        }),
         areAttachmentsLoaded: attr({
             default: false,
         }),
@@ -2020,7 +1990,7 @@ function factory(dependencies) {
          */
         avatarCacheKey: attr(),
         cache: one2one('mail.thread_cache', {
-            default: create(),
+            default: insertAndReplace(),
             inverse: 'thread',
             isCausal: true,
             readonly: true,
@@ -2032,16 +2002,19 @@ function factory(dependencies) {
          */
         chatWindow: one2one('mail.chat_window', {
             inverse: 'thread',
+            isCausal: true,
         }),
+        /**
+         * Determines the composer state of this thread.
+         */
         composer: one2one('mail.composer', {
-            default: create(),
+            compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,
             readonly: true,
         }),
         correspondent: many2one('mail.partner', {
             compute: '_computeCorrespondent',
-            inverse: 'correspondentThreads',
         }),
         counter: attr({
             default: 0,
@@ -2058,6 +2031,10 @@ function factory(dependencies) {
          * States the description of this thread. Only applies to channels.
          */
         description: attr(),
+        discussSidebarCategoryItem: one2many('mail.discuss_sidebar_category_item', {
+            inverse: 'channel',
+            isCausal: true,
+        }),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
@@ -2119,6 +2096,7 @@ function factory(dependencies) {
             default: false,
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         invitationLink: attr({
@@ -2254,6 +2232,16 @@ function factory(dependencies) {
             inverse: 'memberThreads',
         }),
         /**
+         * Determines the last mentioned channels of the last composer related
+         * to this thread. Useful to sync the composer when re-creating it.
+         */
+        mentionedChannelsBackup: many2many('mail.thread'),
+        /**
+         * Determines the last mentioned partners of the last composer related
+         * to this thread. Useful to sync the composer when re-creating it.
+         */
+        mentionedPartnersBackup: many2many('mail.partner'),
+        /**
          * Determines the message before which the "new message" separator must
          * be positioned, if any.
          */
@@ -2277,16 +2265,17 @@ function factory(dependencies) {
          */
         messagesAsOriginThread: one2many('mail.message', {
             inverse: 'originThread',
+            isCausal: true,
         }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
-         * FIXME This field should be readonly once task-2336946 is done.
          */
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
         }),
         model: attr({
+            readonly: true,
             required: true,
         }),
         model_name: attr(),
@@ -2345,6 +2334,7 @@ function factory(dependencies) {
         }),
         originThreadAttachments: one2many('mail.attachment', {
             inverse: 'originThread',
+            isCausal: true,
         }),
         /**
          * States the `mail.activity` that belongs to `this` and that are
@@ -2424,6 +2414,34 @@ function factory(dependencies) {
         suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
             inverse: 'thread',
         }),
+        /**
+         * Determines the last content of the last composer related to this
+         * thread. Useful to sync the composer when re-creating it.
+         */
+        textInputContentBackup: attr({
+            default: "",
+        }),
+        /**
+         * Determines the last cursor end of the last composer related to this
+         * thread. Useful to sync the composer when re-creating it.
+         */
+        textInputCursorEndBackup: attr({
+            default: 0,
+        }),
+        /**
+         * Determines the last cursor start of the last composer related to this
+         * thread. Useful to sync the composer when re-creating it.
+         */
+        textInputCursorStartBackup: attr({
+            default: 0,
+        }),
+        /**
+         * Determines the last selection direction of the last composer related
+         * to this thread. Useful to sync the composer when re-creating it.
+         */
+        textInputSelectionDirectionBackup: attr({
+            default: "none",
+        }),
         threadViews: one2many('mail.thread_view', {
             inverse: 'thread',
         }),
@@ -2470,6 +2488,7 @@ function factory(dependencies) {
             default: 0,
         }),
     };
+    Thread.identifyingFields = ['model', 'id'];
     Thread.onChanges = [
         new OnChange({
             dependencies: ['lastSeenByCurrentPartnerMessageId'],

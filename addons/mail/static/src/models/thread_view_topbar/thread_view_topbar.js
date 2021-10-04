@@ -480,10 +480,11 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'topbar',
+            readonly: true,
             required: true,
         }),
     };
-
+    ThreadViewTopBar.identifyingFields = ['threadView'];
     ThreadViewTopBar.modelName = 'mail.thread_view_topbar';
 
     return ThreadViewTopBar;

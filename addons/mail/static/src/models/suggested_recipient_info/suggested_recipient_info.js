@@ -12,14 +12,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @private
-         * @returns {string}
-         */
-        _computeEmail() {
-            return this.partner && this.partner.email || this.email;
-        }
-
-        /**
          * Prevents selecting a recipient that does not have a partner.
          *
          * @private
@@ -46,7 +38,15 @@ function factory(dependencies) {
          * creating a new partner from `this`.
          */
         email: attr({
-            compute: '_computeEmail',
+            readonly: true,
+        }),
+        /**
+         * States the id of this suggested recipient info. This id does not
+         * correspond to any specific value, it is just a unique identifier
+         * given by the creator of this record.
+         */
+        id: attr({
+            readonly: true,
         }),
         /**
          * Determines whether `this` will be added to recipients when posting a
@@ -80,7 +80,7 @@ function factory(dependencies) {
             inverse: 'suggestedRecipientInfoList',
         }),
     };
-
+    SuggestedRecipientInfo.identifyingFields = ['id'];
     SuggestedRecipientInfo.modelName = 'mail.suggested_recipient_info';
 
     return SuggestedRecipientInfo;

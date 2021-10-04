@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
@@ -29,6 +29,8 @@ function factory(dependencies) {
          * @override
          */
         _created() {
+            this._attachmentsLoaderTimeout = undefined;
+            this._isPreparingAttachmentsLoading = undefined;
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
             this.onClickButtonAttachments = this.onClickButtonAttachments.bind(this);
@@ -36,7 +38,6 @@ function factory(dependencies) {
             this.onClickLogNote = this.onClickLogNote.bind(this);
             this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
             this.onClickSendMessage = this.onClickSendMessage.bind(this);
-            this.onComposerMessagePosted = this.onComposerMessagePosted.bind(this);
             this.onScrollScrollPanel = this.onScrollScrollPanel.bind(this);
         }
 
@@ -53,7 +54,9 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         focus() {
-            this.update({ isDoFocus: true });
+            if (this.composerView) {
+                this.composerView.update({ doFocus: true });
+            }
         }
 
         /**
@@ -89,11 +92,8 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickLogNote() {
-            if (!this.composer) {
-                return;
-            }
-            if (this.isComposerVisible && this.composer.isLog) {
-                this.update({ isComposerVisible: false });
+            if (this.composerView && this.composerView.composer.isLog) {
+                this.update({ composerView: clear() });
             } else {
                 this.showLogNote();
             }
@@ -137,23 +137,11 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickSendMessage(ev) {
-            if (!this.composer) {
-                return;
-            }
-            if (this.isComposerVisible && !this.composer.isLog) {
-                this.update({ isComposerVisible: false });
+            if (this.composerView && !this.composerView.composer.isLog) {
+                this.update({ composerView: clear() });
             } else {
                 this.showSendMessage();
             }
-        }
-
-        /**
-         * Handles message posted on composer.
-         *
-         * @param {Event} ev
-         */
-        onComposerMessagePosted(ev) {
-            this.update({ isComposerVisible: false });
         }
 
         /**
@@ -182,14 +170,14 @@ function factory(dependencies) {
         }
 
         showLogNote() {
-            this.update({ isComposerVisible: true });
-            this.thread.composer.update({ isLog: true });
+            this.update({ composerView: insertAndReplace() });
+            this.composerView.composer.update({ isLog: true });
             this.focus();
         }
 
         showSendMessage() {
-            this.update({ isComposerVisible: true });
-            this.thread.composer.update({ isLog: false });
+            this.update({ composerView: insertAndReplace() });
+            this.composerView.composer.update({ isLog: false });
             this.focus();
         }
 
@@ -201,8 +189,18 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeAttachmentList() {
+            return (this.thread && this.thread.allAttachments.length > 0)
+                ? insertAndReplace()
+                : clear();
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasThreadView() {
-            return this.thread && this.hasMessageList;
+            return Boolean(this.thread && this.hasMessageList);
         }
 
         /**
@@ -210,7 +208,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsDisabled() {
-            return !this.thread || this.thread.isTemporary;
+            return Boolean(!this.thread || this.thread.isTemporary);
         }
 
         /**
@@ -218,14 +216,11 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer}
          */
         _computeThreadViewer() {
-            const threadViewerData = {
+            return insertAndReplace({
                 hasThreadView: this.hasThreadView,
+                order: 'desc',
                 thread: this.thread ? link(this.thread) : unlink(),
-            };
-            if (!this.threadViewer) {
-                return create(threadViewerData);
-            }
-            return update(threadViewerData);
+            });
         }
 
         /**
@@ -316,13 +311,26 @@ function factory(dependencies) {
     }
 
     Chatter.fields = {
-        composer: many2one('mail.composer', {
-            related: 'thread.composer',
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one2one('mail.attachment_list', {
+            compute: '_computeAttachmentList',
+            inverse: 'chatter',
+            isCausal: true,
+            readonly: true,
         }),
         /**
          * States the OWL component of this chatter top bar.
          */
         componentChatterTopbar: attr(),
+        /**
+         * Determines the composer view used to post in this chatter (if any).
+         */
+        composerView: one2one('mail.composer_view', {
+            inverse: 'chatter',
+            isCausal: true,
+        }),
         context: attr({
             default: {},
         }),
@@ -366,6 +374,15 @@ function factory(dependencies) {
         hasTopbarCloseButton: attr({
             default: false,
         }),
+        /**
+         * States the id of this chatter. This id does not correspond to any
+         * specific value, it is just a unique identifier given by the creator
+         * of this record.
+         */
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         isActivityBoxVisible: attr({
             default: true,
         }),
@@ -381,17 +398,8 @@ function factory(dependencies) {
         isAttachmentBoxVisibleInitially: attr({
             default: false,
         }),
-        isComposerVisible: attr({
-            default: false,
-        }),
         isDisabled: attr({
             compute: '_computeIsDisabled',
-            default: false,
-        }),
-        /**
-         * Determine whether this chatter should be focused at next render.
-         */
-        isDoFocus: attr({
             default: false,
         }),
         isShowingAttachmentsLoading: attr({
@@ -424,11 +432,13 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'chatter',
             isCausal: true,
             readonly: true,
             required: true,
         }),
     };
+    Chatter.identifyingFields = ['id'];
     Chatter.onChanges = [
         new OnChange({
             dependencies: ['threadId', 'threadModel'],

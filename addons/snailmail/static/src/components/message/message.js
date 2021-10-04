@@ -26,14 +26,14 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
      * @override
      */
     _onClickFailure() {
-        if (this.message.message_type === 'snailmail') {
+        if (this.messageView.message.message_type === 'snailmail') {
             /**
              * Messages from snailmail are considered to have at most one
              * notification. The failure type of the whole message is considered
              * to be the same as the one from that first notification, and the
              * click action will depend on it.
              */
-            switch (this.message.notifications[0].failure_type) {
+            switch (this.messageView.message.notifications[0].failure_type) {
                 case 'sn_credit':
                     // URL only used in this component, not received at init
                     this.messaging.fetchSnailmailCreditsUrl();
@@ -43,10 +43,10 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
                     this.snailmailState.hasDialog = true;
                     break;
                 case 'sn_fields':
-                    this.message.openMissingFieldsLetterAction();
+                    this.messageView.message.openMissingFieldsLetterAction();
                     break;
                 case 'sn_format':
-                    this.message.openFormatLetterAction();
+                    this.messageView.message.openFormatLetterAction();
                     break;
                 case 'sn_price':
                     this.snailmailState.hasDialog = true;

@@ -26,11 +26,8 @@
                 <t t-if="chatWindow.threadView and !chatWindow.isMemberListOpened">
                     <ThreadView
                         class="o_ChatWindow_thread"
-                        composerAttachmentsDetailsMode="'card'"
-                        hasComposer="chatWindow.thread.model !== 'mail.box'"
                         hasComposerCurrentPartnerAvatar="false"
                         hasComposerSendButton="messaging.device.isMobile"
-                        hasSquashCloseMessages="chatWindow.thread.model !== 'mail.box'"
                         threadViewLocalId="chatWindow.threadView.localId"
                         t-on-focusin="_onFocusinThread"
                         t-ref="thread"
@@ -46,6 +43,7 @@
                             placeholder="newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"
+                            t-on-focusin="chatWindow.onFocusInNewMessageFormInput"
                             t-ref="input"
                         />
                     </div>

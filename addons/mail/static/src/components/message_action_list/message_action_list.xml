@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="mail.MessageActionList" owl="1">
-        <div class="o_MessageActionList d-flex" t-on-click="actionList.onClick">
-            <Popover class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" position="'top'" titleAttribute="ADD_A_REACTION" t-on-click="actionList.onClickReaction" t-on-o-emoji-selection="actionList.onEmojiSelection" t-on-o-popover-closed="actionList.onReactionPopoverClosed" t-on-o-popover-opened="actionList.onReactionPopoverOpened" t-ref="reactionPopover">
-                <t t-set="opened">
-                    <EmojisPopover/>
-                </t>
-            </Popover>
-            <span t-if="actionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
-                    'o_MessageActionList_actionStar_active': actionList.message.isStarred,
-                    'fa fa-lg fa-star': actionList.message.isStarred,
-                    'fa fa-lg fa-star-o': !actionList.message.isStarred,
-                }" title="Mark as Todo" t-on-click="actionList.onClickToggleStar"/>
-            <span t-if="props.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply p-2 fa fa-lg fa-reply" title="Reply" t-on-click="actionList.onClickReplyTo"/>
-            <span t-if="props.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="actionList.onClickMarkAsRead"/>
-            <span t-if="actionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" t-on-click="actionList.onClickEdit"/>
-            <span t-if="actionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="actionList.onClickDelete"/>
-            <DeleteMessageConfirmDialog t-if="actionList.showDeleteConfirm" actionListLocalId="actionList.localId"/>
+        <div class="o_MessageActionList d-flex" t-on-click="messageActionList and messageActionList.onClick">
+            <t t-if="messageActionList">
+                <Popover class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" position="'top'" titleAttribute="ADD_A_REACTION" t-on-o-emoji-selection="messageActionList.onEmojiSelection" t-on-o-popover-closed="messageActionList.onReactionPopoverClosed" t-on-o-popover-opened="messageActionList.onReactionPopoverOpened" t-ref="reactionPopover">
+                    <t t-set="opened">
+                        <EmojisPopover/>
+                    </t>
+                </Popover>
+                <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
+                        'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
+                        'fa fa-lg fa-star': messageActionList.message.isStarred,
+                        'fa fa-lg fa-star-o': !messageActionList.message.isStarred,
+                    }" title="Mark as Todo" t-on-click="messageActionList.onClickToggleStar"/>
+                <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply p-2 fa fa-lg fa-reply" title="Reply" t-on-click="messageActionList.onClickReplyTo"/>
+                <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
+                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" t-on-click="messageActionList.onClickEdit"/>
+                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="messageActionList.onClickDelete"/>
+                <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" messageActionListLocalId="messageActionList.localId"/>
+            </t>
         </div>
     </t>
 </templates>

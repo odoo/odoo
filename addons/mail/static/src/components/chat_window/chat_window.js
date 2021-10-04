@@ -28,9 +28,7 @@ export class ChatWindow extends Component {
         this._inputRef = useRef('input');
         /**
          * Reference of thread in the chat window (chat window with thread
-         * only). Useful when focusing this chat window, which consists of
-         * focusing this thread. Will likely focus the composer of thread, if
-         * it has one!
+         * only). Useful to save/restore scroll position.
          */
         this._threadRef = useRef('thread');
         // the following are passed as props to children
@@ -83,24 +81,6 @@ export class ChatWindow extends Component {
     }
 
     /**
-     * Focus this chat window.
-     *
-     * @private
-     */
-    _focus() {
-        this.chatWindow.update({
-            isDoFocus: false,
-            isFocused: true,
-        });
-        if (this._inputRef.comp) {
-            this._inputRef.comp.focus();
-        }
-        if (this._threadRef.comp) {
-            this._threadRef.comp.focus();
-        }
-    }
-
-    /**
      * Save the scroll positions of the chat window in the store.
      * This is useful in order to remount chat windows and keep previous
      * scroll positions. This is necessary because when toggling on/off
@@ -141,7 +121,10 @@ export class ChatWindow extends Component {
             return;
         }
         if (this.chatWindow.isDoFocus) {
-            this._focus();
+            this.chatWindow.update({ isDoFocus: false });
+            if (this._inputRef.comp) {
+                this._inputRef.comp.focus();
+            }
         }
         this._applyVisibleOffset();
     }

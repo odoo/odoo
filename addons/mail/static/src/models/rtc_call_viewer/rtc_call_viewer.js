@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one, one2many } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, create, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -32,6 +32,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            browser.clearTimeout(this._timeoutId);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
             return super._willDelete(...arguments);
         }
@@ -78,7 +79,7 @@ function factory(dependencies) {
             this.update({
                 showOverlay: true,
             });
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this._timeoutId);
         }
 
         /**
@@ -130,7 +131,7 @@ function factory(dependencies) {
 
         toggleLayoutMenu() {
             if (!this.rtcLayoutMenu) {
-                this.update({ rtcLayoutMenu: create() });
+                this.update({ rtcLayoutMenu: insertAndReplace() });
                 return;
             }
             this.update({ rtcLayoutMenu: unlink() });
@@ -262,7 +263,7 @@ function factory(dependencies) {
          * @private
          */
         _debounce(f, { delay = 0 } = {}) {
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this._timeoutId);
             this._timeoutId = browser.setTimeout(() => {
                 if (!this.exists()) {
                     return;
@@ -376,7 +377,7 @@ function factory(dependencies) {
          * The model for the controller (buttons).
          */
         rtcController: one2one('mail.rtc_controller', {
-            default: create(),
+            default: insertAndReplace(),
             readonly: true,
             required: true,
             inverse: 'callViewer',
@@ -400,6 +401,7 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'rtcCallViewer',
+            readonly: true,
             required: true,
         }),
         /**
@@ -410,6 +412,7 @@ function factory(dependencies) {
             inverse: 'rtcCallViewerOfTile',
         }),
     };
+    RtcCallViewer.identifyingFields = ['threadView'];
     RtcCallViewer.onChanges = [
         new OnChange({
             dependencies: ['threadView.thread.rtc'],

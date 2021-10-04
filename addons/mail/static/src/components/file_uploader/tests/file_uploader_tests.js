@@ -19,8 +19,7 @@ QUnit.module('file_uploader_tests.js', {
         beforeEach(this);
         this.components = [];
 
-        this.createFileUploaderComponent = async otherProps => {
-            const props = Object.assign({ attachmentLocalIds: [] }, otherProps);
+        this.createFileUploaderComponent = async props => {
             return createRootMessagingComponent(this, "FileUploader", {
                 props,
                 target: this.widget.el,

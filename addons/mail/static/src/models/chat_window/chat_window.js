@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
@@ -17,6 +17,7 @@ function factory(dependencies) {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
             this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
+            this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
         }
 
         //----------------------------------------------------------------------
@@ -61,7 +62,12 @@ function factory(dependencies) {
          * Programmatically auto-focus an existing chat window.
          */
         focus() {
-            this.update({ isDoFocus: true });
+            if (!this.thread) {
+                this.update({ isDoFocus: true });
+            }
+            if (this.threadView && this.threadView.composerView) {
+                this.threadView.composerView.update({ doFocus: true });
+            }
         }
 
         focusNextVisibleUnfoldedChatWindow() {
@@ -136,6 +142,15 @@ function factory(dependencies) {
         onClickShowMemberList(ev) {
             markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
             this.update({ isMemberListOpened: true });
+        }
+
+        /**
+         * @param {Event} ev
+         */
+        onFocusInNewMessageFormInput(ev) {
+            if (this.exists()) {
+                this.update({ isFocused: true });
+            }
         }
 
         /**
@@ -266,15 +281,11 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer}
          */
         _computeThreadViewer() {
-            const threadViewerData = {
+            return insertAndReplace({
                 compact: true,
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
-            };
-            if (!this.threadViewer) {
-                return create(threadViewerData);
-            }
-            return update(threadViewerData);
+            });
         }
 
         /**
@@ -420,6 +431,11 @@ function factory(dependencies) {
         }),
         manager: many2one('mail.chat_window_manager', {
             inverse: 'chatWindows',
+            readonly: true,
+        }),
+        managerAsNewMessage: one2one('mail.chat_window_manager', {
+            inverse: 'newMessageChatWindow',
+            readonly: true,
         }),
         name: attr({
             compute: '_computeName',
@@ -430,6 +446,7 @@ function factory(dependencies) {
          */
         thread: one2one('mail.thread', {
             inverse: 'chatWindow',
+            readonly: true,
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
@@ -442,6 +459,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'chatWindow',
             isCausal: true,
             readonly: true,
             required: true,
@@ -459,7 +477,7 @@ function factory(dependencies) {
             compute: '_computeVisibleOffset',
         }),
     };
-
+    ChatWindow.identifyingFields = ['manager', ['thread', 'managerAsNewMessage']];
     ChatWindow.modelName = 'mail.chat_window';
 
     return ChatWindow;

@@ -154,17 +154,6 @@ function factory(dependencies) {
             });
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     Employee.fields = {
@@ -179,6 +168,7 @@ function factory(dependencies) {
          * Unique identifier for this employee.
          */
         id: attr({
+            readonly: true,
             required: true,
         }),
         /**
@@ -195,7 +185,7 @@ function factory(dependencies) {
             inverse: 'employee',
         }),
     };
-
+    Employee.identifyingFields = ['id'];
     Employee.modelName = 'hr.employee';
 
     return Employee;

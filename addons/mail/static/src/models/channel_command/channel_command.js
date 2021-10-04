@@ -143,10 +143,11 @@ function factory(dependencies) {
          *  The keyword to use a specific command.
          */
         name: attr({
+            readonly: true,
             required: true,
         }),
     };
-
+    ChannelCommand.identifyingFields = ['name'];
     ChannelCommand.modelName = 'mail.channel_command';
 
     return ChannelCommand;

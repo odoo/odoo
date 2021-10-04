@@ -87,8 +87,8 @@ export class MessageSeenIndicator extends Component {
             return undefined;
         }
         return this.messaging.models['mail.message_seen_indicator'].findFromIdentifyingData({
-            channelId: this.thread.id,
-            messageId: this.message.id,
+            message: this.message,
+            thread: this.thread,
         });
     }
 

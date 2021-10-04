@@ -426,6 +426,8 @@ function factory(dependencies) {
         }),
         thread: one2one('mail.thread', {
             inverse: 'cache',
+            readonly: true,
+            required: true,
         }),
         /**
          * States the 'mail.thread_view' that are currently displaying `this`.
@@ -434,6 +436,7 @@ function factory(dependencies) {
             inverse: 'threadCache',
         }),
     };
+    ThreadCache.identifyingFields = ['thread'];
     ThreadCache.onChanges = [
         new OnChange({
             dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],

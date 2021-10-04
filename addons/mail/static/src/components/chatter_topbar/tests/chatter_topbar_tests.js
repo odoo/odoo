@@ -45,6 +45,7 @@ QUnit.test('base rendering', async function (assert) {
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -97,6 +98,7 @@ QUnit.test('base disabled rendering', async function (assert) {
 
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadModel: 'res.partner',
     });
     await this.createChatterTopbarComponent(chatter);
@@ -153,6 +155,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         }
     });
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -195,6 +198,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
         }
     });
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -237,6 +241,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         },
     });
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -287,6 +292,7 @@ QUnit.test('attachment counter without attachments', async function (assert) {
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -334,6 +340,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
     );
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -367,6 +374,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -447,6 +455,7 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
         },
     );
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         followerIds: [1, 2],
         threadId: 100,
         threadModel: 'res.partner',
@@ -502,6 +511,7 @@ QUnit.test('log note/send message switching', async function (assert) {
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -562,6 +572,7 @@ QUnit.test('log note toggling', async function (assert) {
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -602,6 +613,7 @@ QUnit.test('send message toggling', async function (assert) {
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 100,
         threadModel: 'res.partner',
     });
