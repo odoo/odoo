@@ -2,8 +2,8 @@
 
 import logging
 
-from odoo import _, api, models
-from odoo.exceptions import ValidationError
+from odoo import _, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -12,6 +12,54 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    capture_manually = fields.Boolean(related='acquirer_id.capture_manually')
+
+    #=== ACTION METHODS ===#
+
+    def action_test_set_done(self):
+        """ Set the state of the test transaction to 'done'.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        if self.provider != 'test':
+            return
+
+        notification_data = {'reference': self.reference, 'simulated_state': 'done'}
+        self._handle_notification_data('test', notification_data)
+
+    def action_test_set_canceled(self):
+        """ Set the state of the test transaction to 'cancel'.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        if self.provider != 'test':
+            return
+
+        notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
+        self._handle_notification_data('test', notification_data)
+
+    def action_test_set_error(self):
+        """ Set the state of the test transaction to 'error'.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        if self.provider != 'test':
+            return
+
+        notification_data = {'reference': self.reference, 'simulated_state': 'error'}
+        self._handle_notification_data('test', notification_data)
+
+    #=== BUSINESS METHODS ===#
 
     def _send_payment_request(self):
         """ Override of payment to simulate a payment request.
@@ -24,7 +72,65 @@ class PaymentTransaction(models.Model):
         if self.provider != 'test':
             return
 
-        self._handle_notification_data('test', None)
+        if not self.token_id:
+            raise UserError("Test: " + _("The transaction is not linked to a token."))
+
+        simulated_state = self.token_id.test_simulated_state
+        notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
+        self._handle_notification_data('test', notification_data)
+
+    def _send_refund_request(self, create_refund_transaction=True, **kwargs):
+        """ Override of payment to simulate a refund.
+
+        Note: self.ensure_one()
+
+        :param bool create_refund_transaction: Whether a refund transaction should be created.
+        :param dict kwargs: The keyword arguments.
+        :return: The refund transaction if any
+        :rtype: recordset of `payment.transaction`
+        """
+        if self.provider != 'test':
+            return super()._send_refund_request(
+                create_refund_transaction=create_refund_transaction, **kwargs
+            )
+        refund_tx = super()._send_refund_request(create_refund_transaction=True, **kwargs)
+
+        notification_data = {'reference': refund_tx.reference, 'simulated_state': 'done'}
+        refund_tx._handle_notification_data('test', notification_data)
+
+        return refund_tx
+
+    def _send_capture_request(self):
+        """ Override of payment to simulate a capture request.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_capture_request()
+        if self.provider != 'test':
+            return
+
+        notification_data = {
+            'reference': self.reference,
+            'simulated_state': 'done',
+            'manual_capture': True,  # Distinguish manual captures from regular one-step captures.
+        }
+        self._handle_notification_data('test', notification_data)
+
+    def _send_void_request(self):
+        """ Override of payment to simulate a void request.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_void_request()
+        if self.provider != 'test':
+            return
+
+        notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
+        self._handle_notification_data('test', notification_data)
 
     def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on dummy data.
@@ -60,14 +166,56 @@ class PaymentTransaction(models.Model):
         if self.provider != "test":
             return
 
-        self._set_done()  # Dummy transactions are always successful
         if self.tokenize:
-            payment_details_short = notification_data['cc_summary']
-            token = self.env['payment.token'].create({
-                'acquirer_id': self.acquirer_id.id,
-                'name': payment_utils.build_token_name(payment_details_short=payment_details_short),
-                'partner_id': self.partner_id.id,
-                'acquirer_ref': 'fake acquirer reference',
-                'verified': True,
-            })
-            self.token_id = token.id
+            # The reasons why we immediately tokenize the transaction regardless of the state rather
+            # than waiting for the payment method to be validated ('authorized' or 'done') like the
+            # other payment acquirers do are:
+            # - To save the simulated state and payment details on the token while we have them.
+            # - To allow customers to create tokens whose transactions will always end up in the
+            #   said simulated state.
+            self._test_tokenize_from_notification_data(notification_data)
+
+        state = notification_data['simulated_state']
+        if state == 'pending':
+            self._set_pending()
+        elif state == 'done':
+            if self.capture_manually and not notification_data.get('manual_capture'):
+                self._set_authorized()
+            else:
+                self._set_done()
+                # Immediately post-process the transaction if it is a refund, as the post-processing
+                # will not be triggered by a customer browsing the transaction from the portal.
+                if self.operation == 'refund':
+                    self.env.ref('payment.cron_post_process_payment_tx')._trigger()
+        elif state == 'cancel':
+            self._set_canceled()
+        else:  # Simulate an error state.
+            self._set_error(_("You selected the following test payment status: %s", state))
+
+    def _test_tokenize_from_notification_data(self, notification_data):
+        """ Create a new token based on the notification data.
+
+        Note: self.ensure_one()
+
+        :param dict notification_data: The fake notification data to tokenize from.
+        :return: None
+        """
+        self.ensure_one()
+
+        payment_details_short = notification_data['cc_summary']
+        state = notification_data['simulated_state']
+        token = self.env['payment.token'].create({
+            'acquirer_id': self.acquirer_id.id,
+            'name': payment_utils.build_token_name(payment_details_short=payment_details_short),
+            'partner_id': self.partner_id.id,
+            'acquirer_ref': 'fake acquirer reference',
+            'verified': True,
+            'test_simulated_state': state,
+        })
+        self.write({
+            'token_id': token,
+            'tokenize': False,
+        })
+        _logger.info(
+            "Created token with id %s for partner with id %s.", token.id, self.partner_id.id
+        )

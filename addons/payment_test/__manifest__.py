@@ -12,6 +12,8 @@ It should never be used in production environment. Make sure to disable it befor
     'data': [
         'views/payment_templates.xml',
         'views/payment_test_templates.xml',
+        'views/payment_token_views.xml',
+        'views/payment_transaction_views.xml',
         'data/payment_acquirer_data.xml',
     ],
     'uninstall_hook': 'uninstall_hook',

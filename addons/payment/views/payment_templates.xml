@@ -85,11 +85,11 @@
                     <!-- === Acquirer inline form === -->
                     <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
                          name="o_payment_inline_form"
-                         class="card-footer d-none">
-                        <!-- === Inline form content (filled by acquirer) === -->
+                         class="card-footer px-3 d-none">
                         <t t-if="acquirer.sudo()._should_build_inline_form(is_validation=False)">
                             <t t-set="inline_form_xml_id"
                                t-value="acquirer.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by acquirer) === -->
                             <div t-if="inline_form_xml_id" class="clearfix">
                                 <t t-call="{{inline_form_xml_id}}">
                                     <t t-set="acquirer_id" t-value="acquirer.id"/>
@@ -123,7 +123,16 @@
                     <!-- === Token inline form === -->
                     <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
                          name="o_payment_inline_form"
-                         class="card-footer d-none"/>
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().acquirer_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by acquirer) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
                 </t>
             </div>
             <!-- === "Pay" button === -->
@@ -207,9 +216,9 @@
                         <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
                              name="o_payment_inline_form"
                              class="card-footer d-none">
-                            <!-- === Inline form content (filled by acquirer) === -->
                             <t t-set="inline_form_xml_id"
                                t-value="acquirer.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by acquirer) === -->
                             <div t-if="inline_form_xml_id" class="clearfix">
                                 <t t-call="{{inline_form_xml_id}}">
                                     <t t-set="acquirer_id" t-value="acquirer.id"/>
@@ -245,7 +254,16 @@
                     <!-- === Token inline form === -->
                     <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
                          name="o_payment_inline_form"
-                         class="card-footer d-none"/>
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().acquirer_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by acquirer) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
                 </t>
             </div>
             <!-- === "Save Payment Method" button === -->
