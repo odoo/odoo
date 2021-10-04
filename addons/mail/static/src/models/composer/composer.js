@@ -7,8 +7,10 @@ import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
     addLink,
+    createRange,
     escapeAndCompactTextContent,
     parseAndTransform,
+    setSelection,
 } from '@mail/js/utils';
 
 function factory(dependencies) {
@@ -93,59 +95,25 @@ function factory(dependencies) {
             this.update({ hasFocus: true });
         }
 
-        /**
-         * Inserts text content in text input based on selection.
-         *
-         * @param {string} content
-         */
-        insertIntoTextInput(content) {
-            const partA = this.textInputContent.slice(0, this.textInputCursorStart);
-            const partB = this.textInputContent.slice(
-                this.textInputCursorEnd,
-                this.textInputContent.length
-            );
-            let suggestionDelimiterPosition = this.suggestionDelimiterPosition;
-            if (
-                suggestionDelimiterPosition !== undefined &&
-                suggestionDelimiterPosition >= this.textInputCursorStart
-            ) {
-                suggestionDelimiterPosition = suggestionDelimiterPosition + content.length;
-            }
-            this.update({
-                isLastStateChangeProgrammatic: true,
-                suggestionDelimiterPosition,
-                textInputContent: partA + content + partB,
-                textInputCursorEnd: this.textInputCursorStart + content.length,
-                textInputCursorStart: this.textInputCursorStart + content.length,
-            });
-        }
 
         insertSuggestion() {
-            const cursorPosition = this.textInputCursorStart;
-            let textLeft = this.textInputContent.substring(
-                0,
-                this.suggestionDelimiterPosition + 1
+            const replaceRange = createRange(
+                this.suggestionDelimiterPosition.node,
+                this.suggestionDelimiterPosition.offset,
+                this.textInputCursorSelection.anchorNode,
+                this.textInputCursorSelection.anchorOffset,
             );
-            let textRight = this.textInputContent.substring(
-                cursorPosition,
-                this.textInputContent.length
-            );
-            if (this.suggestionDelimiter === ':') {
-                textLeft = this.textInputContent.substring(
-                    0,
-                    this.suggestionDelimiterPosition
-                );
-                textRight = this.textInputContent.substring(
-                    cursorPosition,
-                    this.textInputContent.length
-                );
-            }
-            const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            replaceRange.deleteContents();
+            const contentNode = this._generateMentionsLinks();
+            replaceRange.insertNode(contentNode);
+
+            const range = new Range();
+            range.setStartAfter(contentNode);
+            range.collapse();
+            const selection = setSelection(range);
             const updateData = {
-                isLastStateChangeProgrammatic: true,
-                textInputContent: textLeft + recordReplacement + ' ' + textRight,
-                textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
-                textInputCursorStart: textLeft.length + recordReplacement.length + 1,
+                textInputContent: this.textInputRef.comp._getContent(),
+                textInputCursorSelection: selection,
             };
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
@@ -251,7 +219,9 @@ function factory(dependencies) {
          */
         async postMessage() {
             if (this.activeThread.model === 'mail.channel') {
-                const command = this._getCommandFromText(this.textInputContent);
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(this.textInputContent.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
+                const command = this._getCommandFromText(htmlDoc.body.textContent);
                 if (command) {
                     await command.execute({ channel: this.activeThread, body: this.textInputContent });
                     if (this.exists()) {
@@ -263,15 +233,13 @@ function factory(dependencies) {
             if (this.messaging.currentPartner) {
                 this.activeThread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            let body = this.textInputContent;
             // This message will be received from the mail composer as html content
             // subtype but the urls will not be linkified. If the mail composer
             // takes the responsibility to linkify the urls we end up with double
             // linkification a bit everywhere. Ideally we want to keep the content
             // as text internally and only make html enrichment at display time but
             // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
             body = this._generateEmojisOnHtml(body);
             const postData = {
@@ -335,9 +303,7 @@ function factory(dependencies) {
                 this.messageInEditing.actionList.update({ showDeleteConfirm: true });
                 return;
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this._generateMentionsLinks(body);
+            let body = this.textInputContent;
             body = parseAndTransform(body, addLink);
             body = this._generateEmojisOnHtml(body);
             let data = {
@@ -597,12 +563,11 @@ function factory(dependencies) {
          */
         _computeSuggestionDelimiter() {
             if (
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.textInputContent.length
+                this.suggestionDelimiterPosition === undefined
             ) {
                 return clear();
             }
-            return this.textInputContent[this.suggestionDelimiterPosition];
+            return this.textInputCursorSelection.anchorNode.textContent[this.suggestionDelimiterPosition.offset];
         }
 
         /**
@@ -628,14 +593,18 @@ function factory(dependencies) {
          * @private
          * @returns {string}
          */
-        _computeSuggestionSearchTerm() {
+         _onChangeUpdateSuggestionSearchTerm() {
             if (
                 this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.textInputCursorStart
+                this.suggestionDelimiterPosition.offset >= this.textInputCursorSelection.anchorOffset
             ) {
-                return clear();
+                return this.update({
+                    suggestionSearchTerm: clear(),
+                });
             }
-            return this.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.textInputCursorStart);
+            return this.update({
+                suggestionSearchTerm: this.textInputCursorSelection.anchorNode.textContent.substring(this.suggestionDelimiterPosition.offset + 1, this.textInputCursorSelection.anchorOffset),
+            });
         }
 
         /**
@@ -677,9 +646,9 @@ function factory(dependencies) {
                         /([.*+?=^!:${}()|[\]/\\])/g,
                         '\\$1');
                     const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
+                        '(' + escapedSource + ')',
                         'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
+                    htmlString = htmlString.replace(regexp, emoji.unicode);
                 }
             }
             return htmlString;
@@ -690,49 +659,44 @@ function factory(dependencies) {
          * Generates the html link related to the mentioned partner
          *
          * @private
-         * @param {string} body
          * @returns {string}
          */
-        _generateMentionsLinks(body) {
-            // List of mention data to insert in the body.
-            // Useful to do the final replace after parsing to avoid using the
-            // same tag twice if two different mentions have the same name.
+        _generateMentionsLinks() {
+            const suggestion = this.activeSuggestedRecord;
             const mentions = [];
-            for (const partner of this.mentionedPartners) {
-                const placeholder = `@-mention-partner-${partner.id}`;
-                const text = `@${owl.utils.escape(partner.name)}`;
-                mentions.push({
-                    class: 'o_mail_redirect',
-                    id: partner.id,
-                    model: 'res.partner',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            for (const channel of this.mentionedChannels) {
-                const placeholder = `#-mention-channel-${channel.id}`;
-                const text = `#${owl.utils.escape(channel.name)}`;
-                mentions.push({
+            switch (suggestion.constructor.modelName) {
+                case 'mail.partner':
+                    mentions.push({
+                        class: 'o_mail_redirect',
+                        id: suggestion.id,
+                        model: 'res.partner',
+                    });
+                    break;
+                case 'mail.thread':
+                    mentions.push({
                     class: 'o_channel_redirect',
-                    id: channel.id,
+                    id: suggestion.id,
                     model: 'mail.channel',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
+                    });
+                    break;
+                default:
+                    break;
+            };
+            const linkReplacement = document.createElement('a');
+            linkReplacement.innerHTML = suggestion.getMentionText();
+            if (['/', '#', '@'].includes(this.suggestionDelimiter)) {
+                linkReplacement.innerHTML = this.suggestionDelimiter + linkReplacement.innerHTML;
             }
-            const baseHREF = this.env.session.url('/web');
-            for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-                const attClass = `class='${mention.class}'`;
-                const dataOeId = `data-oe-id='${mention.id}'`;
-                const dataOeModel = `data-oe-model='${mention.model}'`;
-                const target = `target='_blank'`;
-                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-                body = body.replace(mention.placeholder, link);
+            if (mentions.length != 0) {
+                const mention = mentions[0];
+                const baseHREF = this.env.session.url('/web');
+                linkReplacement.setAttribute('href', `${baseHREF}#model=${mention.model}&id=${mention.id}`);
+                linkReplacement.setAttribute('class', `${mention.class}`);
+                linkReplacement.setAttribute('data-oe-id', `${mention.id}`);
+                linkReplacement.setAttribute('data-oe-model', `${mention.model}`);
+                linkReplacement.setAttribute('target', '_blank');
             }
-            return body;
+            return linkReplacement;
         }
 
         /**
@@ -760,7 +724,8 @@ function factory(dependencies) {
          * @private
          */
         _onChangeDetectSuggestionDelimiterPosition() {
-            if (this.textInputCursorStart !== this.textInputCursorEnd) {
+            const selection = this.textInputCursorSelection;
+            if (!selection.isCollapsed) {
                 // avoid interfering with multi-char selection
                 return this.update({ suggestionDelimiterPosition: clear() });
             }
@@ -768,31 +733,34 @@ function factory(dependencies) {
             // keep the current delimiter if it is still valid
             if (
                 this.suggestionDelimiterPosition !== undefined &&
-                this.suggestionDelimiterPosition < this.textInputCursorStart
+                this.suggestionDelimiterPosition.offset < this.textInputCursorSelection.anchorOffset
             ) {
                 candidatePositions.push(this.suggestionDelimiterPosition);
             }
             // consider the char before the current cursor position if the
             // current delimiter is no longer valid (or if there is none)
-            if (this.textInputCursorStart > 0) {
-                candidatePositions.push(this.textInputCursorStart - 1);
+            if (selection.anchorOffset > 0) {
+                candidatePositions.push({
+                    node: selection.anchorNode,
+                    offset: selection.anchorOffset - 1,
+                });
             }
             const suggestionDelimiters = ['@', ':', '#', '/'];
             for (const candidatePosition of candidatePositions) {
                 if (
-                    candidatePosition < 0 ||
-                    candidatePosition >= this.textInputContent.length
+                    candidatePosition.offset < 0 ||
+                    candidatePosition.offset >= this.textInputCursorSelection.anchorNode.textContent.length
                 ) {
                     continue;
                 }
-                const candidateChar = this.textInputContent[candidatePosition];
-                if (candidateChar === '/' && candidatePosition !== 0) {
+                const candidateChar = candidatePosition.node.textContent.charAt(candidatePosition.offset);
+                if (candidateChar === '/' && candidatePosition.offset !== 0) {
                     continue;
                 }
                 if (!suggestionDelimiters.includes(candidateChar)) {
                     continue;
                 }
-                const charBeforeCandidate = this.textInputContent[candidatePosition - 1];
+                const charBeforeCandidate = candidatePosition.node.textContent.charAt(candidatePosition.offset - 1)
                 if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                     continue;
                 }
@@ -849,9 +817,8 @@ function factory(dependencies) {
                 isLastStateChangeProgrammatic: true,
                 mentionedChannels: unlinkAll(),
                 mentionedPartners: unlinkAll(),
-                textInputContent: '',
-                textInputCursorEnd: 0,
-                textInputCursorStart: 0,
+                textInputContent: '<p><br></p>',
+                textInputCursorSelection: "",
             });
         }
 
@@ -1041,19 +1008,18 @@ function factory(dependencies) {
          * States the search term to use for suggestions (if any).
          */
         suggestionSearchTerm: attr({
-            compute: '_computeSuggestionSearchTerm',
+            default: "",
         }),
+        /**
+         * The main role of this reference is to connect the Legancy Widget (composer_wysiwyg)
+         * to the OWL model (composer).
+         */
+        textInputRef: attr(),
         textInputContent: attr({
             default: "",
         }),
-        textInputCursorEnd: attr({
-            default: 0,
-        }),
-        textInputCursorStart: attr({
-            default: 0,
-        }),
-        textInputSelectionDirection: attr({
-            default: "none",
+        textInputCursorSelection: attr({
+            default: "",
         }),
         thread: one2one('mail.thread', {
             inverse: 'composer',
@@ -1064,12 +1030,16 @@ function factory(dependencies) {
     };
     Composer.onChanges = [
         new OnChange({
-            dependencies: ['textInputContent', 'textInputCursorEnd', 'textInputCursorStart'],
+            dependencies: ['textInputContent', 'textInputCursorSelection'],
             methodName: '_onChangeDetectSuggestionDelimiterPosition',
         }),
         new OnChange({
             dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'thread'],
             methodName: '_onChangeUpdateSuggestionList',
+        }),
+        new OnChange({
+            dependencies: ['textInputContent',],
+            methodName: '_onChangeUpdateSuggestionSearchTerm',
         }),
     ];
     Composer.modelName = 'mail.composer';

@@ -1597,6 +1597,9 @@ export class OdooEditor extends EventTarget {
     // ===========
 
     _createCommandBar() {
+        if (this.options.disableCommandBar) {
+            return;
+        }
         this.options.noScrollSelector = this.options.noScrollSelector || 'body';
 
         const revertHistoryBeforeCommandbar = () => {
@@ -2124,8 +2127,8 @@ export class OdooEditor extends EventTarget {
                     ev.data.includes(' ') &&
                     selection &&
                     selection.anchorNode
-                    && (!this.commandBar._active ||
-                        this.commandBar._currentOpenOptions.closeOnSpace !== true)
+                    && (this.commandBar && (!this.commandBar._active ||
+                        this.commandBar._currentOpenOptions.closeOnSpace !== true))
                 ) {
                     this._convertUrlInElement(closestElement(selection.anchorNode));
                 }

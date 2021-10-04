@@ -277,15 +277,10 @@ function factory(dependencies) {
         }
 
         startEditing() {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(this.body.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
-            const textInputContent = htmlDoc.body.textContent;
+            const textInputContent = this.body;
             const composerData = {
                 doFocus: true,
                 isLastStateChangeProgrammatic: true,
-                textInputCursorStart: textInputContent.length,
-                textInputCursorEnd: textInputContent.length,
-                textInputSelectionDirection: 'none',
                 textInputContent,
             };
             if (this.composerInEditing) {

@@ -87,6 +87,22 @@ function addLink(node, transformChildren) {
     return node.outerHTML;
 }
 
+
+/**
+ * Returns a range based on the given node info.
+ * @param {Node} startNode
+ * @param {attr} startOffset
+ * @param {Node} endNode
+ * @param {attr} endOffset
+ * @returns {range}
+ */
+function createRange(startNode, startOffset, endNode, endOffset) {
+    const range = new Range();
+    range.setStart(startNode, startOffset);
+    range.setEnd(endNode, endOffset);
+    return range;
+}
+
 /**
  * @param {string} htmlString
  * @return {string}
@@ -106,6 +122,13 @@ function htmlToTextContentInline(htmlString) {
         .trim()
         .replace(/[\n\r]/g, '')
         .replace(/\s\s+/g, ' ');
+}
+
+function setSelection(range) {
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return selection;
 }
 
 function stripHTML(node, transformChildren) {
@@ -172,6 +195,7 @@ function timeFromNow(date) {
 
 export {
     addLink,
+    createRange,
     escapeAndCompactTextContent,
     getTextToHTML,
     htmlToTextContentInline,
@@ -179,6 +203,7 @@ export {
     linkify,
     parseAndTransform,
     parseEmail,
+    setSelection,
     stripHTML,
     timeFromNow,
 };

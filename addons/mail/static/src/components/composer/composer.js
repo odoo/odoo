@@ -2,6 +2,7 @@
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { replace } from '@mail/model/model_field_command';
 import {
@@ -32,10 +33,16 @@ export class Composer extends Component {
          */
         this._fileUploaderRef = useRef('fileUploader');
         /**
-         * Reference of the text input component.
+         * The main role of this component (composer_text_input) is to connect the Legancy Widget (composer_wysiwyg)
+         * to the OWL component (composer).
          */
         this._textInputRef = useRef('textInput');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+    }
+
+    setup() {
+        super.setup();
+        useRefToModel({ fieldName: 'textInputRef', modelName: 'mail.composer', propNameAsRecordLocalId: 'composerLocalId', refName: 'textInput' });
     }
 
     mounted() {
@@ -67,7 +74,12 @@ export class Composer extends Component {
     contains(node) {
         // emoji popover is outside but should be considered inside
         const emojisPopover = this._emojisPopoverRef.comp;
+        const wysiwyg = this._textInputRef.comp._wysiwygRef;
         if (emojisPopover && emojisPopover.contains(node)) {
+            return true;
+        }
+        // wysiwyg, including toolbar should be considered inside
+        if (wysiwyg && wysiwyg.contains(node)) {
             return true;
         }
         return this.el.contains(node);
@@ -174,6 +186,7 @@ export class Composer extends Component {
             return;
         }
         await this.composer.postMessage();
+        this._textInputRef.comp._wysiwygRef.clear();
         // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
         // task-2252858
         this.trigger('o-message-posted');
@@ -296,7 +309,9 @@ export class Composer extends Component {
     _onEmojiSelection(ev) {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
-        this.composer.insertIntoTextInput(ev.detail.unicode);
+        // This will call the legacy wysiwyg to update the content, and afterwards,
+        // updating the composer.textInputContent automaticlly.
+        this._textInputRef.comp.insertIntoTextInput(ev.detail.unicode);
         if (!this.env.device.isMobile) {
             this.focus();
         }

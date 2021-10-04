@@ -2,11 +2,16 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { markEventHandled } from '@mail/utils/utils';
+import wysiwygLoader from '@mail/js/frontend/loader';
+import Widget from 'web.Widget';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
+/**
+ * This component is used as middleware to connect OWL and legacy widget.
+ * Theoretically, composer and wysiwyg should have a one2one relationship according the OWL framework.
+ */
 export class ComposerTextInput extends Component {
 
     /**
@@ -29,11 +34,17 @@ export class ComposerTextInput extends Component {
          */
         this._textareaRef = useRef('textarea');
         /**
-         * This is the invisible textarea used to compute the composer height
-         * based on the text content. We need it to downsize the textarea
-         * properly without flicker.
+         * Reference of the wysiwyg. Get instance when in mounted() lifecycle.
          */
-        this._mirroredTextareaRef = useRef('mirroredTextarea');
+        this._wysiwygRef = undefined;
+
+        this._createWysiwygIntance = this._createWysiwygIntance.bind(this);
+        this._getContent = this._getContent.bind(this);
+        this._getSelection = this._getSelection.bind(this);
+    }
+
+    mounted() {
+        this._createWysiwygIntance();
     }
 
     //--------------------------------------------------------------------------
@@ -54,14 +65,14 @@ export class ComposerTextInput extends Component {
         if (!this.composer) {
             return "";
         }
-        if (!this.composer.thread) {
+        if (!this.composer.activeThread) {
             return "";
         }
-        if (this.composer.thread.model === 'mail.channel') {
-            if (this.composer.thread.correspondent) {
-                return _.str.sprintf("Message %s...", this.composer.thread.correspondent.nameOrDisplayName);
+        if (this.composer.activeThread.model === 'mail.channel') {
+            if (this.composer.activeThread.correspondent) {
+                return _.str.sprintf("Message %s...", this.composer.activeThread.correspondent.nameOrDisplayName);
             }
-            return _.str.sprintf("Message #%s...", this.composer.thread.displayName);
+            return _.str.sprintf("Message #%s...", this.composer.activeThread.displayName);
         }
         if (this.composer.isLog) {
             return this.env._t("Log an internal note...");
@@ -70,12 +81,14 @@ export class ComposerTextInput extends Component {
     }
 
     focus() {
-        this._textareaRef.el.focus();
+        if (this._wysiwygRef) {
+            this._wysiwygRef.focus();
+        }
     }
 
     focusout() {
         this.saveStateInStore();
-        this._textareaRef.el.blur();
+        this._wysiwygRef.el.blur();
     }
 
     /**
@@ -84,10 +97,15 @@ export class ComposerTextInput extends Component {
     saveStateInStore() {
         this.composer.update({
             textInputContent: this._getContent(),
-            textInputCursorEnd: this._getSelectionEnd(),
-            textInputCursorStart: this._getSelectionStart(),
-            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
+            textInputCursorSelection: this._getSelection(),
         });
+    }
+
+    /**
+     * Insert the content into the wysiwyg.
+     */
+    insertIntoTextInput(content) {
+        this._wysiwygRef.insertIntoTextInput(content);
     }
 
     //--------------------------------------------------------------------------
@@ -95,34 +113,58 @@ export class ComposerTextInput extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Returns textarea current content.
+     * Create the wysiwyg instance
+     *
+     * @private
+     * @returns {Promise}
+     */
+     async _createWysiwygIntance () {
+        var options = {
+            composer: this.composer,
+            disableCommandBar: true,
+            placeholder: this.textareaPlaceholder,
+            resizable: false,
+            textInputComponent: this,
+            toolbarTemplate: 'mail.composer_toolbar',
+            userGeneratedContent: true,
+        };
+        this._wysiwygRef = await wysiwygLoader.loadFromTextarea(new Widget(), this._textareaRef.el, options);
+        /**
+         * Updates the initial state of the wysiwyg widget when ready.
+         * Calling this.focus() when wysiwyg ref is not fully prepared cause unexpected error.
+         * Checking the state of composer and do manully focus after wysiwyg is ready is to
+         * prevent the unexpected behaviour happens.
+         */
+        if (this.composer.isLastStateChangeProgrammatic) {
+            this._wysiwygRef.el.innerHTML = this.composer.textInputContent;
+            this.composer.update({ isLastStateChangeProgrammatic: false });
+        }
+        if (this.composer.doFocus) {
+            this.focus();
+            this.composer.update({ doFocus: false });
+        }
+    }
+    /**
+     * Returns current content.
      *
      * @private
      * @returns {string}
      */
     _getContent() {
-        return this._textareaRef.el.value;
+        if(this._wysiwygRef.el.innerText.trim() === "") {
+            return "";
+        }
+        return this._wysiwygRef.getValue();
     }
 
     /**
-     * Returns selection end position.
+     * Returns current selection.
      *
      * @private
-     * @returns {integer}
+     * @returns {Selection}
      */
-    _getSelectionEnd() {
-        return this._textareaRef.el.selectionEnd;
-    }
-
-    /**
-     * Returns selection start position.
-     *
-     * @private
-     * @returns {integer}
-     *
-     */
-    _getSelectionStart() {
-        return this._textareaRef.el.selectionStart;
+    _getSelection() {
+        return this._wysiwygRef.getSelection();
     }
 
     /**
@@ -144,234 +186,13 @@ export class ComposerTextInput extends Component {
         if (!this.composer) {
             return;
         }
-        if (this.composer.doFocus) {
+        if (this.composer.doFocus && this._wysiwygRef) {
             this.focus();
             this.composer.update({ doFocus: false });
         }
-        if (this.composer.isLastStateChangeProgrammatic) {
-            this._textareaRef.el.value = this.composer.textInputContent;
-            if (this.composer.hasFocus) {
-                this._textareaRef.el.setSelectionRange(
-                    this.composer.textInputCursorStart,
-                    this.composer.textInputCursorEnd,
-                    this.composer.textInputSelectionDirection,
-                );
-            }
+        if (this.composer.isLastStateChangeProgrammatic && this._wysiwygRef) {
+            this._wysiwygRef.el.innerHTML = this.composer.textInputContent;
             this.composer.update({ isLastStateChangeProgrammatic: false });
-        }
-        this._updateHeight();
-    }
-
-    /**
-     * Updates the textarea height.
-     *
-     * @private
-     */
-    _updateHeight() {
-        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickTextarea() {
-        // clicking might change the cursor position
-        this.saveStateInStore();
-    }
-
-    /**
-     * @private
-     */
-    _onFocusinTextarea() {
-        this.composer.focus();
-        this.trigger('o-focusin-composer');
-    }
-
-    /**
-     * @private
-     */
-    _onFocusoutTextarea() {
-        this.saveStateInStore();
-        this.composer.update({ hasFocus: false });
-    }
-
-    /**
-     * @private
-     */
-    _onInputTextarea() {
-        this.saveStateInStore();
-        if (this._textareaLastInputValue !== this._textareaRef.el.value) {
-            this.composer.handleCurrentPartnerIsTyping();
-        }
-        this._textareaLastInputValue = this._textareaRef.el.value;
-        this._updateHeight();
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownTextarea(ev) {
-        switch (ev.key) {
-            case 'Escape':
-                if (this.composer.hasSuggestions) {
-                    ev.preventDefault();
-                    this.composer.closeSuggestions();
-                    markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
-                }
-                break;
-            // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
-            case 'ArrowUp':
-            case 'PageUp':
-            case 'ArrowDown':
-            case 'PageDown':
-            case 'Home':
-            case 'End':
-            case 'Tab':
-                if (this.composer.hasSuggestions) {
-                    // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
-                    ev.preventDefault();
-                }
-                break;
-            // ENTER: submit the message only if the dropdown mention proposition is not displayed
-            case 'Enter':
-                this._onKeydownTextareaEnter(ev);
-                break;
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestions) {
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.props.sendShortcuts.includes('ctrl-enter') &&
-            !ev.altKey &&
-            ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.trigger('o-composer-text-input-send-shortcut');
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.props.sendShortcuts.includes('enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            !ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.trigger('o-composer-text-input-send-shortcut');
-            ev.preventDefault();
-            return;
-        }
-        if (
-            this.props.sendShortcuts.includes('meta-enter') &&
-            !ev.altKey &&
-            !ev.ctrlKey &&
-            ev.metaKey &&
-            !ev.shiftKey
-        ) {
-            this.trigger('o-composer-text-input-send-shortcut');
-            ev.preventDefault();
-            return;
-        }
-    }
-
-    /**
-     * Key events management is performed in a Keyup to avoid intempestive RPC calls
-     *
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeyupTextarea(ev) {
-        switch (ev.key) {
-            case 'Escape':
-                // already handled in _onKeydownTextarea, break to avoid default
-                break;
-            // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
-            case 'Enter':
-                if (this.composer.hasSuggestions) {
-                    this.composer.insertSuggestion();
-                    this.composer.closeSuggestions();
-                    this.focus();
-                }
-                break;
-            case 'ArrowUp':
-            case 'PageUp':
-                if (ev.key === 'ArrowUp' && !this.composer.hasSuggestions && !this.composer.textInputContent && this.composer.thread) {
-                    this.composer.thread.startEditingLastMessageFromCurrentUser();
-                    break;
-                }
-                if (this.composer.hasSuggestions) {
-                    this.composer.setPreviousSuggestionActive();
-                    this.composer.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'ArrowDown':
-            case 'PageDown':
-                if (ev.key === 'ArrowDown' && !this.composer.hasSuggestions && !this.composer.textInputContent && this.composer.thread) {
-                    this.composer.thread.startEditingLastMessageFromCurrentUser();
-                    break;
-                }
-                if (this.composer.hasSuggestions) {
-                    this.composer.setNextSuggestionActive();
-                    this.composer.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'Home':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setFirstSuggestionActive();
-                    this.composer.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'End':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setLastSuggestionActive();
-                    this.composer.update({ hasToScrollToActiveSuggestion: true });
-                }
-                break;
-            case 'Tab':
-                if (this.composer.hasSuggestions) {
-                    if (ev.shiftKey) {
-                        this.composer.setPreviousSuggestionActive();
-                        this.composer.update({ hasToScrollToActiveSuggestion: true });
-                    } else {
-                        this.composer.setNextSuggestionActive();
-                        this.composer.update({ hasToScrollToActiveSuggestion: true });
-                    }
-                }
-                break;
-            case 'Alt':
-            case 'AltGraph':
-            case 'CapsLock':
-            case 'Control':
-            case 'Fn':
-            case 'FnLock':
-            case 'Hyper':
-            case 'Meta':
-            case 'NumLock':
-            case 'ScrollLock':
-            case 'Shift':
-            case 'ShiftSuper':
-            case 'Symbol':
-            case 'SymbolLock':
-                // prevent modifier keys from resetting the suggestion state
-                break;
-            // Otherwise, check if a mention is typed
-            default:
-                this.saveStateInStore();
         }
     }
 

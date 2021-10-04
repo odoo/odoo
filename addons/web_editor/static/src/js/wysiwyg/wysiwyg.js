@@ -93,6 +93,7 @@ const Wysiwyg = Widget.extend({
             placeholder: this.options.placeholder,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
+            disableCommandBar: this.options.disableCommandBar,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {

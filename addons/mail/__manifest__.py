@@ -158,6 +158,9 @@
             'mail/static/src/components/*/mobile_tests/*.js',
         ],
         'web.assets_qweb': [
+            # Used to customize the toolbar layout.
+            'web_editor/static/src/xml/editor.xml',
+
             'mail/static/src/xml/*.xml',
             'mail/static/src/components/*/*.xml',
             'mail/static/src/widgets/*/*.xml',
