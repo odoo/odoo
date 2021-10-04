@@ -52,12 +52,18 @@ const validElements = [
     { tagName: "DIV", attr: "class", value: "tooltip fade bs-tooltip-auto" },
     { tagName: "DIV", attr: "class", value: "tooltip fade bs-tooltip-auto show" },
     { tagName: "SPAN", attr: "class", value: "select2-hidden-accessible" },
+
     // Due to a Document Kanban bug (already present in 12.0)
     { tagName: "DIV", attr: "class", value: "ui-helper-hidden-accessible" },
     {
         tagName: "UL",
         attr: "class",
         value: "ui-menu ui-widget ui-widget-content ui-autocomplete ui-front",
+    },
+    {
+        tagName: "UL",
+        attr: "class",
+        value: "ui-menu ui-widget ui-widget-content ui-autocomplete dropdown-menu ui-front", // many2ones
     },
 ];
 
@@ -72,7 +78,7 @@ QUnit.on("OdooAfterTestHook", function (info) {
     if (QUnit.config.debug) {
         return;
     }
-    const failed = info.testReport.getStatus() === 'failed';
+    const failed = info.testReport.getStatus() === "failed";
     const toRemove = [];
     // check for leftover elements in the body
     for (const bodyChild of document.body.children) {
