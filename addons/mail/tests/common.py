@@ -923,6 +923,7 @@ class MailCommon(common.SavepointCase, MailCase):
             cls.env, login='employee_c2',
             groups='base.group_user',
             company_id=cls.company_2.id,
+            company_ids=[(4, cls.company_2.id)],
             name='Enguerrand Employee C2',
             notification_type='inbox',
             signature='--\nEnguerrand'
