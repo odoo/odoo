@@ -26,11 +26,13 @@ odoo.define('payment_test.payment_form', require => {
             }
 
             const customerInput = document.getElementById('customer_input').value;
+            const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
             return this._rpc({
                 route: '/payment/test/simulate_payment',
                 params: {
                     'reference': processingValues.reference,
-                    'customer_input': customerInput,
+                    'cc_summary': customerInput.slice(-4),
+                    'simulated_state': simulatedPaymentState,
                 },
             }).then(() => {
                 window.location = '/payment/status';
