@@ -164,7 +164,7 @@ function clickOnText(snippet, element, position = "bottom") {
         content: Markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
         run: "text",
-        consumeEvent: "input",
+        consumeEvent: "click",
     };
 }
 
