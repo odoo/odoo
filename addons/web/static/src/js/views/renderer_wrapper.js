@@ -7,7 +7,6 @@ odoo.define('web.RendererWrapper', function (require) {
         getLocalState() { }
         setLocalState() { }
         giveFocus() { }
-        resetLocalState() { } 
     }
 
     return RendererWrapper;

@@ -228,21 +228,6 @@ var FormRenderer = BasicRenderer.extend({
         this.lastActivatedFieldIndex = -1;
     },
     /**
-     * Resets state which stores information like scroll position, curently
-     * active page, ...
-     *
-     * @override
-     */
-    resetLocalState() {
-        for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
-            [...notebook.querySelectorAll(':scope .o_notebook_headers .nav-item .nav-link')]
-                .map(nav => nav.classList.remove('active'));
-            [...notebook.querySelectorAll(':scope .tab-content > .tab-pane')]
-                .map(tab => tab.classList.remove('active'));
-        }
-
-    },
-    /**
      * Restore active tab pages for each notebook. It relies on the implicit fact
      * that each nav header corresponds to a tab page.
      *

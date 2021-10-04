@@ -63,13 +63,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
         await this._super(...arguments);
     },
-    /**
-     * Called each time the controller is dettached into the DOM
-     */
-    on_detach_callback() {
-        this._super.apply(this, arguments);
-        this.renderer.resetLocalState();
-    },
 
     //--------------------------------------------------------------------------
     // Public
