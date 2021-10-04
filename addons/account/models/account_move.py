@@ -446,7 +446,7 @@ class AccountMove(models.Model):
         if res:
             raise UserError(
                 _("Cannot create unbalanced journal entry.") +
-                "\n\n{}{}".format(_('Difference debit - credit: '), res[1])
+                "\n\n{}{}\n move_id: {}".format(_('Difference debit - credit: '), res[1], res[0])
             )
         return True
 
