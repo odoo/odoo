@@ -1834,7 +1834,7 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.updateColorpickerLabels();
-
+        const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
         const block = closestBlock(sel.anchorNode);
         let activeLabel = undefined;
         for (const [style, tag, isList] of [
@@ -1864,6 +1864,15 @@ export class OdooEditor extends EventTarget {
                     activeLabel = button.textContent;
                 }
             }
+        }
+        const listMode = getListMode(block.parentElement);
+        const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
+        if (listDropdownButton) {
+            if (listMode) {
+                listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
+                listDropdownButton.classList.add(listUIClasses[listMode]);
+            }
+            listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
         }
         if (!activeLabel) {
             // If no element from the text style dropdown was marked as active,
