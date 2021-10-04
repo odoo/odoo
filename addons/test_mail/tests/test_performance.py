@@ -263,7 +263,7 @@ class TestAdvMailPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=21, emp=23):
+        with self.assertQueryCount(__system__=20, emp=22):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -717,7 +717,7 @@ class TestMailPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=113):  # runbot 113 // test_mail only: 105
+        with self.assertQueryCount(emp=100):  # runbot 100 // test_mail only: 89
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
