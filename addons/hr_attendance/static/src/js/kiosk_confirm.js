@@ -6,6 +6,8 @@ var core = require('web.core');
 var field_utils = require('web.field_utils');
 var QWeb = core.qweb;
 
+const session = require('web.session');
+
 
 var KioskConfirm = AbstractAction.extend({
     events: {
@@ -16,6 +18,7 @@ var KioskConfirm = AbstractAction.extend({
                     model: 'hr.employee',
                     method: 'attendance_manual',
                     args: [[this.employee_id], this.next_action],
+                    context: session.user_context,
                 })
                 .then(function(result) {
                     if (result.action) {
@@ -43,6 +46,7 @@ var KioskConfirm = AbstractAction.extend({
                     model: 'hr.employee',
                     method: 'attendance_manual',
                     args: [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()],
+                    context: session.user_context,
                 })
                 .then(function(result) {
                     if (result.action) {
