@@ -42,6 +42,8 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
                 'country_id': self.env.ref('base.be').id,
             })
 
+        self._init_mail_gateway()
+
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
 
@@ -51,7 +53,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=21):  # test_mail_enterprise: 21
+        with self.mockSMSGateway(), self.assertQueryCount(employee=24):  # test_mail_enterprise: 24
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -66,7 +68,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=39):  # test_mail_enterprise: 39
+        with self.mockSMSGateway(), self.assertQueryCount(employee=42):  # test_mail_enterprise: 42
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -80,7 +82,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
     @warmup
     def test_message_sms_record_default(self):
         record = self.test_record.with_user(self.env.user)
-        with self.mockSMSGateway(), self.assertQueryCount(employee=24):  # test_mail_enterprise: 24
+        with self.mockSMSGateway(), self.assertQueryCount(employee=26):  # test_mail_enterprise: 26
             messages = record._message_sms(
                 body='Performance Test',
             )
