@@ -149,7 +149,7 @@
                             Start Survey
                         </t>
                     </button>
-                    <span class="o_survey_enter font-weight-bold text-muted ml-2">or press Enter</span>
+                    <span class="o_survey_enter font-weight-bold text-muted ml-2 d-none d-md-inline">or press Enter</span>
                 </t>
             </div>
         </div>
@@ -171,8 +171,10 @@
             </t>
 
             <div class="text-center mt16 mb256">
-                <button type="submit" value="finish" class="btn btn-primary">
-                    Submit</button><span class="font-weight-bold text-muted ml-2 d-none d-md-inline">or press Enter</span>
+                <button type="submit" value="finish" class="btn btn-primary">Submit</button>
+                    <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">
+                        <span id="enter-tooltip">or press Enter</span>
+                    </span>
             </div>
         </t>
 
@@ -190,7 +192,8 @@
                     <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
                         <t t-if="not survey_last">Continue</t>
                         <t t-else="">Submit</t>
-                    </button><span class="font-weight-bold text-muted ml-2 d-none d-md-inline"> or press Enter</span>
+                    </button>
+                    <span class="font-weight-bold text-muted ml-2 d-none d-md-inline" id="enter-tooltip"> or press Enter</span>
                 </div>
             </div>
         </t>
@@ -229,8 +232,7 @@
                             <t t-else="">Continue</t>
                         </button>
                         <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">
-                            <span t-if="question.question_type == 'text_box'">or press CTRL+Enter</span>
-                            <span t-else="">or press Enter</span>
+                            <span id="enter-tooltip">or press Enter</span>
                         </span>
                     </div>
                 </div>
