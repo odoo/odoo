@@ -25,7 +25,7 @@
                     attrs="{'invisible': ['|', ('mailing_sms_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                     groups="mass_mailing.group_mass_mailing_user">
                     <group>
-                        <field name="mailing_sms_ids" readonly="1" nolabel="1">
+                        <field name="mailing_sms_ids" nolabel="1">
                             <tree>
                                 <field name="calendar_date" string="Date"/>
                                 <field name="subject" string="Title"/>
@@ -45,6 +45,9 @@
                         </field>
                     </group>
                 </page>
+            </xpath>
+            <xpath expr="//group[@name='ab_test_group']" position="attributes">
+                <attribute name="attrs">{'invisible': [('ab_testing_mailings_sms_count', '=', 0), ('ab_testing_mailings_count', '=', 0)]}</attribute>
             </xpath>
         </field>
     </record>

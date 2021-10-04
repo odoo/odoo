@@ -50,8 +50,8 @@ class UtmCampaign(models.Model):
             mapped_sms_data = dict()
             ab_testing_mapped_sms_data = dict()
         for campaign in self:
-            campaign.mailing_sms_count = sum(mapped_sms_data.get(campaign.id, []))
-            campaign.ab_testing_mailings_sms_count = sum(ab_testing_mapped_sms_data.get(campaign.id, []))
+            campaign.mailing_sms_count = sum(mapped_sms_data.get(campaign._origin.id or campaign.id, []))
+            campaign.ab_testing_mailings_sms_count = sum(ab_testing_mapped_sms_data.get(campaign._origin.id or campaign.id, []))
 
     def action_create_mass_sms(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_create_mass_mailings_from_campaign")
