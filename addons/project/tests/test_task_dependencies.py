@@ -140,6 +140,10 @@ class TestTaskDependencies(TestProjectCommon):
             'allow_task_dependencies': False,
         })
 
+        # As the the Project General Setting group_project_task_dependencies needs to be toggled in order
+        # to be applied on the existing projects we need to force it so that it does not depends on anything
+        # (like demo data for instance)
+        set_task_dependencies_setting(False)
         set_task_dependencies_setting(True)
         self.assertTrue(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
 
