@@ -94,28 +94,27 @@ export class Dropdown extends Component {
             );
         }
 
-        // Setup positioning only when in desktop
-        if (!this.env.isSmall) {
-            /** @type {string} **/
-            let position =
-                this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
-            let [direction, variant = "middle"] = position.split("-");
-            if (localization.direction === "rtl") {
-                if (["bottom", "top"].includes(direction)) {
-                    variant = variant === "start" ? "end" : "start";
-                } else {
-                    direction = direction === "left" ? "right" : "left";
-                }
-                position = [direction, variant].join("-");
+        /** @type {string} **/
+        let position =
+            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+        let [direction, variant = "middle"] = position.split("-");
+        if (localization.direction === "rtl") {
+            if (["bottom", "top"].includes(direction)) {
+                variant = variant === "start" ? "end" : "start";
+            } else {
+                direction = direction === "left" ? "right" : "left";
             }
-            this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
+            position = [direction, variant].join("-");
+        }
+        this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
 
-            const positioningOptions = {
-                popper: "menuRef",
-                position,
-                directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
-            };
+        const positioningOptions = {
+            popper: "menuRef",
+            position,
+            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
+        };
 
+        if (!this.env.isSmall) {
             // Position menu relatively to parent element
             if (this.props.toggler === "parent") {
                 usePosition(() => this.el.parentElement, positioningOptions);
@@ -123,6 +122,18 @@ export class Dropdown extends Component {
                 // Position menu relatively to inner toggler
                 usePosition(() => this.togglerRef.el, positioningOptions);
             }
+        } else {
+            useEffect(
+                () => {
+                    const element = this.el.querySelector(".dropdown-menu");
+                    if (element) {
+                        element.style.left = "0px";
+                        element.style.top = "0px";
+                        element.style.right = "0px";
+                    }
+                },
+                () => [this.state.open]
+            );
         }
     }
 
