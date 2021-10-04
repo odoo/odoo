@@ -8,13 +8,6 @@ function factory(dependencies) {
     class Guest extends dependencies['mail.model'] {
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @private
          * @returns {string}
          */
@@ -37,7 +30,7 @@ function factory(dependencies) {
         }),
         name: attr(),
     };
-
+    Guest.identifyingFields = ['id'];
     Guest.modelName = 'mail.guest';
 
     return Guest;

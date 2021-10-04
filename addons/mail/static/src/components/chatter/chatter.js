@@ -17,18 +17,10 @@ export class Chatter extends Component {
         useUpdate({ func: () => this._update() });
         useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
         /**
-         * Reference of the composer. Useful to focus it.
-         */
-        this._composerRef = useRef('composer');
-        /**
          * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
          * child component to handle proper scrollable element.
          */
         this._scrollPanelRef = useRef('scrollPanel');
-        /**
-         * Reference of the message list. Useful to trigger the scroll event on it.
-         */
-        this._threadRef = useRef('thread');
         this.getScrollableElement = this.getScrollableElement.bind(this);
     }
 
@@ -76,13 +68,6 @@ export class Chatter extends Component {
         }
         if (this.chatter.thread) {
             this._notifyRendered();
-        }
-        if (this.chatter.isDoFocus) {
-            this.chatter.update({ isDoFocus: false });
-            const composer = this._composerRef.comp;
-            if (composer) {
-                composer.focus();
-            }
         }
     }
 

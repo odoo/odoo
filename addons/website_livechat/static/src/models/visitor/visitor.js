@@ -29,6 +29,9 @@ function factory(dependencies) {
             if ('history' in data) {
                 data2.history = data.history;
             }
+            if ('id' in data) {
+                data2.id = data.id;
+            }
             if ('is_connected' in data) {
                 data2.is_connected = data.is_connected;
             }
@@ -114,6 +117,13 @@ function factory(dependencies) {
          */
         history: attr(),
         /**
+         * States the id of this visitor.
+         */
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
+        /**
          * Determine whether the visitor is connected or not.
          */
         is_connected: attr(),
@@ -139,7 +149,7 @@ function factory(dependencies) {
          */
         website_name: attr(),
     };
-
+    Visitor.identifyingFields = ['id'];
     Visitor.modelName = 'website_livechat.visitor';
 
     return Visitor;

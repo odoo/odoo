@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
-import { clear, insert, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -218,13 +218,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @private
          * @returns {boolean}
          */
@@ -274,6 +267,7 @@ function factory(dependencies) {
         }),
         icon: attr(),
         id: attr({
+            readonly: true,
             required: true,
         }),
         isCurrentPartnerAssignee: attr({
@@ -313,7 +307,7 @@ function factory(dependencies) {
             inverse: 'activities',
         }),
     };
-
+    Activity.identifyingFields = ['id'];
     Activity.modelName = 'mail.activity';
 
     return Activity;

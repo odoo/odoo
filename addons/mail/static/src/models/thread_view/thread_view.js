@@ -2,13 +2,20 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
-import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
     class ThreadView extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _created() {
+            this._loaderTimeout = undefined;
+        }
 
         /**
          * @override
@@ -63,6 +70,18 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Starts editing the last message of this thread from the current user.
+         */
+        startEditingLastMessageFromCurrentUser() {
+            const messageViews = this.messageViews;
+            messageViews.reverse();
+            const messageView = messageViews.find(messageViews => messageViews.message.isCurrentUserOrGuestAuthor && messageViews.message.canBeDeleted);
+            if (messageView) {
+                messageView.startEditing();
+            }
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -71,13 +90,9 @@ function factory(dependencies) {
          * @private
          */
         _computeRtcCallViewer() {
-            if (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0) {
-                if (this.rtcCallViewer) {
-                    return;
-                }
-                return create();
-            }
-            return unlink();
+            return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
+                ? insertAndReplace()
+                : clear();
         }
 
         /**
@@ -85,18 +100,60 @@ function factory(dependencies) {
          * @returns {mail.channel_invitation_form}
          */
         _computeChannelInvitationForm() {
-            if (!this.thread || !this.thread.hasInviteFeature) {
+            return (this.thread && this.thread.hasInviteFeature)
+                ? insertAndReplace({
+                    searchResultCount: clear(),
+                    searchTerm: clear(),
+                    selectablePartners: clear(),
+                    selectedPartners: clear(),
+                })
+                : clear();
+        }
+
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeComposerView() {
+            if (!this.thread || this.thread.model === 'mail.box') {
                 return clear();
             }
-            if (!this.channelInvitationForm) {
-                return create();
+            if (this.threadViewer && this.threadViewer.chatter) {
+                return clear();
             }
-            return update({
-                searchResultCount: clear(),
-                searchTerm: clear(),
-                selectablePartners: clear(),
-                selectedPartners: clear(),
-            });
+            return insertAndReplace();
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasSquashCloseMessages() {
+            return Boolean(this.threadViewer && !this.threadViewer.chatter && this.thread && this.thread.model !== 'mail.box');
+        }
+
+        /**
+         * @private
+         * @returns {mail.message_view[]}
+         */
+        _computeMessageViews() {
+            if (!this.threadCache) {
+                return clear();
+            }
+            const orderedMessages = this.threadCache.orderedMessages;
+            if (this.order === 'desc') {
+                orderedMessages.reverse();
+            }
+            const messageViewsData = [];
+            let prevMessage;
+            for (const message of orderedMessages) {
+                messageViewsData.push({
+                    isSquashed: this._shouldMessageBeSquashed(prevMessage, message),
+                    message: replace(message),
+                });
+                prevMessage = message;
+            }
+            return insertAndReplace(messageViewsData);
         }
 
         /**
@@ -190,12 +247,7 @@ function factory(dependencies) {
          * @private
          */
         _computeTopBar() {
-            if (!this.hasTopbar) {
-                return unlink();
-            }
-            if (this.hasTopbar && !this.topbar) {
-                return create();
-            }
+            return this.hasTopbar ? insertAndReplace() : clear();
         }
 
         /**
@@ -237,6 +289,61 @@ function factory(dependencies) {
             this.env.browser.clearTimeout(this._loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         }
+
+        /**
+         * @param {mail.message} prevMessage
+         * @param {mail.message} message
+         * @returns {boolean}
+         */
+        _shouldMessageBeSquashed(prevMessage, message) {
+            if (!this.hasSquashCloseMessages) {
+                return false;
+            }
+            if (!prevMessage) {
+                return;
+            }
+            if (!prevMessage.date && message.date) {
+                return false;
+            }
+            if (message.date && prevMessage.date && Math.abs(message.date.diff(prevMessage.date)) > 60000) {
+                // more than 1 min. elasped
+                return false;
+            }
+            if (prevMessage.dateDay !== message.dateDay) {
+                return false;
+            }
+            if (prevMessage.message_type !== 'comment' || message.message_type !== 'comment') {
+                return false;
+            }
+            if (prevMessage.author !== message.author || prevMessage.guestAuthor !== message.guestAuthor) {
+                // from a different author
+                return false;
+            }
+            if (prevMessage.originThread !== message.originThread) {
+                return false;
+            }
+            if (
+                prevMessage.notifications.length > 0 ||
+                message.notifications.length > 0
+            ) {
+                // visual about notifications is restricted to non-squashed messages
+                return false;
+            }
+            const prevOriginThread = prevMessage.originThread;
+            const originThread = message.originThread;
+            if (
+                prevOriginThread &&
+                originThread &&
+                prevOriginThread.model === originThread.model &&
+                originThread.model !== 'mail.channel' &&
+                prevOriginThread.id !== originThread.id
+            ) {
+                // messages linked to different document thread
+                return false;
+            }
+            return true;
+        }
+
     }
 
     ThreadView.fields = {
@@ -274,8 +381,10 @@ function factory(dependencies) {
         componentHintList: attr({
             default: [],
         }),
-        composer: many2one('mail.composer', {
-            related: 'thread.composer',
+        composerView: one2one('mail.composer_view', {
+            compute: '_computeComposerView',
+            inverse: 'threadView',
+            isCausal: true,
         }),
         /**
          * Determines which extra class this thread view component should have.
@@ -284,7 +393,7 @@ function factory(dependencies) {
             related: 'threadViewer.extraClass',
         }),
         hasComposerFocus: attr({
-            related: 'composer.hasFocus',
+            related: 'composerView.hasFocus',
         }),
         /**
          * Determines whether this thread viewer has a member list.
@@ -292,6 +401,14 @@ function factory(dependencies) {
          */
         hasMemberList: attr({
             related: 'threadViewer.hasMemberList',
+        }),
+        /**
+         * Determines whether this thread view should squash close messages.
+         * See `_shouldMessageBeSquashed` for which conditions are considered
+         * to determine if messages are "close" to each other.
+         */
+        hasSquashCloseMessages: attr({
+            compute: '_computeHasSquashCloseMessages',
         }),
         /**
          * Determines whether this thread view has a top bar.
@@ -353,8 +470,23 @@ function factory(dependencies) {
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
         }),
+        /**
+         * States the message views used to display this messages.
+         */
+        messageViews: one2many('mail.message_view', {
+            compute: '_computeMessageViews',
+            inverse: 'threadView',
+            isCausal: true,
+        }),
         nonEmptyMessages: many2many('mail.message', {
             related: 'threadCache.nonEmptyMessages',
+        }),
+        /**
+         * States the order mode of the messages on this thread view.
+         * Either 'asc', or 'desc'.
+         */
+        order: attr({
+            related: 'threadViewer.order',
         }),
         /**
          * Determines the Rtc call viewer of this thread.
@@ -414,6 +546,7 @@ function factory(dependencies) {
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
             readonly: true,
+            required: true,
         }),
         /**
          * Determines the top bar of this thread view, if any.
@@ -425,6 +558,7 @@ function factory(dependencies) {
             readonly: true,
         }),
     };
+    ThreadView.identifyingFields = ['threadViewer'];
     ThreadView.onChanges = [
         new OnChange({
             dependencies: ['threadCache'],
@@ -435,7 +569,7 @@ function factory(dependencies) {
             methodName: '_onThreadCacheIsLoadingChanged',
         }),
         new OnChange({
-            dependencies: ['hasComposerFocus', 'lastMessage', 'lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
+            dependencies: ['hasComposerFocus', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
             methodName: '_computeThreadShouldBeSetAsSeen',
         }),
     ];

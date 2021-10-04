@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -30,9 +31,13 @@ function factory(dependencies) {
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.messaging.models['mail.attachment'].view({
-                attachment: this.attachment,
-                attachments: this.attachmentList.viewableAttachments,
+            this.messaging.dialogManager.update({
+                dialogs: insert({
+                    attachmentViewer: insertAndReplace({
+                        attachment: replace(this.attachment),
+                        attachmentList: replace(this.attachmentList),
+                    }),
+                }),
             });
         }
 
@@ -46,7 +51,7 @@ function factory(dependencies) {
             if (!this.attachment) {
                 return;
             }
-            if (this.attachment.isLinkedToComposer) {
+            if (this.attachmentList.composerView) {
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
@@ -73,7 +78,18 @@ function factory(dependencies) {
          * @returns {number}
          */
         _computeHeight() {
-            return this.width;
+            if (!this.attachmentList) {
+                return clear();
+            }
+            if (this.attachmentList.composerView) {
+                return 50;
+            }
+            if (this.attachmentList.chatter) {
+                return 160;
+            }
+            if (this.attachmentList.message) {
+                return 300;
+            }
         }
 
         /**
@@ -92,37 +108,32 @@ function factory(dependencies) {
         }
 
         /**
+         * Returns an arbitrary high value, this is effectively a max-width and
+         * the height should be more constrained.
+         *
          * @private
          * @returns {number}
          */
         _computeWidth() {
-            if (!this.attachmentList) {
-                return;
-            }
-            if (this.attachmentList.composer) {
-                return 50;
-            }
-            if (this.attachmentList.thread) {
-                return 160;
-            }
-            if (this.attachmentList.message) {
-                return 300;
-            }
+            return 1920;
         }
     }
 
     AttachmentImage.fields = {
         /**
-         * Determines the attachment of this card.
+         * Determines the attachment of this attachment image..
          */
         attachment: many2one('mail.attachment', {
             inverse: 'attachmentImages',
+            readonly: true,
             required: true,
         }),
         /**
-         * Determines the attachmentList for this card.
+         * States the attachmentList displaying this attachment image.
          */
         attachmentList: many2one('mail.attachment_list', {
+            inverse: 'attachmentImages',
+            readonly: true,
             required: true,
         }),
         /**
@@ -153,7 +164,7 @@ function factory(dependencies) {
             required: true,
         }),
     };
-
+    AttachmentImage.identifyingFields = ['attachmentList', 'attachment'];
     AttachmentImage.modelName = 'mail.attachment_image';
 
     return AttachmentImage;
