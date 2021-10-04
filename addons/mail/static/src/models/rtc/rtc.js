@@ -765,9 +765,12 @@ function factory(dependencies) {
             if (rtcSession) {
                 rtcSession.reset();
             }
-            const peerConnection = this._peerConnections[token];
             const dataChannel = this._dataChannels[token];
-            dataChannel.close();
+            if (dataChannel) {
+                dataChannel.close();
+            }
+            delete this._dataChannels[token];
+            const peerConnection = this._peerConnections[token];
             if (peerConnection) {
                 this._removeRemoteTracks(peerConnection);
                 peerConnection.close();
