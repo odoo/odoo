@@ -2,7 +2,6 @@
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { link } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -27,22 +26,10 @@ export class AttachmentBox extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Get an object which is passed to FileUploader component to be used when
-     * creating attachment.
-     *
-     * @returns {Object}
+     * @returns {mail.chatter|undefined}
      */
-    get newAttachmentExtraData() {
-        return {
-            originThread: link(this.thread),
-        };
-    }
-
-    /**
-     * @returns {mail.thread|undefined}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+    get chatter() {
+        return this.messaging && this.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -93,7 +80,7 @@ export class AttachmentBox extends Component {
 
 Object.assign(AttachmentBox, {
     props: {
-        threadLocalId: String,
+        chatterLocalId: String,
     },
     template: 'mail.AttachmentBox',
 });

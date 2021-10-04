@@ -45,13 +45,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @private
          */
         _onChangeVolume() {
@@ -65,6 +58,7 @@ function factory(dependencies) {
 
     VolumeSetting.fields = {
         id: attr({
+            readonly: true,
             required: true,
         }),
         partner: one2one('mail.partner', {
@@ -79,7 +73,7 @@ function factory(dependencies) {
             default: 0.5,
         }),
     };
-
+    VolumeSetting.identifyingFields = ['id'];
     VolumeSetting.onChanges = [
         new OnChange({
             dependencies: ['volume'],

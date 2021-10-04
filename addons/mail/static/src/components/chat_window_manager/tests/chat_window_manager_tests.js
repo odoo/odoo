@@ -143,7 +143,7 @@ QUnit.test('chat window new message: basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('chat window new message: focused on open', async function (assert) {
+QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(2);
 
     await this.start();
@@ -854,7 +854,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.verifySteps(['rpc:channel_fold/closed']);
 });
 
-QUnit.test('focus next visible chat window when closing current chat window with ESCAPE', async function (assert) {
+QUnit.test('focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
      * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)

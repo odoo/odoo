@@ -63,13 +63,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.relationalId}`;
-        }
-
-        /**
          * @private
          * @returns {string}
          */
@@ -184,6 +177,7 @@ function factory(dependencies) {
          * Unique id for this session provided when instantiated.
          */
         relationalId: attr({
+            readonly: true,
             required: true,
         }),
         /**
@@ -203,7 +197,7 @@ function factory(dependencies) {
          */
         rtcSession: many2one('mail.rtc_session'),
     };
-
+    RtcCallParticipantCard.identifyingFields = ['relationalId'];
     RtcCallParticipantCard.modelName = 'mail.rtc_call_participant_card';
 
     return RtcCallParticipantCard;

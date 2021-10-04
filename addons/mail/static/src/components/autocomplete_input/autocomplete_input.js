@@ -1,4 +1,4 @@
-/** @odoo-module **/;
+/** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -48,6 +48,9 @@ export class AutocompleteInput extends Component {
      * @returns {boolean}
      */
     contains(node) {
+        if (!this.el) {
+            return false;
+        }
         if (this.el.contains(node)) {
             return true;
         }
@@ -66,13 +69,6 @@ export class AutocompleteInput extends Component {
             return;
         }
         this.el.focus();
-    }
-
-    focusout() {
-        if (!this.el) {
-            return;
-        }
-        this.el.blur();
     }
 
     //--------------------------------------------------------------------------

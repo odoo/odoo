@@ -13,11 +13,6 @@ export class ThreadView extends Component {
     setup() {
         super.setup();
         /**
-         * Reference of the composer. Useful to set focus on composer when
-         * thread has the focus.
-         */
-        this._composerRef = useRef('composer');
-        /**
          * Reference of the message list. Useful to determine scroll positions.
          */
         this._messageListRef = useRef('messageList');
@@ -26,26 +21,6 @@ export class ThreadView extends Component {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * Focus the thread. If it has a composer, focus it.
-     */
-    focus() {
-        if (!this._composerRef.comp) {
-            return;
-        }
-        this._composerRef.comp.focus();
-    }
-
-    /**
-     * Focusout the thread.
-     */
-    focusout() {
-        if (!this._composerRef.comp) {
-            return;
-        }
-        this._composerRef.comp.focusout();
-    }
 
     /**
      * Get the scroll height in the message list.
@@ -110,21 +85,10 @@ export class ThreadView extends Component {
 
 Object.assign(ThreadView, {
     defaultProps: {
-        composerAttachmentsDetailsMode: 'auto',
-        hasComposer: false,
-        hasSquashCloseMessages: false,
-        haveMessagesMarkAsReadIcon: false,
-        haveMessagesReplyIcon: false,
-        isDoFocus: false,
-        order: 'asc',
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
     },
     props: {
-        composerAttachmentsDetailsMode: {
-            type: String,
-            validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
-        },
         /**
          * Function returns the exact scrollable element from the parent
          * to manage proper scroll heights which affects the load more messages.
@@ -133,7 +97,6 @@ Object.assign(ThreadView, {
             type: Function,
             optional: true,
         },
-        hasComposer: Boolean,
         hasComposerCurrentPartnerAvatar: {
             type: Boolean,
             optional: true,
@@ -154,17 +117,6 @@ Object.assign(ThreadView, {
         hasScrollAdjust: {
             type: Boolean,
             optional: true,
-        },
-        hasSquashCloseMessages: Boolean,
-        haveMessagesMarkAsReadIcon: Boolean,
-        haveMessagesReplyIcon: Boolean,
-        /**
-         * Determines whether this should become focused.
-         */
-        isDoFocus: Boolean,
-        order: {
-            type: String,
-            validate: prop => ['asc', 'desc'].includes(prop),
         },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,

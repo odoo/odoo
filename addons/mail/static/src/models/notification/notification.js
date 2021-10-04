@@ -44,22 +44,12 @@ function factory(dependencies) {
             return data2;
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     Notification.fields = {
         failure_type: attr(),
         id: attr({
+            readonly: true,
             required: true,
         }),
         message: many2one('mail.message', {
@@ -69,7 +59,7 @@ function factory(dependencies) {
         notification_type: attr(),
         partner: many2one('mail.partner'),
     };
-
+    Notification.identifyingFields = ['id'];
     Notification.modelName = 'mail.notification';
 
     return Notification;

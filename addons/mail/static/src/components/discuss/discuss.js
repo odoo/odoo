@@ -5,7 +5,6 @@ import { link, unlink } from '@mail/model/model_field_command';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class Discuss extends Component {
     /**
@@ -14,14 +13,6 @@ export class Discuss extends Component {
     constructor(...args) {
         super(...args);
         this._updateLocalStoreProps();
-        /**
-         * Reference of the composer. Useful to focus it.
-         */
-        this._composerRef = useRef('composer');
-        /**
-         * Reference of the ThreadView. Useful to focus it.
-         */
-        this._threadViewRef = useRef('threadView');
         // bind since passed as props
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
@@ -140,14 +131,6 @@ export class Discuss extends Component {
      * @private
      * @param {CustomEvent} ev
      */
-    _onFocusinComposer(ev) {
-        this.discuss.update({ isDoFocus: false });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
     _onHideMobileAddItemHeader(ev) {
         ev.stopPropagation();
         this.discuss.clearIsAddingItem();
@@ -181,20 +164,6 @@ export class Discuss extends Component {
         } else {
             this.discuss.handleAddChatAutocompleteSource(req, res);
         }
-    }
-
-    /**
-     * @private
-     */
-    _onReplyingToMessageMessagePosted() {
-        this.env.services['notification'].notify({
-            message: _.str.sprintf(
-                this.env._t(`Message posted on "%s"`),
-                this.discuss.replyingToMessage.originThread.displayName
-            ),
-            type: 'info',
-        });
-        this.discuss.clearReplyingToMessage();
     }
 
     /**

@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { many2one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
  * This function generates a class that represent a model. Instances of such
@@ -17,16 +18,26 @@ function factory() {
 
         /**
          * @param {Object} [param0={}]
+         * @param {string} param0.localId
          * @param {boolean} [param0.valid=false] if set, this constructor is
          *   called by static method `create()`. This should always be the case.
          * @throws {Error} in case constructor is called in an invalid way, i.e.
          *   by instantiating the record manually with `new` instead of from
          *   static method `create()`.
          */
-        constructor({ valid = false } = {}) {
+        constructor({ localId, valid = false } = {}) {
             if (!valid) {
                 throw new Error("Record must always be instantiated from static method 'create()'");
             }
+            Object.assign(this, {
+                // The unique record identifier.
+                localId,
+                // Listeners that are bound to this record, to be notified of
+                // change in dependencies of compute, related and "on change".
+                __listeners: [],
+                // Field values of record.
+                __values: {},
+            });
         }
 
         /**
@@ -85,15 +96,7 @@ function factory() {
         }
 
         /**
-         * This method is used to create new records of this model
-         * with provided data. This is the only way to create them:
-         * instantiation must never been done with keyword `new` outside of this
-         * function, otherwise the record will not be registered.
-         *
-         * @static
-         * @param {Object|Object[]} [data] data object with initial data, including relations.
-         *  If data is an iterable, multiple records will be created.
-         * @returns {mail.model|mail.model[]} newly created record(s)
+         * @deprecated use insert instead
          */
         static create(data) {
             return this.modelManager.create(this, data);
@@ -122,7 +125,6 @@ function factory() {
         /**
          * Gets the unique record that matches the given identifying data, if it
          * exists.
-         * @see `_createRecordLocalId` for criteria of identification.
          *
          * @static
          * @param {Object} data
@@ -150,15 +152,17 @@ function factory() {
         }
 
         /**
-         * This method creates a record or updates one, depending
-         * on provided data.
+         * This method creates a record or updates one, depending on provided
+         * data. This is the only way to create a record: instantiation must
+         * never been done with keyword `new` outside of this function,
+         * otherwise the record will not be registered correctly.
          *
          * @static
-         * @param {Object|Object[]} data
+         * @param {Object|Object[]} [data={}]
          *  If data is an iterable, multiple records will be created/updated.
          * @returns {mail.model|mail.model[]} created or updated record(s).
          */
-        static insert(data) {
+        static insert(data = {}) {
             return this.modelManager.insert(this, data);
         }
 
@@ -178,6 +182,15 @@ function factory() {
          */
         static get models() {
             return this.modelManager.models;
+        }
+
+        /**
+         * Returns a string representation of this model.
+         *
+         * @returns {string}
+         */
+        static toString() {
+            return `model(${this.modelName})`;
         }
 
         /**
@@ -254,36 +267,19 @@ function factory() {
         }
 
         /**
+         * Returns a string representation of this record.
+         */
+        toString() {
+            return `record(${this.localId})`;
+        }
+
+        /**
          * Update this record with provided data.
          *
          * @param {Object} [data={}]
          */
         update(data = {}) {
             this.modelManager.update(this, data);
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * This method generates a local id for this record that is
-         * being created at the moment.
-         *
-         * This function helps customizing the local id to ease mapping a local
-         * id to its record for the developer that reads the local id. For
-         * instance, the local id of a thread cache could combine the thread
-         * and stringified domain in its local id, which is much easier to
-         * track relations and records in the system instead of arbitrary
-         * number to differenciate them.
-         *
-         * @static
-         * @private
-         * @param {Object} data
-         * @returns {string}
-         */
-        static _createRecordLocalId(data) {
-            return _.uniqueId(`${this.modelName}_`);
         }
 
     }
@@ -303,11 +299,21 @@ function factory() {
          * manager at creation.
          */
         messaging: many2one('mail.messaging', {
+            default: insertAndReplace(),
             inverse: 'allRecords',
-            required: true,
             readonly: true,
+            required: true,
         }),
     };
+
+    /**
+     * Determines which fields are identifying fields for this model. Must be
+     * overwritten in actual models. This should be a list of either field name
+     * or sub-list of field name. Each top level element will be parsed as "and"
+     * and each element of the same sub-list will be parsed as "or". If there
+     * is no identifying fields, this model generates a singleton.
+     */
+    Model.identifyingFields = ['messaging'];
 
     /**
      * Name of the model. Important to refer to appropriate model class
