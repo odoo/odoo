@@ -647,14 +647,16 @@ class PaymentTransaction(models.Model):
         """
         for tx in self.filtered(lambda t: not t.sudo().callback_is_done):
             # Only use sudo to check, not to execute
-            model_sudo = tx.sudo().callback_model_id
-            res_id = tx.sudo().callback_res_id
-            method = tx.sudo().callback_method
+            tx_sudo = tx.sudo()
+            model_sudo = tx_sudo.callback_model_id
+            res_id = tx_sudo.callback_res_id
+            method = tx_sudo.callback_method
+            callback_hash = tx_sudo.callback_hash
             if not (model_sudo and res_id and method):
                 continue  # Skip transactions with unset (or not properly defined) callbacks
 
             valid_callback_hash = self._generate_callback_hash(model_sudo.id, res_id, method)
-            if not consteq(ustr(valid_callback_hash), tx.callback_hash):
+            if not consteq(ustr(valid_callback_hash), callback_hash):
                 _logger.warning("invalid callback signature for transaction with id %s", tx.id)
                 continue  # Ignore tampered callbacks
 
@@ -672,7 +674,7 @@ class PaymentTransaction(models.Model):
                 continue  # Ignore invalidated callbacks
 
             success = getattr(record, method)(tx)  # Execute the callback
-            tx.callback_is_done = success or success is None  # Missing returns are successful
+            tx_sudo.callback_is_done = success or success is None  # Missing returns are successful
 
     def _send_refund_request(self):
         """ Request the provider of the acquirer handling the transaction to refund it.
