@@ -24,7 +24,7 @@
                 <page string="Mailings" name="mailings"
                     attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                     groups="mass_mailing.group_mass_mailing_user">
-                    <field name="mailing_mail_ids" readonly="1" nolabel="1">
+                    <field name="mailing_mail_ids" nolabel="1">
                         <tree>
                             <field name="calendar_date" string="Date"/>
                             <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
@@ -44,6 +44,16 @@
                         </tree>
                     </field>
                 </page>
+            </xpath>
+            <xpath expr="//notebook" position="after">
+                <group name="ab_test_group" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('ab_testing_mailings_count', '=', 0)]}">
+                    <group string="A/B Test">
+                        <field name="ab_testing_completed" invisible="1"/>
+                        <field name="ab_testing_winner_selection" attrs="{'readonly': [('ab_testing_completed', '=', True)]}"/>
+                        <field name="ab_testing_schedule_datetime"
+                            attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')], 'readonly': [('ab_testing_completed', '=', True)]}"/>
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>

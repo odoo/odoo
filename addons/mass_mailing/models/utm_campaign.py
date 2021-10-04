@@ -66,8 +66,8 @@ class UtmCampaign(models.Model):
             mapped_data = dict()
             ab_testing_mapped_data = dict()
         for campaign in self:
-            campaign.mailing_mail_count = sum(mapped_data.get(campaign.id, []))
-            campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign.id, []))
+            campaign.mailing_mail_count = sum(mapped_data.get(campaign._origin.id or campaign.id, []))
+            campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign._origin.id or campaign.id, []))
 
     @api.constrains('ab_testing_total_pc', 'ab_testing_completed')
     def _check_ab_testing_total_pc(self):
