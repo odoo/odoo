@@ -10,6 +10,7 @@ var dom = require('web.dom');
 var utils = require('web.utils');
 
 var _t = core._t;
+var isMac = navigator.platform.toUpperCase().includes('MAC');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     selector: '.o_survey_form',
@@ -17,6 +18,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click button[type="submit"]': '_onSubmit',
+        'focusin .form-control': '_updateEnterButtonText',
+        'focusout .form-control': '_updateEnterButtonText'
     },
     custom_events: {
         'breadcrumb_click': '_onBreadcrumbClick',
@@ -89,7 +92,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      */
     _onKeyDown: function (event) {
         // If user is answering a text input, do not handle keydown (can be forced by pressing CTRL)
-        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !event.ctrlKey) {
+        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !(event.ctrlKey || event.metaKey)) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -271,6 +274,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
     // Custom Events
     // -------------------------------------------------------------------------
+    
+    /**
+     * Changes the tooltip according to the type of the field.
+     * @param {Event} event 
+     */
+    _updateEnterButtonText: function (event) {
+        const $target = event.target;
+        const isTextbox = event.type == "focusin" && $target.tagName.toLowerCase() === 'textarea';
+        const text = !isTextbox ? _t('or press Enter') : isMac ? _t("or press ⌘+Enter") : _t("or press CTRL+Enter");
+        $('#enter-tooltip').text(text);
+    },
 
     _onBreadcrumbClick: function (event) {
         this._submitForm({'previousPageId': event.data.previousPageId});
