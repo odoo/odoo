@@ -24,6 +24,9 @@ class PaymentAcquirer(models.Model):
         """ Override of `payment` to enable additional features. """
         super()._compute_feature_support_fields()
         self.filtered(lambda acq: acq.provider == 'test').update({
+            'support_fees': True,
+            'support_manual_capture': True,
+            'support_refund': 'partial',
             'support_tokenization': True,
         })
 
