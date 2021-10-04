@@ -54,6 +54,12 @@ class PaymentAcquirer(models.Model):
         string="Inline Form Template", comodel_name='ir.ui.view',
         help="The template rendering the inline payment form when making a direct payment",
         domain=[('type', '=', 'qweb')])
+    token_inline_form_view_id = fields.Many2one(
+        string="Token Inline Form Template",
+        comodel_name='ir.ui.view',
+        help="The template rendering the inline payment form when making a payment by token.",
+        domain=[('type', '=', 'qweb')],
+    )
     country_ids = fields.Many2many(
         string="Countries", comodel_name='res.country', relation='payment_country_rel',
         column1='payment_id', column2='country_id',
