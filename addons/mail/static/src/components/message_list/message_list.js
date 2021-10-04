@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
@@ -15,7 +14,6 @@ export class MessageList extends Component {
      */
     setup() {
         super.setup();
-        this._getRefs = useRefs();
         /**
          * States whether there was at least one programmatic scroll since the
          * last scroll event was handled (which is particularly async due to
@@ -46,7 +44,7 @@ export class MessageList extends Component {
                 componentHintList: threadView ? [...threadView.componentHintList] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 hasScrollAdjust: this.props.hasScrollAdjust,
-                order: this.props.order,
+                order: threadView && threadView.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
                 thread,
                 threadCache,
@@ -63,11 +61,7 @@ export class MessageList extends Component {
     }
 
     willPatch() {
-        const lastMessageRef = this.lastMessageRef;
         this._willPatchSnapshot = {
-            isLastMessageVisible:
-                lastMessageRef &&
-                lastMessageRef.isBottomVisible({ offset: 10 }),
             scrollHeight: this._getScrollableElement().scrollHeight,
             scrollTop: this._getScrollableElement().scrollTop,
         };
@@ -136,29 +130,6 @@ export class MessageList extends Component {
     }
 
     /**
-     * @param {mail.message} message
-     * @returns {string}
-     */
-    getDateDay(message) {
-        if (!message.date) {
-            // Without a date, we assume that it's a today message. This is
-            // mainly done to avoid flicker inside the UI.
-            return this.env._t("Today");
-        }
-        const date = message.date.format('YYYY-MM-DD');
-        if (date === moment().format('YYYY-MM-DD')) {
-            return this.env._t("Today");
-        } else if (
-            date === moment()
-                .subtract(1, 'days')
-                .format('YYYY-MM-DD')
-        ) {
-            return this.env._t("Yesterday");
-        }
-        return message.date.format('LL');
-    }
-
-    /**
      * @returns {integer}
      */
     getScrollHeight() {
@@ -173,80 +144,6 @@ export class MessageList extends Component {
     }
 
     /**
-     * @returns {mail/static/src/components/message/message.js|undefined}
-     */
-    get mostRecentMessageRef() {
-        const { order } = this._lastRenderedValues();
-        if (order === 'desc') {
-            return this.messageRefs[0];
-        }
-        const { length: l, [l - 1]: mostRecentMessageRef } = this.messageRefs;
-        return mostRecentMessageRef;
-    }
-
-    /**
-     * @param {integer} messageId
-     * @returns {mail/static/src/components/message/message.js|undefined}
-     */
-    messageRefFromId(messageId) {
-        return this.messageRefs.find(ref => ref.message.id === messageId);
-    }
-
-    /**
-     * Get list of sub-components Message, ordered based on prop `order`
-     * (ASC/DESC).
-     *
-     * The asynchronous nature of OWL rendering pipeline may reveal disparity
-     * between knowledgeable state of store between components. Use this getter
-     * with extreme caution!
-     *
-     * Let's illustrate the disparity with a small example:
-     *
-     * - Suppose this component is aware of ordered (record) messages with
-     *   following IDs: [1, 2, 3, 4, 5], and each (sub-component) messages map
-     * each of these records.
-     * - Now let's assume a change in store that translate to ordered (record)
-     *   messages with following IDs: [2, 3, 4, 5, 6].
-     * - Because store changes trigger component re-rendering by their "depth"
-     *   (i.e. from parents to children), this component may be aware of
-     *   [2, 3, 4, 5, 6] but not yet sub-components, so that some (component)
-     *   messages should be destroyed but aren't yet (the ref with message ID 1)
-     *   and some do not exist yet (no ref with message ID 6).
-     *
-     * @returns {mail/static/src/components/message/message.js[]}
-     */
-    get messageRefs() {
-        const { order } = this._lastRenderedValues();
-        const refs = this._getRefs();
-        const ascOrderedMessageRefs = Object.entries(refs)
-            .filter(([refId, ref]) => (
-                    // Message refs have message local id as ref id, and message
-                    // local ids contain name of model 'mail.message'.
-                    refId.includes(this.messaging.models['mail.message'].modelName) &&
-                    // Component that should be destroyed but haven't just yet.
-                    ref.message
-                )
-            )
-            .map(([refId, ref]) => ref)
-            .sort((ref1, ref2) => (ref1.message.id < ref2.message.id ? -1 : 1));
-        if (order === 'desc') {
-            return ascOrderedMessageRefs.reverse();
-        }
-        return ascOrderedMessageRefs;
-    }
-
-    /**
-     * @returns {mail.message[]}
-     */
-    get orderedMessages() {
-        const threadCache = this.threadView.threadCache;
-        if (this.props.order === 'desc') {
-            return [...threadCache.orderedMessages].reverse();
-        }
-        return threadCache.orderedMessages;
-    }
-
-    /**
      * @param {integer} value
      */
     setScrollTop(value) {
@@ -255,54 +152,6 @@ export class MessageList extends Component {
         }
         this._isLastScrollProgrammatic = true;
         this._getScrollableElement().scrollTop = value;
-    }
-
-    /**
-     * @param {mail.message} prevMessage
-     * @param {mail.message} message
-     * @returns {boolean}
-     */
-    shouldMessageBeSquashed(prevMessage, message) {
-        if (!this.props.hasSquashCloseMessages) {
-            return false;
-        }
-        if (!prevMessage.date && message.date) {
-            return false;
-        }
-        if (message.date && prevMessage.date && Math.abs(message.date.diff(prevMessage.date)) > 60000) {
-            // more than 1 min. elasped
-            return false;
-        }
-        if (prevMessage.message_type !== 'comment' || message.message_type !== 'comment') {
-            return false;
-        }
-        if (prevMessage.author !== message.author || prevMessage.guestAuthor !== message.guestAuthor) {
-            // from a different author
-            return false;
-        }
-        if (prevMessage.originThread !== message.originThread) {
-            return false;
-        }
-        if (
-            prevMessage.notifications.length > 0 ||
-            message.notifications.length > 0
-        ) {
-            // visual about notifications is restricted to non-squashed messages
-            return false;
-        }
-        const prevOriginThread = prevMessage.originThread;
-        const originThread = message.originThread;
-        if (
-            prevOriginThread &&
-            originThread &&
-            prevOriginThread.model === originThread.model &&
-            originThread.model !== 'mail.channel' &&
-            prevOriginThread.id !== originThread.id
-        ) {
-            // messages linked to different document thread
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -389,11 +238,9 @@ export class MessageList extends Component {
         if (!threadView || !threadView.exists()) {
             return;
         }
-        const lastMessageIsVisible =
-            this.mostRecentMessageRef &&
-            this.mostRecentMessageRef.isPartiallyVisible();
-        if (lastMessageIsVisible) {
-            threadView.handleVisibleMessage(this.mostRecentMessageRef.message);
+        const { length, [length - 1]: lastMessageView } = this.threadView.messageViews;
+        if (lastMessageView && lastMessageView.component && lastMessageView.component.isPartiallyVisible()) {
+            threadView.handleVisibleMessage(lastMessageView.message);
         }
     }
 
@@ -539,10 +386,6 @@ export class MessageList extends Component {
 Object.assign(MessageList, {
     defaultProps: {
         hasScrollAdjust: true,
-        hasSquashCloseMessages: false,
-        haveMessagesMarkAsReadIcon: false,
-        haveMessagesReplyIcon: false,
-        order: 'asc',
     },
     props: {
         /**
@@ -553,14 +396,7 @@ Object.assign(MessageList, {
             type: Function,
             optional: true,
         },
-        hasSquashCloseMessages: Boolean,
-        haveMessagesMarkAsReadIcon: Boolean,
-        haveMessagesReplyIcon: Boolean,
         hasScrollAdjust: Boolean,
-        order: {
-            type: String,
-            validate: prop => ['asc', 'desc'].includes(prop),
-        },
         threadViewLocalId: String,
     },
     template: 'mail.MessageList',

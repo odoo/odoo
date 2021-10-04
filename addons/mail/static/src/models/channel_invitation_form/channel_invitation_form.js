@@ -269,6 +269,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
+            readonly: true,
             required: true,
         }),
         /**
@@ -276,9 +277,10 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'channelInvitationForm',
+            readonly: true,
         }),
     };
-
+    ChannelInvitationForm.identifyingFields = ['threadView'];
     ChannelInvitationForm.modelName = 'mail.channel_invitation_form';
 
     return ChannelInvitationForm;

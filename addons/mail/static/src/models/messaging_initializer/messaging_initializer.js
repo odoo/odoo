@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
-import { create, link, insert } from '@mail/model/model_field_command';
+import { link, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -18,19 +18,19 @@ function factory(dependencies) {
          */
         async start() {
             this.messaging.update({
-                history: create({
+                history: insertAndReplace({
                     id: 'history',
                     isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("History"),
                 }),
-                inbox: create({
+                inbox: insertAndReplace({
                     id: 'inbox',
                     isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("Inbox"),
                 }),
-                starred: create({
+                starred: insertAndReplace({
                     id: 'starred',
                     isServerPinned: true,
                     model: 'mail.box',
@@ -105,6 +105,12 @@ function factory(dependencies) {
             // init mail user settings
             if (current_user_settings) {
                 this._initResUsersSettings(current_user_settings);
+            } else {
+                this.messaging.update({
+                    userSetting: insertAndReplace({
+                        id: -1, // fake id for guest
+                    }),
+                });
             }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
@@ -241,14 +247,17 @@ function factory(dependencies) {
             volume_settings = [],
         }) {
             this.messaging.currentUser.update({ resUsersSettingsId: id });
-            this.messaging.userSetting.update({
-                usePushToTalk: use_push_to_talk,
-                pushToTalkKey: push_to_talk_key,
-                voiceActiveDuration: voice_active_duration,
-                volumeSettings: insert(volume_settings.map(volumeSetting => this.messaging.models['mail.volume_setting'].convertData(volumeSetting))),
+            this.messaging.update({
+                userSetting: insertAndReplace({
+                    id,
+                    usePushToTalk: use_push_to_talk,
+                    pushToTalkKey: push_to_talk_key,
+                    voiceActiveDuration: voice_active_duration,
+                    volumeSettings: insert(volume_settings.map(volumeSetting => this.messaging.models['mail.volume_setting'].convertData(volumeSetting))),
+                }),
             });
             this.messaging.discuss.update({
-                categoryChannel: create({
+                categoryChannel: insertAndReplace({
                     autocompleteMethod: 'channel',
                     commandAddTitleText: this.env._t("Add or join a channel"),
                     counterComputeMethod: 'needaction',
@@ -261,7 +270,7 @@ function factory(dependencies) {
                     sortComputeMethod: 'name',
                     supportedChannelTypes: ['channel'],
                 }),
-                categoryChat: create({
+                categoryChat: insertAndReplace({
                     autocompleteMethod: 'chat',
                     commandAddTitleText: this.env._t("Start a conversation"),
                     counterComputeMethod: 'unread',
@@ -311,7 +320,7 @@ function factory(dependencies) {
         }
 
     }
-
+    MessagingInitializer.identifyingFields = ['messaging'];
     MessagingInitializer.modelName = 'mail.messaging_initializer';
 
     return MessagingInitializer;

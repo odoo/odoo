@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
@@ -58,7 +59,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
          onClickEdit(ev) {
-            this.message.startEditing();
+            this.messageView.startEditing();
         }
 
         /**
@@ -129,6 +130,30 @@ function factory(dependencies) {
         // Private
         //----------------------------------------------------------------------
 
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasMarkAsReadIcon() {
+            return Boolean(
+                this.messaging && this.messaging.inbox &&
+                this.messageView && this.messageView.threadView && this.messageView.threadView.thread &&
+                this.messageView.threadView.thread === this.messaging.inbox
+            );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasReplyIcon() {
+            return Boolean(
+                this.messaging && this.messaging.inbox &&
+                this.messageView && this.messageView.threadView && this.messageView.threadView.thread &&
+                this.messageView.threadView.thread === this.messaging.inbox
+            );
+        }
+
         _computeIsReactionPopoverOpened() {
             return Boolean(
                 this.reactionPopoverRef &&
@@ -136,30 +161,73 @@ function factory(dependencies) {
                 this.reactionPopoverRef.comp.state.displayed
             );
         }
+
+        /**
+         * @private
+         * @returns {mail.message_view}
+         */
+        _computeMessageViewForDelete() {
+            return this.message
+                ? insertAndReplace({ message: replace(this.message) })
+                : clear();
+        }
+
     }
 
     MessageActionList.fields = {
+        /**
+         * Determines whether this message action list has mark as read icon.
+         */
+        hasMarkAsReadIcon: attr({
+            compute: '_computeHasMarkAsReadIcon',
+        }),
+        /**
+         * Determines whether this message action list has a reply icon.
+         */
+        hasReplyIcon: attr({
+            compute: '_computeHasReplyIcon',
+        }),
         /**
          * States whether the reaction popover is currently opened.
          */
         isReactionPopoverOpened: attr({
             compute: '_computeIsReactionPopoverOpened',
         }),
-        message: one2one('mail.message', {
-            inverse: 'actionList'
+        /**
+         * States the message on which this action message list operates.
+         */
+        message: many2one('mail.message', {
+            related: 'messageView.message',
+        }),
+        /**
+         * States the message view that controls this message action list.
+         */
+        messageView: one2one('mail.message_view', {
+            inverse: 'messageActionList',
+            readonly: true,
+            required: true,
+        }),
+        /**
+         * Determines the message view that this message action list will use to
+         * display this message in this delete confirmation dialog.
+         */
+        messageViewForDelete: one2one('mail.message_view', {
+            compute: '_computeMessageViewForDelete',
+            inverse: 'messageActionListWithDelete',
+            isCausal: true,
         }),
         /**
          * States the reference to the reaction popover component (if any).
          */
         reactionPopoverRef: attr(),
         /**
-         * Whether to show the message delete-confirm dialog
+         * Determines whether to show the message delete-confirm dialog.
          */
         showDeleteConfirm: attr({
             default: false,
         }),
     };
-
+    MessageActionList.identifyingFields = ['messageView'];
     MessageActionList.modelName = 'mail.message_action_list';
 
     return MessageActionList;

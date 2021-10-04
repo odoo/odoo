@@ -23,7 +23,15 @@ QUnit.module('attachment_box_tests.js', {
         beforeEach(this);
 
         this.createAttachmentBoxComponent = async (thread, otherProps) => {
-            const props = Object.assign({ threadLocalId: thread.localId }, otherProps);
+            const chatter = this.messaging.models['mail.chatter'].insert({
+                id: 1,
+                threadId: thread.id,
+                threadModel: thread.model,
+            });
+            const props = {
+                chatterLocalId: chatter.localId,
+                ...otherProps,
+            };
             await createRootMessagingComponent(this, "AttachmentBox", {
                 props,
                 target: this.widget.el,
@@ -46,6 +54,7 @@ QUnit.module('attachment_box_tests.js', {
 QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const thread = this.messaging.models['mail.thread'].create({
         id: 100,
@@ -77,6 +86,7 @@ QUnit.test('base empty rendering', async function (assert) {
 QUnit.test('base non-empty rendering', async function (assert) {
     assert.expect(6);
 
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['ir.attachment'].records.push(
         {
             mimetype: 'text/plain',
@@ -103,7 +113,6 @@ QUnit.test('base non-empty rendering', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    await thread.fetchAttachments();
     await this.createAttachmentBoxComponent(thread);
     assert.verifySteps(
         ['ir.attachment/search_read'],
@@ -134,6 +143,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
 QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const thread = this.messaging.models['mail.thread'].create({
         id: 100,
@@ -209,6 +219,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         hasDialog: true,
     });
@@ -285,6 +296,7 @@ QUnit.test('view attachments', async function (assert) {
 QUnit.test('remove attachment should ask for confirmation', async function (assert) {
     assert.expect(5);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const thread = this.messaging.models['mail.thread'].create({
         attachments: insert({

@@ -85,10 +85,11 @@ function factory(dependencies) {
         component: attr(),
         rtcController: one2one('mail.rtc_controller', {
             inverse: 'rtcOptionList',
+            readonly: true,
             required: true,
         }),
     };
-
+    RtcOptionList.identifyingFields = ['rtcController'];
     RtcOptionList.modelName = 'mail.rtc_option_list';
 
     return RtcOptionList;

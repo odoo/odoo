@@ -37,6 +37,12 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
         get messaging() {
             return this.env.services.messaging.modelManager.messaging;
         }
+        /**
+         * @returns {string}
+         */
+        toString() {
+            return `component(${decoratedName}, props: ${Object.entries(this.props || {})})`;
+        }
     } }[decoratedName];
     // Create an object whose prototype is the component registry with the values of the original
     // Component.components. This means that trying to get a value from this object will first look

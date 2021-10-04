@@ -33,11 +33,12 @@ MockServer.include({
                     country_id: country && country.id,
                     display_name: visitor.display_name,
                     history: visitor.history, // TODO should be computed
+                    id: visitor.id,
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_name,
                     partner_id: visitor.partner_id,
                     website_name: visitor.website_name,
-                }
+                };
             }
         }
         return channelInfos;

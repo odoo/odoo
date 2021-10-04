@@ -2,7 +2,7 @@
 
 import { attr, one2one } from '@mail/model/model_field';
 import { registerNewModel } from '@mail/model/model_core';
-import { clear, create, link } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -17,7 +17,7 @@ function factory(dependencies) {
          */
         async switchToThreadView() {
             this.update({
-                threadViewer: create({
+                threadViewer: insertAndReplace({
                     extraClass: 'flex-grow-1',
                     hasMemberList: true,
                     hasThreadView: true,
@@ -42,7 +42,7 @@ function factory(dependencies) {
         switchToWelcomeView() {
             this.update({
                 threadViewer: clear(),
-                welcomeView: create({
+                welcomeView: insertAndReplace({
                     channel: link(this.channel),
                     isDoFocusGuestNameInput: true,
                     originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
@@ -87,6 +87,7 @@ function factory(dependencies) {
          * States the thread viewer linked to this discuss public view.
          */
         threadViewer: one2one('mail.thread_viewer', {
+            inverse: 'discussPublicView',
             isCausal: true,
         }),
         /**
@@ -97,7 +98,7 @@ function factory(dependencies) {
             isCausal: true,
         }),
     };
-
+    DiscussPublicView.identifyingFields = ['messaging'];
     DiscussPublicView.modelName = 'mail.discuss_public_view';
 
     return DiscussPublicView;

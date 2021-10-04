@@ -4,16 +4,16 @@
     <t t-name="mail.Composer" owl="1">
         <div class="o_Composer"
             t-att-class="{
-                'o-focused': composer and composer.hasFocus,
+                'o-focused': composerView and composerView.hasFocus,
                 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                 'o-has-footer': hasFooter,
                 'o-has-header': hasHeader,
                 'o-is-compact': props.isCompact,
-                'o-messaging-in-editing': composer and composer.messageInEditing,
+                'o-messaging-in-editing': composerView and composerView.messageViewInEditing,
             }"
             t-on-keydown="_onKeydown"
         >
-            <t t-if="composer">
+            <t t-if="composerView">
                 <t t-if="isDropZoneVisible.value">
                     <DropZone
                         class="o_Composer_dropZone"
@@ -22,54 +22,42 @@
                     />
                 </t>
                 <FileUploader
-                    attachmentLocalIds="composer.attachments.map(attachment => attachment.localId)"
-                    isPending="true"
-                    newAttachmentExtraData="newAttachmentExtraData"
-                    threadLocalId="composer.messageInEditing ? composer.messageInEditing.originThread.localId : composer.thread.localId"
+                    composerViewLocalId="composerView.localId"
+                    threadLocalId="composerView.composer.activeThread.localId"
                     t-ref="fileUploader"
                 />
                 <t t-if="hasHeader">
                     <div class="o_Composer_coreHeader text-truncate">
-                        <t t-if="props.hasThreadName and composer.thread">
+                        <t t-if="props.hasThreadName">
                             <span class="o_Composer_threadName">
-                                on: <b><t t-esc="composer.thread.displayName"/></b>
+                                on: <b><t t-esc="composerView.composer.activeThread.displayName"/></b>
                             </span>
                         </t>
-                        <t t-if="props.hasThreadName and composer.messageInEditing and composer.messageInEditing.originThread">
-                            <span class="o_Composer_threadName">
-                                on: <b><t t-esc="composer.messageInEditing.originThread.displayName"/></b>
-                            </span>
-                        </t>
-                        <t t-if="props.hasFollowers and !composer.isLog">
+                        <t t-if="props.hasFollowers and !composerView.composer.isLog">
                             <!-- Text for followers -->
                             <small class="o_Composer_followers">
                                 <b class="text-muted">To: </b>
                                 <em class="text-muted">Followers of </em>
                                 <b>
-                                    <t t-if="composer.thread and composer.thread.displayName">
-                                        &#32;&quot;<t t-esc="composer.thread.displayName"/>&quot;
-                                    </t>
-                                    <t t-elif="composer.messageInEditing and composer.messageInEditing.originThread.displayName">
-                                        &#32;&quot;<t t-esc="composer.messageInEditing.originThread.displayName"/>&quot;
+                                    <t t-if="composerView.composer.activeThread.displayName">
+                                        &#32;&quot;<t t-esc="composerView.composer.activeThread.displayName"/>&quot;
                                     </t>
                                     <t t-else="">
                                         this document
                                     </t>
                                 </b>
                             </small>
-                            <t t-if="!composer.messageInEditing">
-                                <ComposerSuggestedRecipientList threadLocalId="composer.thread.localId"/>
-                            </t>
+                            <ComposerSuggestedRecipientList threadLocalId="composerView.composer.activeThread.localId"/>
                         </t>
                     </div>
                 </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
-                        <t t-if="!messaging.currentGuest or composer.thread.model !== 'mail.channel'">
+                        <t t-if="!messaging.currentGuest or composerView.composer.activeThread.model !== 'mail.channel'">
                             <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt="Avatar of user"/>
                         </t>
-                        <t t-if="messaging.currentGuest and composer.thread.model === 'mail.channel'">
-                            <img class="o_Composer_currentPartnerAvatar rounded-circle" t-attf-src="/mail/channel/{{ composer.thread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128" alt="Avatar of guest"/>
+                        <t t-if="messaging.currentGuest and composerView.composer.activeThread.model === 'mail.channel'">
+                            <img class="o_Composer_currentPartnerAvatar rounded-circle" t-attf-src="/mail/channel/{{ composerView.composer.activeThread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128" alt="Avatar of guest"/>
                         </t>
                     </div>
                 </t>
@@ -86,17 +74,16 @@
                             'o_Composer_textInput-mobile': messaging.device.isMobile,
                             'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
-                        composerLocalId="composer.localId"
+                        composerViewLocalId="composerView.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
                         isCompact="props.isCompact"
                         sendShortcuts="props.textInputSendShortcuts"
-                        t-on-o-composer-suggestion-clicked="_onComposerSuggestionClicked"
                         t-on-o-composer-text-input-send-shortcut="_onComposerTextInputSendShortcut"
                         t-on-paste="_onPasteTextInput"
-                        t-key="composer.localId"
+                        t-key="composerView.localId"
                         t-ref="textInput"
                     />
-                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composer and composer.messageInEditing }">
+                    <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': messaging.device.isMobile, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
                         <div class="o_Composer_toolButtons"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
@@ -136,21 +123,20 @@
                 </div>
                 <t t-if="hasFooter">
                     <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
-                        <t t-if="props.hasThreadTyping and !composer.messageInEditing">
-                            <ThreadTextualTypingStatus class="o_Composer_threadTextualTypingStatus" threadLocalId="composer.thread.localId"/>
+                        <t t-if="props.hasThreadTyping">
+                            <ThreadTextualTypingStatus class="o_Composer_threadTextualTypingStatus" threadLocalId="composerView.composer.activeThread.localId"/>
                         </t>
-                        <t t-if="composer.attachments.length > 0">
-                            <AttachmentList
-                                class="o_Composer_attachmentList"
-                                t-att-class="{ 'o-composer-is-compact': props.isCompact }"
-                                attachmentListLocalId="composer.attachmentList.localId"
-                            />
-                        </t>
+                        <AttachmentList
+                            t-if="composerView.attachmentList"
+                            class="o_Composer_attachmentList"
+                            t-att-class="{ 'o-composer-is-compact': props.isCompact }"
+                            attachmentListLocalId="composerView.attachmentList.localId"
+                        />
                         <t t-if="!props.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>
                         </t>
-                        <t t-if="composer.messageInEditing">
-                            <span class="text-muted">escape to <a href="#" t-on-click="composer.onClickCancelLink">cancel</a>, enter to <a href="#" t-on-click="composer.onClickSaveLink">save</a></span>
+                        <t t-if="composerView.messageViewInEditing">
+                            <span class="text-muted">escape to <a href="#" t-on-click="composerView.onClickCancelLink">cancel</a>, enter to <a href="#" t-on-click="composerView.onClickSaveLink">save</a></span>
                         </t>
                     </div>
                 </t>
@@ -169,11 +155,11 @@
                         'o-composer-is-compact': props.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
-                    t-att-disabled="!composer.canPostMessage ? 'disabled' : ''"
+                    t-att-disabled="!composerView.composer.canPostMessage ? 'disabled' : ''"
                     type="button"
                     t-on-click="_onClickSend"
                 >
-                    <t t-if="!messaging.device.isMobile"><t t-if="composer.isLog">Log</t><t t-else="">Send</t></t>
+                    <t t-if="!messaging.device.isMobile"><t t-if="composerView.composer.isLog">Log</t><t t-else="">Send</t></t>
                 </button>
             </t>
             <t t-if="!messaging.device.isMobile and props.hasDiscardButton">
