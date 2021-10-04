@@ -241,12 +241,10 @@
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
-                                             'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
-                                             'required': [('partner_type','=','customer')]}"/>
+                                             'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
-                                               'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
-                                               'required': [('partner_type','=','supplier')]}"/>
+                                               'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"
