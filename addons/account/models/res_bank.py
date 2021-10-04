@@ -6,8 +6,13 @@ from odoo.exceptions import UserError
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
+<<<<<<< HEAD
     def build_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
         """ Returns the QR-code report URL to pay to this account with the given parameters,
+=======
+    def _build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
+        """ Returns the QR-code vals needed to generate the QR-code report link to pay this account with the given parameters,
+>>>>>>> 14568e65d8c... temp
         or None if no QR-code could be generated.
 
         :param amount: The amount to be paid
@@ -33,7 +38,18 @@ class ResPartnerBank(models.Model):
                 error_message = self._check_for_qr_code_errors(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
                 if not error_message:
+<<<<<<< HEAD
                     return self._get_qr_code_url(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
+=======
+                    return {
+                        'qr_method': candidate_method,
+                        'amount': amount,
+                        'currency': currency,
+                        'debtor_partner': debtor_partner,
+                        'free_communication': free_communication,
+                        'structured_communication': structured_communication,
+                    }
+>>>>>>> 14568e65d8c... temp
 
                 elif not silent_errors:
                     error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
@@ -41,6 +57,41 @@ class ResPartnerBank(models.Model):
 
         return None
 
+<<<<<<< HEAD
+=======
+    def build_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
+        vals = self._build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
+        if vals:
+            return self._get_qr_code_url(
+                vals['qr_method'],
+                vals['amount'],
+                vals['currency'],
+                vals['debtor_partner'],
+                vals['free_communication'],
+                vals['structured_communication'],
+            )
+        return None
+
+    def build_qr_code_base64(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
+        vals = self._build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
+        if vals:
+            return self._get_qr_code_base64(
+                vals['qr_method'],
+                vals['amount'],
+                vals['currency'],
+                vals['debtor_partner'],
+                vals['free_communication'],
+                vals['structured_communication']
+            )
+        return None
+
+    def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        return None
+
+    def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        return None
+
+>>>>>>> 14568e65d8c... temp
     def _get_qr_code_url(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         """ Hook for extension, to support the different QR generation methods.
         This function uses the provided qr_method to try generation a QR-code for
