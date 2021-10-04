@@ -151,18 +151,31 @@ class TestAdvMailPerformance(TransactionCase):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
 
+        self._init_mail_gateway()
+
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
 
         # automatically follow activities, for backward compatibility concerning query count
         self.env.ref('mail.mt_activities').write({'default': True})
 
+    def _init_mail_gateway(self):
+        # setup mail gateway
+        self.alias_domain = 'example.com'
+        self.alias_catchall = 'catchall.test'
+        self.alias_bounce = 'bounce.test'
+        self.default_from = 'notifications'
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', self.alias_bounce)
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
+        self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
+
     @users('__system__', 'emp')
     @warmup
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(__system__=9, emp=9):  # test_mail only: 9 - 9
+        with self.assertQueryCount(__system__=10, emp=10):  # test_mail only: 10 - 10
             model.create({'name': 'Test'})
 
     @users('__system__', 'emp')
@@ -184,7 +197,7 @@ class TestAdvMailPerformance(TransactionCase):
             #voip module read activity_type during create leading to one less query in enterprise on action_feedback
             category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=27, emp=46):  # com runbot: 26 - 46 // test_mail only: 27 - 46
+        with self.assertQueryCount(__system__=31, emp=50):  # com runbot: 30 - 50 // test_mail only: 31 - 50
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'emp')
@@ -201,7 +214,7 @@ class TestAdvMailPerformance(TransactionCase):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=29, emp=48):  # com runbot: 28 - 86 // test_mail only: 29 - 48
+        with self.assertQueryCount(__system__=33, emp=52):  # com runbot: 32 - 52 // test_mail only: 33 - 52
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -243,7 +256,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, emp=13):  # test_mail only: 7 - 13
+        with self.assertQueryCount(__system__=9, emp=16):  # test_mail only: 9 - 16
             record.message_post(
                 body='<p>Test message_post as log</p>',
                 subtype='mail.mt_note',
@@ -254,7 +267,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, emp=13):  # test_mail only: 7 - 13
+        with self.assertQueryCount(__system__=9, emp=16):  # test_mail only: 9 - 16
             record.message_post(
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
@@ -267,7 +280,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=53, emp=72):  # com runbot: 53 - 72 // test_mail only: 48 - 68
+        with self.assertQueryCount(__system__=54, emp=74):  # com runbot: 54 - 74 // test_mail only: 51 - 71
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -279,7 +292,8 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=32, emp=44):  # com runbot 31 - 43 // test_mail only: 32 - 44
+
+        with self.assertQueryCount(__system__=34, emp=46):  # com runbot 33 - 45 // test_mail only: 34 - 46
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -310,6 +324,32 @@ class TestAdvMailPerformance(TransactionCase):
 
         with self.assertQueryCount(__system__=2, emp=2):  # test_mail only: 2 - 2
             record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
+
+    @users('__system__', 'emp')
+    @warmup
+    def test_notification_reply_to_batch(self):
+        test_records_sudo = self.env['mail.test'].sudo().create([
+            {'alias_name': 'alias.test.%d' % index,
+             'customer_id': self.customer.id,
+             'name': 'Test_%d' % index,
+            } for index in range(10)
+        ])
+
+        with self.assertQueryCount(__system__=3, emp=5):
+            test_records = self.env['mail.test'].browse(test_records_sudo.ids)
+            reply_to = test_records._notify_get_reply_to(
+                default=self.env.user.email_formatted
+            )
+
+        for record in test_records:
+            self.assertEqual(
+                reply_to[record.id],
+                formataddr(
+                    ("%s %s" % (self.env.user.company_id.name, record.name),
+                     "%s@%s" % (record.alias_name, self.alias_domain)
+                    )
+                )
+            )
 
 
 @tagged('mail_performance')
@@ -342,10 +382,7 @@ class TestHeavyMailPerformance(TransactionCase):
 
         self.admin = self.env.user
 
-        # setup mail gateway
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
-        self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
+        self._init_mail_gateway()
 
         self.channel = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
             'name': 'Listener',
@@ -369,7 +406,21 @@ class TestHeavyMailPerformance(TransactionCase):
             self.env.ref('mail.mt_comment').id,
             self.env.ref('test_mail.st_mail_test_child_full').id]
         )
+
+        self._init_mail_gateway()
+
         self.patch(self.env.registry, 'ready', True)
+
+    def _init_mail_gateway(self):
+        # setup mail gateway
+        self.alias_domain = 'example.com'
+        self.alias_catchall = 'catchall.test'
+        self.alias_bounce = 'bounce.test'
+        self.default_from = 'notifications'
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', self.alias_bounce)
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
+        self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
