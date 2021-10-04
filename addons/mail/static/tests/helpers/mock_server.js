@@ -1326,8 +1326,8 @@ MockServer.include({
                     'name': attachment.name,
                     'mimetype': attachment.mimetype,
                     'is_main': thread && thread.message_main_attachment_id === attachment.id,
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
+                    'res_id': attachment.res_id || messages.res_id,
+                    'res_model': attachment.res_model || message.model,
                 });
             });
             const allNotifications = this._getRecords('mail.notification', [
@@ -1484,12 +1484,17 @@ MockServer.include({
      * @returns {Object[]}
      */
     _mockMailNotification_FilteredForWebClient(ids) {
-        return this._getRecords('mail.notification', [
+        const notifications = this._getRecords('mail.notification', [
             ['id', 'in', ids],
             ['notification_type', '!=', 'inbox'],
-            ['notification_status', 'in', ['bounce', 'exception', 'canceled']],
-            // or "res_partner_id.partner_share" not done here for simplicity
         ]);
+        return notifications.filter(notification => {
+            const partner = this._getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
+            return Boolean(
+                ['bounce', 'exception', 'canceled'].includes(notification.notification_status) ||
+                (partner && partner.partner_share)
+            );
+        });
     },
     /**
      * Simulates `_notification_format` on `mail.notification`.
@@ -1507,7 +1512,7 @@ MockServer.include({
                 'notification_type': notification.notification_type,
                 'notification_status': notification.notification_status,
                 'failure_type': notification.failure_type,
-                'res_partner_id': [partner && partner.id, partner && partner.display_name],
+                'res_partner_id': partner ? [partner && partner.id, partner && partner.display_name] : undefined,
             };
         });
     },

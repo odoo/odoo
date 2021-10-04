@@ -9,18 +9,16 @@
                         class="o_Chatter_topbar"
                         chatterLocalId="chatter.localId"
                     />
-                    <t t-if="chatter.threadView and chatter.isComposerVisible">
+                    <t t-if="chatter.composerView">
                         <Composer
                             class="o_Chatter_composer"
                             t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
-                            composerLocalId="chatter.thread.composer.localId"
+                            composerViewLocalId="chatter.composerView.localId"
                             hasFollowers="true"
                             hasMentionSuggestionsBelowPosition="true"
                             isCompact="false"
                             isExpandable="true"
                             textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
-                            t-on-o-message-posted="chatter.onComposerMessagePosted"
-                            t-ref="composer"
                         />
                     </t>
                 </div>
@@ -28,7 +26,7 @@
                     <t t-if="chatter.isAttachmentBoxVisible">
                         <AttachmentBox
                             class="o_Chatter_attachmentBox"
-                            threadLocalId="chatter.thread.localId"
+                            chatterLocalId="chatter.localId"
                         />
                     </t>
                     <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
@@ -41,9 +39,7 @@
                         <ThreadView
                             class="o_Chatter_thread"
                             getScrollableElement="getScrollableElement"
-                            hasComposer="false"
                             hasScrollAdjust="chatter.hasMessageListScrollAdjust"
-                            order="'desc'"
                             threadViewLocalId="chatter.threadView.localId"
                             t-ref="thread"
                         />

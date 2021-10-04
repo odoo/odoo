@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { link, replace, unlink } from '@mail/model/model_field_command';
+import { insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -89,13 +89,10 @@ function factory(dependencies) {
         }
 
         openNewMessage() {
-            let newMessageChatWindow = this.newMessageChatWindow;
-            if (!newMessageChatWindow) {
-                newMessageChatWindow = this.messaging.models['mail.chat_window'].create({
-                    manager: link(this),
-                });
+            if (!this.newMessageChatWindow) {
+                this.update({ newMessageChatWindow: insertAndReplace({ manager: replace(this) }) });
             }
-            newMessageChatWindow.makeActive();
+            this.newMessageChatWindow.makeActive();
         }
 
         /**
@@ -264,18 +261,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.chat_window|undefined}
-         */
-        _computeNewMessageChatWindow() {
-            const chatWindow = this.allOrdered.find(chatWindow => !chatWindow.thread);
-            if (!chatWindow) {
-                return unlink();
-            }
-            return link(chatWindow);
-        }
-
-        /**
-         * @private
          * @returns {integer}
          */
         _computeUnreadHiddenConversationAmount() {
@@ -392,7 +377,8 @@ function factory(dependencies) {
             compute: '_computeLastVisible',
         }),
         newMessageChatWindow: one2one('mail.chat_window', {
-            compute: '_computeNewMessageChatWindow',
+            inverse: 'managerAsNewMessage',
+            isCausal: true,
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
@@ -402,7 +388,7 @@ function factory(dependencies) {
             default: BASE_VISUAL,
         }),
     };
-
+    ChatWindowManager.identifyingFields = ['messaging'];
     ChatWindowManager.modelName = 'mail.chat_window_manager';
 
     return ChatWindowManager;

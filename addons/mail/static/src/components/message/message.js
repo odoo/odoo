@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -65,6 +66,14 @@ export class Message extends Component {
      */
     _constructor() {}
 
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.message_view', propNameAsRecordLocalId: 'messageViewLocalId' });
+    }
+
     willUnmount() {
         clearInterval(this._intervalId);
     }
@@ -77,18 +86,18 @@ export class Message extends Component {
      * @returns {string}
      */
     get avatar() {
-        if (this.message.author && (!this.message.originThread || this.message.originThread.model !== 'mail.channel')) {
+        if (this.messageView.message.author && (!this.messageView.message.originThread || this.messageView.message.originThread.model !== 'mail.channel')) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
-            return this.message.author.avatarUrl;
-        } else if (this.message.author && this.message.originThread && this.message.originThread.model === 'mail.channel') {
-            return `/mail/channel/${this.message.originThread.id}/partner/${this.message.author.id}/avatar_128`;
-        } else if (this.message.guestAuthor && (!this.message.originThread || this.message.originThread.model !== 'mail.channel')) {
-            return this.message.guestAuthor.avatarUrl;
-        } else if (this.message.guestAuthor && this.message.originThread && this.message.originThread.model === 'mail.channel') {
-            return `/mail/channel/${this.message.originThread.id}/guest/${this.message.guestAuthor.id}/avatar_128`;
-        } else if (this.message.message_type === 'email') {
+            return this.messageView.message.author.avatarUrl;
+        } else if (this.messageView.message.author && this.messageView.message.originThread && this.messageView.message.originThread.model === 'mail.channel') {
+            return `/mail/channel/${this.messageView.message.originThread.id}/partner/${this.messageView.message.author.id}/avatar_128`;
+        } else if (this.messageView.message.guestAuthor && (!this.messageView.message.originThread || this.messageView.message.originThread.model !== 'mail.channel')) {
+            return this.messageView.message.guestAuthor.avatarUrl;
+        } else if (this.messageView.message.guestAuthor && this.messageView.message.originThread && this.messageView.message.originThread.model === 'mail.channel') {
+            return `/mail/channel/${this.messageView.message.originThread.id}/guest/${this.messageView.message.guestAuthor.id}/avatar_128`;
+        } else if (this.messageView.message.message_type === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }
         return '/mail/static/src/img/smiley/avatar.jpg';
@@ -100,7 +109,7 @@ export class Message extends Component {
      * @returns {string}
      */
     get datetime() {
-        return this.message.date.format(getLangDatetimeFormat());
+        return this.messageView.message.date.format(getLangDatetimeFormat());
     }
 
     /**
@@ -112,13 +121,13 @@ export class Message extends Component {
         if (this.messaging.currentGuest) {
             return false;
         }
-        if (!this.message.author) {
+        if (!this.messageView.message.author) {
             return false;
         }
         if (
             this.threadView &&
             this.threadView.thread &&
-            this.threadView.thread.correspondent === this.message.author
+            this.threadView.thread.correspondent === this.messageView.message.author
         ) {
             return false;
         }
@@ -135,7 +144,14 @@ export class Message extends Component {
         return Boolean(
             this.state.isHovered ||
             this.state.isClicked ||
-            (this.message && this.message.actionList.isReactionPopoverOpened)
+            (
+                this.messageView &&
+                this.messageView.messageActionList &&
+                (
+                    this.messageView.messageActionList.isReactionPopoverOpened ||
+                    this.messageView.messageActionList.showDeleteConfirm
+                )
+            )
         );
     }
 
@@ -146,7 +162,7 @@ export class Message extends Component {
      * @param {integer} [offset=0]
      * @returns {boolean}
      */
-    isBottomVisible({ offset=0 } = {}) {
+    isBottomVisible({ offset = 0 } = {}) {
         if (!this.el) {
             return false;
         }
@@ -168,6 +184,9 @@ export class Message extends Component {
      * @returns {boolean}
      */
     isPartiallyVisible() {
+        if (!this.el) {
+            return false;
+        }
         const elRect = this.el.getBoundingClientRect();
         if (!this.el.parentNode) {
             return false;
@@ -188,16 +207,17 @@ export class Message extends Component {
     get isSelected() {
         return (
             this.threadView &&
+            this.messageView &&
             this.threadView.threadViewer &&
-            this.threadView.threadViewer.selectedMessage === this.message
+            this.threadView.threadViewer.selectedMessage === this.messageView.message
         );
     }
 
     /**
-     * @returns {mail.message}
+     * @returns {mail.message_view}
      */
-    get message() {
-        return this.messaging && this.messaging.models['mail.message'].get(this.props.messageLocalId);
+    get messageView() {
+        return this.messaging && this.messaging.models['mail.message_view'].get(this.props.messageViewLocalId);
     }
     /**
      * @returns {string}
@@ -234,21 +254,21 @@ export class Message extends Component {
      * @returns {string}
      */
     get shortTime() {
-        return this.message.date.format('hh:mm');
+        return this.messageView.message.date.format('hh:mm');
     }
 
     /**
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.messaging && this.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.messageView && this.messageView.threadView;
     }
 
     /**
      * @returns {Object}
      */
     get trackingValues() {
-        return this.message.tracking_value_ids.map(trackingValue => {
+        return this.messageView.message.tracking_value_ids.map(trackingValue => {
             const value = Object.assign({}, trackingValue);
             value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
             /**
@@ -415,12 +435,12 @@ export class Message extends Component {
      * @private
      */
     _update() {
-        if (!this.message) {
+        if (!this.messageView) {
             return;
         }
-        if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
-            this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
-            this._lastPrettyBody = this.message.prettyBody;
+        if (this._prettyBodyRef.el && this.messageView.message.prettyBody !== this._lastPrettyBody) {
+            this._prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
+            this._lastPrettyBody = this.messageView.message.prettyBody;
         }
         if (!this._prettyBodyRef.el) {
             this._lastPrettyBody = undefined;
@@ -434,13 +454,13 @@ export class Message extends Component {
             }
             this._insertReadMoreLess($(this._contentRef.el));
             this.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
-                message: this.message,
+                message: this.messageView.message,
             });
         }
-        this.message.refreshDateFromNow();
+        this.messageView.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
-            this.message.refreshDateFromNow();
+            this.messageView.message.refreshDateFromNow();
         }, 60 * 1000);
     }
 
@@ -493,7 +513,7 @@ export class Message extends Component {
         if (!this.hasAuthorOpenChat) {
             return;
         }
-        this.message.author.openChat();
+        this.messageView.message.author.openChat();
     }
 
     /**
@@ -502,10 +522,10 @@ export class Message extends Component {
      */
     _onClickAuthorName(ev) {
         markEventHandled(ev, 'Message.ClickAuthorName');
-        if (!this.message.author) {
+        if (!this.messageView.message.author) {
             return;
         }
-        this.message.author.openProfile();
+        this.messageView.message.author.openProfile();
     }
 
     /**
@@ -514,7 +534,7 @@ export class Message extends Component {
      */
     _onClickFailure(ev) {
         markEventHandled(ev, 'Message.ClickFailure');
-        this.message.openResendAction();
+        this.messageView.message.openResendAction();
     }
 
     /**
@@ -524,32 +544,13 @@ export class Message extends Component {
     _onClickOriginThread(ev) {
         // avoid following dummy href
         ev.preventDefault();
-        this.message.originThread.open();
+        this.messageView.message.originThread.open();
     }
 }
 
 Object.assign(Message, {
-    defaultProps: {
-        hasMarkAsReadIcon: false,
-        hasReplyIcon: false,
-        isSquashed: false,
-        showActions: true,
-    },
     props: {
-        attachmentsDetailsMode: {
-            type: String,
-            optional: true,
-            validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
-        },
-        hasMarkAsReadIcon: Boolean,
-        hasReplyIcon: Boolean,
-        isSquashed: Boolean,
-        messageLocalId: String,
-        threadViewLocalId: {
-            type: String,
-            optional: true,
-        },
-        showActions: Boolean,
+        messageViewLocalId: String,
     },
     template: 'mail.Message',
 });

@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink, unlinkAll, update } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -30,7 +30,10 @@ function factory(dependencies) {
         }
 
         clearReplyingToMessage() {
-            this.update({ replyingToMessage: unlinkAll() });
+            this.update({
+                replyingToMessage: clear(),
+                replyingToMessageComposerView: clear(),
+            });
         }
 
         /**
@@ -58,7 +61,12 @@ function factory(dependencies) {
         }
 
         focus() {
-            this.update({ isDoFocus: true });
+            if (this.replyingToMessageComposerView) {
+                this.replyingToMessageComposerView.update({ doFocus: true });
+            }
+            if (this.threadView && this.threadView.composerView) {
+                this.threadView.composerView.update({ doFocus: true });
+            }
         }
 
         /**
@@ -246,13 +254,15 @@ function factory(dependencies) {
                 this.clearReplyingToMessage();
                 return;
             }
-            this.update({ replyingToMessage: link(message) });
-            // avoid to reply to a note by a message and vice-versa.
-            // subject to change later by allowing subtype choice.
-            this.replyingToMessageOriginThreadComposer.update({
-                isLog: !message.is_discussion && !message.is_notification
+            message.originThread.composer.update({
+                isLog: !message.is_discussion && !message.is_notification,
             });
-            this.focus();
+            this.update({
+                replyingToMessage: replace(message),
+                replyingToMessageComposerView: insertAndReplace({
+                    doFocus: true,
+                }),
+            });
         }
 
         /**
@@ -309,10 +319,7 @@ function factory(dependencies) {
             if (!this.mostRecentMeetingChannel) {
                 return clear();
             }
-            if (!this.channelInvitationForm) {
-                return create();
-            }
-            return update({
+            return insertAndReplace({
                 searchResultCount: clear(),
                 searchTerm: clear(),
                 selectablePartners: clear(),
@@ -363,20 +370,25 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsReplyingToMessage() {
-            return !!this.replyingToMessage;
-        }
-
-        /**
          * Ensures the reply feature is disabled if discuss is not open.
          *
          * @private
          * @returns {mail.message|undefined}
          */
         _computeReplyingToMessage() {
+            if (!this.isOpen) {
+                return unlinkAll();
+            }
+            return;
+        }
+
+        /**
+         * Ensures the reply feature is disabled if discuss is not open.
+         *
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeReplyingToMessageComposerView() {
             if (!this.isOpen) {
                 return unlinkAll();
             }
@@ -400,17 +412,13 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer}
          */
         _computeThreadViewer() {
-            const threadViewerData = {
+            return insertAndReplace({
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
                 selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
                 thread: this.thread ? link(this.thread) : unlink(),
-            };
-            if (!this.threadViewer) {
-                return create(threadViewerData);
-            }
-            return update(threadViewerData);
+            });
         }
     }
 
@@ -435,12 +443,14 @@ function factory(dependencies) {
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one2one('mail.discuss_sidebar_category', {
+            inverse: 'discussAsChannel',
             isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
         categoryChat: one2one('mail.discuss_sidebar_category', {
+            inverse: 'discussAsChat',
             isCausal: true,
         }),
         /**
@@ -487,20 +497,10 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Determine whether this discuss should be focused at next render.
-         */
-        isDoFocus: attr({
-            default: false,
-        }),
-        /**
          * Whether the discuss app is open or not. Useful to determine
          * whether the discuss or chat window logic should be applied.
          */
         isOpen: attr({
-            default: false,
-        }),
-        isReplyingToMessage: attr({
-            compute: '_computeIsReplyingToMessage',
             default: false,
         }),
         /**
@@ -524,20 +524,13 @@ function factory(dependencies) {
             compute: '_computeReplyingToMessage',
         }),
         /**
-         * The thread concerned by the reply feature in Inbox. It depends on the
-         * message set to be replied, and should be considered read-only.
-         */
-        replyingToMessageOriginThread: many2one('mail.thread', {
-            related: 'replyingToMessage.originThread',
-        }),
-        /**
          * The composer to display for the reply feature in Inbox. It depends
          * on the message set to be replied.
          */
-        replyingToMessageOriginThreadComposer: one2one('mail.composer', {
+        replyingToMessageComposerView: one2one('mail.composer_view', {
+            compute: '_computeReplyingToMessageComposerView',
             inverse: 'discussAsReplying',
-            readonly: true,
-            related: 'replyingToMessageOriginThread.composer',
+            isCausal: true,
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
@@ -563,12 +556,13 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'discuss',
             isCausal: true,
             readonly: true,
             required: true,
         }),
     };
-
+    Discuss.identifyingFields = ['messaging'];
     Discuss.modelName = 'mail.discuss';
 
     return Discuss;

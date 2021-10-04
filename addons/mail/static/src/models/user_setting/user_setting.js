@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one, one2many } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -260,7 +260,10 @@ function factory(dependencies) {
         audioInputDeviceId: attr({
             default: '',
         }),
-        id: attr(),
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          * true if the dialog for the call viewer layout is open
          */
@@ -277,7 +280,7 @@ function factory(dependencies) {
          * Model for the component with the controls for RTC related settings.
          */
         rtcConfigurationMenu: one2one('mail.rtc_configuration_menu', {
-            default: create(),
+            default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,
             required: true,
@@ -315,7 +318,7 @@ function factory(dependencies) {
             isCausal: true,
         }),
     };
-
+    UserSetting.identifyingFields = ['id'];
     UserSetting.modelName = 'mail.user_setting';
 
     return UserSetting;

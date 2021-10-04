@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
-import { insert, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -48,8 +48,7 @@ function factory(dependencies) {
          *  Close subtypes dialog
          */
         closeSubtypes() {
-            this._subtypesListDialog.delete();
-            this._subtypesListDialog = undefined;
+            this.update({ subtypeList: clear() });
         }
 
         /**
@@ -104,8 +103,12 @@ function factory(dependencies) {
                     this.update({ selectedSubtypes: unlink(subtype) });
                 }
             }
-            this._subtypesListDialog = this.messaging.dialogManager.open('mail.follower_subtype_list', {
-                follower: link(this),
+            this.messaging.dialogManager.update({
+                dialogs: insert({
+                    followerSubtypeList: insertAndReplace({
+                        follower: replace(this),
+                    }),
+                }),
             });
         }
 
@@ -145,17 +148,6 @@ function factory(dependencies) {
             this.closeSubtypes();
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     Follower.fields = {
@@ -163,6 +155,7 @@ function factory(dependencies) {
             inverse: 'followers',
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         isActive: attr({
@@ -175,9 +168,13 @@ function factory(dependencies) {
             required: true,
         }),
         selectedSubtypes: many2many('mail.follower_subtype'),
+        subtypeList: one2many('mail.follower_subtype_list', {
+            inverse: 'follower',
+            isCausal: true,
+        }),
         subtypes: many2many('mail.follower_subtype'),
     };
-
+    Follower.identifyingFields = ['id'];
     Follower.modelName = 'mail.follower';
 
     return Follower;

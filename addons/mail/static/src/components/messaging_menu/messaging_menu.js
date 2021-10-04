@@ -90,7 +90,7 @@ export class MessagingMenu extends Component {
             return;
         }
         // ignore click inside the menu
-        if (this.el.contains(ev.target)) {
+        if (!this.el || this.el.contains(ev.target)) {
             return;
         }
         // in all other cases: close the messaging menu when clicking outside

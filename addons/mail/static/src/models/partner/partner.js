@@ -378,13 +378,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * @static
          * @private
          */
@@ -451,10 +444,6 @@ function factory(dependencies) {
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
-        correspondentThreads: one2many('mail.thread', {
-            inverse: 'correspondent',
-            readonly: true,
-        }),
         country: many2one('mail.country'),
         display_name: attr({
             compute: '_computeDisplayName',
@@ -472,6 +461,7 @@ function factory(dependencies) {
             default: false,
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         im_status: attr(),
@@ -497,6 +487,10 @@ function factory(dependencies) {
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
+        partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         rtcSessions: one2many('mail.rtc_session', {
             inverse: 'partner',
         }),
@@ -507,7 +501,7 @@ function factory(dependencies) {
             inverse: 'partner',
         }),
     };
-
+    Partner.identifyingFields = ['id'];
     Partner.modelName = 'mail.partner';
 
     return Partner;

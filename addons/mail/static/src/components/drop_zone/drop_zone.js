@@ -36,7 +36,7 @@ export class DropZone extends Component {
      * @returns {boolean}
      */
     contains(node) {
-        return this.el.contains(node);
+        return Boolean(this.el && this.el.contains(node));
     }
 
     //--------------------------------------------------------------------------

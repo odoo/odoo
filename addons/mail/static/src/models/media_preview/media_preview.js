@@ -205,7 +205,7 @@ function factory(dependencies) {
             default: null,
         }),
     };
-
+    MediaPreview.identifyingFields = ['messaging'];
     MediaPreview.modelName = 'mail.media_preview';
 
     return MediaPreview;
