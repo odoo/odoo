@@ -5,6 +5,7 @@ var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 
+const session = require('web.session');
 
 var MyAttendances = AbstractAction.extend({
     contentTemplate: 'HrAttendanceMyMainMenu',
@@ -21,6 +22,7 @@ var MyAttendances = AbstractAction.extend({
                 model: 'hr.employee',
                 method: 'search_read',
                 args: [[['user_id', '=', this.getSession().uid]], ['attendance_state', 'name', 'hours_today']],
+                context: session.user_context,
             })
             .then(function (res) {
                 self.employee = res.length && res[0];
@@ -38,6 +40,7 @@ var MyAttendances = AbstractAction.extend({
                 model: 'hr.employee',
                 method: 'attendance_manual',
                 args: [[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'],
+                context: session.user_context,
             })
             .then(function(result) {
                 if (result.action) {
