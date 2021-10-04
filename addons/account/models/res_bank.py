@@ -11,8 +11,8 @@ import werkzeug.exceptions
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    def build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
-        """ Returns the QR-code report URL to pay to this account with the given parameters,
+    def _build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
+        """ Returns the QR-code vals needed to generate the QR-code report link to pay this account with the given parameters,
         or None if no QR-code could be generated.
 
         :param amount: The amount to be paid
@@ -38,7 +38,14 @@ class ResPartnerBank(models.Model):
                 error_message = self._check_for_qr_code_errors(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
                 if not error_message:
-                    return candidate_method, amount, currency, debtor_partner, free_communication, structured_communication
+                    return {
+                        'qr_method': candidate_method,
+                        'amount': amount,
+                        'currency': currency,
+                        'debtor_partner': debtor_partner,
+                        'free_communication': free_communication,
+                        'structured_communication': structured_communication,
+                    }
 
                 elif not silent_errors:
                     error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
@@ -47,15 +54,30 @@ class ResPartnerBank(models.Model):
         return None
 
     def build_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
-        candidate_method, amount, currency, debtor_partner, free_communication, structured_communication = \
-            self.build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
-        return self._get_qr_code_url(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
-
+        vals = self._build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
+        if vals:
+            return self._get_qr_code_url(
+                vals['qr_method'],
+                vals['amount'],
+                vals['currency'],
+                vals['debtor_partner'],
+                vals['free_communication'],
+                vals['structured_communication'],
+            )
+        return None
 
     def build_qr_code_base64(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
-        candidate_method, amount, currency, debtor_partner, free_communication, structured_communication = \
-            self.build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
-        return self._get_qr_code_base64(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
+        vals = self._build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
+        if vals:
+            return self._get_qr_code_base64(
+                vals['qr_method'],
+                vals['amount'],
+                vals['currency'],
+                vals['debtor_partner'],
+                vals['free_communication'],
+                vals['structured_communication']
+            )
+        return None
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         return None
