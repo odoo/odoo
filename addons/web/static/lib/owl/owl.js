@@ -1614,6 +1614,9 @@
          * template, with the name given by the t-name attribute.
          */
         addTemplates(xmlstr) {
+            if (!xmlstr) {
+                return;
+            }
             const doc = typeof xmlstr === "string" ? parseXML(xmlstr) : xmlstr;
             const templates = doc.getElementsByTagName("templates")[0];
             if (!templates) {
@@ -1823,7 +1826,7 @@
                 return;
             }
             if (node.tagName !== "t" && node.hasAttribute("t-call")) {
-                const tCallNode = document.createElement("t");
+                const tCallNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                 tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
                 node.removeAttribute("t-call");
                 node.prepend(tCallNode);
@@ -1850,7 +1853,7 @@
                         throw new Error(`Unknown QWeb directive: '${attrName}'`);
                     }
                     if (node.tagName !== "t" && (attrName === "t-esc" || attrName === "t-raw")) {
-                        const tNode = document.createElement("t");
+                        const tNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                         tNode.setAttribute(attrName, node.getAttribute(attrName));
                         for (let child of Array.from(node.childNodes)) {
                             tNode.appendChild(child);
@@ -2905,7 +2908,9 @@
         },
     });
 
-    const config = {};
+    const config = {
+        translatableAttributes: TRANSLATABLE_ATTRS,
+    };
     Object.defineProperty(config, "mode", {
         get() {
             return QWeb.dev ? "dev" : "prod";
@@ -3656,6 +3661,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             // build patchQueue
             const patchQueue = [];
             const doWork = function (f) {
+                f.component.__owl__.currentFiber = null;
                 patchQueue.push(f);
                 return f.child;
             };
@@ -3711,10 +3717,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
                         component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
                         component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                     }
-                }
-                const compOwl = component.__owl__;
-                if (fiber === compOwl.currentFiber) {
-                    compOwl.currentFiber = null;
                 }
             }
             // insert into the DOM (mount case)
@@ -4262,7 +4264,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
          * its props.
          */
         async render(force = false) {
-            await Promise.resolve();
             const __owl__ = this.__owl__;
             const currentFiber = __owl__.currentFiber;
             if (!__owl__.vnode && !currentFiber) {
@@ -4370,7 +4371,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
         __callMounted() {
             const __owl__ = this.__owl__;
             __owl__.status = 3 /* MOUNTED */;
-            __owl__.currentFiber = null;
             this.mounted();
             if (__owl__.mountedCB) {
                 __owl__.mountedCB();
@@ -5545,9 +5545,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.utils = utils;
 
 
-    __info__.version = '1.4.4';
-    __info__.date = '2021-09-03T08:19:48.452Z';
-    __info__.hash = 'b3181f1';
+    __info__.version = '1.4.5';
+    __info__.date = '2021-10-04T12:34:22.482Z';
+    __info__.hash = '09dd684';
     __info__.url = 'https://github.com/odoo/owl';
 
 
