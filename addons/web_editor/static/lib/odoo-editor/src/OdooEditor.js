@@ -1422,6 +1422,7 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.updateColorpickerLabels();
+        const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
         const block = closestBlock(sel.anchorNode);
         for (const [style, tag, isList] of [
             ['paragraph', 'P', false],
@@ -1446,6 +1447,15 @@ export class OdooEditor extends EventTarget {
                     : block.tagName === tag;
                 button.classList.toggle('active', isActive);
             }
+        }
+        const listMode = getListMode(block.parentElement);
+        const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
+        if (listDropdownButton) {
+            if (listMode) {
+                listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
+                listDropdownButton.classList.add(listUIClasses[listMode]);
+            }
+            listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
         }
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
