@@ -800,7 +800,7 @@ export function preserveCursor(document) {
  * Source:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
  *
- * */
+ **/
 const blockTagNames = [
     'ADDRESS',
     'ARTICLE',
@@ -983,6 +983,53 @@ export function getInSelection(document, selector) {
                 node => range.intersectsNode(node),
             ))
     );
+}
+
+// This is a list of "paragraph-related elements", defined as elements that
+// behave like paragraphs.
+const paragraphRelatedElements = [
+    'P',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+];
+
+/**
+ * Return true if the given node allows "paragraph-related elements".
+ *
+ * @see paragraphRelatedElements
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function allowsParagraphRelatedElements(node) {
+    return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
+}
+
+/**
+ * Take a node and unwrap all of its block contents recursively. All blocks
+ * (except for firstChilds) are preceded by a <br> in order to preserve the line
+ * breaks.
+ *
+ * @param {Node} node
+ */
+export function makeContentsInline(node) {
+    let childIndex = 0;
+    for (const child of node.childNodes) {
+        if (isBlock(child)) {
+            if (childIndex && paragraphRelatedElements.includes(child.nodeName)) {
+                child.before(document.createElement('br'));
+            }
+            for (const grandChild of child.childNodes) {
+                child.before(grandChild);
+                makeContentsInline(grandChild);
+            }
+            child.remove();
+        }
+        childIndex += 1;
+    }
 }
 
 /**
