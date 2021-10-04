@@ -461,10 +461,10 @@ class TestIrPropertyOptimizations(TransactionCase):
             self.Bacon.create({'property_eggs': False})
 
         # create with another value
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': eggs.id})
 
     def test_with_truthy_default(self):
@@ -495,14 +495,14 @@ class TestIrPropertyOptimizations(TransactionCase):
         eggs = self.Eggs.create({})
         self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=False).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': False})
