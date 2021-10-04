@@ -438,9 +438,12 @@ class Http(models.AbstractModel):
     @api.model
     def get_frontend_session_info(self):
         session_info = super(Http, self).get_frontend_session_info()
+        geoip_country_code = request.session.get('geoip', {}).get('country_code')
+        geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
-            'geoip_country_code': request.session.get('geoip', {}).get('country_code'),
+            'geoip_country_code': geoip_country_code,
+            'geoip_phone_code': geoip_phone_code,
         })
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({
