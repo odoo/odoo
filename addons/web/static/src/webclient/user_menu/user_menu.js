@@ -50,8 +50,7 @@ export class UserMenu extends Component {
 UserMenu.template = "web.UserMenu";
 UserMenu.components = { UserMenuItem };
 
-const systrayItem = {
+export const systrayItem = {
     Component: UserMenu,
-    isDisplayed: (env) => !env.isSmall,
 };
 registry.category("systray").add("web.user_menu", systrayItem, { sequence: 0 });
