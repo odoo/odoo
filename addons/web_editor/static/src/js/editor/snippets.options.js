@@ -3134,7 +3134,7 @@ const SnippetOptionWidget = Widget.extend({
         // method with background-color as property too, so it is automatically
         // reset anyway).
         let bgImageParts = undefined;
-        if (params.cssProperty === 'background-color') {
+        if (params.withGradients && params.cssProperty === 'background-color') {
             const styles = getComputedStyle(this.$target[0]);
             bgImageParts = backgroundImageCssToParts(styles['background-image']);
             delete bgImageParts.gradient;
@@ -3185,7 +3185,7 @@ const SnippetOptionWidget = Widget.extend({
         // In case of background-color edition, we could receive a gradient, in
         // which case the value has to be combined with the potential background
         // image (real image).
-        if (params.cssProperty === 'background-color' && weUtils.isColorGradient(widgetValue)) {
+        if (params.withGradients && params.cssProperty === 'background-color' && weUtils.isColorGradient(widgetValue)) {
             cssProps = ['background-image'];
             bgImageParts.gradient = widgetValue;
             widgetValue = backgroundImagePartsToCss(bgImageParts);
@@ -3550,7 +3550,7 @@ const SnippetOptionWidget = Widget.extend({
 
                 const styles = window.getComputedStyle(this.$target[0]);
 
-                if (params.cssProperty === 'background-color') {
+                if (params.withGradients && params.cssProperty === 'background-color') {
                     // Check if there is a gradient, in that case this is the
                     // value to be returned, we normally not allow color and
                     // gradient at the same time (the option would remove one
