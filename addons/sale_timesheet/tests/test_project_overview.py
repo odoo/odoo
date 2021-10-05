@@ -34,7 +34,6 @@ class TestSaleProject(TestCommonReporting):
         project_so = self.so_line_order_project.project_id
         # log timesheet for billable time
         timesheet1 = self._log_timesheet_manager(project_so, 10, so_line_deliver_global_project.task_id)
-
         task_so = self.so_line_order_project.task_id
         # logged some timesheets: on project only, then on tasks with different employees
         timesheet2 = self._log_timesheet_user(project_so, 2)
@@ -89,7 +88,7 @@ class TestSaleProject(TestCommonReporting):
         })
 
         other_revenues = self.env['account.analytic.line'].create({
-           'name': 'pther revenues on project_so',
+           'name': 'other revenues on project_so',
            'account_id': project_so.analytic_account_id.id,
            'employee_id': self.employee_user.id,
            'unit_amount': 1,
@@ -103,10 +102,10 @@ class TestSaleProject(TestCommonReporting):
 
         dashboard_value = timesheet2.unit_amount + timesheet3.unit_amount + timesheet4.unit_amount + timesheet5.unit_amount + timesheet1.unit_amount
         project_so_timesheet_sold_unit = timesheet3.unit_amount + timesheet4.unit_amount
-        project_rate_non_billable = timesheet5.unit_amount / dashboard_value * 100
-        project_rate_non_billable_project = timesheet2.unit_amount / dashboard_value * 100
-        project_rate_billable_time = timesheet1.unit_amount / dashboard_value * 100
-        project_rate_billable_fixed = project_so_timesheet_sold_unit / dashboard_value * 100
+        project_rate_non_billable = round(timesheet5.unit_amount / dashboard_value * 100, 2)
+        project_rate_non_billable_project = round(timesheet2.unit_amount / dashboard_value * 100, 2)
+        project_rate_billable_time = round(timesheet1.unit_amount / dashboard_value * 100, 2)
+        project_rate_billable_fixed = round(project_so_timesheet_sold_unit / dashboard_value * 100, 2)
         project_rate_total = project_rate_non_billable + project_rate_non_billable_project + project_rate_billable_time + project_rate_billable_fixed
         project_invoiced = self.so_line_order_project.price_unit * self.so_line_order_project.product_uom_qty * timesheet1.unit_amount
         project_timesheet_cost = timesheet2.amount + timesheet3.amount + timesheet4.amount + timesheet5.amount + timesheet1.amount
