@@ -159,7 +159,7 @@ class ProfitabilityAnalysis(models.Model):
 
                                 UNION ALL
 
-                                -- Get the other revenues
+                                -- Get the other revenues TODO : Add to_invoice for non_tracked service product 
                                 SELECT
                                     P.id AS project_id,
                                     P.analytic_account_id AS analytic_account_id,
@@ -290,7 +290,7 @@ class ProfitabilityAnalysis(models.Model):
                                         ELSE 0.0
                                     END AS amount_untaxed_to_invoice,
                                     CASE
-                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (COALESCE(SOL.untaxed_amount_invoiced, AMOUNT_UNTAXED.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                                        WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') AND T.service_tracking != 'no' THEN (COALESCE(SOL.untaxed_amount_invoiced, AMOUNT_UNTAXED.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                         ELSE 0.0
                                     END AS amount_untaxed_invoiced,
                                     S.date_order AS line_date
