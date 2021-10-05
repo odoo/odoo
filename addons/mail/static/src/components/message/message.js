@@ -96,7 +96,7 @@ export class Message extends Component {
         } else if (this.messageView.message.guestAuthor && (!this.messageView.message.originThread || this.messageView.message.originThread.model !== 'mail.channel')) {
             return this.messageView.message.guestAuthor.avatarUrl;
         } else if (this.messageView.message.guestAuthor && this.messageView.message.originThread && this.messageView.message.originThread.model === 'mail.channel') {
-            return `/mail/channel/${this.messageView.message.originThread.id}/guest/${this.messageView.message.guestAuthor.id}/avatar_128`;
+            return `/mail/channel/${this.messageView.message.originThread.id}/guest/${this.messageView.message.guestAuthor.id}/avatar_128?unique=${this.messageView.message.guestAuthor.name}`;
         } else if (this.messageView.message.message_type === 'email') {
             return '/mail/static/src/img/email_icon.png';
         }

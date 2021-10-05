@@ -10,7 +10,7 @@
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopBar.thread">
                         <t t-if="!threadViewTopBar.isEditingThreadName">
-                            <div class="o_ThreadViewTopbar_threadName flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopBar.thread.displayName" t-on-click="threadViewTopBar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadName" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadName" t-att-class="{ 'o-threadNameEditable': threadViewTopBar.isMouseOverThreadName and !messaging.isCurrentUserGuest }">
+                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopBar.thread.displayName" t-on-click="threadViewTopBar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadName" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadName" t-att-class="{ 'o-threadNameEditable': threadViewTopBar.isMouseOverThreadName and !messaging.isCurrentUserGuest }">
                                 <t t-esc="threadViewTopBar.thread.displayName"/>
                             </div>
                         </t>
@@ -27,7 +27,7 @@
                         <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2"/>
                         <t t-if="!threadViewTopBar.isEditingThreadDescription">
                             <t t-if="threadViewTopBar.thread.description">
-                                <div class="o_ThreadViewTopbar_threadDescription text-truncate px-1" t-att-title="threadViewTopBar.thread.description" t-on-click="threadViewTopBar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadDescription" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopBar.isMouseOverThreadDescription and !messaging.isCurrentUserGuest }">
+                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem text-truncate px-1" t-att-title="threadViewTopBar.thread.description" t-on-click="threadViewTopBar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadDescription" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopBar.isMouseOverThreadDescription and !messaging.isCurrentUserGuest }">
                                     <t t-esc="threadViewTopBar.thread.description"/>
                                 </div>
                             </t>
@@ -42,7 +42,7 @@
                         </t>
                     </t>
                 </div>
-                <div class="o_ThreadViewTopbar_actions d-flex align-items-center">
+                <div class="o_ThreadViewTopbar_actions d-flex align-items-center ml-1">
                     <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === messaging.inbox">
                         <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopBar.threadView.messages.length === 0" t-on-click="threadViewTopBar.onClickInboxMarkAllAsRead">Mark all read</button>
                     </t>
@@ -79,6 +79,20 @@
                         </button>
                     </t>
                 </div>
+                <!-- FIXME: handle display on mobile -->
+                <t t-if="threadViewTopBar.threadView.threadViewer.discussPublicView and !messaging.device.isMobile">
+                    <div class="o_ThreadViewTopbar_userInfo d-flex align-items-center">
+                        <img class="o_ThreadViewTopbar_avatar ml-1 mr-1 rounded-circle" t-att-src="avatarUrl" alt="Avatar"/>
+                        <t t-if="!threadViewTopBar.isEditingGuestName">
+                            <span class="o_ThreadViewTopBar_userName o_ThreadViewTopbar_editableItem px-1 font-weight-bold text-truncate" t-att-class="{ 'o-userNameEditable': threadViewTopBar.isMouseOverUserInfo and messaging.isCurrentUserGuest }" t-on-click="threadViewTopBar.onClickUserName" t-on-mouseenter="threadViewTopBar.onMouseEnterUserName" t-on-mouseleave="threadViewTopBar.onMouseLeaveUserName">
+                                <t t-esc="messaging.isCurrentUserGuest ? messaging.currentGuest.name : messaging.currentUser.nameOrDisplayName"/>
+                            </span>
+                        </t>
+                        <t t-if="threadViewTopBar.isEditingGuestName">
+                            <input class="o_ThreadViewTopBar_guestNameInput" type="text" t-att-value="messaging.currentGuest.name" t-on-input="threadViewTopBar.onInputGuestNameInput" t-on-keydown="threadViewTopBar.onKeyDownGuestNameInput" t-ref="guestNameInput"/>
+                        </t>
+                    </div>
+                </t>
             </t>
         </div>
     </t>
