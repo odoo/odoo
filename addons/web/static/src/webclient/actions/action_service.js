@@ -841,8 +841,11 @@ function makeActionManager(env) {
     async function _executeClientAction(action, options) {
         const clientAction = actionRegistry.get(action.tag);
         if (clientAction.prototype instanceof Component) {
-            if (action.target !== "new" && clientAction.target) {
-                action.target = clientAction.target;
+            if (action.target !== "new") {
+                await clearUncommittedChanges(env);
+                if (clientAction.target) {
+                    action.target = clientAction.target;
+                }
             }
             const controller = {
                 jsId: `controller_${++id}`,
@@ -1078,9 +1081,6 @@ function makeActionManager(env) {
             case "ir.actions.act_window_close":
                 return _executeCloseAction({ onClose: options.onClose, onCloseInfo: action.infos });
             case "ir.actions.client":
-                if (action.target !== "new") {
-                    await clearUncommittedChanges(env);
-                }
                 return _executeClientAction(action, options);
             case "ir.actions.report":
                 return _executeReportAction(action, options);
