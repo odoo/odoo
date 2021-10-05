@@ -1031,8 +1031,8 @@ class Import(models.TransientModel):
             module = self.env['ir.module.module'].search([('name', 'in', list(rec_modules_dict.keys()))], limit=1)
             if module:
                 e_id = rec_modules_dict[module.name]
-                preview_warning = '''We do not recommend prefixing your IDs with a module name and dot (e.g. %s), as the imported records might be overwritten or deleted at module upgrade.
-                    To prevent this issue, simply use underscores instead of dots in IDs (e.g. %s).''' % (e_id, e_id.replace('.', '_'))
+                preview_warning = _('''We do not recommend prefixing your IDs with a module name and dot (e.g. %s), as the imported records might be overwritten or deleted at module upgrade.
+                    To prevent this issue, simply use underscores instead of dots in IDs (e.g. %s).''') % (e_id, e_id.replace('.', '_'))
             return preview_warning
 
     @api.model

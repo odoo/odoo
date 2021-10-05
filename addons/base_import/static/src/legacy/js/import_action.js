@@ -459,14 +459,6 @@ var DataImport = AbstractAction.extend({
         this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
-        if (result.preview_warnings) {
-            this.onresults(null, null, null, {
-                'messages': [{
-                    type: 'warning o_preview_external_id_warning',
-                    message: result.preview_warnings
-                }]
-            });
-        }
         this.$('.oe_import_grid .o_import_preview').each((index, element) => {
             $(element).popover({
                 title: _t("Preview"),
@@ -484,6 +476,9 @@ var DataImport = AbstractAction.extend({
         var messages = [];
         if (result.headers.length === 1) {
             messages.push({type: 'warning', message: _t("A single column was found in the file, this often means the file separator is incorrect")});
+        }
+        if (result.preview_warnings) {
+            messages.push({type: 'warning o_preview_external_id_warning', message: result.preview_warnings});
         }
 
         if (!_.isEmpty(messages)) {
@@ -643,9 +638,7 @@ var DataImport = AbstractAction.extend({
                 var fieldInfo = item_finder(changedField.value);
                 updateFieldInformation(fieldInfo);
                 self._handleMappingComments(changedField, fieldInfo);
-                if (fieldInfo.id === "id") {
-                    self._handleExternalIdComments(fieldInfo);
-                }
+                self._handleExternalIdComments(fieldInfo);
 
                 if (!event.val) {
                     var $matchingCell = $(changedField).closest('.oe_import_match_cell')
@@ -740,23 +733,27 @@ var DataImport = AbstractAction.extend({
             return $(el).select2('val') || false;
         }).get();
         const $previewWarning = this.$el.find('.o_preview_external_id_warning');
-        this._rpc({
-            model: 'base_import.import',
-            method: 'validate_import',
-            args: [this.id],
-            kwargs: { options: this.import_options(), fields}
-        }, {
-            shadow: true,
-        }).then((previewWarning) => {
-            if (previewWarning) {
-                this.onresults(null, null, null, {'messages': [{
-                    type: 'warning o_preview_external_id_warning',
-                    message: previewWarning
-                }]});
-            } else {
-                $previewWarning.remove();
-            }
-        });
+        if (fieldInfo.id === "id") {
+            this._rpc({
+                model: 'base_import.import',
+                method: 'validate_import',
+                args: [this.id],
+                kwargs: { options: this.import_options(), fields}
+            }, {
+                shadow: true,
+            }).then((previewWarning) => {
+                if (previewWarning) {
+                    this.onresults(null, null, null, {'messages': [{
+                        type: 'warning o_preview_external_id_warning',
+                        message: previewWarning
+                    }]});
+                } else {
+                    $previewWarning.remove();
+                }
+            });
+        } else if ($previewWarning.length && !fields.includes('id')) {
+            $previewWarning.remove();
+        }
     },
    /**
     * This method is called when selecting a new mapping field, or when changing/removing an already selected mapping
