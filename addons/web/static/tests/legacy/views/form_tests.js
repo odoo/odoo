@@ -22,6 +22,7 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var createView = testUtils.createView;
 
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
@@ -11308,9 +11309,32 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Quick Edition: selecting text of quick editable field', async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
 
-        const MULTI_CLICK_TIME = 50;
+        const MULTI_CLICK_DELAY = 6498651354; // arbitrary large number to identify setTimeout calls
+        let quickEditCB;
+        let quickEditTimeoutId;
+        let nextId = 1;
+        const originalSetTimeout = window.setTimeout;
+        const originalClearTimeout = window.clearTimeout;
+        patchWithCleanup(window, {
+            setTimeout(fn, delay) {
+                if (delay === MULTI_CLICK_DELAY) {
+                    quickEditCB = fn;
+                    quickEditTimeoutId = `quick_edit_${nextId++}`;
+                    return quickEditTimeoutId;
+                } else {
+                    return originalSetTimeout(...arguments);
+                }
+            },
+            clearTimeout(id) {
+                if (id === quickEditTimeoutId) {
+                    quickEditCB = undefined;
+                } else {
+                    return originalClearTimeout(...arguments);
+                }
+            },
+        });
 
         const form = await createView({
             View: FormView,
@@ -11322,7 +11346,7 @@ QUnit.module('Views', {
                         <field name="display_name"/>
                     </group>
                 </form>`,
-            formMultiClickTime: MULTI_CLICK_TIME,
+            formMultiClickTime: MULTI_CLICK_DELAY,
             res_id: 1,
         });
 
@@ -11334,7 +11358,8 @@ QUnit.module('Views', {
         await range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
-        await concurrency.delay(MULTI_CLICK_TIME);
+        await testUtils.nextTick();
+        assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
 
         // double click selecting text doesn't start quick edit
@@ -11343,7 +11368,8 @@ QUnit.module('Views', {
         range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
-        await concurrency.delay(MULTI_CLICK_TIME);
+        await testUtils.nextTick();
+        assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
 
         // quick edit happens after timeout
@@ -11351,7 +11377,10 @@ QUnit.module('Views', {
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
         await testUtils.nextTick();
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
-        await concurrency.delay(MULTI_CLICK_TIME);
+        assert.ok(quickEditCB, "quickEdit callback should have been set");
+        quickEditCB();
+        await testUtils.nextTick();
+        await legacyExtraNextTick();
         assert.containsOnce(form, '.o_form_view.o_form_editable');
 
         form.destroy();
