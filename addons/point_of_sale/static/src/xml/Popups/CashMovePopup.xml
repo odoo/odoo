@@ -14,12 +14,12 @@
                                 <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
                                     Cash Out
                                 </span>
-                                <div class="input-field">
+                                <div class="input-field" t-on-mousedown.stop="" t-on-touchstart.stop="">
                                     <input type="text" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref"/>
                                     <span class="currency" t-esc="env.pos.currency.symbol" />
                                 </div>
                             </div>
-                            <textarea name="reason" t-model="state.inputReason" placeholder="Reason"></textarea>
+                            <textarea name="reason" t-model="state.inputReason" placeholder="Reason" t-on-mousedown.stop="" t-on-touchstart.stop="" ></textarea>
                             <span t-if="state.inputHasError" class="error-message">
                                 <t t-esc="errorMessage" />
                             </span>
