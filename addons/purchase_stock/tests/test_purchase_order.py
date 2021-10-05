@@ -132,7 +132,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Validate picking
         return_pick.move_line_ids.write({'qty_done': 2})
-        
+
         return_pick.button_validate()
 
         # Check Received quantity
@@ -232,3 +232,33 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(po.company_id, company_a)
         self.assertEqual(po.picking_type_id.warehouse_id.company_id, company_a)
         self.assertEqual(po.currency_id, po.company_id.currency_id)
+
+    def test_05_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        product = self.product_id_2.copy({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        po = self.PurchaseOrder.create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 4.0,
+                    'product_uom': product.uom_po_id.id,
+                    'price_unit': 1.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                })
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.move_line_ids.write({'qty_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')

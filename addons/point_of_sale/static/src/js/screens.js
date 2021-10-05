@@ -2439,7 +2439,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         };
 
         var receipt = QWeb.render('OrderReceipt', data);
-        var printer = new Printer();
+        var printer = new Printer(null, this.pos);
 
         return new Promise(function (resolve, reject) {
             printer.htmlToImg(receipt).then(function(ticket) {

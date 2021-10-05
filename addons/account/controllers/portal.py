@@ -11,9 +11,8 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_home_portal_values(self):
         values = super(PortalAccount, self)._prepare_home_portal_values()
-        invoice_count = request.env['account.move'].search_count([
-            ('type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
-        ]) if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
+        invoice_count = request.env['account.move'].search_count(self._get_invoices_domain()) \
+            if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
         values['invoice_count'] = invoice_count
         return values
 
@@ -27,13 +26,16 @@ class PortalAccount(CustomerPortal):
             'invoice': invoice,
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
+    
+    def _get_invoices_domain(self):
+        return [('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
-        domain = [('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
+        domain = self._get_invoices_domain()
 
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'invoice_date desc'},

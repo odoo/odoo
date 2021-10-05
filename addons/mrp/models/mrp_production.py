@@ -536,6 +536,15 @@ class MrpProduction(models.Model):
             production._onchange_move_raw()
         return production
 
+    def copy(self, default=None):
+        """
+        When there is a kit in the child bom of that production, we should not copy the workorder
+        """
+        res = super().copy(default)
+        if any(bom.type == 'phantom' for bom in self.bom_id.bom_line_ids.child_bom_id):
+            res.move_raw_ids.workorder_id = False
+        return res
+
     def unlink(self):
         if any(production.state == 'done' for production in self):
             raise UserError(_('Cannot delete a manufacturing order in done state.'))
@@ -686,6 +695,9 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._check_company()
         for production in self:
+            # Avoid confirming it twice
+            if production.state != 'draft':
+                continue
             if not production.move_raw_ids:
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             for move_raw in production.move_raw_ids:

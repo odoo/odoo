@@ -2,6 +2,8 @@
 import logging
 import time
 from threading import Thread, Event, Lock
+from traceback import format_exc
+
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
@@ -505,45 +507,50 @@ class Manager(Thread):
         display_devices = self.get_connected_displays()
         cpt = 0
         while 1:
-            updated_devices = self.usb_loop()
-            updated_devices.update(self.video_loop())
-            updated_devices.update(mpdm.devices)
-            updated_devices.update(display_devices)
-            updated_devices.update(bt_devices)
-            updated_devices.update(socket_devices)
-            updated_devices.update(self.serial_loop())
-            if cpt % 40 == 0:
-                printer_devices = self.printer_loop()
-                cpt = 0
-            updated_devices.update(printer_devices)
-            cpt += 1
-            added = updated_devices.keys() - self.devices.keys()
-            removed = self.devices.keys() - updated_devices.keys()
-            self.devices = updated_devices
-            send_devices = False
-            for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
-                iot_devices[path].disconnect()
-                _logger.info('Device %s is now disconnected', path)
-                send_devices = True
-            for path in [device_add for device_add in added if device_add not in iot_devices]:
-                for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
-                    if driverclass.supported(device = updated_devices[path].dev):
-                        _logger.info('Device %s is now connected', path)
-                        d = driverclass(device = updated_devices[path].dev)
-                        d.daemon = True
-                        iot_devices[path] = d
-                        # Start the thread after creating the iot_devices entry so the
-                        # thread can assume the iot_devices entry will exist while it's
-                        # running, at least until the `disconnect` above gets triggered
-                        # when `removed` is not empty. Threads are currently not
-                        # explicitly terminated when that happens, so the results can
-                        # be undefined.
-                        d.start()
-                        send_devices = True
-                        break
-            if send_devices:
-                self.send_alldevices()
-            time.sleep(3)
+            try:
+                updated_devices = self.usb_loop()
+                updated_devices.update(self.video_loop())
+                updated_devices.update(mpdm.devices)
+                updated_devices.update(display_devices)
+                updated_devices.update(bt_devices)
+                updated_devices.update(socket_devices)
+                updated_devices.update(self.serial_loop())
+                if cpt % 40 == 0:
+                    printer_devices = self.printer_loop()
+                    cpt = 0
+                updated_devices.update(printer_devices)
+                cpt += 1
+                added = updated_devices.keys() - self.devices.keys()
+                removed = self.devices.keys() - updated_devices.keys()
+                self.devices = updated_devices
+                send_devices = False
+                for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
+                    iot_devices[path].disconnect()
+                    _logger.info('Device %s is now disconnected', path)
+                    send_devices = True
+                for path in [device_add for device_add in added if device_add not in iot_devices]:
+                    for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
+                        if driverclass.supported(device = updated_devices[path].dev):
+                            _logger.info('Device %s is now connected', path)
+                            d = driverclass(device = updated_devices[path].dev)
+                            d.daemon = True
+                            iot_devices[path] = d
+                            # Start the thread after creating the iot_devices entry so the
+                            # thread can assume the iot_devices entry will exist while it's
+                            # running, at least until the `disconnect` above gets triggered
+                            # when `removed` is not empty. Threads are currently not
+                            # explicitly terminated when that happens, so the results can
+                            # be undefined.
+                            d.start()
+                            send_devices = True
+                            break
+                if send_devices:
+                    self.send_alldevices()
+                time.sleep(3)
+            except:
+                # No matter what goes wrong, the Manager loop needs to keep running
+                _logger.error(format_exc())
+
 
 class GattBtManager(Gatt_DeviceManager):
 

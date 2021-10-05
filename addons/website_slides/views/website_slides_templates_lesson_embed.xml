@@ -42,13 +42,13 @@
                                 t-attf-data-downloadable="#{False}"
                                 t-att-data-defaultpage="page">
                             <t t-if="is_embedded">
-                                <div id="slide_share" class="oe_slide_embed_option">
+                                <div id="slide_share" class="oe_slide_embed_option" style="display: none;">
                                     <t t-call="website_slides.slide_social_media"/>
                                 </div>
-                                <div id="slide_email" class="oe_slide_embed_option">
+                                <div id="slide_email" class="oe_slide_embed_option" style="display: none;">
                                     <t t-call="website_slides.slide_social_email"/>
                                 </div>
-                                <div id="slide_embed" class="oe_slide_embed_option">
+                                <div id="slide_embed" class="oe_slide_embed_option" style="display: none;">
                                     <t t-call="website_slides.slide_social_embed"/>
                                 </div>
                             </t>
