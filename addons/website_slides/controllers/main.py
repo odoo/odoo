@@ -1153,12 +1153,12 @@ class WebsiteSlides(WebsiteProfile):
 
         try:
             slide = request.env['slide.slide'].browse(slide_id)
+            if not slide.exists():
+                raise werkzeug.exceptions.NotFound()
+
             referer_url = request.httprequest.headers.get('Referer', '')
-            if is_external_embed and referer_url:
-                request.env['slide.embed'].sudo()._add_embed_url(
-                    slide.id,
-                    referer_url
-                )
+            if is_external_embed:
+                slide.sudo()._embed_increment(referer_url)
 
             values = self._get_slide_detail(slide)
             values['page'] = page
