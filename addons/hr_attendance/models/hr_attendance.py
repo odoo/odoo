@@ -140,7 +140,6 @@ class HrAttendance(models.Model):
         for emp, attendance_dates in employee_attendance_dates.items():
             # get_attendances_dates returns the date translated from the local timezone without tzinfo,
             # and contains all the date which we need to check for overtime
-            emp_tz = pytz.timezone(emp._get_tz())
             attendance_domain = []
             for attendance_date in attendance_dates:
                 attendance_domain = OR([attendance_domain, [

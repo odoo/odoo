@@ -118,17 +118,12 @@
                             Checked out at <b><t t-esc="widget.attendance.check_out_time"/></b>
                             <br/><b><t t-esc="widget.hours_today"/></b>
                         </div>
+                        <div t-att-class="'alert ' + (widget.today_overtime_float &gt;= 0 ? 'alert-success' : 'alert-danger') + ' h3 mt0'" role="status">
+                            Extra hours today:
+                            <span t-esc="widget.today_overtime"/>
+                        </div>
                         <t t-if="widget.total_overtime_float &gt; 0">
-                            <div class="alert alert-success h3 mt0" role="status">
-                                Total extra hours:
-                                <span t-esc="widget.total_overtime"/>
-                            </div>
-                        </t>
-                        <t t-if="widget.total_overtime_float &lt; 0">
-                            <div class="alert alert-danger h3 mt0" role="status">
-                                Total extra hours:
-                                <span t-esc="widget.total_overtime"/>
-                            </div>
+                            Total extra hours: <span t-esc="widget.total_overtime"/>
                         </t>
                         <h3 class="o_hr_attendance_random_message mb24"/>
                         <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
