@@ -5,7 +5,7 @@
         <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0 }" t-on-scroll="onScroll">
             <t t-if="threadView">
                 <!-- No result messages -->
-                <t t-if="threadView.nonEmptyMessages.length === 0">
+                <t t-if="threadView.threadCache.orderedNonEmptyMessages.length === 0">
                     <div class="o_MessageList_empty o_MessageList_item">
                         <t t-if="threadView.thread === messaging.inbox">
                             <div class="o_MessageList_emptyTitle">
@@ -41,10 +41,10 @@
                         </button>
                     </div>
                 </t>
-                <t t-elif="threadView.order === 'asc' and threadView.messageViews.length > 0">
+                <t t-if="!threadView.threadCache.hasLoadingFailed and threadView.order === 'asc'">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
-                <div t-if="threadView.order === 'asc' and threadView.nonEmptyMessages.length !== 0 and !(threadView and threadView.thread and threadView.thread.model === 'mail.box')" class="flex-grow-1"/>
+                <div t-if="threadView.order === 'asc' and threadView.threadCache.orderedNonEmptyMessages.length !== 0 and !(threadView and threadView.thread and threadView.thread.model === 'mail.box')" class="flex-grow-1"/>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-foreach="threadView.messageViews" t-as="messageView" t-key="messageView.localId">
@@ -65,7 +65,7 @@
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
-                <t t-if="!threadView.threadCache.hasLoadingFailed and threadView.order === 'desc' and threadView.messageViews.length > 0">
+                <t t-if="!threadView.threadCache.hasLoadingFailed and threadView.order === 'desc'">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
             </t>

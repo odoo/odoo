@@ -140,7 +140,7 @@ function factory(dependencies) {
             if (!this.threadCache) {
                 return clear();
             }
-            const orderedMessages = this.threadCache.orderedMessages;
+            const orderedMessages = this.threadCache.orderedNonEmptyMessages;
             if (this.order === 'desc') {
                 orderedMessages.reverse();
             }
@@ -477,9 +477,6 @@ function factory(dependencies) {
             compute: '_computeMessageViews',
             inverse: 'threadView',
             isCausal: true,
-        }),
-        nonEmptyMessages: many2many('mail.message', {
-            related: 'threadCache.nonEmptyMessages',
         }),
         /**
          * States the order mode of the messages on this thread view.
