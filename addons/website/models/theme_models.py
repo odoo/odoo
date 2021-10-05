@@ -225,7 +225,6 @@ class Theme(models.AbstractModel):
         self.disable_asset('website.ripple_effect_js')
 
         # Reinitialize header templates
-        self.enable_view('website.template_header_default')
         self.disable_view('website.template_header_hamburger')
         self.disable_view('website.template_header_vertical')
         self.disable_view('website.template_header_sidebar')
@@ -236,9 +235,9 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_header_image')
         self.disable_view('website.template_header_hamburger_full')
         self.disable_view('website.template_header_magazine')
+        self.enable_view('website.template_header_default')
 
         # Reinitialize footer templates
-        self.enable_view('website.footer_custom')
         self.disable_view('website.template_footer_descriptive')
         self.disable_view('website.template_footer_centered')
         self.disable_view('website.template_footer_links')
@@ -246,6 +245,7 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_footer_contact')
         self.disable_view('website.template_footer_call_to_action')
         self.disable_view('website.template_footer_headline')
+        self.enable_view('website.footer_custom')
 
         # Reinitialize footer scrolltop template
         self.disable_view('website.option_footer_scrolltop')
