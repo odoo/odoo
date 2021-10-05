@@ -131,6 +131,25 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".o_kanban_view");
     });
 
+    QUnit.test(
+        "'CLEAR-UNCOMMITTED-CHANGES' is not triggered for function client actions",
+        async function (assert) {
+            assert.expect(2);
+
+            registry.category("actions").add("my_action", async () => {
+                assert.step("my_action");
+            });
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.bus.on("CLEAR-UNCOMMITTED-CHANGES", webClient, () => {
+                assert.step("CLEAR-UNCOMMITTED-CHANGES");
+            });
+
+            await doAction(webClient, "my_action");
+            assert.verifySteps(["my_action"]);
+        }
+    );
+
     QUnit.test("client action with control panel (legacy)", async function (assert) {
         assert.expect(4);
         // LPE Fixme: at this time we don't really know the API that wowl ClientActions implement
