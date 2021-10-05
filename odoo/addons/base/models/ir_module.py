@@ -539,7 +539,7 @@ class Module(models.Model):
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
-                    JOIN ir_module_module m ON (d.module_id=m.id)
+                    RIGHT JOIN ir_module_module m ON (d.module_id=m.id)
                     WHERE
                         m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
                         m.state NOT IN %s AND
