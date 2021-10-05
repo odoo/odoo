@@ -93,7 +93,7 @@ class WebsiteSnippetFilter(models.Model):
             if search_domain:
                 domain = expression.AND([domain, search_domain])
             try:
-                records = self.env[filter_sudo.model_id].search(
+                records = self.env[filter_sudo.model_id].with_context(**literal_eval(filter_sudo.context)).search(
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
