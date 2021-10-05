@@ -65,7 +65,7 @@ class MrpProduction(models.Model):
     def _get_default_date_planned_start(self):
         if self.env.context.get('default_date_deadline'):
             return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
-        return fields.Datetime.now().replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
+        return datetime.datetime.now()
 
     @api.model
     def _get_default_is_locked(self):
