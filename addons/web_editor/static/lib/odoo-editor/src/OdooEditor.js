@@ -1865,14 +1865,16 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
-        const listMode = getListMode(block.parentElement);
-        const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
-        if (listDropdownButton) {
-            if (listMode) {
-                listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
-                listDropdownButton.classList.add(listUIClasses[listMode]);
+        if (block) {
+            const listMode = getListMode(block.parentElement);
+            const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
+            if (listDropdownButton) {
+                if (listMode) {
+                    listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
+                    listDropdownButton.classList.add(listUIClasses[listMode]);
+                }
+                listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
             }
-            listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
         }
         if (!activeLabel) {
             // If no element from the text style dropdown was marked as active,
