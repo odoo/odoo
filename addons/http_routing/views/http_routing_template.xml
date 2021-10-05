@@ -69,7 +69,7 @@
                     <h1 class="mt-5">Oops! Something went wrong.</h1>
                     <p>Take a look at the error message below.</p>
                 </div>
-                <t t-if="editable or request.session.debug">
+                <t t-if="editable or debug">
                     <t t-call="http_routing.http_error_debug"/>
                 </t>
                 <t t-else="">
@@ -88,7 +88,7 @@
                     <h1 class="mt-5">403: Forbidden</h1>
                     <p>The page you were looking for could not be authorized.</p>
                 </div>
-                    <t t-if="editable or request.session.debug">
+                    <t t-if="editable or debug">
                         <t t-call="http_routing.http_error_debug"/>
                     </t>
                     <t t-else="">
@@ -145,7 +145,6 @@
         <html>
             <head>
                 <title t-esc="status_message">Internal Server Error</title>
-                <t t-set="debug" t-value="True"/>
 
                 <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
                 <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
