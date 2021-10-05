@@ -145,7 +145,8 @@ class Slide(models.Model):
     embed_code_external = fields.Html('External Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False,
         help="Same as 'Embed Code' but used to embed the content on an external website.")
     # views
-    embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
+    embed_ids = fields.One2many('slide.embed', 'slide_id', string="External Slide Embeds")
+    embed_count = fields.Integer('# of Embeds', compute='_compute_embed_counts')
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views', copy=False)
     total_views = fields.Integer("# Total Views", default="0", compute='_compute_total', store=True)
@@ -248,6 +249,24 @@ class Slide(models.Model):
         mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
+
+    @api.depends('embed_ids.slide_id')
+    def _compute_embed_counts(self):
+        mapped_data = {}
+
+        if self.ids:
+            read_group_res = self.env['slide.embed'].read_group(
+                [('slide_id', 'in', self.ids)],
+                ['count_views'],
+                ['slide_id']
+            )
+            mapped_data = {
+                res['slide_id'][0]: res.get('count_views', 0)
+                for res in read_group_res
+            }
+
+        for slide in self:
+            slide.embed_count = mapped_data.get(slide.id, 0)
 
     @api.depends('slide_ids.sequence', 'slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
@@ -490,6 +509,32 @@ class Slide(models.Model):
     # Business Methods
     # ---------------------------------------------------------
 
+    def _embed_increment(self, url):
+        """ Increment the view count of the record we have based on the passed url.
+        If the url is empty, which typically happens if the browser does not pass the 'referer'
+        header properly, then we increment the entry that has 'False' as url value. """
+
+        self.ensure_one()
+
+        url_entry = url
+        if not urls.url_parse(url).netloc:
+            url_entry = False
+
+        embed_entry = self.env['slide.embed'].search([
+            ('url', '=', url_entry),
+            ('slide_id', '=', self.id)
+        ], limit=1)
+
+        if embed_entry:
+            embed_entry.count_views += 1
+        else:
+            embed_entry = self.env['slide.embed'].create({
+                'slide_id': self.id,
+                'url': url_entry,
+            })
+
+        return embed_entry
+
     def _post_publication(self):
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
@@ -653,6 +698,13 @@ class Slide(models.Model):
             points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
 
         return self.env.user.sudo().add_karma(points)
+
+    def action_view_embeds(self):
+        self.ensure_one()
+
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_embed_action")
+        action['context'] = {'search_default_slide_id': self.id}
+        return action
 
     def _compute_quiz_info(self, target_partner, quiz_done=False):
         result = dict.fromkeys(self.ids, False)
