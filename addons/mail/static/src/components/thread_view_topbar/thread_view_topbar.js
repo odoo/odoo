@@ -13,6 +13,7 @@ export class ThreadViewTopbar extends Component {
      */
     setup() {
         super.setup();
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
         useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadNameInput' });
         useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadDescriptionInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId' });
@@ -21,6 +22,16 @@ export class ThreadViewTopbar extends Component {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * @returns {string}
+     */
+    get avatarUrl() {
+        if (this.messaging.isCurrentUserGuest) {
+            return `/mail/channel/${this.threadViewTopBar.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
+        }
+        return this.messaging.currentPartner.avatarUrl;
+    }
 
     /**
      * @returns {mail.thread_view_topbar}

@@ -52,19 +52,21 @@ class MailGuest(models.Model):
     def _update_name(self, name):
         self.ensure_one()
         name = name.strip()
-        if name == "":
+        if len(name) < 1:
             raise UserError(_("Guest's name cannot be empty."))
+        if len(name) > 512:
+            raise UserError(_("Guest's name is too long."))
         self.name = name
-        self.env['bus.bus'].sendmany([(
-            (self._cr.dbname, 'mail.channel', channel.id),
-            {
-                'type': 'mail.guest_update',
-                'payload': {
-                    'id': self.id,
-                    'name': self.name,
-                },
-            }
-        ) for channel in self.channel_ids])
+        message = {
+            'type': 'mail.guest_update',
+            'payload': {
+                'id': self.id,
+                'name': self.name,
+            },
+        }
+        bus_notifs = [((self._cr.dbname, 'mail.channel', channel.id), message) for channel in self.channel_ids]
+        bus_notifs.append(((self._cr.dbname, 'mail.guest', self.id), message))
+        self.env['bus.bus'].sendmany(bus_notifs)
 
     def _update_timezone(self, timezone):
         query = """
