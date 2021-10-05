@@ -317,8 +317,8 @@ class Team(models.Model):
         plaintext or html message at caller's will
         """
         # extract some statistics
-        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in self)
-        duplicates = sum(len(teams_data[team]['duplicates']) for team in self)
+        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in teams_data)
+        duplicates = sum(len(teams_data[team]['duplicates']) for team in teams_data)
         members = len(members_data)
         members_assigned = sum(len(member_data['assigned']) for member_data in members_data.values())
 
