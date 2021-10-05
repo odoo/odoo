@@ -69,7 +69,6 @@ function factory(dependencies) {
          * @param {boolean} param0.isTalking
          */
         async setAudio({ audioStream, isMuted, isTalking }) {
-            this._removeAudio();
             const audioElement = this.audioElement || new window.Audio();
             try {
                 audioElement.srcObject = audioStream;
