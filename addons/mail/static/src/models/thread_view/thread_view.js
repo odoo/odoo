@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink, update } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
@@ -49,6 +49,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @param {mail.message} message
+         */
+        handleVisibleMessage(message) {
+            if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
+                this.update({ lastVisibleMessage: link(message) });
+            }
+        }
+
+        /**
          * @param {Object} hint
          */
         markComponentHintProcessed(hint) {
@@ -59,15 +68,6 @@ function factory(dependencies) {
                 hint,
                 threadViewer: this.threadViewer,
             });
-        }
-
-        /**
-         * @param {mail.message} message
-         */
-        handleVisibleMessage(message) {
-            if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: link(message) });
-            }
         }
 
         /**
@@ -171,7 +171,10 @@ function factory(dependencies) {
             // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
             // size with a non-mailing channel.
             // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
-            if (this.messaging.device.isMobile) {
+            if (
+                this.messaging.device.isMobile ||
+                (this.messaging.discuss.threadView === this && this.messaging.discuss.thread === this.messaging.inbox)
+            ) {
                 return ['ctrl-enter', 'meta-enter'];
             }
             return ['enter'];
@@ -299,8 +302,11 @@ function factory(dependencies) {
             if (!this.hasSquashCloseMessages) {
                 return false;
             }
+            if (message.parentMessage) {
+                return false;
+            }
             if (!prevMessage) {
-                return;
+                return false;
             }
             if (!prevMessage.date && message.date) {
                 return false;
@@ -485,6 +491,10 @@ function factory(dependencies) {
         order: attr({
             related: 'threadViewer.order',
         }),
+        /**
+         * Determines the message that's currently being replied to.
+         */
+        replyingToMessageView: many2one('mail.message_view'),
         /**
          * Determines the Rtc call viewer of this thread.
          */

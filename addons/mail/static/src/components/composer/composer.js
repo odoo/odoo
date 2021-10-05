@@ -115,7 +115,8 @@ export class Composer extends Component {
         }
         return (
             (this.props.hasThreadName && this.composerView.composer.thread) ||
-            (this.props.hasFollowers && !this.composerView.composer.isLog)
+            (this.props.hasFollowers && !this.composerView.composer.isLog) ||
+            this.composerView.threadView && this.composerView.threadView.replyingToMessageView
         );
     }
 
