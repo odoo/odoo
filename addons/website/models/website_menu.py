@@ -19,6 +19,7 @@ class Menu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
+    @api.depends('mega_menu_content')
     def _compute_field_is_mega_menu(self):
         for menu in self:
             menu.is_mega_menu = bool(menu.mega_menu_content)
