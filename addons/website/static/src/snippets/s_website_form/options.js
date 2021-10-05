@@ -704,14 +704,11 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @returns {HTMLElement}
      */
     _addCreateButton: function (element, action) {
-        const iconEl = document.createElement('i');
-        iconEl.classList.add('fa', 'fa-fw', 'fa-plus');
         const linkButtonEl = document.createElement('we-button');
         linkButtonEl.title = _t("Create new");
         linkButtonEl.dataset.noPreview = 'true';
         linkButtonEl.dataset.promptSaveRedirect = action;
-        linkButtonEl.classList.add('o_we_button_icon');
-        linkButtonEl.append(iconEl);
+        linkButtonEl.classList.add('fa', 'fa-fw', 'fa-plus');
         const projectRowEl = document.createElement('we-row');
         projectRowEl.append(element);
         projectRowEl.append(linkButtonEl);

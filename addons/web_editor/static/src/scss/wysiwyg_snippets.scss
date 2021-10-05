@@ -793,10 +793,15 @@ body.editor_enable.editor_has_snippets {
                     we-button {
                         margin-top: 0 !important;
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
-                        padding: 0 $o-we-sidebar-content-field-multi-spacing;
+                        padding: 0 $o-we-sidebar-content-field-multi-spacing !important;
 
-                        &.fa, &[data-img] {
+                        &.fa, &.o_we_icon_button {
+                            box-sizing: content-box;
+                            width: 1.29em; // Fix width and override potential fa-fw
+                            padding: 0 0.15em !important;
                             margin-left: $o-we-sidebar-content-field-label-spacing;
+                            text-align: center;
+                            justify-content: center;
                         }
                     }
                 }
@@ -891,9 +896,17 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
-        // Buttons with an icon but no text, so no possible overflow
-        we-button.o_we_button_icon {
-            flex: 0 0 auto;
+        we-button {
+            // Prevent icon buttons to shrink
+            &.o_we_icon_button, &.fa {
+                flex: 0 0 auto;
+            }
+            // Buttons being `fa-fw`, prevent font-awesome hardcoded width
+            &.fa-fw {
+                padding: 0 .5em;
+                width: 2.29em; // .fa-fw = 1.28571429em (font-awesome.css)
+                justify-content: center;
+            }
         }
 
         // Checkboxes
