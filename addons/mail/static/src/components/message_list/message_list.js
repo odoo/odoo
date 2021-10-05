@@ -121,6 +121,9 @@ export class MessageList extends Component {
                     // position
                     this._adjustScrollForExtraMessagesAtTheStart();
                     break;
+                case 'highlight-reply':
+                    this._highlightMessageView(hint.data);
+                    break;
             }
             if (threadView && threadView.exists()) {
                 threadView.markComponentHintProcessed(hint);
@@ -253,6 +256,19 @@ export class MessageList extends Component {
             return this.props.getScrollableElement();
         } else {
             return this.el;
+        }
+    }
+
+    /**
+     * Scrolls to a given message view and briefly highlights it.
+     *
+     * @private
+     * @param {mail.message_view} messageView
+     */
+    _highlightMessageView(messageView) {
+        if (messageView.exists() && messageView.component && messageView.component.el) {
+            messageView.component.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            messageView.highlight();
         }
     }
 

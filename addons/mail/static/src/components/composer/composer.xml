@@ -28,6 +28,10 @@
                 />
                 <t t-if="hasHeader">
                     <div class="o_Composer_coreHeader text-truncate">
+                        <t t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
+                            Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
+                            <i t-if="composerView.threadView.thread !== messaging.inbox" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ml-1" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
+                        </t>
                         <t t-if="props.hasThreadName">
                             <span class="o_Composer_threadName">
                                 on: <b><t t-esc="composerView.composer.activeThread.displayName"/></b>

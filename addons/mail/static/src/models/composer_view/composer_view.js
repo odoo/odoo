@@ -35,6 +35,7 @@ function factory(dependencies) {
          _created() {
             this.onClickCancelLink = this.onClickCancelLink.bind(this);
             this.onClickSaveLink = this.onClickSaveLink.bind(this);
+            this.onClickStopReplying = this.onClickStopReplying.bind(this);
         }
 
         /**
@@ -67,8 +68,12 @@ function factory(dependencies) {
             if (this.messageViewInEditing) {
                 this.messageViewInEditing.stopEditing();
             }
-            if (this.discussAsReplying) {
-                this.discussAsReplying.clearReplyingToMessage();
+            if (this.threadView && this.threadView.replyingToMessageView) {
+                const { threadView } = this;
+                if (this.threadView.thread === this.messaging.inbox) {
+                    this.delete();
+                }
+                threadView.update({ replyingToMessageView: clear() });
             }
         }
 
@@ -204,6 +209,17 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "stop replying" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickStopReplying(ev) {
+            this.threadView.update({
+                replyingToMessageView: clear(),
+            });
+        }
+
+        /**
          * Open the full composer modal.
          */
         async openFullComposer() {
@@ -295,8 +311,12 @@ function factory(dependencies) {
                         params.context = { mail_post_autofollow: true };
                     }
                 }
-                const chatter = this.chatter;
-                const discussAsReplying = this.discussAsReplying;
+                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
+                    postData.parent_id = this.threadView.replyingToMessageView.message.id;
+                }
+                const { threadView = {} } = this;
+                const { thread: chatterThread } = this.chatter || {};
+                const { thread: threadViewThread } = threadView;
                 const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
                 if (!this.messaging) {
                     return;
@@ -308,19 +328,28 @@ function factory(dependencies) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                 }
-                if (chatter && chatter.exists()) {
-                    chatter.update({ composerView: clear() });
-                    chatter.thread.refreshFollowers();
-                    chatter.thread.fetchAndUpdateSuggestedRecipients();
+                if (chatterThread) {
+                    if (this.exists()) {
+                        this.delete();
+                    }
+                    if (chatterThread.exists()) {
+                        chatterThread.refreshFollowers();
+                        chatterThread.fetchAndUpdateSuggestedRecipients();
+                    }
                 }
-                if (discussAsReplying) {
-                    this.env.services['notification'].notify({
-                        message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
-                        type: 'info',
-                    });
-                }
-                if (discussAsReplying && discussAsReplying.exists()) {
-                    discussAsReplying.clearReplyingToMessage();
+                if (threadViewThread) {
+                    if (threadViewThread === this.messaging.inbox) {
+                        if (this.exists()) {
+                            this.delete();
+                        }
+                        this.env.services['notification'].notify({
+                            message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
+                            type: 'info',
+                        });
+                    }
+                    if (threadView && threadView.exists()) {
+                        threadView.update({ replyingToMessageView: clear() });
+                    }
                 }
                 if (composer.exists()) {
                     composer._reset();
@@ -464,14 +493,17 @@ function factory(dependencies) {
          * @returns {FieldCommand}
          */
         _computeComposer() {
-            if (this.threadView && this.threadView.thread && this.threadView.thread.composer) {
-                return replace(this.threadView.thread.composer);
+            if (this.threadView) {
+                // When replying to a message, always use the composer from that message's thread
+                if (this.threadView && this.threadView.replyingToMessageView) {
+                    return replace(this.threadView.replyingToMessageView.message.originThread.composer);
+                }
+                if (this.threadView.thread && this.threadView.thread.composer) {
+                    return replace(this.threadView.thread.composer);
+                }
             }
             if (this.messageViewInEditing && this.messageViewInEditing.composerForEditing) {
                 return replace(this.messageViewInEditing.composerForEditing);
-            }
-            if (this.discussAsReplying && this.discussAsReplying.replyingToMessage && this.discussAsReplying.replyingToMessage.originThread && this.discussAsReplying.replyingToMessage.originThread.composer) {
-                return replace(this.discussAsReplying.replyingToMessage.originThread.composer);
             }
             if (this.chatter && this.chatter.thread && this.chatter.thread.composer) {
                 return replace(this.chatter.thread.composer);
@@ -853,15 +885,6 @@ function factory(dependencies) {
             required: true,
         }),
         /**
-         * Instance of discuss if this composer is used as the reply composer
-         * from Inbox. This field is computed from the inverse relation and
-         * should be considered read-only.
-         */
-        discussAsReplying: one2one('mail.discuss', {
-            inverse: 'replyingToMessageComposerView',
-            readonly: true,
-        }),
-        /**
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
@@ -946,7 +969,7 @@ function factory(dependencies) {
             readonly: true,
         }),
     };
-    ComposerView.identifyingFields = [['threadView', 'discussAsReplying', 'messageViewInEditing', 'chatter']];
+    ComposerView.identifyingFields = [['threadView', 'messageViewInEditing', 'chatter']];
     ComposerView.onChanges = [
         new OnChange({
             dependencies: ['composer'],

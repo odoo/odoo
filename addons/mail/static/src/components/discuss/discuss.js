@@ -177,7 +177,6 @@ export class Discuss extends Component {
         if (this.discuss.activeMobileNavbarTabId === ev.detail.tabId) {
             return;
         }
-        this.discuss.clearReplyingToMessage();
         this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
         if (
             this.discuss.activeMobileNavbarTabId === 'mailbox' &&
