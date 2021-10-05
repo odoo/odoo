@@ -139,15 +139,6 @@ function factory(dependencies) {
         }
 
         /**
-         *
-         * @private
-         * @returns {mail.message[]}
-         */
-        _computeNonEmptyMessages() {
-            return replace(this.messages.filter(message => !message.isEmpty));
-        }
-
-        /**
          * @private
          * @returns {mail.message[]}
          */
@@ -161,6 +152,15 @@ function factory(dependencies) {
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+        }
+
+        /**
+         *
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedNonEmptyMessages() {
+            return replace(this.orderedMessages.filter(message => !message.isEmpty));
         }
 
         /**
@@ -403,12 +403,6 @@ function factory(dependencies) {
             compute: '_computeMessages',
         }),
         /**
-         * List of non empty messages linked to this cache.
-         */
-        nonEmptyMessages: many2many('mail.message', {
-            compute: '_computeNonEmptyMessages',
-        }),
-        /**
          * Ordered list of messages that have been fetched by this cache.
          *
          * This DOES NOT necessarily includes all messages linked to this thread
@@ -423,6 +417,12 @@ function factory(dependencies) {
          */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
+        }),
+        /**
+         * List of ordered non empty messages linked to this cache.
+         */
+        orderedNonEmptyMessages: many2many('mail.message', {
+            compute: '_computeOrderedNonEmptyMessages',
         }),
         thread: one2one('mail.thread', {
             inverse: 'cache',
