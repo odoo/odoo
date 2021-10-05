@@ -548,7 +548,7 @@ function factory(dependencies) {
          */
         async _handleRtcTransactionAnswer(fromToken, { sdp }) {
             const peerConnection = this._peerConnections[fromToken];
-            if (!peerConnection || peerConnection.connectionState === 'closed' || peerConnection.signalingState === 'stable') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState) || peerConnection.signalingState === 'stable') {
                 return;
             }
             if (peerConnection.signalingState === 'have-remote-offer') {
@@ -572,7 +572,7 @@ function factory(dependencies) {
          */
         async _handleRtcTransactionICECandidate(fromToken, { candidate }) {
             const peerConnection = this._peerConnections[fromToken];
-            if (!peerConnection || peerConnection.connectionState === 'closed') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
             const rtcIceCandidate = new window.RTCIceCandidate(candidate);
@@ -593,7 +593,7 @@ function factory(dependencies) {
         async _handleRtcTransactionOffer(fromToken, { sdp }) {
             const peerConnection = this._peerConnections[fromToken] || this._createPeerConnection(fromToken);
 
-            if (!peerConnection || peerConnection.connectionState === 'closed') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
             if (peerConnection.signalingState === 'have-remote-offer') {
@@ -740,9 +740,6 @@ function factory(dependencies) {
                     return;
                 }
                 if (peerConnection.iceConnectionState === 'connected') {
-                    return;
-                }
-                if (['connected', 'closed'].includes(peerConnection.connectionState)) {
                     return;
                 }
                 this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
@@ -1243,6 +1240,14 @@ function factory(dependencies) {
                     ],
                 },
             ],
+        }),
+        /**
+         * list of connection states considered invalid, which means that
+         * no action should be taken on such peerConnection.
+         */
+        invalidIceConnectionStates: attr({
+            default: new Set(['disconnected', 'failed', 'closed']),
+            readonly: true,
         }),
         /**
          * true if the browser supports webRTC
