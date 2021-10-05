@@ -208,7 +208,7 @@ class EventEvent(models.Model):
             else:
                 event.kanban_state_label = event.stage_id.legend_done
 
-    @api.depends('seats_max', 'registration_ids.state')
+    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0
@@ -225,10 +225,10 @@ class EventEvent(models.Model):
         if self.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
+                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
                         GROUP BY event_id, state
                     """
-            self.env['event.registration'].flush(['event_id', 'state'])
+            self.env['event.registration'].flush(['event_id', 'state', 'active'])
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
@@ -496,8 +496,11 @@ class EventEvent(models.Model):
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
-        if any(event.seats_limited and event.seats_max and event.seats_available < 0 for event in self):
-            raise ValidationError(_('No more available seats.'))
+        for event in self:
+            if event.seats_limited and event.seats_max and event.seats_available < 0:
+                raise ValidationError(_('No more available seats for %s. '
+                                        'Raise the limit or remove some other confirmed registrations first.',
+                                        event.name))
 
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):

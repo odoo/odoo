@@ -96,8 +96,9 @@ class EventRegistration(models.Model):
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         for registration in self:
-            if registration.event_id.seats_limited and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
-                raise ValidationError(_('No more seats available for this event.'))
+            event_id = registration.event_id
+            if event_id.seats_limited and event_id.seats_max and event_id.seats_available < (1 if registration.state == 'draft' and event_id.auto_confirm else 0):
+                raise ValidationError(_('There are no more available seats for %s. Raise the limit or remove some other confirmed registrations first.', event_id.name))
 
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):

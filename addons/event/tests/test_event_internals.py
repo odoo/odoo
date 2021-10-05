@@ -452,12 +452,13 @@ class TestEventData(TestEventCommon):
 
         # create registration in order to check the seats computation
         self.assertTrue(event.auto_confirm)
-        for x in range(5):
-            reg = self.env['event.registration'].create({
-                'event_id': event.id,
-                'name': 'reg_open',
-            })
-            self.assertEqual(reg.state, 'open')
+        reg_open_multiple = self.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': 'reg_open',
+        } for _ in range(5)])
+        self.assertEqual(set(reg_open_multiple.mapped('state')), {'open'})
+        reg_open = reg_open_multiple[0]
+
         reg_draft = self.env['event.registration'].create({
             'event_id': event.id,
             'name': 'reg_draft',
@@ -473,6 +474,38 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.seats_reserved, 5)
         self.assertEqual(event.seats_used, 1)
         self.assertEqual(event.seats_expected, 7)
+
+        # ------------------------------------------------------------
+        # (UN-)ARCHIVING REGISTRATIONS
+        # ------------------------------------------------------------
+
+        # Archiving and seats availability
+        reg_open.action_archive()
+        self.assertEqual(event.seats_reserved, 4)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 5)
+        self.assertEqual(event.seats_expected, 6)
+
+        reg_draft.action_archive()
+        self.assertEqual(event.seats_unconfirmed, 0)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 5)
+        self.assertEqual(event.seats_expected, 5)
+
+        # Un-archiving confirmed seats requires available seat(s)
+        reg_open.action_unarchive()
+        self.assertEqual(event.seats_reserved, 5)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
+        self.assertEqual(event.seats_expected, 6)
+
+        reg_draft.action_unarchive()
+        self.assertEqual(event.seats_unconfirmed, 1)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max - 6)
+        self.assertEqual(event.seats_expected, 7)
+
+        reg_open.action_archive()
+        event.write({'seats_max': 5})
+        # It is not possible to unarchive confirmed seat if event is full
+        with self.assertRaises(exceptions.ValidationError):
+            reg_open.action_unarchive()
 
 
 class TestEventRegistrationData(TestEventCommon):
@@ -588,19 +621,21 @@ class TestEventTicketData(TestEventCommon):
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
+        INITIAL_TICKET_SEATS_MAX = 30
         event = self.event_0.with_user(self.env.user)
         event.write({
             'event_ticket_ids': [
                 (5, 0),
                 (0, 0, {
                     'name': 'First Ticket',
-                    'seats_max': 30,
+                    'seats_max': INITIAL_TICKET_SEATS_MAX,
                 }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
                     'name': 'Second Ticket',
                     'start_sale_datetime': datetime(2020, 1, 10, 0, 0, 0),
                     'end_sale_datetime': datetime(2020, 2, 10, 23, 59, 59),
                 })
             ],
+            'auto_confirm': False  # to interact with registrations states
         })
         first_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'First Ticket')
         second_ticket = event.event_ticket_ids.filtered(lambda t: t.name == 'Second Ticket')
@@ -655,6 +690,67 @@ class TestEventTicketData(TestEventCommon):
 
         self.assertFalse(second_ticket.sale_available)
         self.assertTrue(second_ticket.is_expired)
+
+        # ------------------------------------------------------------
+        # (UN-)ARCHIVING TICKET REGISTRATIONS
+        # ------------------------------------------------------------
+
+        # Archiving and seats availability
+        reg_draft_multiple = self.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': f'reg_draft #{idx}',
+            'event_ticket_id': first_ticket.id,
+        } for idx in range(3)])
+        reg_draft = reg_draft_multiple[0]
+
+        reg_open = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_open',
+            'event_ticket_id': first_ticket.id,
+            'state': 'open'
+        })
+
+        reg_done = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_done',
+            'event_ticket_id': first_ticket.id,
+            'state': 'done'
+        })
+
+        self.assertEqual(first_ticket.seats_unconfirmed, 3)
+        self.assertEqual(first_ticket.seats_reserved, 1)
+        self.assertEqual(first_ticket.seats_used, 1)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 2)
+
+        reg_done.action_archive()
+        self.assertEqual(first_ticket.seats_used, 0)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 1)
+
+        reg_open.action_archive()
+        self.assertEqual(first_ticket.seats_reserved, 0)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX)
+
+        reg_draft.action_archive()
+        self.assertEqual(first_ticket.seats_unconfirmed, 2)
+
+        # Un-archiving confirmed/done seats requires available seat(s)
+        reg_open.action_unarchive()
+        self.assertEqual(first_ticket.seats_reserved, 1)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 1)
+
+        reg_done.action_unarchive()
+        self.assertEqual(first_ticket.seats_used, 1)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 2)
+
+        reg_draft.action_unarchive()
+        self.assertEqual(first_ticket.seats_unconfirmed, 3)
+        self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 2)
+
+        reg_open.action_archive()
+        first_ticket.write({'seats_max': 1})
+        # It is not possible to unarchive confirmed seat if ticket is fully booked
+        with self.assertRaises(exceptions.ValidationError):
+            reg_open.action_unarchive()
 
 
 class TestEventTypeData(TestEventCommon):
