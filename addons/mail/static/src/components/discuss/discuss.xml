@@ -47,6 +47,8 @@
                 class="o_Discuss_thread"
                 t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                 hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
+                hasComposerDiscardButton="discuss.thread === messaging.inbox"
+                hasComposerThreadName="discuss.thread === messaging.inbox"
                 hasComposerThreadTyping="true"
                 threadViewLocalId="discuss.threadView.localId"
             />
@@ -72,22 +74,12 @@
                 filter="discuss.activeMobileNavbarTabId"
             />
         </t>
-        <t t-if="messaging.device.isMobile and !discuss.replyingToMessage">
+        <t t-if="messaging.device.isMobile and !(discuss.threadView and discuss.threadView.replyingToMessageView)">
             <MobileMessagingNavbar
                 class="o_Discuss_mobileNavbar"
                 activeTabId="discuss.activeMobileNavbarTabId"
                 tabs="mobileNavbarTabs()"
                 t-on-o-select-mobile-messaging-navbar-tab="_onSelectMobileNavbarTab"
-            />
-        </t>
-        <t t-if="discuss.replyingToMessageComposerView">
-            <Composer
-                class="w-100"
-                composerViewLocalId="discuss.replyingToMessageComposerView.localId"
-                hasCurrentPartnerAvatar="!messaging.device.isMobile"
-                hasDiscardButton="true"
-                hasThreadName="true"
-                textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
             />
         </t>
     </t>

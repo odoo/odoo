@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -26,13 +26,6 @@ function factory(dependencies) {
                 addingChannelValue: "",
                 isAddingChannel: false,
                 isAddingChat: false,
-            });
-        }
-
-        clearReplyingToMessage() {
-            this.update({
-                replyingToMessage: clear(),
-                replyingToMessageComposerView: clear(),
             });
         }
 
@@ -61,9 +54,6 @@ function factory(dependencies) {
         }
 
         focus() {
-            if (this.replyingToMessageComposerView) {
-                this.replyingToMessageComposerView.update({ doFocus: true });
-            }
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
             }
@@ -243,29 +233,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Action to initiate reply to given message in Inbox. Assumes that
-         * Discuss and Inbox are already opened.
-         *
-         * @param {mail.message} message
-         */
-        replyToMessage(message) {
-            // When already replying to this message, just stop replying to it.
-            if (this.replyingToMessage === message) {
-                this.clearReplyingToMessage();
-                return;
-            }
-            message.originThread.composer.update({
-                isLog: !message.is_discussion && !message.is_notification,
-            });
-            this.update({
-                replyingToMessage: replace(message),
-                replyingToMessageComposerView: insertAndReplace({
-                    doFocus: true,
-                }),
-            });
-        }
-
-        /**
          * @param {mail.thread} thread
          * @returns {string}
          */
@@ -370,32 +337,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Ensures the reply feature is disabled if discuss is not open.
-         *
-         * @private
-         * @returns {mail.message|undefined}
-         */
-        _computeReplyingToMessage() {
-            if (!this.isOpen) {
-                return unlinkAll();
-            }
-            return;
-        }
-
-        /**
-         * Ensures the reply feature is disabled if discuss is not open.
-         *
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeReplyingToMessageComposerView() {
-            if (!this.isOpen) {
-                return unlinkAll();
-            }
-            return;
-        }
-
-        /**
          * Only pinned threads are allowed in discuss.
          *
          * @private
@@ -416,7 +357,6 @@ function factory(dependencies) {
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
-                selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
                 thread: this.thread ? link(this.thread) : unlink(),
             });
         }
@@ -515,23 +455,6 @@ function factory(dependencies) {
          * meeting" button.
          */
         mostRecentMeetingChannel: one2one('mail.thread'),
-        /**
-         * The message that is currently selected as being replied to in Inbox.
-         * There is only one reply composer shown at a time, which depends on
-         * this selected message.
-         */
-        replyingToMessage: many2one('mail.message', {
-            compute: '_computeReplyingToMessage',
-        }),
-        /**
-         * The composer to display for the reply feature in Inbox. It depends
-         * on the message set to be replied.
-         */
-        replyingToMessageComposerView: one2one('mail.composer_view', {
-            compute: '_computeReplyingToMessageComposerView',
-            inverse: 'discussAsReplying',
-            isCausal: true,
-        }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
          * to filter channels and chats based on this input content.
