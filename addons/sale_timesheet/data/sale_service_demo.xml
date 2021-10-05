@@ -485,6 +485,24 @@
             <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
+        <!-- Personal stages for those tasks -->
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_1')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_2')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_3')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_4')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project.project_personal_stage_admin_2')}"/>
+        </function>
+
         <!-- Timesheet for those tasks -->
         <record id="account_analytic_line_0" model="account.analytic.line">
             <field name="name">On Site Visit</field>
