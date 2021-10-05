@@ -151,8 +151,11 @@ class DiscussController(http.Controller):
             raise NotFound()
         return channel_partner_sudo.env['ir.http']._get_content_common(res_id=int(attachment_id), download=True)
 
-    @http.route('/mail/channel/<int:channel_id>/image/<int:attachment_id>/<int:width>x<int:height>', methods=['GET'], type='http', auth='public')
-    def fetch_image(self, channel_id, attachment_id, width, height, **kwargs):
+    @http.route([
+        '/mail/channel/<int:channel_id>/image/<int:attachment_id>',
+        '/mail/channel/<int:channel_id>/image/<int:attachment_id>/<int:width>x<int:height>',
+    ], methods=['GET'], type='http', auth='public')
+    def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
         if not channel_partner_sudo.env['ir.attachment'].search([('id', '=', int(attachment_id)), ('res_id', '=', int(channel_id)), ('res_model', '=', 'mail.channel')], limit=1):
             raise NotFound()
