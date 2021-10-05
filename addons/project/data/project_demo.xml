@@ -228,6 +228,10 @@
             <field name="new_value_integer">3</field>
             <field name="mail_message_id" ref="project_task_2_mail_message_2"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_2')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_5')}"/>
+        </function>
 
         <record id="project_task_3" model="project.task">
             <field name="planned_hours" eval="10.0"/>
@@ -276,6 +280,10 @@
             <field name="new_value_integer">3</field>
             <field name="mail_message_id" ref="project_task_3_mail_message_2"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_3')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_5')}"/>
+        </function>
 
         <record id="project_task_4" model="project.task">
             <field name="planned_hours" eval="60.0"/>
@@ -291,6 +299,10 @@
                     ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_4')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_3')}"/>
+        </function>
         <record id="project_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_4"/>
@@ -324,6 +336,10 @@
                     ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_5')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_1')}"/>
+        </function>
         <record id="project_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_5"/>
@@ -352,6 +368,10 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_6')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_4')}"/>
+        </function>
         <record id="project_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_6"/>
@@ -380,6 +400,10 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_7')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_4')}"/>
+        </function>
         <record id="project_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_7"/>
@@ -409,6 +433,14 @@
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_22')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_1')}"/>
+        </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_22')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_1')}"/>
+        </function>
         <record id="project_task_22_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_22"/>
@@ -439,6 +471,10 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[(4, ref('project.project_task_22'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_12')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_2')}"/>
+        </function>
 
         <record id="project_task_8" model="project.task">
             <field name="planned_hours" eval="22.0"/>
@@ -489,6 +525,10 @@
             <field name="new_value_integer">3</field>
             <field name="mail_message_id" ref="project_task_8_mail_message_2"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_8')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_5')}"/>
+        </function>
 
         <record id="project_task_10" model="project.task">
             <field name="planned_hours" eval="38.0"/>
@@ -501,6 +541,10 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[(4, ref('project.project_task_12'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_10')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_4')}"/>
+        </function>
         <record id="project_task_10_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_10"/>
@@ -533,6 +577,10 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[(4, ref('project.project_task_12'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_11')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_1')}"/>
+        </function>
         <record id="project_task_11_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_11"/>
@@ -574,6 +622,14 @@
             <field name="depend_on_ids"
                    eval="[(4, ref('project.project_task_8')), (4, ref('project.project_task_10')), (4, ref('project.project_task_11')), (4, ref('project.project_task_20'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_21')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_3')}"/>
+        </function>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_21')), ('user_id', '=', ref('base.user_demo'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_demo_2')}"/>
+        </function>
         <record id="project_task_21_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_21"/>
@@ -603,6 +659,10 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[(4, ref('project.project_task_21'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_9')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_1')}"/>
+        </function>
 
         <record id="project_task_19" model="project.task">
             <field name="planned_hours">24.0</field>
@@ -615,6 +675,10 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[(4, ref('project.project_task_22'))]"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_19')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_1')}"/>
+        </function>
         <record id="project_task_19_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project.project_task_19"/>
@@ -779,6 +843,10 @@
             <field name="name">Bathroom</field>
             <field name="stage_id" ref="project_stage_2"/>
         </record>
+        <function model="project.task.stage.personal" name="write">
+            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_task_33')), ('user_id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'stage_id': ref('project_personal_stage_admin_5')}"/>
+        </function>
 
         <record id="message_task_1" model="mail.message">
             <field name="model">project.task</field>
