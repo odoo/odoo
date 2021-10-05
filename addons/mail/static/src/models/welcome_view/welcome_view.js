@@ -29,23 +29,15 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @static
-         * @param {string} name
-         */
-        static async performRpcGuestUpdateName(name) {
-            await this.env.services.rpc({
-                route: '/mail/guest/update_name',
-                params: { name },
-            });
-        }
-
-        /**
          * Updates guest if needed then displays the thread view instead of the
          * welcome view.
          */
         async joinChannel() {
             if (this.hasGuestNameChanged) {
-                await this.messaging.models['mail.welcome_view'].performRpcGuestUpdateName(this.pendingGuestName.trim());
+                await this.messaging.models['mail.guest'].performRpcGuestUpdateName({
+                    id: this.messaging.currentGuest.id,
+                    name: this.pendingGuestName.trim(),
+                });
             }
             if (this.discussPublicView.shouldAddGuestAsMemberOnJoin) {
                 await this.performRpcAddGuestAsMember();

@@ -541,8 +541,11 @@ class DiscussController(http.Controller):
     # --------------------------------------------------------------------------
 
     @http.route('/mail/guest/update_name', methods=['POST'], type='json', auth='public')
-    def mail_guest_update_name(self, name):
+    def mail_guest_update_name(self, guest_id, name):
         guest = request.env['mail.guest']._get_guest_from_request(request)
-        if not guest:
+        guest_to_rename_sudo = guest.env['mail.guest'].browse(guest_id).sudo().exists()
+        if not guest_to_rename_sudo:
             raise NotFound()
-        guest.sudo()._update_name(name)
+        if guest_to_rename_sudo != guest and not request.env.user._is_admin():
+            raise NotFound()
+        guest_to_rename_sudo._update_name(name)
