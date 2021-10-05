@@ -36,6 +36,12 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
             this.state.inputHasError = false;
             this.inputAmountRef.el && this.inputAmountRef.el.focus();
         }
+        onEditInputAmount(event) {
+            if (['-', '+'].includes(event.key)) {
+                this.state.inputType = { '-': 'out', '+': 'in' }[event.key];
+                event.preventDefault();
+            }
+        }
         getPayload() {
             return {
                 amount: parse.float(this.state.inputAmount),

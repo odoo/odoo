@@ -11,11 +11,12 @@
                                 <span t-on-click="onClickButton('in')" class="input-type" t-att-class="{ highlight: state.inputType == 'in' }">
                                     Cash In
                                 </span>
-                                <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
+                                <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ 'red-background': state.inputType == 'out' }">
                                     Cash Out
                                 </span>
+                                <span class="sign" t-att-class="{ oe_invisible: state.inputType != 'out' }">-</span>
                                 <div class="input-field" t-on-mousedown.stop="" t-on-touchstart.stop="">
-                                    <input type="text" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref"/>
+                                    <input type="text" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref" t-on-keydown="onEditInputAmount" />
                                     <span class="currency" t-esc="env.pos.currency.symbol" />
                                 </div>
                             </div>

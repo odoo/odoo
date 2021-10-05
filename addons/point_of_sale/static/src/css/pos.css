@@ -3659,9 +3659,15 @@ td {
 }
 
 .cash-move .input-amount .input-type.highlight {
-    background: #6EC89B !important;
-    border: solid 1px #64AF8A !important;
-    color: white !important;
+    background: #6EC89B;
+    border: solid 1px #64AF8A;
+    color: white;
+}
+
+.cash-move .input-amount .input-type.red-background {
+    background: #d53b15;
+    border: solid 1px #aa3e00;
+    color: white;
 }
 
 .cash-move .input-amount input {
@@ -3669,6 +3675,12 @@ td {
     min-height: auto;
     text-align: right;
     padding-right: 30px;
+}
+
+.cash-move .input-amount span.sign {
+    position: relative;
+    left: 15px;
+    top: 10px;
 }
 
 .cash-move .input-amount .input-field span.currency {
