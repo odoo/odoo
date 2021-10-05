@@ -275,7 +275,14 @@ class BaseModel(models.AbstractModel):
         return self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
 
     def _alias_get_catchall_domain(self):
+        # return self._alias_get_domains()[0]
         return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
+    def _alias_get_catchall_domain_names(self):
+        return [
+            company.alias_domain_id.name
+            for company in self._mail_get_companies()
+        ]
 
     def _alias_get_catchall_email(self):
         catchall_alias = self._alias_get_catchall_alias()

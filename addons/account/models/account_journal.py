@@ -396,9 +396,10 @@ class AccountJournal(models.Model):
                 journal.alias_id = self.env['mail.alias'].sudo().create(alias_values)
         self.invalidate_recordset(['alias_name'])
 
-    @api.depends('name')
+    @api.depends('company_id', 'name')
     def _compute_alias_domain(self):
-        self.alias_domain = self._alias_get_catchall_domain()
+        for journal, alias_domain_name in zip(self, self._alias_get_domain_names()):
+            journal.alias_domain = alias_domain_name
 
     @api.depends('alias_id', 'alias_id.alias_name')
     def _compute_alias_name(self):
