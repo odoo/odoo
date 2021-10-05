@@ -1864,12 +1864,25 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
+<<<<<<< HEAD
         if (!activeLabel) {
             // If no element from the text style dropdown was marked as active,
             // mark the paragraph one as active and use its label.
             const firstButtonEl = this.toolbar.querySelector('#paragraph');
             firstButtonEl.classList.add('active');
             activeLabel = firstButtonEl.textContent;
+=======
+        if (block) {
+            const listMode = getListMode(block.parentElement);
+            const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
+            if (listDropdownButton) {
+                if (listMode) {
+                    listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
+                    listDropdownButton.classList.add(listUIClasses[listMode]);
+                }
+                listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
+            }
+>>>>>>> 845bc592803... temp
         }
         this.toolbar.querySelector('#style button span').textContent = activeLabel;
 
