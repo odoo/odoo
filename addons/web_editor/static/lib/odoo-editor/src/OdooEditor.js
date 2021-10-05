@@ -1448,14 +1448,16 @@ export class OdooEditor extends EventTarget {
                 button.classList.toggle('active', isActive);
             }
         }
-        const listMode = getListMode(block.parentElement);
-        const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
-        if (listDropdownButton) {
-            if (listMode) {
-                listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
-                listDropdownButton.classList.add(listUIClasses[listMode]);
+        if (block) {
+            const listMode = getListMode(block.parentElement);
+            const listDropdownButton = this.toolbar.querySelector('#listDropdownButton');
+            if (listDropdownButton) {
+                if (listMode) {
+                    listDropdownButton.classList.remove('fa-list-ul', 'fa-list-ol', 'fa-tasks');
+                    listDropdownButton.classList.add(listUIClasses[listMode]);
+                }
+                listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
             }
-            listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
         }
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
