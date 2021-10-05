@@ -91,7 +91,7 @@ class EventTicket(models.Model):
             else:
                 ticket.sale_available = True
 
-    @api.depends('seats_max', 'registration_ids.state')
+    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0 + compute seats availability
@@ -107,10 +107,10 @@ class EventTicket(models.Model):
             }
             query = """ SELECT event_ticket_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done')
+                        WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
                         GROUP BY event_ticket_id, state
                     """
-            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state'])
+            self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state', 'active'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for event_ticket_id, state, num in self.env.cr.fetchall():
                 results.setdefault(event_ticket_id, {})[state_field[state]] = num
@@ -129,8 +129,12 @@ class EventTicket(models.Model):
 
     @api.constrains('seats_available', 'seats_max')
     def _constrains_seats_available(self):
-        if any(record.seats_max and record.seats_available < 0 for record in self):
-            raise ValidationError(_('No more available seats for this ticket.'))
+        for record in self:
+            if record.seats_max and record.seats_available < 0:
+                raise ValidationError(
+                    _('No more available seats for the ticket %s (%s). '
+                      'Raise the limit or remove some other confirmed registrations first.',
+                      record.name, record.event_id.name))
 
     def _get_ticket_multiline_description(self):
         """ Compute a multiline description of this ticket. It is used when ticket
