@@ -17,9 +17,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-# IAP Server address.
-# Customize this address if you want to use the IAP Test Server
-SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
+DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
 TIMEOUT = 30
 
 
@@ -132,7 +130,8 @@ class AccountEdiProxyClientUser(models.Model):
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
-                response = self._make_request(SERVER_URL + '/iap/account_edi/1/create_user', params={
+                server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+                response = self._make_request(server_url + '/iap/account_edi/1/create_user', params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
                     'edi_format_code': edi_format.code,
@@ -160,7 +159,8 @@ class AccountEdiProxyClientUser(models.Model):
         that multiple database use the same credentials. When receiving an error for an expired refresh_token,
         This method makes a request to get a new refresh token.
         '''
-        response = self._make_request(SERVER_URL + '/iap/account_edi/1/renew_token')
+        server_url = self.env['ir.config_parameter'].get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+        response = self._make_request(server_url + '/iap/account_edi/1/renew_token')
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
             # we don't want two database to be able to query the proxy with the same user
