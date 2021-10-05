@@ -668,16 +668,6 @@ const ButtonUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start: function (parent, title, options) {
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
-        }
-
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
     async willStart() {
         await this._super(...arguments);
         if (this.options.dataAttributes.activeImg) {
@@ -689,10 +679,23 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      */
     _makeDescriptive() {
         const $el = this._super(...arguments);
+        if (this.imgEl) {
+            $el[0].classList.add('o_we_icon_button');
+        }
         if (this.activeImgEl) {
             this.containerEl.appendChild(this.activeImgEl);
         }
         return $el;
+    },
+    /**
+     * @override
+     */
+    start: function (parent, title, options) {
+        if (this.options && this.options.childNodes) {
+            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
+        }
+
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
