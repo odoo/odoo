@@ -4178,6 +4178,10 @@ registry.sizing = SnippetOptionWidget.extend({
             $body.on('mouseup', bodyMouseUp);
         });
 
+        _.each(resizeValues, (value, key) => {
+            this.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
+
         return def;
     },
     /**
@@ -4185,12 +4189,6 @@ registry.sizing = SnippetOptionWidget.extend({
      */
     onFocus: function () {
         this._onResize();
-    },
-    /**
-     * @override
-     */
-    onBlur: function () {
-        this.$handles.addClass('readonly');
     },
 
     //--------------------------------------------------------------------------
@@ -4203,16 +4201,6 @@ registry.sizing = SnippetOptionWidget.extend({
     setTarget: function () {
         this._super(...arguments);
         this._onResize();
-    },
-    /**
-     * @override
-     */
-    updateUI: async function () {
-        await this._super(...arguments);
-        const resizeValues = this._getSize();
-        _.each(resizeValues, (value, key) => {
-            this.$handles.filter('.' + key).toggleClass('readonly', !value);
-        });
     },
 
     //--------------------------------------------------------------------------
