@@ -179,13 +179,11 @@
 
 <template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
     <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
-        <we-button title="Video"
+        <we-button title="Video" class="fa fa-fw fa-film"
                    data-name="bg_video_toggler_opt"
                    t-att-data-dependencies="images_dependencies"
                    data-toggle-bg-video="true"
-                   data-no-preview="true">
-            <i class="fa fa-fw fa-film"/>
-        </we-button>
+                   data-no-preview="true"/>
     </xpath>
     <xpath expr="//t[@t-set='color_filter_dependencies']" position="after">
         <t t-set="color_filter_dependencies" t-valuef="#{color_filter_dependencies}, bg_video_toggler_opt"/>
@@ -357,9 +355,9 @@
     <!-- H-ALIGN -->
     <div id="so_text_align" data-selector=".s_share, .s_text_highlight">
         <we-button-group string="Alignment">
-            <we-button title="Left" data-select-class="text-left"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="text-center"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="text-right"><i class="fa fa-fw fa-align-right"/></we-button>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-right"/>
         </we-button-group>
     </div>
 
@@ -374,9 +372,9 @@
 
     <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
-            <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
         </we-button-group>
     </div>
 
@@ -416,18 +414,10 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward">
-            <i class="fa fa-fw fa-angle-left"/>
-        </we-button>
-        <we-button data-slide="right" data-no-preview="true" class="mr-2" data-tooltip="true" title="Move Forward">
-            <i class="fa fa-fw fa-angle-right"/>
-        </we-button>
-        <we-button data-add-slide-item="true" data-no-preview="true" class="o_we_bg_success" data-tooltip="true" title="Add Slide">
-            <i class="fa fa-fw fa-plus"/>
-        </we-button>
-        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_bg_danger" data-tooltip="true" title="Remove Slide">
-            <i class="fa fa-fw fa-minus"/>
-        </we-button>
+        <we-button class="fa fa-fw fa-angle-left" data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward"/>
+        <we-button class="fa fa-fw fa-angle-right mr-2" data-slide="right" data-no-preview="true" data-tooltip="true" title="Move Forward"/>
+        <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" data-tooltip="true" title="Add Slide"/>
+        <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" data-tooltip="true" title="Remove Slide"/>
     </div>
 
     <!-- Accordion -->
@@ -1044,8 +1034,7 @@
             </t>
             <we-button-group class="ml-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>
-                <we-button title="None" data-background="">
-                    <i class="fa fa-fw fa-ban"/>
+                <we-button class="fa fa-fw fa-ban" title="None" data-background="">
                 </we-button>
             </we-button-group>
         </we-row>
@@ -1303,12 +1292,12 @@
                             data-customize-website-color=""
                             data-color="body"/>
             <we-button-group data-imagepicker="body_bg_image_opt">
-                <we-button title="Image"
-                           data-customize-body-bg-type="'image'"><i class="fa fa-fw fa-camera"/></we-button>
-                <we-button title="Pattern"
-                           data-customize-body-bg-type="'pattern'"><i class="fa fa-fw fa-th"/></we-button>
-                <we-button title="None"
-                           data-customize-body-bg-type="NONE"><i class="fa fa-fw fa-ban"/></we-button>
+                <we-button title="Image" class="fa fa-fw fa-camera"
+                           data-customize-body-bg-type="'image'"/>
+                <we-button title="Pattern" class="fa fa-fw fa-th"
+                           data-customize-body-bg-type="'pattern'"/>
+                <we-button title="None" class="fa fa-fw fa-ban"
+                           data-customize-body-bg-type="NONE"/>
             </we-button-group>
             <!-- Hidden imagepicker enabled by above button-group -->
             <we-imagepicker data-name="body_bg_image_opt"
