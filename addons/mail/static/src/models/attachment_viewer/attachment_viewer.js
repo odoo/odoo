@@ -20,6 +20,25 @@ function factory(dependencies) {
                 dialog.delete();
             }
         }
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeImageUrl() {
+            if (!this.attachment) {
+                return;
+            }
+            if (!this.attachment.accessToken && this.attachment.originThread && this.attachment.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.attachment.originThread.id}/image/${this.attachment.id}`;
+            }
+            const accessToken = this.attachment.accessToken ? `?access_token=${this.attachment.accessToken}` : '';
+            return `/web/image/${this.attachment.id}${accessToken}`;
+        }
     }
 
     AttachmentViewer.fields = {
@@ -45,6 +64,13 @@ function factory(dependencies) {
         dialog: one2one('mail.dialog', {
             inverse: 'attachmentViewer',
             isCausal: true,
+            readonly: true,
+        }),
+        /**
+         * Determines the source URL to use for the image.
+         */
+        imageUrl: attr({
+            compute: '_computeImageUrl',
             readonly: true,
         }),
         /**
