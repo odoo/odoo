@@ -268,7 +268,12 @@ class PosSession(models.Model):
             session.write(values)
         return True
 
+<<<<<<< HEAD
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0):
+=======
+    def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        bank_payment_method_diffs = bank_payment_method_diffs or {}
+>>>>>>> 25c4f313eee... temp
         self._check_pos_session_balance()
         for session in self:
             if any(order.state == 'draft' for order in session.order_ids):
@@ -297,18 +302,33 @@ class PosSession(models.Model):
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
 
+<<<<<<< HEAD
     def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0):
+=======
+    def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        bank_payment_method_diffs = bank_payment_method_diffs or {}
+>>>>>>> 25c4f313eee... temp
         self._check_pos_session_balance()
         return self.action_pos_session_close(balancing_account, amount_to_balance)
 
+<<<<<<< HEAD
     def action_pos_session_close(self, balancing_account=False, amount_to_balance=0):
+=======
+    def action_pos_session_close(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        bank_payment_method_diffs = bank_payment_method_diffs or {}
+>>>>>>> 25c4f313eee... temp
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
         self._check_bank_statement_state()
         return self._validate_session(balancing_account, amount_to_balance)
 
+<<<<<<< HEAD
     def _validate_session(self, balancing_account=False, amount_to_balance=0):
+=======
+    def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        bank_payment_method_diffs = bank_payment_method_diffs or {}
+>>>>>>> 25c4f313eee... temp
         self.ensure_one()
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
         if self.order_ids or self.statement_ids.line_ids:
@@ -378,7 +398,11 @@ class PosSession(models.Model):
             'context': {**self.env.context, 'active_ids': self.ids, 'active_model': 'pos.session'},
         }
 
+<<<<<<< HEAD
     def close_session_from_ui(self):
+=======
+    def close_session_from_ui(self, bank_payment_method_diff_pairs=None):
+>>>>>>> 25c4f313eee... temp
         """Calling this method will try to close the session.
 
         If successful, it returns {'successful': True}
@@ -386,6 +410,10 @@ class PosSession(models.Model):
         'redirect' is a boolean used to know whether we redirect the user to the back end or not.
         When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
         """
+<<<<<<< HEAD
+=======
+        bank_payment_method_diffs = dict(bank_payment_method_diff_pairs or [])
+>>>>>>> 25c4f313eee... temp
         self.ensure_one()
         # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
         # where cash_control = False
@@ -457,12 +485,17 @@ class PosSession(models.Model):
 
         return {'successful': True}
 
+<<<<<<< HEAD
     def _cannot_close_session(self):
+=======
+    def _cannot_close_session(self, bank_payment_method_diffs=None):
+>>>>>>> 25c4f313eee... temp
         """
         Add check in this method if you want to return or raise an error when trying to either post cash details
         or close the session. Raising an error will always redirect the user to the back end.
         It should return {'successful': False, 'message': str, 'redirect': bool} if we can't close the session
         """
+        bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == 'draft' for order in self.order_ids):
             return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
         if self.state == 'closed':
@@ -563,7 +596,11 @@ class PosSession(models.Model):
         propoerty_account = self.env['ir.property']._get('property_account_receivable_id', 'res.partner')
         return self.company_id.account_default_pos_receivable_account_id or propoerty_account or self.env['account.account']
 
+<<<<<<< HEAD
     def _create_account_move(self, balancing_account=False, amount_to_balance=0):
+=======
+    def _create_account_move(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+>>>>>>> 25c4f313eee... temp
         """ Create account.move and account.move.line records for this session.
 
         Side-effects include:
@@ -581,7 +618,11 @@ class PosSession(models.Model):
         })
         self.write({'move_id': account_move.id})
 
+<<<<<<< HEAD
         data = {}
+=======
+        data = {'bank_payment_method_diffs': bank_payment_method_diffs or {}}
+>>>>>>> 25c4f313eee... temp
         data = self._accumulate_amounts(data)
         data = self._create_non_reconciliable_move_lines(data)
         data = self._create_bank_payment_moves(data)
@@ -1327,6 +1368,20 @@ class PosSession(models.Model):
             },
         }
 
+<<<<<<< HEAD
+=======
+    def _get_other_related_moves(self):
+        # TODO This is not an ideal way to get the diff account.move's for
+        # the session. It would be better if there is a relation field where
+        # these moves are saved.
+
+        # Unfortunately, the 'ref' of account.move is not indexed, so
+        # we are querying over the account.move.line because its 'ref' is indexed.
+        # And yes, we are only concern for split bank payment methods.
+        diff_lines_ref = [self._get_diff_account_move_ref(pm) for pm in self.payment_method_ids if pm.type == 'bank' and pm.split_transactions]
+        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
+
+>>>>>>> 25c4f313eee... temp
     def _get_related_account_moves(self):
         pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
         invoices = self.mapped('order_ids.account_move')
