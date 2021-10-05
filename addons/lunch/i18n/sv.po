@@ -14,6 +14,7 @@
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# STefan Rundgren <stefanrundgren@cellglas.com>, 2021
 # Simon Strömberg <simon.stromberg@vertel.se>, 2021
 # 
 msgid ""
@@ -248,12 +249,12 @@ msgstr "Aktiviteter"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoration för aktivitetsundantag"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Aktivitetsstatus"
 
 #. module: lunch
 #. openerp-web
@@ -805,7 +806,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Om markerad så har det blivit ett leveransfel för några  meddelanden."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_temp__image_1920
@@ -1345,7 +1346,7 @@ msgstr "Produkt"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_report__is_available_at
 msgid "Product Availability"
-msgstr ""
+msgstr "Produkttillgänglighet"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
@@ -1516,6 +1517,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status baserad på aktiviteter\n"
+"Försenade: Förfallodagen har passerat\n"
+"Idag: Aktivitetsdatum är idag\n"
+"Kommande: Framtida aktiviteter."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
@@ -1689,7 +1694,7 @@ msgstr "tisdag"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ av undantagsaktivitet i posten"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_unread

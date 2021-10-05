@@ -14,6 +14,7 @@
 # Grega Vavtar <grega@hbs.si>, 2020
 # Tadej Lupšina <tadej@hbs.si>, 2021
 # Jasmina Macur <jasmina@hbs.si>, 2021
+# Nejc G <nejc@luxim.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
+"Last-Translator: Nejc G <nejc@luxim.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -472,11 +473,13 @@ msgstr "<span>Sprejeto v imenu:</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>S plačilom tega predloga se strinjam z naslednjimi pogoji:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>S podpisom tega predloga se strinjam z naslednjimi pogoji:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -487,7 +490,7 @@ msgstr "<span>Pop.%</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>V znesku:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -502,7 +505,7 @@ msgstr "<span>Davki</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>S plačilnimi pogoji:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -611,13 +614,13 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "O prevzemniku je treba navesti dnevnik %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Pridobitelj plačila je potreben za ustvarjanje transakcije."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -633,6 +636,8 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
+"Transakcije ni mogoče povezati s prodajnimi nalogi, ki imajo različne "
+"valute."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -640,6 +645,8 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Transakcije ni mogoče povezati s prodajnimi nalogi, ki imajo različne "
+"partnerje."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -704,12 +711,12 @@ msgstr "Številka računa"
 #. module: sale
 #: model:ir.model,name:sale.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Pripomoček za usklajevanje računa"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "Račun, ki se uporablja za depozite"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -767,6 +774,7 @@ msgstr "Naslovi v prodajnem nalogu"
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
+"Dovoli uporabnikom, da za to vrednost atributa vnesejo vrednosti po meri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -797,12 +805,12 @@ msgstr "Znesek pred popustom"
 #: code:addons/sale/models/payment.py:0
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Neusklajenost zneskov (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Količina ponudb za obračun"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -814,7 +822,7 @@ msgstr "Analitični konto"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analitično iz stroškov"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -859,7 +867,7 @@ msgstr "Število prilog"
 #: model:ir.model,name:sale.model_product_attribute_value
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "Vrednost atributa"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -889,12 +897,12 @@ msgstr "Naziv banke"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Na podlagi ID-ja stranke"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Na podlagi reference dokumenta"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -919,7 +927,7 @@ msgstr "Kampanja"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "Lahko ureja izdelek"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -937,7 +945,7 @@ msgstr "Preklicano"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Zajem transakcije"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1191,7 +1199,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Navodila za plačilo po meri"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1221,7 +1229,7 @@ msgstr "Država kupca"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Entiteta stranke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1340,7 +1348,7 @@ msgstr "Dostavljeno"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "Dostavljeno ročno"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1379,12 +1387,16 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Datum dobave, ki ga lahko obljubite stranki, izračunan iz minimalnega roka "
+"za izvedbo naročil v primeru storitvenih izdelkov. V primeru pošiljanja se "
+"upošteva politika pošiljanja naročila, da se uporabi najmanjši ali najdaljši"
+" rok izvedbe iz postavk naročila."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Depozit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
@@ -1752,6 +1764,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Če je prodaja zaklenjena, je ne morete več spreminjati. Kljub temu boste "
+"lahko še vedno izdali račun ali dostavili."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -1760,6 +1774,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Če podatke o plačilu hranimo na našem strežniku, bodo plačila za naročnino "
+"izvedena samodejno."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -1961,12 +1977,12 @@ msgstr "Je predplačilo"
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr ""
+msgstr "Ali je vrednost po meri"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "Ali je strošek"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
@@ -2008,7 +2024,7 @@ msgstr "Postavka"
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_sample_quotation_state__just_done
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Ravnokar opravljeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value____last_update
@@ -2182,7 +2198,7 @@ msgstr "Metoda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Način za posodabljanje dostavljene količine"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
@@ -2260,7 +2276,7 @@ msgstr "Potrjenih nalogov ne bo več mogoče spreminjati."
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Naročil za izdajo računa ni bilo mogoče najti"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -2328,7 +2344,7 @@ msgstr "Število ponudb za obračun"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "Število prodaj za obračun"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2368,6 +2384,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Ko je ponudba pripravljena, jo lahko shranite, natisnete ali pošljete po "
+"e-pošti."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2581,7 +2599,7 @@ msgstr "Plačaj z"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Plačajte z drugim pridobiteljem plačil"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2602,7 +2620,7 @@ msgstr "Ponudniki plačilnih storitev"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Navodila za plačilo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -2658,17 +2676,17 @@ msgstr "Znižanje cene"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Znižanje cene brez DDV"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Znižanje cene z DDV"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr ""
+msgstr "Vmesna vsota"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -2724,7 +2742,7 @@ msgstr "Atribut proizvoda"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Vrednost po meri atributa izdelka"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2877,7 +2895,7 @@ msgstr "Ponudba poslana"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr ""
+msgstr "Veljavnost ponudbe je obvezna in mora biti večja od 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3009,7 +3027,7 @@ msgstr "Zahtevajte spletni podpis stranke za potrditev naročil"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Zahtevani datum je prezgodaj."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3082,7 +3100,7 @@ msgstr "Prodajna opozorila"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Vključevanje izbranega plačilnega sredstva pri prodaji"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3225,7 +3243,7 @@ msgstr "Prodajna opozorila"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Prodaja po kanalih (vse v enem)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3253,13 +3271,13 @@ msgstr "Prodajalec"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Vzorec naročila"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Product"
-msgstr ""
+msgstr "Vzorec izdelka"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3280,7 +3298,7 @@ msgstr "Oddelek"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Ime oddelka (npr. izdelki, storitve)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -3297,12 +3315,12 @@ msgstr "Izberi"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Izberite izdelek ali ustvarite novega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr ""
+msgstr "Izberite lastnosti izdelka in neobvezne izdelke iz prodajnega naloga"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3336,7 +3354,7 @@ msgstr "Prodaja proizvodov v večkratniku enote # na pakiranje"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Prodaja različic izdelka z uporabo lastnosti (velikost, barva itd.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3560,12 +3578,12 @@ msgstr "Stripe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe ključ za objavo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe skriti ključ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -3773,12 +3791,12 @@ msgstr "Obstajajo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr ""
+msgstr "Za vaš račun trenutno ni naročil."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "Za vaš račun trenutno ni ponudb."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0 code:addons/sale/models/sale.py:0
@@ -3941,7 +3959,7 @@ msgstr "Skupaj z davkom"
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "Sledenje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -4087,7 +4105,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "Ta meni uporabite za dostop do ponudb, prodajnih naročil in strank."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4112,7 +4130,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Neveljavna transakcija"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -4229,22 +4247,22 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Vaše povratne informacije..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Naročilo je potrjeno."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
-msgstr ""
+msgstr "Naročilo je podpisano, vendar ga je treba za potrditev še plačati."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Vaše naročilo je podpisano."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

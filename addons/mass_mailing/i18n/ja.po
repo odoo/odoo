@@ -6,7 +6,7 @@
 # kent_ocean <ke.tanabe@gmail.com>, 2019
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2019
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
@@ -14,9 +14,10 @@
 # Martin Trigaux, 2019
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
 # Hau Dao <hau@quartile.co>, 2020
-# JEK Odoo <jek@odoo.com>, 2020
+# Jérôme JEK <jek@odoo.com>, 2020
 # Noma Yuki, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Tsuda Ryoko <ryoko04nov@gmail.com>, 2021\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -311,7 +312,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr ""
+msgstr "受信者に自身のブラックリスト登録を許可する"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -436,7 +437,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr ""
+msgstr "登録解除時のブラックリストオプション"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -591,7 +592,7 @@ msgstr "設定"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Configure Email Server"
-msgstr ""
+msgstr "メールサーバの設定"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
@@ -661,7 +662,7 @@ msgstr "メール連絡先を作成"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
 msgid "Create a new mailing"
-msgstr ""
+msgstr "新しいメールを作成しましょう。"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -1055,6 +1056,7 @@ msgid ""
 " lets you send different mailings to randomly selected recipients and test "
 "the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
+"有効化されると、受信者にはキャンペーン全体で一回のみメールが配信されます。異なるメールをランダムに選択された受信者に重複なく送信し、メールの効果をテストすることができます。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
@@ -1218,12 +1220,12 @@ msgstr "メール"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mailing Campaign"
-msgstr ""
+msgstr "メーリングキャンペーン"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
 msgid "Mailing Campaigns"
-msgstr ""
+msgstr "メーリングキャンペーン"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
@@ -1344,7 +1346,7 @@ msgstr "メール一括配信キャンペーンを管理"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr ""
+msgstr "メール一括配信キャンペーンを管理"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -1501,7 +1503,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "My Mailings"
-msgstr ""
+msgstr "自分のメール"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__name
@@ -1702,7 +1704,7 @@ msgstr ""
 msgid ""
 "Percentage of the contacts that will be mailed. Recipients will be taken "
 "randomly."
-msgstr ""
+msgstr "メールを配信される連絡先のパーセント。受信者はランダムに選択されます。"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/wizard/mailing_mailing_schedule_date.py:0
@@ -1910,7 +1912,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
-msgstr ""
+msgstr "Select mailing lists"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1956,7 +1958,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
 msgid "Sending"
-msgstr ""
+msgstr "送信中"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent
@@ -1979,7 +1981,7 @@ msgstr "送信者"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent_date
 msgid "Sent Date"
-msgstr ""
+msgstr "送信日"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__sent
@@ -1989,7 +1991,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Sent Period"
-msgstr ""
+msgstr "送信期間"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
@@ -2125,7 +2127,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__opt_out
 msgid "The contact has chosen not to receive mails anymore from this list"
-msgstr ""
+msgstr "連絡先はこのリストからメールを受け取らないことを選択済み"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_list__is_public
@@ -2275,7 +2277,7 @@ msgstr "未購読"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
-msgstr ""
+msgstr "登録解除日"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -2410,6 +2412,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"メーリングリストをインポートする必要はありません。\n"
+"                他のOdooアプリに保存されているすべての連絡先にメール<br> を送ることができます。"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists

@@ -483,6 +483,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         return -1 if self.type in ('out_invoice', 'in_refund', 'out_receipt') else 1
 
+    def _preprocess_taxes_map(self, taxes_map):
+        """ Useful in case we want to pre-process taxes_map """
+        return taxes_map
+
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         ''' Compute the dynamic tax lines of the journal entry.
 
@@ -544,7 +548,7 @@ class AccountMove(models.Model):
             if move.type == 'entry':
                 repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
                 repartition_tags = base_line.tax_ids.flatten_taxes_hierarchy().mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').tag_ids
-                tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+                tags_need_inversion = self._tax_tags_need_inversion(move, is_refund, tax_type)
                 if tags_need_inversion:
                     balance_taxes_res['base_tags'] = base_line._revert_signed_tags(repartition_tags).ids
                     for tax_res in balance_taxes_res['taxes']:
@@ -565,7 +569,7 @@ class AccountMove(models.Model):
                 if move.type == 'entry':
                     repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
                     repartition_tags = base_line.tax_ids.mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').tag_ids
-                    tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+                    tags_need_inversion = self._tax_tags_need_inversion(move, is_refund, tax_type)
                     if tags_need_inversion:
                         balance_taxes_res['base_tags'] = base_line._revert_signed_tags(repartition_tags).ids
                         for tax_res in balance_taxes_res['taxes']:
@@ -643,6 +647,9 @@ class AccountMove(models.Model):
             if not recompute_tax_base_amount:
                 line.tax_exigible = tax_exigible
 
+        # ==== Pre-process taxes_map ====
+        taxes_map = self._preprocess_taxes_map(taxes_map)
+
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
             # Don't create tax lines with zero balance.
@@ -690,6 +697,19 @@ class AccountMove(models.Model):
             if tax_line and in_draft_mode:
                 tax_line._onchange_amount_currency()
                 tax_line._onchange_balance()
+
+    def _tax_tags_need_inversion(self, move, is_refund, tax_type):
+        """ Tells whether the tax tags need to be inverted for a given move.
+
+        :param move: the move for which we want to check inversion
+        :param is_refund: whether or not the operation we want the inversion value for is a refund
+        :param tax_type: the tax type of the operation we want the inversion value for
+
+        :return: True if the tags need to be inverted
+        """
+        if move.type == 'entry':
+            return (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+        return False
 
     @api.model
     def _get_base_amount_to_display(self, base_amount, tax_rep_ln, parent_tax_group=None):
@@ -1785,7 +1805,7 @@ class AccountMove(models.Model):
         for move in self:
             if move.name != '/' and not self._context.get('force_delete'):
                 raise UserError(_("You cannot delete an entry which has been posted once."))
-            move.line_ids.unlink()
+        self.line_ids.unlink()
         return super(AccountMove, self).unlink()
 
     @api.returns('self', lambda value: value.id)
@@ -2212,13 +2232,17 @@ class AccountMove(models.Model):
             # Helper to know if the partner is an internal one.
             return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
 
+        extra_domain = False
+        if custom_values.get('company_id'):
+            extra_domain = ['|', ('company_id', '=', custom_values['company_id']), ('company_id', '=', False)]
+
         # Search for partners in copy.
         cc_mail_addresses = email_split(msg_dict.get('cc', ''))
-        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses) if partner]
+        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain) if partner]
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
-        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses) if partner]
+        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain) if partner]
 
         # Search for partners using the user.
         if not senders:
@@ -2229,7 +2253,7 @@ class AccountMove(models.Model):
             if is_internal_partner(partners[0]):
                 # Search for partners in the mail's body.
                 body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-                partners = [partner for partner in self._mail_find_partner_from_emails(body_mail_addresses) if not is_internal_partner(partner)]
+                partners = [partner for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain) if not is_internal_partner(partner)]
 
         # Little hack: Inject the mail's subject in the body.
         if msg_dict.get('subject') and msg_dict.get('body'):
@@ -2536,8 +2560,6 @@ class AccountMove(models.Model):
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
     def _get_report_base_filename(self):
-        if any(not move.is_invoice() for move in self):
-            raise UserError(_("Only invoices could be printed."))
         return self._get_move_display_name()
 
     def preview_invoice(self):
