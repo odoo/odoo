@@ -188,7 +188,10 @@ class ProductionLot(models.Model):
             })
         return action
 
-    def _find_delivery_ids_by_lot(self):
+    def _find_delivery_ids_by_lot(self, lot_path=None):
+        if lot_path is None:
+            lot_path = set()
+
         domain = [
             ('lot_id', 'in', self.ids),
             ('state', '=', 'done'),
@@ -198,10 +201,14 @@ class ProductionLot(models.Model):
         delivery_by_lot = dict()
         for lot in self:
             delivery_ids = set()
+            if lot.id in lot_path:
+                continue
             for line in move_lines.filtered(lambda ml: ml.lot_id.id == lot.id):
                 if line.produce_line_ids:
-                    # Do the same process for lot_id contained in produce_line_ids, to fetch the end product deliveries
-                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot().values():
+                    # Do the same process for lot_id contained in produce_line_ids,
+                    # to fetch the end product deliveries
+                    lot_path.add(lot.id)
+                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot(lot_path=lot_path).values():
                         delivery_ids.update(delivery_ids_set)
                 else:
                     delivery_ids.add(line.picking_id.id)
