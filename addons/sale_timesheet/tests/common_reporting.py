@@ -36,8 +36,15 @@ class TestCommonReporting(TestCommonSaleTimesheet):
             'company_id': cls.company_data['company'].id,
             'partner_id': cls.partner_a.id
         })
+        cls.analytic_account_3 = cls.env['account.analytic.account'].create({
+            'name': 'Test AA 3',
+            'code': 'AA3',
+            'company_id': cls.company_data['company'].id,
+            'partner_id': cls.partner_a.id
+        })
 
         # Sale orders each will create project and a task in a global project (one SO is 'delivered', the other is 'ordered')
+        # and a third one using fixed_price (which is 'delivered')
         cls.sale_order_1 = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
@@ -82,6 +89,21 @@ class TestCommonReporting(TestCommonSaleTimesheet):
             'product_uom': cls.product_order_timesheet2.uom_id.id,
             'price_unit': cls.product_order_timesheet2.list_price,
             'order_id': cls.sale_order_2.id,
+        })
+
+        cls.sale_order_3 = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'analytic_account_id': cls.analytic_account_3.id,
+        })
+        cls.so_line_deliver_manual_project = cls.env['sale.order.line'].create({
+            'name': cls.product_delivery_manual3.name,
+            'product_id': cls.product_delivery_manual3.id,
+            'product_uom_qty': 11,
+            'product_uom': cls.product_delivery_manual3.uom_id.id,
+            'price_unit': cls.product_delivery_manual3.list_price,
+            'order_id': cls.sale_order_3.id,
         })
 
     def _log_timesheet_user(self, project, unit_amount, task=False):
