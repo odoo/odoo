@@ -2283,7 +2283,7 @@
     </xpath>
     <xpath expr="//div[@id='error_message']" position="after">
         <div class="container" t-if="view and editable">
-            <div class="alert alert-danger" t-if="debug" role="alert">
+            <div class="alert alert-danger" role="alert">
                 <h4>Template fallback</h4>
                 <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
                 <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
