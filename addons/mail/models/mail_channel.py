@@ -594,6 +594,11 @@ class Channel(models.Model):
     def _message_compute_author(self, author_id=None, email_from=None, raise_exception=False):
         return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_exception=False)
 
+    def _message_compute_parent_id(self, parent_id):
+        # super() unravels the chain of parents to set parent_id as the first
+        # ancestor. We don't want that in channel.
+        return parent_id
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({

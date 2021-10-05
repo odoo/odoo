@@ -205,11 +205,10 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get isSelected() {
-        return (
+        return Boolean(
             this.threadView &&
             this.messageView &&
-            this.threadView.threadViewer &&
-            this.threadView.threadViewer.selectedMessage === this.messageView.message
+            this.threadView.replyingToMessageView === this.messageView
         );
     }
 
@@ -498,7 +497,8 @@ export class Message extends Component {
             !isEventHandled(ev, 'Message.ClickAuthorName') &&
             !isEventHandled(ev, 'Message.ClickFailure') &&
             !isEventHandled(ev, 'MessageActionList.Click') &&
-            !isEventHandled(ev, 'MessageReactionGroup.Click')
+            !isEventHandled(ev, 'MessageReactionGroup.Click') &&
+            !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
         ) {
             this.state.isClicked = !this.state.isClicked;
         }

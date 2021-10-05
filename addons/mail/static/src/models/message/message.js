@@ -104,6 +104,13 @@ function factory(dependencies) {
                     this.messaging.models['mail.notification'].convertData(notificationData)
                 ));
             }
+            if ('parentMessage' in data) {
+                if (!data.parentMessage) {
+                    data2.parentMessage = clear();
+                } else {
+                    data2.parentMessage = insertAndReplace(this.convertData(data.parentMessage));
+                }
+            }
             if ('partner_ids' in data && this.messaging.currentPartner) {
                 data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
             }
@@ -269,14 +276,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Action to initiate reply to current message in Discuss Inbox. Assumes
-         * that Discuss and Inbox are already opened.
-         */
-        replyTo() {
-            this.messaging.discuss.replyToMessage(this);
-        }
-
-        /**
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
@@ -311,6 +310,22 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @returns {string|FieldCommand}
+         */
+        _computeAuthorName() {
+            if (this.author) {
+                return this.author.nameOrDisplayName;
+            }
+            if (this.guestAuthor) {
+                return this.guestAuthor.name;
+            }
+            if (this.email_from) {
+                return this.email_from;
+            }
+            return this.env._t("Anonymous");
+        }
 
         /**
          * @returns {boolean}
@@ -545,6 +560,9 @@ function factory(dependencies) {
     }
 
     Message.fields = {
+        authorName: attr({
+            compute: '_computeAuthorName',
+        }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
@@ -725,6 +743,13 @@ function factory(dependencies) {
         originThread: many2one('mail.thread', {
             inverse: 'messagesAsOriginThread',
         }),
+        /**
+         * States the message that this message replies to (if any). Only makes
+         * sense on channels. Other types of threads might have a parent message
+         * (parent_id in python) that should be ignored for the purpose of this
+         * feature.
+         */
+        parentMessage: many2one('mail.message'),
         /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).

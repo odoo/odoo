@@ -201,7 +201,7 @@ class DiscussController(http.Controller):
             thread = channel_partner_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
-        allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid'}
+        allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
         return thread.message_post(**{key: value for key, value in post_data.items() if key in allowed_params}).message_format()[0]
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
