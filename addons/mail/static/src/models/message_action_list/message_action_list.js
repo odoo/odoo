@@ -95,7 +95,7 @@ function factory(dependencies) {
          */
         onClickReplyTo(ev) {
             markEventHandled(ev, 'MessageActionList.replyTo');
-            this.message.replyTo();
+            this.messageView.replyTo();
         }
 
         /**
@@ -149,8 +149,10 @@ function factory(dependencies) {
         _computeHasReplyIcon() {
             return Boolean(
                 this.messaging && this.messaging.inbox &&
-                this.messageView && this.messageView.threadView && this.messageView.threadView.thread &&
-                this.messageView.threadView.thread === this.messaging.inbox
+                this.messageView && this.messageView.threadView && this.messageView.threadView.thread && (
+                    this.messageView.threadView.thread === this.messaging.inbox ||
+                    this.messageView.threadView.thread.model === 'mail.channel'
+                )
             );
         }
 

@@ -2,11 +2,6 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_Message {
-    display: flex;
-    flex: 0 0 auto;
-}
-
 .o_Message_actionListContainer {
     @include o-position-absolute($top: - map-get($spacers, 3), $right: 0);
 
@@ -73,7 +68,10 @@
 }
 
 .o_Message_highlightIndicator {
+    @include o-position-absolute($top: 0, $left: 0);
+    height: 100%;
     width: $o-mail-discuss-message-highlight-indicator-width;
+    transition: background-color .5s ease-out;
 }
 
 .o_Message_originThread {
@@ -135,6 +133,7 @@
 
 .o_Message {
     background-color: $white;
+    transition: background-color .5s ease-out;
 
     .o_Message_partnerImStatusIcon {
         color: $white;

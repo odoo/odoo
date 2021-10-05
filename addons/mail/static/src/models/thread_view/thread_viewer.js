@@ -125,10 +125,6 @@ function factory(dependencies) {
             default: 'asc',
         }),
         /**
-         * Determines the selected `mail.message`.
-         */
-        selectedMessage: many2one('mail.message'),
-        /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread'),
