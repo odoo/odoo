@@ -326,67 +326,6 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.product_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'turlututu',
-                'partner_id': self.partner_b.id,
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'price_unit': -987.0,
-                'price_subtotal': -987.0,
-                'price_total': -987.0,
-                'amount_currency': -987.0,
-                'credit': 987.0,
-                'date_maturity': fields.Date.from_string('2019-02-28'),
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'turlututu',
-                'partner_id': self.partner_b.id,
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'price_unit': -423.0,
-                'price_subtotal': -423.0,
-                'price_total': -423.0,
-                'amount_currency': -423.0,
-                'credit': 423.0,
-            },
-        ], {
-            **self.move_vals,
-            'partner_id': self.partner_b.id,
-            'payment_reference': 'turlututu',
-            'fiscal_position_id': self.fiscal_pos_a.id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
-        })
-
-        # Remove lines and recreate them to apply the fiscal position.
-        move_form = Form(self.invoice)
-        move_form.invoice_line_ids.remove(0)
-        move_form.invoice_line_ids.remove(0)
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_b
-        move_form.save()
-
-        self.assertInvoiceValues(self.invoice, [
-            {
-                **self.product_line_vals_1,
                 'account_id': self.product_b.property_account_income_id.id,
                 'partner_id': self.partner_b.id,
                 'tax_ids': self.tax_sale_b.ids,
@@ -432,6 +371,46 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'payment_reference': 'turlututu',
             'fiscal_position_id': self.fiscal_pos_a.id,
             'invoice_payment_term_id': self.pay_terms_b.id,
+            'amount_untaxed': 1200.0,
+            'amount_tax': 180.0,
+            'amount_total': 1380.0,
+        })
+
+    def test_out_refund_line_onchange_fiscal_position_1(self):
+
+        move_form = Form(self.invoice)
+
+        # Change from no fiscal position to fiscal position a
+        move_form.fiscal_position_id = self.fiscal_pos_a
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            {
+                **self.product_line_vals_1,
+                'account_id': self.product_b.property_account_income_id.id,
+                'tax_ids': self.tax_sale_b.ids,
+            },
+            {
+                **self.product_line_vals_2,
+                'price_total': 230.0,
+                'tax_ids': self.tax_sale_b.ids,
+            },
+            {
+                **self.tax_line_vals_1,
+                'name': self.tax_sale_b.name,
+                'tax_line_id': self.tax_sale_b.id,
+            },
+            {
+                **self.term_line_vals_1,
+                'price_unit': -1380,
+                'price_subtotal': -1380.0,
+                'price_total': -1380.0,
+                'amount_currency': -1380.0,
+                'credit': 1380.0,
+            },
+        ], {
+            **self.move_vals,
+            'fiscal_position_id': self.fiscal_pos_a.id,
             'amount_untaxed': 1200.0,
             'amount_tax': 180.0,
             'amount_total': 1380.0,

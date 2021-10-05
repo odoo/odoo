@@ -503,11 +503,40 @@ class AccountMove(models.Model):
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
+        # Keep track of whether the fiscal position has changed
+        previous_fiscal_position_id = self.fiscal_position_id
         self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
             self.partner_id.id, delivery_id=delivery_partner_id)
-        self._recompute_dynamic_lines()
+
+        # Update the taxes if the fiscal position has changed
+        if previous_fiscal_position_id != self.fiscal_position_id:
+            self._onchange_fiscal_position_id()
+        else:
+            self._recompute_dynamic_lines()
+
         if warning:
             return {'warning': warning}
+
+    @api.onchange('fiscal_position_id')
+    def _onchange_fiscal_position_id(self):
+        for line in self.line_ids:
+
+            if line.display_type or line.exclude_from_invoice_tab:
+                continue
+
+            # Only update lines with products that have defined taxes
+            if (self.is_sale_document(include_receipts=True) and line.product_id.taxes_id) \
+               or (self.is_purchase_document(include_receipts=True) and line.product_id.supplier_taxes_id):
+
+                new_taxes = line._get_computed_taxes()
+                if set(line.tax_ids) != set(new_taxes):
+                    line.tax_ids = new_taxes
+                    line.recompute_tax_line = True
+
+            if line.product_id:
+                line.account_id = line._get_computed_account()
+
+        self._recompute_dynamic_lines()
 
     @api.onchange('date', 'currency_id')
     def _onchange_currency(self):
@@ -3773,6 +3802,8 @@ class AccountMoveLine(models.Model):
             # Out invoice.
             if self.product_id.taxes_id:
                 tax_ids = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+                if self.move_id.fiscal_position_id:
+                    tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
             elif self.account_id.tax_ids:
                 tax_ids = self.account_id.tax_ids
             else:
@@ -3783,6 +3814,8 @@ class AccountMoveLine(models.Model):
             # In invoice.
             if self.product_id.supplier_taxes_id:
                 tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+                if self.move_id.fiscal_position_id:
+                    tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
             elif self.account_id.tax_ids:
                 tax_ids = self.account_id.tax_ids
             else:
