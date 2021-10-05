@@ -1895,9 +1895,9 @@ QUnit.module('Views', {
             willStart: function () {
                 assert.step('load '+rpcCount);
                 if (rpcCount === 2) {
-                    return $.Deferred();
+                    return new Promise(() => {});
                 }
-                return $.Deferred().resolve();
+                return Promise.resolve();
             },
         }));
 
@@ -1924,18 +1924,13 @@ QUnit.module('Views', {
         });
         assert.verifySteps(['load 1']);
 
-        await testUtils.mock.intercept(form, 'execute_action', function (ev) {
+        testUtils.mock.intercept(form, 'execute_action', function (ev) {
             ev.data.on_success();
             ev.data.on_closed();
         });
 
         await testUtils.dom.click('.o_form_statusbar button.p', form);
         assert.verifySteps(['load 2']);
-
-        testUtils.mock.intercept(form, 'execute_action', function (ev) {
-            ev.data.on_success();
-            ev.data.on_closed();
-        });
 
         await testUtils.dom.click('.o_form_statusbar button.p', form);
         assert.verifySteps(['load 3']);
