@@ -49,7 +49,7 @@ function factory(dependencies) {
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                 }),
             });
-            if (this.channel.defaultDisplayMode === 'video_full_screen') {
+            if (this.welcomeView.mediaPreview) {
                 this.welcomeView.mediaPreview.enableMicrophone();
                 this.welcomeView.mediaPreview.enableVideo();
             }
