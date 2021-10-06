@@ -65,6 +65,7 @@ var ScreenWidget = PosBaseWidget.extend({
             if (self.barcode_product_screen) {
                 self.gui.show_screen(self.barcode_product_screen, null, null, true);
             }
+            self.numpad.state.reset();
         } else {
             this.barcode_error_action(code);
         }
@@ -1051,7 +1052,10 @@ var ProductScreenWidget = ScreenWidget.extend({
         this.order_widget.replace(this.$('.placeholder-OrderWidget'));
 
         this.product_list_widget = new ProductListWidget(this,{
-            click_product_action: function(product){ self.click_product(product); },
+            click_product_action: function(product) {
+                self.click_product(product);
+                self.numpad.state.reset();
+            },
             product_list: this.pos.db.get_product_by_category(0)
         });
         this.product_list_widget.replace(this.$('.placeholder-ProductListWidget'));
