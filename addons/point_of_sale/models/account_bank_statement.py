@@ -24,6 +24,17 @@ class AccountBankStatement(models.Model):
                 raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
 
+    @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
+    def _compute_starting_balance(self):
+        statement_ids = self.env['account.bank.statement']
+        for statement in self:
+            if statement.pos_session_id.config_id == statement.previous_statement_id.pos_session_id.config_id:
+                statement_ids |= statement
+            else:
+                # Need default value
+                statement.balance_start = statement.balance_start or 0.0
+        return super(AccountBankStatement, statement_ids)._compute_starting_balance()
+
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 
