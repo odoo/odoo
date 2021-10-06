@@ -65,6 +65,8 @@ class TestSaleMrpProcurement(TransactionCase):
         # I confirm the sale order
         sale_order_so0.action_confirm()
 
+        self.assertEqual(sale_order_so0.mrp_production_count, 1, "Smart button should show 1 manufacture order")
+
         # I verify that a manufacturing order has been generated, and that its name and reference are correct
         mo = self.env['mrp.production'].search([('origin', 'like', sale_order_so0.name)], limit=1)
         self.assertTrue(mo, 'Manufacturing order has not been generated')
@@ -163,6 +165,9 @@ class TestSaleMrpProcurement(TransactionCase):
         sale_order_so0.action_confirm()
 
         pickings = sale_order_so0.picking_ids
+
+        # Two MO for final production and manufactured component
+        self.assertEqual(sale_order_so0.mrp_production_count, 2, "Smart button should show 2 manufacture orders")
 
         # One delivery...
         self.assertEqual(len(pickings), 1)
