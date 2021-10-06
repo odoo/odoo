@@ -3158,10 +3158,14 @@ td {
     background-color:  rgb(110,200,155);
 }
 
+.ticket-screen .orders .order-item-row {
+    display: flex;
+}
+
 .ticket-screen .orders .col {
     display: flex;
     flex: 1;
-    padding: 10px;
+    padding: 5px;
     text-align: start;
 }
 
@@ -3681,8 +3685,9 @@ td {
     }
 
     .pos .ticket-screen .order-table {
-        border: solid 1px #000;
         margin: 5px;
+        border: 1px solid #C9CCD2 /* $border-color */;
+        background: white /* $o-view-background-color */;
     }
 
     .pos .order-management-screen .order-list {
@@ -3690,16 +3695,18 @@ td {
         flex-direction: column;
     }
 
-    .pos .ticket-screen .order-table .order-row .col:first-child {
-        font-weight:bold;
+    .pos .ticket-screen .order-table .order-item-row .col:first-child {
+        font-weight: bold;
     }
 
     .pos .ticket-screen .order-row:nth-child(odd) {
         background: rgb(230, 230, 230);
     }
 
-    .pos .ticket-screen .order-table .order-row.delete-button {
-        background: #bfbfbf;
+    .pos .ticket-screen .order-table .order-item-row.delete-button {
+        background: #d23f3a;
+        color: white;
+        justify-content: space-evenly;
     }
     .pos .ticket-screen .order-table .order-row.delete-button .fa-trash {
         margin-right: 5px;

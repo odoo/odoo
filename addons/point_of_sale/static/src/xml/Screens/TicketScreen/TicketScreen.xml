@@ -54,74 +54,8 @@
                     <div class="orders">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
-                            <t t-if="env.isMobile">
-                                <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                    <div class="order-table pointer" t-on-click="trigger('click-order', order)">
-                                        <div class="order-row">
-                                            <div class="col">
-                                                Date
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getDate(order)"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row">
-                                            <div class="col">
-                                                Receipt Number
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="order.name"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row">
-                                            <div class="col">
-                                                Customer
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getCustomer(order)"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row" t-if="showCardholderName()">
-                                            <div class="col">
-                                                Cardholder Name
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getCardholderName(order)"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row">
-                                            <div class="col">
-                                                Employee
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getEmployee(order)"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row">
-                                            <div class="col">
-                                                Total
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getTotal(order)"/>
-                                            </div>
-                                        </div>
-                                        <div class="order-row">
-                                            <div class="col start">
-                                                Status
-                                            </div>
-                                            <div class="col end">
-                                                <t t-esc="getStatus(order)"/>
-                                            </div>
-                                        </div>
-                                        <div t-if="!shouldHideDeleteButton(order)" class="order-row delete-button">
-                                            <div class="col center very-narrow" name="delete" t-on-click.stop="deleteOrder(order)">
-                                                <i class="fa fa-trash" aria-hidden="true"/> Delete
-                                            </div>
-                                        </div>
-                                    </div>
-                                </t>
-                            </t>
-                            <t t-else="">
+                            <!-- DESKTOP -->
+                            <t t-if="!env.isMobile">
                                 <div class="header-row">
                                     <div class="col start wide">Date</div>
                                     <div class="col start wide">Receipt Number</div>
@@ -159,6 +93,74 @@
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </div>
                                         <div t-else="" class="col center very-narrow delete-button"></div>
+                                    </div>
+                                </t>
+                            </t>
+                            <!-- MOBILE -->
+                            <t t-else="">
+                                <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
+                                    <div class="order-table pointer" t-on-click="trigger('click-order', order)">
+                                        <div class="order-item-row">
+                                            <div class="col">
+                                                Date
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getDate(order)"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row">
+                                            <div class="col">
+                                                Receipt Number
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="order.name"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row">
+                                            <div class="col">
+                                                Customer
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getCustomer(order)"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row" t-if="showCardholderName()">
+                                            <div class="col">
+                                                Cardholder Name
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getCardholderName(order)"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row">
+                                            <div class="col">
+                                                Employee
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getEmployee(order)"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row">
+                                            <div class="col">
+                                                Total
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getTotal(order)"/>
+                                            </div>
+                                        </div>
+                                        <div class="order-item-row">
+                                            <div class="col start">
+                                                Status
+                                            </div>
+                                            <div class="col end">
+                                                <t t-esc="getStatus(order)"/>
+                                            </div>
+                                        </div>
+                                        <div t-if="!shouldHideDeleteButton(order)" class="order-item-row delete-button">
+                                            <div class="col center very-narrow" name="delete" t-on-click.stop="deleteOrder(order)">
+                                                <i class="fa fa-trash" aria-hidden="true"/> Delete
+                                            </div>
+                                        </div>
                                     </div>
                                 </t>
                             </t>

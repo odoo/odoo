@@ -4,37 +4,31 @@
     <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
         <!-- DESKTOP -->
         <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
-            <t t-if="!env.isMobile">
-                <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">Table</div>
-                <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
-            </t>
+            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">Table</div>
+            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
         </xpath>
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
-            <t t-if="!env.isMobile">
-                <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">
-                    <t t-esc="getTable(order)"></t>
-                </div>
-                <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
-                    <TipCell order="order" />
-                </div>
-            </t>
+            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">
+                <t t-esc="getTable(order)"></t>
+            </div>
+            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
+                <TipCell order="order" />
+            </div>
         </xpath>
         <!-- MOBILE -->
-        <xpath expr="//div[hasclass('order-row') and hasclass('delete-button')]" position="before">
-            <t t-if="env.isMobile">
-                <div t-if="env.pos.config.iface_floorplan" class="order-row">
-                    <div class="col">Table</div>
-                    <div class="col end" name="table">
-                        <t t-esc="getTable(order)"></t>
-                    </div>
+        <xpath expr="//div[hasclass('order-item-row') and hasclass('delete-button')]" position="before">
+            <div t-if="env.pos.config.iface_floorplan" class="order-item-row">
+                <div class="col">Table</div>
+                <div class="col end" name="table">
+                    <t t-esc="getTable(order)"></t>
                 </div>
-                <div t-if="filter === 'Tipping'" class="order-row">
-                    <div class="col" name="tip">Tip</div>
-                    <div class="col end narrow" name="tip">
-                        <TipCell order="order" />
-                    </div>
+            </div>
+            <div t-if="filter === 'Tipping'" class="order-item-row">
+                <div class="col" name="tip">Tip</div>
+                <div class="col end narrow" name="tip">
+                    <TipCell order="order" />
                 </div>
-            </t>
+            </div>
         </xpath>
 
         <xpath expr="//div[hasclass('buttons')]" position="inside">
