@@ -173,7 +173,7 @@ class MailThread(models.AbstractModel):
             operator_new = 'inselect'
         else:
             operator_new = 'not inselect'
-        return [('id', operator_new, ("SELECT distinct res_id FROM mail_message WHERE model=%s", [self._name]))]
+        return [('id', operator_new, ("SELECT res_id FROM mail_message WHERE model=%s", [self._name]))]
 
     def _compute_message_unread(self):
         partner_id = self.env.user.partner_id.id
