@@ -15,6 +15,7 @@
 
     <record id="demo_company_sa" model="res.company">
         <field name="name">SA Company</field>
+        <field name="vat">123456789</field>
         <field name="partner_id" ref="partner_demo_company_sa"/>
     </record>
 
@@ -28,7 +29,7 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_sa.account_arabic_coa_general')]"/>
+        <value eval="[ref('l10n_sa.sa_chart_template_standard')]"/>
         <value model="res.company" eval="obj().env.ref('l10n_sa.demo_company_sa')"/>
     </function>
 </odoo>
