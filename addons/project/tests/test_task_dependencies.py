@@ -8,7 +8,8 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 from datetime import date
 
-@tagged('-at_install', 'post_install', 'task_dependencies')
+
+@tagged('-at_install', 'post_install')
 class TestTaskDependencies(TestProjectCommon):
 
     @classmethod
@@ -128,3 +129,29 @@ class TestTaskDependencies(TestProjectCommon):
         self.flush_tracking()
         self.assertEqual(len(self.task_1.message_ids), 3,
             'Changing multiple fields on task 2 should only log one message in task 1.')
+
+    def test_task_dependencies_settings_change(self):
+
+        def set_task_dependencies_setting(enabled):
+            features_config = self.env["res.config.settings"].create({'group_project_task_dependencies': enabled})
+            features_config.execute()
+
+        self.project_pigs.write({
+            'allow_task_dependencies': False,
+        })
+
+        set_task_dependencies_setting(True)
+        self.assertTrue(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
+
+        self.project_chickens = self.env['project.project'].create({
+            'name': 'My Chicken Project'
+        })
+        self.assertTrue(self.project_chickens.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
+
+        set_task_dependencies_setting(False)
+        self.assertFalse(self.project_pigs.allow_task_dependencies, "Projects allow_task_dependencies should follow group_project_task_dependencies setting changes")
+
+        self.project_ducks = self.env['project.project'].create({
+            'name': 'My Ducks Project'
+        })
+        self.assertFalse(self.project_ducks.allow_task_dependencies, "New Projects allow_task_dependencies should default to group_project_task_dependencies")
