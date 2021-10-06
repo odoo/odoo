@@ -459,7 +459,9 @@ export class Message extends Component {
         this.messageView.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
-            this.messageView.message.refreshDateFromNow();
+            if (this.messageView) {
+                this.messageView.message.refreshDateFromNow();
+            }
         }, 60 * 1000);
     }
 
