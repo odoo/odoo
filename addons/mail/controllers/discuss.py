@@ -377,7 +377,11 @@ class DiscussController(http.Controller):
                 ('id', '=', int(rtc_session_id)),
                 ('channel_partner_id', '=', channel_partner_sudo.id),
             ]).write({})  # update write_date
-        return {'rtcSessions': channel_partner_sudo._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)}
+        current_rtc_sessions, outdated_rtc_sessions = channel_partner_sudo._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
+        return {'rtcSessions': [
+            ('insert', [rtc_session_sudo._mail_rtc_session_format(complete_info=False) for rtc_session_sudo in current_rtc_sessions]),
+            ('insert-and-unlink', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions]),
+        ]}
 
     # --------------------------------------------------------------------------
     # Chatter API
