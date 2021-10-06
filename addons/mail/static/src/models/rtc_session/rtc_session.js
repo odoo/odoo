@@ -205,7 +205,7 @@ function factory(dependencies) {
                 return `/mail/channel/${this.channel.id}/partner/${this.partner.id}/avatar_128`;
             }
             if (this.guest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.guest.id}/avatar_128`;
+                return `/mail/channel/${this.channel.id}/guest/${this.guest.id}/avatar_128?unique=${this.guest.name}`;
             }
         }
 
