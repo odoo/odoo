@@ -114,9 +114,13 @@ class ChannelPartner(models.Model):
         self.channel_id._rtc_cancel_invitations(partner_ids=self.partner_id.ids, guest_ids=self.guest_id.ids)
         self.rtc_session_ids.unlink()
         rtc_session = self.env['mail.channel.rtc.session'].create({'channel_partner_id': self.id})
+        current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         res = {
             'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,
-            'rtcSessions': self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids),
+            'rtcSessions': [
+                ('insert', [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
+                ('insert-and-unlink', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions]),
+            ],
             'sessionId': rtc_session.id,
         }
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
@@ -141,15 +145,13 @@ class ChannelPartner(models.Model):
             - Current sessions are returned.
             - Sessions given in check_rtc_session_ids that no longer exists
               are returned as non-existing.
-        Returns a list of JS command for updating rtcSessions field of channel.
+            :param list check_rtc_session_ids: list of the ids of the sessions to check
+            :returns tuple: (current_rtc_sessions, outdated_rtc_sessions)
         """
         self.ensure_one()
         self.channel_id.rtc_session_ids._delete_inactive_rtc_sessions()
         check_rtc_sessions = self.env['mail.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
-        return [
-            ('insert', [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in self.channel_id.rtc_session_ids]),
-            ('insert-and-unlink', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in check_rtc_sessions - self.channel_id.rtc_session_ids]),
-        ]
+        return self.channel_id.rtc_session_ids, check_rtc_sessions - self.channel_id.rtc_session_ids
 
     def _rtc_invite_members(self, partner_ids=None, guest_ids=None):
         """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited.
