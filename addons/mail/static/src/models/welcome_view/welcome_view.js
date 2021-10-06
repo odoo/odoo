@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -127,6 +127,16 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMediaPreview() {
+            return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
+                ? insertAndReplace()
+                : clear();
+        }
+
+        /**
+         * @private
          */
         _handleFocus() {
             if (this.isDoFocusGuestNameInput) {
@@ -213,10 +223,9 @@ function factory(dependencies) {
          * States the media preview embedded in this welcome view.
          */
         mediaPreview: one2one('mail.media_preview', {
-            default: insertAndReplace(),
+            compute: '_computeMediaPreview',
             isCausal: true,
             readonly: true,
-            required: true,
         }),
         /**
          * States the name the guest had when landing on the welcome view.
