@@ -237,7 +237,7 @@ function factory(dependencies) {
         /**
          * @private
          */
-        _computeTopBar() {
+        _computeTopbar() {
             return this.hasTopbar ? insertAndReplace() : clear();
         }
 
@@ -545,7 +545,7 @@ function factory(dependencies) {
          * Determines the top bar of this thread view, if any.
          */
         topbar: one2one('mail.thread_view_topbar', {
-            compute: '_computeTopBar',
+            compute: '_computeTopbar',
             inverse: 'threadView',
             isCausal: true,
             readonly: true,
