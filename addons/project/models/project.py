@@ -897,7 +897,7 @@ class Task(models.Model):
     def _compute_recurrence_message(self):
         self.recurrence_message = False
         for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
-            date = self._get_recurrence_start_date()
+            date = task._get_recurrence_start_date()
             recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
             number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
             delta = task.repeat_interval if task.repeat_unit == 'day' else 1
