@@ -77,7 +77,7 @@ function factory(dependencies) {
                 return `/mail/channel/${this.channel.id}/partner/${this.invitedPartner.id}/avatar_128`;
             }
             if (this.invitedGuest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128`;
+                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128?unique=${this.invitedGuest.name}`;
             }
         }
 
