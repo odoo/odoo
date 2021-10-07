@@ -2,17 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import hashlib
+import io
 import itertools
 import logging
 import mimetypes
 import os
 import re
-from collections import defaultdict
 import uuid
+
+from collections import defaultdict
+from PIL import Image
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
-from odoo.tools import config, human_size, ustr, html_escape
+from odoo.tools import config, human_size, ustr, html_escape, ImageProcess, str2bool
 from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -280,6 +283,43 @@ class IrAttachment(models.Model):
                 mimetype = guess_mimetype(raw)
         return mimetype or 'application/octet-stream'
 
+    def _postprocess_contents(self, values):
+        ICP = self.env['ir.config_parameter'].sudo().get_param
+        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,gif,bmp,tif').split(',')
+
+        mimetype = values['mimetype'] = self._compute_mimetype(values)
+        _type, _subtype = mimetype.split('/')
+        is_image_resizable = _type == 'image' and _subtype in supported_subtype
+        if is_image_resizable and (values.get('datas') or values.get('raw')):
+            is_raw = values.get('raw')
+
+            # Can be set to 0 to skip the resize
+            max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
+            if str2bool(max_resolution, True):
+                try:
+                    img = fn_quality = False
+                    if is_raw:
+                        img = ImageProcess(False, verify_resolution=False)
+                        img.image = Image.open(io.BytesIO(values['raw']))
+                        img.original_format = (img.image.format or '').upper()
+                        fn_quality = img.image_quality
+                    else:  # datas
+                        img = ImageProcess(values['datas'], verify_resolution=False)
+                        fn_quality = img.image_base64
+
+                    w, h = img.image.size
+                    nw, nh = map(int, max_resolution.split('x'))
+                    if w > nw or h > nh:
+                        img.resize(nw, nh)
+                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
+                except UserError as e:
+                    # Catch error during test where we provide fake image
+                    # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
+                    _logger.info('Post processing ignored : %s', e)
+                    pass
+        return values
+
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
@@ -290,6 +330,8 @@ class IrAttachment(models.Model):
             self.env.context.get('attachments_mime_plainxml')))
         if force_text:
             values['mimetype'] = 'text/plain'
+        if not self.env.context.get('image_no_postprocess'):
+            values = self._postprocess_contents(values)
         return values
 
     @api.model
