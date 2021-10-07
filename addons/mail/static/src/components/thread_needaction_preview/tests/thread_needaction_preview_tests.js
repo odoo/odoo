@@ -25,12 +25,14 @@ QUnit.module('thread_needaction_preview_tests.js', {
         };
 
         this.start = async params => {
-            const { afterEvent, env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { afterEvent, env, widget } = res;
             this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -54,9 +56,8 @@ QUnit.test('mark as read', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
+    const { createMessagingMenuComponent } = await this.start({
         hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -72,6 +73,7 @@ QUnit.test('mark as read', async function (assert) {
             return this._super(...arguments);
         },
     });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -116,9 +118,8 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
+    const { createMessagingMenuComponent } = await this.start({
         hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -134,6 +135,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
             return this._super(...arguments);
         },
     });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -197,11 +199,11 @@ QUnit.test('click on expand from chat window should close the chat window and op
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
+    const { createMessagingMenuComponent } = await this.start({
         env: { bus },
         hasChatWindow: true,
-        hasMessagingMenu: true,
     });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -261,9 +263,8 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
+    const { createMessagingMenuComponent } = await this.start({
         hasChatWindow: true,
-        hasMessagingMenu: true,
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -274,6 +275,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
             return this._super(...arguments);
         },
     });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -332,10 +334,8 @@ QUnit.test('preview should display last needaction message preview even if there
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
-    });
+    const { createMessagingMenuComponent } = await this.start({ hasChatWindow: true });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -375,10 +375,8 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: this.data.currentPartnerId,
     });
-    await this.start({
-        hasChatWindow: true,
-        hasMessagingMenu: true,
-    });
+    const { createMessagingMenuComponent } = await this.start({ hasChatWindow: true });
+    await createMessagingMenuComponent();
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
