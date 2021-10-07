@@ -88,6 +88,68 @@ class ImageProcess():
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
                 raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 10e6)))
 
+    def image_quality(self, quality=0, output_format=''):
+        """Return the image resulting of all the image processing
+        operations that have been applied previously.
+
+        Return False if the initialized `image` was falsy, and return
+        the initialized `image` without change if it was SVG.
+
+        Also return the initialized `image` if no operations have been applied
+        and the `output_format` is the same as the original format and the
+        quality is not specified.
+
+        :param quality: quality setting to apply. Default to 0.
+            - for JPEG: 1 is worse, 95 is best. Values above 95 should be
+                avoided. Falsy values will fallback to 95, but only if the image
+                was changed, otherwise the original image is returned.
+            - for PNG: set falsy to prevent conversion to a WEB palette.
+            - for other formats: no effect.
+        :type quality: int
+
+        :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
+            Default to the format of the original image. BMP is converted to
+            PNG, other formats than those mentioned above are converted to JPEG.
+        :type output_format: string
+
+        :return: image
+        :rtype: bytes or False
+        """
+        if not self.image:
+            return self.image
+
+        output_image = self.image
+
+        output_format = output_format.upper() or self.original_format
+        if output_format == 'BMP':
+            output_format = 'PNG'
+        elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
+            output_format = 'JPEG'
+
+        if not self.operationsCount and output_format == self.original_format and not quality:
+            return self.image
+
+        opt = {'format': output_format}
+
+        if output_format == 'PNG':
+            opt['optimize'] = True
+            if quality:
+                if output_image.mode != 'P':
+                    # Floyd Steinberg dithering by default
+                    output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+        if output_format == 'JPEG':
+            opt['optimize'] = True
+            opt['quality'] = quality or 95
+        if output_format == 'GIF':
+            opt['optimize'] = True
+            opt['save_all'] = True
+
+        if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
+            output_image = output_image.convert("RGB")
+
+        return image_apply_opt(output_image, **opt)
+
+    # TODO: rename to image_quality_base64 in master~saas-15.1
     def image_base64(self, quality=0, output_format=''):
         """Return the base64 encoded image resulting of all the image processing
         operations that have been applied previously.
@@ -115,39 +177,15 @@ class ImageProcess():
         :return: image base64 encoded or False
         :rtype: bytes or False
         """
-        output_image = self.image
 
-        if not output_image:
+        if not self.image:
             return self.base64_source
 
-        output_format = output_format.upper() or self.original_format
-        if output_format == 'BMP':
-            output_format = 'PNG'
-        elif output_format not in ['PNG', 'JPEG', 'GIF', 'ICO']:
-            output_format = 'JPEG'
+        stream = self.image_quality(quality=quality, output_format=output_format)
 
-        if not self.operationsCount and output_format == self.original_format and not quality:
-            return self.base64_source
-
-        opt = {'format': output_format}
-
-        if output_format == 'PNG':
-            opt['optimize'] = True
-            if quality:
-                if output_image.mode != 'P':
-                    # Floyd Steinberg dithering by default
-                    output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
-        if output_format == 'JPEG':
-            opt['optimize'] = True
-            opt['quality'] = quality or 95
-        if output_format == 'GIF':
-            opt['optimize'] = True
-            opt['save_all'] = True
-
-        if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
-            output_image = output_image.convert("RGB")
-
-        return image_to_base64(output_image, **opt)
+        if stream != self.image:
+            return base64.b64encode(stream)
+        return self.base64_source
 
     def resize(self, max_width=0, max_height=0):
         """Resize the image.
@@ -406,6 +444,22 @@ def base64_to_image(base64_source):
         raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
 
 
+def image_apply_opt(image, format, **params):
+    """Return the given PIL `image` using `params`.
+
+    :param image: the PIL image
+    :type image: PIL.Image
+
+    :param params: params to expand when calling PIL.Image.save()
+    :type params: dict
+
+    :return: the image formatted
+    :rtype: bytes
+    """
+    stream = io.BytesIO()
+    image.save(stream, format=format, **params)
+    return stream.getvalue()
+
 def image_to_base64(image, format, **params):
     """Return a base64_image from the given PIL `image` using `params`.
 
@@ -418,10 +472,8 @@ def image_to_base64(image, format, **params):
     :return: the image base64 encoded
     :rtype: bytes
     """
-    stream = io.BytesIO()
-    image.save(stream, format=format, **params)
-    return base64.b64encode(stream.getvalue())
-
+    stream = image_apply_opt(image, format, **params)
+    return base64.b64encode(stream)
 
 def is_image_size_above(base64_source_1, base64_source_2):
     """Return whether or not the size of the given image `base64_source_1` is
