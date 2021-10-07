@@ -511,6 +511,9 @@
                         limit: category.limit,
                         search_domain: this.searchDomain,
                     },
+                    params: {
+                        context: this.config.context,
+                    },
                 });
                 this._createCategoryTree(category.id, result);
             }));
