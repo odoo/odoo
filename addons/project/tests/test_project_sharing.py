@@ -123,7 +123,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             task = form.save()
             self.assertEqual(task.name, 'Test')
             self.assertEqual(task.project_id, self.project_portal)
-            self.assertEqual(task.user_ids, self.user_portal)
+            self.assertEqual(task.portal_user_names, self.user_portal.name)
             # 3.1) Try to change the project of the new task with this user.
             with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                 form.project_id = self.project_cows
@@ -160,16 +160,49 @@ class TestProjectSharing(TestProjectSharingCommon):
             task = form.save()
             self.assertEqual(task.name, 'Test')
             self.assertEqual(task.project_id, self.project_cows)
-            # 3.1) Try to change the project of the new task with this user.
-            with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
+
+        # 3.1) Try to change the project of the new task with this user.
+        with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
+            with self.get_project_sharing_form_view(task, self.user_portal) as form:
                 form.project_id = self.project_portal
-                task = form.save()
-            # 3.2) Create a sub-task
+
+        # 3.2) Create a sub-task
+        with self.get_project_sharing_form_view(task, self.user_portal) as form:
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
                 with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                     subtask_form.display_project_id = self.project_portal
-            form.save()
-            self.assertEqual(task.child_ids.name, 'Test Subtask')
-            self.assertEqual(task.child_ids.project_id, self.project_cows)
-            self.assertEqual(task.child_ids.user_ids, self.user_portal)
+        self.assertEqual(task.child_ids.name, 'Test Subtask')
+        self.assertEqual(task.child_ids.project_id, self.project_cows)
+        self.assertEqual(task.child_ids.portal_user_names, self.user_portal.name)
+        self.assertEqual(task.child_ids.user_ids, self.user_portal)
+
+    def test_portal_user_cannot_see_all_assignees(self):
+        """ Test when the portal sees a task he cannot see all the assignees.
+
+            Because of a ir.rule in res.partner filters the assignees, the portal
+            can only see the assignees in the same company than him.
+
+            Test Cases:
+            ==========
+            1) add many assignees in a task
+            2) check the portal user can read no assignee in this task. Should have an AccessError exception
+        """
+        self.task_cow.write({'user_ids': [Command.link(self.user_projectmanager.id)]})
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to access to a task he does not follow it and its project."):
+            self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
+        self.assertEqual(len(self.task_cow.user_ids), 2, '2 users should be assigned in this task.')
+
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'access_mode': 'edit',
+            'res_model': 'project.project',
+            'res_id': self.project_cows.id,
+            'partner_ids': [
+                Command.link(self.user_portal.partner_id.id),
+            ],
+        })
+        project_share_wizard.action_send_mail()
+
+        self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
+        task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
+        self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
