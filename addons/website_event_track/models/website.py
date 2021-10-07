@@ -43,4 +43,4 @@ class Website(models.Model):
             image.crop_resize(square_size, square_size)
             image.image = image.image.resize((512, 512))
             image.operationsCount += 1
-            website.app_icon = image.image_base64(output_format='PNG')
+            website.app_icon = image.image_quality_base64(output_format='PNG')
