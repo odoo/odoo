@@ -198,6 +198,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
             method: 'get_html',
             kwargs: {
                 data: this._prepareActionReportParams(),
+                context: this.context,
             },
         }).then(result => {
             this.reportHtml = result;
