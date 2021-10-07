@@ -8,7 +8,6 @@ from unittest.mock import patch
 
 @tagged('-at_install', 'post_install')
 class TestHttpCase(HttpCase):
-
     def test_console_error_string(self):
         with self.assertRaises(AssertionError) as error_catcher:
             code = "console.error('test error','message')"

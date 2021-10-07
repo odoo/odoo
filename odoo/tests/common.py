@@ -1067,7 +1067,7 @@ class ChromeBrowser():
         try:
             res = json.loads(self.ws.recv())
         except websocket.WebSocketTimeoutException:
-            res = {}
+            return {}
 
         if res.get('method') == 'Runtime.consoleAPICalled':
             params = res['params']
@@ -1254,7 +1254,7 @@ class ChromeBrowser():
             res = self._get_message()
 
             if res.get('id') == ready_id:
-                result = res.get('result').get('result')
+                result = res.get('result', {}).get('result', {})
                 if result.get('subtype') == 'promise':
                     remote_promise_id = result.get('objectId')
                     promise_id = self._websocket_send('Runtime.awaitPromise', params={'promiseObjectId': remote_promise_id})
@@ -1376,7 +1376,18 @@ class ChromeBrowser():
         # nb: preview properties are *not* recursive, the value is *all* we get
         props = arg.get('preview', {}).get('properties')
         if props is None:
-            props = self._preview_from_value(arg['value'])
+            value = arg['value']
+            if isinstance(value, dict):
+                props = self._preview_from_value(value)
+            elif isinstance(value, list):
+                return repr([
+                         'Object' if isinstance(v, dict)
+                    else f'Array({len(v)})' if isinstance(v, list)
+                    else v
+                    for v in value
+                ])
+            else:
+                return value
         return '%s(%s)' % (
             arg.get('className') or 'Object',
             ', '.join(
