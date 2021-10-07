@@ -36,6 +36,9 @@ function factory(dependencies) {
                 message: replace(parentMessage),
                 threadView: replace(threadView),
             });
+            if (!parentMessageView) {
+                return;
+            }
             threadView.addComponentHint('highlight-reply', parentMessageView);
         }
 
