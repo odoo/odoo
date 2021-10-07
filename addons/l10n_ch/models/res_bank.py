@@ -230,7 +230,8 @@ class ResPartnerBank(models.Model):
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'ch_qr':
-            return self._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
+            qr_vals = self._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
+            return "\n".join(qr_vals)
         return super()._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
