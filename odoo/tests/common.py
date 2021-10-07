@@ -791,6 +791,7 @@ class ChromeBrowserException(Exception):
     pass
 
 
+USE_CHROME = 'USE_FIREFOX' not in os.environ
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
@@ -800,12 +801,8 @@ class ChromeBrowser():
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        self.devtools_port = None
-        self.ws_url = ''  # WebSocketUrl
-        self.ws = None  # websocket
         self.request_id = 0
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
-        self.chrome_pid = None
 
         otc = odoo.tools.config
         self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
@@ -817,10 +814,13 @@ class ChromeBrowser():
 
         self.window_size = window_size
         self.sigxcpu_handler = None
-        self._chrome_start()
-        self._find_websocket()
-        self._logger.info('Websocket url found: %s', self.ws_url)
-        self._open_websocket()
+        if USE_CHROME:
+            self.chrome_pid, devtools_port = self._chrome_start()
+        else:
+            self.chrome_pid, devtools_port = self._firefox_start()
+        ws_url = self._find_websocket(devtools_port)
+        self._logger.info('Websocket url found: %s', ws_url)
+        self.ws = self._open_websocket(ws_url)
         self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
@@ -874,7 +874,7 @@ class ChromeBrowser():
         self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
-    def _spawn_chrome(self, cmd):
+    def _spawn_browser(self, cmd):
         if os.name != 'posix':
             return
 
@@ -885,11 +885,8 @@ class ChromeBrowser():
                 time.sleep(0.1)
                 if port_file.is_file():
                     with port_file.open('r', encoding='utf-8') as f:
-                        self.devtools_port = int(f.readline())
-                    break
-            else:
-                raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
-            return pid
+                        return pid, int(f.readline())
+            raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
         else:
             if platform.system() != 'Darwin':
                 # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
@@ -904,9 +901,6 @@ class ChromeBrowser():
             os.execv(cmd[0], cmd)
 
     def _chrome_start(self):
-        if self.chrome_pid is not None:
-            return
-
         switches = {
             '--headless': '',
             '--no-default-browser-check': '',
@@ -938,36 +932,65 @@ class ChromeBrowser():
         url = 'about:blank'
         cmd.append(url)
         try:
-            self.chrome_pid = self._spawn_chrome(cmd)
+            pid, port = self._spawn_browser(cmd)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
-        self._logger.info('Chrome pid: %s', self.chrome_pid)
+        self._logger.info('Chrome pid: %s', pid)
+        return pid, port
 
-    def _find_websocket(self):
-        version = self._json_command('version')
+    def _firefox_start(self):
+        executable = None
+        for bin_ in ['firefox', 'Firefox']:
+            try:
+                executable = find_in_path(bin_)
+                break
+            except IOError:
+                continue
+        if not executable:
+            raise unittest.SkipTest("Firefox executable not found")
+
+        switches = [
+            '--headless',
+            '--profile', self.user_data_dir,
+            '--window-size', self.window_size,
+            '--remote-debugging-port', '0',
+        ]
+        cmd = [
+            executable,
+            *switches,
+            'about:blank'
+        ]
+        try:
+            pid, port = self._spawn_browser(cmd)
+        except OSError:
+            raise unittest.SkipTest("%s not found" % cmd[0])
+        self._logger.info('Firefox pid: %s', pid)
+        return pid, port
+
+    def _find_websocket(self, devtools_port):
+        version = self._json_command(devtools_port, 'version')
         self._logger.info('Browser version: %s', version['Browser'])
-        infos = self._json_command('list', get_key=0)  # Infos about the first tab
-        self.ws_url = infos['webSocketDebuggerUrl']
+        infos = self._json_command(devtools_port, 'list', get_key=0)  # Infos about the first tab
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
+        return infos['webSocketDebuggerUrl']
 
-    def _json_command(self, command, timeout=3, get_key=None):
+    def _json_command(self, port, command, timeout=3, get_key=None):
         """
         Inspect dev tools with get
         Available commands:
-            '' : return list of tabs with their id
-            list (or json/): list tabs
-            new : open a new tab
-            activate/ + an id: activate a tab
-            close/ + and id: close a tab
+            list: return list of tabs with their id
+            new: open a new tab
+            activate/{id}: activate a tab
+            close/{id}: close a tab
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        command = os.path.join('json', command).strip('/')
-        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        assert command
+        url = f'http://{HOST}:{port}/json/{command}'
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
         tries = 0
-        failure_info = None
+        message = failure_info = None
         while timeout > 0:
             try:
                 os.kill(self.chrome_pid, 0)
@@ -1001,11 +1024,12 @@ class ChromeBrowser():
         self.stop()
         raise unittest.SkipTest("Error during Chrome headless connection")
 
-    def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url)
-        if self.ws.getstatus() != 101:
+    def _open_websocket(self, ws_url):
+        ws = websocket.create_connection(ws_url)
+        if ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
-        self.ws.settimeout(0.01)
+        ws.settimeout(0.01)
+        return ws
 
     def _websocket_send(self, method, params=None):
         """
@@ -1350,14 +1374,50 @@ class ChromeBrowser():
         # non-standard objects, print as TypeName(param=val, ...), sadly because
         # of the way Odoo widgets are created they all appear as Class(...)
         # nb: preview properties are *not* recursive, the value is *all* we get
+        props = arg.get('preview', {}).get('properties')
+        if props is None:
+            props = self._preview_from_value(arg['value'])
         return '%s(%s)' % (
-            arg.get('className') or 'object',
+            arg.get('className') or 'Object',
             ', '.join(
                 '%s=%s' % (p['name'], repr(p['value']) if p['type'] == 'string' else p['value'])
-                for p in arg.get('preview', {}).get('properties', [])
+                for p in props
                 if p.get('value') is not None
             )
         )
+    JSON_TYPE = {
+        bool: 'boolean',
+        int: 'number',
+        float: 'number',
+        str: 'string',
+        dict: 'object',
+        list: 'object',
+        tuple: 'object',
+    }
+    def _preview_from_value(self, value):
+        """Firefox's `consoleAPICalled` provides a `value` which is a full
+        recursive JSON object, while Chrome only provides `preview` which is
+        a non-recursive preview of the object, but provides access to properties
+        and information which are not serializable at all e.g. console.log-ing
+        exception objects.
+
+        This tries to convert a `value` into a preview. `Runtime.getProperties`
+        would likely be an alternative but that induces an additional call and
+        it may not be safe? e.g. what happens if the object gets GC'd before
+        the call? There's a `Runtime.releaseObject` but I don't know what
+        objects are locked and to be released, any RemoteObject returned from
+        CDP to the client? Are we already "leaking" objects?
+        """
+        props = []
+        for k, v in value.items():
+            preview_type = self.JSON_TYPE[type(v)]
+            v = 'Object' if preview_type == 'object' else str(v)
+            props.append({
+                'name': k,
+                'type': preview_type,
+                'value': v
+            })
+        return props
 
     LINE_PATTERN = '\tat %(functionName)s (%(url)s:%(lineNumber)d:%(columnNumber)d)\n'
     def _format_stack(self, logrecord):

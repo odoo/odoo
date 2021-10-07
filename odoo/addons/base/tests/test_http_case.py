@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest import skipIf
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import HttpCase, tagged, USE_CHROME
 from odoo.tools import mute_logger, logging
 from unittest.mock import patch
 
@@ -16,6 +17,7 @@ class TestHttpCase(HttpCase):
         # second line must contains error message
         self.assertEqual(error_catcher.exception.args[0].splitlines()[1], "test error message")
 
+    @skipIf(not USE_CHROME, "Firefox can not serialize exceptions, also probably non-portable stacktrace details")
     def test_console_error_object(self):
         with self.assertRaises(AssertionError) as error_catcher:
             code = "console.error(TypeError('test error message'))"
