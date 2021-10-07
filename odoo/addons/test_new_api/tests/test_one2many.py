@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import MissingError
 from odoo import Command
 
 
@@ -256,3 +256,30 @@ class One2manyCase(TransactionCase):
         # at this point, member.container_id must be computed for member to
         # appear in container.member_ids
         self.assertEqual(container.member_ids, member)
+
+    def test_reward_line_delete(self):
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [
+                Command.create({'product': 'a'}),
+                Command.create({'product': 'b'}),
+                Command.create({'product': 'b', 'reward': True}),
+            ],
+        })
+        line0, line1, line2 = order.line_ids
+
+        # this is what the client sends to delete the 2nd line; it should not
+        # crash when deleting the 2nd line automatically deletes the 3rd line
+        order.write({
+            'line_ids': [
+                Command.link(line0.id),
+                Command.delete(line1.id),
+                Command.link(line2.id),
+            ],
+        })
+        self.assertEqual(order.line_ids, line0)
+
+        # but linking a missing line on purpose is an error
+        with self.assertRaises(MissingError):
+            order.write({
+                'line_ids': [Command.link(line0.id), Command.link(line1.id)],
+            })

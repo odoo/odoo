@@ -167,24 +167,24 @@ class TestPerformance(SavepointCaseWithUserDemo):
         rec2 = self.env['test_performance.base'].create({'name': 'X'})
 
         # link N lines from rec1 to rec2: O(1) queries
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             rec1.invalidate_cache()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             rec1.invalidate_cache()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec1.invalidate_cache()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec1.invalidate_cache()
             rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
