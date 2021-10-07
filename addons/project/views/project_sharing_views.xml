@@ -31,7 +31,9 @@
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
-                <field name="user_ids"/>
+                <!-- TODO: [XBO] remove me in master -->
+                <field name="user_ids" invisible="1"/>
+                <field name="portal_user_names"/>
                 <field name="partner_id"/>
                 <field name="sequence"/>
                 <field name="is_closed"/>
@@ -89,8 +91,14 @@
                                     <field name="priority" widget="priority"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right" t-if="!selection_mode">
+                                    <span t-if="record.portal_user_names.raw_value.length > 0" class="pr-2" t-att-title="record.portal_user_names.raw_value">
+                                        <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
+                                        <t t-set="display_nb_assignees" t-value="user_count + ' assignee' + (user_count > 1 ? 's' : '')"/>
+                                        <t t-out="display_nb_assignees"/>
+                                    </span>
                                     <field name="kanban_state" widget="state_selection"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" options="{'no_open_chat': True}"/>
+                                    <!-- TODO: [XBO] remove me in master -->
+                                    <field name="user_ids" string="Assignees" widget="many2many_avatar_user" options="{'no_open_chat': True}" invisible="1"/>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +124,9 @@
                 <field name="child_text" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" optional="hide"/>
-                <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_open_chat': True}"/>
+                <field name="portal_user_names" string="Assignees" optional="show"/>
+                <!-- TODO: [XBO] remove me in master -->
+                <field name="user_ids" invisible="1" />
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="kanban_state" widget="state_selection" optional="hide"/>
@@ -133,6 +143,10 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
+                    <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
+                            attrs="{'invisible' : &quot;[('user_ids', 'in', [uid])]&quot;}" data-hotkey="q"/>
+                    <button name="action_unassign_me" string="Unassign Me" type="object" class="oe_highlight"
+                            attrs="{'invisible' : &quot;[('user_ids', 'not in', [uid])]&quot;}" data-hotkey="q"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}" />
                 </header>
                 <sheet string="Task">
@@ -151,11 +165,10 @@
                         <group>
                             <field name="project_id" invisible="1"/>
                             <field name="display_project_id" string="Project" invisible="1"/>
-                            <field name="user_ids"
-                                class="o_task_user_field"
-                                options="{'no_open': True, 'no_open_chat': True}"
-                                widget="many2many_avatar_user"
-                                domain="[('share', '=', False)]"/>
+                            <field name="user_ids" invisible="1" />
+                            <field name="portal_user_names"
+                                string="Assignees"
+                                class="o_task_user_field"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -182,7 +195,9 @@
                                     <field name="display_project_id" string="Project" optional="hide" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" options="{'no_open_chat': True}"/>
+                                    <!-- TODO: [XBO] remove me in master -->
+                                    <field name="user_ids" invisible="1"/>
+                                    <field name="portal_user_names" string="Assignees"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" optional="hide"/>
@@ -208,7 +223,9 @@
             <search string="Tasks">
                 <field name="name" string="Task"/>
                 <field name="tag_ids"/>
-                <field name="user_ids"/>
+                <!-- TODO: [XBO] remove me in master -->
+                <field name="user_ids" invisible="1"/>
+                <field name="portal_user_names" string="Assignees"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="stage_id"/>
                 <field string="Project" name="display_project_id"/>
@@ -223,7 +240,8 @@
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
-                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
+                    <!-- TODO: [XBO] remove me in master -->
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}" invisible="1"/>
                     <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                     <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                     <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
