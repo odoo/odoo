@@ -31,8 +31,6 @@ class StockPicking(models.Model):
     # Action methods
     # -------------------------------------------------------------------------
     def _action_done(self):
-        res = super(StockPicking, self)._action_done()
-
         for move in self.move_lines.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO if there isn't tracked component
             # If there is tracked component, the flow use subcontracting_record_component instead
@@ -74,7 +72,7 @@ class StockPicking(models.Model):
             production_moves = productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
             production_moves.write({'date': minimum_date - timedelta(seconds=1)})
             production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
-        return res
+        return super(StockPicking, self)._action_done()
 
     def action_record_components(self):
         self.ensure_one()
