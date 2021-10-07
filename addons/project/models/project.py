@@ -38,6 +38,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'displayed_image_id',
     'display_name',
     'priority',
+    'portal_user_names',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -956,6 +957,8 @@ class Task(models.Model):
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', default=lambda self: self.env.user)
+    # User names displayed in project sharing views
+    portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
@@ -1416,6 +1419,35 @@ class Task(models.Model):
                         ('fold', '=', False), ('is_closed', '=', False)])
             else:
                 task.stage_id = False
+
+    @api.depends('user_ids')
+    def _compute_portal_user_names(self):
+        """ This compute method allows to see all the names of assigned users to each task contained in `self`.
+
+            When we are in the project sharing feature, the `user_ids` contains only the users if we are a portal user.
+            That is, only the users in the same company of the current user.
+            So this compute method is a related of `user_ids.name` but with more records that the portal user
+            can normally see.
+            (In other words, this compute is only used in project sharing views to see all assignees for each task)
+        """
+        if self.ids:
+            # fetch 'user_ids' in superuser mode (and override value in cache)
+            self._read(['user_ids'])
+        for task in self.with_context(prefetch_fields=False):
+            task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
+
+    def _search_portal_user_names(self, operator, value):
+        if operator != 'ilike' and not isinstance(value, str):
+            raise ValidationError('Not Implemented.')
+
+        query = """
+            SELECT task_user.task_id
+              FROM project_task_user_rel task_user
+        INNER JOIN res_users users ON task_user.user_id = users.id
+        INNER JOIN res_partner partners ON partners.id = users.partner_id
+             WHERE partners.name ILIKE %s
+        """
+        return [('id', 'inselect', (query, [f'%{value}%']))]
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -1988,6 +2020,9 @@ class Task(models.Model):
 
     def action_assign_to_me(self):
         self.write({'user_ids': [(4, self.env.user.id)]})
+
+    def action_unassign_me(self):
+        self.write({'user_ids': [Command.unlink(self.env.uid)]})
 
     # If depth == 1, return only direct children
     # If depth == 3, return children to third generation
