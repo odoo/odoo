@@ -479,6 +479,32 @@ class Payment(models.Model):
     move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
 
 
+class Order(models.Model):
+    _name = _description = 'test_new_api.order'
+
+    line_ids = fields.One2many('test_new_api.order.line', 'order_id')
+
+
+class OrderLine(models.Model):
+    _name = _description = 'test_new_api.order.line'
+
+    order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
+    product = fields.Char()
+    reward = fields.Boolean()
+
+    def unlink(self):
+        # also delete associated reward lines
+        reward_lines = [
+            other_line
+            for line in self
+            if not line.reward
+            for other_line in line.order_id.line_ids
+            if other_line.reward and other_line.product == line.product
+        ]
+        self = self.union(*reward_lines)
+        return super().unlink()
+
+
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
     _description = 'Test New API Company'

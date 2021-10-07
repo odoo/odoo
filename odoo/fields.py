@@ -3184,7 +3184,7 @@ class One2many(_RelationalMulti):
             inverse = self.inverse_name
             to_create = []                  # line vals to create
             to_delete = []                  # line ids to delete
-            to_inverse = {}
+            to_link = defaultdict(set)      # {record: line_ids}
             allow_full_delete = not create
 
             def unlink(lines):
@@ -3194,6 +3194,8 @@ class One2many(_RelationalMulti):
                     lines[inverse] = False
 
             def flush():
+                if to_link:
+                    before = {record: record[self.name] for record in to_link}
                 if to_delete:
                     # unlink() will remove the lines from the cache
                     comodel.browse(to_delete).unlink()
@@ -3202,11 +3204,13 @@ class One2many(_RelationalMulti):
                     # create() will add the new lines to the cache of records
                     comodel.create(to_create)
                     to_create.clear()
-                if to_inverse:
-                    for record, inverse_ids in to_inverse.items():
-                        lines = comodel.browse(inverse_ids)
-                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                if to_link:
+                    for record, line_ids in to_link.items():
+                        lines = comodel.browse(line_ids) - before[record]
+                        # linking missing lines should fail
+                        lines.mapped(inverse)
                         lines[inverse] = record
+                    to_link.clear()
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -3221,7 +3225,7 @@ class One2many(_RelationalMulti):
                     elif command[0] == 3:
                         unlink(comodel.browse(command[1]))
                     elif command[0] == 4:
-                        to_inverse.setdefault(recs[-1], set()).add(command[1])
+                        to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
                     elif command[0] in (5, 6) :
                         # do not try to delete anything in creation mode if nothing has been created before
