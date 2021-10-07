@@ -57,6 +57,17 @@ function daysInMonth(year, month) {
     return DAYS_IN_MONTH[month];
 }
 
+function getDayOfWeek(d) {
+    const date = new Date(d.year, d.month - 1, d.day);
+    return (date.getDay() + 6) % 7;
+}
+
+function getQuarterFirstMonth(year, month) {
+    const quarterNumber = Math.ceil(month / 3);
+    const monthFrom = (quarterNumber - 1) * 3 + 1;
+    return monthFrom;
+}
+
 function isLeap(year) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
@@ -271,6 +282,54 @@ export class PyDate {
         return this.year === other.year && this.month === other.month && this.day === other.day;
     }
 
+    start_of(granularity) {
+        if (granularity === "year") {
+            return PyDate.create(this.year, 1, 1);
+        } else if (granularity === "quarter") {
+            const month = getQuarterFirstMonth(this.year, this.month);
+            return PyDate.create(this.year, month, 1);
+        } else if (granularity === "month") {
+            return PyDate.create(this.year, this.month, 1);
+        } else if (granularity === "week") {
+            const dow = getDayOfWeek(this);
+            return PyDate.create(this.year, this.month, this.day - dow);
+        } else if (granularity === "day") {
+            return PyDate.create(this.year, this.month, this.day);
+        } else {
+            throw new NotSupportedError(
+                "ValueError: " +
+                    granularity +
+                    " is not a supported granularity, supported " +
+                    " granularities are: year, quarter, month, week and day."
+            );
+        }
+    }
+
+    end_of(granularity) {
+        if (granularity === "year") {
+            return PyDate.create(this.year, 12, 31);
+        } else if (granularity === "quarter") {
+            const month = getQuarterFirstMonth(this.year, this.month);
+            const dom = daysInMonth(this.year, month);
+            return PyDate.create(this.year, month + 2, dom);
+        } else if (granularity === "month") {
+            const dom = daysInMonth(this.year, this.month);
+            return PyDate.create(this.year, this.month, dom);
+        } else if (granularity === "week") {
+            const dow = getDayOfWeek(this);
+            return PyDate.create(this.year, this.month, this.day + (6 - dow));
+        } else if (granularity === "day") {
+            return PyDate.create(this.year, this.month, this.day);
+        } else {
+            throw new NotSupportedError(
+                "ValueError: " +
+                    granularity +
+                    " is not a supported granularity, supported " +
+                    " granularities are: year, quarter, month, week and day."
+            );
+        }
+    }
+
     /**
      * @param {string} format
      * @returns {string}
@@ -428,6 +487,58 @@ export class PyDateTime {
             this.second === other.second &&
             this.microsecond === other.microsecond
         );
+    }
+
+    start_of(granularity) {
+        if (granularity === "year") {
+            return PyDateTime.create(this.year, 1, 1);
+        } else if (granularity === "quarter") {
+            const month = getQuarterFirstMonth(this.year, this.month);
+            return PyDateTime.create(this.year, month, 1);
+        } else if (granularity === "month") {
+            return PyDateTime.create(this.year, this.month, 1);
+        } else if (granularity === "week") {
+            const dow = getDayOfWeek(this);
+            return PyDateTime.create(this.year, this.month, this.day - dow);
+        } else if (granularity === "day") {
+            return PyDateTime.create(this.year, this.month, this.day);
+        } else if (granularity === "hour") {
+            return PyDateTime.create(this.year, this.month, this.day, this.hour);
+        } else {
+            throw new NotSupportedError(
+                "ValueError: " +
+                    granularity +
+                    " is not a supported granularity, supported " +
+                    " granularities are: year, quarter, month, week, day and hour."
+            );
+        }
+    }
+    end_of(granularity) {
+        const min = [23, 59, 59];
+        if (granularity === "year") {
+            return PyDateTime.create(this.year, 12, 31, ...min);
+        } else if (granularity === "quarter") {
+            const month = getQuarterFirstMonth(this.year, this.month);
+            const dom = daysInMonth(this.year, month);
+            return PyDateTime.create(this.year, month + 2, dom, ...min);
+        } else if (granularity === "month") {
+            const dom = daysInMonth(this.year, this.month);
+            return PyDateTime.create(this.year, this.month, dom, ...min);
+        } else if (granularity === "week") {
+            const dow = getDayOfWeek(this);
+            return PyDateTime.create(this.year, this.month, this.day + (6 - dow), ...min);
+        } else if (granularity === "day") {
+            return PyDateTime.create(this.year, this.month, this.day, ...min);
+        } else if (granularity === "hour") {
+            return PyDateTime.create(this.year, this.month, this.day, this.hour, 59, 59);
+        } else {
+            throw new NotSupportedError(
+                "ValueError: " +
+                    granularity +
+                    " is not a supported granularity, supported " +
+                    " granularities are: year, quarter, month, week, day and hour."
+            );
+        }
     }
 
     /**

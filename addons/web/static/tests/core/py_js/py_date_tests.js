@@ -2,7 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { PyDate, PyTimeDelta } from "@web/core/py_js/py_date";
+import { PyDate, PyDateTime, PyTimeDelta } from "@web/core/py_js/py_date";
 
 QUnit.module("py", {}, () => {
     QUnit.module("date stuff", () => {
@@ -129,6 +129,37 @@ QUnit.module("py", {}, () => {
             );
         });
 
+        QUnit.test("datetime start_of/end_of", function (assert) {
+            assert.expect(14);
+
+            const ctx = {
+                dt: PyDateTime,
+                _dt: new PyDateTime(2281, 10, 11, 22, 33, 44),
+            };
+
+            // Start of period
+            assert.ok(evaluateExpr('_dt.start_of("year") == dt(2281, 1, 1)', ctx));
+            assert.ok(evaluateExpr('_dt.start_of("quarter") == dt(2281, 10, 1)', ctx));
+            assert.ok(evaluateExpr('_dt.start_of("month") == dt(2281, 10, 1)', ctx));
+            assert.ok(evaluateExpr('_dt.start_of("week") == dt(2281, 10, 10)', ctx));
+            assert.ok(evaluateExpr('_dt.start_of("day") == dt(2281, 10, 11)', ctx));
+            assert.ok(evaluateExpr('_dt.start_of("hour") == dt(2281, 10, 11, 22, 0, 0)', ctx));
+            assert.throws(function () {
+                evaluateExpr('_dt.start_of("cheese")', ctx);
+            });
+
+            // End of period
+            assert.ok(evaluateExpr('_dt.end_of("year") == dt(2281, 12, 31, 23, 59, 59)', ctx));
+            assert.ok(evaluateExpr('_dt.end_of("quarter") == dt(2281, 12, 31, 23, 59, 59)', ctx));
+            assert.ok(evaluateExpr('_dt.end_of("month") == dt(2281, 10, 31, 23, 59, 59)', ctx));
+            assert.ok(evaluateExpr('_dt.end_of("week") == dt(2281, 10, 16, 23, 59, 59)', ctx));
+            assert.ok(evaluateExpr('_dt.end_of("day") == dt(2281, 10, 11, 23, 59, 59)', ctx));
+            assert.ok(evaluateExpr('_dt.end_of("hour") == dt(2281, 10, 11, 22, 59, 59)', ctx));
+            assert.throws(function () {
+                evaluateExpr('_dt.end_of("cheese")', ctx);
+            });
+        });
+
         QUnit.module("datetime.date");
 
         QUnit.test("datetime.date.today", (assert) => {
@@ -225,6 +256,35 @@ QUnit.module("py", {}, () => {
             // assert.throws(function () {
             //     evaluateExpr("a + a", ctx);
             // }, /^Error: TypeError:/);
+        });
+
+        QUnit.test("date start_of/end_of", function (assert) {
+            assert.expect(12);
+
+            const ctx = {
+                d: PyDate,
+                _d: new PyDate(2281, 10, 11),
+            };
+
+            // Start of period
+            assert.ok(evaluateExpr('_d.start_of("year") == d(2281, 1, 1)', ctx));
+            assert.ok(evaluateExpr('_d.start_of("quarter") == d(2281, 10, 1)', ctx));
+            assert.ok(evaluateExpr('_d.start_of("month") == d(2281, 10, 1)', ctx));
+            assert.ok(evaluateExpr('_d.start_of("week") == d(2281, 10, 10)', ctx));
+            assert.ok(evaluateExpr('_d.start_of("day") == d(2281, 10, 11)', ctx));
+            assert.throws(function () {
+                evaluateExpr('_d.start_of("hour")', ctx);
+            });
+
+            // End of period
+            assert.ok(evaluateExpr('_d.end_of("year") == d(2281, 12, 31)', ctx));
+            assert.ok(evaluateExpr('_d.end_of("quarter") == d(2281, 12, 31)', ctx));
+            assert.ok(evaluateExpr('_d.end_of("month") == d(2281, 10, 31)', ctx));
+            assert.ok(evaluateExpr('_d.end_of("week") == d(2281, 10, 16)', ctx));
+            assert.ok(evaluateExpr('_d.end_of("day") == d(2281, 10, 11)', ctx));
+            assert.throws(function () {
+                evaluateExpr('_d.start_of("hour")', ctx);
+            });
         });
 
         QUnit.module("datetime.time");
