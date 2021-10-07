@@ -647,7 +647,7 @@ class Meeting(models.Model):
                         recurring_date = pytz.UTC.localize(recurring_date)
                     recurring_date = recurring_date.astimezone(timezone).replace(tzinfo=None)
                 if date_field == "stop":
-                    recurring_date += timedelta(hours=self.duration)
+                    recurring_date += timedelta(hours=self.duration, seconds=-1)
                 rset1.exdate(recurring_date)
             invalidate = True
 
