@@ -338,7 +338,7 @@ function styleToClass($editable) {
         var css = getMatchedCSSRules(node);
         var style = '';
         _.each(css, function (v,k) {
-            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
+            if (!(new RegExp('(^|;)\s*' + k + '\s*:').test(style))) {
                 style = k+':'+v+';'+style;
             }
         });
