@@ -100,7 +100,6 @@ class ResPartnerBank(models.Model):
         """
         params = self._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
         if params:
-            params['value'] = '\n'.join(params['value'])
             params['type'] = params.pop('barcode_type')
             return '/report/barcode/?' + werkzeug.urls.url_encode(params)
         return None

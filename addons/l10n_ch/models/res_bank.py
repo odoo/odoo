@@ -305,7 +305,7 @@ class ResPartnerBank(models.Model):
                 'height': 256,
                 'quiet': 1,
                 'mask': 'ch_cross',
-                'value': self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication),
+                'value': '\n'.join(self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)),
             }
         return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
