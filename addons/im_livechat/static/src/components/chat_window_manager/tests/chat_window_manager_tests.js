@@ -15,15 +15,17 @@ QUnit.module('chat_window_manager_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { afterEvent, env, widget } = await start(Object.assign(
-                { hasChatWindow: true, hasMessagingMenu: true },
+            const res = await start(Object.assign(
+                { hasChatWindow: true },
                 params,
                 { data: this.data }
             ));
+            const { afterEvent, env, widget } = res;
             this.debug = params && params.debug;
             this.afterEvent = afterEvent;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -48,7 +50,8 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
             uuid: 'channel-10-uuid',
         },
     );
-    await this.start();
+    const { createMessagingMenuComponent } = await this.start();
+    await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());

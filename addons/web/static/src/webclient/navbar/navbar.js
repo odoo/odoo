@@ -92,8 +92,8 @@ export class NavBar extends Component {
 
     get systrayItems() {
         return systrayRegistry
-            .getAll()
-            .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+            .getEntries()
+            .filter(([, item]) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
             .reverse();
     }
 

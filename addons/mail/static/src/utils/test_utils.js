@@ -14,7 +14,6 @@ import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
-import { MessagingMenuWidget } from '@mail/widgets/messaging_menu/messaging_menu';
 import { MockModels } from '@mail/../tests/helpers/mock_models';
 
 import AbstractStorageService from 'web.AbstractStorageService';
@@ -149,33 +148,6 @@ function _useDiscuss(callbacks) {
         }),
         return: prevReturn.concat(result => {
             Object.assign(result, { discussWidget });
-        }),
-    });
-}
-
-/**
- * @private
- * @param {Object} callbacks
- * @param {function[]} callbacks.init
- * @param {function[]} callbacks.mount
- * @param {function[]} callbacks.destroy
- * @param {function[]} callbacks.return
- * @returns {Object} update callbacks
- */
-function _useMessagingMenu(callbacks) {
-    const {
-        mount: prevMount,
-        return: prevReturn,
-    } = callbacks;
-    let messagingMenuWidget;
-    return Object.assign({}, callbacks, {
-        mount: prevMount.concat(async ({ selector, widget }) => {
-            messagingMenuWidget = new MessagingMenuWidget(widget, {});
-            await messagingMenuWidget.appendTo($(selector));
-            await messagingMenuWidget.on_attach_callback();
-        }),
-        return: prevReturn.concat(result => {
-            Object.assign(result, { messagingMenuWidget });
         }),
     });
 }
@@ -465,6 +437,15 @@ function getCreateMessageComponent({ components, env, modelManager, widget }) {
     };
 }
 
+function getCreateMessagingMenuComponent({ components, env, widget }) {
+    return async function createMessagingMenuComponent() {
+        await createRootMessagingComponent({ components, env }, 'MessagingMenu', {
+            props: {},
+            target: widget.el,
+        });
+    };
+}
+
 function getCreateThreadViewComponent({ afterEvent, components, env, widget }) {
     return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
         let target;
@@ -526,8 +507,6 @@ function getCreateThreadViewComponent({ afterEvent, components, env, widget }) {
  * @param {boolean} [param0.hasChatWindow=false] if set, mount chat window
  *   service.
  * @param {boolean} [param0.hasDiscuss=false] if set, mount discuss app.
- * @param {boolean} [param0.hasMessagingMenu=false] if set, mount messaging
- *   menu.
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time
  *   with `env.browser.setTimeout` are fully controlled by test itself.
  *     @see addTimeControlToEnv that adds `advanceTime` function in
@@ -583,7 +562,6 @@ async function start(param0 = {}) {
         hasChatWindow = false,
         hasDialog = false,
         hasDiscuss = false,
-        hasMessagingMenu = false,
         hasTimeControl = false,
         hasView = false,
         loadingBaseDelayDuration = 0,
@@ -598,7 +576,6 @@ async function start(param0 = {}) {
     delete param0.hasWebClient;
     delete param0.hasChatWindow;
     delete param0.hasDiscuss;
-    delete param0.hasMessagingMenu;
     delete param0.hasTimeControl;
     delete param0.hasView;
     if (hasChatWindow) {
@@ -609,9 +586,6 @@ async function start(param0 = {}) {
     }
     if (hasDiscuss) {
         callbacks = _useDiscuss(callbacks);
-    }
-    if (hasMessagingMenu) {
-        callbacks = _useMessagingMenu(callbacks);
     }
     const messagingBus = new EventBus();
     const {
@@ -808,6 +782,7 @@ async function start(param0 = {}) {
         createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),
         createMessageComponent: getCreateMessageComponent({ components, env: testEnv, modelManager, widget }),
+        createMessagingMenuComponent: getCreateMessagingMenuComponent({ components, env: testEnv, widget }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, components, env: testEnv, widget }),
     };
 }

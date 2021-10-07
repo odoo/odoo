@@ -30,6 +30,12 @@ export class MessagingMenu extends Component {
      */
     _constructor() {}
 
+    setup() {
+        // for now, the legacy env is needed for internal functions such as
+        // `useModels` to work
+        this.env = owl.Component.env;
+    }
+
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
