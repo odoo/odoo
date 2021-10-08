@@ -69,6 +69,9 @@
 
     .o_cp_bottom_right {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        column-gap: $o-horizontal-padding;
 
         > .o_cp_pager {
             margin: auto 0 auto auto;
@@ -87,12 +90,6 @@
         }
 
         > .o_cp_switch_buttons {
-            > .btn:first-child {
-                margin-left: $o-horizontal-padding;
-                @include media-breakpoint-down(sm) {
-                    margin-left: 0;
-                }
-            }
             .dropdown-menu {
                 right: 0;
             }
