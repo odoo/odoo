@@ -7,6 +7,7 @@ import logging
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class MailTemplate(models.Model):
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
     reply_to = fields.Char('Reply To', help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.")
     # content
-    body_html = fields.Html('Body', render_engine='qweb', translate=True, sanitize=False)
+    body_html = fields.Html('Body', render_engine='qweb', translate=html_translate, sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
