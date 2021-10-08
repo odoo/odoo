@@ -1063,7 +1063,7 @@ class Message(models.Model):
                 ('res_id', 'in', moderated_channel_ids),
                 '|',
                 ('author_id', '=', self.env.user.partner_id.id),
-                ('moderation_status', '=', 'pending_moderation'),
+                ('need_moderation', '=', True),
             ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
