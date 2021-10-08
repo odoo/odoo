@@ -12,7 +12,7 @@ odoo.define('web.ControlPanel', function (require) {
     const { useModel } = require('web.Model');
 
     const { Component, hooks } = owl;
-    const { useRef, useSubEnv } = hooks;
+    const { useRef, useSubEnv, useState } = hooks;
 
     /**
      * TODO: remove this whole mechanism as soon as `cp_content` is completely removed.
@@ -97,8 +97,8 @@ odoo.define('web.ControlPanel', function (require) {
      * @extends Component
      */
     class ControlPanel extends Component {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup(...arguments);
 
             this.additionalContent = getAdditionalContent(this.props);
 
@@ -106,6 +106,10 @@ odoo.define('web.ControlPanel', function (require) {
                 action: this.props.action,
                 searchModel: this.props.searchModel,
                 view: this.props.view,
+            });
+
+            this.state = useState({
+                showViewSwitcher: false,
             });
 
             // Connect to the model
