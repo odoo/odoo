@@ -150,7 +150,7 @@ class HrEmployeePrivate(models.Model):
 
     def _compute_avatar(self, avatar_field, image_field):
         for employee in self:
-            avatar = employee[image_field]
+            avatar = employee._origin[image_field]
             if not avatar:
                 if employee.user_id:
                     avatar = employee.user_id[avatar_field]
