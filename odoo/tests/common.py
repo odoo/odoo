@@ -952,9 +952,10 @@ class ChromeBrowser():
         switches = [
             '--headless',
             '--profile', self.user_data_dir,
-            '--window-size', self.window_size,
             '--remote-debugging-port', '0',
         ]
+        os.environ['MOZ_HEADLESS_WIDTH'], os.environ['MOZ_HEADLESS_HEIGHT'] = \
+            self.window_size.split('x')
         cmd = [
             executable,
             *switches,
