@@ -162,12 +162,12 @@ class StockQuant(models.Model):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
         domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        quant_query = self.env['stock.quant']._search(domain_loc)
         if (operator == '!=' and value is True) or (operator == '=' and value is False):
             domain_operator = 'not in'
         else:
             domain_operator = 'in'
-        return [('id', domain_operator, quant_ids)]
+        return [('id', domain_operator, quant_query)]
 
     @api.model
     def create(self, vals):
