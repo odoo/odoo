@@ -163,15 +163,22 @@ function factory(dependencies) {
                 id: sessionId,
             });
             const focusedSessionId = this.focusedRtcSession && this.focusedRtcSession.id;
-            if (!sessionId || focusedSessionId === sessionId || !rtcSession.videoStream) {
+            if (!sessionId || !rtcSession.videoStream) {
                 this.update({ focusedRtcSession: unlink() });
+                return;
+            }
+            if (focusedSessionId === sessionId) {
+                if (this.userSetting.rtcLayout !== 'sidebar') {
+                    // We cannot deselect a focus in sidebar mode.
+                    this.update({ focusedRtcSession: unlink() });
+                }
                 return;
             }
             this.update({ focusedRtcSession: link(rtcSession) });
             if (this.userSetting.rtcLayout !== 'tiled') {
                 return;
             }
-            this.userSetting.update({ rtcLayout: 'sidebar' });
+            this.userSetting.update({ rtcLayout: 'spotlight' });
         }
 
         //----------------------------------------------------------------------

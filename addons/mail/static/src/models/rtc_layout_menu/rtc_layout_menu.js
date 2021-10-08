@@ -44,8 +44,23 @@ function factory(dependencies) {
          */
         onClickLayout(ev) {
             ev.preventDefault();
+            const rtcLayout = ev.target.value;
+            // focusing the first available peer video if none is focused
+            if (rtcLayout !== 'tiled' && this.messaging.rtc.channel && !this.messaging.focusedRtcSession) {
+                for (const session of this.messaging.rtc.channel.rtcSessions) {
+                    if (!session.videoStream) {
+                        continue;
+                    }
+                    this.messaging.toggleFocusedRtcSession(session.id);
+                    break;
+                }
+            }
+            if (rtcLayout === 'tiled') {
+                // in tiled mode all videos must be active simultaneously
+                this.messaging.rtc.filterIncomingVideoTraffic();
+            }
             this.messaging.userSetting.update({
-                rtcLayout: ev.target.value,
+                rtcLayout,
             });
             this.component.trigger('dialog-closed');
         }
