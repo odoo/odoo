@@ -532,6 +532,7 @@ odoo.define('web.searchUtils', function (require) {
         INTERVAL_OPTIONS,
         PERIOD_OPTIONS,
 
+        constructDateRange,
         constructDateDomain,
         getComparisonOptions,
         getIntervalOptions,
