@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -13,43 +14,34 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         super().setUpClass()
         # Create warehouse
         cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
-        warehouse_form = Form(cls.env['stock.warehouse'])
-        warehouse_form.name = 'Test Warehouse'
-        warehouse_form.code = 'TWH'
-        cls.warehouse = warehouse_form.save()
-
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-
-        # Create manufactured product
-        product_form = Form(cls.env['product.product'])
-        product_form.name = 'Stick'
-        product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
-        product_form.detailed_type = 'product'
-        product_form.route_ids.clear()
-        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
-        cls.finished_product = product_form.save()
-
-        # Create raw product for manufactured product
-        product_form = Form(cls.env['product.product'])
-        product_form.name = 'Raw Stick'
-        product_form.detailed_type = 'product'
-        product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
-        cls.raw_product = product_form.save()
-
-        # Create bom for manufactured product
-        bom_product_form = Form(cls.env['mrp.bom'])
-        bom_product_form.product_id = cls.finished_product
-        bom_product_form.product_tmpl_id = cls.finished_product.product_tmpl_id
-        bom_product_form.product_qty = 1.0
-        bom_product_form.type = 'normal'
-        with bom_product_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = cls.raw_product
-            bom_line.product_qty = 2.0
-
-        cls.bom = bom_product_form.save()
+        cls.warehouse = cls.warehouse_1
+        cls.finished_product, cls.raw_product = cls.env['product.product'].create([
+            {
+                'name': 'Stick',
+                'uom_id': cls.uom_unit.id,
+                'uom_po_id': cls.uom_unit.id,
+                'detailed_type': 'product',
+                'route_ids': [
+                    Command.clear(),
+                    Command.link(cls.warehouse.manufacture_pull_id.route_id.id),
+                    Command.link(cls.warehouse.mto_pull_id.route_id.id),
+                ]
+            }, {
+                'name': 'Raw Stick',
+                'detailed_type': 'product',
+                'uom_id': cls.uom_unit.id,
+                'uom_po_id': cls.uom_unit.id,
+            }
+        ])
+        cls.bom = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.finished_product.product_tmpl_id.id,
+            'product_id': cls.finished_product.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': cls.raw_product.id, 'product_qty': 2})
+            ]
+        })
 
     def _check_location_and_routes(self):
         # Check manufacturing pull rule.

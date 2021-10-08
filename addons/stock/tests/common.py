@@ -103,7 +103,6 @@ class TestStockCommon(common.TransactionCase):
 class TestStockCommon2(TestProductCommon):
 
     def _create_move(self, product, src_location, dst_location, **values):
-        # TDE FIXME: user as parameter
         Move = self.env['stock.move'].with_user(self.user_stock_manager)
         # simulate create + onchange
         move = Move.new({'product_id': product.id, 'location_id': src_location.id, 'location_dest_id': dst_location.id})
@@ -149,5 +148,4 @@ class TestStockCommon2(TestProductCommon):
         })
 
         # Existing data
-        cls.existing_inventories = cls.env['stock.quant'].search([('inventory_quantity', '!=', 0.0)])
         cls.existing_quants = cls.env['stock.quant'].search([])

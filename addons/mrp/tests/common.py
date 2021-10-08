@@ -105,8 +105,6 @@ class TestMrpCommon(common.TestStockCommon2):
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
             'consumption': 'flexible',
-            'operation_ids': [
-            ],
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
