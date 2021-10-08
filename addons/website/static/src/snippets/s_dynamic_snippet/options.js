@@ -63,6 +63,20 @@ const dynamicSnippetOptions = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * See from updateUI in s_website_form
+     * 
+     * @override
+     */
+    async updateUI() {
+        if (this.rerender) {
+            this.rerender = false;
+            await this._rerenderXML();
+            return;
+        }
+        await this._super(...arguments);
+    },
+
+    /**
      * @override
      */
     async updateUIVisibility() {
@@ -252,7 +266,7 @@ const dynamicSnippetOptions = options.Class.extend({
     _filterUpdated: function (filter) {
         if (filter && this.currentModelName !== filter.model_name) {
             this.currentModelName = filter.model_name;
-            this._rerenderXML();
+            this.rerender = true;
         }
     },
     /**
