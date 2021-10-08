@@ -1322,6 +1322,9 @@ class ChromeBrowser():
             self._websocket_wait_event('Page.frameStoppedLoading', params={'frameId': frame_id})
 
     def clear(self):
+        if not USE_CHROME:
+            return
+
         self._websocket_send('Page.stopScreencast')
         if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
             shutil.rmtree(self.screencasts_frames_dir)
