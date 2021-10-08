@@ -57,7 +57,7 @@ class OAuthLogin(Home):
         except Exception:
             providers = []
         for provider in providers:
-            return_url = request.httprequest.url_root + 'auth_oauth/signin'
+            return_url = request.env['ir.config_parameter'].get_param('web.base.url') + '/auth_oauth/signin'
             state = self.get_state(provider)
             params = dict(
                 response_type='token',
@@ -72,7 +72,7 @@ class OAuthLogin(Home):
     def get_state(self, provider):
         redirect = request.params.get('redirect') or 'web'
         if not redirect.startswith(('//', 'http://', 'https://')):
-            redirect = '%s%s' % (request.httprequest.url_root, redirect[1:] if redirect[0] == '/' else redirect)
+            redirect = '%s/%s' % (request.env['ir.config_parameter'].get_param('web.base.url'), redirect[1:] if redirect[0] == '/' else redirect)
         state = dict(
             d=request.session.db,
             p=provider['id'],
