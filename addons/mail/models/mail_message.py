@@ -905,11 +905,29 @@ class Message(models.Model):
             :param limit: the maximum amount of messages to get;
             :returns list(dict).
         """
+<<<<<<< HEAD
         if max_id:
             domain = expression.AND([domain, [('id', '<', max_id)]])
         if min_id:
             domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit).message_format()
+=======
+        messages = self.search(domain, limit=limit)
+        if moderated_channel_ids:
+            # Split load moderated and regular messages, as the ORed domain can
+            # cause performance issues on large databases.
+            moderated_messages_dom = [
+                ('model', '=', 'mail.channel'),
+                ('res_id', 'in', moderated_channel_ids),
+                '|',
+                ('author_id', '=', self.env.user.partner_id.id),
+                ('need_moderation', '=', True),
+            ]
+            messages |= self.search(moderated_messages_dom, limit=limit)
+            # Truncate the results to `limit`
+            messages = messages.sorted(key='id', reverse=True)[:limit]
+        return messages.message_format()
+>>>>>>> 6e7a0ce3970... temp
 
     def message_format(self, format_reply=True):
         """ Get the message values in the format for web client. Since message values can be broadcasted,
