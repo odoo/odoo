@@ -1106,6 +1106,13 @@ class ChromeBrowser():
         if res.get('method') == 'Runtime.exceptionThrown':
             details = res['params']['exceptionDetails']
             message = details['text']
+            if re.match('uncaught exception: (Object|undefined)$', message):
+                # workaround: `PromiseRejectionEvent.preventDefault()`
+                # currently does not work in firefox (issue 1642147), and the
+                # CDP serialisation of errors is dreary (basically just a
+                # `text`, which is also pretty shite). so the first time a bus
+                # request is cancelled due to no bus in test mode, firefox fails
+                return {}
             exception = details.get('exception')
             if exception:
                 message += str(self._from_remoteobject(exception))
