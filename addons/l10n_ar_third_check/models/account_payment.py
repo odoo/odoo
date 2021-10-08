@@ -273,7 +273,7 @@ class AccountPayment(models.Model):
         res_names = super().name_get()
         for i, (res_name, rec) in enumerate(zip(res_names, self)):
             if rec.check_number:
-                res_names[i] = (res_name[0], "%s %s" % (res_name[1], _("(Check %s)" % rec.check_number)))
+                res_names[i] = (res_name[0], "%s %s" % (res_name[1], _("(Check %s)") % rec.check_number))
         return res_names
 
     @api.model
