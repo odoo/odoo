@@ -48,11 +48,11 @@
 						<a href="https://www.odoo.com/documentation/15.0/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
 						<span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
 						<div class="text-muted">
-							Schedule receivings earlier to avoid delays
+							Schedule automatically generated request for quotations earlier to avoid delays
 						</div>
 						<div class="content-group">
 							<div class="mt16" attrs="{'invisible': [('use_po_lead','=',False)]}">
-								<span>Move forward expected delivery dates by <field name="po_lead" class="oe_inline"/> days</span>
+								<span>Move forward expected request creation date by <field name="po_lead" class="oe_inline"/> days</span>
 							</div>
 						</div>
 					</div>
