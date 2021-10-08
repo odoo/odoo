@@ -18,7 +18,8 @@ from sales order. It adds sales name and sales Reference on production order.
         'security/ir.model.access.csv',
         'views/mrp_production_views.xml',
         'views/sale_order_views.xml',
-        'views/sale_portal_templates.xml'
+        'views/sale_portal_templates.xml',
+        'data/mail_templates.xml',
     ],
     'installable': True,
     'auto_install': True,

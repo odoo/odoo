@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="exception_sale_on_manufacture_quantity_decreased" name="Message: Alert on sale orders when manufactured quantity decreased on Manufacturing Orders">
+        <div class="alert alert-warning" role="alert">
+            <p>
+                Exception(s) occured on the manufacturing order(s):
+                <t t-foreach="manufacturing_orders" t-as="manufacturing_order">
+                    <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="manufacturing_order.id"><t t-esc="manufacturing_order.name"/></a>.
+                </t>
+                Manual actions may be needed.
+            </p>
+            <div class="mt16">
+                <p>Exception(s):</p>
+                <ul t-foreach="manufacturing_orders" t-as="manufacturing_order">
+                    <li>
+                        <t t-set="unit" t-value="manufacturing_order.product_uom_id.name"/>
+                        <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="manufacturing_order.id"><t t-esc="manufacturing_order.name"/></a>:
+                        <t t-esc="new_quantity"/> <t t-esc="unit"/> of <t t-esc="manufacturing_order.product_id.name"/> to manufacture instead of <t t-esc="manufacturing_order.product_qty"/> <t t-esc="unit"/>.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
+</odoo>
