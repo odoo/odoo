@@ -29,7 +29,8 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
                     args: [[this.props.product.id],
                         this.props.product.get_price(order.pricelist, this.props.quantity),
                         this.props.quantity,
-                        this.env.pos.config_id]
+                        this.env.pos.config_id],
+                    kwargs: {context: this.env.session.user_context},
                 });
 
                 const priceWithoutTax = this.productInfo['all_prices']['price_without_tax'];
