@@ -12,6 +12,23 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_account_payment_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="third_check_state"/>
+                <field name="third_check_last_journal_id"/>
+            </field>
+            <filter name="journal" position="after">
+                <filter name="groupby_third_check_state" string="Third Check State" domain="[]" context="{'group_by': 'third_check_state'}"/>
+                <filter name="groupby_third_check_last_journal" string="Third Check State" domain="[]" context="{'group_by': 'third_check_last_journal_id'}"/>
+            </filter>
+        </field>
+    </record>
+
     <record id="view_account_payment_form_inherited" model="ir.ui.view">
         <field name="name">account.payment.form.inherited</field>
         <field name="model">account.payment</field>
@@ -70,6 +87,9 @@
             <field name="state" position="after">
                 <field name="third_check_state" string="Check State"/>
             </field>
+            <tree position="attributes">
+                <attribute name="create">false</attribute>
+            </tree>
         </field>
     </record>
 
@@ -79,7 +99,7 @@
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="l10n_ar_third_check.view_account_third_check_tree"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
-        <!-- <field name="context">{'search_default_state':'holding','default_type':'third_check', 'search_default_groupby_journal_id': 1}</field> -->
+        <field name="context">{'search_default_third_check_state': 'holding', 'search_default_groupby_third_check_last_journal': 1}</field>
     </record>
 
     <menuitem
