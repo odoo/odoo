@@ -267,7 +267,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         asset_nodes = self._get_asset_nodes(bundle, js=False)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
-    @tools.ormcache_context('bundle', 'nodeAttrs and nodeAttrs.get("media")', keys=("website_id", "lang"))
+    @tools.ormcache_context('bundle', 'nodeAttrs and nodeAttrs.get("media")', 'defer_load', 'lazy_load', keys=("website_id", "lang"))
     def _get_asset_content(self, bundle, nodeAttrs=None, defer_load=False, lazy_load=False):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
