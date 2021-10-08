@@ -382,7 +382,8 @@ class Product(models.Model):
         if include_zero:
             products_without_quants_in_domain = self.env['product.product'].search([
                 ('type', '=', 'product'),
-                ('id', 'not in', list(processed_product_ids))]
+                ('id', 'not in', list(processed_product_ids))],
+                order='id'
             )
             product_ids |= set(products_without_quants_in_domain.ids)
         return list(product_ids)
@@ -749,23 +750,23 @@ class ProductTemplate(models.Model):
 
     def _search_qty_available(self, operator, value):
         domain = [('qty_available', operator, value)]
-        product_variant_ids = self.env['product.product'].search(domain)
-        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+        product_variant_query = self.env['product.product']._search(domain)
+        return [('product_variant_ids', 'in', product_variant_query)]
 
     def _search_virtual_available(self, operator, value):
         domain = [('virtual_available', operator, value)]
-        product_variant_ids = self.env['product.product'].search(domain)
-        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+        product_variant_query = self.env['product.product']._search(domain)
+        return [('product_variant_ids', 'in', product_variant_query)]
 
     def _search_incoming_qty(self, operator, value):
         domain = [('incoming_qty', operator, value)]
-        product_variant_ids = self.env['product.product'].search(domain)
-        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+        product_variant_query = self.env['product.product']._search(domain)
+        return [('product_variant_ids', 'in', product_variant_query)]
 
     def _search_outgoing_qty(self, operator, value):
         domain = [('outgoing_qty', operator, value)]
-        product_variant_ids = self.env['product.product'].search(domain)
-        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+        product_variant_query = self.env['product.product']._search(domain)
+        return [('product_variant_ids', 'in', product_variant_query)]
 
     def _compute_nbr_reordering_rules(self):
         res = {k: {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for k in self.ids}
