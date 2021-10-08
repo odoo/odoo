@@ -40,8 +40,8 @@ class ProductionLot(models.Model):
         # We look if the first lot contains at least one digit.
         caught_initial_number = regex_findall(r"\d+", first_lot)
         if not caught_initial_number:
-            raise UserError(_('The lot name must contain at least one digit.'))
-        # We base the serie on the last number found in the base lot.
+            return self.generate_lot_names(first_lot + "0", count)
+        # We base the series on the last number found in the base lot.
         initial_number = caught_initial_number[-1]
         padding = len(initial_number)
         # We split the lot name to get the prefix and suffix.

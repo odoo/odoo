@@ -191,14 +191,16 @@ class StockGenerate(TransactionCase):
             default_move_id=move.id,
             default_next_serial_number='code-xxx',
         ))
-        wiz = form_wizard.save()
-        with self.assertRaises(UserError):
-            wiz.generate_serial_numbers()
 
         form_wizard.next_serial_count = 0
         # Must raise an exception because `next_serial_count` must be greater than 0.
         with self.assertRaises(ValidationError):
             form_wizard.save()
+
+        form_wizard.next_serial_count = 3
+        wiz = form_wizard.save()
+        wiz.generate_serial_numbers()
+        self.assertEqual(move.move_line_nosuggest_ids.mapped('lot_name'), ["code-xxx0", "code-xxx1", "code-xxx2"])
 
     def test_generate_04_generate_in_multiple_time(self):
         """ Generates a Serial Number for each move lines (except the last one)
