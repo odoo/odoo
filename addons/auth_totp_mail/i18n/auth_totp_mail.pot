@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,30 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: auth_totp_mail
-#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
-msgid ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
-"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
-"\n"
-"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                Activate my two-factor Authentication\n"
-"            </a>\n"
-"        </p>\n"
-"    </p>\n"
-"</div>\n"
-"        "
-msgstr ""
-
-#. module: auth_totp_mail
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model_terms:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid "Activate my two-factor Authentication"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model_terms:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid "Dear"
 msgstr ""
 
 #. module: auth_totp_mail
@@ -83,4 +72,13 @@ msgstr ""
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "Users"
+msgstr ""
+
+#. module: auth_totp_mail
+#: model_terms:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"requested you activate two-factor authentication to protect your account.<br><br>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_presence
-#: model:mail.template,body_html:hr_presence.mail_template_presence
+#: model_terms:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
+",<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
+"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
-"                    <br/>Best Regards,<br/><br/>\n"
-"                </div>\n"
-"            "
+"                    <br>Best Regards,<br><br>"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:mail.template,body_html:hr_presence.mail_template_presence
+msgid "Abigail Peterson"
 msgstr ""
 
 #. module: hr_presence
@@ -64,6 +66,11 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:mail.template,body_html:hr_presence.mail_template_presence
+msgid "Dear"
 msgstr ""
 
 #. module: hr_presence

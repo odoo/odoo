@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -187,8 +187,20 @@ msgid ", max:"
 msgstr ""
 
 #. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid ""
+",<br><br>\n"
+"        We are glad to inform you that your order has been shipped."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
+msgstr ""
+
+#. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid "--<br>Mitchell Admin"
 msgstr ""
 
 #. module: stock
@@ -227,6 +239,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid ""
+"<br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
+"        Thank you,"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid ""
@@ -240,44 +260,6 @@ msgstr ""
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
-msgstr ""
-
-#. module: stock
-#: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Your tracking reference is\n"
-"            <strong>\n"
-"            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
-"                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
-"                    </t>\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
-"                </t>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
-"            </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
-"        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 msgstr ""
 
 #. module: stock
@@ -1070,6 +1052,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
+msgstr ""
+
+#. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid "Brandon Freeman"
 msgstr ""
 
 #. module: stock
@@ -2859,6 +2846,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
+msgstr ""
+
+#. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid "Hello"
 msgstr ""
 
 #. module: stock
@@ -8765,6 +8757,11 @@ msgid ""
 "You'll find here smart replenishment propositions based on inventory forecasts.\n"
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
+msgstr ""
+
+#. module: stock
+#: model_terms:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+msgid "Your tracking reference is"
 msgstr ""
 
 #. module: stock

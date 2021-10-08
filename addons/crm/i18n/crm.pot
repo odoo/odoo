@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,25 @@ msgid "%s's opportunity"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "+1 650-123-4567"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid ""
+",<br><br>\n"
+"                            Welcome to"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid ""
+".\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what"
+msgstr ""
+
+#. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
@@ -114,6 +133,16 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "<br>Email:"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "<br>Phone:"
 msgstr ""
 
 #. module: crm
@@ -230,6 +259,11 @@ msgid "<span class=\"oe_inline\"> / </span>"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "<span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "<span>Periodically assign leads based on rules</span><br/>\n"
@@ -237,81 +271,6 @@ msgid ""
 "                                        All sales teams will use this setting by default unless\n"
 "                                        specified otherwise.\n"
 "                                    </span>"
-msgstr ""
-
-#. module: crm
-#: model:mail.template,body_html:crm.mail_template_demo_crm_lead
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interest in your products</span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
-"                            Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
-"                            Feel free to reach out at any time!<br/><br/>\n"
-"                            Best,<br/>\n"
-"                            <t t-if=\"object.user_id\">\n"
-"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                            </t>\n"
-"                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
-"                            </t>\n"
-"                        </div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
-"            <div style=\"color: #999999;\">\n"
-"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
-"                </t>\n"
-"                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
-"                </t>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
-"</td></tr>\n"
-"</table>\n"
-"        "
 msgstr ""
 
 #. module: crm
@@ -1057,6 +1016,11 @@ msgid "Days to Close"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Deco Addict"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
 msgid "Default Values"
 msgstr ""
@@ -1425,6 +1389,11 @@ msgid "Has Message"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Hi"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__2
 msgid "High"
 msgstr ""
@@ -1553,6 +1522,11 @@ msgid ""
 "Indicates if a blacklisted sanitized phone number is a phone number. Helps "
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Interest in your products"
 msgstr ""
 
 #. module: crm
@@ -1991,6 +1965,11 @@ msgid "Manually"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Marc Demo"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as lost"
@@ -2136,6 +2115,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__my_activity_date_deadline
 msgid "My Activity Deadline"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "My Company (San Francisco)"
 msgstr ""
 
 #. module: crm
@@ -2357,6 +2341,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread_counter
 msgid "Number of unread messages"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Odoo"
 msgstr ""
 
 #. module: crm
@@ -2668,6 +2657,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "Powered by"
 msgstr ""
 
 #. module: crm
@@ -3623,6 +3617,14 @@ msgid "Zip"
 msgstr ""
 
 #. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid ""
+"and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br>\n"
+"                            Feel free to reach out at any time!<br><br>\n"
+"                            Best,<br>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
 msgstr ""
@@ -3646,6 +3648,26 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "has to offer. My name is"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "http://www.example.com"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "info@yourcompany.com"
+msgstr ""
+
+#. module: crm
+#: model_terms:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid "mark.brown23@example.com"
 msgstr ""
 
 #. module: crm

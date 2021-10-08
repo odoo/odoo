@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,47 +23,32 @@ msgid ""
 msgstr ""
 
 #. module: mail_group
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+".\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message."
+msgstr ""
+
+#. module: mail_group
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_subscribe
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+".\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link:"
+msgstr ""
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
 msgstr ""
 
 #. module: mail_group
-#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_subscribe
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br/><br/>\n"
-"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
-"                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
-"            </div>\n"
-"        "
-msgstr ""
-
-#. module: mail_group
-#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br/><br/>\n"
-"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
-"                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
-"            </div>\n"
-"        "
-msgstr ""
-
-#. module: mail_group
-#: model:mail.template,body_html:mail_group.mail_template_guidelines
-msgid ""
-"<div>\n"
-"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the {{ object.mail_group_id.name} mailing list.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
-"            </div>\n"
-"        "
+"<br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message."
 msgstr ""
 
 #. module: mail_group
@@ -541,7 +526,22 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#: model_terms:mail.template,body_html:mail_group.mail_template_guidelines
 msgid "Hello"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"Hello,<br><br>\n"
+"                You have requested to be subscribed to the mailing list"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"Hello,<br><br>\n"
+"                You have requested to be unsubscribed to the mailing list"
 msgstr ""
 
 #. module: mail_group
@@ -1019,6 +1019,13 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"Please find below the guidelines of the {{ object.mail_group_id.name} "
+"mailing list."
 msgstr ""
 
 #. module: mail_group

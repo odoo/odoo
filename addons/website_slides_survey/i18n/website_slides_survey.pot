@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-10-08 08:39+0000\n"
+"PO-Revision-Date: 2021-10-08 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,17 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_slides_survey
-#: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
-"        Don't hesitate to enroll again!\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                Enroll now\n"
-"            </a>\n"
-"        </div>\n"
-"        Thank you for your participation.\n"
-"    </p>\n"
-"</div>\n"
-"            "
+".<br><br>\n"
+"        Don't hesitate to enroll again!"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"<br><br>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course:"
 msgstr ""
 
 #. module: website_slides_survey
@@ -138,6 +133,11 @@ msgstr ""
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
 msgid "Ash"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Basics of Gardening"
 msgstr ""
 
 #. module: website_slides_survey
@@ -257,6 +257,11 @@ msgid "DIY Furniture Certification"
 msgstr ""
 
 #. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Dear"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
 msgid "Desk"
 msgstr ""
@@ -268,6 +273,11 @@ msgstr ""
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Download certification"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Enroll now"
 msgstr ""
 
 #. module: website_slides_survey
@@ -413,6 +423,11 @@ msgid "Test Certification"
 msgstr ""
 
 #. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid "Thank you for your participation."
+msgstr ""
+
+#. module: website_slides_survey
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_1
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_2
@@ -498,4 +513,9 @@ msgstr ""
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
 "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid "participant"
 msgstr ""

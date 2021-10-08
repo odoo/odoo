@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,8 +109,33 @@ msgid "(last project update),"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+",<br>\n"
+"    Thank you for your enquiry.<br>\n"
+"    If you have any questions, please let us know.\n"
+"    <br><br>\n"
+"    Thank you,"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid ",<br><br>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.mail_template_data_project_task
+msgid "--<br>Mitchell Admin"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid ".<br>"
 msgstr ""
 
 #. module: project
@@ -267,90 +292,6 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Private</span>"
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.rating_project_request_email_template
-msgid ""
-"<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object.rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object.rating_get_partner_id()\"/>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
-"    <tbody>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
-"            </t>\n"
-"            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
-"            <t t-if=\"object.rating_get_rated_partner_id().name\">\n"
-"                assigned to <strong t-out=\"object.rating_get_rated_partner_id().name or ''\">Mitchell Admin</strong>.<br/>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                .<br/>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
-"                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
-"                        <tr>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
-"                                </a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td></tr>\n"
-"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            We appreciate your feedback. It helps us to improve continuously.\n"
-"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
-"            </t>\n"
-"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
-"            </t>\n"
-"        </td></tr>\n"
-"    </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
-"    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
-"    Thank you,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"    </t>\n"
-"</div>\n"
-"        "
 msgstr ""
 
 #. module: project
@@ -535,6 +476,13 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid ""
+"<strong>Tell us how you feel about our service</strong><br>\n"
+"                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>"
 msgstr ""
 
 #. module: project
@@ -1020,6 +968,12 @@ msgid "Brainstorm"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.mail_template_data_project_task
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Brandon Freeman"
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
@@ -1485,6 +1439,11 @@ msgid "Deadline"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.mail_template_data_project_task
+msgid "Dear"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__december
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__december
 msgid "December"
@@ -1648,6 +1607,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__display_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_project_id
 msgid "Display Project"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Dissatisfied"
 msgstr ""
 
 #. module: project
@@ -1990,6 +1954,16 @@ msgid "Has Message"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Hello"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Hello,<br><br>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High"
 msgstr ""
@@ -2195,6 +2169,11 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "In progress"
 msgstr ""
 
 #. module: project
@@ -2640,6 +2619,11 @@ msgid "Milestones"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Mitchell Admin"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3019,6 +3003,11 @@ msgid "Ok"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Okay"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3197,11 +3186,21 @@ msgid "Planning"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Planning and budget"
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Please take a moment to rate our services related to the task \""
 msgstr ""
 
 #. module: project
@@ -3865,6 +3864,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__sat
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sat
 msgid "Sat"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "Satisfied"
 msgstr ""
 
 #. module: project
@@ -4589,6 +4593,18 @@ msgid "This and following tasks"
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid ""
+"This customer survey has been sent because your task has been moved to the "
+"stage"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "This customer survey is sent"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
@@ -4921,6 +4937,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "We appreciate your feedback. It helps us to improve continuously."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
@@ -4957,6 +4978,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
 msgid "Weekly"
 msgstr ""
 
@@ -5099,6 +5121,16 @@ msgid "You have not write access of %s field."
 msgstr ""
 
 #. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "as long as the task is in the"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "assigned to"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
@@ -5137,6 +5169,11 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in status:"
+msgstr ""
+
+#. module: project
+#: model_terms:mail.template,body_html:project.rating_project_request_email_template
+msgid "stage."
 msgstr ""
 
 #. module: project

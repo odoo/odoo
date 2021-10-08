@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "$ 100.00"
+msgstr ""
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -34,6 +39,11 @@ msgid "(update)"
 msgstr ""
 
 #. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "(with reference:"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
@@ -46,36 +56,26 @@ msgid ""
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0
-#, python-format
-msgid ": Insufficient Quantity To Repair"
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid ""
+",<br>\n"
+"        Here is your repair order"
 msgstr ""
 
 #. module: repair
-#: model:mail.template,body_html:repair.mail_template_repair_quotation
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
-"        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin\"/> )\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            .<br/>\n"
-"        </t>\n"
-"        You can reply to this email if you have any questions.\n"
-"        <br/><br/>\n"
-"        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>"
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "--<br>Mitchell Admin"
+msgstr ""
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid ".<br>"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid ": Insufficient Quantity To Repair"
 msgstr ""
 
 #. module: repair
@@ -198,6 +198,11 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__b4repair
 msgid "Before Repair"
+msgstr ""
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "Brandon Freeman"
 msgstr ""
 
 #. module: repair
@@ -444,6 +449,11 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "Hello"
 msgstr ""
 
 #. module: repair
@@ -862,6 +872,11 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
+msgstr ""
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "RO/00004"
 msgstr ""
 
 #. module: repair
@@ -1333,6 +1348,14 @@ msgid "You can not enter negative quantities."
 msgstr ""
 
 #. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid ""
+"You can reply to this email if you have any questions.\n"
+"        <br><br>\n"
+"        Thank you,"
+msgstr ""
+
+#. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1344,6 +1367,11 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
+msgstr ""
+
+#. module: repair
+#: model_terms:mail.template,body_html:repair.mail_template_repair_quotation
+msgid "amounting in"
 msgstr ""
 
 #. module: repair

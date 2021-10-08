@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,13 @@ msgid "(empty)"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "--<br>Mitchell Admin"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -79,6 +86,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<b>(empty)</b>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "<b>Congratulations!</b>"
 msgstr ""
 
 #. module: website_slides
@@ -104,95 +116,6 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 msgid "<b>Uncategorized</b>"
-msgstr ""
-
-#. module: website_slides
-#: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
-msgid ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br/><br/>\n"
-"        You have been invited to join a new course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
-"    </p>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: website_slides
-#: model:mail.template,body_html:website_slides.mail_template_channel_completed
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
-"                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
-"                        <p>Check out the other available courses.</p><br/>\n"
-"\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                                Explore courses\n"
-"                            </a>\n"
-"                        </div>\n"
-"                        Enjoy this exclusive content!\n"
-"                        <t t-if=\"object.channel_id.user_id.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"                        </t>\n"
-"                    </div>\n"
-"                </div>\n"
-"            "
-msgstr ""
-
-#. module: website_slides
-#: model:mail.template,body_html:website_slides.slide_template_shared
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br/><br/>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_type or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
-"                            </a>\n"
-"                        </div>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
-"                        </div>\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"                        </t>\n"
-"                    </p>\n"
-"                </div>\n"
-"            "
-msgstr ""
-
-#. module: website_slides
-#: model:mail.template,body_html:website_slides.slide_template_published
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br/><br/>\n"
-"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br/><br/>\n"
-"                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
-"                        <t t-if=\"object.image_1024\">\n"
-"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                                <a t-att-href=\"object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
-"                            </a>\n"
-"                        </div>\n"
-"                        </t>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
-"                        </div>\n"
-"                        Enjoy this exclusive content!\n"
-"                        <t t-if=\"user.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"                        </t>\n"
-"                    </p>\n"
-"                </div>\n"
-"            "
 msgstr ""
 
 #. module: website_slides
@@ -1246,6 +1169,8 @@ msgstr ""
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_0_gard_0
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+#: model_terms:mail.template,body_html:website_slides.mail_template_slide_channel_invite
 msgid "Basics of Gardening"
 msgstr ""
 
@@ -1254,6 +1179,11 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "Be notified when a new content is added."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "Brandon Freeman"
 msgstr ""
 
 #. module: website_slides
@@ -1418,6 +1348,11 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check answers"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "Check out the other available courses."
 msgstr ""
 
 #. module: website_slides
@@ -2343,6 +2278,12 @@ msgid "Enjoy this exclusive content !"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+msgid "Enjoy this exclusive content!"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
 msgstr ""
@@ -2407,6 +2348,11 @@ msgstr ""
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_exercises
 msgid "Exercises"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "Explore courses"
 msgstr ""
 
 #. module: website_slides
@@ -2676,6 +2622,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "Hello"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "Hello<br><br>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+msgid ""
+"Hello<br><br>\n"
+"                        There is something new in the course"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_slide_channel_invite
+msgid ""
+"Hello<br><br>\n"
+"        You have been invited to join a new course:"
 msgstr ""
 
 #. module: website_slides
@@ -3364,6 +3334,11 @@ msgstr ""
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Missing \"Tag Group\" for creating a new \"Tag\"."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "Mitchell Admin"
 msgstr ""
 
 #. module: website_slides
@@ -4963,11 +4938,14 @@ msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_0
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
 msgid "Trees"
 msgstr ""
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
 msgid "Trees, Wood and Gardens"
 msgstr ""
 
@@ -5113,6 +5091,7 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
 msgid "View"
 msgstr ""
 
@@ -5122,6 +5101,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+msgid "View content"
 msgstr ""
 
 #. module: website_slides
@@ -5517,6 +5501,11 @@ msgid "You're enrolled"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid "You've completed the course"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Your"
 msgstr ""
@@ -5589,6 +5578,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "by email."
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "document"
 msgstr ""
 
 #. module: website_slides
@@ -5674,6 +5668,11 @@ msgid "reviews"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "shared the"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5720,10 +5719,20 @@ msgid "unlisted"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_shared
+msgid "with you!"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "xp"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:mail.template,body_html:website_slides.slide_template_published
+msgid "you are following:<br><br>"
 msgstr ""
 
 #. module: website_slides

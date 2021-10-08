@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
-"PO-Revision-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-10-08 08:39+0000\n"
+"PO-Revision-Date: 2021-10-08 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,19 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "&amp;bull;"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "--<br>Mitchell Admin"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+".\n"
+"    <br>\n"
+"    You will find more details here:"
 msgstr ""
 
 #. module: website_event_track
@@ -107,25 +120,17 @@ msgid "<b>Talk Introduction</b>:"
 msgstr ""
 
 #. module: website_event_track
-#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
-"<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br/>\n"
-"    You will find more details here:\n"
-"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            View Talk\n"
-"        </a>\n"
-"    </div>\n"
-"    <br/><br/>\n"
-"    Thank you,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"    </t>\n"
-"</div>"
+"<br>\n"
+"    We are pleased to inform you that your proposal"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"<br><br>\n"
+"    Thank you,"
 msgstr ""
 
 #. module: website_event_track
@@ -485,6 +490,11 @@ msgid "Book your talks"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "Brandon Freeman"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 msgid "Building a DIY cabin from the ground up"
 msgstr ""
@@ -703,6 +713,11 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "Dear"
 msgstr ""
 
 #. module: website_event_track
@@ -1655,6 +1670,11 @@ msgid "Old is New"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "OpenWood Collection Online Reveal"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together !"
 msgstr ""
@@ -2434,6 +2454,11 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "View Talk"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
 msgstr ""
@@ -2576,6 +2601,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_1
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid "What This Event Is All About"
 msgstr ""
 
@@ -2651,6 +2677,11 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. http://www.example.com"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "has been accepted and confirmed for the event"
 msgstr ""
 
 #. module: website_event_track

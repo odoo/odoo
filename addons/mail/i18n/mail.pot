@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -266,6 +266,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">joined the channel</div>"
@@ -875,6 +876,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
 msgid "Anonymous"
 msgstr ""
@@ -1070,6 +1072,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
 #: code:addons/mail/static/src/components/rtc_invitation_card/rtc_invitation_card.xml:0
+#: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_channel__avatar_128
 #: model:ir.model.fields,field_description:mail.field_mail_guest__avatar_1920
 #, python-format
@@ -2891,6 +2894,12 @@ msgstr ""
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name cannot be empty."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_guest.py:0
+#, python-format
+msgid "Guest's name is too long."
 msgstr ""
 
 #. module: mail
@@ -4905,6 +4914,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message_in_reply_to_view/message_in_reply_to_view.xml:0
+#, python-format
+msgid "Original message was deleted"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing"
@@ -5610,6 +5626,13 @@ msgid "Reply-To"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Replying to"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
 msgid "Report Filename"
 msgstr ""
@@ -6221,6 +6244,13 @@ msgstr ""
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Stop camera"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "Stop replying"
 msgstr ""
 
 #. module: mail
@@ -7466,6 +7496,13 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#, python-format
+msgid "You've been invited to a chat!"
 msgstr ""
 
 #. module: mail

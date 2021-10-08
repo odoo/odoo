@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-08 08:38+0000\n"
+"PO-Revision-Date: 2021-10-08 08:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,6 +32,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "$ 10.00"
 msgstr ""
 
 #. module: purchase
@@ -77,6 +82,37 @@ msgid "-&gt;"
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+".\n"
+"            <br><br>\n"
+"            Could you please acknowledge the receipt of this order?"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+".\n"
+"        <br><br>\n"
+"        If you have any questions, please do not hesitate to contact us.\n"
+"        <br><br>\n"
+"        Best regards,"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+". \n"
+"        <br><br>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "05/05/2021"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
 msgstr ""
@@ -87,78 +123,24 @@ msgid "3-way matching: purchases, receptions and bills"
 msgstr ""
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Here is a reminder that the delivery of the purchase order <strong t-out=\"object.name or ''\">P00015</strong>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            <strong>(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</strong>\n"
-"        </t>\n"
-"        is expected for \n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
-"        </t>\n"
-"         <t t-else=\"\">\n"
-"            <strong>undefined</strong>.\n"
-"        </t>\n"
-"        Could you please confirm it will be delivered on time?\n"
-"    </p>\n"
-"</div>"
+"<br><br>\n"
+"        Here is a reminder that the delivery of the purchase order"
 msgstr ""
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Here is in attachment a purchase order <strong t-out=\"object.name or ''\">P00015</strong>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
-"        </t>\n"
-"        amounting in <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
-"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
-"        <br/><br/>\n"
-"        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
-"            <br/><br/>\n"
-"            Could you please acknowledge the receipt of this order?\n"
-"        </t>\n"
-"    </p>\n"
-"</div>"
+"<br><br>\n"
+"        Here is in attachment a purchase order"
 msgstr ""
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Here is in attachment a request for quotation <strong t-out=\"object.name or ''\">P00015</strong>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
-"        </t>\n"
-"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
-"        If you have any questions, please do not hesitate to contact us.\n"
-"        <br/><br/>\n"
-"        Best regards,\n"
-"    </p>\n"
-"</div>"
+"<br><br>\n"
+"        Here is in attachment a request for quotation"
 msgstr ""
 
 #. module: purchase
@@ -406,6 +388,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "<strong>undefined</strong>."
 msgstr ""
 
 #. module: purchase
@@ -670,6 +657,13 @@ msgid "Avg Order Value ("
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "Azure Interior"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
 msgid "Best regards,"
 msgstr ""
@@ -728,6 +722,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__block
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__block
 msgid "Blocking Message"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "Brandon Freeman"
 msgstr ""
 
 #. module: purchase
@@ -878,6 +879,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "Could you please confirm it will be delivered on time?"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Create Bill"
 msgstr ""
@@ -972,6 +978,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
 msgid "Days to Receive"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "Dear"
 msgstr ""
 
 #. module: purchase
@@ -1702,6 +1715,13 @@ msgid "Other Information"
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "P00015"
+msgstr ""
+
+#. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_reminder
 msgid "PO_{{ (object.name or '').replace('/','_') }}"
@@ -2118,6 +2138,13 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "REF_XXX"
 msgstr ""
 
 #. module: purchase
@@ -2568,6 +2595,11 @@ msgid "The order receipt has been acknowledged by %s."
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "The receipt is expected for"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -3014,6 +3046,17 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "YourCompany"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "amounting in"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "close"
 msgstr ""
@@ -3021,6 +3064,23 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "from"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+msgid "is expected for"
+msgstr ""
+
+#. module: purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase
+#: model_terms:mail.template,body_html:purchase.email_template_edi_purchase_done
+msgid "with reference:"
 msgstr ""
 
 #. module: purchase
