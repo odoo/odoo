@@ -39,6 +39,8 @@ class MrpProduction(models.Model):
         assert self.env.context.get('subcontract_move_id')
         if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
+        if self.product_tracking != 'none' and not self.lot_producing_id:
+            raise UserError(_('You must enter a serial number for %s') % self.product_id.name)
         for sml in self.move_raw_ids.move_line_ids:
             if sml.tracking != 'none' and not sml.lot_id:
                 raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.name)
@@ -58,6 +60,11 @@ class MrpProduction(models.Model):
             action = subcontract_move_id._action_record_components()
             action.update({'res_id': backorder.id})
             return action
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_subcontracting_discard_remaining_components(self):
+        self.ensure_one()
+        self.qty_producing = 0
         return {'type': 'ir.actions.act_window_close'}
 
     def _pre_button_mark_done(self):
@@ -135,7 +142,7 @@ class MrpProduction(models.Model):
                 return False
             if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
                 return False
-            if mo.product_id.tracking != 'none' and not mo.lot_producing_id:
+            if mo.product_tracking != 'none' and not mo.lot_producing_id:
                 return False
             return True
 
