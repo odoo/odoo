@@ -179,19 +179,19 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         var data = {channels: this._channels, last: this._lastNotificationID, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
         this._pollRpc = this._makePoll(data);
-        this._pollRpc.then(function (result) {
-            self._pollRpc = false;
-            self._onPoll(result);
-            self._poll();
-        }).guardedCatch(function (result) {
-            self._pollRpc = false;
+        this._pollRpc.then(result => {
+            this._pollRpc = false;
+            this._onPoll(result);
+            this._poll();
+        }, reject => {
+            this._pollRpc = false;
             // no error popup if request is interrupted or fails for any reason
-            result.event.preventDefault();
-            if (result.message === "XmlHttpRequestError abort") {
-                self._poll();
+            reject.event.preventDefault();
+            if (reject.message === "XmlHttpRequestError abort") {
+                this._poll();
             } else {
                 // random delay to avoid massive longpolling
-                self._pollRetryTimeout = setTimeout(self._poll, self.ERROR_RETRY_DELAY + (Math.floor((Math.random()*20)+1)*1000));
+                this._pollRetryTimeout = setTimeout(this._poll, this.ERROR_RETRY_DELAY + (Math.floor((Math.random()*20)+1)*1000));
             }
         });
     },
