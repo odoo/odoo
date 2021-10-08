@@ -17,7 +17,12 @@
                             </div>
                             <div>
                                 <span>Valid until: </span> 
-                                <t t-esc="coupon_info['expiration_date'] ? coupon_info['expiration_date'] : 'no expiration'"/>
+                                <t t-if="coupon_info['expiration_date']">
+                                    <t t-esc="coupon_info['expiration_date']"/>
+                                </t>
+                                <t t-else="">
+                                    no expiration
+                                </t>
                             </div>
                             <div>
                                 <img t-att-src="'/report/barcode/Code128/'+coupon_info['code']" style="width:200px;height:50px" alt="Barcode"/>
