@@ -107,7 +107,6 @@ class StockPicking(models.Model):
                                 ml_vals.update({'qty_done':qty})
                                 if self.picking_type_id.use_existing_lots:
                                     existing_lot = self.env['stock.production.lot'].search([
-                                        ('company_id', '=', self.company_id.id),
                                         ('product_id', '=', line.product_id.id),
                                         ('name', '=', lot.lot_name)
                                     ])
