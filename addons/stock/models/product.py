@@ -284,34 +284,25 @@ class Product(models.Model):
             else:
                 location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
 
-        return self._get_domain_locations_new(location_ids, compute_child=self.env.context.get('compute_child', True))
+        return self._get_domain_locations_new(location_ids)
 
-    def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):
-        operator = compute_child and 'child_of' or 'in'
-        domain = company_id and ['&', ('company_id', '=', company_id)] or []
+    def _get_domain_locations_new(self, location_ids):
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        hierarchical_locations = locations if operator == 'child_of' else locations.browse()
-        other_locations = locations - hierarchical_locations
-        loc_domain = []
-        dest_loc_domain = []
-        # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
+        loc_domain, dest_loc_domain = [], []
+        # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        for location in hierarchical_locations:
+        for location in locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
             loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
             dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
-        if other_locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
+
         return (
-            domain + loc_domain,
-            domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
-            domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
+            loc_domain,
+            dest_loc_domain + ['!'] + loc_domain if loc_domain else dest_loc_domain,
+            loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else loc_domain
         )
 
     def _search_qty_available(self, operator, value):
@@ -560,23 +551,6 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_replenishment_product_product_action")
         return action
-
-    @api.model
-    def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
-        product_id = self.env['product.product'].browse(product_id)
-        product_id.check_access_rights('read')
-        product_id.check_access_rule('read')
-
-        location_id = self.env['stock.location'].browse(location_id)
-        lot_id = self.env['stock.production.lot'].browse(lot_id)
-        package_id = self.env['stock.quant.package'].browse(package_id)
-        owner_id = self.env['res.partner'].browse(owner_id)
-        to_uom = self.env['uom.uom'].browse(to_uom)
-        quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-        theoretical_quantity = sum([quant.quantity for quant in quants])
-        if to_uom and product_id.uom_id != to_uom:
-            theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
-        return theoretical_quantity
 
     def write(self, values):
         if 'active' in values:
