@@ -250,7 +250,7 @@ class Project(models.Model):
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     update_ids = fields.One2many('project.update', 'project_id')
-    last_update_id = fields.Many2one('project.update', string='Last Update')
+    last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)
     last_update_status = fields.Selection(selection=[
         ('on_track', 'On Track'),
         ('at_risk', 'At Risk'),
