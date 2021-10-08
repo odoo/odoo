@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
-
+from dateutil.relativedelta import relativedelta
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -267,6 +267,11 @@ class Orderpoint(models.Model):
         if route_id and orderpoint_wh_supplier:
             orderpoint_wh_supplier.route_id = route_id[0].id
         return super()._set_default_route_id()
+
+    def _get_orderpoint_procurement_date(self):
+        date = super()._get_orderpoint_procurement_date()
+        date -= relativedelta(days=self.company_id.po_lead)
+        return date
 
 
 class ProductionLot(models.Model):
