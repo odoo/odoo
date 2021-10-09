@@ -18,6 +18,7 @@ from odoo import registry as registry_get
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from odoo.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
 
+from urllib.parse import urljoin
 
 _logger = logging.getLogger(__name__)
 
@@ -57,7 +58,8 @@ class OAuthLogin(Home):
         except Exception:
             providers = []
         for provider in providers:
-            return_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/auth_oauth/signin'
+            base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url', request.httprequest.url_root)
+            return_url = urljoin(base_url, 'auth_oauth/signin')
             state = self.get_state(provider)
             params = dict(
                 response_type='token',
