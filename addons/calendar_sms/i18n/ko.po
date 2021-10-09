@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -44,15 +44,15 @@ msgid "Event Alarm Manager"
 msgstr "일정 알림 관리자"
 
 #. module: calendar_sms
-#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: ${object.name}, ${object.display_time}"
-msgstr "행사 미리 알림: ${object.name}, ${object.display_time}"
-
-#. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
 msgstr "행사 미리 알림 : %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid "Event reminder: {{ object.name }}, {{ object.display_time }}"
+msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited

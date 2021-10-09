@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Bert Burggraaf, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.1\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Bert Burggraaf, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,26 +25,11 @@ msgstr ""
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                %if object.origin:\n"
-"                    ${object.company_id.name}: We are glad to inform you that your order n° ${object.origin} has been shipped.\n"
-"                %else:\n"
-"                    ${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
-"                %endif\n"
-"                %if object.carrier_tracking_ref:\n"
-"                    Your tracking reference is ${object.carrier_tracking_ref}.\n"
-"                %endif\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 "\n"
-"                %if object.origin:\n"
-"                    ${object.company_id.name}: We zijn blij om te melden dat je bestelling met n° ${object.origin} verzonden is.\n"
-"                %else:\n"
-"                    ${object.company_id.name}: We zijn blij om te melden dat je bestelling verzonden is.\n"
-"                %endif\n"
-"                %if object.carrier_tracking_ref:\n"
-"                    Jouw tracking referentie is ${object.carrier_tracking_ref}.\n"
-"                %endif\n"
-"            "
+"                {{ (object.company_id.name + ': We zijn blij je te kunnen mededelen datje bestelling nr. ' + object.origin + ' is verzonden.' if object.origin else object.company_id.name + ': We zijn blij je te kunnen melden dat je bestelling is verzonden.') + ('Je tracking referentie is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -134,6 +120,7 @@ msgstr "SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Confirmation"
 msgstr "SMS bevestiging"
 
