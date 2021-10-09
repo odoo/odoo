@@ -57,7 +57,7 @@ class OAuthLogin(Home):
         except Exception:
             providers = []
         for provider in providers:
-            return_url = request.httprequest.url_root + 'auth_oauth/signin'
+            return_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/auth_oauth/signin'
             state = self.get_state(provider)
             params = dict(
                 response_type='token',
