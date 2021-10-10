@@ -161,7 +161,7 @@ msgstr "(prévu le"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid ", out of"
-msgstr ""
+msgstr ", sur"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -390,6 +390,66 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            % if partner.name:\n"
+"                Bonjour ${partner.name},<br/><br/>\n"
+"            % else:\n"
+"                Bonjour,<br/><br/>\n"
+"            % endif\n"
+"            Veuillez prendre un moment pour évaluer nos services liés à la tâche  \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                attribuée à <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Dîtes-nous ce que vous pensez de notre service</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(cliquez sur l'un de ces smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Nous apprécions votre retour. Cela nous aide à continuellement nous améliorer.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Cette enquête client a été envoyée car votre tâche a été bougée dans l'étape <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Cette enquête client est envoyée <b>${object.project_id.rating_status_period}</b> tant que la tâche est dans l'étape <b>${object.stage_id.name}</b>.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -504,6 +564,9 @@ msgid ""
 "                                    Milestones\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Jalons\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -512,6 +575,9 @@ msgid ""
 "                                Burndown Chart\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Burndown Chart\n"
+"                            </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -594,7 +660,7 @@ msgstr "<strong>Rapporté par</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -676,7 +742,7 @@ msgstr "Types d'activités"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "Ajouter un Jalon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -975,7 +1041,7 @@ msgstr "Brainstorm"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Burndown Chart"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1001,6 +1067,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"Choisissez un <b>nom</b> pour votre projet. <i>Cela peut être ce que vous voulez: le nom d'un client,\n"
+"     d'un article, d'une équipe, d'un site de construction, etc.</i>"
 
 #. module: project
 #. openerp-web
@@ -1410,7 +1478,7 @@ msgstr "Supprimer"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Supprimer le jalon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1770,6 +1838,8 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
+"Obtenez un aperçu de l'état de votre projet et partagez son avancement avec "
+"les parties prenantes."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2035,12 +2105,12 @@ msgstr "Employés invités"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
 msgid "Is Deadline Exceeded"
-msgstr ""
+msgstr "Date limite dépassée?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
 msgid "Is Deadline Future"
-msgstr ""
+msgstr "Date limite future?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2176,12 +2246,12 @@ msgstr "Dernière mise à jour"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_color
 msgid "Last Update Color"
-msgstr ""
+msgstr "Couleur de la dernière mise à jour"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr ""
+msgstr "État de la dernière mise à jour"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -2226,12 +2296,12 @@ msgstr "Tâches en retard"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Dissatisfied"
-msgstr ""
+msgstr "Dernière évaluation: Insatisfait"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Okay"
-msgstr ""
+msgstr "Dernière évaluation: Okay"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2261,6 +2331,8 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Retournons en <b>vue kanban</b> pour avoir une vue d'ensemble de vos "
+"prochaines tâches."
 
 #. module: project
 #. openerp-web
@@ -2387,12 +2459,12 @@ msgstr "Messages"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Jalon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Nombre de Jalons"
 
 #. module: project
 #. openerp-web
@@ -2401,7 +2473,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Jalons"
 
 #. module: project
 #. openerp-web
@@ -2465,7 +2537,7 @@ msgstr "Nom"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__name_cropped
 msgid "Name Cropped"
-msgstr ""
+msgstr "Nom rogné"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2490,7 +2562,7 @@ msgstr "Nouveau"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Nouveau Jalon"
 
 #. module: project
 #. openerp-web
@@ -2586,7 +2658,7 @@ msgstr "Pas de données"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
 msgid "No milestones found. Let's create one!"
-msgstr ""
+msgstr "Pas de jalons trouvés. Créons-en un!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2614,7 +2686,7 @@ msgstr "Aucunes tâches trouvées. Créons-en une!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "Pas de mises à jour trouvées. Créons-en une!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2715,7 +2787,7 @@ msgstr "Octobre"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 msgid "Off Track"
-msgstr ""
+msgstr "En retard"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -2739,7 +2811,7 @@ msgstr "En attente"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 msgid "On Track"
-msgstr ""
+msgstr "En bonne voie"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2782,6 +2854,8 @@ msgid ""
 "Over the last 30 days, the deadline of the following milestone has been "
 "updated :"
 msgstr ""
+"Sur les 30 derniers jours, la date limite du jalon suivant a été mise à "
+"jour:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -2789,6 +2863,8 @@ msgid ""
 "Over the last 30 days, the deadline of the following milestones has been "
 "updated :"
 msgstr ""
+"Sur les 30 derniers jours, la date limite des jalons suivants a été mise à "
+"jour:"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3041,7 +3117,7 @@ msgstr "Responsable"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Jalon du Projet"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3077,7 +3153,7 @@ msgstr "Mise à Jour du Projet"
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Mises à Jour du Projet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -3484,7 +3560,7 @@ msgstr "Chercher un projet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "Recherche une mise à jour"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3981,12 +4057,12 @@ msgstr "Tests"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added :"
-msgstr ""
+msgstr "Le jalon suivant a été ajouté:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added :"
-msgstr ""
+msgstr "Les jalons suivants ont été ajoutés:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4168,7 +4244,7 @@ msgstr "Titre"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Title of the Update"
-msgstr ""
+msgstr "Titre de la Mise à Jour"
 
 #. module: project
 #. openerp-web
@@ -4212,11 +4288,12 @@ msgstr "Suivre la satisfaction client sur les tâches"
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
+"Suivez les étapes importantes devant être atteintes pour assurer le succès."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr ""
+msgstr "Suivez l'avancement de vos tâches, de leur création à leur fermeture."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4353,6 +4430,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Utilisez le chatter pour <b>envoyer des emails</b> et communiquer efficacement avec vos clients. \n"
+"    Ajoutez des nouvelles personnes à la liste des abonnés pour les tenir au courant des principaux changements de cette tâche."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4570,7 +4649,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
-msgstr ""
+msgstr "par ex. Nouveau Design"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

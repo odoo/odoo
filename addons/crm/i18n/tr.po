@@ -321,6 +321,11 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
+"<span>Fırsatları şu kurallara göre periyodik olarak atayınız</span><br/>\n"
+"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                        Tüm satış ekipleri aksi belirtilmedikçe bu ayarları\n"
+"                                       kullanacaktır. \n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -444,7 +449,7 @@ msgstr "Fırsat yaratılmadan önce bir yeterlilik adımı ekleyin."
 msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
-msgstr ""
+msgstr "Atanmamış adayları takıma atamak için toplarken ek filtre alan adı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -553,7 +558,7 @@ msgstr "Atama Tarihi"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
 msgid "Assignment Domain"
-msgstr ""
+msgstr "Atama Alan Adı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -564,7 +569,7 @@ msgstr "Atama Kuralları"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "Alan adı ataması  %(team)stakımı için hatalı formatlanmıştır."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -605,7 +610,7 @@ msgstr "Otomatik Olasılık"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_max
 msgid "Average Leads Capacity (on 30 days)"
-msgstr ""
+msgstr "Ortalama Fırsat Kapasitesi (30 günde)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -660,7 +665,7 @@ msgstr "CRM Aşamaları"
 #: model:ir.cron,cron_name:crm.ir_cron_crm_lead_assign
 #: model:ir.cron,name:crm.ir_cron_crm_lead_assign
 msgid "CRM: Lead Assignment"
-msgstr ""
+msgstr "CRM: Fırsat Ataması"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -798,7 +803,7 @@ msgstr "Congrats, best of luck catching such big fish! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Yaratılan fırsatları şunun parçası olarak düşünün:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -919,7 +924,7 @@ msgstr "Fırsat Oluştur"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr ""
+msgstr "Fırsat Oluştur"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
@@ -1712,12 +1717,12 @@ msgstr "Aday Ataması"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr ""
+msgstr "Fırsat Ataması talep eden %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
 msgid "Lead Average Capacity"
-msgstr ""
+msgstr "Fırsat Ortalama Kapasitesi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1777,6 +1782,7 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
+"Adat/Fırsatların otomatik atanması yöneticiler ve adminlerle sınırlıdır"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1807,7 +1813,7 @@ msgstr "Adaylar"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr ""
+msgstr "Fırsatlar (30 gün)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1832,7 +1838,7 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr ""
+msgstr "Atanmış Fırsatlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
@@ -1848,7 +1854,7 @@ msgstr "Aday Oluşturma"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
-msgstr ""
+msgstr "Adaylar, Fırsat yaratılmadan önceki yeterlilik adımıdır."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -1863,6 +1869,8 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
+"Adaylar takım allocation en az 0,2 veya en çok 30 işgünü için yapılmalıdır,"
+"  %.2f değil."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1936,7 +1944,7 @@ msgstr "Gelen e-postalardaki cc listesi."
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Looks like nothing is planned."
-msgstr ""
+msgstr "Planlanan birşey yok"
 
 #. module: crm
 #. openerp-web
@@ -2046,6 +2054,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
+" %(user)s kullanıcı ve  %(team)stakımı için atama alan adı hatalı "
+"formatlanmıştır"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2137,7 +2147,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr ""
+msgstr "Çoklu Takımlar"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2246,6 +2256,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
+" %(team_name)s takımına ve satışçılarına atanan aday yoktur çünkü atanmamış "
+"adayların hiçbiri alan adıyla eşleşmemektedir."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2254,6 +2266,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
+"%(team_name)s ekibine atanan aday yoktur çünkü kapasitesi yoktur. "
+"Satışçılara kapasite ekleyiniz."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2262,12 +2276,15 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
+"Herhangi bir ekibe veya satışçıya atanan aday yoktur. Atanmayan adayların "
+"yanı sıra Satış Ekiplerini veya Satışçıların konfigürasyonunu kontrol "
+"ediniz."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "No data found!"
-msgstr ""
+msgstr "Veri bulunamadı!"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -2282,6 +2299,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
+"Satışçılara atanan aday yoktur çünkü atanmamış adayların hiçbiri alan adıyla"
+" eşleşmemektedir."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2290,6 +2309,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+" %(team_name)s takımına ve satışçılarına atanan yeni aday yoktur çünkü "
+"atanmamış adayların hiçbiri alan adıyla eşleşmemektedir."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2297,6 +2318,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
+"Takımlara atanan yeni aday yoktur çünkü atanmamış adayların hiçbiri alan "
+"adıyla eşleşmemektedir."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2584,12 +2607,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr ""
+msgstr "Ortak E-postası güncellenecek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr ""
+msgstr "Ortak Telefonu Güncellenecek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
@@ -2659,12 +2682,12 @@ msgstr "Liste görünümünden lütfen birden fazla öğe (aday veya fırsat) se
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr ""
+msgstr "Ltf Alanlar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Ltf Başlangıç ​​Tarihi"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -2682,24 +2705,24 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "Potansiyel Tekrar  Fırsat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr ""
+msgstr "Potansiyel Çift Fırsat Sayısı"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr ""
+msgstr "Tahmini Aday Puanlama Alan Etiketleri"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr ""
+msgstr "Tahmini Aday Puanlama: Otomatize Olasılıkları Yeniden Hesapla "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2793,12 +2816,12 @@ msgstr "Tekrarlama Durumu"
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "Repeat frequency should be positive."
-msgstr ""
+msgstr "Tekrarlama frekansı pozitif olmalıdır."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
 msgid "Repeatedly"
-msgstr ""
+msgstr "Tekraren"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
@@ -2814,7 +2837,7 @@ msgstr "Gereksinimler"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "Yeniden planla"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -2829,7 +2852,7 @@ msgstr "Geriyükle"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr ""
+msgstr "Kurala Dayalı Atama"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2867,7 +2890,7 @@ msgstr "Satış Ekibi"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Satış Ekibi Üyesi"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2906,7 +2929,7 @@ msgstr "Temizlenmiş Numara"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
-msgstr ""
+msgstr "Yapmanız gereken herşeyi takip etmek için aktiviteleri programlayın"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2990,7 +3013,7 @@ msgstr "Sadece fırsatı göster"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Skip auto assignment"
-msgstr ""
+msgstr "Otomatik atamayı atla"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -3152,7 +3175,7 @@ msgstr "Ekipler"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
-msgstr ""
+msgstr "Ekip Üyeleri"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3216,7 +3239,7 @@ msgstr "Anlaşmanın kapanış olasılığı %0 ile %100 arasında olmalıdır!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr ""
+msgstr "Başarı oranı hesaplanması şuna dayanır: "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3230,7 +3253,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "Bu analiz size ayda kaç tane aday yaratıldığını gösterir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3252,6 +3275,8 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
+"Satışçılara kurallara uygun olarak otomatik olarak fırsatları atamak için bu"
+" kullanılabilir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3315,7 +3340,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
-msgstr ""
+msgstr "Bu adayları tüm üyelere atayacaktır. Devam etmek istiyor musunuz?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
@@ -3366,6 +3391,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
+"Veri kaybını önlemek için, Fırsatlar ve Opportunityler  %(max_length)s "
+"gruplarına göre birleştirilebilir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3419,7 +3446,7 @@ msgstr "UTM kampanyası"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr ""
+msgstr "UX. Ana şirkete sınırlayın ya da şirket yoksa hepsine"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3457,7 +3484,7 @@ msgstr "Olasılıkları Güncelle"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
 msgid "Update the probabilities"
-msgstr ""
+msgstr "Olasılıkları güncelleyin"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3513,7 +3540,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid "Use this menu to have an overview of your Pipeline."
-msgstr ""
+msgstr "Fırsat Havuzuna genel bakış için bu menüyü kullanınız"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -3528,7 +3555,7 @@ msgstr "Aşamaları sıralamak için kullanılır. Düşük olması daha iyidir.
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Kullanıcı Şirket"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_email
@@ -3668,7 +3695,7 @@ msgstr "PK"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr ""
+msgstr "ör. Müzakere"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3679,7 +3706,7 @@ msgstr "ör. Ürün fiyatı"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "e.g. Too expensive"
-msgstr ""
+msgstr "ör. Çok pahalı"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
