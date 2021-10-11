@@ -420,7 +420,6 @@ class ProductTemplate(models.Model):
     def _constrains_detailed_type(self):
         type_mapping = self._detailed_type_mapping()
         for record in self:
-            print(record.type, record.detailed_type)
             if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
                 raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
 
