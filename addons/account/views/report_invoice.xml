@@ -127,8 +127,8 @@
                                 <table class="table table-sm" style="page-break-inside: avoid;">
 
                                     <!--Tax totals-->
-                                    <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
-                                    <t t-call="account.document_tax_totals"/>
+                                    <t t-if="o.tax_totals_json" t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                                    <t t-if="o.tax_totals_json" t-call="account.document_tax_totals"/>
 
                                     <!--Payments-->
                                     <t t-if="print_with_payments">
