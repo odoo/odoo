@@ -94,6 +94,8 @@ export function computePositioning(reference, popper, options) {
     const refBox = reference.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
 
+    const containerIsHTMLNode = container === document.firstElementChild;
+
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
@@ -122,12 +124,22 @@ export function computePositioning(reference, popper, options) {
             const [directionSize, variantSize] = vertical
                 ? [popBox.height + margin, popBox.width]
                 : [popBox.width, popBox.height + margin];
-            const [directionMin, directionMax] = vertical
+            let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
-            const [variantMin, variantMax] = vertical
+            let [variantMin, variantMax] = vertical
                 ? [contBox.left, contBox.right]
                 : [contBox.top, contBox.bottom];
+
+            if (containerIsHTMLNode) {
+                if (vertical) {
+                    directionMin += container.scrollTop;
+                    directionMax += container.scrollTop;
+                } else {
+                    variantMin += container.scrollTop;
+                    variantMax += container.scrollTop;
+                }
+            }
 
             // Abort if outside container boundaries
             const directionOverflow =
