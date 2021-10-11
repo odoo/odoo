@@ -220,6 +220,7 @@ export class OdooEditor extends EventTarget {
         editable.oid = 'root';
         this._idToNodeMap.set(1, editable);
         this.editable = this.options.toSanitize ? sanitize(editable) : editable;
+        this.editable.classList.add("odoo-editor-editable");
 
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
@@ -2171,7 +2172,7 @@ export class OdooEditor extends EventTarget {
         } else if (ev.key === 'Tab') {
             // Tab
             const sel = this.document.getSelection();
-            const closestTag = (closestElement(sel.anchorNode, 'li, table') || {}).tagName;
+            const closestTag = (closestElement(sel.anchorNode, 'li, table', true) || {}).tagName;
 
             if (closestTag === 'LI') {
                 this._applyCommand('indentList', ev.shiftKey ? 'outdent' : 'indent');
