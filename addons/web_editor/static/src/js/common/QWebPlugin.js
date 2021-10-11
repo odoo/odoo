@@ -43,7 +43,7 @@ export class QWebPlugin {
 
         this._fixInlines(subRoot);
 
-        const demoElements = subRoot.querySelectorAll('[t-esc], [t-raw], [t-out]');
+        const demoElements = subRoot.querySelectorAll('[t-esc], [t-raw], [t-out], [data-oe-original-expression]');
         for (const element of demoElements) {
             element.setAttribute('contenteditable', 'false');
         }

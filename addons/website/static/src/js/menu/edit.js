@@ -7,6 +7,7 @@ var wysiwygLoader = require('web_editor.loader');
 var websiteNavbarData = require('website.navbar');
 var Dialog = require('web.Dialog');
 
+const { QWebPlugin } = require('@web_editor/js/common/QWebPlugin');
 const { registry } = require("@web/core/registry");
 
 var _t = core._t;
@@ -393,6 +394,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             isRootEditable: false,
             controlHistoryFromDocument: true,
             getContentEditableAreas: this._getContentEditableAreas.bind(this),
+            editorPlugins: [QWebPlugin],
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),

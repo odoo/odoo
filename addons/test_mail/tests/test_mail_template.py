@@ -104,15 +104,8 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
             'model': 'ir.ui.view',
             'res_id': view.id
         })
-        cls.env['ir.translation'].create({
-            'type': 'model_terms',
-            'name': 'ir.ui.view,arch_db',
-            'module': 'test_mail',
-            'lang': 'es_ES',
-            'res_id': view.id,
-            'src': 'English Layout',
-            'value': 'Spanish Layout',
-            'state': 'translated',
+        view.with_context(lang='es_ES').write({
+            'arch_db': '<body><t t-out="message.body"/> Spanish Layout <t t-esc="model_description"/></body>'
         })
 
         # admin should receive emails

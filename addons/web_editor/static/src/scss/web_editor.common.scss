@@ -846,7 +846,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 /* QWEB */
 
-.odoo-editor, .o_readonly {
+.odoo-editor, .o_readonly, #wrapwrap {
     t,
     [t-if],
     [t-elif],
@@ -857,12 +857,14 @@ section, .oe_img_bg, [data-oe-shape-data] {
     t,
     [t-esc],
     [t-out],
-    [t-raw] {
+    [t-raw],
+    [data-oe-original-expression] {
         border-radius: 2px;
     }
     [t-esc],
     [t-out],
-    [t-raw] {
+    [t-raw],
+    [data-oe-original-expression] {
         background-color: rgba(36, 154, 255, 0.16) !important;
     }
     [t-esc]:empty::before {

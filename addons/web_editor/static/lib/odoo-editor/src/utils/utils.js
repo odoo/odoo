@@ -918,6 +918,7 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-foreach') ||
                 node.getAttribute('t-value') ||
                 node.getAttribute('t-out') ||
+                node.getAttribute('data-oe-original-expression') ||
                 node.getAttribute('t-raw'))) ||
         node.classList.contains('oe_unbreakable')
     );

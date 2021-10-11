@@ -6,7 +6,7 @@ var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
 var field_registry = require('web.field_registry');
-const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
+const {QWebPlugin} = require('@web_editor/js/common/QWebPlugin');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 require('web._field_registry');
 
