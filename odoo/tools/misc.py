@@ -836,7 +836,7 @@ class lower_logging(logging.Handler):
             record.levelname = f'_{record.levelname}'
             record.levelno = self.max_level
             self.had_error_log = True
-            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') for arg in record.args)
+            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if type(arg) is str else arg for arg in record.args)  # pylint: disable=unidiomatic-typecheck
 
         for handler in self.old_handlers:
             if handler.level <= record.levelno:
