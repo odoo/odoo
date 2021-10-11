@@ -213,6 +213,9 @@
                     <group name='carrier_data' string="Shipping Information">
                         <field name="is_return_picking" invisible="1"/>
                         <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="shipment_description"/>
+                        <field name="declared_value"/>
+                        <field name="company_currency_id" invisible="1"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
@@ -267,6 +270,7 @@
                 <xpath expr="//field[@name='picking_partner_id']" position="after">
                     <field name="destination_country_code" optional="hide"/>
                     <field name="carrier_id" optional="hide"/>
+
                 </xpath>
             </field>
         </record>

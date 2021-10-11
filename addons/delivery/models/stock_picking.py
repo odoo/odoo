@@ -90,6 +90,9 @@ class StockPicking(models.Model):
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
+    company_currency_id = fields.Many2one(string='Company Currency', readonly=True, related='company_id.currency_id')
+    declared_value = fields.Monetary(compute="_compute_declared_value", string="Declared Value", currency_field='company_currency_id')
+    shipment_description = fields.Char(string='Shipment Description', compute='_compute_shipment_description', readonly=False)
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -110,6 +113,17 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
+
+    @api.depends('move_line_ids.sale_price')
+    def _compute_declared_value(self):
+        for picking in self:
+            picking.declared_value = sum(picking.mapped('move_line_ids.sale_price'))
+
+    @api.depends('shipment_description')
+    def _compute_shipment_description(self):
+        for picking in self:
+            first_line = picking.move_lines and picking.move_lines[0] or False
+            picking.shipment_description = first_line and first_line.product_id.categ_id.name or ''
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
