@@ -125,8 +125,20 @@
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                                 <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                <field name="lang_id"/>
+                                <field name="lang_active_count" invisible="1"/>
                                 <field name="lang_code" invisible="1"/>
+                                <label for="lang_id" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}"/>
+                                <div class="o_row" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}">
+                                    <field name="lang_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                    <button
+                                        type="action"
+                                        name="%(base.res_lang_act_window)d"
+                                        class="btn-sm btn-link mb4 fa fa-globe"
+                                        aria-label="More languages"
+                                        groups="base.group_system"
+                                        title="More languages"
+                                    />
+                                </div>
                             </group>
 
                             <group name="opportunity_partner" attrs="{'invisible': [('type', '=', 'lead')]}">
@@ -294,7 +306,19 @@
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
                                         <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                        <field name="lang_id" options="{'no_create': True}"/>
+                                        <field name="lang_active_count" invisible="1"/>
+                                        <label for="lang_id" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}"/>
+                                        <div class="o_row" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}">
+                                            <field name="lang_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.res_lang_act_window)d"
+                                                class="btn-sm btn-link mb4 fa fa-globe"
+                                                aria-label="More languages"
+                                                groups="base.group_system"
+                                                title="More languages"
+                                            />
+                                        </div>
                                     </group>
                                     <group class="mt48">
                                         <label for="contact_name_page_lead"/>

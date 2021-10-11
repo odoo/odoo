@@ -193,6 +193,7 @@ class Lead(models.Model):
     website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True)
     lang_id = fields.Many2one('res.lang', string='Language', compute='_compute_lang_id', readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
+    lang_active_count = fields.Integer(compute='_compute_lang_active_count')
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
     street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -402,6 +403,10 @@ class Lead(models.Model):
         )
         for lead in self.filtered('partner_id'):
             lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
+
+    @api.depends('lang_id')
+    def _compute_lang_active_count(self):
+        self.lang_active_count = len(self.env['res.lang'].get_installed())
 
     @api.depends('partner_id')
     def _compute_partner_address_values(self):
