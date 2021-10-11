@@ -88,7 +88,6 @@ export class Dropdown extends Component {
         const positioningOptions = {
             popper: "menuRef",
             position,
-            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
         };
         this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
         this.togglerRef = useRef("togglerRef");
