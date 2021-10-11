@@ -68,10 +68,9 @@ class HolidaysType(models.Model):
     virtual_leaves_taken = fields.Float(
         compute='_compute_leaves', string='Virtual Time Off Already Taken',
         help='Sum of validated and non validated time off requests.')
-    # KBA TODO in master: rename, change to int
     closest_allocation_to_expire = fields.Many2one('hr.leave.allocation', 'Allocation', compute='_compute_leaves')
-    group_days_allocation = fields.Float(
-        compute='_compute_group_days_allocation', string='Days Allocated')
+    allocation_count = fields.Integer(
+        compute='_compute_allocation_count', string='Allocations')
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
@@ -339,7 +338,7 @@ class HolidaysType(models.Model):
             holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
             holiday_status.closest_allocation_to_expire = result.get('closest_allocation_to_expire', 0)
 
-    def _compute_group_days_allocation(self):
+    def _compute_allocation_count(self):
         date_from = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         domain = [
             ('holiday_status_id', 'in', self.ids),
@@ -354,7 +353,7 @@ class HolidaysType(models.Model):
         )
         grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
         for allocation in self:
-            allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
+            allocation.allocation_count = grouped_dict.get(allocation.id, 0)
 
     def _compute_group_days_leave(self):
         grouped_res = self.env['hr.leave'].read_group(

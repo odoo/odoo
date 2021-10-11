@@ -67,9 +67,6 @@
             'hr/static/tests/m2x_avatar_employee_tests.js',
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],
-        'web.assets_qweb': [
-            'hr/static/src/xml/hr_templates.xml',
-        ],
     },
     'license': 'LGPL-3',
 }

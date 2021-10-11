@@ -73,8 +73,6 @@ class HrExpense(models.Model):
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
-    # TODO SGV can be removed
-    untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     total_amount = fields.Monetary("Amount paid", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
@@ -152,7 +150,6 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
         for expense in self:
-            expense.untaxed_amount = expense.unit_amount * expense.quantity
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
 
