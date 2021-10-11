@@ -3290,7 +3290,7 @@ class AccountMove(models.Model):
         return action
 
     def action_activate_currency(self):
-        self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
+        self.sudo().currency_id.filtered(lambda currency: not currency.active).write({'active': True})
 
     @api.model
     def _move_dict_to_preview_vals(self, move_vals, currency_id=None):
