@@ -57,7 +57,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_header ml-2">
                                 <t t-if="messageView.message.author">
-                                    <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open profile">
+                                    <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open chat">
                                         <t t-esc="messageView.message.author.nameOrDisplayName"/>
                                     </div>
                                 </t>

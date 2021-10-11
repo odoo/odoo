@@ -485,6 +485,11 @@ export class Message extends Component {
         }
         if (ev.target.tagName === 'A') {
             if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
+                if (ev.target.dataset.oeModel === 'res.partner') {
+                    const id = parseInt(ev.target.dataset.oeId);
+                    const partner = this.messaging.models['mail.partner'].insert({ id });
+                    return partner.openChat();
+                }
                 this.messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
@@ -527,7 +532,7 @@ export class Message extends Component {
         if (!this.messageView.message.author) {
             return;
         }
-        this.messageView.message.author.openProfile();
+        this.messageView.message.author.openChat();
     }
 
     /**
