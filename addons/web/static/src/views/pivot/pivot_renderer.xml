@@ -54,6 +54,7 @@
             <t t-if="cell.isLeaf and !cell.isFolded">
                 <PivotGroupByMenu
                     toggler="'parent'"
+                    position="isXAxis ? 'bottom-start' : 'bottom-end'"
                     cell="cell"
                     customGroupBys="model.metaData.customGroupBys"
                     showActiveItems="false"
