@@ -1930,7 +1930,7 @@ class StockMove(models.Model):
                          ('procure_method', '=', 'make_to_stock'),
                          ('reservation_date', '<=', fields.Date.today())]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
-                                                         order='reservation_date, priority desc, date asc')
+                                                         order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests(self, seen):
