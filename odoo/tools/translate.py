@@ -141,7 +141,7 @@ TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
-    'sup', 'time', 'u', 'var', 'wbr', 'text',
+    'sup', 't', 'text', 'time', 'u', 'var', 'wbr',
 }
 
 # Which attributes must be translated. This is a dict, where the value indicates
@@ -188,7 +188,7 @@ def translate_xml_node(node, callback, parse, serialize):
         """ Return whether the given node can be translated as a whole. """
         return (
             node.tag in TRANSLATED_ELEMENTS
-            and not any(key.startswith("t-") for key in node.attrib)
+            and all(not key.startswith("t-") or key == "t-out" for key in node.attrib)
             and all(translatable(child) for child in node)
         )
 
