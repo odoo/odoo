@@ -1137,9 +1137,21 @@ class ChromeBrowser():
         'info': logging.INFO,
         'warning': logging.WARNING,
         'error': logging.ERROR,
-        # TODO: what do with
-        # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
-        # endGroup, assert, profile, profileEnd, count, timeEnd
+        # event is only sent if the assertion fails, pretty cool
+        'assert': logging.ERROR,
+        # same as log but in the browser console objects are expanded by default
+        'dir': logging.INFO,
+        # same as log except always dumps a stacktrace (or links an async stack
+        # really?), useless in FF as it never sends stacktraces anyway
+        'trace': logging.INFO,
+        # count: sends a `count` console event with the label as arg, not really
+        #        useable: chrome sends formatted value while firefox only sends
+        #        label
+        # 'count': logging.WARNING,
+        # countReset: resets counter
+        # time: N/A, never sent to client
+        # timeLog, timeEnd: sends event for corresponding timer, use timestamp
+        # startGroup/startGroupCollapsed/endGroup: sub-logger?
     }
 
     def _websocket_wait_id(self, awaited_id, timeout=10):
