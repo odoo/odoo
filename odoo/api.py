@@ -501,8 +501,12 @@ class Environment(Mapping):
         assert context is not None
         args = (cr, uid, context, su)
 
-        # if env already exists, return it
+        # determine transaction object
         transaction = cr.transaction
+        if transaction is None:
+            transaction = cr.transaction = Transaction(Registry(cr.dbname))
+
+        # if env already exists, return it
         for env in transaction.envs:
             if env.args == args:
                 return env

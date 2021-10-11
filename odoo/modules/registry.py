@@ -716,15 +716,10 @@ class Registry(Mapping):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
-        if self.test_cr is None:
-            cr = self._db.cursor()
-        else:
+        if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            cr = TestCursor(self.test_cr, self.test_lock)
-
-        # bind the cursor to a Transaction object, which manages environments
-        cr.transaction = odoo.api.Transaction(self)
-        return cr
+            return TestCursor(self.test_cr, self.test_lock)
+        return self._db.cursor()
 
 
 class DummyRLock(object):
