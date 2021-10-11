@@ -389,7 +389,9 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
-
+    company_currency_id = fields.Many2one(string='Company Currency', readonly=True, related='company_id.currency_id')
+    declared_value = fields.Monetary(compute="_compute_declared_value", string="Declared Value", currency_field='company_currency_id')
+    shipment_description = fields.Char(string='Shipment Description', compute='_compute_shipment_description', readonly=False)
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
@@ -604,6 +606,18 @@ class Picking(models.Model):
                 picking.show_validate = False
             else:
                 picking.show_validate = True
+
+    @api.depends('declared_value')
+    def _compute_declared_value(self):
+        for picking in self:
+            picking.declared_value = sum([move_line.sale_price for move_line in picking.move_line_ids])
+
+    @api.depends('shipment_description')
+    def _compute_shipment_description(self):
+        for picking in self:
+            if picking.move_lines:
+                picking.shipment_description = picking.move_lines[0].product_id.categ_id.name
+
 
     @api.model
     def _search_delay_alert_date(self, operator, value):

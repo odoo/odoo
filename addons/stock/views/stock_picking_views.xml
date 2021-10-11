@@ -446,6 +446,9 @@
                                     <field name="user_id" domain="[('share', '=', False)]"/>
                                     <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
+                                    <field name="shipment_description"/>
+                                    <field name="declared_value"/>
+                                    <field name="company_currency_id" invisible="1"/>
                                 </group>
                             </group>
                         </page>
