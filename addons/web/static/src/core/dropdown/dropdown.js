@@ -73,6 +73,24 @@ export class Dropdown extends Component {
         useDropdownNavigation();
 
         // Set up toggler and positioning --------------------------------------
+        /** @type {string} **/
+        let position =
+            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+        let [direction, variant = "middle"] = position.split("-");
+        if (localization.direction === "rtl") {
+            if (["bottom", "top"].includes(direction)) {
+                variant = variant === "start" ? "end" : "start";
+            } else {
+                direction = direction === "left" ? "right" : "left";
+            }
+            position = [direction, variant].join("-");
+        }
+        const positioningOptions = {
+            popper: "menuRef",
+            position,
+            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
+        };
+        this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
         this.togglerRef = useRef("togglerRef");
         if (this.props.toggler === "parent") {
             // Add parent click listener to handle toggling
@@ -92,37 +110,13 @@ export class Dropdown extends Component {
                 },
                 () => []
             );
-        }
-
-        // Setup positioning only when in desktop
-        if (!this.env.isSmall) {
-            /** @type {string} **/
-            let position =
-                this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
-            let [direction, variant = "middle"] = position.split("-");
-            if (localization.direction === "rtl") {
-                if (["bottom", "top"].includes(direction)) {
-                    variant = variant === "start" ? "end" : "start";
-                } else {
-                    direction = direction === "left" ? "right" : "left";
-                }
-                position = [direction, variant].join("-");
-            }
-            this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
-
-            const positioningOptions = {
-                popper: "menuRef",
-                position,
-                directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
-            };
 
             // Position menu relatively to parent element
-            if (this.props.toggler === "parent") {
-                usePosition(() => this.el.parentElement, positioningOptions);
-            } else {
-                // Position menu relatively to inner toggler
-                usePosition(() => this.togglerRef.el, positioningOptions);
-            }
+            usePosition(() => this.el.parentElement, positioningOptions);
+        } else {
+            // Position menu relatively to inner toggler
+            const togglerRef = useRef("togglerRef");
+            usePosition(() => togglerRef.el, positioningOptions);
         }
     }
 
