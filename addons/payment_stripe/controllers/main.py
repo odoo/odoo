@@ -9,7 +9,7 @@ from datetime import datetime
 
 import werkzeug
 
-from odoo import http
+from odoo import SUPERUSER_ID, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
@@ -83,7 +83,11 @@ class StripeController(http.Controller):
         event = json.loads(request.httprequest.data)
         _logger.info("event received:\n%s", pprint.pformat(event))
         try:
-            if event['type'] == 'checkout.session.completed':
+            if event['type'] in [
+                'checkout.session.completed',
+                'checkout.session.async_payment_succeeded',
+                'checkout.session.async_payment_failed',
+            ]:
                 checkout_session = event['data']['object']
 
                 # Check the source and integrity of the event
@@ -113,7 +117,9 @@ class StripeController(http.Controller):
                         )
                         self._include_setup_intent_in_feedback_data(setup_intent, data)
                     # Handle the feedback data crafted with Stripe API objects as a regular feedback
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+                    request.env['payment.transaction'].with_user(
+                        SUPERUSER_ID
+                    ).sudo()._handle_feedback_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''

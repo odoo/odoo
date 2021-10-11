@@ -12,6 +12,7 @@ PAYMENT_METHOD_TYPES = [
     PMT('eps', ['at'], ['eur'], 'punctual'),
     PMT('giropay', ['de'], ['eur'], 'punctual'),
     PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
+    PMT('sofort', ['at', 'be', 'de', 'it', 'nl', 'es'], ['eur'], 'punctual'),
 ]
 
 # Mapping of transaction states to Stripe {Payment,Setup}Intent statuses.

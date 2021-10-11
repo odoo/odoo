@@ -33,17 +33,22 @@ class PaymentTransaction(models.Model):
 
     def _set_pending(self, state_message=None):
         """ Override of payment to send the quotations automatically. """
+        premilinary_state = self.state
         super(PaymentTransaction, self)._set_pending(state_message=state_message)
 
-        for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
-            sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
+        # When using webhooks, this function can be called two times (when the user comes back and
+        # when the webhooks notify the db). To avoid duplicates, check if the transaction is not
+        # already pending
+        if premilinary_state != 'pending' and  self.state == 'pending':
+            for record in self:
+                sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+                sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
 
-            if record.acquirer_id.provider == 'transfer':
-                for so in record.sale_order_ids:
-                    so.reference = record._compute_sale_order_reference(so)
-            # send order confirmation mail
-            sales_orders._send_order_confirmation_mail()
+                if record.acquirer_id.provider == 'transfer':
+                    for so in record.sale_order_ids:
+                        so.reference = record._compute_sale_order_reference(so)
+                # send order confirmation mail
+                sales_orders._send_order_confirmation_mail()
 
     def _check_amount_and_confirm_order(self):
         self.ensure_one()
