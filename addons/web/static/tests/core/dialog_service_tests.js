@@ -12,6 +12,7 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { Dialog } from "../../src/core/dialog/dialog";
+import {isBrowserFirefox} from "../../src/core/browser/feature_detection";
 
 const { Component, mount, tags } = owl;
 
@@ -209,7 +210,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     assert.containsOnce(target, ".o_dialog_container");
 });
 
-QUnit.test("dialog component crashes", async (assert) => {
+QUnit.skipIf(isBrowserFirefox(), "dialog component crashes", async (assert) => {
     assert.expect(4);
 
     class FailingDialog extends Dialog {

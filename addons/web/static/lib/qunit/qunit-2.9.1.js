@@ -3036,8 +3036,10 @@
   		try {
   			runTest(this);
   		} catch (e) {
-  			lastError = e;
-  			this.pushFailure("Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + (e.message || e), extractStacktrace(e, 0));
+		    if (!(e instanceof QUnit.Skip)) {
+				lastError = e;
+				this.pushFailure("Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + (e.message || e), extractStacktrace(e, 0));
+			}
 
   			// Else next test will carry the responsibility
   			saveGlobal();
@@ -3379,9 +3381,11 @@
   					then.call(promise, function () {
   						resume();
   					}, function (error) {
-  						lastError = error;
-  						message = "Promise rejected " + (!phase ? "during" : phase.replace(/Each$/, "")) + " \"" + test.testName + "\": " + (error && error.message || error);
-  						test.pushFailure(message, extractStacktrace(error, 0));
+					    if (!(error instanceof QUnit.Skip)) {
+							lastError = error;
+							message = "Promise rejected " + (!phase ? "during" : phase.replace(/Each$/, "")) + " \"" + test.testName + "\": " + (error && error.message || error);
+							test.pushFailure(message, extractStacktrace(error, 0));
+						}
 
   						// Else next test will carry the responsibility
   						saveGlobal();
@@ -3928,8 +3932,8 @@
   		value: function deepEqual(actual, expected, message) {
   			this.pushResult({
   				result: equiv(actual, expected),
-  				actual: actual,
-  				expected: expected,
+  				actual: JSON.stringify(actual),
+  				expected: JSON.stringify(expected),
   				message: message
   			});
   		}
@@ -4279,6 +4283,14 @@
   	todo: todo,
 
   	skip: skip,
+	skipIf(test, ...args) {
+		if (test) {
+			return skip(...args);
+		} else {
+			return test(...args);
+		}
+	},
+	Skip: function Skip() {},
 
   	only: only,
 

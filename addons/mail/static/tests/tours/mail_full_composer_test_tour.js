@@ -6,6 +6,7 @@ import {
 } from 'web.test_utils_file';
 
 import tour from 'web_tour.tour';
+import { hasLegacyFilesystem } from "@web/core/browser/feature_detection";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -15,7 +16,11 @@ import tour from 'web_tour.tour';
  */
 tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     test: true,
-}, [{
+}, !hasLegacyFilesystem() ? [{
+    content: "Has a Send Message",
+    trigger: '.o_ChatterTopbar_buttonSendMessage',
+    run() {},
+}] : [{
     content: "Click on Send Message",
     trigger: '.o_ChatterTopbar_buttonSendMessage',
 }, {

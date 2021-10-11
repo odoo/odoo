@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
 import re
 import odoo.tests
 
@@ -11,8 +12,9 @@ RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 class WebSuite(odoo.tests.HttpCase):
 
     def test_js(self):
+        failfast = '&failfast' if 'ODOO_QWEB_FAILFAST' in os.environ else ''
         # webclient desktop test suite
-        self.browser_js('/web/tests?mod=web&failfast', "", "", login='admin', timeout=1800)
+        self.browser_js(f'/web/tests?mod=web{failfast}', "", "", login='admin', timeout=1800)
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
@@ -42,5 +44,6 @@ class MobileWebSuite(odoo.tests.HttpCase):
     browser_size = '375x667'
 
     def test_mobile_js(self):
+        failfast = '&failfast' if 'ODOO_QWEB_FAILFAST' in os.environ else ''
         # webclient mobile test suite
-        self.browser_js('/web/tests/mobile?mod=web&failfast', "", "", login='admin', timeout=1800)
+        self.browser_js(f'/web/tests/mobile?mod=web{failfast}', "", "", login='admin', timeout=1800)

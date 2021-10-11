@@ -15,6 +15,10 @@ export function isBrowserChrome() {
     return browser.navigator.userAgent.includes("Chrome");
 }
 
+export function isBrowserFirefox() {
+    return browser.navigator.userAgent.includes("Firefox");
+}
+
 export function isMacOS() {
     return Boolean(browser.navigator.userAgent.match(/Mac/i));
 }
@@ -37,4 +41,8 @@ export function isIosApp() {
 
 export function hasTouch() {
     return "ontouchstart" in window || "onmsgesturechange" in window;
+}
+
+export function hasLegacyFilesystem() {
+    return window['requestFileSystem'] || window['webkitRequestFileSystem'];
 }

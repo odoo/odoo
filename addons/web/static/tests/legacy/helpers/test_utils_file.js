@@ -54,7 +54,7 @@ function createFile(data) {
     return new Promise(function (resolve, reject) {
         var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         if (!requestFileSystem) {
-            throw new Error('FileSystem API is not supported');
+            throw new QUnit.Skip();
         }
         requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
             fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
