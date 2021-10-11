@@ -357,13 +357,15 @@ class Website(models.Model):
     @api.model
     def configurator_apply(self, **kwargs):
         def set_colors(selected_palette):
+            url = '/website/static/src/scss/options/user_values.scss'
+            selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
+            values = {'color-palettes-name': "'%s'" % selected_palette_name}
+            self.env['web_editor.assets'].make_scss_customization(url, values)
+
             if isinstance(selected_palette, list):
                 url = '/website/static/src/scss/options/colors/user_color_palette.scss'
                 values = {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
-            else:
-                url = '/website/static/src/scss/options/user_values.scss'
-                values = {'color-palettes-name': "'%s'" % selected_palette}
-            self.env['web_editor.assets'].make_scss_customization(url, values)
+                self.env['web_editor.assets'].make_scss_customization(url, values)
 
         def set_features(selected_features):
             features = self.env['website.configurator.feature'].browse(selected_features)
