@@ -11,6 +11,15 @@ commandProviderRegistry.add("debug", {
         const result = [];
         if (env.services.user.isAdmin) {
             if (env.debug) {
+                if (!env.debug.includes("assets")){
+                    result.push({
+                        action() {
+                            browser.location.search = "?debug=assets";
+                        },
+                        category: "debug",
+                        name: env._t("Activate debug mode (with assets)"),
+                    });
+                }
                 result.push({
                     action() {
                         const route = env.services.router.current;
@@ -27,7 +36,7 @@ commandProviderRegistry.add("debug", {
                             browser.location.search = "?debug=assets";
                         },
                         category: "debug",
-                        name: env._t("Activate debug mode"),
+                        name: env._t("Activate debug mode (with assets)"),
                     });
                 }
             }
