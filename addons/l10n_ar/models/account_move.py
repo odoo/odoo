@@ -257,15 +257,13 @@ class AccountMove(models.Model):
             '04': 'intern_tax_amount',
             '99': 'other_taxes_amount',
             '06': 'vat_perc_amount',
-            # other taxes other perc y profits?
-            # 'profits_perc_amount': tax_values['tax_id'].tax_group_id == profits_tax_group,
             '09': 'other_perc_amount',
         }
 
         amounts_detail = dict.fromkeys([
             'vat_amount', 'vat_taxable_amount', 'vat_exempt_base_amount', 'vat_untaxed_base_amount',
             'not_vat_taxes_amount', 'iibb_perc_amount', 'mun_perc_amount', 'intern_tax_amount', 'other_taxes_amount',
-            'profits_perc_amount', 'vat_perc_amount', 'other_perc_amount'], 0.0)
+            'vat_perc_amount', 'other_perc_amount'], 0.0)
         vat_detail = []
 
         tax_details = self._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
