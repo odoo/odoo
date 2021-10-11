@@ -1058,7 +1058,7 @@ class Lead(models.Model):
                 - initial_date: date of the start of the first relevant meeting. The calendar will target that date.
         """
         self.ensure_one()
-        meeting_results = self.env["calendar.event"].search_read([('opportunity_id', '=', self.id)], ['start', 'stop', 'allday'])
+        meeting_results = self.env["calendar.event"].search_read([('opportunity_id', '=', self.id)], ['start_datetime', 'stop_datetime', 'allday'])
         if not meeting_results:
             return "week", False
 
@@ -1074,10 +1074,10 @@ class Lead(models.Model):
         # 08.00.00->18.00.00. Therefore we must not put it back in the user tz but take it raw.
         for meeting in meeting_results:
             if meeting.get('allday'):
-                meeting_dts.append((meeting.get('start'), meeting.get('stop')))
+                meeting_dts.append((meeting.get('start_datetime'), meeting.get('stop_datetime')))
             else:
-                meeting_dts.append((meeting.get('start').astimezone(user_pytz).replace(tzinfo=None),
-                                   meeting.get('stop').astimezone(user_pytz).replace(tzinfo=None)))
+                meeting_dts.append((meeting.get('start_datetime').astimezone(user_pytz).replace(tzinfo=None),
+                                   meeting.get('stop_datetime').astimezone(user_pytz).replace(tzinfo=None)))
 
         # If there are meetings that are still ongoing or to come, only take those.
         unfinished_meeting_dts = [meeting_dt for meeting_dt in meeting_dts if meeting_dt[1] >= now_dt]

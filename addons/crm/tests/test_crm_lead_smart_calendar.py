@@ -29,30 +29,30 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
         cls.next_year = datetime.now().year + 1
         cls.calendar_meeting_1 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_1',
-            'start': datetime(2020, 12, 13, 17),
-            'stop': datetime(2020, 12, 13, 22)})
+            'start_datetime': datetime(2020, 12, 13, 17),
+            'stop_datetime': datetime(2020, 12, 13, 22)})
         cls.calendar_meeting_2 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_2',
-            'start': datetime(2020, 12, 13, 2),
-            'stop': datetime(2020, 12, 13, 3)})
+            'start_datetime': datetime(2020, 12, 13, 2),
+            'stop_datetime': datetime(2020, 12, 13, 3)})
         cls.calendar_meeting_3 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_3',
-            'start': datetime(cls.next_year, 5, 4, 12),
-            'stop': datetime(cls.next_year, 5, 4, 13)})
+            'start_datetime': datetime(cls.next_year, 5, 4, 12),
+            'stop_datetime': datetime(cls.next_year, 5, 4, 13)})
         cls.calendar_meeting_4 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_4',
             'allday': True,
-            'start': datetime(2020, 12, 6, 0, 0, 0),
-            'stop': datetime(2020, 12, 6, 23, 59, 59)})
+            'start_datetime': datetime(2020, 12, 6, 0, 0, 0),
+            'stop_datetime': datetime(2020, 12, 6, 23, 59, 59)})
         cls.calendar_meeting_5 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_5',
-            'start': datetime(2020, 12, 13, 8),
-            'stop': datetime(2020, 12, 13, 18),
+            'start_datetime': datetime(2020, 12, 13, 8),
+            'stop_datetime': datetime(2020, 12, 13, 18),
             'allday': True})
         cls.calendar_meeting_6 = cls.env['calendar.event'].create({
             'name': 'calendar_meeting_6',
-            'start': datetime(2020, 12, 12, 0),
-            'stop': datetime(2020, 12, 19, 0)})
+            'start_datetime': datetime(2020, 12, 12, 0),
+            'stop_datetime': datetime(2020, 12, 19, 0)})
 
     @users('user_NY_en_US')
     def test_meeting_view_parameters_1(self):
@@ -127,8 +127,8 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
         })
         calendar_action = lead.action_schedule_meeting()
         event = self.env['calendar.event'].with_context(calendar_action['context']).create({
-            'start': datetime(2020, 12, 13, 17),
-            'stop': datetime(2020, 12, 13, 22),
+            'start_datetime': datetime(2020, 12, 13, 17),
+            'stop_datetime': datetime(2020, 12, 13, 22),
         })
         self.assertEqual(len(event.attendee_ids), 2)
         self.assertIn(self.user_sales_leads.partner_id, event.attendee_ids.partner_id)

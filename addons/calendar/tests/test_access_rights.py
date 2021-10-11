@@ -19,8 +19,8 @@ class TestAccessRights(TransactionCase):
     def create_event(self, user, **values):
         return self.env['calendar.event'].with_user(user).create(dict({
             'name': 'Event',
-            'start': datetime(2020, 2, 2, 8, 0),
-            'stop': datetime(2020, 2, 2, 18, 0),
+            'start_datetime': datetime(2020, 2, 2, 8, 0),
+            'stop_datetime': datetime(2020, 2, 2, 18, 0),
             'user_id': user.id,
         }, **values))
 
@@ -71,7 +71,7 @@ class TestAccessRights(TransactionCase):
 
     def test_read_group_public(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby='start')
+        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start_datetime'], groupby='start_datetime')
         self.assertTrue(data, "It should be able to read group")
         data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'],
                                                                            groupby='name')
@@ -85,12 +85,12 @@ class TestAccessRights(TransactionCase):
 
     def test_read_group_agg(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby='start:week')
+        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start_datetime'], groupby='start_datetime:week')
         self.assertTrue(data, "It should be able to read group")
 
     def test_read_group_list(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby=['start'])
+        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start_datetime'], groupby=['start_datetime'])
         self.assertTrue(data, "It should be able to read group")
 
     def test_private_attendee(self):

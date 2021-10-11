@@ -7,8 +7,8 @@ from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCal
 
 
 class RecurrenceRule(models.Model):
-    _name = 'calendar.recurrence'
-    _inherit = ['calendar.recurrence', 'microsoft.calendar.sync']
+    _name = 'recurrence.recurrence'
+    _inherit = ['recurrence.recurrence', 'microsoft.calendar.sync']
 
 
     # Don't sync by default. Sync only when the recurrence is applied
@@ -28,9 +28,13 @@ class RecurrenceRule(models.Model):
             values.update({'need_sync_m': False})
             recurrence.write(values)
 
-    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
-        events = self.filtered('need_sync_m').calendar_event_ids
-        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit, generic_values_creation)
+    def _apply_recurrence(self, specific_values_creation=None, model=None, generic_values_creation=None, keep_base=False):
+        events = self.filtered('need_sync_m')._get_recurrent_records(model='calendar.event')
+        detached_events = super()._apply_recurrence(specific_values_creation=specific_values_creation,
+                                                    model=model,
+                                                    generic_values_creation=generic_values_creation,
+                                                    keep_base=keep_base
+                                                    )
 
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
 
@@ -46,53 +50,55 @@ class RecurrenceRule(models.Model):
                 vals += [{
                     'name': event.name,
                     'microsoft_id': event.microsoft_id,
-                    'start': event.start,
-                    'stop': event.stop,
+                    'start_datetime': event.start_datetime,
+                    'stop_datetime': event.stop_datetime,
                     'active': False,
                     'need_sync_m': True,
                 }]
                 event._microsoft_delete(microsoft_service, event.microsoft_id)
                 event.microsoft_id = False
-        self.env['calendar.event'].create(vals)
-        self.calendar_event_ids.need_sync_m = False
+        events |= self.env['calendar.event'].create(vals)
+        events.need_sync_m = False
         return detached_events
 
-    def _write_events(self, values, dtstart=None):
+    def _write_records(self, values, dtstart=None):
         # If only some events are updated, sync those events.
         # If all events are updated, sync the recurrence instead.
-        values['need_sync_m'] = bool(dtstart)
-        return super()._write_events(values, dtstart=dtstart)
+        if self.model == 'calendar.event':
+            values['need_sync_m'] = bool(dtstart)
+        return super()._write_records(values, dtstart=dtstart)
 
-    def _get_rrule(self, dtstart=None):
+    def _get_rrule(self, dtstart=None, rrule_args=None):
         if not dtstart and self.dtstart:
             dtstart = self.dtstart
-        return super()._get_rrule(dtstart)
+        return super()._get_rrule(dtstart, rrule_args)
 
     def _get_microsoft_synced_fields(self):
         return {'rrule'} | self.env['calendar.event']._get_microsoft_synced_fields()
 
     @api.model
     def _restart_microsoft_sync(self):
-        self.env['calendar.recurrence'].search(self._get_microsoft_sync_domain()).write({
+        self.env['recurrence.recurrence'].search(self._get_microsoft_sync_domain()).write({
             'need_sync_m': True,
         })
 
     def _write_from_microsoft(self, microsoft_event, vals):
         current_rrule = self.rrule
         # event_tz is written on event in Microsoft but on recurrence in Odoo
-        vals['event_tz'] = microsoft_event.start.get('timeZone')
+        vals['record_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
-        base_event_time_fields = ['start', 'stop', 'allday']
+        base_event_time_fields = ['start_datetime', 'stop_datetime', 'allday']
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
-        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
+        base_event = self.base_id and self.env["calendar.event"].browse(self.base_id).exists()
+        old_event_values = base_event and base_event.read(base_event_time_fields)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
-            base_event_id = self.base_event_id
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.
             # We can't call _cancel because events without user_id would not be deleted
-            (self.calendar_event_ids - base_event_id).microsoft_id = False
-            (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.with_context(dont_notify=True).write(dict(new_event_values, microsoft_id=False, need_sync_m=False))
+            events = self._get_recurrent_records(model='calendar.event')
+            (events - base_event).microsoft_id = False
+            (events - base_event).unlink()
+            base_event.with_context(dont_notify=True).write(dict(new_event_values, microsoft_id=False, need_sync_m=False))
             if self.rrule == current_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
@@ -103,7 +109,7 @@ class RecurrenceRule(models.Model):
                     | self.env["calendar.event"]._get_recurrent_fields()
             )
             # We avoid to write time_fields because they are not shared between events.
-            self._write_events(dict({
+            self._write_records(dict({
                 field: value
                 for field, value in new_event_values.items()
                 if field not in time_fields
@@ -112,7 +118,7 @@ class RecurrenceRule(models.Model):
         # We apply the rrule check after the time_field check because the microsoft_id are generated according
         # to base_event start datetime.
         if self.rrule != current_rrule:
-            detached_events = self._apply_recurrence()
+            detached_events = self._apply_recurrence(model='calendar.event')
             detached_events.microsoft_id = False
             detached_events.unlink()
 
@@ -121,19 +127,24 @@ class RecurrenceRule(models.Model):
         # older versions of the module. When synced, these recurrence may come back from Microsoft after database cleaning
         # and trigger errors as the records are not properly populated.
         # We also prevent sync of other user recurrent events.
-        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        # arj todo note before it was like that. problems are coming: ...
+        # fixme return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        # Note for review: See the weird user_id computed field in google_calendar to see if it is a valid solution
+        #
+        return [('rrule', '!=', False), ('model', '=', 'calendar.event')]
 
 
     def _cancel_microsoft(self):
-        self.calendar_event_ids._cancel_microsoft()
+        events = self._get_recurrent_records(model='calendar.event')
+        events._cancel_microsoft()
         super()._cancel_microsoft()
 
     @api.model
     def _microsoft_to_odoo_values(self, microsoft_recurrence, default_reminders=(), default_values={}):
         recurrence = microsoft_recurrence.get_recurrence()
-
         return {
             **recurrence,
+            'model': 'calendar.event',
             'microsoft_id': microsoft_recurrence.id,
         }
 

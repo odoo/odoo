@@ -51,8 +51,8 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         # If synchronization stopped, creating a new event should not call _google_insert.
         self.env['calendar.event'].create({
             'name': "Event",
-            'start': datetime(2020, 1, 15, 8, 0),
-            'stop': datetime(2020, 1, 15, 18, 0),
+            'start_datetime': datetime(2020, 1, 15, 8, 0),
+            'stop_datetime': datetime(2020, 1, 15, 18, 0),
             'privacy': 'private',
         })
         self.assertMicrosoftEventNotInserted()
@@ -73,8 +73,8 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         event = self.env['calendar.event'].with_user(user).create({
             'microsoft_id': microsoft_id,
             'name': "Event",
-            'start': datetime(2021, 1, 15, 8, 0),
-            'stop': datetime(2021, 1, 15, 18, 0),
+            'start_datetime': datetime(2021, 1, 15, 8, 0),
+            'stop_datetime': datetime(2021, 1, 15, 18, 0),
             'partner_ids': [(4, partner.id)],
         })
 

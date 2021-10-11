@@ -61,6 +61,9 @@ class MicrosoftSync(models.AbstractModel):
     active = fields.Boolean(default=True)
 
     def write(self, vals):
+        model_check = self._name in ['calendar.event', 'recurrence.recurrence']
+        if not model_check or self._name == 'recurrence.recurrence' and self.model != 'calendar.event':
+            return super().write(vals)
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         if 'microsoft_id' in vals:
             self._from_microsoft_ids.clear_cache(self)
@@ -87,6 +90,11 @@ class MicrosoftSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
+        event_model_check = self._name in ['calendar.event', 'recurrence.recurrence']
+        models = {val.get('model') for val in vals_list}
+        recurrence_check = self._name == 'recurrence.recurrence' and models == {'calendar.event'}
+        if not event_model_check or not recurrence_check:
+            return super().create(vals_list)
         if any(vals.get('microsoft_id') for vals in vals_list):
             self._from_microsoft_ids.clear_cache(self)
         if self.env.user.microsoft_synchronization_stopped:
@@ -157,10 +165,9 @@ class MicrosoftSync(models.AbstractModel):
         recurrents = microsoft_events.filter(lambda e: e.is_recurrent_not_master())
         default_values = {'need_sync_m': False}
 
-        new_recurrence = self.env['calendar.recurrence']
-
+        new_recurrence = self.env['recurrence.recurrence']
         for recurrent_master in recurrent_masters:
-            new_calendar_recurrence = dict(self.env['calendar.recurrence']._microsoft_to_odoo_values(recurrent_master, (), default_values), need_sync_m=False)
+            new_calendar_recurrence = dict(self.env['recurrence.recurrence']._microsoft_to_odoo_values(recurrent_master, (), default_values), need_sync_m=False)
             to_create = recurrents.filter(lambda e: e.seriesMasterId == new_calendar_recurrence['microsoft_id'])
             recurrents -= to_create
             base_values = dict(self.env['calendar.event']._microsoft_to_odoo_values(recurrent_master, (), default_values), need_sync_m=False)
@@ -175,13 +182,16 @@ class MicrosoftSync(models.AbstractModel):
 
                 to_create_values += [dict(value, need_sync_m=False)]
 
-            new_calendar_recurrence['calendar_event_ids'] = [(0, 0, to_create_value) for to_create_value in to_create_values]
-            new_recurrence_odoo = self.env['calendar.recurrence'].create(new_calendar_recurrence)
-            new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
+            new_recurrence_odoo = self.env['recurrence.recurrence'].create(new_calendar_recurrence)
+            to_create_values = [dict(val, recurrence_id=new_recurrence_odoo.id) for val in to_create_values]
+            events = self.env['calendar.event'].create(to_create_values)
+            new_recurrence_odoo.base_id = events.sorted('start_datetime')[0].id if events else False
             new_recurrence |= new_recurrence_odoo
 
+        new_recurrence._get_recurrent_records(model='calendar.event')
+
         microsoft_ids = [x.seriesMasterId for x in recurrents]
-        recurrences = self.env['calendar.recurrence'].search([('microsoft_id', 'in', microsoft_ids)])
+        recurrences = self.env['recurrence.recurrence'].search([('microsoft_id', 'in', microsoft_ids)])
         for recurrent_master_id in set([x.seriesMasterId for x in recurrents]):
             recurrence_id = recurrences.filtered(lambda ev: ev.microsoft_id == recurrent_master_id)
             to_update = recurrents.filter(lambda e: e.seriesMasterId == recurrent_master_id)
@@ -190,19 +200,21 @@ class MicrosoftSync(models.AbstractModel):
                     value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, (), {'need_sync_m': False})
                 else:
                     value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, (), default_values)
-                existing_event = recurrence_id.calendar_event_ids.filtered(lambda e: e._range() == (value['start'], value['stop']))
+                events = recurrence_id._get_recurrent_records(model='calendar.event')
+                existing_event = events.filtered(lambda e: e._range() == (value['start_datetime'], value['stop_datetime']))
                 if not existing_event:
                     continue
-                value.pop('start')
-                value.pop('stop')
+                value.pop('start_datetime')
+                value.pop('stop_datetime')
                 existing_event._write_from_microsoft(recurrent_event, value)
             new_recurrence |= recurrence_id
         return new_recurrence
 
     def _update_microsoft_recurrence(self, recurrence_event, events):
-        vals = dict(self.base_event_id._microsoft_to_odoo_values(recurrence_event, ()), need_sync_m=False)
+        base_event = self.base_id and self.env['calendar.event'].browse(self.base_id)
+        vals = dict(base_event._microsoft_to_odoo_values(recurrence_event, ()), need_sync_m=False)
         vals['microsoft_recurrence_master_id'] = vals.pop('microsoft_id')
-        self.base_event_id.write(vals)
+        base_event.write(vals)
         values = {}
         default_values = {}
 
@@ -218,28 +230,30 @@ class MicrosoftSync(models.AbstractModel):
             else:
                 value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, (), default_values)
                 self.env['calendar.event'].browse(recurrent_event.odoo_id(self.env)).with_context(no_mail_to_attendees=True, mail_create_nolog=True).write(dict(value, need_sync_m=False))
-            if value.get('start') and value.get('stop'):
-                values[(self.id, value.get('start'), value.get('stop'))] = dict(value, need_sync_m=False)
+            if value.get('start_datetime') and value.get('stop_datetime'):
+                values[(self.id, value.get('start_datetime'), value.get('stop_datetime'))] = dict(value, need_sync_m=False)
 
-        if (self.id, vals.get('start'), vals.get('stop')) in values:
+        if (self.id, vals.get('start_datetime'), vals.get('stop_datetime')) in values:
             base_event_vals = dict(vals)
-            base_event_vals.update(values[(self.id, vals.get('start'), vals.get('stop'))])
-            self.base_event_id.write(base_event_vals)
-
-        old_record = self._apply_recurrence(specific_values_creation=values, no_send_edit=True)
+            base_event_vals.update(values[(self.id, vals.get('start_datetime'), vals.get('stop_datetime'))])
+            base_event = self.env['calendar.event'].browse(self.base_id)
+            base_event.write(base_event_vals)
+        old_record = self._apply_recurrence(specific_values_creation=values, model='calendar.event')
 
         vals.pop('microsoft_id', None)
-        vals.pop('start', None)
-        vals.pop('stop', None)
-        normal_events = [e for e in normal_events if e in self.calendar_event_ids.ids]
+        vals.pop('start_datetime', None)
+        vals.pop('stop_datetime', None)
+        events = self._get_recurrent_records(model='calendar.event')
+        normal_events = [e for e in normal_events if e in events.ids]
         normal_event_ids = self.env['calendar.event'].browse(normal_events) - old_record
         if normal_event_ids:
             vals['follow_recurrence'] = True
             (self.env['calendar.event'].browse(normal_events) - old_record).write(vals)
 
         old_record._cancel_microsoft()
-        if not self.base_event_id:
-            self.base_event_id = self._get_first_event(include_outliers=False)
+        if not self.base_id:
+            first_event = self._get_first_event(include_outliers=False)
+            self.base_id = first_event and first_event.id
 
     @api.model
     def _sync_microsoft2odoo(self, microsoft_events: MicrosoftEvent, default_reminders=()):
@@ -266,17 +280,19 @@ class MicrosoftSync(models.AbstractModel):
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
         cancelled_odoo._cancel_microsoft()
 
-        recurrent_cancelled = self.env['calendar.recurrence'].search([
-            ('microsoft_id', 'in', (microsoft_events.cancelled() - cancelled).microsoft_ids())])
+        recurrent_cancelled = self.env['recurrence.recurrence'].search([
+            ('model', '=', 'calendar.event'),
+            ('microsoft_id', 'in', (microsoft_events.cancelled() - cancelled).microsoft_ids())
+        ])
         recurrent_cancelled._cancel_microsoft()
 
-        synced_records = new_odoo + cancelled_odoo + synced_recurrent_records.calendar_event_ids
+        synced_records = new_odoo + cancelled_odoo + synced_recurrent_records._get_recurrent_records(model='calendar.event')
 
         for mevent in (existing - cancelled).filter(lambda e: e.lastModifiedDateTime and not e.seriesMasterId):
             # Last updated wins.
             # This could be dangerous if microsoft server time and odoo server time are different
             if mevent.is_recurrence():
-                odoo_record = self.env['calendar.recurrence'].browse(mevent.odoo_id(self.env))
+                odoo_record = self.env['recurrence.recurrence'].browse(mevent.odoo_id(self.env))
             else:
                 odoo_record = self.browse(mevent.odoo_id(self.env))
             odoo_record_updated = pytz.utc.localize(odoo_record.write_date)
@@ -284,7 +300,7 @@ class MicrosoftSync(models.AbstractModel):
             if updated >= odoo_record_updated:
                 vals = dict(odoo_record._microsoft_to_odoo_values(mevent, default_reminders), need_sync_m=False)
                 odoo_record._write_from_microsoft(mevent, vals)
-                if odoo_record._name == 'calendar.recurrence':
+                if odoo_record._name == 'recurrence.recurrence':
                     odoo_record._update_microsoft_recurrence(mevent, microsoft_events)
                     synced_recurrent_records |= odoo_record
                 else:

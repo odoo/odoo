@@ -150,7 +150,7 @@ class GoogleEvent(abc.Set):
 
     def clear_type_ambiguity(self, env):
         ambiguous_events = self.filter(GoogleEvent._is_type_ambiguous)
-        recurrences = ambiguous_events._load_odoo_ids_from_db(env, env['calendar.recurrence'])
+        recurrences = ambiguous_events._load_odoo_ids_from_db(env, env['recurrence.recurrence'])
         for recurrence in recurrences:
             self._events[recurrence.id]['recurrence'] = True
         for event in ambiguous_events - recurrences:
@@ -189,7 +189,7 @@ class GoogleEvent(abc.Set):
 
     def _get_model(self, env):
         if all(e.is_recurrence() for e in self):
-            return env['calendar.recurrence']
+            return env['recurrence.recurrence']
         if all(not e.is_recurrence() for e in self):
             return env['calendar.event']
         raise TypeError("Mixing Google events and Google recurrences")

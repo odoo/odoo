@@ -10,7 +10,6 @@ from dateutil.parser import parse
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context
-from odoo.exceptions import UserError
 from odoo.osv import expression
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
@@ -58,6 +57,9 @@ class GoogleSync(models.AbstractModel):
     active = fields.Boolean(default=True)
 
     def write(self, vals):
+        google_affected = self._name == 'calendar.event' or (self._name == 'recurrence.recurrence' and self.mapped('model') == ['calendar.event'])
+        if not google_affected:
+            return super().write(vals)
         google_service = GoogleCalendarService(self.env['google.service'])
         if 'google_id' in vals:
             self._from_google_ids.clear_cache(self)
@@ -74,6 +76,12 @@ class GoogleSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
+        event_model_check = self._name in ['calendar.event', 'recurrence.recurrence']
+        models = {val.get('model') for val in vals_list}
+        recurrence_check = self._name == 'recurrence.recurrence' and models == {'calendar.event'}
+        if not event_model_check or not recurrence_check:
+            # Avoid messing with non calendar.event records
+            return super().create(vals_list)
         if any(vals.get('google_id') for vals in vals_list):
             self._from_google_ids.clear_cache(self)
         if self.env.user.google_synchronization_stopped:
@@ -91,6 +99,9 @@ class GoogleSync(models.AbstractModel):
         """We can't delete an event that is also in Google Calendar. Otherwise we would
         have no clue that the event must must deleted from Google Calendar at the next sync.
         """
+        google_affected = self._name == 'calendar.event' or (self._name == 'recurrence.recurrence' and self.mapped('model') == ['calendar.event'])
+        if not google_affected:
+            return super().unlink()
         synced = self.filtered('google_id')
         # LUL TODO find a way to get rid of this context key
         if self.env.context.get('archive_on_error') and self._active_name:
@@ -180,10 +191,12 @@ class GoogleSync(models.AbstractModel):
                 # calendar recurrence is triggering the error
                 event = self.base_event_id or self._get_first_event(include_outliers=True)
                 start = event.start and event.start.strftime('%Y-%m-%d at %H:%M') or _("undefined time")
-                event_ids = _("%(id)s and %(length)s following", id=event.id, length=len(self.calendar_event_ids.ids))
+                events = self._get_recurrent_records(model='calendar.event')
+                event_ids = _("%(id)s and %(length)s following", id=event.id, length=len(events))
                 name = event.name
                 # prevent to sync other events
-                self.calendar_event_ids.need_sync = False
+                records = self._get_recurrent_records(model='calendar.event')
+                records.need_sync = False
                 error_log = "Error while syncing recurrence [{id} - {name} - {rrule}]: ".format(id=self.id, name=self.name, rrule=self.rrule)
 
             # We don't have right access on the event or the request paramaters were bad.

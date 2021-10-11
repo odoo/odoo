@@ -35,19 +35,19 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
     def test_new_microsoft_recurrence(self):
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = recurrence.calendar_event_ids
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        events = recurrence._get_recurrent_records(model='calendar.event', order='start_datetime')
         self.assertTrue(recurrence, "It should have created an recurrence")
         self.assertEqual(len(events), 3, "It should have created 3 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        self.assertEqual(recurrence.base_id, events[0].id)
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event', 'My recurrent event'])
         self.assertFalse(events[0].allday)
-        self.assertEqual(events[0].start, datetime(2020, 5, 3, 14, 30))
-        self.assertEqual(events[0].stop, datetime(2020, 5, 3, 16, 00))
-        self.assertEqual(events[1].start, datetime(2020, 5, 4, 14, 30))
-        self.assertEqual(events[1].stop, datetime(2020, 5, 4, 16, 00))
-        self.assertEqual(events[2].start, datetime(2020, 5, 5, 14, 30))
-        self.assertEqual(events[2].stop, datetime(2020, 5, 5, 16, 00))
+        self.assertEqual(events[0].start_datetime, datetime(2020, 5, 3, 14, 30))
+        self.assertEqual(events[0].stop_datetime, datetime(2020, 5, 3, 16, 00))
+        self.assertEqual(events[1].start_datetime, datetime(2020, 5, 4, 14, 30))
+        self.assertEqual(events[1].stop_datetime, datetime(2020, 5, 4, 16, 00))
+        self.assertEqual(events[2].start_datetime, datetime(2020, 5, 5, 14, 30))
+        self.assertEqual(events[2].stop_datetime, datetime(2020, 5, 5, 16, 00))
 
     def test_microsoft_recurrence_delete_one_event(self):
         values = [
@@ -58,11 +58,12 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         self.assertTrue(recurrence, "It should keep the recurrence")
         self.assertEqual(len(events), 2, "It should keep 2 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        base_event = self.env['calendar.event'].browse(recurrence.base_id)
+        self.assertEqual(base_event, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event'])
 
     def test_microsoft_recurrence_change_name_one_event(self):
@@ -75,11 +76,12 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         self.assertTrue(recurrence, "It should have created an recurrence")
         self.assertEqual(len(events), 3, "It should have created 3 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        base_event = self.env['calendar.event'].browse(recurrence.base_id)
+        self.assertEqual(base_event, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event 2', 'My recurrent event'])
 
     def test_microsoft_recurrence_change_name_all_event(self):
@@ -92,11 +94,12 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         self.assertTrue(recurrence, "It should keep the recurrence")
         self.assertEqual(len(events), 3, "It should keep the 3 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        base_event = self.env['calendar.event'].browse(recurrence.base_id)
+        self.assertEqual(base_event, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event 2', 'My recurrent event 2', 'My recurrent event 2'])
 
     def test_microsoft_recurrence_change_date_one_event(self):
@@ -109,22 +112,23 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         special_event = self.env['calendar.event'].search([('microsoft_id', '=', 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX774WtQAAAEYAAAJAcu19N72jSr9Rp1mE2xWABwBlLa4RUBXJToExnebpwea2AAACAQ0AAABlLa4RUBXJToExnebpwea2AAAACyy0xAAAABA=')])
         self.assertTrue(recurrence, "It should have created an recurrence")
         self.assertTrue(special_event, "It should have created an special event")
         self.assertEqual(len(events), 3, "It should have created 3 events")
         self.assertTrue(special_event in events)
-        self.assertEqual(recurrence.base_event_id, events[0])
+        base_event = self.env['calendar.event'].browse(recurrence.base_id)
+        self.assertEqual(base_event, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event', 'My recurrent event'])
         event_not_special = events - special_event
-        self.assertEqual(event_not_special[0].start, datetime(2020, 5, 3, 14, 30))
-        self.assertEqual(event_not_special[0].stop, datetime(2020, 5, 3, 16, 00))
-        self.assertEqual(event_not_special[1].start, datetime(2020, 5, 5, 14, 30))
-        self.assertEqual(event_not_special[1].stop, datetime(2020, 5, 5, 16, 00))
-        self.assertEqual(special_event.start, datetime(2020, 5, 4, 14, 30))
-        self.assertEqual(special_event.stop, datetime(2020, 5, 4, 17, 00))
+        self.assertEqual(event_not_special[0].start_datetime, datetime(2020, 5, 3, 14, 30))
+        self.assertEqual(event_not_special[0].stop_datetime, datetime(2020, 5, 3, 16, 00))
+        self.assertEqual(event_not_special[1].start_datetime, datetime(2020, 5, 5, 14, 30))
+        self.assertEqual(event_not_special[1].stop_datetime, datetime(2020, 5, 5, 16, 00))
+        self.assertEqual(special_event.start_datetime, datetime(2020, 5, 4, 14, 30))
+        self.assertEqual(special_event.stop_datetime, datetime(2020, 5, 4, 17, 00))
 
     def test_microsoft_recurrence_delete_first_event(self):
         values = [
@@ -132,18 +136,17 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAAMj8Gf"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX774WtQAAAEYAAAJAcu19N72jSr9Rp1mE2xWABwBlLa4RUBXJToExnebpwea2AAACAQ0AAABlLa4RUBXJToExnebpwea2AAAACyy0xAAAABA=', 'start': {'dateTime': '2020-05-04T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-04T16:00:00.0000000', 'timeZone': 'UTC'}},
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"DwAAABYAAABlLa4RUBXJToExnebpwea2AAAMj8Gf"', 'seriesMasterId': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'type': 'occurrence', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoBUQAICADX8IdBHsAARgAAAkBy7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAAEA==', 'start': {'dateTime': '2020-05-05T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-05T16:00:00.0000000', 'timeZone': 'UTC'}}
         ]
-
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
-        self.assertTrue(recurrence, "It should have created an recurrence")
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
+        self.assertTrue(recurrence, "It should have created a recurrence")
         self.assertEqual(len(events), 2, "It should left 2 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
-        self.assertEqual(events[0].start, datetime(2020, 5, 4, 14, 30))
-        self.assertEqual(events[0].stop, datetime(2020, 5, 4, 16, 00))
-        self.assertEqual(events[1].start, datetime(2020, 5, 5, 14, 30))
-        self.assertEqual(events[1].stop, datetime(2020, 5, 5, 16, 00))
+        self.assertEqual(events[0].start_datetime, datetime(2020, 5, 4, 14, 30))
+        self.assertEqual(events[0].stop_datetime, datetime(2020, 5, 4, 16, 00))
+        self.assertEqual(events[1].start_datetime, datetime(2020, 5, 5, 14, 30))
+        self.assertEqual(events[1].stop_datetime, datetime(2020, 5, 5, 16, 00))
 
         # Now we delete lastest event in Outlook.
         values = [
@@ -153,9 +156,9 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         self.assertEqual(len(events), 1, "It should have created 1 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        self.assertEqual(recurrence.base_id, events[0].id)
 
         # Now, we change end datetime of recurrence in Outlook, so all recurrence is recreated (even deleted events)
         values = [
@@ -167,16 +170,16 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start asc')
+        events = self.env['calendar.event'].search([('recurrence_id', '=', recurrence.id)], order='start_datetime asc')
         self.assertEqual(len(events), 3, "It should have created 3 events")
-        self.assertEqual(recurrence.base_event_id, events[0])
+        self.assertEqual(recurrence.base_id, events[0].id)
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event', 'My recurrent event'])
-        self.assertEqual(events[0].start, datetime(2020, 5, 3, 14, 30))
-        self.assertEqual(events[0].stop, datetime(2020, 5, 3, 16, 30))
-        self.assertEqual(events[1].start, datetime(2020, 5, 4, 14, 30))
-        self.assertEqual(events[1].stop, datetime(2020, 5, 4, 16, 30))
-        self.assertEqual(events[2].start, datetime(2020, 5, 5, 14, 30))
-        self.assertEqual(events[2].stop, datetime(2020, 5, 5, 16, 30))
+        self.assertEqual(events[0].start_datetime, datetime(2020, 5, 3, 14, 30))
+        self.assertEqual(events[0].stop_datetime, datetime(2020, 5, 3, 16, 30))
+        self.assertEqual(events[1].start_datetime, datetime(2020, 5, 4, 14, 30))
+        self.assertEqual(events[1].stop_datetime, datetime(2020, 5, 4, 16, 30))
+        self.assertEqual(events[2].start_datetime, datetime(2020, 5, 5, 14, 30))
+        self.assertEqual(events[2].stop_datetime, datetime(2020, 5, 5, 16, 30))
 
     def test_microsoft_recurrence_split_recurrence(self):
         values = [
@@ -189,36 +192,35 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         ]
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
-        recurrence_1 = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        recurrence_2 = self.env['calendar.recurrence'].search([('microsoft_id', '=', 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAAMkgQrAAAA')])
-
-        events_1 = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_1.id)], order='start asc')
-        events_2 = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_2.id)], order='start asc')
+        recurrence_1 = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        recurrence_2 = self.env['recurrence.recurrence'].search([('microsoft_id', '=', 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAAMkgQrAAAA')])
+        events_1 = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_1.id)], order='start_datetime asc')
+        events_2 = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_2.id)], order='start_datetime asc')
         self.assertTrue(recurrence_1, "It should have created an recurrence")
         self.assertTrue(recurrence_2, "It should have created an recurrence")
         self.assertEqual(len(events_1), 1, "It should left 1 event")
         self.assertEqual(len(events_2), 3, "It should have created 3 events")
-        self.assertEqual(recurrence_1.base_event_id, events_1[0])
-        self.assertEqual(recurrence_2.base_event_id, events_2[0])
+        self.assertEqual(recurrence_1.base_id, events_1[0].id)
+        self.assertEqual(recurrence_2.base_id, events_2[0].id)
         self.assertEqual(events_1.mapped('name'), ['My recurrent event'])
         self.assertEqual(events_2.mapped('name'), ['My recurrent event', 'My recurrent event 2', 'My recurrent event'])
-        self.assertEqual(events_1[0].start, datetime(2020, 5, 3, 14, 30))
-        self.assertEqual(events_1[0].stop, datetime(2020, 5, 3, 16, 30))
-        self.assertEqual(events_2[0].start, datetime(2020, 5, 4, 14, 30))
-        self.assertEqual(events_2[0].stop, datetime(2020, 5, 4, 17, 00))
-        self.assertEqual(events_2[1].start, datetime(2020, 5, 5, 14, 30))
-        self.assertEqual(events_2[1].stop, datetime(2020, 5, 5, 17, 00))
-        self.assertEqual(events_2[2].start, datetime(2020, 5, 6, 14, 30))
-        self.assertEqual(events_2[2].stop, datetime(2020, 5, 6, 17, 00))
+        self.assertEqual(events_1[0].start_datetime, datetime(2020, 5, 3, 14, 30))
+        self.assertEqual(events_1[0].stop_datetime, datetime(2020, 5, 3, 16, 30))
+        self.assertEqual(events_2[0].start_datetime, datetime(2020, 5, 4, 14, 30))
+        self.assertEqual(events_2[0].stop_datetime, datetime(2020, 5, 4, 17, 00))
+        self.assertEqual(events_2[1].start_datetime, datetime(2020, 5, 5, 14, 30))
+        self.assertEqual(events_2[1].stop_datetime, datetime(2020, 5, 5, 17, 00))
+        self.assertEqual(events_2[2].start_datetime, datetime(2020, 5, 6, 14, 30))
+        self.assertEqual(events_2[2].stop_datetime, datetime(2020, 5, 6, 17, 00))
 
     def test_microsoft_recurrence_delete(self):
-        recurrence_id = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
-        event_ids = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_id.id)], order='start asc').ids
+        recurrence_id = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        event_ids = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_id.id)], order='start_datetime asc').ids
         values = [{'@odata.type': '#microsoft.graph.event', 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', '@removed': {'reason': 'deleted'}}]
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(values))
 
-        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
+        recurrence = self.env['recurrence.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
         events = self.env['calendar.event'].browse(event_ids).exists()
         self.assertFalse(recurrence, "It should remove recurrence")
         self.assertFalse(events, "It should remove all events")
@@ -233,8 +235,8 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         })
         event = self.env['calendar.event'].create({
             'name': "SuperEvent",
-            'start': datetime(2020, 3, 16, 11, 0),
-            'stop': datetime(2020, 3, 16, 13, 0),
+            'start_datetime': datetime(2020, 3, 16, 11, 0),
+            'stop_datetime': datetime(2020, 3, 16, 13, 0),
             'partner_ids': [(4, partner.id)],
         })
         with self.assertRaises(ValidationError):
@@ -263,15 +265,17 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         ]
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(first_sync_values))
-        recurrent_event = self.env['calendar.recurrence'].search([('microsoft_id', '=', 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA=')])
-        self.assertEqual(len(recurrent_event.calendar_event_ids), 3)
-
+        recurrent_event = self.env['recurrence.recurrence'].search([('microsoft_id', '=', 'AQMkADAwATM3ZmYAZS0zZmMyLWYxYjQtMDACLTAwCgBGAAADZ59RIxdyh0Kt-MXfyCpfwAcApynKRnkCyUmnqILQHcLZEQAAAgENAAAApynKRnkCyUmnqILQHcLZEQAAAARKsSQAAAA=')])
+        events = recurrent_event._get_recurrent_records(model='calendar.event', order='start_datetime')
+        self.assertEqual(len(events), 3)
         # Need to cheat on the write date, otherwise the second sync won't update the events
         recurrent_event.write_date = datetime(2021, 7, 15, 14, 00)
 
         self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(second_sync_values))
-        self.assertEqual(len(recurrent_event.calendar_event_ids), 2)
-        self.assertEqual(recurrent_event.calendar_event_ids[0].start, datetime(2021, 7, 15, 15, 00))
-        self.assertEqual(recurrent_event.calendar_event_ids[0].stop, datetime(2021, 7, 15, 15, 30))
-        self.assertEqual(recurrent_event.calendar_event_ids[1].start, datetime(2021, 7, 17, 15, 00))
-        self.assertEqual(recurrent_event.calendar_event_ids[1].stop, datetime(2021, 7, 17, 15, 30))
+        recurrent_event.invalidate_cache()
+        events = recurrent_event._get_recurrent_records(model='calendar.event', order='start_datetime')
+        self.assertEqual(len(events), 2)
+        self.assertEqual(events[0].start_datetime, datetime(2021, 7, 15, 15, 00))
+        self.assertEqual(events[0].stop_datetime, datetime(2021, 7, 15, 15, 30))
+        self.assertEqual(events[1].start_datetime, datetime(2021, 7, 17, 15, 00))
+        self.assertEqual(events[1].stop_datetime, datetime(2021, 7, 17, 15, 30))

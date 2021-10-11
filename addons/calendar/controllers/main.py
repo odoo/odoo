@@ -24,8 +24,9 @@ class CalendarController(http.Controller):
             ('access_token', '=', token),
             ('state', '!=', 'accepted')])
         if attendee:
+            events = attendee.event_id.recurrence_id._get_recurrent_records(model='calendar.event')
             attendees = request.env['calendar.attendee'].sudo().search([
-                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
+                ('event_id', 'in', events.ids),
                 ('partner_id', '=', attendee.partner_id.id),
                 ('state', '!=', 'accepted'),
             ])
@@ -46,8 +47,9 @@ class CalendarController(http.Controller):
             ('access_token', '=', token),
             ('state', '!=', 'declined')])
         if attendee:
+            events = attendee.event_id.recurrence_id._get_recurrent_records(model='calendar.event')
             attendees = request.env['calendar.attendee'].sudo().search([
-                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
+                ('event_id', 'in', events.ids),
                 ('partner_id', '=', attendee.partner_id.id),
                 ('state', '!=', 'declined'),
             ])

@@ -24,9 +24,9 @@ class Users(models.Model):
         return ['&', '|',
                 '&',
                     '|',
-                        ['start', '>=', fields.Datetime.to_string(start_dt)],
-                        ['stop', '>=', fields.Datetime.to_string(start_dt)],
-                    ['start', '<=', fields.Datetime.to_string(end_dt)],
+                        ['start_datetime', '>=', fields.Datetime.to_string(start_dt)],
+                        ['stop_datetime', '>=', fields.Datetime.to_string(start_dt)],
+                    ['start_datetime', '<=', fields.Datetime.to_string(end_dt)],
                 '&',
                     ['allday', '=', True],
                     ['start_date', '=', fields.Date.to_string(start_date)],
@@ -38,8 +38,8 @@ class Users(models.Model):
 
         meetings_lines = self.env['calendar.event'].search_read(
             self._systray_get_calendar_event_domain(),
-            ['id', 'start', 'name', 'allday', 'attendee_status'],
-            order='start')
+            ['id', 'start_datetime', 'name', 'allday', 'attendee_status'],
+            order='start_datetime')
         meetings_lines = [line for line in meetings_lines if line['attendee_status'] != 'declined']
         if meetings_lines:
             meeting_label = _("Today's Meetings")

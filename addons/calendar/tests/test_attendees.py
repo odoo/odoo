@@ -14,8 +14,8 @@ class TestEventNotifications(TransactionCase):
         cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.event = cls.env['calendar.event'].with_user(cls.user).create({
             'name': "Doom's day",
-            'start': datetime(2019, 10, 25, 8, 0),
-            'stop': datetime(2019, 10, 27, 18, 0),
+            'start_datetime': datetime(2019, 10, 25, 8, 0),
+            'stop_datetime': datetime(2019, 10, 27, 18, 0),
         }).with_context(mail_notrack=True)
         cls.partner = cls.user.partner_id
 
@@ -28,8 +28,8 @@ class TestEventNotifications(TransactionCase):
     def test_attendee_added_create(self):
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
-            'start': datetime(2019, 10, 25, 8, 0),
-            'stop': datetime(2019, 10, 27, 18, 0),
+            'start_datetime': datetime(2019, 10, 25, 8, 0),
+            'stop_datetime': datetime(2019, 10, 27, 18, 0),
             'partner_ids': [(4, self.partner.id)],
         })
         self.assertTrue(event.attendee_ids, "It should have created an attendee")
@@ -39,8 +39,8 @@ class TestEventNotifications(TransactionCase):
     def test_attendee_added_multi(self):
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
-            'start': datetime(2019, 10, 25, 8, 0),
-            'stop': datetime(2019, 10, 27, 18, 0),
+            'start_datetime': datetime(2019, 10, 25, 8, 0),
+            'stop_datetime': datetime(2019, 10, 27, 18, 0),
         })
         events = self.event | event
         events.partner_ids = self.partner

@@ -31,7 +31,7 @@ class Attendee(models.Model):
 
     # event
     event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, ondelete='cascade')
-    recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
+    recurrence_id = fields.Many2one('recurrence.recurrence', related='event_id.recurrence_id')
     # attendee
     partner_id = fields.Many2one('res.partner', 'Attendee', required=True, readonly=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")

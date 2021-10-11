@@ -5,7 +5,7 @@
     'name': 'Calendar',
     'version': '1.1',
     'sequence': 165,
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'mail', 'recurrence'],
     'summary': "Schedule employees' meetings",
     'description': """
 This is a full-featured calendar system.

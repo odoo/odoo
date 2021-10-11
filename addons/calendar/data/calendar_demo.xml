@@ -40,9 +40,9 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_1')])]"/>
             <field name="name">Follow-up for Project proposal</field>
             <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
-            <field name="start" eval="time.strftime('%Y-%m-03 10:20:00')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-03 10:20:00')"/>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
-            <field name="stop" eval="time.strftime('%Y-%m-03 16:30:00')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-03 16:30:00')"/>
             <field name="duration" eval="6.3"/>
             <field name="allday" eval="False"/>
         </record>
@@ -54,8 +54,8 @@
             <field name="name">Initial discussion</field>
             <field name="description">Discussion with partner for product.</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-05 12:00:00')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-05 19:00:00')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-05 12:00:00')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-05 19:00:00')"/>
             <field name="allday" eval="False"/>
             <field name="duration" eval="7.0"/>
         </record>
@@ -67,8 +67,8 @@
             <field name="name">Pricing Discussion</field>
             <field name="description">Internal meeting for discussion for new pricing for product and services.</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-12 15:55:05')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-12 18:55:05')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-12 15:55:05')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-12 18:55:05')"/>
             <field name="duration" eval="3.0"/>
             <field name="allday" eval="False"/>
         </record>
@@ -79,8 +79,8 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_demo'),ref('base.res_partner_1')])]"/>
             <field name="name">Requirements review</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-20 08:00:00')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-20 10:30:00')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-20 08:00:00')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-20 10:30:00')"/>
             <field name="duration" eval="2.5"/>
             <field name="allday" eval="False"/>
         </record>
@@ -91,8 +91,8 @@
             <field name="user_id" ref="base.user_admin"/>
             <field name="name">Changes in Designing</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-22')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-22')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-22')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-22')"/>
             <field name="allday" eval="True"/>
         </record>
 
@@ -102,8 +102,8 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4'),ref('base.res_partner_1'),ref('base.res_partner_12')])]"/>
             <field name="name">Presentation for new Services</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-18 02:00:00')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-18 10:30:00')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-18 02:00:00')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-18 10:30:00')"/>
             <field name="duration" eval="8.5"/>
             <field name="allday" eval="False"/>
         </record>
@@ -114,8 +114,8 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_4')])]"/>
             <field name="name">Presentation of the new Calendar</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
-            <field name="start" eval="time.strftime('%Y-%m-16')"/>
-            <field name="stop" eval="time.strftime('%Y-%m-16')"/>
+            <field name="start_datetime" eval="time.strftime('%Y-%m-16')"/>
+            <field name="stop_datetime" eval="time.strftime('%Y-%m-16')"/>
             <field name="duration" eval="8.5"/>
             <field name="allday" eval="True"/>
         </record>

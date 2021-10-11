@@ -39,8 +39,8 @@ class TestMailActivityMixin(MailCommon):
         def create_event(name, event_date):
             return self.env['calendar.event'].create({
                 'name': name,
-                'start': datetime.combine(event_date, time(12, 0, 0)),
-                'stop': datetime.combine(event_date, time(14, 0, 0)),
+                'start_datetime': datetime.combine(event_date, time(12, 0, 0)),
+                'stop_datetime': datetime.combine(event_date, time(14, 0, 0)),
             })
 
         def schedule_meeting_activity(record, date_deadline, calendar_event=False):

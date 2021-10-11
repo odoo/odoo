@@ -202,7 +202,7 @@ class Applicant(models.Model):
         (self - applicants).application_count = False
 
     @api.depends_context('lang')
-    @api.depends('meeting_ids', 'meeting_ids.start')
+    @api.depends('meeting_ids', 'meeting_ids.start_datetime')
     def _compute_meeting_display(self):
         applicant_with_meetings = self.filtered('meeting_ids')
         (self - applicant_with_meetings).write({

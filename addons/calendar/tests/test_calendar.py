@@ -2,13 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-import pytz
-import re
-
 
 class TestCalendar(SavepointCaseWithUserDemo):
 
@@ -19,8 +16,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         # In Order to test calendar, I will first create One Simple Event with real data
         self.event_tech_presentation = self.CalendarEvent.create({
             'privacy': 'private',
-            'start': '2011-04-30 16:00:00',
-            'stop': '2011-04-30 18:30:00',
+            'start_datetime': '2011-04-30 16:00:00',
+            'stop_datetime': '2011-04-30 18:30:00',
             'description': 'The Technical Presentation will cover following topics:\n* Creating Odoo class\n* Views\n* Wizards\n* Workflows',
             'duration': 2.5,
             'location': 'Odoo S.A.',
@@ -32,8 +29,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         def create_event(name, date):
             return self.CalendarEvent.create({
                 'name': name,
-                'start': date + ' 12:00:00',
-                'stop': date + ' 14:00:00',
+                'start_datetime': date + ' 12:00:00',
+                'stop_datetime': date + ' 14:00:00',
             })
         foo1 = create_event('foo', '2011-04-01')
         foo2 = create_event('foo', '2011-06-01')
@@ -48,29 +45,29 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(events.mapped('name'), ['foo', 'foo', 'bar', 'bar'])
 
         # sort them by start date only
-        events = self.CalendarEvent.search(domain, order='start')
-        self.assertEqual(events.mapped('start'), (foo1 + bar1 + foo2 + bar2).mapped('start'))
-        events = self.CalendarEvent.search(domain, order='start desc')
-        self.assertEqual(events.mapped('start'), (foo2 + bar2 + bar1 + foo1).mapped('start'))
+        events = self.CalendarEvent.search(domain, order='start_datetime')
+        self.assertEqual(events.mapped('start_datetime'), (foo1 + bar1 + foo2 + bar2).mapped('start_datetime'))
+        events = self.CalendarEvent.search(domain, order='start_datetime desc')
+        self.assertEqual(events.mapped('start_datetime'), (foo2 + bar2 + bar1 + foo1).mapped('start_datetime'))
 
         # sort them by name then start date
-        events = self.CalendarEvent.search(domain, order='name asc, start asc')
+        events = self.CalendarEvent.search(domain, order='name asc, start_datetime asc')
         self.assertEqual(list(events), [bar1, bar2, foo1, foo2])
-        events = self.CalendarEvent.search(domain, order='name asc, start desc')
+        events = self.CalendarEvent.search(domain, order='name asc, start_datetime desc')
         self.assertEqual(list(events), [bar2, bar1, foo2, foo1])
-        events = self.CalendarEvent.search(domain, order='name desc, start asc')
+        events = self.CalendarEvent.search(domain, order='name desc, start_datetime asc')
         self.assertEqual(list(events), [foo1, foo2, bar1, bar2])
-        events = self.CalendarEvent.search(domain, order='name desc, start desc')
+        events = self.CalendarEvent.search(domain, order='name desc, start_datetime desc')
         self.assertEqual(list(events), [foo2, foo1, bar2, bar1])
 
         # sort them by start date then name
-        events = self.CalendarEvent.search(domain, order='start asc, name asc')
+        events = self.CalendarEvent.search(domain, order='start_datetime asc, name asc')
         self.assertEqual(list(events), [foo1, bar1, bar2, foo2])
-        events = self.CalendarEvent.search(domain, order='start asc, name desc')
+        events = self.CalendarEvent.search(domain, order='start_datetime asc, name desc')
         self.assertEqual(list(events), [foo1, bar1, foo2, bar2])
-        events = self.CalendarEvent.search(domain, order='start desc, name asc')
+        events = self.CalendarEvent.search(domain, order='start_datetime desc, name asc')
         self.assertEqual(list(events), [bar2, foo2, bar1, foo1])
-        events = self.CalendarEvent.search(domain, order='start desc, name desc')
+        events = self.CalendarEvent.search(domain, order='start_datetime desc, name desc')
         self.assertEqual(list(events), [foo2, bar2, bar1, foo1])
 
     def test_event_activity(self):
@@ -98,8 +95,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'start_datetime': fields.Datetime.to_string(now + timedelta(days=-1)),
+            'stop_datetime': fields.Datetime.to_string(now + timedelta(hours=2)),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
@@ -114,7 +111,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         test_event.write({
             'name': '%s2' % test_name,
             'description': test_description2,
-            'start': fields.Datetime.to_string(now + timedelta(days=-2)),
+            'start_datetime': fields.Datetime.to_string(now + timedelta(days=-2)),
             'user_id': test_user.id,
         })
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
@@ -142,8 +139,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': now + timedelta(days=-1),
-            'stop': now + timedelta(hours=2),
+            'start_datetime': now + timedelta(days=-1),
+            'stop_datetime': now + timedelta(hours=2),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
@@ -155,28 +152,29 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         event = self.CalendarEvent.create({
             'name': 'All Day',
-            'start': "2018-10-16 00:00:00",
+            'start_datetime': "2018-10-16 00:00:00",
             'start_date': "2018-10-16",
-            'stop': "2018-10-18 00:00:00",
+            'stop_datetime': "2018-10-18 00:00:00",
             'stop_date': "2018-10-18",
             'allday': True,
         })
         event.invalidate_cache()
-        self.assertEqual(str(event.start), '2018-10-16 08:00:00')
-        self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
+        self.assertEqual(str(event.start_datetime), '2018-10-16 08:00:00')
+        self.assertEqual(str(event.stop_datetime), '2018-10-18 18:00:00')
 
     def test_recurring_around_dst(self):
         m = self.CalendarEvent.create({
             'name': "wheee",
-            'start': '2018-10-27 14:30:00',
+            'start_datetime': '2018-10-27 14:30:00',
             'allday': False,
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=4',
             'recurrency': True,
-            'stop': '2018-10-27 16:30:00',
-            'event_tz': 'Europe/Brussels',
+            'stop_datetime': '2018-10-27 16:30:00',
+            'record_tz': 'Europe/Brussels',
         })
 
-        start_recurring_dates = m.recurrence_id.calendar_event_ids.sorted('start').mapped('start')
+        records = m.recurrence_id._get_recurrent_records(model='calendar.event')
+        start_recurring_dates = records.sorted('start_datetime').mapped('start_datetime')
         self.assertEqual(len(start_recurring_dates), 4)
 
         for d in start_recurring_dates:
@@ -202,8 +200,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         calendar_event = self.env['calendar.event'].create({
             'name': 'Meeting with partner',
             'activity_ids': [(6, False, activity_id.ids)],
-            'start': '2018-11-12 21:00:00',
-            'stop': '2018-11-13 00:00:00',
+            'start_datetime': '2018-11-12 21:00:00',
+            'stop_datetime': '2018-11-13 00:00:00',
         })
 
         # Check output in UTC
@@ -212,7 +210,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         # Check output in the user's tz
         # write on the event to trigger sync of activities
         calendar_event.with_context({'tz': 'Australia/Brisbane'}).write({
-            'start': '2018-11-12 21:00:00',
+            'start_datetime': '2018-11-12 21:00:00',
         })
 
         self.assertEqual(str(activity_id.date_deadline), '2018-11-13')
@@ -234,9 +232,9 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         calendar_event = self.env['calendar.event'].create({
             'name': 'All Day',
-            'start': "2018-10-16 00:00:00",
+            'start_datetime': "2018-10-16 00:00:00",
             'start_date': "2018-10-16",
-            'stop': "2018-10-18 00:00:00",
+            'stop_datetime': "2018-10-18 00:00:00",
             'stop_date': "2018-10-18",
             'allday': True,
             'activity_ids': [(6, False, activity_id.ids)],
@@ -248,7 +246,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         # Check output in the user's tz
         # write on the event to trigger sync of activities
         calendar_event.with_context({'tz': 'Pacific/Honolulu'}).write({
-            'start': '2018-10-16 00:00:00',
+            'start_datetime': '2018-10-16 00:00:00',
             'start_date': '2018-10-16',
         })
 
@@ -281,8 +279,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=5',
             'recurrency': True,
             'partner_ids': partner_ids,
-            'start': fields.Datetime.to_string(now + timedelta(days=10)),
-            'stop': fields.Datetime.to_string(now + timedelta(days=15)),
+            'start_datetime': fields.Datetime.to_string(now + timedelta(days=10)),
+            'stop_datetime': fields.Datetime.to_string(now + timedelta(days=15)),
             })
 
         # every partner should have 1 mail sent
@@ -297,7 +295,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         partner_ids = [(6, False, [p.id for p in partners]),]
         m.write({
             'partner_ids': partner_ids,
-            'recurrence_update': 'all_events',
+            'recurrence_update': 'all_records',
         })
 
         # more email should be sent
@@ -309,8 +307,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'allday': False,
             'recurrency': False,
             'partner_ids': partner_ids,
-            'start': fields.Datetime.to_string(now - timedelta(days=10)),
-            'stop': fields.Datetime.to_string(now - timedelta(days=9)),
+            'start_datetime': fields.Datetime.to_string(now - timedelta(days=10)),
+            'stop_datetime': fields.Datetime.to_string(now - timedelta(days=9)),
         })
 
         # no more email should be sent
@@ -343,8 +341,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 'duration': 30,
             })],
             'user_id': self.user_demo.id,
-            'start': fields.Datetime.to_string(now + timedelta(hours=5)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=6)),
+            'start_datetime': fields.Datetime.to_string(now + timedelta(hours=5)),
+            'stop_datetime': fields.Datetime.to_string(now + timedelta(hours=6)),
         })
 
     def test_meeting_creation_from_partner_form(self):
@@ -353,8 +351,8 @@ class TestCalendar(SavepointCaseWithUserDemo):
         calendar_action = self.partner_demo.schedule_meeting()
         event = self.env['calendar.event'].with_context(calendar_action['context']).create({
             'name': 'Super Meeting',
-            'start': datetime(2020, 12, 13, 17),
-            'stop': datetime(2020, 12, 13, 22),
+            'start_datetime': datetime(2020, 12, 13, 17),
+            'stop_datetime': datetime(2020, 12, 13, 22),
         })
         self.assertEqual(len(event.attendee_ids), 2)
         self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))

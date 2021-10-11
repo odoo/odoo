@@ -18,8 +18,8 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         super().setUpClass()
         cls.event = cls.env['calendar.event'].create({
             'name': "Doom's day",
-            'start': datetime(2019, 10, 25, 8, 0),
-            'stop': datetime(2019, 10, 27, 18, 0),
+            'start_datetime': datetime(2019, 10, 25, 8, 0),
+            'stop_datetime': datetime(2019, 10, 27, 18, 0),
         }).with_context(mail_notrack=True)
         cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.partner = cls.user.partner_id
@@ -55,7 +55,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
-            self.event.start = fields.Datetime.now() + relativedelta(days=1)
+            self.event.start_datetime = fields.Datetime.now() + relativedelta(days=1)
 
     def test_message_date_changed(self):
         self.event.write({
@@ -78,7 +78,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         self.event.partner_ids = self.partner
         with self.assertNoNotifications():
-            self.event.write({'start': date(2019, 1, 1)})
+            self.event.write({'start_datetime': date(2019, 1, 1)})
 
     def test_message_set_inactive_date_changed(self):
         self.event.write({
@@ -111,7 +111,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             'subtype': 'mail.mt_note',
         }):
             self.event.write({
-                'start': self.event.start - relativedelta(days=1),
+                'start_datetime': self.event.start_datetime - relativedelta(days=1),
                 'partner_ids': [(4, self.partner.id)],
             })
 
@@ -126,8 +126,8 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertBus([(self.env.cr.dbname, 'calendar.alarm', self.partner.id)]):
                 self.event.with_context(no_mail_to_attendees=True).write({
-                    'start': now + relativedelta(minutes=50),
-                    'stop': now + relativedelta(minutes=55),
+                    'start_datetime': now + relativedelta(minutes=50),
+                    'stop_datetime': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
                     'alarm_ids': [(4, alarm.id)]
                 })
@@ -153,8 +153,8 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             })
             self.event.write({
                 'name': 'test event',
-                'start': now + relativedelta(minutes=15),
-                'stop': now + relativedelta(minutes=18),
+                'start_datetime': now + relativedelta(minutes=15),
+                'stop_datetime': now + relativedelta(minutes=18),
                 'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })

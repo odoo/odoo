@@ -28,15 +28,15 @@ class AlarmManager(models.AbstractModel):
         base_request = """
                     SELECT
                         cal.id,
-                        cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
+                        cal.start_datetime - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
                         CASE
                             WHEN cal.recurrency THEN rrule.until - interval '1' minute  * calcul_delta.min_delta
-                            ELSE cal.stop - interval '1' minute  * calcul_delta.min_delta
+                            ELSE cal.stop_datetime - interval '1' minute  * calcul_delta.min_delta
                         END as last_alarm,
-                        cal.start as first_event_date,
+                        cal.start_datetime as first_event_date,
                         CASE
                             WHEN cal.recurrency THEN rrule.until
-                            ELSE cal.stop
+                            ELSE cal.stop_datetime
                         END as last_event_date,
                         calcul_delta.min_delta,
                         calcul_delta.max_delta,
@@ -44,7 +44,7 @@ class AlarmManager(models.AbstractModel):
                     FROM
                         calendar_event AS cal
                     RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                    LEFT JOIN calendar_recurrence as rrule ON rrule.id = cal.recurrence_id
+                    LEFT JOIN recurrence_recurrence as rrule ON rrule.id = cal.recurrence_id
              """
 
         filter_user = """
@@ -65,10 +65,10 @@ class AlarmManager(models.AbstractModel):
         if seconds is None:
             # first alarm in the future + 3 minutes if there is one, now otherwise
             first_alarm_max_value = """
-                COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
+                COALESCE((SELECT MIN(cal.start_datetime - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+                WHERE cal.start_datetime - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
             ) + interval '3' minute, now() at time zone 'utc')"""
         else:
             # now + given seconds
@@ -156,8 +156,8 @@ class AlarmManager(models.AbstractModel):
              WHERE (
                    "alarm"."alarm_type" = %s
                AND "event"."active"
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
+               AND "event"."start_datetime" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
+               AND "event"."start_datetime" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
              )''', [alarm_type, self.env.context['lastcall']])
 
         events_by_alarm = {}
@@ -199,7 +199,7 @@ class AlarmManager(models.AbstractModel):
         for event_id in all_meetings:
             max_delta = all_meetings[event_id]['max_duration']
             meeting = self.env['calendar.event'].browse(event_id)
-            in_date_format = fields.Datetime.from_string(meeting.start)
+            in_date_format = fields.Datetime.from_string(meeting.start_datetime)
             last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
             if last_found:
                 for alert in last_found:

@@ -218,7 +218,7 @@ class MicrosoftEvent(abc.Set):
 
     def _get_model(self, env):
         if all(e.is_recurrence() for e in self):
-            return env['calendar.recurrence']
+            return env['recurrence.recurrence']
         if all(not e.is_recurrence() for e in self):
             return env['calendar.event']
         raise TypeError("Mixing Microsoft events and Microsoft recurrences")

@@ -81,8 +81,8 @@
                             string="Send Mail"/>
                 </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
-                <field name="start" string="Start Date" readonly="1"/>
-                <field name="stop" string="End Date" readonly="1"/>
+                <field name="start_datetime" string="Start Date" readonly="1"/>
+                <field name="stop_datetime" string="End Date" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly':[('recurrency','=',True)]}" optional="hide"/>
                 <field name="partner_ids" widget="many2many_tags" attrs="{'readonly':[('recurrency','=',True)]}" optional="show"/>
                 <field name="alarm_ids" widget="many2many_tags" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
@@ -144,14 +144,14 @@
                                     <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
                                     <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
 
-                                    <field name="start" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop" string="Ending At" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" string="Ending At" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
                                         <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                     <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                                     <field name="record_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                     <field name="allday" force_save="1"/>
                                     <field name="user_id" widget="many2one_avatar_user"/>
                                 </group>
@@ -264,7 +264,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
+            <calendar js_class="attendee_calendar" string="Meetings" date_start="start_datetime" date_stop="stop_datetime" date_delay="duration" all_day="allday"
                 event_open_popup="true"
                 event_limit="5"
                 color="partner_ids">
@@ -303,7 +303,7 @@
                 <field name="description"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
                 <separator/>
-                <filter string="Date" name="filter_start_date" date="start"/>
+                <filter string="Date" name="filter_start_date" date="start_datetime"/>
                 <separator/>
                 <filter string="Busy" name="busy" domain="[('show_as', '=', 'busy')]"/>
                 <filter string="Free" name="free" domain="[('show_as', '=', 'free')]"/>

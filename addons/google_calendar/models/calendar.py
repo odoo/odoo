@@ -30,7 +30,7 @@ class Meeting(models.Model):
 
     @api.model
     def _get_google_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'allday', 'start_datetime', 'date_end', 'stop_datetime',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active'}
 
     @api.model
@@ -41,6 +41,8 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self._name != 'calendar.event':
+            return super(Meeting).create(vals_list)
         notify_context = self.env.context.get('dont_notify', False)
         return super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
@@ -48,12 +50,14 @@ class Meeting(models.Model):
         ])
 
     def write(self, values):
+        if self._name != 'calendar.event':
+            return super(Meeting).write(values)
         recurrence_update_setting = values.get('recurrence_update')
-        if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
+        if recurrence_update_setting in ('all_records', 'future_records') and len(self) == 1:
             values = dict(values, need_sync=False)
         notify_context = self.env.context.get('dont_notify', False)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
-        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
+        if recurrence_update_setting in ('all_records',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
 
@@ -65,8 +69,8 @@ class Meeting(models.Model):
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return [
             ('partner_ids.user_ids', 'in', self.env.user.id),
-            ('stop', '>', lower_bound),
-            ('start', '<', upper_bound),
+            ('stop_datetime', '>', lower_bound),
+            ('start_datetime', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
@@ -112,8 +116,8 @@ class Meeting(models.Model):
             if stop < start:
                 stop = parse(google_event.end.get('date'))
             values['allday'] = True
-        values['start'] = start
-        values['stop'] = stop
+        values['start_datetime'] = start
+        values['stop_datetime'] = stop
         return values
 
     @api.model
@@ -203,8 +207,8 @@ class Meeting(models.Model):
             start = {'date': self.start_date.isoformat()}
             end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
+            start = {'dateTime': pytz.utc.localize(self.start_datetime).isoformat()}
+            end = {'dateTime': pytz.utc.localize(self.stop_datetime).isoformat()}
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes

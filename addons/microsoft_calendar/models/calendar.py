@@ -33,7 +33,7 @@ class Meeting(models.Model):
 
     @api.model
     def _get_microsoft_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'allday', 'start_datetime', 'date_end', 'stop_dateti',
                 'user_id', 'privacy',
                 'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active'}
 
@@ -45,6 +45,11 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        event_model_check = self._name in ['calendar.event', 'recurrence.recurrence']
+        models = {val.get('model') for val in vals_list}
+        recurrence_check = self._name == 'recurrence.recurrence' and models == {'calendar.event'}
+        if not event_model_check or not recurrence_check:
+            return super().create(vals_list)
         notify_context = self.env.context.get('dont_notify', False)
         return super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
@@ -52,19 +57,28 @@ class Meeting(models.Model):
         ])
 
     def write(self, values):
+        model_check = self._name in ['calendar.event', 'recurrence.recurrence']
+        if not model_check or self._name == 'recurrence.recurrence' and self.model != 'calendar.event':
+            return super().write(values)
         recurrence_update_setting = values.get('recurrence_update')
-        if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
+        if recurrence_update_setting in ('all_records', 'future_records') and len(self) == 1:
             values = dict(values, need_sync_m=False)
-        elif recurrence_update_setting == 'self_only' and 'start' in values:
-            previous_event_before_write = self.recurrence_id.calendar_event_ids.filtered(lambda e: e.start.date() < self.start.date() and e != self)
-            new_start = parse(values['start']).date()
-            previous_event_after_write = self.recurrence_id.calendar_event_ids.filtered(lambda e: e.start.date() < new_start and e != self)
+        elif recurrence_update_setting == 'self_only' and 'start_datetime' in values:
+            previous_event_before_write = self.search([('recurrence_id', '=', self.recurrence_id.id),
+                                                       ('start_date', '<', self.start.date()),
+                                                       ('id', '!=', self.id)
+                                                       ])
+            new_start = parse(values['start_datetime']).date()
+            previous_event_after_write = self.search([('recurrence_id', '=', self.recurrence_id.id),
+                                                      ('start_date', '<', new_start),
+                                                      ('id', '!=', self.id)
+                                                      ])
             if previous_event_before_write != previous_event_after_write:
                 # Outlook returns a 400 error if you try to synchronize an occurrence of this type.
                 raise UserError(_("Modified occurrence is crossing or overlapping adjacent occurrence."))
         notify_context = self.env.context.get('dont_notify', False)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
-        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_microsoft_synced_fields():
+        if recurrence_update_setting in ('all_records',) and len(self) == 1 and values.keys() & self._get_microsoft_synced_fields():
             self.recurrence_id.need_sync_m = True
         return res
 
@@ -76,8 +90,8 @@ class Meeting(models.Model):
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return [
             ('partner_ids.user_ids', 'in', self.env.user.id),
-            ('stop', '>', lower_bound),
-            ('start', '<', upper_bound),
+            ('stop_datetime', '>', lower_bound),
+            ('start_datetime', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
@@ -111,8 +125,8 @@ class Meeting(models.Model):
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
-            'start': start,
-            'stop': stop,
+            'start_datetime': start,
+            'stop_datetime': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         }
@@ -146,8 +160,8 @@ class Meeting(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
         values['microsoft_id'] = microsoft_event.id
         values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
-        values['start'] = start
-        values['stop'] = stop
+        values['start_datetime'] = start
+        values['stop_datetime'] = stop
         return values
 
     @api.model
@@ -277,13 +291,13 @@ class Meeting(models.Model):
                 'contentType': "text",
             }
 
-        if any(x in fields_to_sync for x in ['allday', 'start', 'date_end', 'stop']):
+        if any(x in fields_to_sync for x in ['allday', 'start_datetime', 'date_end', 'stop_datetime']):
             if self.allday:
                 start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
                 end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
             else:
-                start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+                start = {'dateTime': pytz.utc.localize(self.start_datetime).isoformat(), 'timeZone': 'Europe/London'}
+                end = {'dateTime': pytz.utc.localize(self.stop_datetime).isoformat(), 'timeZone': 'Europe/London'}
 
             values['start'] = start
             values['end'] = end
@@ -384,7 +398,7 @@ class Meeting(models.Model):
         invalid_event_ids = self.env['calendar.event'].search_read(
             domain=[('id', 'in', self.ids), ('attendee_ids.partner_id.email', '=', False)],
             fields=['display_time', 'display_name'],
-            order='start',
+            order='start_datetime',
         )
         if invalid_event_ids:
             list_length_limit = 50
@@ -419,8 +433,8 @@ class Meeting(models.Model):
             start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
             end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+            start = {'dateTime': pytz.utc.localize(self.start_datetime).isoformat(), 'timeZone': 'Europe/London'}
+            end = {'dateTime': pytz.utc.localize(self.stop_datetime).isoformat(), 'timeZone': 'Europe/London'}
 
         values['start'] = start
         values['end'] = end

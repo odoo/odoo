@@ -132,5 +132,5 @@ class User(models.Model):
     def restart_microsoft_synchronization(self):
         self.ensure_one()
         self.microsoft_synchronization_stopped = False
-        self.env['calendar.recurrence']._restart_microsoft_sync()
+        self.env['recurrence.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()

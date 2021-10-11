@@ -65,14 +65,15 @@ class User(models.Model):
         # Google -> Odoo
         events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
-        synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
+        synced_recurrences = self.env['recurrence.recurrence']._sync_google2odoo(recurrences)
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # Odoo -> Google
-        recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
+        recurrences = self.env['recurrence.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
         recurrences._sync_odoo2google(calendar_service)
-        synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
+        all_events = recurrences._get_recurrent_records(model='calendar.event')
+        synced_events |= all_events - recurrences._get_outliers(model='calendar.event')
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events)._sync_odoo2google(calendar_service)
 
@@ -101,5 +102,5 @@ class User(models.Model):
         if not self.google_cal_account_id:
             self.google_cal_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
         self.google_synchronization_stopped = False
-        self.env['calendar.recurrence']._restart_google_sync()
+        self.env['recurrence.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
