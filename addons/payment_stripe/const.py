@@ -16,6 +16,7 @@ PAYMENT_METHOD_TYPES = [
     PMT('eps', ['at'], ['eur'], 'punctual'),
     PMT('giropay', ['de'], ['eur'], 'punctual'),
     PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
+    PMT('sofort', ['at', 'be', 'de', 'it', 'nl', 'es'], ['eur'], 'punctual'),
 ]
 
 # Mapping of transaction states to Stripe {Payment,Setup}Intent statuses.
@@ -32,5 +33,6 @@ INTENT_STATUS_MAPPING = {
 HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
+    'payment_intent.payment_failed',
     'setup_intent.succeeded',
 ]
