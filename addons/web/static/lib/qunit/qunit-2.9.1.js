@@ -4283,8 +4283,8 @@
   	todo: todo,
 
   	skip: skip,
-	skipIf(test, ...args) {
-		if (test) {
+	skipIf(assertion, ...args) {
+		if (assertion) {
 			return skip(...args);
 		} else {
 			return test(...args);
