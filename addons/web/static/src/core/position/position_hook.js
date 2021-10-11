@@ -9,8 +9,6 @@ import { debounce, throttle } from "../utils/timing";
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
- *  directionFlipOrder?: DirectionFlipOrder;
- *  variantFlipOrder?: VariantFlipOrder;
  * }} Options
  *
  * @typedef {{
@@ -59,13 +57,15 @@ const { hooks } = owl;
 const { useComponent, useExternalListener, useRef } = hooks;
 
 const POPPER_CLASS = "o-popper-position";
+/** @type DirectionFlipOrder */
+const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
+/** @type VariantFlipOrder */
+const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
 
 /** @type {Options} */
 export const DEFAULTS = {
     margin: 0,
     position: "bottom",
-    directionFlipOrder: { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" },
-    variantFlipOrder: { start: "sme", middle: "mse", end: "ems" },
 };
 
 /**
@@ -82,12 +82,12 @@ export const DEFAULTS = {
  *  - a method returning style to apply to the popper for a given direction and variant
  */
 export function computePositioning(reference, popper, options) {
-    const { container, margin, position, directionFlipOrder, variantFlipOrder } = options;
+    const { container, margin, position } = options;
 
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = directionFlipOrder[directionKey];
-    const variants = variantFlipOrder[variantKey];
+    const directions = DIRECTION_FLIP_ORDER[directionKey];
+    const variants = VARIANT_FLIP_ORDER[variantKey];
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
