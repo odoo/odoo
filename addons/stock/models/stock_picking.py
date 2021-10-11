@@ -389,6 +389,7 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
+    
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
