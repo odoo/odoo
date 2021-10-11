@@ -11,6 +11,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import textwrap
 import time
 import traceback
 from xmlrpc import client as xmlrpclib
@@ -23,6 +24,10 @@ from glob import glob
 
 ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 TSTAMP = time.strftime("%Y%m%d", time.gmtime())
+# Get some variables from release.py
+version = ...
+version_info = ...
+nt_service_name = ...
 exec(open(os.path.join(ROOTDIR, 'odoo', 'release.py'), 'rb').read())
 VERSION = version.split('-')[0].replace('saas~', '')
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
@@ -450,11 +455,16 @@ class KVM(object):
 class KVMWinBuildExe(KVM):
     def run(self):
         logging.info('Start building Windows package')
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s.%s\n" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP))
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w', encoding='utf-8') as f:
+            win_version = VERSION.replace('~', '_').replace('+', '')
+            f.write(textwrap.dedent(f"""
+                VERSION={win_version}.{TSTAMP}
+                MAJORVERSION={version_info[0]}
+                MINORVERSION={version_info[1]}
+            """))
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w', encoding='utf-8') as f:
             f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version)
-        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
+        with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w', encoding='utf-8') as f:
             f.write("SERVICENAME=%s\n" % nt_service_name)
 
         remote_build_dir = '/cygdrive/c/odoobuild/server/'
