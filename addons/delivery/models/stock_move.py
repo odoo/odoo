@@ -9,6 +9,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
+    sale_price = fields.Float(compute='_compute_sale_price', readonly=False, inverse='_inverse_sale_price')
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _cal_move_weight(self):
@@ -16,6 +17,15 @@ class StockMove(models.Model):
         for move in moves_with_weight:
             move.weight = (move.product_qty * move.product_id.weight)
         (self - moves_with_weight).weight = 0
+
+    @api.depends('sale_price')
+    def _compute_sale_price(self):
+        for move in self:
+            move.sale_price = sum([l.sale_price for l in self.move_line_ids])
+
+    def _inverse_sale_price(self):
+        for move in self:
+            move.move_line_ids.write({'sale_price': move.sale_price})
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
@@ -30,7 +40,7 @@ class StockMove(models.Model):
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    sale_price = fields.Float(compute='_compute_sale_price')
+    sale_price = fields.Float(compute='_compute_sale_price', store=True, readonly=False)
     destination_country_code = fields.Char(related='picking_id.destination_country_code')
     carrier_id = fields.Many2one(related='picking_id.carrier_id')
 

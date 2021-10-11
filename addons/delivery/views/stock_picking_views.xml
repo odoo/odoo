@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_picking_form_delivery">
+        <field name="name">stock.picking.delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+        <xpath expr='//page[@name="operations"]/field[@name="move_ids_without_package"]/tree' position="inside">
+            <field name="sale_price" />
+        </xpath>
+        </field>
+    </record>
+
+</odoo>
