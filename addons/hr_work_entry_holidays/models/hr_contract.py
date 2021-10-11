@@ -29,10 +29,6 @@ class HrContract(models.Model):
         else:
             return leave.work_entry_type_id
 
-    # YTI TODO: Master remove the method (deprecated)
-    def _get_more_vals_leave(self, leave):
-        return [('leave_id', leave.holiday_id and leave.holiday_id.id)]
-
     def _get_more_vals_leave_interval(self, interval, leaves):
         result = super()._get_more_vals_leave_interval(interval, leaves)
         for leave in leaves:
