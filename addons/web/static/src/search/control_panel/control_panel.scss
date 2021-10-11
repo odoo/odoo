@@ -87,14 +87,11 @@
         }
 
         > .o_cp_switch_buttons {
-            > .btn:first-child {
-                margin-left: $o-horizontal-padding;
-                @include media-breakpoint-down(sm) {
-                    margin-left: 0;
+            button {
+                > span {
+                    text-transform: capitalize;
+                    padding-left: 6px;
                 }
-            }
-            .dropdown-menu {
-                right: 0;
             }
         }
     }

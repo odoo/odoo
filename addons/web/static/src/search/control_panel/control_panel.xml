@@ -31,15 +31,7 @@
                     <div class="o_cp_pager"/>
 
                     <t t-if="(env.config.viewSwitcherEntries or []).length">
-                        <nav class="btn-group o_cp_switch_buttons">
-                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                <button class="btn btn-light fa fa-lg o_switch_view "
-                                    t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
-                                    t-att-data-tooltip="view.name"
-                                    t-on-click="onViewClicked(view.type)"
-                                    />
-                            </t>
-                        </nav>
+                        <t t-call="web.ControlPanel.viewSwitcherEntries" />
                     </t>
                 </div>
             </div>
@@ -63,6 +55,32 @@
                 <em t-else="" class="text-warning">Unnamed</em>
             </li>
         </ol>
+    </t>
+
+    <t t-name="web.ControlPanel.viewSwitcherEntries" owl="1">
+        <nav class="btn-group o_cp_switch_buttons">
+            <t t-set="view" t-value="env.config.viewSwitcherEntries.find((v) => v.active)" />
+
+            <Dropdown
+                position="'bottom-end'"
+                togglerClass="'btn ' + (env.isSmall ? 'btn-link' : 'btn-light')"
+                menuClass="env.isSmall ? 'd-inline-flex' : ''"
+            >
+                <t t-set-slot="toggler">
+                    <i
+                        class="fa fa-lg o_switch_view"
+                        t-attf-class="fa o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                    />
+                </t>
+                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                    <button class="btn btn-light o_switch_view"
+                        t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}} {{ env.isSmall ? '' : 'dropdown-item' }}"
+                        t-attf-data-tooltip="{{ env.isSmall ? view.name : undefined }}"
+                        t-on-click="onViewClicked(view.type)"
+                    ><i t-attf-class="fa {{view.icon}}" /><span t-if="!env.isSmall" t-esc="view.name" /></button>
+                </t>
+            </Dropdown>
+        </nav>
     </t>
 
 </templates>
