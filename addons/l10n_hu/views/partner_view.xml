@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="oerp_account_fiscal_position_form_divided" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form.oerp_tax_divide_destination</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="inherit_id" ref="account.view_account_position_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_dest_id']" position="after">
+                    <field name="service_tax_dest_id" domain="[('type_tax_use', '!=', 'none'), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

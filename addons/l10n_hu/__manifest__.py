@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2014 InnOpen Group Kft (<http://www.innopen.eu>).
+# Copyright (C) 2021 Online ERP Hungary Kft. (<https://online-erp.hu/>).
 
 {
     'name': 'Hungarian - Accounting',
-    'version': '2.0',
+    'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
@@ -18,8 +19,8 @@ This module consists of:
  - Hungarian taxes
  - Hungarian Bank information
  """,
-    'author': 'InnOpen Group Kft',
-    'website': 'http://www.innopen.eu',
+    'author': 'Online ERP Hungary Kft.',
+    'website': 'https://online-erp.hu/',
     'depends': ['account'],
     'data': [
         'data/l10n_hu_chart_data.xml',
@@ -32,6 +33,7 @@ This module consists of:
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'views/partner_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
