@@ -515,9 +515,6 @@ class ProjectTask(models.Model):
     def _get_action_view_so_ids(self):
         return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))
 
-class ProjectTaskRecurrence(models.Model):
-    _inherit = 'project.task.recurrence'
-
     @api.model
     def _get_recurring_fields(self):
-        return ['so_analytic_account_id'] + super(ProjectTaskRecurrence, self)._get_recurring_fields()
+        return ['so_analytic_account_id'] + super()._get_recurring_fields()

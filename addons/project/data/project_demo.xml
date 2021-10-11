@@ -882,31 +882,26 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <!-- Recurring tasks and subtasks -->
-        <record id="project_task_recurrence_1" model="project.task.recurrence">
-            <field name="recurrence_left">3</field>
-            <field name="repeat_unit">month</field>
-            <field name="repeat_on_month">date</field>
-            <field name="repeat_type">after</field>
-            <field name="repeat_number">4</field>
-            <field name="repeat_day">1</field>
-            <field name="repeat_weekday">mon</field>
+        <record id="project_task_recurrence_1" model="recurrence.recurrence">
+            <field name="model">project.task</field>
+            <field name="rrule_type">monthly</field>
+            <field name="month_by">date</field>
+            <field name="end_type">count</field>
+            <field name="count">4</field>
+            <field name="day">1</field>
             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="last_record_time" eval="DateTime.now() + relativedelta(weeks=-2)"/>
         </record>
-        <record id="project_task_recurrence_1" model="project.task.recurrence">
-            <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
-        </record>
-        <record id="project_task_recurrence_2" model="project.task.recurrence">
-            <field name="recurrence_left">20</field>
+        <record id="project_task_recurrence_2" model="recurrence.recurrence">
+            <field name="model">project.task</field>
             <field name="mon" eval="True"/>
             <field name="tue" eval="True"/>
             <field name="wed" eval="True"/>
             <field name="thu" eval="True"/>
             <field name="fri" eval="True"/>
-            <field name="repeat_type">after</field>
-            <field name="repeat_number">20</field>
-        </record>
-        <record id="project_task_recurrence_2" model="project.task.recurrence">
-            <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="end_type">count</field>
+            <field name="count">20</field>
+            <field name="last_record_time" eval="DateTime.now() + relativedelta(weeks=-2)"/>
         </record>
         <record id="project_task_27" model="project.task">
             <field name="sequence">20</field>
@@ -915,9 +910,12 @@ Send it ASAP, its urgent.</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Customer review</field>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="recurring_task" eval="True"/>
+            <field name="recurrency" eval="True"/>
             <field name="recurrence_id" ref="project_task_recurrence_1"/>
             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+        </record>
+        <record id="project_task_recurrence_1" model="recurrence.recurrence">
+            <field name="base_id" ref="project.project_task_27"/>
         </record>
         <record id="project_task_28" model="project.task">
             <field name="sequence">20</field>
@@ -927,9 +925,12 @@ Send it ASAP, its urgent.</field>
             <field name="parent_id" ref="project.project_task_27"/>
             <field name="name">Daily stand-up meeting - Send minutes</field>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="recurring_task" eval="True"/>
+            <field name="recurrency" eval="True"/>
             <field name="recurrence_id" ref="project_task_recurrence_2"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(weeks=-1)"/>
+        </record>
+        <record id="project_task_recurrence_2" model="recurrence.recurrence">
+            <field name="base_id" ref="project.project_task_28"/>
         </record>
         <record id="project_task_29" model="project.task">
             <field name="sequence">20</field>
@@ -968,6 +969,6 @@ Send it ASAP, its urgent.</field>
             <field name="stage_id" ref="project_stage_1"/>
         </record>
 
-        <function model="project.task.recurrence" name="_cron_create_recurring_tasks"/>
+        <function model="project.task" name="_cron_schedule_next"/>
     </data>
 </odoo>

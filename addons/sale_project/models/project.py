@@ -192,15 +192,11 @@ class ProjectTask(models.Model):
             operator_new = 'not inselect'
         return [('sale_order_id', operator_new, (query, ()))]
 
-
-class ProjectTaskRecurrence(models.Model):
-    _inherit = 'project.task.recurrence'
-
-    def _new_task_values(self, task):
-        values = super(ProjectTaskRecurrence, self)._new_task_values(task)
-        task = self.sudo().task_ids[0]
-        values['sale_line_id'] = self._get_sale_line_id(task)
+    def _new_task_values(self):
+        values = super()._new_task_values()
+        values['sale_line_id'] = self.sudo()._get_sale_line_id()
         return values
 
-    def _get_sale_line_id(self, task):
-        return task.sale_line_id.id
+    def _get_sale_line_id(self):
+        self.ensure_one()
+        return self.sale_line_id.id

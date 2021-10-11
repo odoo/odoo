@@ -9,10 +9,9 @@ from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.tools import format_amount, get_timedelta
+from odoo.osv import expression
 
-from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
 
@@ -467,7 +466,7 @@ class Project(models.Model):
         res = super(Project, self).write(vals) if vals else True
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
-            self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
+            self.env['project.task'].search([('project_id', 'in', self.ids), ('recurrency', '=', True)]).write({'recurrency': False})
 
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
@@ -875,10 +874,21 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin', 'recurrence.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
     _check_company_auto = True
+
+    @api.model
+    def _default_batch(self):
+        return True
+
+    @api.model
+    def _default_next_recurrence_interval(self):
+        """Number of month between batch of records
+        This method must be overridden when batch creation is needed.
+        """
+        return 0
 
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
@@ -1030,86 +1040,8 @@ class Task(models.Model):
 
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
-    recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
-    recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
-    recurrence_update = fields.Selection([
-        ('this', 'This task'),
-        ('subsequent', 'This and following tasks'),
-        ('all', 'All tasks'),
-    ], default='this', store=False)
     recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message')
-
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', readonly=False)
-    repeat_type = fields.Selection([
-        ('forever', 'Forever'),
-        ('until', 'End Date'),
-        ('after', 'Number of Repetitions'),
-    ], default="forever", string="Until", compute='_compute_repeat', readonly=False)
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', readonly=False)
-    repeat_number = fields.Integer(string="Repetitions", default=1, compute='_compute_repeat', readonly=False)
-
-    repeat_on_month = fields.Selection([
-        ('date', 'Date of the Month'),
-        ('day', 'Day of the Month'),
-    ], default='date', compute='_compute_repeat', readonly=False)
-
-    repeat_on_year = fields.Selection([
-        ('date', 'Date of the Year'),
-        ('day', 'Day of the Year'),
-    ], default='date', compute='_compute_repeat', readonly=False)
-
-    mon = fields.Boolean(string="Mon", compute='_compute_repeat', readonly=False)
-    tue = fields.Boolean(string="Tue", compute='_compute_repeat', readonly=False)
-    wed = fields.Boolean(string="Wed", compute='_compute_repeat', readonly=False)
-    thu = fields.Boolean(string="Thu", compute='_compute_repeat', readonly=False)
-    fri = fields.Boolean(string="Fri", compute='_compute_repeat', readonly=False)
-    sat = fields.Boolean(string="Sat", compute='_compute_repeat', readonly=False)
-    sun = fields.Boolean(string="Sun", compute='_compute_repeat', readonly=False)
-
-    repeat_day = fields.Selection([
-        (str(i), str(i)) for i in range(1, 32)
-    ], compute='_compute_repeat', readonly=False)
-    repeat_week = fields.Selection([
-        ('first', 'First'),
-        ('second', 'Second'),
-        ('third', 'Third'),
-        ('last', 'Last'),
-    ], default='first', compute='_compute_repeat', readonly=False)
-    repeat_weekday = fields.Selection([
-        ('mon', 'Monday'),
-        ('tue', 'Tuesday'),
-        ('wed', 'Wednesday'),
-        ('thu', 'Thursday'),
-        ('fri', 'Friday'),
-        ('sat', 'Saturday'),
-        ('sun', 'Sunday'),
-    ], string='Day Of The Week', compute='_compute_repeat', readonly=False)
-    repeat_month = fields.Selection([
-        ('january', 'January'),
-        ('february', 'February'),
-        ('march', 'March'),
-        ('april', 'April'),
-        ('may', 'May'),
-        ('june', 'June'),
-        ('july', 'July'),
-        ('august', 'August'),
-        ('september', 'September'),
-        ('october', 'October'),
-        ('november', 'November'),
-        ('december', 'December'),
-    ], compute='_compute_repeat', readonly=False)
-
-    repeat_show_dow = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_day = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
-    repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null',
@@ -1192,86 +1124,57 @@ class Task(models.Model):
         if not self._check_m2m_recursion('depend_on_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
-    @api.model
-    def _get_recurrence_fields(self):
-        return ['repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until', 'repeat_number',
-                'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat',
-                'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday']
-
-    @api.depends('recurring_task', 'repeat_unit', 'repeat_on_month', 'repeat_on_year')
-    def _compute_repeat_visibility(self):
-        for task in self:
-            task.repeat_show_day = task.recurring_task and (task.repeat_unit == 'month' and task.repeat_on_month == 'date') or (task.repeat_unit == 'year' and task.repeat_on_year == 'date')
-            task.repeat_show_week = task.recurring_task and (task.repeat_unit == 'month' and task.repeat_on_month == 'day') or (task.repeat_unit == 'year' and task.repeat_on_year == 'day')
-            task.repeat_show_dow = task.recurring_task and task.repeat_unit == 'week'
-            task.repeat_show_month = task.recurring_task and task.repeat_unit == 'year'
-
-    @api.depends('recurring_task')
-    def _compute_repeat(self):
-        rec_fields = self._get_recurrence_fields()
-        defaults = self.default_get(rec_fields)
-        for task in self:
-            for f in rec_fields:
-                if task.recurrence_id:
-                    task[f] = task.recurrence_id[f]
-                else:
-                    if task.recurring_task:
-                        task[f] = defaults.get(f)
-                    else:
-                        task[f] = False
-
-    def _get_weekdays(self, n=1):
-        self.ensure_one()
-        if self.repeat_unit == 'week':
-            return [fn(n) for day, fn in DAYS.items() if self[day]]
-        return [DAYS.get(self.repeat_weekday)(n)]
-
-    def _get_recurrence_start_date(self):
-        return fields.Date.today()
-
-    @api.depends(
-        'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
-        'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
-        'sat', 'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday')
+    @api.depends('recurrency', 'interval', 'rrule_type', 'until', 'end_type', 'start_datetime',
+                 'count', 'month_by', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'day', 'byday',
+                 )
     def _compute_recurrence_message(self):
         self.recurrence_message = False
-        for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
-            date = task._get_recurrence_start_date()
-            recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
-            number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
-            delta = task.repeat_interval if task.repeat_unit == 'day' else 1
-            recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
-                date + timedelta(days=delta),
-                task.repeat_interval,
-                task.repeat_unit,
-                task.repeat_type,
-                task.repeat_until,
-                task.repeat_on_month,
-                task.repeat_on_year,
-                task._get_weekdays(WEEKS.get(task.repeat_week)),
-                task.repeat_day,
-                task.repeat_week,
-                task.repeat_month,
-                count=number_occurrences)
+        for task in self.filtered(lambda t: t.recurrency and t._is_recurrence_valid()):
+            start_datetime = task.start_datetime
+            if task.recurrence_id and task.recurrence_id.base_id:
+                base_task = self.env['project.task'].browse(task.recurrence_id.base_id)
+                start_datetime = base_task.exists() and base_task.start_datetime or start_datetime
+            weekdays = task.recurrence_id._get_week_days({'mon': task.mon, 'tue': task.tue, 'wed': task.wed,
+                                                          'thu': task.thu, 'fri': task.fri, 'sat': task.sat, 'sun': task.sun
+                                                          })
+            rrule_args = dict(start_datetime=start_datetime,
+                              interval=task.interval,
+                              rrule_type=task.rrule_type,
+                              until=task.until,
+                              month_by=task.month_by,
+                              weekdays=weekdays,
+                              weekday=task.weekday,
+                              count=task.count,
+                              allday=task.allday,
+                              end_type=task.end_type,
+                              day=task.day,
+                              byday=task.byday,
+                              )
+            ranges = self.env['recurrence.recurrence']._range_calculation(record=task,
+                                                                          duration=task.stop_datetime-task.start_datetime,
+                                                                          batch_until=None,
+                                                                          rrule_args=rrule_args)
+            recurring_dates = [d[0] for d in ranges if d[0] > task.start_datetime]
+            recurring_dates.sort()
             date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            recurrence_left = len(recurring_dates)
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
                 recurrence_title = _('Next Occurrences:')
             task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
             task.recurrence_message += ''.join(['<li>%s</li>' % date.strftime(date_format) for date in recurring_dates[:5]])
-            if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
+            if task.rrule_type == 'after' and recurrence_left > 5 or task.rrule_type == 'forever' or len(recurring_dates) > 5:
                 task.recurrence_message += '<li>...</li>'
             task.recurrence_message += '</ul>'
-            if task.repeat_type == 'until':
+            if task.rrule_type == 'until':
                 task.recurrence_message += _('<p><em>Number of tasks: %(tasks_count)s</em></p>') % {'tasks_count': len(recurring_dates)}
 
     def _is_recurrence_valid(self):
         self.ensure_one()
-        return self.repeat_interval > 0 and\
-                (not self.repeat_show_dow or self._get_weekdays()) and\
-                (self.repeat_type != 'after' or self.repeat_number) and\
-                (self.repeat_type != 'until' or self.repeat_until and self.repeat_until > fields.Date.today())
+        return self.interval and \
+               (self.end_type != 'end_date' or self.count) and \
+               (self.end_type != 'end_date' or self.until and self.until > fields.Date.today())
 
     @api.depends('recurrence_id')
     def _compute_recurring_count(self):
@@ -1535,20 +1438,6 @@ class Task(models.Model):
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
-        days = list(DAYS.keys())
-        week_start = fields.Datetime.today().weekday()
-
-        if all(d in default_fields for d in days):
-            vals[days[week_start]] = True
-        if 'repeat_day' in default_fields:
-            vals['repeat_day'] = str(fields.Datetime.today().day)
-        if 'repeat_month' in default_fields:
-            vals['repeat_month'] = self._fields.get('repeat_month').selection[fields.Datetime.today().month - 1][0]
-        if 'repeat_until' in default_fields:
-            vals['repeat_until'] = fields.Date.today() + timedelta(days=7)
-        if 'repeat_weekday' in default_fields:
-            vals['repeat_weekday'] = self._fields.get('repeat_weekday').selection[week_start][0]
-
         if 'partner_id' in vals and not vals['partner_id']:
             # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
             project_id = vals.get('project_id')
@@ -1657,13 +1546,6 @@ class Task(models.Model):
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
                 vals['date_last_stage_update'] = fields.Datetime.now()
-            # recurrence
-            rec_fields = vals.keys() & self._get_recurrence_fields()
-            if rec_fields and vals.get('recurring_task') is True:
-                rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
-                rec_values['next_recurrence_date'] = fields.Datetime.today()
-                recurrence = self.env['project.task.recurrence'].create(rec_values)
-                vals['recurrence_id'] = recurrence.id
         # The sudo is required for a portal user as the record creation
         # requires the read access on other models, as mail.template
         # in order to compute the field tracking
@@ -1712,32 +1594,7 @@ class Task(models.Model):
         if vals.get('user_ids') and 'date_assign' not in vals:
             vals['date_assign'] = now
 
-        # recurrence fields
-        rec_fields = vals.keys() & self._get_recurrence_fields()
-        if rec_fields:
-            rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
-            for task in self:
-                if task.recurrence_id:
-                    task.recurrence_id.write(rec_values)
-                elif vals.get('recurring_task'):
-                    rec_values['next_recurrence_date'] = fields.Datetime.today()
-                    recurrence = self.env['project.task.recurrence'].create(rec_values)
-                    task.recurrence_id = recurrence.id
-
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
-            self.recurrence_id.unlink()
-
         tasks = self
-        recurrence_update = vals.pop('recurrence_update', 'this')
-        if recurrence_update != 'this':
-            recurrence_domain = []
-            if recurrence_update == 'subsequent':
-                for task in self:
-                    recurrence_domain = OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
-            else:
-                recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
-            tasks |= self.env['project.task'].search(recurrence_domain)
-
         # The sudo is required for a portal user as the record update
         # requires the write access on others models, as rating.rating
         # in order to keep the same name than the task.
@@ -2128,6 +1985,131 @@ class Task(models.Model):
     def _get_task_analytic_account_id(self):
         self.ensure_one()
         return self.analytic_account_id or self.project_analytic_account_id
+
+    # ---------------------------------------------------
+    # Recurrence
+    # ---------------------------------------------------
+
+    @api.model
+    def _cron_schedule_next(self):
+        """Because of subtasks logic and copies of recurrence, we can't use apply_recurrence here
+        We need to adapt the logic specially for project
+        """
+        companies = self.env['res.company'].search([])
+        recurrences = self.env['recurrence.recurrence']
+        date_today = fields.Datetime.from_string(fields.Date.today())
+        full_domain = [('base_id', '!=', False)]
+        for company in companies:
+            interval = self.env['project.task'].with_company(company)._default_next_recurrence_interval()
+            delta = get_timedelta(interval, 'month')
+            domain = self.env['recurrence.recurrence']._get_batch_domain('project.task', company, delta)
+            full_domain = expression.AND([domain, full_domain])
+        recurrences |= self.env['recurrence.recurrence'].search(full_domain)
+        existing_taks = recurrences._get_recurrent_records(model='project.task')
+        for recurrence in recurrences:
+            base_record = self.env['project.task'].browse(recurrence.base_id).exists()
+            duration = base_record.stop_datetime - base_record.start_datetime
+            ranges = recurrence._range_calculation(base_record, duration, date_today.date())
+            records = existing_taks.filtered(lambda t: t.recurrence_id.id == recurrence.id) | base_record
+            records_to_keep, ranges = recurrence._reconcile_records(ranges, existing_records=records)
+            create_values = base_record._new_task_values()
+            # sub tasks are generated here thanks to a hack. We filter the already created records but create the subtasks anyway
+            for start, stop in ranges:
+                # Update values according to base record, recurrence and datetime. Make sure the records are active if the base record is not
+                create_values = dict(create_values, active=True, start_datetime=start, stop_datetime=stop, follow_recurrence=True, recurrency=True)
+                # new_task is part of the same recurrence than base_record
+                current_task = records_to_keep.filtered(lambda t: t.start_datetime == start)
+                if not current_task:
+                    self._create_next_task(start, stop, recurrence, records_to_keep)
+
+    @api.model
+    def _get_recurring_fields(self):
+        return ['message_partner_ids', 'company_id', 'description', 'displayed_image_id', 'email_cc',
+                'parent_id', 'partner_email', 'partner_id', 'partner_phone', 'planned_hours',
+                'project_id', 'project_privacy_visibility', 'sequence', 'tag_ids', 'recurrence_id',
+                'name', 'analytic_account_id']
+
+    def _new_task_values(self):
+        self.ensure_one()
+        fields_to_copy = self._get_recurring_fields()
+        task_values = self.read(fields_to_copy).pop()
+        create_values = {
+            field: value[0] if isinstance(value, tuple) else value for field, value in task_values.items()
+        }
+        create_values['stage_id'] = self.project_id.type_ids[0].id if self.project_id.type_ids else self.stage_id.id
+        create_values['user_ids'] = False
+        return create_values
+
+    def _create_subtasks(self, new_task, depth=3):
+        """
+        This method creates the children tasks of a recurrent task in the recurrency.
+        :param new_task: new task to copy the values
+        :param depth: create children tasks up to depth value (grandchildren).
+        """
+        self.ensure_one()
+        if depth == 0 or not self.child_ids:
+            return
+        children = []
+        child_recurrence = []
+        # copy the subtasks of the original task
+        for child in self.child_ids:
+            if child.recurrence_id and child.recurrence_id.id in child_recurrence:
+                # The subtask has been generated by another subtask in the childs
+                # This subtasks is skipped as it will be meant to be a copy of the first
+                # task of the recurrence we just created.
+                continue
+            child_values = child._new_task_values()
+            child_values['parent_id'] = new_task.id
+            if child.recurrence_id:
+                # The subtask has a recurrence, the recurrence is thus copied rather than used
+                # with raw reference in order to decouple the recurrence of the initial subtask
+                # from the recurrence of the copied subtask which will live its own life and generate
+                # subsequent tasks.
+                child_recurrence += [child.recurrence_id.id]
+                # TODO: improve that because it is creating records in a loop.
+                recurrence = child.recurrence_id.copy()
+                child_values['recurrence_id'] = recurrence.id
+                new_child = self.env['project.task'].sudo().create(child_values)
+                recurrence.base_id = new_child.id
+
+            if child.child_ids and depth > 1:
+                # If child has childs in the following layer and we will have to copy layer, we have to
+                # first create the new_child record in order to have a new parent_id reference for the
+                # "grandchildren" tasks
+                new_child = self.env['project.task'].sudo().create(child_values)
+                child._create_subtasks(new_child, depth=depth - 1)
+            else:
+                children.append(child_values)
+        self.env['project.task'].sudo().create(children)
+
+    @api.model
+    def _create_next_task(self, start, stop, recurrence, all_tasks):
+        rec_tasks = all_tasks.filtered(lambda t: t.recurrence_id.id == recurrence.id)
+        latest_task = rec_tasks[-1]
+        create_values = latest_task._new_task_values()
+        create_values.update(start_datetime=start, stop_datetime=stop)
+        new_task = self.env['project.task'].sudo().create(create_values)
+        latest_task._create_subtasks(new_task, depth=3)
+
+    def _get_recurring_values(self):
+        """ This method aims to provide the base value of each record duplicated in a recurrence.
+        By default, these are the value of the base record but other model may want to customized them further
+        """
+        self.ensure_one()
+        create_values = self._new_task_values()
+        return create_values
+
+    @api.model
+    def _keep_initiator(self):
+        """ When a recurrent record is created, the base event can be dismissed if it does not follow the rrule.
+        For example, if a friday weekly recurrency is created and the base record has a start_datetime = wednesday,
+        it will be automatically archived. In some model that's not the intended behavior (e.g. project).
+        This method should be override according to the model need.
+        """
+        # In project, we want to move the base record to the first occurence to avoid losing the associated
+        # values with the base record (timesheets, subtasks etc)
+        return True
+
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
