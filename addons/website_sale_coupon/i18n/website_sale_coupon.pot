@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-10-11 10:20+0000\n"
+"PO-Revision-Date: 2021-10-11 10:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_sale_coupon
-#: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
-#, python-format
-msgid "A coupon is needed for coupon programs."
+#: model_terms:ir.ui.view,arch_db:website_sale_coupon.layout
+msgid ""
+"<span class=\"coupon-message-content\">The following promo code was applied "
+"on your order: <t t-out=\"notify_coupon\"/></span>"
 msgstr ""
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.layout
-msgid "Could not apply the promo code:"
+msgid ""
+"<span class=\"coupon-message-title\">Could not apply the promo code: <t t-out=\"pending_coupon_code\"/></span>\n"
+"                <span class=\"coupon-message-content\" t-out=\"coupon_error\"/>"
+msgstr ""
+
+#. module: website_sale_coupon
+#: code:addons/website_sale_coupon/wizard/sale_coupon_share.py:0
+#, python-format
+msgid "A coupon is needed for coupon programs."
 msgstr ""
 
 #. module: website_sale_coupon
@@ -176,11 +185,6 @@ msgstr ""
 msgid ""
 "The coupon will be automatically applied when you add something in your "
 "cart."
-msgstr ""
-
-#. module: website_sale_coupon
-#: model_terms:ir.ui.view,arch_db:website_sale_coupon.layout
-msgid "The following promo code was applied on your order:"
 msgstr ""
 
 #. module: website_sale_coupon

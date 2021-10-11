@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
-"PO-Revision-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-10-11 10:19+0000\n"
+"PO-Revision-Date: 2021-10-11 10:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,21 +24,6 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "$20"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "% of recipients"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "% of recipients."
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "% receive one of the"
 msgstr ""
 
 #. module: mass_mailing
@@ -86,11 +71,6 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
 msgid "&amp;nbsp;&amp;nbsp;"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid ", and"
 msgstr ""
 
 #. module: mass_mailing
@@ -528,6 +508,11 @@ msgid "<strong>Total</strong> management"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_kanban
+msgid "<t t-out=\"record.mailing_mail_ids.raw_value.length\"/> Mailings"
+msgstr ""
+
+#. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A campaign should be set when A/B test is enabled"
@@ -559,7 +544,16 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "A sample of"
+msgid ""
+"A sample of <b><t t-out=\"mailing.ab_testing_pc\"/>% of recipients</b> will receive this <b><t t-out=\"mailing.mailing_type_description\"/></b>, and <t t-out=\"other_ab_testing_pc\"/>% receive one of the\n"
+"                    <b><t t-out=\"mailing.ab_testing_mailings_count - 1\"/> other versions</b> from the same campaign."
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
+msgid ""
+"A sample of <b><t t-out=\"mailing.ab_testing_pc\"/>% of recipients</b> will "
+"receive this <b><t t-out=\"mailing.mailing_type_description\"/></b>."
 msgstr ""
 
 #. module: mass_mailing
@@ -2416,7 +2410,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_calendar
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
-#: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Mailings"
@@ -3702,7 +3695,9 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "The actual"
+msgid ""
+"The actual <t t-out=\"mailing.mailing_type_description\"/> will be sent to "
+"the remaining recipients."
 msgstr ""
 
 #. module: mass_mailing
@@ -3768,7 +3763,10 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "Then on"
+msgid ""
+"Then on <b><t t-out=\"mailing.ab_testing_schedule_datetime.strftime('%b %d, "
+"%Y')\"/></b> the <t t-out=\"mailing.mailing_type_description\"/> having the "
+"<b><t t-out=\"ab_testing_winner_selection_description\"/></b> will be sent"
 msgstr ""
 
 #. module: mass_mailing
@@ -3784,7 +3782,9 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "This"
+msgid ""
+"This <t t-out=\"mailing.mailing_type_description\"/> is the winner of the "
+"A/B testing campaign and has been sent to all remaining recipients."
 msgstr ""
 
 #. module: mass_mailing
@@ -3901,7 +3901,9 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "Try different variations in the campaign to compare their"
+msgid ""
+"Try different variations in the campaign to compare their <t "
+"t-out=\"ab_testing_winner_selection_description\"/>."
 msgstr ""
 
 #. module: mass_mailing
@@ -4338,30 +4340,8 @@ msgid "free website"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "from the same campaign."
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "having the"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid ""
-"is the winner of the A/B testing campaign and has been sent to all remaining"
-" recipients."
-msgstr ""
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "on"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "other versions"
 msgstr ""
 
 #. module: mass_mailing
@@ -4371,27 +4351,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "the"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "to the remaining"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "will be sent"
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "will be sent to the remaining recipients."
-msgstr ""
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "will receive this"
+msgid "to the remaining <t t-out=\"remaining_ab_testing_pc\"/>% of recipients."
 msgstr ""
 
 #. module: mass_mailing
