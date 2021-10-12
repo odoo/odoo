@@ -1,7 +1,9 @@
 /** @odoo-module */
 
 import { useEffect } from "@web/core/utils/hooks";
-import { debounce, throttle } from "../utils/timing";
+import { throttleForAnimation } from "../utils/timing";
+
+const { onWillUnmount } = owl.hooks;
 
 /**
  * @typedef {{
@@ -247,6 +249,8 @@ export function usePosition(reference, options) {
         }
     };
     useEffect(update);
-    useExternalListener(document, "scroll", throttle(update, 50), { capture: true });
-    useExternalListener(window, "resize", debounce(update, 250));
+    const throttledUpdate = throttleForAnimation(update);
+    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+    useExternalListener(window, "resize", throttledUpdate);
+    onWillUnmount(throttledUpdate.cancel);
 }
