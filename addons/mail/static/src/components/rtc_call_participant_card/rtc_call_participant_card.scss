@@ -52,6 +52,22 @@
     flex-direction: column;
 }
 
+.o_RtcCallParticipantCard_contextMenu {
+    max-width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_RtcCallParticipantCard_contextMenu > * {
+    width: 100%;
+}
+
+.o_RtcCallParticipantCard_contextMenu_volumeInput {
+    width: 100%;
+}
+
 .o_RtcCallParticipantCard_liveIndicator {
     display: flex;
     margin-inline-end: 5%;
@@ -97,7 +113,7 @@
     }
 }
 
-.o_RtcCallParticipantCard_volumeMenuAnchor {
+.o_RtcCallParticipantCard_contextMenuAnchor {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -109,6 +125,7 @@
 
 .o_RtcCallParticipantCard {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+    cursor: pointer;
 
     &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 2) darken($o-enterprise-primary-color, 5%);
@@ -126,13 +143,18 @@
 .o_RtcCallParticipantCard_container {
     border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 
-    &.o-canClick {
-        cursor: pointer;
-    }
-
     &:not(.o-isMinimized) {
         background-color: $o-brand-secondary;
     }
+}
+
+.o_RtcCallParticipantCard_contextMenu_button {
+    text-align: center;
+}
+
+.o_RtcCallParticipantCard_contextMenu_name {
+    @include text-truncate();
+    text-align: center;
 }
 
 .o_RtcCallParticipantCard_liveIndicator {

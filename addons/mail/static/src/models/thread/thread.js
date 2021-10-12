@@ -843,6 +843,10 @@ function factory(dependencies) {
             this.rtc && this.rtc.filterCallees(this.rtcSessions);
             if (this.rtc && !this.rtc.currentRtcSession) {
                 this.endCall();
+                this.env.services['notification'].notify({
+                    message: this.env._t("Disconnected from the RTC call by the server"),
+                    type: 'warning',
+                });
             }
         }
 

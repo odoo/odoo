@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -12,7 +13,8 @@ export class RtcCallParticipantCard extends Component {
      */
     setup() {
         super.setup();
-        this._volumeMenuAnchorRef = useRef('volumeMenuAnchor');
+        this._contextMenuAnchorRef = useRef('contextMenuAnchor');
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.rtc_call_participant_card', propNameAsRecordLocalId: 'callParticipantCardLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -38,11 +40,11 @@ export class RtcCallParticipantCard extends Component {
      * @param {Event} ev
      */
     async _onContextMenu(ev) {
-        if (!this._volumeMenuAnchorRef || !this._volumeMenuAnchorRef.el) {
+        if (!this._contextMenuAnchorRef || !this._contextMenuAnchorRef.el) {
             return;
         }
         ev.preventDefault();
-        this._volumeMenuAnchorRef.el.click();
+        this._contextMenuAnchorRef.el.click();
     }
 }
 

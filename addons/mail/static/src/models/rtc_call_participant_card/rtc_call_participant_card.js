@@ -3,6 +3,11 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 
+import {
+    isEventHandled,
+    markEventHandled,
+} from '@mail/utils/utils';
+
 function factory(dependencies) {
 
     class RtcCallParticipantCard extends dependencies['mail.model'] {
@@ -14,6 +19,7 @@ function factory(dependencies) {
             super._created();
             this.onChangeVolume = this.onChangeVolume.bind(this);
             this.onClick = this.onClick.bind(this);
+            this.onClickDisconnect = this.onClickDisconnect.bind(this);
             this.onClickVideo = this.onClickVideo.bind(this);
         }
 
@@ -32,6 +38,9 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
+            if (isEventHandled(ev, 'RtcCallParticipantCard.clickVideo')) {
+                return;
+            }
             if (!this.invitedPartner && !this.invitedGuest) {
                 return;
             }
@@ -53,8 +62,31 @@ function factory(dependencies) {
         /**
          * @param {MouseEvent} ev
          */
+        async onClickDisconnect(ev) {
+            if (!this.rtcSession) {
+                return;
+            }
+            if (this.rtcSession.rtc) {
+                // Should not disconnect one's own current session,
+                // this should be done with leaveCall.
+                return;
+            }
+            await this.env.services.rpc(
+                {
+                    model: 'mail.channel.rtc.session',
+                    method: 'unlink',
+                    args: [[this.rtcSession.id]],
+                },
+                { shadow: true },
+            );
+            this.component.trigger('o-popover-close');
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
         async onClickVideo(ev) {
-            ev.stopPropagation();
+            markEventHandled(ev, 'RtcCallParticipantCard.clickVideo');
             this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
         }
 
@@ -137,6 +169,10 @@ function factory(dependencies) {
         channel: many2one('mail.thread', {
             required: true,
         }),
+        /**
+         * OWL component of this participant card.
+         */
+        component: attr(),
         /**
          * If set, this card represents an invitation of this guest to this call.
          */
