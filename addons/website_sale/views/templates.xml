@@ -415,7 +415,7 @@
                 Show categories
             </button>
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
-                <strong class="o_categories_collapse_title text-uppercase">Categories</strong>
+                <h6 class="o_categories_collapse_title"><b>Categories</b></h6>
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
@@ -438,7 +438,7 @@
             <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <t t-call="website_sale.categorie_link"/>
-                <i t-if="children" t-attf-class="fa #{'fa-chevron-down' if c.id in category.parents_and_self.ids else 'fa-chevron-right'}"
+                <i t-if="children" t-attf-class="fa #{'fa-angle-down' if c.id in category.parents_and_self.ids else 'fa-angle-right'}"
                     t-attf-title="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
                     t-attf-aria-label="#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}" role="img"/>
                 <ul t-if="children" class="nav flex-column w-100 nav-hierarchy" t-att-style="'display:block;' if c.id in category.parents_and_self.ids else 'display:none;'">
@@ -468,19 +468,19 @@
                 data-target="#wsale_products_attributes_collapse" data-toggle="collapse">
                 Show options
             </button>
-            <div class="collapse d-lg-block" id="wsale_products_attributes_collapse">
+            <div class="collapse d-lg-block mb-lg-3" id="wsale_products_attributes_collapse">
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
-                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-link p-0">
-                        <i class="fa fa-eraser mr-1"/><u>Clear filters</u>
+                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-light btn-block py-0 mb-2">
+                        <small><b>Clear Filters</b></small><b class="pull-right">&#215;</b>
                     </a>
                     <ul class="nav flex-column">
                         <t t-foreach="attributes" t-as="a">
                             <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item mb-2">
-                                <div>
-                                    <strong t-field="a.name" class="o_products_attributes_title text-uppercase d-block my-2"/>
-                                </div>
+                                <h6>
+                                    <b t-field="a.name" class="o_products_attributes_title"/>
+                                </h6>
                                 <t t-if="a.display_type == 'select'">
                                     <select class="custom-select css_attribute_select" name="attrib">
                                         <option value="" />
@@ -520,7 +520,9 @@
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <div t-if="available_min_price != available_max_price" id="o_wsale_price_range_option">
-                <label>Price</label>
+                <label class="m-0 h6 o_products_attributes_title">
+                    <b>Price Range</b>
+                </label>
                 <input type="range" multiple="multiple" class="custom-range range-with-input"
                        t-att-data-currency="pricelist.currency_id.symbol"
                        t-att-data-currency-position="pricelist.currency_id.position"

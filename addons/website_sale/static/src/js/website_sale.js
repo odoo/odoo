@@ -112,8 +112,8 @@ var publicWidget = require('web.public.widget');
 publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     selector: '#o_shop_collapse_category',
     events: {
-        'click .fa-chevron-right': '_onOpenClick',
-        'click .fa-chevron-down': '_onCloseClick',
+        'click .fa-angle-right': '_onOpenClick',
+        'click .fa-angle-down': '_onCloseClick',
     },
 
     //--------------------------------------------------------------------------
@@ -126,9 +126,9 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
      */
     _onOpenClick: function (ev) {
         var $fa = $(ev.currentTarget);
-        $fa.parent().siblings().find('.fa-chevron-down:first').click();
+        $fa.parent().siblings().find('.fa-angle-down:first').click();
         $fa.parents('li').find('ul:first').show('normal');
-        $fa.toggleClass('fa-chevron-down fa-chevron-right');
+        $fa.toggleClass('fa-angle-down fa-angle-right');
     },
     /**
      * @private
@@ -137,7 +137,7 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     _onCloseClick: function (ev) {
         var $fa = $(ev.currentTarget);
         $fa.parent().find('ul:first').hide('normal');
-        $fa.toggleClass('fa-chevron-down fa-chevron-right');
+        $fa.toggleClass('fa-angle-down fa-angle-right');
     },
 });
 });
