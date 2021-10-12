@@ -1965,6 +1965,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         return numpad;
     },
     click_delete_paymentline: function(cid){
+        var self = this;
         var lines = this.pos.get_order().get_paymentlines();
         for ( var i = 0; i < lines.length; i++ ) {
             var line = lines[i];
@@ -1973,12 +1974,20 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 // it is removed, the terminal should get a cancel
                 // request.
                 if (['waiting', 'waitingCard', 'timeout'].includes(lines[i].get_payment_status())) {
-                    line.payment_method.payment_terminal.send_payment_cancel(this.pos.get_order(), cid);
+                    line.set_payment_status('waitingCancel');
+                    this.render_paymentlines();
+                    line.payment_method.payment_terminal.send_payment_cancel(this.pos.get_order(), cid).then(function () {
+                        self.pos.get_order().remove_paymentline(line);
+                        self.reset_input();
+                        self.render_paymentlines();
+                    });
+                }
+                else if (lines[i].get_payment_status() !== 'waitingCancel') {
+                    this.pos.get_order().remove_paymentline(line);
+                    this.reset_input();
+                    this.render_paymentlines();
                 }
 
-                this.pos.get_order().remove_paymentline(line);
-                this.reset_input();
-                this.render_paymentlines();
                 return;
             }
         }

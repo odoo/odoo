@@ -424,6 +424,85 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test("Form dialog replaces the context with _createContext method when specified", async function (assert) {
+        assert.expect(5);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                "partner,false,form":
+                    `<form string="Partner">
+                        <sheet>
+                            <group><field name="foo"/></group>
+                        </sheet>
+                    </form>`,
+            },
+
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.step(JSON.stringify(args.kwargs.context));
+                }
+                return this._super(route, args);
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: "partner",
+            context: { answer: 42 },
+            _createContext: () => ({ dolphin: 64 }),
+        }).open();
+        await testUtils.nextTick();
+
+        assert.notOk($(".modal-body button").length,
+            "should not have any button in body");
+        assert.strictEqual($(".modal-footer button").length, 3,
+            "should have 3 buttons in footer");
+
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        assert.verifySteps(['{"answer":42}', '{"dolphin":64}']);
+        parent.destroy();
+    });
+
+    QUnit.test("Form dialog keeps full context when no _createContext is specified", async function (assert) {
+        assert.expect(5);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                "partner,false,form":
+                    `<form string="Partner">
+                        <sheet>
+                            <group><field name="foo"/></group>
+                        </sheet>
+                    </form>`,
+            },
+
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.step(JSON.stringify(args.kwargs.context));
+                }
+                return this._super(route, args);
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: "partner",
+            context: { answer: 42 }
+        }).open();
+        await testUtils.nextTick();
+
+        assert.notOk($(".modal-body button").length,
+            "should not have any button in body");
+        assert.strictEqual($(".modal-footer button").length, 3,
+            "should have 3 buttons in footer");
+
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        assert.verifySteps(['{"answer":42}', '{"answer":42}']);
+        parent.destroy();
+    });
+
     QUnit.test('SelectCreateDialog: save current search', async function (assert) {
         assert.expect(4);
 

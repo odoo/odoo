@@ -516,7 +516,7 @@ class AccountReconcileModel(models.Model):
             LEFT JOIN res_company company           ON company.id = st_line.company_id
             LEFT JOIN partners_table line_partner   ON line_partner.line_id = st_line.id
             , account_move_line aml
-            LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
+            LEFT JOIN account_move move             ON move.id = aml.move_id
             LEFT JOIN account_account account       ON account.id = aml.account_id
             WHERE st_line.id IN %s
                 AND aml.company_id = st_line.company_id

@@ -2838,6 +2838,7 @@ exports.Order = Backbone.Model.extend({
      * Stops a payment on the terminal if one is running
      */
     stop_electronic_payment: function () {
+        var self = this;
         var lines = this.get_paymentlines();
         var line = lines.find(function (line) {
             var status = line.get_payment_status();
@@ -2847,6 +2848,16 @@ exports.Order = Backbone.Model.extend({
             line.set_payment_status('waitingCancel');
             line.payment_method.payment_terminal.send_payment_cancel(this, line.cid).finally(function () {
                 line.set_payment_status('retry');
+
+                // If stop_electronic_payment is triggered by pressing the back button, and you wait a bit, this
+                // payment status update will happen when on the main screen. If you then press the pay button
+                // again, the payment will be in the retry state as intended, because moving to the payment screen
+                // re-renders the lines. If however after pressing the back button, you immediately press the pay button
+                // again, the state will still update, but the line in the UI won't, because there's nothing triggering a
+                // re-render on it. Hence we do that here.
+                if (self.pos.chrome.gui.current_screen && self.pos.chrome.gui.current_screen.render_paymentlines) {
+                    self.pos.chrome.gui.current_screen.render_paymentlines();
+                }
             });
         }
     },
