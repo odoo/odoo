@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 import { XMLParser } from "../../core/utils/xml";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useModel } from "@web/views/helpers/model";
-import { useDebugMenu } from "../../core/debug/debug_menu";
+import { useSetupView } from "@web/views/helpers/view_hook";
 import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
@@ -44,7 +44,6 @@ export class ListArchParser extends XMLParser {
 class ListView extends owl.Component {
     setup() {
         this.actionService = useService("action");
-        useDebugMenu("view", { component: this });
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
@@ -55,6 +54,8 @@ class ListView extends owl.Component {
         });
 
         this.openRecord = this.openRecord.bind(this);
+
+        useSetupView({ /** TODO **/ });
     }
 
     openRecord(record) {

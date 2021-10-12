@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useDebugMenu } from "../../core/debug/debug_menu";
+import { useSetupView } from "@web/views/helpers/view_hook";
 import { registry } from "../../core/registry";
 import { combineAttributes, XMLParser } from "../../core/utils/xml";
 import { ControlPanel } from "../../search/control_panel/control_panel";
@@ -132,7 +132,6 @@ export class KanbanArchParser extends XMLParser {
 
 class KanbanView extends owl.Component {
     setup() {
-        useDebugMenu("view", { component: this });
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
         const { fields: activeFields, relations, defaultGroupBy } = this.archInfo;
@@ -151,6 +150,8 @@ class KanbanView extends owl.Component {
             { processParams }
         );
         useViewButtons(this.model);
+
+        useSetupView({ /** TODO **/ });
     }
 }
 

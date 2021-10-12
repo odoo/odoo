@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "../../core/domain";
-import { useService } from "../../core/service_hook";
+import { useService } from "../../core/utils/hooks";
 import { Field } from "../../fields/field";
 import { FormCompiler } from "../../views/form/form_compiler";
 import { ViewButton } from "../view_button/view_button";

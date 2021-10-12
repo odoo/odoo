@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { useListener } from "web.custom_hooks";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 function toggleButtonsDisable(el, enable = true) {
