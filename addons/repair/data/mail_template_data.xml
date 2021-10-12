@@ -4,7 +4,7 @@
         <record id="mail_template_repair_quotation" model="mail.template">
             <field name="name">Repair Quotation: Send by email</field>
             <field name="model_id" ref="repair.model_repair_order"/>
-            <field name="subject">{{ object.partner_id.name or '' }} Repair Orders (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="body_html" type="html">
@@ -12,9 +12,6 @@
     <p style="margin: 0px; padding: 0px;font-size: 13px;">
         Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/>
         Here is your repair order <strong t-out="object.name or ''">RO/00004</strong>
-        <t t-if="object.origin">
-            (with reference: <t t-out="object.origin"/> )
-        </t>
         <t t-if="object.invoice_method != 'none'">
             amounting in <strong><t t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$ 100.00</t>.</strong><br/>
         </t>
