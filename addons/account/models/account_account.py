@@ -521,7 +521,7 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True)
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()
-    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
 
     _sql_constraints = [
         (
@@ -628,7 +628,7 @@ class AccountGroup(models.Model):
                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
                    AND agroup.company_id = account.company_id
-                 WHERE account.company_id IN %(company_ids)s {where_account}
+                 WHERE (account.company_id IN %(company_ids)s OR account.company_id IS NULL) {where_account}
             )
             UPDATE account_account account
                SET group_id = relation.group_id
@@ -637,7 +637,7 @@ class AccountGroup(models.Model):
         """.format(
             where_account=account_ids and 'AND account.id IN %(account_ids)s' or ''
         )
-        self.env.cr.execute(query, {'company_ids': tuple((self.company_id or account_ids.company_id).ids), 'account_ids': account_ids and tuple(account_ids.ids)})
+        self.env.cr.execute(query, {'company_ids': tuple((self or account_ids).company_id.ids), 'account_ids': account_ids and tuple(account_ids.ids)})
         self.env['account.account'].invalidate_cache(fnames=['group_id'])
 
     def _adapt_parent_account_group(self):
