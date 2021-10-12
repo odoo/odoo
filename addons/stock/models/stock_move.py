@@ -651,7 +651,7 @@ class StockMove(models.Model):
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
-            self.next_serial = self.env['stock.production.lot'].get_next_serial(self.company_id, self.product_id)
+            self.next_serial = self.env['stock.production.lot']._get_next_serial(self.company_id, self.product_id)
 
         return {
             'name': _('Detailed Operations'),
