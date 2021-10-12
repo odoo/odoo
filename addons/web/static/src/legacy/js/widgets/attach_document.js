@@ -3,6 +3,7 @@ odoo.define('web.AttachDocument', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
+var {Markup} = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
@@ -64,9 +65,8 @@ var AttachDocument = Widget.extend({
         warnings.push('</ul>');
         this.displayNotification({
             title: _t("Invalid fields:"),
-            message: warnings.join(''),
+            message: Markup(warnings.join('')),
             type: 'danger',
-            messageIsHtml: true, // dynamic parts of the message are escaped above
         });
      },
 
