@@ -160,33 +160,37 @@
 
         <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
 
-        <form action="/shop/cart/update" method="post" class="card oe_product_cart"
+        <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
             itemscope="itemscope" itemtype="http://schema.org/Product">
-            <a class="o_product_link css_editable_mode_hidden" t-att-href="product_href"/>
-            <div class="card-body p-1 oe_product_image">
+            <!-- <a class="o_product_link css_editable_mode_hidden" t-att-href="product_href"/> -->
+            <div class="oe_product_image position-relative h-100 flex-grow-0">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                <a t-att-href="product_href" class="d-block h-100" itemprop="url">
+                <a t-att-href="product_href" class="oe_product_image_link d-block h-100 position-relative" itemprop="url" contenteditable="false">
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256', 'itemprop': 'image'}"
-                        class="d-flex h-100 justify-content-center align-items-center"/>
+                        t-options="{'widget': 'image', 'preview_image': 'image_1024', 'itemprop': 'image', 'class': 'h-100 w-100'}"
+                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
                 </a>
             </div>
-            <div class="card-body p-0 o_wsale_product_information">
-                <div class="p-2 o_wsale_product_information_text">
-                    <h6 class="o_wsale_products_item_title mb-1">
+            <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
+                <div class="o_wsale_product_information_text flex-grow-1">
+                    <h6 class="o_wsale_products_item_title mb-2">
                         <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         <a role="button" t-if="not product.website_published" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h6>
-                    <div class="product_price mb-1" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                        <span class="h5" t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <del t-attf-class="text-danger ml-1 h6 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                </div>
+                <div class="o_wsale_product_sub d-flex justify-content-between align-items-end pb-1">
+                    <div class="o_wsale_product_btn"/>
+                    <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                        <del t-attf-class="text-muted mr-1 h6 mb-0 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;">
+                            <em class="small" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                        </del>
+                        <span class="h6 mb-0" t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                         <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
                 </div>
-                <div class="o_wsale_product_btn pl-2"/>
             </div>
             <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
             <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
@@ -196,8 +200,8 @@
     </template>
 
     <template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
-        <xpath expr="//*[hasclass('product_price')]" position="after">
-            <div class="oe_subdescription" contenteditable="false">
+        <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
+            <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
                 <div itemprop="description" t-field="product.description_sale"/>
             </div>
         </xpath>
@@ -296,10 +300,8 @@
                                                         t-att-rowspan="td_product['y'] != 1 and td_product['y']"
                                                         t-attf-class="oe_product"
                                                         t-att-data-ribbon-id="td_product['ribbon'].id">
-                                                        <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                            <t t-call="website_sale.products_item">
-                                                                <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
-                                                            </t>
+                                                        <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                            <t t-call="website_sale.products_item"/>
                                                         </div>
                                                     </td>
                                                 </t>
@@ -333,10 +335,44 @@
         </t>
     </template>
 
-    <!-- (Option) Products: Enable image full for all products : Images Full -->
-    <template id="products_images_full" name="Images Full" inherit_id="website_sale.products" active="False" customize_show="True">
-        <xpath expr="//t[@t-foreach='tr_product']//td" position="attributes">
-            <attribute name="t-attf-class" add="oe_image_full" separator=" "/>
+    <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
+    <template id="products_design_card" name="Card Design" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_design_cards" separator=" "/>
+        </xpath>
+    </template>
+    <template id="products_design_thumbs" name="Thumbnails Design" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_design_thumbs" separator=" "/>
+        </xpath>
+    </template>
+    <template id="products_design_grid" name="Grid Design" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_design_grid" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- (Options) Products: Define products' default image ratio -->
+    <template id="products_thumb_4_3" name="thumb_4_3" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_context_thumb_4_3" separator=" "/>
+        </xpath>
+    </template>
+    <template id="products_thumb_4_5" name="thumb_4_5" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_context_thumb_4_5" separator=" "/>
+        </xpath>
+    </template>
+    <template id="products_thumb_2_3" name="thumb_2_3" inherit_id="website_sale.products" active="False">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_context_thumb_2_3" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- (Option) Products: Define products' images filling mode -->
+    <template id="products_thumb_cover" name="thumb_cover" inherit_id="website_sale.products" active="True">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_wsale_context_thumb_cover" separator=" "/>
         </xpath>
     </template>
 
@@ -370,7 +406,7 @@
 
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_header')]" position="inside">
-            <div class="btn-group btn-group-toggle ml-3 mb-2 d-none d-sm-inline-flex o_wsale_apply_layout" data-toggle="buttons">
+            <div class="btn-group btn-group-toggle ml-3 mb-2 d-inline-flex o_wsale_apply_layout" data-toggle="buttons">
                 <label t-attf-class="btn btn-light border-0 #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid">
                     <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode != 'list' else None"/>
                 </label>

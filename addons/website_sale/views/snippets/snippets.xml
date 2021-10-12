@@ -23,6 +23,54 @@
                     <we-button t-att-data-set-default-sort="query_and_label[0]"><t t-esc="query_and_label[1]"/></we-button>
                 </t>
             </we-select>
+            <we-select string="Design">
+                <we-button data-select-class=""
+                           data-customize-website-views="">
+                           Default
+                </we-button>
+                <we-button data-select-class="o_wsale_design_cards"
+                           data-customize-website-views="website_sale.products_design_card">
+                           Cards
+                </we-button>
+                <we-button data-select-class="o_wsale_design_thumbs"
+                           data-customize-website-views="website_sale.products_design_thumbs">
+                           Thumbnails
+                </we-button>
+                <we-button data-select-class="o_wsale_design_grid"
+                           data-customize-website-views="website_sale.products_design_grid">
+                           Grid
+                </we-button>
+            </we-select>
+            <we-select string="Images Height">
+                <we-button data-select-class="o_wsale_context_thumb_4_3"
+                           data-customize-website-views="website_sale.products_thumb_4_3">
+                           Landscape (4/3)
+                </we-button>
+                <we-button data-select-class=""
+                           data-customize-website-views="">
+                           Default (1/1)
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_4_5"
+                           data-customize-website-views="website_sale.products_thumb_4_5">
+                           Portrait (4/5)
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_2_3"
+                           data-customize-website-views="website_sale.products_thumb_2_3">
+                           Vertical (2/3)
+                </we-button>
+            </we-select>
+            <we-button-group string=" ⌙ Fill" data-variable="thumb_size">
+                <we-button data-select-class=""
+                           data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                           data-customize-website-views="">
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_cover"
+                           data-name="thumb_cover"
+                           data-variable="thumb_cover"
+                           data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                           data-customize-website-views="website_sale.products_thumb_cover">
+                </we-button>
+            </we-button-group>
         </div>
 
         <div data-js="WebsiteSaleProductsItem"
