@@ -881,6 +881,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var questionTimeLimitReached = $timerData.data('questionTimeLimitReached');
         var timeLimitMinutes = $timerData.data('timeLimitMinutes');
         var hasAnswered = $timerData.data('hasAnswered');
+        const serverTime = $timerData.data('serverTime');
 
         if (!questionTimeLimitReached && !hasAnswered && timeLimitMinutes) {
             var timer = $timerData.data('timer');
@@ -889,6 +890,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             });
             this.$('.o_survey_timer_container').append($timer);
             this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
+                'serverTime': serverTime,
                 'timer': timer,
                 'timeLimitMinutes': timeLimitMinutes
             });

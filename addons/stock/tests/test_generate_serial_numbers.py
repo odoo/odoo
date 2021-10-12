@@ -295,6 +295,7 @@ class StockGenerate(SavepointCase):
             self.assertEqual(move_line.qty_done, 1)
             # The location dest must be now the one from the putaway.
             self.assertEqual(move_line.location_dest_id.id, shelf_location.id)
+
     def test_set_multiple_lot_name_01(self):
         """ Sets five SN in one time in stock move view form, then checks move
         has five new move lines with the right `lot_name`.

@@ -1748,7 +1748,13 @@ class MrpProduction(models.Model):
                     duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
                         ('move_id.unbuild_id', '!=', False)
                     ])
-                    if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                    removed = self.env['stock.move.line'].search_count([
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('state', '=', 'done'),
+                        ('location_dest_id.scrap_location', '=', True)
+                    ])
+                    # Either removed or unbuild
+                    if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
@@ -1784,7 +1790,13 @@ class MrpProduction(models.Model):
                     duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
                             ('move_id.unbuild_id', '!=', False)
                         ])
-                    if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
+                    removed = self.env['stock.move.line'].search_count([
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('state', '=', 'done'),
+                        ('location_dest_id.scrap_location', '=', True)
+                    ])
+                    # Either removed or unbuild
+                    if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line

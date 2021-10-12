@@ -90,6 +90,12 @@ msgid ""
 "recording time on this project are not linked to any Sales Order Item. This "
 "means that their time will be considered as non-billable.\"/>"
 msgstr ""
+"<i class=\"ml-2 fa fa-exclamation-triangle text-danger small\" role=\"img\" "
+"title=\"Some of the employees who are recording time on this project are not"
+" linked to any Sales Order Item. This means that their time will be "
+"considered as non-billable.\" aria-label=\"Some of the employees who are "
+"recording time on this project are not linked to any Sales Order Item. This "
+"means that their time will be considered as non-billable.\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -109,6 +115,9 @@ msgid ""
 "                                                                Non Billable Timesheets\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
+"                                                                Жодного табелю для виставлення у рахунку\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -308,7 +317,7 @@ msgstr "Залиште або встановіть як виконано"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "За типом виставлення у рахунку"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -464,7 +473,7 @@ msgstr "Обслуговування клієнтів (Передплачені 
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
 msgid "Invoice Tasks to"
-msgstr ""
+msgstr "Виставити завдання у рахунку"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -493,17 +502,17 @@ msgstr "Витрачені дні"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Days recorded"
-msgstr ""
+msgstr "Записані дні"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr ""
+msgstr "Елемент замовлення на продаж за замовчуванням"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Service"
-msgstr ""
+msgstr "Послуга за замовчуванням"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
@@ -514,7 +523,7 @@ msgstr "Опис"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_create_order
 msgid "Display Create Order"
-msgstr ""
+msgstr "Відобразити створення замовлення"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
@@ -563,7 +572,7 @@ msgstr "Співробітник"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Ставка співробітника"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -592,7 +601,7 @@ msgstr "Фіксована ціна послуг "
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr ""
+msgstr "Ставка проекту"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -624,7 +633,7 @@ msgstr "Витрачені години"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded"
-msgstr ""
+msgstr "Записані години"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
@@ -1252,6 +1261,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Виберіть оплачуваний проект, за яким можна створювати завдання. Це "
+"налаштування потрібно встановити для кожної компанії."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
@@ -1260,6 +1271,8 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Виберіть оплачуваний проект, який буде скелетом нового створеного проекту "
+"під час продажу поточного товару. Його етапи та завдання будуть дублюватися."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id

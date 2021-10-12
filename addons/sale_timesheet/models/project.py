@@ -205,6 +205,7 @@ class ProjectTask(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     bill_type = fields.Selection(related="project_id.bill_type")
     pricing_type = fields.Selection(related="project_id.pricing_type")
+    sale_line_id = fields.Many2one(domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), '|', ('project_id.bill_type', '=', 'customer_task'), ('order_id', '=?', project_sale_order_id)]")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")

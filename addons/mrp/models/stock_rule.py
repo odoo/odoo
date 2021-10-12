@@ -89,7 +89,11 @@ class StockRule(models.Model):
                 # Create now the procurement group that will be assigned to the new MO
                 # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
                 # rather than the original record (MO or SO)
-                procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
+                group = procurement.values.get('group_id')
+                if group:
+                    procurement.values['group_id'] = group.copy({'name': name})
+                else:
+                    procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
         return super()._run_pull(procurements)
 
     def _get_custom_move_fields(self):

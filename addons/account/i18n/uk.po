@@ -4416,7 +4416,7 @@ msgstr "Дата"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_resequence_wizard__first_date
 msgid "Date (inclusive) from which the numbers are resequenced."
-msgstr ""
+msgstr "Дата (включно), з якої починається послідовність номерів."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_resequence_wizard__end_date
@@ -4424,6 +4424,8 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
+"Дата (включно), до якої будуть номери послідовності. Якщо не встановлено, "
+"усі записи журналу до кінця періоду переупорядковуються."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
@@ -4617,6 +4619,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
+"Визначте, в яких журналах можна використовувати цей обліковий запис. Якщо "
+"він порожній, його можна використовувати у всіх журналах."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4766,6 +4770,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
 msgid "Digitalize your vendor bills with OCR and Artificial Intelligence."
 msgstr ""
+"Оцифруйте рахунки постачальників за допомогою OCR та штучного інтелекту."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9417,12 +9422,12 @@ msgstr "Переглянути зміни"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__preview_move_data
 msgid "Preview Move Data"
-msgstr ""
+msgstr "Переглянути даних переміщення"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
 msgid "Preview Moves"
-msgstr ""
+msgstr "Переглянути переміщення"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -9432,7 +9437,7 @@ msgstr "Попередній перегляд у PDF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
 msgid "Previous Statement"
-msgstr ""
+msgstr "Попередня виписка"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9472,7 +9477,7 @@ msgstr "Друк чеків на оплату вашим постачальни�
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__posted
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Processing"
-msgstr ""
+msgstr "Оброблення"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -9547,6 +9552,8 @@ msgid ""
 "Programmation Error: Can't call _get_writeoff_suggestion_query() for "
 "different rules than 'writeoff_suggestion'"
 msgstr ""
+"Помилка програмування: не можна викликати _get_writeoff_suggestion_query() "
+"для інших правил 'writeoff_suggestion'"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -9617,12 +9624,12 @@ msgstr "Імпорт QIF"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "QR-код"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr ""
+msgstr "QR-коди"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__qr_code
@@ -9650,7 +9657,7 @@ msgstr "Кількість:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
-msgstr ""
+msgstr "Повторна послідовність"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -9704,7 +9711,7 @@ msgstr "Отримати гроші"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr ""
+msgstr "Банк одержувача"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -9720,7 +9727,7 @@ msgstr "Одержувачі"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
-msgstr ""
+msgstr "Дата узгодження"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -9730,7 +9737,7 @@ msgstr "Перерахувати рядок податку"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line_template
 msgid "Reconcile Model Line Template"
-msgstr ""
+msgstr "Узгодити шаблон рядка моделі"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
@@ -9746,7 +9753,7 @@ msgstr "Узгоджено"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr ""
+msgstr "Узгоджені рахунки постачальника"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9761,7 +9768,7 @@ msgstr "Узгоджені рахунки"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_ids
 msgid "Reconciled Statements"
-msgstr ""
+msgstr "Узгоджені виписки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -9894,12 +9901,12 @@ msgstr "Пов'язана модель документа"
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr ""
+msgstr "Переробіть послідовність записів журналу."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
 msgid "Reorder by accounting date"
-msgstr ""
+msgstr "Перезамовити за датою бухобліку "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
@@ -11028,7 +11035,7 @@ msgstr "Початкова дата"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Почніть перевірку даних вашої компанії."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
