@@ -137,11 +137,29 @@ class Channel(models.Model):
         'mail.thread', 'rating.mixin',
         'mail.activity.mixin',
         'image.mixin',
+        'website.cover_properties.mixin',
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
     ]
     _order = 'sequence, id'
+
+    def _default_cover_properties(self):
+        """ Cover properties defaults are overridden to keep a consistent look for the slides
+        channels headers across Odoo versions (pre-customization, with purple gradient fitting the
+        homepage images, etc). Furthermore, as adding padding to the cover would not look great,
+        its height is set to fit to content (snippet option to change this also disabled on the view)."""
+        res = super()._default_cover_properties()
+        res.update({
+            "background_color_class": "o_cc3",
+            'background_color_style': (
+                'background-color: rgba(0, 0, 0, 0); '
+                'background-image: linear-gradient(120deg, #875A7B, #78516F);'
+            ),
+            'opacity': '0',
+            'resize_class': 'cover_auto'
+        })
+        return res
 
     def _default_access_token(self):
         return str(uuid.uuid4())

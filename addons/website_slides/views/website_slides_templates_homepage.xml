@@ -6,9 +6,10 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%" data-snippet="s_banner">
+            <div class="oe_structure oe_empty">
+            <section class="s_banner overflow-hidden" style="background-color:(0, 0, 0, 0); background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%" data-snippet="s_banner">
                 <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
-                    <div>
+                    <div class="text-white">
                         <h1 class="display-3 mb-0">Reach new heights</h1>
                         <h2 class="mb-4">Start your online course today!</h2>
                         <div class="row mt-1 mb-3">
@@ -19,6 +20,7 @@
                     </div>
                 </div>
             </section>
+            </div>
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: white!important">
                     <t t-call="website.website_search_box_input">
@@ -170,13 +172,25 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%" data-snippet="s_banner">
-                <div class="container py-5">
-                    <h1 t-if="search_my" class="display-3 mb-0">My Courses</h1>
-                    <h1 t-elif="search_slide_category=='certification'" class="display-3 mb-0">Certifications</h1>
-                    <h1 t-else="" class="display-3 mb-0">All Courses</h1>
-                </div>
-            </section>
+            <!-- Repeat structure for every section to allow customization through website editor. !-->
+            <div class="oe_structure oe_empty" t-if="search_my">
+                <section class="s_banner" data-snippet="s_banner"
+                         style="background-color:(0, 0, 0, 0); background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
+                    <div class="container py-5"><h1 class="display-3 mb-0 text-white">My Courses</h1></div>
+                </section>
+            </div>
+            <div class="oe_structure oe_empty" t-elif="search_slide_category == 'certification'">
+               <section class="s_banner" data-snippet="s_banner"
+                        style="background-color:(0, 0, 0, 0); background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
+                    <div class="container py-5"><h1 class="display-3 mb-0 text-white">Certifications</h1></div>
+                </section>
+            </div>
+            <div class="oe_structure oe_empty" t-else="">
+                <section class="s_banner" data-snippet="s_banner"
+                         style="background-color:(0, 0, 0, 0); background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
+                    <div class="container py-5"><h1 class="display-3 mb-0 text-white">All Courses</h1></div>
+                </section>
+            </div>
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
                 <nav class="navbar navbar-expand-md navbar-light shadow-sm pl-0" style="background: white!important">
@@ -321,7 +335,7 @@
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
             <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
-            <div t-else="" class="o_wslides_gradient card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
+            <div t-else="" class="o_wslides_card_default_background card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
                 <i class="fa fa-graduation-cap fa-2x mr-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
             </div>
         </a>

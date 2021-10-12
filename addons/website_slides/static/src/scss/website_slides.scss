@@ -33,9 +33,6 @@ $truncate-limits: 2, 3, 10;
 
 // Common to new slides pages
 // **************************************************
-.o_wslides_gradient {
-    background-image: linear-gradient(120deg, #875A7B, darken(#875A7B, 10%));
-}
 
 .o_wslides_course_pict {
     @include size(100%);
@@ -209,6 +206,10 @@ $truncate-limits: 2, 3, 10;
 
 }
 
+.o_wslides_card_default_background {
+    background-color: $o-wslides-color-bg;  // same as body
+}
+
 // New home page
 // **************************************************
 .o_wslides_home_main {
@@ -321,22 +322,26 @@ $truncate-limits: 2, 3, 10;
 
     .o_wslides_course_nav_search {
         border-width: 0 1px;
+
+        button, button:hover, input, input::placeholder {
+            // Resolves into the color chosen for slide channel description through cover customization
+            color: inherit;
+            opacity: 0.8;
+        }
     }
 
-    .breadcrumb-item, .breadcrumb-item.active{
+    .breadcrumb-item {
         --max-lines: 2;
         position: relative;
         max-height: calc(1.4rem * var(--max-lines));
         overflow: hidden;
         text-overflow: ellipsis;
-    }
 
-    .breadcrumb-item.active a, .breadcrumb-item a:hover{
-        color: white;
-    }
-
-    .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before, .o_wslides_course_nav_search input::placeholder {
-        color: rgba(white, 0.8);
+        a, a:hover, + .breadcrumb-item::before {
+            // Resolves into the color chosen for slide channel description through cover customization
+            color: inherit;
+            opacity: 0.8;
+        }
     }
 }
 
@@ -344,6 +349,9 @@ $truncate-limits: 2, 3, 10;
 .o_wslides_course_header {
     @include media-breakpoint-up(md)  {
         @include o-wslides-header-bar();
+    }
+    .o_wslides_header_text {
+        color:inherit;
     }
 }
 
@@ -543,7 +551,7 @@ $truncate-limits: 2, 3, 10;
                 right: 5px;
             }
 
-            .o_wslides_gradient {
+            .o_wslides_quiz_success_image {
                 width: 42%;
             }
         }
