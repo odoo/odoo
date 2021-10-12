@@ -91,10 +91,10 @@ class ResPartner(models.Model):
                 if fragment:
                     query['redirect'] = base + werkzeug.urls.url_encode(fragment)
 
-            url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
+            signup_url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
             if not self.env.context.get('relative_url'):
-                url = werkzeug.urls.url_join(base_url, url)
-            res[partner.id] = url
+                signup_url = werkzeug.urls.url_join(base_url, signup_url)
+            res[partner.id] = signup_url
 
         return res
 
