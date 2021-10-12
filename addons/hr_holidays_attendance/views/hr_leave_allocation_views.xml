@@ -31,8 +31,7 @@
                 <attribute name="invisible">1</attribute>
             </div>
             <xpath expr="//field[@name='holiday_status_id']" position="attributes">
-                <attribute name="domain">[('has_valid_allocation', '=', True), ('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes'),
-                    ('employee_requests', '=', 'no')]</attribute>
+                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]</attribute>
                 <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
             </xpath>
             <xpath expr="//sheet" position="after">
@@ -51,7 +50,7 @@
         <field name="priority">70</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='holiday_status_id']" position="attributes">
-                <attribute name="domain">[('has_valid_allocation', '=', True), ('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]</attribute>
+                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]</attribute>
             </xpath>
         </field>
     </record>
