@@ -126,7 +126,7 @@
 
         <record model="ir.actions.act_window" id="account_analytic_line_action">
             <field name="context">{'search_default_group_date': 1, 'default_account_id': active_id}</field>
-            <field name="domain">[('account_id','=', active_id)]</field>
+            <field name="domain">[('account_id','=', active_id), ('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]</field>
             <field name="name">Costs &amp; Revenues</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
