@@ -12,8 +12,8 @@
                         <li class="breadcrumb-item">
                             <a href="/slides">Courses</a>
                         </li>
-                        <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('active' if not slide else '')" />
-                        <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_category and not slide else '')">
+                        <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('font-weight-bold' if not slide else '')" />
+                        <li t-att-class="'breadcrumb-item %s' % ('font-weight-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
                             <a t-att-href="'/slides/%s' % slug(channel)"><span t-esc="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
@@ -28,7 +28,7 @@
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category">
                             <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)"><span t-esc="slide_categories[search_slide_category]"/></a>
                         </li>
-                        <li t-if="slide" class="breadcrumb-item active">
+                        <li t-if="slide" class="breadcrumb-item font-weight-bold">
                             <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name"/></a>
                         </li>
                     </ol>
@@ -38,8 +38,8 @@
                     <!-- search -->
                     <t t-call="website.website_search_box_input">
                         <t t-set="_classes" t-valuef="o_wslides_course_nav_search ml-1 position-relative"/>
-                        <t t-set="_input_classes" t-valuef="border-0 rounded-0 bg-transparent text-white"/>
-                        <t t-set="_submit_classes" t-valuef="btn-link text-white rounded-0 pr-1"/>
+                        <t t-set="_input_classes" t-valuef="border-0 rounded-0 bg-transparent"/>
+                        <t t-set="_submit_classes" t-valuef="btn-link rounded-0 pr-1"/>
                         <t t-set="search_type" t-valuef="slides"/>
                         <t t-set="action" t-valuef="/slides/all"/>
                         <t t-set="display_description" t-valuef="true"/>
@@ -110,53 +110,58 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" t-attf-class="wrap mt-0">
-            <div t-attf-class="o_wslides_course_header o_wslides_gradient position-relative text-white pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
-                <t t-call="website_slides.course_nav"/>
-
-                <div class="container mt-5 mt-md-3 mt-xl-4">
-                    <div class="row align-items-end align-items-md-stretch">
-                        <!-- ==== Header Left ==== -->
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <div class="d-flex align-items-end justify-content-around h-100">
-                                <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
-                                <div t-else="" class="h-100">
-                                    <img t-att-src="'/website_slides/static/src/img/channel-%s-default.jpg' % ('training' if channel.channel_type == 'training' else 'documentation')"
-                                        class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"/>
+            <div class="oe_structure oe_empty" t-call="website.record_cover">
+                <t t-set="_record" t-value="channel"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="use_size" t-value="True"/>
+                <t t-set="use_text_align" t-value="True"/>
+                <div t-attf-class="o_wslides_course_header position-relative pb-md-0 pt-2 pt-md-5 #{'pb-3' if channel.channel_type == 'training' else 'o_wslides_course_doc_header pb-5'}">
+                    <t t-call="website_slides.course_nav"/>
+                    <div class="container mt-5 mt-md-3 mt-xl-4">
+                        <div class="row align-items-end align-items-md-stretch">
+                            <!-- ==== Header Left ==== -->
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <div class="d-flex align-items-end justify-content-around h-100">
+                                    <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
+                                    <div t-else="" class="h-100">
+                                        <img t-att-src="'/website_slides/static/src/img/channel-%s-default.jpg' % ('training' if channel.channel_type == 'training' else 'documentation')"
+                                            class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- ==== Header Right ==== -->
-                        <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
-                            <div class="d-flex flex-column">
-                                <h1 t-field="channel.name"/>
-                                <div class="mb-0 mb-xl-3" t-field="channel.description"/>
+                            <!-- ==== Header Right ==== -->
+                            <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+                                <div class="d-flex flex-column">
+                                    <h1 t-field="channel.name"/>
+                                    <div class="mb-0 mb-xl-3" t-field="channel.description"/>
 
-                                <div t-if="channel.channel_type == 'documentation'" class="d-flex mb-md-5">
-                                    <button role="button" class="btn text-white pl-0" title="Share Channel"
-                                        aria-label="Share Channel"
-                                        data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
-                                        <i class="fa fa-share-square"></i> Share
-                                    </button>
+                                    <div t-if="channel.channel_type == 'documentation'" class="d-flex mb-md-5">
+                                        <button role="button" class="btn text-white pl-0" title="Share Channel"
+                                            aria-label="Share Channel"
+                                            data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
+                                            <i class="fa fa-share-square"></i> Share
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5" t-if="channel.allow_comment">
-                                <t t-call="portal_rating.rating_stars_static_popup_composer">
-                                    <t t-set="rating_avg" t-value="rating_avg"/>
-                                    <t t-set="rating_count" t-value="rating_count"/>
-                                    <t t-set="object" t-value="channel"/>
-                                    <t t-set="token" t-value="channel.access_token"/>
-                                    <t t-set="hash" t-value="message_post_hash"/>
-                                    <t t-set="pid" t-value="message_post_pid"/>
-                                    <t t-set="default_message" t-value="last_message"/>
-                                    <t t-set="default_message_id" t-value="last_message_id"/>
-                                    <t t-set="default_rating_value" t-value="last_rating_value"/>
-                                    <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
-                                    <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
-                                    <t t-set="rate_with_void_content" t-value="True"/>
-                                    <t t-set="disable_composer" t-value="not channel.can_review"/>
-                                    <t t-set="_link_btn_classes" t-value="'btn-sm btn-link text-white mx-3'"/>
-                                </t>
+                                <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5" t-if="channel.allow_comment">
+                                    <t t-call="portal_rating.rating_stars_static_popup_composer">
+                                        <t t-set="rating_avg" t-value="rating_avg"/>
+                                        <t t-set="rating_count" t-value="rating_count"/>
+                                        <t t-set="object" t-value="channel"/>
+                                        <t t-set="token" t-value="channel.access_token"/>
+                                        <t t-set="hash" t-value="message_post_hash"/>
+                                        <t t-set="pid" t-value="message_post_pid"/>
+                                        <t t-set="default_message" t-value="last_message"/>
+                                        <t t-set="default_message_id" t-value="last_message_id"/>
+                                        <t t-set="default_rating_value" t-value="last_rating_value"/>
+                                        <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
+                                        <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                                        <t t-set="rate_with_void_content" t-value="True"/>
+                                        <t t-set="disable_composer" t-value="not channel.can_review"/>
+                                        <t t-set="_link_btn_classes" t-value="'btn-sm btn-link mx-3 o_wslides_header_text'"/>
+                                    </t>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -757,9 +762,9 @@
         </t>
         <t t-else="">
             <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name">
-                <div class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
+                <div class="o_wslides_card_default_background card-img-top border-bottom" t-attf-style="padding-top: 50%;"/>
             </a>
-            <div t-else="" class="card-img-top border-bottom o_wslides_gradient" t-attf-style="padding-top: 50%;"/>
+            <div t-else="" class="o_wslides_card_default_background card-img-top border-bottom" t-attf-style="padding-top: 50%;"/>
         </t>
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 

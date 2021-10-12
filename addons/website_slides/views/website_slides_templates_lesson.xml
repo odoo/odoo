@@ -6,39 +6,47 @@
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
-            <div class="o_wslides_lesson_header o_wslides_gradient position-relative text-white pb-0 pt-2 pt-md-5">
-                <t t-call="website_slides.course_nav">
-                    <t t-set="channel" t-value="slide.channel_id"/>
-                </t>
-                <div class="container o_wslides_lesson_header_container mt-5 mt-md-3 mt-xl-4">
-                    <div class="row align-items-end align-items-md-stretch">
-                        <div t-attf-class="col-12 col-lg-9 d-flex flex-column #{'offset-lg-3' if slide.channel_id.channel_type == 'training' else ''}">
-                            <h2 class="font-weight-medium w-100">
-                                <a t-att-href="'/slides/%s' % (slug(slide.channel_id))" class="text-white text-decoration-none" t-field="slide.channel_id.name"/>
-                                <t t-if="slide.channel_id.completed">
-                                    <small><span class="badge badge-pill badge-success pull-right my-1 py-1 px-2 font-weight-normal"><i class="fa fa-check"/> Completed</span></small>
-                                </t>
-                            </h2>
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="slide.channel_id"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="use_size" t-value="True"/>
+                <t t-set="use_text_align" t-value="True"/>
 
-                            <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
-                                <span class="font-weight-normal">Last update:</span>
-                                <t t-esc="slide.date_published" t-options="{'widget': 'date'}"/>
-                            </div>
-
-                            <div t-else="" t-if="not slide.channel_id.completed" class="d-flex align-items-center pb-3">
-                                <div class="progress w-50 bg-black-25" style="height: 10px;">
-                                    <div class="progress-bar rounded-left" role="progressbar"
-                                        t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
-                                        t-attf-style="width: #{slide.channel_id.completion}%;">
-                                    </div>
+                <div class="o_wslides_lesson_header position-relative pb-0 pt-2 pt-md-5">
+                    <t t-call="website_slides.course_nav">
+                        <t t-set="channel" t-value="slide.channel_id"/>
+                    </t>
+                    <div class="container o_wslides_lesson_header_container mt-5 mt-md-3 mt-xl-4">
+                        <div class="row align-items-md-stretch">
+                            <div t-attf-class="col-12 col-sm-9 d-flex flex-column #{'col-lg-6 offset-lg-3' if slide.channel_id.channel_type == 'training' else ''}">
+                                <h2 class="font-weight-medium w-100">
+                                    <a t-att-href="'/slides/%s' % (slug(slide.channel_id))" class="text-white text-decoration-none" t-field="slide.channel_id.name"/>
+                                </h2>
+                                <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
+                                    <span class="font-weight-normal">Last update:</span>
+                                    <t t-esc="slide.date_published" t-options="{'widget': 'date'}"/>
                                 </div>
-                                <i t-att-class="'fa fa-trophy m-0 ml-2 p-0 %s' % ('text-warning' if slide.channel_id.completed else 'text-black-50')"></i>
-                                <small class="ml-2 text-white-50"><t t-esc="slide.channel_id.completion"/> %</small>
+
+                                <div t-else="" t-if="not slide.channel_id.completed" class="d-flex align-items-center pb-3">
+                                    <div class="progress w-50 bg-black-25" style="height: 10px;">
+                                        <div class="progress-bar rounded-left" role="progressbar"
+                                            t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
+                                            t-attf-style="width: #{slide.channel_id.completion}%;">
+                                        </div>
+                                    </div>
+                                    <i t-att-class="'fa fa-trophy m-0 ml-2 p-0 %s' % ('text-warning' if slide.channel_id.completed else 'text-black-50')"></i>
+                                    <small class="ml-2 text-white-50"><t t-esc="slide.channel_id.completion"/> %</small>
+                                </div>
+                            </div>
+                            <div t-if="slide.channel_id.completed" class="col-12 col-sm-3">
+                                <h2>
+                                    <small><span class="badge badge-pill badge-success font-weight-normal"><i class="fa fa-check"/> Completed</span></small>
+                                </h2>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </t>
             <div class="container o_wslides_lesson_main">
                 <div class="row">
                     <div t-attf-class="o_wslides_lesson_aside col-lg-3 #{'order-2' if slide.channel_id.channel_type == 'documentation' else ''}">
@@ -94,7 +102,7 @@
         <t t-set="slide_image" t-value="website.image_url(aside_slide, 'image_1024')"/>
 
         <div t-if="aside_slide.image_1024" class="flex-shrink-0 mr-1 border" t-attf-style="width: 20%; padding-top: 20%; background-image: url(#{slide_image}); background-size: cover; background-position:center"/>
-        <div t-else="" class="o_wslides_gradient flex-shrink-0 mr-1" t-attf-style="width: 20%; padding-top: 20%;"/>
+        <div t-else="" class="o_wslides_card_default_background flex-shrink-0 mr-1" t-attf-style="width: 20%; padding-top: 20%;"/>
         <div class="overflow-hidden d-flex flex-column justify-content-start">
             <h6 t-esc="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
             <small class="text-600">
