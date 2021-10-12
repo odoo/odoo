@@ -60,8 +60,6 @@
 
         <record id="product.product_product_4" model="product.product">
             <field name="is_published" eval="True"/>
-            <field name="website_size_x">2</field>
-            <field name="website_size_y">2</field>
             <field name="website_sequence">9950</field>
             <field name="website_description" type="html">
                 <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_text_image" data-name="Text - Image">
@@ -691,7 +689,7 @@
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="invoice_policy">delivery</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.png"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
         </record>
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
