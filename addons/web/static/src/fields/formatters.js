@@ -128,7 +128,7 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = value.toFixed(precision || 2).split(".");
+    const formatted = (value || 0).toFixed(precision || 2).split(".");
     formatted[0] = insertThousandsSep(+formatted[0], thousandsSep, grouping);
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");

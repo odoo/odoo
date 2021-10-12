@@ -23,6 +23,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("formatFloat", function (assert) {
         assert.strictEqual(formatFloat(false), "");
+        assert.strictEqual(formatFloat(null), '0.00');
         assert.strictEqual(formatFloat(1000000), "1,000,000.00");
 
         let options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
