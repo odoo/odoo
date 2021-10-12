@@ -121,12 +121,12 @@ class TestMailRender(common.MailCommon):
             'value': cls.base_qweb_bits_fr[0],
         })
         cls.env['ir.translation'].create({
-            'type': 'model',
+            'type': 'model_terms',
             'name': 'mail.template,body_html',
             'lang': 'fr_FR',
             'res_id': cls.test_template.id,
-            'src': cls.test_template.body_html,
-            'value': cls.base_qweb_bits_fr[1],
+            'src': "Hello",
+            'value': "Bonjour",
         })
         cls.env['ir.model.data'].create({
             'name': 'test_template_xmlid',
