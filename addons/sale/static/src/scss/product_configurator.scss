@@ -55,21 +55,15 @@
 .css_quantity {
     width: initial; // We don't want the quantity form to be full-width
 
-    .btn {
-        background: gray('200');
-        color: theme-color('primary');
-        font-weight: normal;
-        padding: 0.7rem;
-        border: none;
+    .btn, input {
+        border-color: $input-border-color;
     }
 
     input {
-        background-color: gray('100');
-        height: auto;
-        max-width: 50px;
-        padding: 0.7rem;
-        text-align: center;
-        border-color: gray('200');
+        // Needs !important because themes customize btns' padding direclty
+        // rather than change '$input-btn-padding-X' (shared with inputs).
+        height: auto !important;
+        max-width: 5ch;
     }
 }
 
