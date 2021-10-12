@@ -437,7 +437,7 @@ const Wysiwyg = Widget.extend({
                     }
                 }
             },
-        }
+        };
         return editorCollaborationOptions;
     },
     /**
@@ -707,7 +707,7 @@ const Wysiwyg = Widget.extend({
      * Set cursor to the editor latest position before blur or to the last editable node, ready to type.
      */
     focus: function () {
-        if(!this.odooEditor.historyResetLatestComputedSelection()) {
+        if (!this.odooEditor.historyResetLatestComputedSelection()) {
             // If the editor don't have an history step to focus to,
             // We place the cursor after the end of the editor exiting content.
             const range = document.createRange();
@@ -1345,14 +1345,16 @@ const Wysiwyg = Widget.extend({
             }, 400);
         }
         // Update color of already opened colorpickers.
-        for (let eventName in this.colorpickers) {
-            const selectedColor = this._getSelectedColor($, eventName);
-            if (selectedColor) {
-                // If the palette was already opened (e.g. modifying a gradient), the new DOM state
-                // must be reflected in the palette, but the tab selection must not be impacted.
-                this.colorpickers[eventName].setSelectedColor(null, selectedColor, false);
+        setTimeout(() => {
+            for (let eventName in this.colorpickers) {
+                const selectedColor = this._getSelectedColor($, eventName);
+                if (selectedColor) {
+                    // If the palette was already opened (e.g. modifying a gradient), the new DOM state
+                    // must be reflected in the palette, but the tab selection must not be impacted.
+                    this.colorpickers[eventName].setSelectedColor(null, selectedColor, false);
+                }
             }
-        }
+        }, 0);
     },
     _updateMediaJustifyButton: function (commandState) {
         if (!this.lastMediaClicked) {
