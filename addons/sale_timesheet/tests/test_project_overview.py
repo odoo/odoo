@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_timesheet.tests.test_reporting import TestReporting
-from odoo.tools import float_compare
+from odoo.addons.sale_timesheet.tests.common_reporting import TestCommonReporting
+from odoo.tools import float_compare, float_is_zero
 from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestSaleProject(TestReporting):
+class TestSaleProject(TestCommonReporting):
 
     def test_project_overview_by_project(self):
         rounding = self.env.company.currency_id.rounding
@@ -122,9 +122,11 @@ class TestSaleProject(TestReporting):
         self.assertEqual(float_compare(vals['dashboard']['rates']['billable_time'], project_rate_billable_time, precision_rounding=rounding), 0, "The rate billable-time should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['rates']['billable_fixed'], project_rate_billable_fixed, precision_rounding=rounding), 0, "The rate billable-fixed should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['rates']['total'], project_rate_total, precision_rounding=rounding), 0, "The total rates should be the one from the SO2 line, as we are in ordered quantity")
-        self.assertEqual(float_compare(vals['dashboard']['profit']['invoiced'], project_invoiced, precision_rounding=rounding), 0, "The amount invoiced should be the one from the SO2 line, as we are in ordered quantity")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['invoiced'], project_invoiced + project_other_revenues.price_total, precision_rounding=rounding), 0, "The amount invoiced should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['profit']['cost'], project_timesheet_cost, precision_rounding=rounding), 0, "The amount cost should be the one from the SO2 line, as we are in ordered quantity")
         self.assertEqual(float_compare(vals['dashboard']['profit']['expense_cost'], expense.amount, precision_rounding=rounding), 0, "The amount expense-cost should be the one from the SO2 line, as we are in ordered quantity")
-        self.assertEqual(float_compare(vals['dashboard']['profit']['other_revenues'], other_revenues.amount + project_other_revenues.price_total, precision_rounding=rounding), 0, "The amount of the other revenues should be equal to the corresponding account move line and the one from the SO line")
-        self.assertEqual(float_compare(vals['dashboard']['profit']['total'], project_invoiced + project_timesheet_cost + expense.amount + other_revenues.amount + project_other_revenues.price_total, precision_rounding=rounding), 0, "The total amount should be the sum of the SO2 line and the created other_revenues account analytic line")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['other_revenues'], other_revenues.amount, precision_rounding=rounding), 0, "The amount of the other revenues should be equal to the corresponding account move line and the one from the SO line")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['expense_amount_untaxed_to_invoice'], -expense.amount, precision_rounding=rounding), 0, "The amount of expense to re-invoice shoul be equal to the opposite of expense amount")
+        self.assertTrue(float_is_zero(vals['dashboard']['profit']['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The amount of expense re-invoiced should be equal to 0")
+        self.assertEqual(float_compare(vals['dashboard']['profit']['total'], project_invoiced + project_timesheet_cost + other_revenues.amount + project_other_revenues.price_total, precision_rounding=rounding), 0, "The total amount should be the sum of the SO2 line and the created other_revenues account analytic line")
         self.assertEqual(float_compare(vals['repartition_employee_max'], 11.0, precision_rounding=rounding), 0, "The amount of repartition-employee-max should be the one from SO2 line")
