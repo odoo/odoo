@@ -2,7 +2,7 @@
 <odoo>
     <template id="variants">
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination, parent_name)"/>
-        <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
+        <ul t-attf-class="list-unstyled js_add_cart_variants mb-0 #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
             <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
                 <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
                 <li t-att-data-attribute_id="ptal.attribute_id.id"
