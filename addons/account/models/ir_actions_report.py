@@ -34,7 +34,7 @@ class IrActionsReport(models.Model):
                 attachment.register_as_main_attachment(force=False)
         return res
 
-    def render_qweb_pdf(self, res_ids=None, data=None):
+    def _render_qweb_pdf(self, res_ids=None, data=None):
         # Overridden so that the print > invoices actions raises an error
         # when trying to print a miscellaneous operation instead of an invoice.
         if self.model == 'account.move' and res_ids:
@@ -44,4 +44,4 @@ class IrActionsReport(models.Model):
                 if any(not move.is_invoice(include_receipts=True) for move in moves):
                     raise UserError(_("Only invoices could be printed."))
 
-        return super().render_qweb_pdf(res_ids=res_ids, data=data)
+        return super()._render_qweb_pdf(res_ids=res_ids, data=data)
