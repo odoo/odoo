@@ -891,7 +891,7 @@ export function isBold(node) {
 }
 
 export function isUnbreakable(node) {
-    if (!node || node.nodeType === Node.TEXT_NODE || !node.isContentEditable) {
+    if (!node || node.nodeType === Node.TEXT_NODE) {
         return false;
     }
     if (node.nodeType !== Node.ELEMENT_NODE) {
