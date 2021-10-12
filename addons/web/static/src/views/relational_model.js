@@ -159,6 +159,18 @@ export const requestBatcherService = {
 
 registry.category("services").add("requestBatcher", requestBatcherService);
 
+function sanitizeValues(values, fields) {
+    const sanitizedValues = {};
+    for (const fieldName in values) {
+        if (fields[fieldName].type === "char") {
+            sanitizedValues[fieldName] = values[fieldName] || "";
+        } else {
+            sanitizedValues[fieldName] = values[fieldName];
+        }
+    }
+    return values;
+}
+
 class DataPoint {
     /**
      * @param {RelationalModel} model
@@ -254,7 +266,7 @@ class DataRecord extends DataPoint {
         let { data } = params;
         if (!data) {
             const recordsData = await this.requestBatcher.read(this.resModel, [this.resId], fields);
-            data = recordsData[0];
+            data = sanitizeValues(recordsData[0], this.fields);
         }
         this.data = Object.freeze(data);
 
