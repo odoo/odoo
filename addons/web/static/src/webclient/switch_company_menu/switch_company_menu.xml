@@ -28,7 +28,7 @@
                 t-att-aria-label="company.name"
                 t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + company.name + ' content.'"
                 tabindex="0"
-                class="border-right toggle_company o_py"
+                class="border-right toggle_company"
                 t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
                 t-on-click.stop="toggleCompany(company.id)">
 
@@ -43,7 +43,7 @@
                 t-att-aria-label="'Switch to ' + company.name "
                 t-att-title="'Switch to ' + company.name "
                 tabindex="0"
-                class="d-flex flex-grow-1 align-items-center py-0 log_into pl-2 o_py"
+                class="d-flex flex-grow-1 align-items-center py-0 log_into pl-2"
                 t-att-class="isCurrent ? 'alert-primary ml-1 mr-2' : 'btn btn-light font-weight-normal border-0'"
                 t-on-click="logIntoCompany(company.id)">
 
