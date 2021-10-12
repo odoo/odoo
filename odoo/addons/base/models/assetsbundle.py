@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from contextlib import closing
 from datetime import datetime
 from subprocess import Popen, PIPE
 import base64
@@ -23,11 +24,12 @@ from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
-from odoo.tools.misc import html_escape as escape
+from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
+EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less")
 
 class CompileError(RuntimeError): pass
 def rjsmin(script):
@@ -773,7 +775,7 @@ class WebAsset(object):
         try:
             self.stat()
             if self._filename:
-                with open(self._filename, 'rb') as fp:
+                with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
                     return fp.read().decode('utf-8')
             else:
                 return base64.b64decode(self._ir_attach['datas']).decode('utf-8')
