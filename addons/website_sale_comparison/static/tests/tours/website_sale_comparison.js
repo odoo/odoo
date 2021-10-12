@@ -11,8 +11,8 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     }, [
     // test from shop page
     {
-        content: "add first product 'Three-Seat Sofa' in a comparison list",
-        trigger: '.oe_product_cart:contains("Three-Seat Sofa") .o_add_compare',
+        content: "add first product 'Warranty' in a comparison list",
+        trigger: '.oe_product_cart:contains("Warranty") .o_add_compare',
     },
     {
         content: "check compare button contains one product",
@@ -36,7 +36,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "check products name are correct in the comparelist",
-        extra_trigger: '.o_product_row:contains("Three-Seat Sofa")',
+        extra_trigger: '.o_product_row:contains("Warranty")',
         trigger: '.o_product_row:contains("Conference Chair")',
         run: function () {},
     },
@@ -126,7 +126,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "check 4th product is correctly added",
-        trigger: '.o_product_comparison_table:contains("Three-Seat Sofa")',
+        trigger: '.o_product_comparison_table:contains("Warranty")',
         run: function () {},
     },
     {
@@ -140,20 +140,20 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
     },
     {
         content: "open compare menu",
-        extra_trigger: 'body:has(.o_product_row:contains("Three-Seat Sofa") .o_remove)',
+        extra_trigger: 'body:has(.o_product_row:contains("Warranty") .o_remove)',
         trigger: '.o_product_panel_header',
     },
     {
         content: "remove product",
-        trigger: '.o_product_row:contains("Three-Seat Sofa") .o_remove',
+        trigger: '.o_product_row:contains("Warranty") .o_remove',
     },
     {
         content: "click on compare button to reload",
         trigger: '.o_comparelist_button a',
     },
     {
-        content: "check product 'Three-Seat Sofa' is removed",
-        trigger: '#o_comparelist_table:not(:contains("Three-Seat Sofa"))',
+        content: "check product 'Warranty' is removed",
+        trigger: '#o_comparelist_table:not(:contains("Warranty"))',
         run: function () {},
     },
     {
