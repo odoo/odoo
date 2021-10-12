@@ -2859,6 +2859,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @override
      */
+    async onBuilt() {
+        this.$target[0].classList.toggle('o_animate_preview', this.$target[0].classList.contains('o_animate'));
+    },
+    /**
+     * @override
+     */
     onFocus() {
         if (this.isAnimatedText) {
             // For animated text, the animation options must be in the editor
