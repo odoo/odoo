@@ -10,7 +10,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import format_date
+from odoo.tools import float_compare, format_date
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -140,6 +140,22 @@ class HolidaysType(models.Model):
 
         return [('id', new_operator, [x['holiday_status_id'] for x in self._cr.dictfetchall()])]
 
+    def _is_valid(self, date_from, date_to, employee_id):
+        allocations = self.env['hr.leave.allocation'].search([])
+        for holiday_type in self:
+            if holiday_type.requires_allocation:
+                allocation = allocations.filtered_domain([
+                    ('holiday_status_id', '=', holiday_type.id),
+                    ('employee_id', '=', employee_id),
+                    '&',
+                    '|',
+                    ('date_to', '>=', date_to),
+                    ('date_to', '=', False),
+                    ('date_from', '<=', date_from)])
+                holiday_type.has_valid_allocation = bool(allocation)
+            else:
+                holiday_type.has_valid_allocation = True
+
 
     @api.depends('requires_allocation')
     def _compute_valid(self):
@@ -147,18 +163,7 @@ class HolidaysType(models.Model):
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
         for holiday_type in self:
-            if holiday_type.requires_allocation:
-                allocation = self.env['hr.leave.allocation'].search([
-                    ('holiday_status_id', '=', holiday_type.id),
-                    ('employee_id', '=', employee_id),
-                    '|',
-                    ('date_to', '>=', date_to),
-                    '&',
-                    ('date_to', '=', False),
-                    ('date_from', '<=', date_from)])
-                holiday_type.has_valid_allocation = bool(allocation)
-            else:
-                holiday_type.has_valid_allocation = True
+            holiday_type._is_valid(date_from, date_to, employee_id)
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -396,16 +401,26 @@ class HolidaysType(models.Model):
             return super(HolidaysType, self).name_get()
         res = []
         for record in self:
-            name = record.name
             if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
+                if record._context.get('default_date_from'):
+                    employee_id = record._context.get('employee_id')
+                    leaves_count = record.get_employees_days([employee_id], date=record._context['default_date_from'])[employee_id][record.id]
+                    virtual_remaining_leaves = float_round(leaves_count.get('virtual_remaining_leaves', 0), precision_digits=2)
+                    max_leaves = float_round(leaves_count.get('max_leaves', 0), precision_digits=2)
+                else:
+                    virtual_remaining_leaves = float_round(record.virtual_remaining_leaves, precision_digits=2)
+                    max_leaves = float_round(record.max_leaves, precision_digits=2)
                 name = "%(name)s (%(count)s)" % {
-                    'name': name,
+                    'name': record.name,
                     'count': _('%g remaining out of %g') % (
-                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
-                        float_round(record.max_leaves, precision_digits=2) or 0.0,
+                        virtual_remaining_leaves or 0.0,
+                        max_leaves or 0.0,
                     ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
                 }
-            res.append((record.id, name))
+                if float_compare(virtual_remaining_leaves, 0, precision_digits=2) >= 0:
+                    res.append((record.id, name))
+            else:
+                res.append((record.id, record.name))
         return res
 
     @api.model
