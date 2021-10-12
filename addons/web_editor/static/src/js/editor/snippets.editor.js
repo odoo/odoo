@@ -161,6 +161,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
         this.displayOverlayOptions = false;
+        this._$toolbarContainer = $();
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -2461,6 +2462,7 @@ var SnippetsMenu = Widget.extend({
 
         this._currentTab = tab || this.tabs.BLOCKS;
 
+        this._$toolbarContainer[0].remove();
         if (content) {
             while (this.customizePanel.firstChild) {
                 this.customizePanel.removeChild(this.customizePanel.firstChild);
@@ -3092,12 +3094,12 @@ var SnippetsMenu = Widget.extend({
                 break;
         }
 
-        const $customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
+        this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
 
-        $customizeBlock.append($title);
-        $customizeBlock.append(this.options.wysiwyg.toolbar.$el);
-        $(this.customizePanel).append($customizeBlock);
+        this._$toolbarContainer.append($title);
+        this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
+        $(this.customizePanel).append(this._$toolbarContainer);
         this._checkEditorToolbarVisibility();
     },
     /**
