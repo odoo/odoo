@@ -59,7 +59,7 @@ Wysiwyg.include({
                 ev.preventDefault();
             }
 
-            if ($target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
+            if ($target.is(this.customizableLinksSelector) && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
                 if (!$target.data('popover-widget-initialized')) {
                     // TODO this code is ugly maybe the mutex should be in the
                     // editor root widget / the popover should not depend on
