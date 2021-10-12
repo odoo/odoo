@@ -592,7 +592,7 @@ a.no-decoration {
             img {
                 height: 100%;
                 width: 100%;
-                object-fit: scale-down;
+                object-fit: contain;
             }
         }
     }
@@ -645,7 +645,11 @@ a.no-decoration {
         }
     }
 
-    .carousel-item, .o_carousel_product_indicators, .carousel-indicators {
+    .carousel-item, .o_carousel_product_indicators {
+        transition: transform 0.2s ease-out;
+    }
+
+    .carousel-indicators {
         transition: transform 0.3s ease-in-out;
     }
 
@@ -660,23 +664,19 @@ a.no-decoration {
                     width: 64px;
                     height: 64px;
                     text-indent: unset;
-                    border: 1px solid gray('500');
-                    opacity: 0.5;
-                    position: relative;
-                    transition: opacity 0.3s;
+                    transition: none;
+                    border: 1px solid gray('400');
 
                     .o_product_video_thumb {
                         @include o-position-absolute(0, 0, 0, 0);
-                        background-color: rgba(black, 0.5);
-                        color: #e0e0e0;
-                        text-align: center;
                         line-height: 64px;
                     }
+
                     &.active {
-                        border: 1px solid theme-color('primary');
-                        box-shadow: 0 0 2px 2px rgba(theme-color('primary'), 0.5);
+                        border-color: theme-color('primary');
                     }
-                    &.active, &:hover {
+
+                    &:hover {
                         opacity: 1;
                     }
                 }
@@ -690,7 +690,6 @@ a.no-decoration {
         }
 
         .carousel-indicators {
-            padding-top: 0px !important;
             justify-content: center;
 
             li {
@@ -698,13 +697,42 @@ a.no-decoration {
                 height: 8px;
                 min-width: 8px;
                 border-radius: 50%;
-                border: 2px solid gray('500');
+                border: 2px solid gray('400');
 
                 &.active {
-                    background-color: gray('500');
+                    border-color: theme-color('primary');
+                    background-color: theme-color('primary');
                 }
                 > div {
                     display: none;
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        .carousel-indicators li {
+            margin: 0;
+
+            &:not(:first-child) {
+                margin-left: 10px;
+            }
+        }
+
+        &.o_carousel_product_left_indicators {
+            .carousel-outer {
+                height: 500px;
+            }
+
+            .o_carousel_product_indicators {
+                max-height: 500px;
+            }
+
+            .carousel-indicators li {
+                margin: 0;
+
+                &:not(:first-child) {
+                    margin-top: 10px;
                 }
             }
         }

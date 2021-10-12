@@ -591,10 +591,10 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mt-md-4">
+                        <div class="col-lg-6 mt-lg-4">
                             <t t-call="website_sale.shop_product_carousel"/>
                         </div>
-                        <div class="col-md-6 mt-md-4" id="product_details">
+                        <div class="col-lg-6 mt-md-4" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
                             <t t-if="is_view_active('website_sale.product_comment')">
@@ -1932,8 +1932,7 @@
     <template id="carousel_product_indicators_bottom" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Bottom">
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="after">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_div_class" t-value="'pr-1 overflow-hidden'"/>
-                <t t-set="indicators_list_class" t-value="'p-1'"/>
+                <t t-set="indicators_div_class" t-value="'pt-2 overflow-hidden'"/>
             </t>
         </xpath>
     </template>
@@ -1945,17 +1944,20 @@
             </t>
         </xpath>
         <xpath expr="//div[@id='o-carousel-product']" position="attributes">
-            <attribute name="class" add="o_carousel_product_left_indicators d-flex pb-1" separator=" "/>
+            <attribute name="class" add="o_carousel_product_left_indicators d-flex" separator=" "/>
         </xpath>
     </template>
 
     <template id="carousel_product_indicators" name="Carousel Product">
         <div t-ignore="True" t-attf-class="o_carousel_product_indicators {{indicators_div_class}}">
-            <ol t-if="len(product_images) > 1" t-attf-class="carousel-indicators {{indicators_list_class}} position-static mx-auto my-0 text-left">
-                <t t-foreach="product_images" t-as="product_image"><li t-attf-class="m-1 mb-2 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
-                    <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_contain", "alt-field": "name"}'/>
-                    <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle o_product_video_thumb"/>
-                </li></t>
+            <ol t-if="len(product_images) > 1" t-attf-class="carousel-indicators {{indicators_list_class}} position-static pt-2 pt-lg-0 mx-auto my-0 text-left">
+                <li t-foreach="product_images" t-as="product_image"
+                    t-attf-class="align-top position-relative {{'active' if product_image_first else ''}}"
+                    data-target="#o-carousel-product"
+                    t-att-data-slide-to="str(product_image_index)">
+                    <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover", "alt-field": "name"}'/>
+                    <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle o_product_video_thumb bg-black-50 text-center"/>
+                </li>
             </ol>
         </div>
     </template>
