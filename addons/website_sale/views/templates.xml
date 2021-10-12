@@ -133,7 +133,7 @@
     <!-- Search Bar input-group template -->
     <template id="search" name="Search Box">
         <t t-call="website.website_search_box_input">
-            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto mr-auto mb-2"/>
+            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto mr-auto mb-2 flex-grow-1"/>
             <t t-set="_classes" t-valuef=" "/>
             <t t-set="search_type" t-valuef="products"/>
             <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0) or '/shop'"/>
@@ -585,7 +585,7 @@
                                     <t t-set="_classes" t-value="'mb-2 mr-sm-2'"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes" t-valuef="ml-1 mb-2 float-right"/>
+                                    <t t-set="_classes" t-valuef="ml-2 mb-2 float-right"/>
                                 </t>
                             </div>
                         </div>
