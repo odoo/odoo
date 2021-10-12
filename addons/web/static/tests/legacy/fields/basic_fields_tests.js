@@ -3923,7 +3923,7 @@ QUnit.module('basic_fields', {
                     if (ev.data.service === 'notification') {
                         assert.strictEqual(ev.data.method, 'notify');
                         assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
-                        assert.strictEqual(ev.data.args[0].message, '<ul><li>A date</li></ul>');
+                        assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>A date</li></ul>');
                     }
                 }
             },
@@ -6102,7 +6102,7 @@ QUnit.module('basic_fields', {
                     if (ev.data.service === 'notification') {
                         assert.strictEqual(ev.data.method, 'notify');
                         assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
-                        assert.strictEqual(ev.data.args[0].message, '<ul><li>Qux</li></ul>');
+                        assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>Qux</li></ul>');
                     }
                 }
             },

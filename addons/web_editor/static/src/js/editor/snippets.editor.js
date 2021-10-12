@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+const {Markup, sprintf} = require('web.utils');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
@@ -2778,11 +2779,11 @@ var SnippetsMenu = Widget.extend({
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
                         this.close();
+                        const message = sprintf(Markup(_t("Could not install module <strong>%s</strong>")), name);
                         self.displayNotification({
-                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), owl.utils.escape(name)),
+                            message: message,
                             type: 'danger',
                             sticky: true,
-                            messageIsHtml: true, // dynamic parts of the message are escaped above
                         });
                     });
                 },

@@ -2,6 +2,7 @@ odoo.define('website_slides_survey.certification_upload_toast', function (requir
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var {Markup, sprintf} = require('web.utils');
 
 var sessionStorage = window.sessionStorage;
 var core = require('web.core');
@@ -19,15 +20,13 @@ publicWidget.registry.CertificationUploadToast = publicWidget.Widget.extend({
         this._super.apply(this, arguments).then(function () {
             var url = sessionStorage.getItem("survey_certification_url");
             if (url) {
+                var message = sprintf(Markup(
+                    _t('Follow this link to add questions to your certification. <a href="%s">Edit certification</a>')), url);
                 self.displayNotification({
                     type: 'info',
                     title: _t('Certification created'),
-                    message: _.str.sprintf(
-                        _t('Follow this link to add questions to your certification. <a href="%s">Edit certification</a>'),
-                        _.escape(url)
-                    ),
+                    message: message,
                     sticky: true,
-                    messageIsHtml: true, // dynamic parts of the message are escaped above
                 });
                 sessionStorage.removeItem("survey_certification_url");
             }

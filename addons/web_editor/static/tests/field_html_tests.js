@@ -198,7 +198,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('check if required field is set', async function (assert) {
-            assert.expect(1);
+            assert.expect(3);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -212,12 +212,9 @@ QUnit.module('web_editor', {}, function () {
 
             testUtils.mock.intercept(form, 'call_service', function (ev) {
                 if (ev.data.service === 'notification') {
-                    assert.deepEqual(ev.data.args[0], {
-                        "message": "<ul><li>Header</li></ul>",
-                        "messageIsHtml": true,
-                        "title": "Invalid fields:",
-                        "type": "danger"
-                    });
+                    assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
+                    assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>Header</li></ul>');
+                    assert.strictEqual(ev.data.args[0].type, 'danger');
                 }
             }, true);
 

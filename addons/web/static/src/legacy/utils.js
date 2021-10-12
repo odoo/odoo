@@ -211,7 +211,6 @@ export function makeLegacyNotificationService(legacyEnv) {
                 type,
                 className,
                 onClose,
-                messageIsHtml,
             }) {
                 if (subtitle) {
                     title = [title, subtitle].filter(Boolean).join(" ");
@@ -230,14 +229,14 @@ export function makeLegacyNotificationService(legacyEnv) {
                     };
                 });
 
-                const removeFn = env.services.notification.add(message, {
+                const removeFn = env.services.notification.add(_.escape(message), {
                     sticky,
                     title,
                     type,
                     className,
                     onClose,
                     buttons,
-                    messageIsHtml,
+                    messageIsHtml: true,
                 });
                 const id = ++notifId;
                 idsToRemoveFn[id] = removeFn;

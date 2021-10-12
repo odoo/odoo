@@ -3664,7 +3664,7 @@ QUnit.module('Views', {
                         }
                         assert.strictEqual(params.title, 'Invalid fields:',
                             "should have a warning with correct title");
-                        assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
+                        assert.strictEqual(params.message.toString(), '<ul><li>Foo</li></ul>',
                             "should have a warning with correct message");
                     }
                 },

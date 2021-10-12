@@ -2,6 +2,7 @@ odoo.define('website_event.register_toaster_widget', function (require) {
 'use strict';
 
 let core = require('web.core');
+const {Markup} = require('web.utils');
 let _t = core._t;
 let publicWidget = require('web.public.widget');
 
@@ -18,9 +19,8 @@ publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
         if (message && message.length) {
             this.displayNotification({
                 title: _t("Register"),
-                message: message,
+                message: Markup(message),
                 type: 'info',
-                messageIsHtml: true, // the message is coming from a QWeb template using safe instructions
             });
         }
         return this._super.apply(this, arguments);
