@@ -15,7 +15,9 @@ function factory(dependencies) {
         _created() {
             super._created();
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickHideInviteForm = this.onClickHideInviteForm.bind(this);
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
+            this.onClickShowInviteForm = this.onClickShowInviteForm.bind(this);
             this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
             this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
         }
@@ -128,6 +130,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "stop adding users" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickHideInviteForm(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({ channelInvitationForm: clear() });
+        }
+
+        /**
          * @param {MouseEvent} ev
          */
         onClickHideMemberList(ev) {
@@ -139,11 +151,32 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "add users" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickShowInviteForm(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({
+                channelInvitationForm: insertAndReplace({
+                    doFocusOnSearchInput: true,
+                }),
+                isMemberListOpened: false,
+            });
+            if (!this.messaging.isCurrentUserGuest) {
+                this.channelInvitationForm.searchPartnersToInvite();
+            }
+        }
+
+        /**
          * @param {MouseEvent} ev
          */
         onClickShowMemberList(ev) {
             markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
-            this.update({ isMemberListOpened: true });
+            this.update({
+                channelInvitationForm: clear(),
+                isMemberListOpened: true,
+            });
         }
 
         /**
@@ -194,7 +227,18 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasCallButtons() {
-            return this.thread && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+            return Boolean(this.thread) && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasInviteFeature() {
+            return Boolean(
+                this.thread && this.thread.hasInviteFeature &&
+                this.messaging && this.messaging.device && this.messaging.device.isMobile
+            );
         }
 
         /**
@@ -241,7 +285,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && !!this.thread;
+            return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm;
         }
 
         /**
@@ -369,11 +413,25 @@ function factory(dependencies) {
 
     ChatWindow.fields = {
         /**
+         * Determines the channel invitation form displayed by this chat window
+         * (if any). Only makes sense if hasInviteFeature is true.
+         */
+        channelInvitationForm: one2one('mail.channel_invitation_form', {
+            inverse: 'chatWindow',
+            isCausal: true,
+        }),
+        /**
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
             default: false,
             compute: '_computeHasCallButtons',
+        }),
+        /**
+         * States whether this chat window has the invite feature.
+         */
+        hasInviteFeature: attr({
+            compute: '_computeHasInviteFeature',
         }),
         /**
          * Determines whether "new message form" should be displayed.
