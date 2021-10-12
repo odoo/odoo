@@ -626,13 +626,22 @@
                                             <t t-set="parent_combination" t-value="None" />
                                         </t>
                                         <t t-else="">
-                                            <ul class="d-none js_add_cart_variants" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
+                                            <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
                                         </t>
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <div id="add_to_cart_wrap" class="d-inline">
-                                        <a role="button" id="add_to_cart" class="btn btn-primary btn-lg js_check_product a-submit my-1 mr-1 px-5 font-weight-bold flex-grow-1" href="#"><i class="fa fa-shopping-cart mr-2"/>ADD TO CART</a>
-                                        <div id="product_option_block" class="d-inline-block align-middle"/>
+                                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
+                                        <t t-set="hasQuantities" t-value="false"/>
+                                        <t t-set="hasBuyNow" t-value="false"/>
+                                        <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
+
+                                        <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 mr-auto">
+                                            <a role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                                                <i class="fa fa-shopping-cart mr-2"/>
+                                                <span style="font-weight: bold">ADD TO CART</span>
+                                            </a>
+                                        </div>
+                                        <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
                                 </div>
                             </form>
@@ -653,7 +662,7 @@
                                     </t>
                                 </table>
                             </div>
-                            <div id="o_product_terms_and_share">
+                            <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
                             </div>
                         </div>
                     </div>
@@ -666,8 +675,8 @@
 
     <template id="product_custom_text" inherit_id="website_sale.product" active="True" customize_show="True" name="Terms and Conditions" priority="21">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <p class="text-muted h6 mt-3">
-                <a href="/terms" class="text-muted">Terms and Conditions</a><br/>
+            <p class="text-muted mb-0">
+                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
                 30-day money-back guarantee<br/>
                 Shipping: 2-3 Business Days
             </p>
@@ -676,7 +685,7 @@
 
     <template id="product_share_buttons" inherit_id="website_sale.product" active="True" customize_show="True" name="Share Buttons" priority="22">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <div class="h4 mt-3 d-flex justify-content-end" contenteditable="false">
+            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" contenteditable="false">
                 <t t-snippet-call="website.s_share">
                     <t t-set="_exclude_share_links" t-value="['whatsapp', 'linkedin']"/>
                     <t t-set="_no_title" t-value="True"/>
@@ -750,16 +759,19 @@
     </template>
 
     <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
+        <xpath expr="//t[@t-set='hasQuantities']" position="attributes">
+            <attribute name="t-value" remove="false" add="true" separator=" "/>
+        </xpath>
       <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
-        <div class="css_quantity input-group d-inline-flex mr-2 my-1 align-middle" contenteditable="false">
+        <div t-attf-class="css_quantity input-group d-inline-flex mr-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
             <div class="input-group-prepend">
-                <a t-attf-href="#" class="btn btn-primary js_add_cart_json" aria-label="Remove one" title="Remove one">
+                <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
                     <i class="fa fa-minus"></i>
                 </a>
             </div>
-            <input type="text" class="form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
+            <input type="text" class="form-control quantity text-center" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
             <div class="input-group-append">
-                <a t-attf-href="#" class="btn btn-primary float_left js_add_cart_json" aria-label="Add one" title="Add one">
+                <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json" aria-label="Add one" title="Add one">
                     <i class="fa fa-plus"></i>
                 </a>
             </div>
@@ -768,8 +780,14 @@
     </template>
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
+        <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
+            <attribute name="t-value" remove="false" add="true" separator=" "/>
+        </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" class="btn btn-outline-primary btn-lg px-5 font-weight-bold o_we_buy_now" href="#"><i class="fa fa-bolt mr-2"/>BUY NOW</a>
+            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ml-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                <i class="fa fa-bolt mr-2"/>
+                <span style="font-weight:bold">BUY NOW</span>
+            </a>
         </xpath>
     </template>
 
@@ -809,7 +827,7 @@
             <t t-if="not product.has_dynamic_attributes() and not product._has_no_variant_attributes() and not product._has_is_custom_values()">
                 <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions()"/>
                 <t t-set="filtered_sorted_variants" t-value="product._get_possible_variants_sorted()"/>
-                <ul class="d-none js_add_cart_variants" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"/>
+                <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"/>
                 <input type="hidden" class="product_template_id" t-att-value="product.id"/>
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">

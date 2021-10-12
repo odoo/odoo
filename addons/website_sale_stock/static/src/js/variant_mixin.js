@@ -47,9 +47,10 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
 
     const $addQtyInput = $parent.find('input[name="add_qty"]');
     let qty = $addQtyInput.val();
+    let ctaWrapper = $parent[0].querySelector('#o_wsale_cta_wrapper');
+    ctaWrapper.classList.replace('d-none', 'd-flex');
+    ctaWrapper.classList.remove('out_of_stock');
 
-    $parent.find('#add_to_cart').removeClass('out_of_stock');
-    $parent.find('.o_we_buy_now').removeClass('out_of_stock');
     if (combination.product_type === 'product' && !combination.allow_out_of_stock_order) {
         combination.free_qty -= parseInt(combination.cart_qty);
         $addQtyInput.data('max', combination.free_qty || 1);
@@ -61,8 +62,8 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
             $addQtyInput.val(qty);
         }
         if (combination.free_qty < 1) {
-            $parent.find('#add_to_cart').addClass('disabled out_of_stock');
-            $parent.find('.o_we_buy_now').addClass('disabled out_of_stock');
+            ctaWrapper.classList.replace('d-flex', 'd-none');
+            ctaWrapper.classList.add('out_of_stock');
         }
     }
 
