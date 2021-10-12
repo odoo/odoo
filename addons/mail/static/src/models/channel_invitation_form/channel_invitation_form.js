@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 function factory(dependencies) {
@@ -142,14 +142,19 @@ function factory(dependencies) {
                     },
                     { shadow: true }
                 );
+                if (!this.exists()) {
+                    return;
+                }
                 this.update({
                     searchResultCount: count,
                     selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['mail.partner'].convertData(partnerData))),
                 });
             } finally {
-                this.update({ hasSearchRpcInProgress: false });
-                if (this.hasPendingSearchRpc) {
-                    this.searchPartnersToInvite();
+                if (this.exists()) {
+                    this.update({ hasSearchRpcInProgress: false });
+                    if (this.hasPendingSearchRpc) {
+                        this.searchPartnersToInvite();
+                    }
                 }
             }
         }
@@ -175,9 +180,27 @@ function factory(dependencies) {
             return this.env._t("Invite to Channel");
         }
 
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeThread() {
+            if (this.threadView && this.threadView.thread) {
+                return replace(this.threadView.thread);
+            }
+            if (this.chatWindow && this.chatWindow.thread) {
+                return replace(this.chatWindow.thread);
+            }
+            return clear();
+        }
+
     }
 
     ChannelInvitationForm.fields = {
+        chatWindow: one2one('mail.chat_window', {
+            inverse: 'channelInvitationForm',
+            readonly: true,
+        }),
         /**
          * States the OWL component of this channel invitation form.
          * Useful to be able to close it with popover trigger, or to know when
@@ -240,8 +263,8 @@ function factory(dependencies) {
          * States the thread on which this list operates (if any).
          */
         thread: many2one('mail.thread', {
+            compute: '_computeThread',
             readonly: true,
-            related: 'threadView.thread',
             required: true,
         }),
         /**
@@ -252,7 +275,7 @@ function factory(dependencies) {
             readonly: true,
         }),
     };
-    ChannelInvitationForm.identifyingFields = ['threadView'];
+    ChannelInvitationForm.identifyingFields = [['chatWindow', 'threadView']];
     ChannelInvitationForm.modelName = 'mail.channel_invitation_form';
 
     return ChannelInvitationForm;

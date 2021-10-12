@@ -23,7 +23,10 @@
                 <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
                     <ChannelMemberList channelLocalId="chatWindow.thread.localId" class="bg-white"/>
                 </t>
-                <t t-if="chatWindow.threadView and !chatWindow.isMemberListOpened">
+                <t t-if="chatWindow.channelInvitationForm">
+                    <ChannelInvitationForm class="o_ChatWindow_channelInvitationForm" localId="chatWindow.channelInvitationForm.localId"/>
+                </t>
+                <t t-if="chatWindow.threadView">
                     <ThreadView
                         class="o_ChatWindow_thread"
                         hasComposerCurrentPartnerAvatar="false"
