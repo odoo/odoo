@@ -7,6 +7,7 @@
     bottom: 0;
     display: flex;
     flex-flow: column;
+    overflow: auto;
 
     &:not(.o-mobile) {
         max-width: 100%;
@@ -30,6 +31,10 @@
         height: 100%;
         width: 100%;
     }
+}
+
+.o_ChatWindow_channelInvitationForm {
+    min-height: 450px; // allow flex shrink smaller than content (but not too small)
 }
 
 .o_ChatWindow_header {
