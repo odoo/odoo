@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useDebugMenu } from "../../core/debug/debug_menu";
+import { useSetupView } from "@web/views/helpers/view_hook";
 import { registry } from "../../core/registry";
 import { XMLParser } from "../../core/utils/xml";
 import { ControlPanel } from "../../search/control_panel/control_panel";
@@ -35,7 +35,6 @@ class FormArchParser extends XMLParser {
 
 class FormView extends owl.Component {
     setup() {
-        useDebugMenu("view", { component: this });
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
@@ -49,6 +48,8 @@ class FormView extends owl.Component {
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
 
         useViewButtons(this.model);
+
+        useSetupView({ /** TODO **/ });
     }
 }
 
