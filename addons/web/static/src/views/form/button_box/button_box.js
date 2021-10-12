@@ -1,6 +1,6 @@
 /** @odoo-module  */
-import { useEffect } from "@web/core/effect_hook";
-import { useService } from "@web/core/service_hook";
+
+import { useEffect, useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const DEFAULT_MAX_BUTTONS = 7;
@@ -11,7 +11,7 @@ class ButtonBoxDropdown extends Dropdown {
         useEffect(
             () => {
                 this.props.redrawButtons(this.state.open);
-                const toggler = this.el.querySelector(".o_dropdown_toggler");
+                const toggler = this.el.querySelector(".dropdown-toggle");
                 if (this.state.open) {
                     toggler.setAttribute("aria-expanded", "true");
                 } else {
@@ -66,7 +66,7 @@ export class ButtonBox extends owl.Component {
             if (!isOpen) {
                 return;
             }
-            const dropdownMenu = dropdown.el.querySelector(".o_dropdown_menu");
+            const dropdownMenu = dropdown.el.querySelector(".dropdown-menu");
             const children = dropdownMenu.children;
             for (let index = 0; index < children.length; index++) {
                 const elem = children[index];
