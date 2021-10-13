@@ -9,6 +9,7 @@ from . import account_journal
 from . import account_tax
 from . import account_tax_carryover_line
 from . import account_tax_report
+from . import account_tax_unit
 from . import account_reconcile_model
 from . import account_payment_term
 from . import account_move
