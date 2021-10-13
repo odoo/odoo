@@ -2,7 +2,6 @@ odoo.define('point_of_sale.RefundButton', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
 
@@ -21,14 +20,6 @@ odoo.define('point_of_sale.RefundButton', function (require) {
         }
     }
     RefundButton.template = 'point_of_sale.RefundButton';
-
-    ProductScreen.addControlButton({
-        component: RefundButton,
-        condition: function () {
-            return true;
-        },
-    });
-
     Registries.Component.add(RefundButton);
 
     return RefundButton;

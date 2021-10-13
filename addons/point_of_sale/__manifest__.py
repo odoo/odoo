@@ -83,7 +83,6 @@
             'point_of_sale/static/src/js/printers.js',
             'point_of_sale/static/src/js/Gui.js',
             'point_of_sale/static/src/js/PopupControllerMixin.js',
-            'point_of_sale/static/src/js/ControlButtonsMixin.js',
             'point_of_sale/static/src/js/Chrome.js',
             'point_of_sale/static/src/js/devices.js',
             'point_of_sale/static/src/js/payment.js',

@@ -8,9 +8,11 @@
                     <OrderWidget/>
                     <div class="pads">
                         <div class="control-buttons">
-                            <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                                <t t-component="cb.component" t-key="cb.name" />
-                            </t>
+                            <ProductInfoButton />
+                            <RefundButton />
+                            <SetFiscalPositionButton t-if="env.pos.fiscal_positions.length > 0" />
+                            <SetPricelistButton t-if="env.pos.config.use_pricelist and env.pos.pricelists.length > 1" />
+                            <OrderlineCustomerNoteButton t-if="env.pos.config.iface_orderline_customer_notes" />
                         </div>
                         <div class="subpads">
                             <t t-set="_actionName">Payment</t>

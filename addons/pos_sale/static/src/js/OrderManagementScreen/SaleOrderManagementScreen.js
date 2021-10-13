@@ -5,7 +5,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
     const { parse } = require('web.field_utils');
     const { useContext } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
-    const ControlButtonsMixin = require('point_of_sale.ControlButtonsMixin');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const Registries = require('point_of_sale.Registries');
     const SaleOrderFetcher = require('pos_sale.SaleOrderFetcher');
@@ -13,7 +12,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
     const contexts = require('point_of_sale.PosContext');
     const models = require('point_of_sale.models');
 
-    class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
+    class SaleOrderManagementScreen extends IndependentToOrderScreen {
         constructor() {
             super(...arguments);
             useListener('close-screen', this.close);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_coupon.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('control-buttons')]" position="inside">
+            <PromoCodeButton t-if="env.pos.config.use_coupon_programs" />
+            <ResetProgramsButton t-if="env.pos.config.use_coupon_programs" />
+        </xpath>
+    </t>
+
+</templates>

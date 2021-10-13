@@ -2,7 +2,6 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
 
@@ -28,14 +27,6 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
         }
     }
     OrderlineNoteButton.template = 'OrderlineNoteButton';
-
-    ProductScreen.addControlButton({
-        component: OrderlineNoteButton,
-        condition: function() {
-            return this.env.pos.config.iface_orderline_notes;
-        },
-    });
-
     Registries.Component.add(OrderlineNoteButton);
 
     return OrderlineNoteButton;
