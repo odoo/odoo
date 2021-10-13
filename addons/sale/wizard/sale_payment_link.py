@@ -24,16 +24,22 @@ class PaymentLinkWizard(models.TransientModel):
             })
         return res
 
-    @api.depends('company_id', 'partner_id', 'currency_id')
-    def _compute_available_acquirer_ids(self):
-        sale_links = self.filtered(lambda link: link.res_model == 'sale.order')
-        super(PaymentLinkWizard, self-sale_links)._compute_available_acquirer_ids()
-        for link in sale_links:
-            link.available_acquirer_ids = link.env['payment.acquirer']._get_compatible_acquirers(
-                company_id=link.company_id.id,
-                partner_id=link.partner_id.id,
-                currency_id=link.currency_id.id,
-                sale_order_id=link.res_id)
+    def _get_payment_acquirer_available(self, company_id=None, partner_id=None, currency_id=None, sale_order_id=None):
+        """ Select and return the acquirers matching the criteria.
+
+        :param int company_id: The company to which acquirers must belong, as a `res.company` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
+        :param int sale_order_id: The sale order currency if known beforehand, as a `sale.order` id
+        :return: The compatible acquirers
+        :rtype: recordset of `payment.acquirer`
+        """
+        return self.env['payment.acquirer'].sudo()._get_compatible_acquirers(
+            company_id=company_id or self.company_id.id,
+            partner_id=partner_id or self.partner_id.id,
+            currency_id=currency_id or self.currency_id.id,
+            sale_order_id=sale_order_id or self.res_id,
+        )
 
     def _generate_link(self):
         """ Override of payment to add the sale_order_id in the link. """
@@ -46,7 +52,7 @@ class PaymentLinkWizard(models.TransientModel):
                                     f'?reference={urls.url_quote(payment_link.description)}' \
                                     f'&amount={payment_link.amount}' \
                                     f'&sale_order_id={payment_link.res_id}' \
-                                    f'{"&acquirer_id=" + str(payment_link.acquirer_id.id) if payment_link.acquirer_id else "" }' \
+                                    f'{"&acquirer_id=" + str(payment_link.payment_acquirer_selection) if payment_link.payment_acquirer_selection != "all" else "" }' \
                                     f'&access_token={payment_link.access_token}'
                 # Order-related fields are retrieved in the controller
             else:
