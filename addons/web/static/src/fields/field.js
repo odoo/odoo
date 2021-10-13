@@ -26,7 +26,7 @@ export class Field extends Component {
     get concreteFieldProps() {
         return {
             value: this.props.record.data[this.name],
-            readonly: this.fields[this.name].readonly,
+            readonly: this.props.readonly || this.fields[this.name].readonly,
             name: this.name,
             record: this.props.record,
         };
