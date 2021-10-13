@@ -1066,6 +1066,7 @@ class QWeb(object):
             for item in el:
                 # ignore comments & processing instructions
                 if isinstance(item, etree._Comment):
+                    body.extend(self._compile_tail(item))
                     continue
                 body.extend(self._compile_node(item, options))
                 body.extend(self._compile_tail(item))
