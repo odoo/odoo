@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from datetime import datetime, timedelta
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -360,3 +360,45 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.move_line_ids.write({'qty_done': 3.66})
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
+
+    def test_message_qty_already_received(self):
+        _product = self.env['product.product'].create({
+            'name': 'TempProduct',
+            'type': 'consu',
+            'company_id': self.env.user.company_id.id,
+        })
+
+        _purchase_order = self.env['purchase.order'].create({
+            'company_id': self.env.user.company_id.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': _product.name,
+                    'product_id': _product.id,
+                    'product_qty': 25.0,
+                    'price_unit': 250.0,
+                })],
+        })
+
+        _purchase_order.button_confirm()
+
+        first_picking = _purchase_order.picking_ids[0]
+        first_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = first_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        second_picking = _purchase_order.picking_ids[1]
+        second_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = second_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        third_picking = _purchase_order.picking_ids[2]
+        third_picking.move_lines.quantity_done = 5
+        backorder_wizard_dict = third_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        _message_content = _purchase_order.message_ids.mapped("body")[0]
+        self.assertIsNotNone(re.search(r"Received Quantity: 5.0 -&gt; 10.0", _message_content), "Already received quantity isn't correctly taken into consideration")
