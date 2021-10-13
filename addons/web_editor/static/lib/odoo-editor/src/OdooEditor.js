@@ -637,7 +637,7 @@ export class OdooEditor extends EventTarget {
     }
 
     // One step completed: apply to vDOM, setup next history step
-    historyStep(skipRollback = false) {
+    historyStep(skipRollback = false, { stepId } = {}) {
         if (!this._historyStepsActive) {
             return;
         }
@@ -654,7 +654,7 @@ export class OdooEditor extends EventTarget {
             return false;
         }
 
-        currentStep.id = this._generateId();
+        currentStep.id = stepId || this._generateId();
         const previousStep = peek(this._historySteps);
         currentStep.clientId = this._collabClientId;
         currentStep.previousStepId = previousStep.id;
@@ -752,10 +752,10 @@ export class OdooEditor extends EventTarget {
             // Consider the position consumed.
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
-            this.historyStep(true);
             // Consider the last position of the history as an undo.
-            const undoStep = this._historySteps[this._historySteps.length - 1];
-            this._historyStepsStates.set(undoStep.id, 'undo');
+            const stepId = this._generateId();
+            this._historyStepsStates.set(stepId, 'undo');
+            this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyUndo'));
         }
     }
@@ -770,9 +770,9 @@ export class OdooEditor extends EventTarget {
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
             this.historySetSelection(this._historySteps[pos]);
-            this.historyStep(true);
-            const lastStep = this._historySteps[this._historySteps.length - 1];
-            this._historyStepsStates.set(lastStep.id, 'redo');
+            const stepId = this._generateId();
+            this._historyStepsStates.set(stepId, 'redo');
+            this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyRedo'));
         }
     }
