@@ -101,8 +101,8 @@ class ResourceCalendarLeaves(models.Model):
 
         holidays_read_group = self.env['hr.leave'].read_group([
             ('employee_id', 'in', list(employee_ids_set)),
-            ('date_from', '<=', min_date),
-            ('date_to', '>=', max_date),
+            ('date_from', '<=', max_date),
+            ('date_to', '>=', min_date),
             ('state', 'not in', ('cancel', 'refuse')),
         ], ['date_from_list:array_agg(date_from)', 'date_to_list:array_agg(date_to)', 'employee_id'], ['employee_id'])
         holidays_by_employee = {
