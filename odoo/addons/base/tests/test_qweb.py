@@ -756,6 +756,31 @@ class TestEmptyLines(TransactionCase):
         self.assertTrue(re.compile('^\s+\n').match(rendered))
         self.assertTrue(re.compile('\n\s+\n').match(rendered))
 
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = b'\n                '
+        expected = b'Text 1' + emptyline + b'Text 2' + emptyline + b'ok'
+        self.assertEqual(view1._render(), expected)
+
+
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not
     # instance
