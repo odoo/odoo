@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
-# Kim Asplund <kim.asplund@gmail.com>, 2019
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
@@ -22,6 +21,7 @@
 # Retropikzel, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Kim Asplund <kim.asplund@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1292,12 +1292,12 @@ msgstr "Tuotteen lisäkuvat"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
 msgid "Extra Variant Images"
-msgstr ""
+msgstr "Lisävarianttikuvat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
-msgstr ""
+msgstr "Lisävarianttimedia"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1435,7 +1435,7 @@ msgstr "Kuvan nimi"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__module_website_sale_stock
 msgid "Installs the \"Website Delivery Information\" application"
-msgstr ""
+msgstr "Asentaa \"Sivuston toimitustiedot\" -sovelluksen"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -1462,7 +1462,7 @@ msgstr "Laskutus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr ""
+msgstr "Lähetä laskuja asiakkaille"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -1545,6 +1545,8 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
+"Katsotaanpa nyt hallintasi hallintapaneelia saadaksesi verkkokauppasivustosi"
+" valmiiksi hetkessä."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -1672,7 +1674,7 @@ msgstr "Tuotetta ei ole määritetty kategoriassa \""
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
-msgstr ""
+msgstr "Tällä kävijällä ei ole vielä tuotenäkymiä"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1709,12 +1711,12 @@ msgstr "Hylättyjen ostoskorien määrä"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
 msgid "Number of grid columns on the shop"
-msgstr ""
+msgstr "Ruudukon sarakkeiden määrä kaupassa"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Number of hours after which the cart is considered abandoned."
-msgstr ""
+msgstr "Tuntimäärä, jonka jälkeen ostoskori katsotaan hylätyksi."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
@@ -1768,7 +1770,7 @@ msgstr "Avoimen lähdekoodin verkkokauppa"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "Avaa verkkosivustosi sovellus tästä."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -1776,6 +1778,7 @@ msgid ""
 "Optimization required! Reduce the image size or increase your compression "
 "settings."
 msgstr ""
+"Optimointi vaaditaan! Pienennä kuvakokoa tai lisää pakkausasetuksiasi."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -2019,7 +2022,7 @@ msgstr "Hinta"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
-msgstr ""
+msgstr "Tämän verkkokaupan/verkkosivuston hinnasto on saatavilla"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -2047,7 +2050,7 @@ msgstr "Tulosta"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr ""
+msgstr "Käsittele tilaus, kun maksu on vastaanotettu."
 
 #. module: website_sale
 #. openerp-web
@@ -2147,7 +2150,7 @@ msgstr "Tuotetta ei löydy!"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr ""
+msgstr "Tuotteiden hinnat näkyvät verkkoluettelossa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -2392,7 +2395,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "Search for a product"
-msgstr ""
+msgstr "Hae tuotetta"
 
 #. module: website_sale
 #. openerp-web
@@ -2431,12 +2434,12 @@ msgstr "Myy tuotevariantteja, käyttäen ominaisuuksia (koko, väri, yms.)"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr ""
+msgstr "Lähetä ostoskorin palauttamisen sähköposti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "Lähetä palautussähköposti"
 
 #. module: website_sale
 #. openerp-web
@@ -2743,20 +2746,20 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr ""
+msgstr "Sivustolta ei ole vahvistettua tilausta"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "Viimeaikaista vahvistettua tilausta ei ole."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr ""
+msgstr "Sivustolta ei ole vielä maksamattomia tilauksia"
 
 #. module: website_sale
 #. openerp-web
@@ -2811,7 +2814,7 @@ msgstr "Tuotetta ei ole julkaistu."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "This promo code is not available."
-msgstr ""
+msgstr "Tämä tarjouskoodi ei ole käytettävissä."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
@@ -3034,7 +3037,7 @@ msgstr "Verkkosivut"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team__website_ids
 msgid "Websites using this Sales Team"
-msgstr ""
+msgstr "Tätä myyntitiimiä käyttävät verkkosivustot"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
@@ -3068,12 +3071,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr ""
+msgstr "Sinulla ei ole tilausta verkkosivustolta"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr ""
+msgstr "Sinulla ei ole laskutustilausta verkkosivustolta"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery

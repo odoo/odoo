@@ -269,6 +269,16 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_email_with_multiline_subject(self):
+        _body, _body_alt, _subject = '<p>Test Body</p>', 'Test Body', '1st line\n2nd line'
+        msg = self.test_record.with_user(self.user_employee).message_post(
+            body=_body, subject=_subject,
+            message_type='comment', subtype='mt_comment',
+            partner_ids=[self.partner_1.id, self.partner_2.id]
+        )
+        self.assertEqual(msg.subject, '1st line 2nd line')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_portal_ok(self):
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)

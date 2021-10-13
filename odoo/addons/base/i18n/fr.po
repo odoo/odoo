@@ -7,6 +7,7 @@
 # Fred Gilson <fgi@odoo.com>, 2019
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2019
 # Henri Cornuau <hcornuau@gmail.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # e34d4dcb8e697b071167e94624cfbccb, 2019
 # Micky Jault <micky037@hotmail.fr>, 2019
 # Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2019
@@ -27,7 +28,6 @@
 # Lionel Sausin <ls@numerigraphe.com>, 2019
 # nle_odoo, 2019
 # lucasdeliege <deliegelucas@gmail.com>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2019
 # Alain van de Werve <avw@openerp.com>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
@@ -74,6 +74,7 @@
 # Cécile Collart <cco@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
+# Sarah Kamli <sak@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -81,7 +82,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
+"Last-Translator: Sarah Kamli <sak@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7981,25 +7982,25 @@ msgstr ""
 "Validation du numéro de TVA des tiers.\n"
 "====================================\n"
 "\n"
-"Après installation de ce module, la valeur entrée dans le champs TVA des tiers\n"
-"sera validé pour tous les pays pris en charge. Le pays est déterminé à\n"
+"Après installation de ce module, la valeur entrée dans le champ TVA des tiers\n"
+"sera validée pour tous les pays pris en charge. Le pays est déterminé à\n"
 "partir du préfixe du code TVA. Par exemple « BE0477472701 » sera validé en \n"
 "utilisant les règles belges.\n"
 "\n"
 "Il y a deux niveaux de validation du numéro de TVA :\n"
 "-------------------------------------------------------------------------------------\n"
 "    * par défaut, une simple vérification hors-ligne est faite en réalisant les règles de validation\n"
-"       connue pour le pays, en général au moyen d'un chiffre de contrôle. Ceci est rapide et \n"
+"       connues pour le pays, en général au moyen d'un chiffre de contrôle. Ceci est rapide et \n"
 "       toujours disponible, mais ne détecte pas les numéros qui ne sont peut-être pas \n"
 "       alloués ou plus valides.\n"
 "\n"
 "    * Lorsque l'option \"Validation du numéro TVA par VIES\" est cochée (dans la configuration  \n"
-"       de la société de l'utilisateur), le numéro de TVA est soumis en-ligne à la base de donnée \n"
+"       de la société de l'utilisateur), le numéro de TVA est soumis en ligne à la base de donnée \n"
 "       européenne VIES, laquelle vérifiera si le numéro est réellement valide et actuellement  \n"
 "       alloué à une compagnie européenne. Ceci est un peu plus lent qu'une simple vérification  \n"
 "       hors-ligne, requiert une connexion internet et n'est peut-être pas disponible tout le temps. \n"
 "       Si le service n'est pas disponible ou ne prend pas en charge le pays concerné (cas des pays hors Union \n"
-"       Européenne), la vérification simple sera réalisé à la place.\n"
+"       Européenne), la vérification simple sera réalisée à la place.\n"
 "\n"
 "Les pays pris en charge actuellement son ceux de l'Union Européenne et quelques autres\n"
 "tels que le Chili, la Colombie, le Mexique, la Norvège ou la Russie. Pour les pays non pris en charge, seul le code\n"

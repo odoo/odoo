@@ -42,6 +42,8 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
                 'country_id': self.env.ref('base.be').id,
             })
 
+        self._init_mail_gateway()
+
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
 
@@ -51,7 +53,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=22):  # test_mail_enterprise: 22
+        with self.mockSMSGateway(), self.assertQueryCount(employee=24):  # test_mail_enterprise: 24
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -66,7 +68,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.MockSMS):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
-        with self.mockSMSGateway(), self.assertQueryCount(employee=40):  # test_mail_enterprise: 40
+        with self.mockSMSGateway(), self.assertQueryCount(employee=42):  # test_mail_enterprise: 42
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -142,7 +144,7 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': False,
         })
 
-        with self.mockSMSGateway(), self.assertQueryCount(employee=108):
+        with self.mockSMSGateway(), self.assertQueryCount(employee=106):
                 composer.action_send_sms()
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
@@ -159,5 +161,5 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': True,
         })
 
-        with self.mockSMSGateway(), self.assertQueryCount(employee=159):
+        with self.mockSMSGateway(), self.assertQueryCount(employee=157):
             composer.action_send_sms()

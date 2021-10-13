@@ -144,7 +144,7 @@ var FormViewDialog = ViewDialog.extend({
                                 .then(function () {
                                     // reset default name field from context when Save & New is clicked, pass additional
                                     // context so that when getContext is called additional context resets it
-                                    var additionalContext = self._createContext && self._createContext(false) || {};
+                                    const additionalContext = self._createContext && self._createContext(false);
                                     self.form_view.createRecord(self.parentID, additionalContext);
                                 })
                                 .then(function () {

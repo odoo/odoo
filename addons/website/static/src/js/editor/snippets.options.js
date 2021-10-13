@@ -313,8 +313,10 @@ options.registry.carousel = options.Class.extend({
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         // we added a space after the <li> in the line below to keep the same space between the indicators
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li> ');
-        var $clone = $active.clone(true);
-        $clone.removeClass('active').insertAfter($active);
+        // Need to remove editor data from the clone so it gets its own.
+        $active.clone(false)
+            .removeClass('active')
+            .insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
             self._rebindEvents();
