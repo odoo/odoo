@@ -11,6 +11,8 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 const { FieldBoolean } = require("web.basic_fields_owl");
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
+var ListView = require('web.ListView');
+var KanbanView = require('web.KanbanView');
 var mixins = require('web.mixins');
 var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
@@ -19,6 +21,8 @@ var ViewDialogs = require('web.view_dialogs');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 var _t = core._t;
 var createView = testUtils.createView;
@@ -37,10 +41,17 @@ const { onMounted, onWillUnmount, xml } = owl;
 let serverData;
 let target;
 QUnit.module('Views', {
-    beforeEach: async function () {
+    beforeEach: function () {
+        target = getFixture();
+
         registry.category("services").add("scroller", scrollerService);
 
-        target = getFixture();
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
 
         this.data = {
             partner: {
@@ -180,7 +191,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('FormView');
+    QUnit.module('Legacy FormView');
 
     QUnit.test('simple form rendering', async function (assert) {
         assert.expect(12);
