@@ -152,7 +152,7 @@ odoo.define('web.basic_fields_owl', function (require) {
     FieldBoolean.components = { CustomCheckbox };
     FieldBoolean.description = _lt("Checkbox");
     FieldBoolean.supportedFieldTypes = ['boolean'];
-    FieldBoolean.template = 'web.FieldBoolean';
+    FieldBoolean.template = 'web.LegacyFieldBoolean';
     FieldBoolean.isQuickEditable = true;
 
 

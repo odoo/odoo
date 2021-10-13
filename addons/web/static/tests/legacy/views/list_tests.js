@@ -15,12 +15,19 @@ const ListView = require('web.ListView');
 const mixins = require('web.mixins');
 const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
+var testUtils = require('web.test_utils');
+var KanbanView = require('web.KanbanView');
 const { patch, unpatch } = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
-const Widget = require('web.Widget');
+var Widget = require('web.Widget');
 const ControlPanel = require('web.ControlPanel');
 const ListController = require('web.ListController');
+
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
+
+var _t = core._t;
 const cpHelpers = require('@web/../tests/search/helpers');
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 var createView = testUtils.createView;
@@ -35,6 +42,13 @@ let serverData;
 let target;
 QUnit.module('Views', {
     beforeEach: function () {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
         this.data = {
             foo: {
                 fields: {
@@ -140,7 +154,7 @@ QUnit.module('Views', {
     }
 }, function () {
 
-    QUnit.module('ListView');
+    QUnit.module('Legacy ListView');
 
     QUnit.test('simple readonly list', async function (assert) {
         assert.expect(10);
