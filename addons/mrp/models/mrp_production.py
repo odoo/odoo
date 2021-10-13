@@ -284,12 +284,14 @@ class MrpProduction(models.Model):
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
         for production in self:
-            production.mrp_production_child_count = len(production.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids - production)
+            moves = production.procurement_group_id.stock_move_ids
+            production.mrp_production_child_count = len((moves | moves.move_orig_ids).created_production_id - production)
 
     @api.depends('move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_source_count(self):
         for production in self:
-            production.mrp_production_source_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids - production)
+            moves = production.move_dest_ids
+            production.mrp_production_source_count = len((moves | moves.move_dest_ids).group_id.mrp_production_ids - production)
 
     @api.depends('procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_backorder(self):
@@ -1044,7 +1046,8 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
+        moves = self.procurement_group_id.stock_move_ids
+        mrp_production_ids = ((moves | moves.move_orig_ids).created_production_id - self).ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1064,7 +1067,8 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_sources(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids.ids
+        moves = self.move_dest_ids
+        mrp_production_ids = ((moves | moves.move_dest_ids).group_id.mrp_production_ids - self).ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
