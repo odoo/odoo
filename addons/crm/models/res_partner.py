@@ -60,8 +60,9 @@ class Partner(models.Model):
             p.meeting_count = len(result.get(p.id, []))
 
     def _compute_meeting(self):
-        if self.ids:
-            all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners = self.with_context(active_test=False).search(
+            [('id', 'child_of', self.ids)])
+        if all_partners:
             self.env.cr.execute("""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
@@ -101,7 +102,7 @@ class Partner(models.Model):
             'default_partner_ids': partner_ids,
             'default_attendee_ids': [(0, 0, {'partner_id': pid}) for pid in partner_ids],
         }
-        action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
+        action['domain'] = ['|', ('id', 'in', self._compute_meeting().get(self.id, [])), ('partner_ids', 'in', self.ids)]
         return action
 
     def action_view_opportunity(self):
