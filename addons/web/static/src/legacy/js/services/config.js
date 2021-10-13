@@ -2,6 +2,7 @@ odoo.define('web.config', function (require) {
 "use strict";
 
 const Bus = require('web.Bus');
+const { hasTouch, isAndroid, isIOS, isMobileOS } = require('@web/core/browser/feature_detection');
 
 const bus = new Bus();
 
@@ -13,11 +14,6 @@ const bus = new Bus();
  * Note that many information currently stored in session should be moved to
  * this file someday.
  */
-
-const maxTouchPoints = navigator.maxTouchPoints || 1;
-const isAndroid = /Android/i.test(navigator.userAgent);
-const isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && maxTouchPoints > 1);
-const isOtherMobileDevice = /(webOS|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
 
 var config = {
     device: {
@@ -33,7 +29,7 @@ var config = {
          *
          * @type Boolean
          */
-        touch: 'ontouchstart' in window || 'onmsgesturechange' in window,
+        touch: hasTouch(),
         /**
          * size_class is an integer: 0, 1, 2, 3 or 4, depending on the (current)
          * size of the device.  This is a dynamic property, updated whenever the
@@ -48,14 +44,14 @@ var config = {
          *
          * @return Boolean
          */
-        isAndroid: isAndroid,
+        isAndroid: isAndroid(),
         /**
          * Mobile OS (iOS) device detection using userAgent.
          * This flag doesn't depend on the size/resolution of the screen.
          *
          * @return Boolean
          */
-        isIOS: isIOS,
+        isIOS: isIOS(),
         /**
          * A frequent use case is to have a different render in 'mobile' mode,
          * meaning when the screen is small.  This flag (boolean) is true when
@@ -71,7 +67,7 @@ var config = {
          *
          * @return {boolean}
          */
-        isMobileDevice: isAndroid || isIOS || isOtherMobileDevice,
+        isMobileDevice: isMobileOS(),
         /**
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */
