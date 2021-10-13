@@ -268,14 +268,13 @@ class Project(models.Model):
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
-            'view_mode': 'tree,grid,kanban,pivot,graph,form',
+            'view_mode': 'tree,kanban,pivot,graph,form',
             'views': [
                 [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
-                [self.env.ref('timesheet_grid.timesheet_view_grid_by_employee').id, 'grid'],
                 [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_pivot').id, 'pivot'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
-                [self.env.ref('timesheet_grid.timesheet_view_form').id, 'form'],
+                [self.env.ref('hr_timesheet.timesheet_view_form_user').id, 'form'],
             ],
         })
         return action
