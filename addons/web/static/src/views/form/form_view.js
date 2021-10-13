@@ -47,9 +47,22 @@ class FormView extends owl.Component {
         });
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
 
+        this.canCreate = true;
+        this.canEdit = true;
+
         useViewButtons(this.model);
 
-        useSetupView({ /** TODO **/ });
+        useSetupView({
+            /** TODO **/
+        });
+    }
+
+    createRecord() {
+        this.model.resId = null;
+        this.model.load();
+    }
+    async saveRecord() {
+        this.model.root.save();
     }
 }
 
@@ -57,6 +70,7 @@ FormView.type = "form";
 FormView.display_name = "Form";
 FormView.multiRecord = false;
 FormView.template = `web.FormView`;
+FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.components = { ControlPanel, FormRenderer, Pager };
 
 registry.category("views").add("form", FormView);

@@ -7,11 +7,11 @@
     </t>
 
     <t t-name="web.FieldBoolean" owl="1">
-        <CheckBox disabled="props.readonly" value="props.value" />
+        <CheckBox disabled="props.readonly" value="props.value" t-on-change="onChange"/>
     </t>
 
     <t t-name="web.FieldImage" owl="1">
-        <img class="img img-fluid" alt="Binary file" t-att-src="url" t-att-border="props.readonly ? 0 : 1" t-att-name="props.name" />
+        <img class="img img-fluid" alt="Binary file" t-att-src="url" t-att-border="props.readonly ? 0 : 1" t-att-name="props.name"/>
     </t>
 
 </templates>

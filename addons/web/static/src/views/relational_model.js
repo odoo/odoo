@@ -168,7 +168,7 @@ function sanitizeValues(values, fields) {
             sanitizedValues[fieldName] = values[fieldName];
         }
     }
-    return values;
+    return sanitizedValues;
 }
 
 class DataPoint {
@@ -249,8 +249,10 @@ class DataRecord extends DataPoint {
      */
     constructor(model, resModel, resId, params) {
         super(model, resModel, params);
-
         this.resId = resId;
+        this.data = {};
+        this._values = {};
+        this._changes = {};
     }
 
     /**
@@ -265,10 +267,21 @@ class DataRecord extends DataPoint {
         }
         let { data } = params;
         if (!data) {
-            const recordsData = await this.requestBatcher.read(this.resModel, [this.resId], fields);
-            data = sanitizeValues(recordsData[0], this.fields);
+            if (this.resId) {
+                const result = await this.requestBatcher.read(
+                    this.resModel,
+                    [this.resId],
+                    this.activeFields
+                );
+                data = sanitizeValues(result[0], this.fields);
+            } else {
+                data = await this._performOnchange();
+            }
         }
-        this.data = Object.freeze(data);
+        this._values = data;
+        this._changes = {};
+        this.data = data;
+        // this.data = Object.freeze(data);
 
         // Relational data
         await Promise.all(Object.keys(this.fields).map((fname) => this.loadRelationalField(fname)));
@@ -291,9 +304,60 @@ class DataRecord extends DataPoint {
         const dataList = this.createList(relation, { activeFields, resIds, views, viewMode });
         const alteredData = { ...this.data, [fieldName]: dataList };
 
-        this.data = Object.freeze(alteredData);
+        this.data = alteredData;
+        // this.data = Object.freeze(alteredData);
 
         await this.data[fieldName].load();
+    }
+
+    async update(fieldName, value) {
+        this.data[fieldName] = value;
+        this._changes[fieldName] = value;
+        Object.assign(this._changes, await this._performOnchange(fieldName));
+        this.model.notify();
+    }
+
+    async save() {
+        const changes = this._getChanges();
+        if (this.resId) {
+            await this.model.orm.write(this.resModel, [this.resId], changes);
+        } else {
+            this.resId = await this.model.orm.create(this.resModel, changes);
+        }
+        await this.load();
+        this.model.notify();
+    }
+
+    _getChanges(allFields = false) {
+        const changes = Object.assign({}, allFields ? this.data : this._changes);
+        for (const fieldName in changes) {
+            const fieldType = this.fields[fieldName].type;
+            if (fieldType === "one2many" || fieldType === "many2many") {
+                // TODO: need to generate commands
+                changes[fieldName] = [];
+            } else if (fieldType === "many2one") {
+                changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
+            }
+        }
+        return changes;
+    }
+
+    async _performOnchange(fieldName) {
+        const result = await this.model.orm.call(this.resModel, "onchange", [
+            [],
+            this._getChanges(true),
+            fieldName ? [fieldName] : [],
+            this._getOnchangeSpec(),
+        ]);
+        return sanitizeValues(result.value, this.fields);
+    }
+
+    _getOnchangeSpec() {
+        const onChangeSpec = {};
+        for (const fieldName in this.aciveFields) {
+            onChangeSpec[fieldName] = "1"; // FIXME: need to on_change info from arch
+        }
+        return onChangeSpec;
     }
 }
 
@@ -463,7 +527,7 @@ export class RelationalModel extends Model {
 
         this.relations = params.relations || {};
         this.fields = params.fields || {};
-        this.activeFields = params.activeFields || [];
+        this.activeFields = params.activeFields || {};
         this.viewMode = params.viewMode || null;
 
         this.requestBatcher = requestBatcher;
@@ -487,6 +551,7 @@ export class RelationalModel extends Model {
             dataPointParams.resIds = this.resIds;
         }
         if (this.resId) {
+            // FIXME: what if it's a new record in form view?
             this.root = new DataRecord(this, this.resModel, this.resId, dataPointParams);
         } else {
             this.root = new DataList(this, this.resModel, dataPointParams);

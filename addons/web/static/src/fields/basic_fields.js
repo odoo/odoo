@@ -9,7 +9,11 @@ const fieldRegistry = registry.category("fields");
 // FieldChar
 // -----------------------------------------------------------------------------
 
-export class FieldChar extends Component {}
+export class FieldChar extends Component {
+    onChange(ev) {
+        this.props.record.update(this.props.name, ev.target.value);
+    }
+}
 FieldChar.template = "web.FieldChar";
 fieldRegistry.add("char", FieldChar);
 
@@ -17,7 +21,11 @@ fieldRegistry.add("char", FieldChar);
 // FieldBoolean
 // -----------------------------------------------------------------------------
 
-export class FieldBoolean extends Component {}
+export class FieldBoolean extends Component {
+    onChange(ev) {
+        this.props.record.update(this.props.name, ev.target.checked);
+    }
+}
 FieldBoolean.template = "web.FieldBoolean";
 fieldRegistry.add("boolean", FieldBoolean);
 
@@ -27,14 +35,19 @@ fieldRegistry.add("boolean", FieldBoolean);
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
-    "R": "gif",
-    "i": "png",
-    "P": "svg+xml",
+    R: "gif",
+    i: "png",
+    P: "svg+xml",
 };
+const placeholder = "/web/static/img/placeholder.png";
 export class FieldImage extends Component {
     setup() {
-        const magic = fileTypeMagicWordMap[this.props.value[0] || "png"];
-        this.url = `data:image/${magic};base64,${this.props.value}`;
+        if (this.props.value) {
+            const magic = fileTypeMagicWordMap[this.props.value[0] || "png"];
+            this.url = `data:image/${magic};base64,${this.props.value}`;
+        } else {
+            this.url = placeholder;
+        }
     }
 }
 FieldImage.template = "web.FieldImage";

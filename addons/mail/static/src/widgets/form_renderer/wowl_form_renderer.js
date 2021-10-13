@@ -31,7 +31,11 @@ class ChatterContainerLegacy extends owl.Component {
         this.env = owl.Component.env;
     }
 }
-ChatterContainerLegacy.template = owl.tags.xml`<ChatterContainer t-props="props"/>`;
+ChatterContainerLegacy.template = owl.tags.xml`
+    <t>
+        <ChatterContainer t-if="props.resId" t-props="props"/>
+        <div t-else=""/>
+    </t>`;
 ChatterContainerLegacy.components = { ChatterContainer };
 
 FormRenderer.components.ChatterContainer = ChatterContainerLegacy;
