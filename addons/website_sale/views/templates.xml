@@ -405,7 +405,7 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <div t-attf-onclick="location.href='#{keep('/shop/category/' + slug(c), category=0)}';" class="custom-control custom-radio mb-1 d-inline-block">
+        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control custom-radio mb-1 d-inline-block">
             <input type="radio" style="pointer-events:none;" class="custom-control-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
             <label class="custom-control-label font-weight-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
@@ -428,7 +428,7 @@
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
-                            <div t-attf-onclick="location.href='#{keep('/shop', category=0)}';" class="custom-control custom-radio mb-1 d-inline-block">
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control custom-radio mb-1 d-inline-block">
                                 <input type="radio" style="pointer-events:none;" class="custom-control-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
                                 <label class="custom-control-label font-weight-normal" t-att-for="all_products">All Products</label>
                             </div>
