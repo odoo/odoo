@@ -18,7 +18,7 @@
               <td class="o_list_record_selector"><CheckBox /></td>
               <t t-foreach="columns" t-as="column" t-key="column_index">
                 <td class="o_data_cell" t-on-click="openRecord(record)">
-                  <Field name="column.name" record="record" mode="'readonly'" type="column.widget"/>
+                  <Field name="column.name" record="record" readonly="1" type="column.widget"/>
                 </td>
               </t>
             </tr>
