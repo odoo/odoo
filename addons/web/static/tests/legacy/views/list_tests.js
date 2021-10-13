@@ -5,13 +5,14 @@ var AbstractFieldOwl = require('web.AbstractFieldOwl');
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
-const Domain = require('web.Domain')
+const Domain = require('web.Domain');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
 var fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
+var KanbanView = require('web.KanbanView');
 var mixins = require('web.mixins');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -19,7 +20,8 @@ const { patch, unpatch } = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 var Widget = require('web.Widget');
-
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 var _t = core._t;
 const cpHelpers = require('@web/../tests/search/helpers');
@@ -32,6 +34,13 @@ let serverData;
 
 QUnit.module('Views', {
     beforeEach: function () {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
         this.data = {
             foo: {
                 fields: {
@@ -136,7 +145,7 @@ QUnit.module('Views', {
     }
 }, function () {
 
-    QUnit.module('ListView');
+    QUnit.module('Legacy ListView');
 
     QUnit.test('simple readonly list', async function (assert) {
         assert.expect(10);

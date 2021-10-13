@@ -46,6 +46,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
+import { requestBatcherService } from "@web/views/relational_model";
 
 const { Component, mount, tags } = owl;
 
@@ -85,6 +86,7 @@ export function setupWebClientRegistries() {
         notification: () => notificationService,
         orm: () => ormService,
         popover: () => popoverService,
+        requestBatcher: () => requestBatcherService,
         router: () => makeFakeRouterService(),
         title: () => fakeTitleService,
         ui: () => uiService,
