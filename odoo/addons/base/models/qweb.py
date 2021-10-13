@@ -939,10 +939,9 @@ class QWeb(object):
         body = []
         if el.getchildren():
             for item in el:
-                # ignore comments & processing instructions
-                if isinstance(item, etree._Comment):
-                    continue
-                body.extend(self._compile_node(item, options, indent))
+                if not isinstance(item, etree._Comment):
+                    body.extend(self._compile_node(item, options, indent))
+                # comments can also contains tail text
                 if item.tail is not None:
                     self._appendText(item.tail, options)
         return body
