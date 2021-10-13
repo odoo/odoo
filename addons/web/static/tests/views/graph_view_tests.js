@@ -3018,6 +3018,48 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [4, 3, 1] });
     });
 
+    QUnit.test("graph view sort by measure in lower case(desc)", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.product.records.push({ id: 38, display_name: "zphone" });
+        serverData.models.foo.records[1].product_id = 38;
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        checkLegend(assert, graph, "Count", "measure should be by count");
+        checkDatasets(assert, graph, "data", { data: [4, 3, 1] });
+    });
+
+    QUnit.test("graph view sort by measure in lower case(asc)", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.product.records.push({ id: 38, display_name: "zphone" });
+        serverData.models.foo.records[1].product_id = 38;
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        checkLegend(assert, graph, "Count", "measure should be by count");
+        checkDatasets(assert, graph, "data", { data: [1, 3, 4] });
+    });
+
     QUnit.test("graph view sort by measure for grouped data", async function (assert) {
         assert.expect(8);
 

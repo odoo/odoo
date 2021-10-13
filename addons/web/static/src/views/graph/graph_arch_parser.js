@@ -26,7 +26,8 @@ export class GraphArchParser extends XMLParser {
                     if (mode && MODES.includes(mode)) {
                         archInfo.mode = mode;
                     }
-                    const order = node.getAttribute("order");
+                    let order = node.getAttribute("order");
+                    order = order && order.toUpperCase();
                     if (order && ORDERS.includes(order)) {
                         archInfo.order = order;
                     }
