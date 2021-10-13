@@ -53,6 +53,7 @@
             'website_sale/static/src/js/website_sale_validate.js',
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
+            'website_sale/static/src/js/website_sale_category_link.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
