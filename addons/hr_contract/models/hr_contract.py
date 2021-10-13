@@ -64,7 +64,7 @@ class Contract(models.Model):
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
-        help='Person responsible for validating the employee\'s contracts.')
+        help='Person responsible for validating the employee\'s contracts.', domain="[('company_id', '=', company_id)]")
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
     first_contract_date = fields.Date(related='employee_id.first_contract_date')
 
