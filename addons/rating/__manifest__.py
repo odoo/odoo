@@ -10,6 +10,7 @@ This module allows a customer to give rating.
         'mail',
     ],
     'data': [
+        'data/ir_cron_data.xml',
         'views/rating_rating_views.xml',
         'views/rating_template.xml',
         'views/mail_message_views.xml',

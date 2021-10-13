@@ -3,6 +3,8 @@
 import base64
 import uuid
 
+from datetime import timedelta
+
 from odoo import api, fields, models
 
 from odoo.modules.module import get_resource_path
@@ -176,3 +178,16 @@ class Rating(models.Model):
             'res_id': self.res_id,
             'views': [[False, 'form']]
         }
+
+    def _cron_apply_ratings(self):
+        """
+        Identify ratings over an hour old without submitted feedback and apply them.
+        """
+        ratings = self.search([
+            ('consumed', '!=', True),
+            ('rating', '!=', 0),
+            ('write_date', '<', fields.Datetime.now() - timedelta(hours=1))
+        ])
+        for rating in ratings:
+            record_sudo = self.env[rating.res_model].sudo().browse(rating.res_id)
+            record_sudo._log_rating(rating)
