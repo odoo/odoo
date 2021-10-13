@@ -16,19 +16,9 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   models.load_models([
     {
       model: "gift.card",
-      fields: ["code", "initial_amount", "balance"],
       loaded: function (self, giftCard) {
         self.giftCard = giftCard;
       },
-    }, {
-        model: product_model.model,
-        fields: product_model.fields,
-        order: product_model.order,
-        domain: function (self) {
-            return [['id', '=', self.config.gift_card_product_id[0]]];
-        },
-        context: product_model.context,
-        loaded: product_model.loaded,
     },
   ]);
 

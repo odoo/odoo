@@ -4,9 +4,6 @@ odoo.define('pos_sale_product_configurator.models', function (require) {
     const { Gui } = require('point_of_sale.Gui');
     var models = require('point_of_sale.models');
 
-    models.load_fields("product.product", ["optional_product_ids"]);
-    models.load_fields("pos.config", ["iface_open_product_info"]);
-
     const super_order_model = models.Order.prototype;
     models.Order = models.Order.extend({
         async add_product(product, options) {

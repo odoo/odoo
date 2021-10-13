@@ -3,8 +3,6 @@ odoo.define('pos_mercury.pos_mercury', function (require) {
 
 var pos_model = require('point_of_sale.models');
 
-pos_model.load_fields('pos.payment.method', 'pos_mercury_config_id');
-
 pos_model.PosModel = pos_model.PosModel.extend({
     getOnlinePaymentMethods: function () {
         var online_payment_methods = [];

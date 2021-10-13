@@ -127,9 +127,19 @@ exports.PosModel = Backbone.Model.extend({
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
         // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
-        this.ready = this.load_server_data().then(function(){
-            return self.after_load_server_data();
-        });
+        this.ready = this.rpc({
+                model: 'pos.session',
+                method: 'load_pos_data',
+                args: [[odoo.pos_session_id]],
+            }).then(async ([records, loadingInfos]) => {
+                self.loadingInfos = loadingInfos;
+                const tmp = {}
+                for (const model of self.models) {
+                    if (model.condition ? !model.condition(self) : false) continue;
+                    await model.loaded(self, records[model.model] || [], tmp);
+                }
+                return self.after_load_server_data();
+            });
     },
     getDefaultSearchDetails: function() {
         return {
@@ -159,13 +169,12 @@ exports.PosModel = Backbone.Model.extend({
 
             return this.connect_to_proxy();
         }
-        if(this.config.limited_products_loading) {
-            await this.loadLimitedProducts();
-            if(this.config.product_load_background)
-                this.loadProductsBackground();
+        if (this.config.limited_products_loading && this.config.product_load_background) {
+            this.loadProductsBackground();
         }
-        if(this.config.partner_load_background )
+        if (this.config.limited_partners_loading && this.config.partner_load_background) {
             this.loadPartnersBackground();
+        }
         return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
@@ -234,12 +243,11 @@ exports.PosModel = Backbone.Model.extend({
 
     },{
         model:  'res.company',
-        fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
-        ids:    function(self){ return [self.session.user_context.allowed_company_ids[0]]; },
-        loaded: function(self,companies){ self.company = companies[0]; },
+        loaded: function(self,companies){
+            self.company = companies[0];
+        },
     },{
         model:  'decimal.precision',
-        fields: ['name','digits'],
         loaded: function(self,dps){
             self.dp  = {};
             for (var i = 0; i < dps.length; i++) {
@@ -248,9 +256,6 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'uom.uom',
-        fields: [],
-        domain: null,
-        context: function(self){ return { active_test: false }; },
         loaded: function(self,units){
             self.units = units;
             _.each(units, function(unit){
@@ -259,13 +264,11 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'res.country.state',
-        fields: ['name', 'country_id'],
         loaded: function(self,states){
             self.states = states;
         },
     },{
         model:  'res.country',
-        fields: ['name', 'vat_label', 'code'],
         loaded: function(self,countries){
             self.countries = countries;
             self.company.country = null;
@@ -277,13 +280,11 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'res.lang',
-        fields: ['name', 'code'],
         loaded: function (self, langs){
             self.langs = langs;
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'is_base_affected', 'amount_type', 'children_tax_ids'],
         domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -296,41 +297,16 @@ exports.PosModel = Backbone.Model.extend({
                     return self.taxes_by_id[child_tax_id];
                 });
             });
-            return new Promise(function (resolve, reject) {
-              var tax_ids = _.pluck(self.taxes, 'id');
-              self.rpc({
-                  model: 'account.tax',
-                  method: 'get_real_tax_amount',
-                  args: [tax_ids],
-              }).then(function (taxes) {
-                  _.each(taxes, function (tax) {
-                      self.taxes_by_id[tax.id].amount = tax.amount;
-                  });
-                  resolve();
-              });
-            });
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state', 'update_stock_at_closing'],
-        domain: function(self){
-            var domain = [
-                ['state','in',['opening_control','opened']],
-                ['rescue', '=', false],
-            ];
-            if (self.config_id) domain.push(['config_id', '=', self.config_id]);
-            return domain;
-        },
         loaded: function(self, pos_sessions, tmp){
             self.pos_session = pos_sessions[0];
             self.pos_session.login_number = odoo.login_number;
             self.config_id = self.config_id || self.pos_session && self.pos_session.config_id[0];
-            tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
         },
     },{
         model: 'pos.config',
-        fields: [],
-        domain: function(self){ return [['id','=', self.config_id]]; },
         loaded: function(self,configs){
             self.config = configs[0];
             self.config.use_proxy = self.config.is_posbox && (
@@ -351,45 +327,23 @@ exports.PosModel = Backbone.Model.extend({
        },
     },{
         model: 'pos.bill',
-        fields: ['name', 'value'],
-        domain: function (self) {
-            return [['id', 'in', self.config.default_bill_ids]];
-        },
         loaded: function (self, bills) {
             self.bills = bills;
         },
       }, {
         model:  'res.partner',
         label: 'load_partners',
-        fields: ['name','street','city','state_id','country_id','vat','lang',
-                 'phone','zip','mobile','email','barcode','write_date',
-                 'property_account_position_id','property_product_pricelist'],
-        domain: async function(self){
-            if(self.config.limited_partners_loading) {
-                const result = await self.rpc({
-                      model: 'pos.config',
-                      method: 'get_limited_partners_loading',
-                      args: [self.config.id],
-                });
-                return [['id','in', result.map(elem => elem[0])]];
-            }
-            return [];
-        },
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
         },
     },{
       model: 'stock.picking.type',
-      fields: ['use_create_lots', 'use_existing_lots'],
-      domain: function(self){ return [['id', '=', self.config.picking_type_id[0]]]; },
       loaded: function(self, picking_type) {
           self.picking_type = picking_type[0];
       },
     },{
         model:  'res.users',
-        fields: ['name','company_id', 'id', 'groups_id', 'lang'],
-        domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
         loaded: function(self,users){
             users.forEach(function(user) {
                 user.role = 'cashier';
@@ -412,14 +366,6 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name', 'discount_policy'],
-        domain: function(self) {
-            if (self.config.use_pricelist) {
-                return [['id', 'in', self.config.available_pricelist_ids]];
-            } else {
-                return [['id', '=', self.config.pricelist_id[0]]];
-            }
-        },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
@@ -427,14 +373,11 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.bank.statement',
-        fields: ['id', 'balance_start'],
-        domain: function(self){ return [['id', '=', self.pos_session.cash_register_id[0]]]; },
         loaded: function(self, statement){
             self.bank_statement = statement[0];
         },
     },{
         model:  'product.pricelist.item',
-        domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
         loaded: function(self, pricelist_items){
             var pricelist_by_id = {};
             _.each(self.pricelists, function (pricelist) {
@@ -449,7 +392,6 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.category',
-        fields: ['name', 'parent_id'],
         loaded: function(self, product_categories){
             var category_by_id = {};
             _.each(product_categories, function (category) {
@@ -463,8 +405,6 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model: 'res.currency',
-        fields: ['name','symbol','position','rounding','rate'],
-        ids:    function(self){ return [self.config.currency_id[0], self.company.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
             if (self.currency.rounding > 0 && self.currency.rounding < 1) {
@@ -473,14 +413,10 @@ exports.PosModel = Backbone.Model.extend({
                 self.currency.decimals = 0;
             }
 
-            self.company_currency = currencies[1];
+            self.company_currency = currencies[1] || currencies[0];
         },
     },{
         model:  'pos.category',
-        fields: ['id', 'name', 'parent_id', 'child_id', 'write_date'],
-        domain: function(self) {
-            return self.config.limit_categories && self.config.iface_available_categ_ids.length ? [['id', 'in', self.config.iface_available_categ_ids]] : [];
-        },
         loaded: function(self, categories){
             self.db.add_categories(categories);
         },
@@ -488,23 +424,6 @@ exports.PosModel = Backbone.Model.extend({
         model:  'product.product',
         label: 'load_products',
         condition: function (self) { return !self.config.limited_products_loading; },
-        fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
-                 'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids', 'active'],
-        order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
-        domain: function(self){
-            var domain = ['&', '&', ['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
-            if (self.config.limit_categories &&  self.config.iface_available_categ_ids.length) {
-                domain.unshift('&');
-                domain.push(['pos_categ_id', 'in', self.config.iface_available_categ_ids]);
-            }
-            if (self.config.iface_tipproduct){
-              domain.unshift(['id', '=', self.config.tip_product_id[0]]);
-              domain.unshift('|');
-            }
-
-            return domain;
-        },
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
@@ -520,16 +439,12 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model: 'product.packaging',
-        fields: ['name', 'barcode', 'product_id', 'qty'],
-        domain: function(self){return [['barcode', '!=', '']]; },
         loaded: function(self, product_packagings) {
             self.db.add_packagings(product_packagings);
         }
     },{
         model: 'product.attribute',
-        fields: ['name', 'display_type'],
         condition: function (self) { return self.config.product_configurator; },
-        domain: function(){ return [['create_variant', '=', 'no_variant']]; },
         loaded: function(self, product_attributes, tmp) {
             tmp.product_attributes_by_id = {};
             _.map(product_attributes, function (product_attribute) {
@@ -538,9 +453,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model: 'product.attribute.value',
-        fields: ['name', 'attribute_id', 'is_custom', 'html_color'],
         condition: function (self) { return self.config.product_configurator; },
-        domain: function(self, tmp){ return [['attribute_id', 'in', _.keys(tmp.product_attributes_by_id).map(parseFloat)]]; },
         loaded: function(self, pavs, tmp) {
             tmp.pav_by_id = {};
             _.map(pavs, function (pav) {
@@ -549,9 +462,7 @@ exports.PosModel = Backbone.Model.extend({
         }
     }, {
         model: 'product.template.attribute.value',
-        fields: ['product_attribute_value_id', 'attribute_id', 'attribute_line_id', 'price_extra'],
         condition: function (self) { return self.config.product_configurator; },
-        domain: function(self, tmp){ return [['attribute_id', 'in', _.keys(tmp.product_attributes_by_id).map(parseFloat)]]; },
         loaded: function(self, ptavs, tmp) {
             self.attributes_by_ptal_id = {};
             _.map(ptavs, function (ptav) {
@@ -574,15 +485,11 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model: 'account.cash.rounding',
-        fields: ['name', 'rounding', 'rounding_method'],
-        domain: function(self){return [['id', '=', self.config.rounding_method[0]]]; },
         loaded: function(self, cash_rounding) {
             self.cash_rounding = cash_rounding;
         }
     },{
         model:  'pos.payment.method',
-        fields: ['name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type'],
-        domain: function(self){return ['|',['active', '=', false], ['active', '=', true]]; },
         loaded: function(self, payment_methods) {
             self.payment_methods = payment_methods.sort(function(a,b){
                 // prefer cash payment_method to be first in the list
@@ -606,25 +513,11 @@ exports.PosModel = Backbone.Model.extend({
         }
     },{
         model:  'account.fiscal.position',
-        fields: [],
-        domain: function(self){ return [['id','in',self.config.fiscal_position_ids]]; },
         loaded: function(self, fiscal_positions){
             self.fiscal_positions = fiscal_positions;
         }
     }, {
         model:  'account.fiscal.position.tax',
-        fields: [],
-        domain: function(self){
-            var fiscal_position_tax_ids = [];
-
-            self.fiscal_positions.forEach(function (fiscal_position) {
-                fiscal_position.tax_ids.forEach(function (tax_id) {
-                    fiscal_position_tax_ids.push(tax_id);
-                });
-            });
-
-            return [['id','in',fiscal_position_tax_ids]];
-        },
         loaded: function(self, fiscal_position_taxes){
             self.fiscal_position_taxes = fiscal_position_taxes;
             self.fiscal_positions.forEach(function (fiscal_position) {
@@ -696,86 +589,6 @@ exports.PosModel = Backbone.Model.extend({
         },
     },
     ],
-
-    // loads all the needed data on the sever. returns a promise indicating when all the data has loaded.
-    load_server_data: function(){
-        var self = this;
-        var progress = 0;
-        var progress_step = 1.0 / self.models.length;
-        var tmp = {}; // this is used to share a temporary state between models loaders
-
-        var loaded = new Promise(function (resolve, reject) {
-            async function load_model(index) {
-                if (index >= self.models.length) {
-                    resolve();
-                } else {
-                    var model = self.models[index];
-                    self.setLoadingMessage(_t('Loading')+' '+(model.label || model.model || ''), progress);
-
-                    var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
-                    if (!cond) {
-                        load_model(index+1);
-                        return;
-                    }
-
-                    var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
-                    var domain =  typeof model.domain === 'function'  ? await model.domain(self,tmp)  : model.domain;
-                    var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
-                    var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
-                    var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
-                    progress += progress_step;
-
-                    if(model.model ){
-                        var params = {
-                            model: model.model,
-                            context: _.extend(context, self.session.user_context || {}),
-                        };
-
-                        if (model.ids) {
-                            params.method = 'read';
-                            params.args = [ids, fields];
-                        } else {
-                            params.method = 'search_read';
-                            params.domain = domain;
-                            params.fields = fields;
-                            params.orderBy = order;
-                        }
-
-                        self.rpc(params).then(function (result) {
-                            try { // catching exceptions in model.loaded(...)
-                                Promise.resolve(model.loaded(self, result, tmp))
-                                    .then(function () { load_model(index + 1); },
-                                        function (err) { reject(err); });
-                            } catch (err) {
-                                console.error(err.message, err.stack);
-                                reject(err);
-                            }
-                        }, function (err) {
-                            reject(err);
-                        });
-                    } else if (model.loaded) {
-                        try { // catching exceptions in model.loaded(...)
-                            Promise.resolve(model.loaded(self, tmp))
-                                .then(function () { load_model(index +1); },
-                                    function (err) { reject(err); });
-                        } catch (err) {
-                            reject(err);
-                        }
-                    } else {
-                        load_model(index + 1);
-                    }
-                }
-            }
-
-            try {
-                return load_model(0);
-            } catch (err) {
-                return Promise.reject(err);
-            }
-        });
-
-        return loaded;
-    },
 
     prepare_new_partners_domain: function(){
         return [['write_date','>', this.db.get_partner_write_date()]];
@@ -909,77 +722,48 @@ exports.PosModel = Backbone.Model.extend({
         });
         productModel.loaded(this, products);
     },
-    async _loadMissingPartners(orders) {
-        const missingPartnerIds = new Set([]);
-        for (const order of orders) {
-            const partnerId = order.partner_id;
-            if(missingPartnerIds.has(partnerId)) continue;
-            if (partnerId && !this.db.get_partner_by_id(partnerId)) {
-                missingPartnerIds.add(partnerId);
-            }
-        }
-        const partnerModel = _.find(this.models, function(model){return model.model === 'res.partner';});
-        const fields = partnerModel.fields;
-        if(missingPartnerIds) {
-            const partners = await this.rpc({
-                model: 'res.partner',
-                method: 'read',
-                args: [[...missingPartnerIds], fields],
-                context: Object.assign(this.session.user_context, { display_default_code: false }),
-            });
-            partnerModel.loaded(this, partners);
-        }
-    },
-    // Load the products following specific rules into the `db`
-    loadLimitedProducts: async function() {
-        let product_model = _.find(this.models, (model) => model.model === 'product.product');
-        const products = await this.rpc({
-            model: 'pos.config',
-            method: 'get_limited_products_loading',
-            args: [this.config_id, product_model.fields],
-            context: { ...this.session.user_context, ...product_model.context() },
-        });
-        product_model.loaded(this, products);
-        return products.length
-    },
     loadProductsBackground: async function() {
         let page = 0;
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
         let products = [];
         do {
             products = await this.rpc({
-                model: 'product.product',
-                method: 'search_read',
+                model: 'pos.session',
+                method: 'default_load_method',
+                args: [[odoo.pos_session_id], "product.product", this.loadingInfos["product.product"]],
                 kwargs: {
-                    'domain': product_model.domain(this),
-                    'fields': product_model.fields,
-                    'offset': page * this.env.pos.config.limited_products_amount,
-                    'limit': this.env.pos.config.limited_products_amount
+                    'search_options': {
+                        'offset': page * this.env.pos.config.limited_products_amount,
+                        'limit': this.env.pos.config.limited_products_amount
+                    },
                 },
-                context: { ...this.session.user_context, ...product_model.context() },
             });
             product_model.loaded(this, products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
     },
     loadPartnersBackground: async function() {
-        let i = 1;
-        let PartnerIds = [];
-        var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
+        // Start at the first page since the first set of loaded partners are not actually in the
+        // same order as this background loading procedure.
+        let i = 0;
+
+        let partners = [];
         do {
-            PartnerIds = await this.rpc({
-                model: 'res.partner',
-                method: 'search_read',
-                args: [[], fields],
+            partners = await this.rpc({
+                model: 'pos.session',
+                method: 'default_load_method',
+                args: [[odoo.pos_session_id], "res.partner", this.loadingInfos["res.partner"]],
                 kwargs: {
-                    limit: this.env.pos.config.limited_partners_amount,
-                    offset: this.env.pos.config.limited_partners_amount * i
+                    'search_options': {
+                        limit: this.env.pos.config.limited_partners_amount,
+                        offset: this.env.pos.config.limited_partners_amount * i,
+                    }
                 },
                 context: this.env.session.user_context,
             });
-            this.env.pos.db.add_partners(PartnerIds);
+            this.env.pos.db.add_partners(partners);
             i += 1;
-        } while(PartnerIds.length);
+        } while(partners.length);
     },
     set_start_order: function(){
         var orders = this.get('orders').models;

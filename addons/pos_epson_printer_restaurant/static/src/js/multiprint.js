@@ -9,8 +9,6 @@ var EpsonPrinter = require('pos_epson_printer.Printer');
 // multiprint file in pos_restaurant.
 require('pos_restaurant.multiprint');
 
-models.load_fields("restaurant.printer", ["epson_printer_ip"]);
-
 var _super_posmodel = models.PosModel.prototype;
 
 models.PosModel = models.PosModel.extend({

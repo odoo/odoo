@@ -372,7 +372,16 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 await this.rpc({
                     'route': '/pos/load_onboarding_data',
                 });
-                this.env.pos.load_server_data();
+                const result = await this.rpc({
+                    method: 'get_onboarding_data',
+                    model: 'pos.session',
+                    args: [this.env.pos.loadingInfos]
+                });
+                const posCategoryModel = _.find(this.env.pos.models, function(model){return model.model === 'pos.category';});
+                const productModel = _.find(this.env.pos.models, function(model){return model.model === 'product.product';});
+                posCategoryModel.loaded(this.env.pos, Object.values(result['categories'][0]));
+                productModel.loaded(this.env.pos, Object.values(result['products'][0]));
+                this.render();
             }
         }
 

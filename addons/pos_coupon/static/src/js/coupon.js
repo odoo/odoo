@@ -183,19 +183,9 @@ odoo.define('pos_coupon.pos', function (require) {
         return free + adjustment;
     }
 
-    // Load the products used for creating program reward lines.
-    var existing_models = models.PosModel.prototype.models;
-    var product_index = _.findIndex(existing_models, function (model) {
-        return model.model === 'product.product';
-    });
-    var product_model = existing_models[product_index];
     models.load_models([
         {
             model: 'coupon.program',
-            fields: [],
-            domain: function (self) {
-                return [['id', 'in', self.config.program_ids]];
-            },
             loaded: function (self, programs) {
                 self.programs = programs;
                 self.coupon_programs_by_id = {};
@@ -216,18 +206,6 @@ odoo.define('pos_coupon.pos', function (require) {
                     program.discount_specific_product_ids = new Set(program.discount_specific_product_ids);
                 }
             },
-        },
-        {
-            model: product_model.model,
-            fields: product_model.fields,
-            order: product_model.order,
-            domain: function (self) {
-                const discountLineProductIds = self.programs.map((program) => program.discount_line_product_id[0]);
-                const rewardProductIds = self.programs.map((program) => program.reward_product_id[0]);
-                return [['id', 'in', discountLineProductIds.concat(rewardProductIds)]];
-            },
-            context: product_model.context,
-            loaded: product_model.loaded,
         },
     ]);
 

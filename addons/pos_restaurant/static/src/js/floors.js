@@ -8,8 +8,6 @@ const { posbus } = require('point_of_sale.utils');
 // At POS Startup, load the floors, and add them to the pos model
 models.load_models({
     model: 'restaurant.floor',
-    fields: ['name','background_color','table_ids','sequence'],
-    domain: function(self){ return [['pos_config_id','=',self.config.id]]; },
     loaded: function(self,floors){
         self.floors = floors;
         self.floors_by_id = {};
@@ -30,7 +28,6 @@ models.load_models({
 // them with their floor.
 models.load_models({
     model: 'restaurant.table',
-    fields: ['name','width','height','position_h','position_v','shape','floor_id','color','seats'],
     loaded: function(self,tables){
         self.tables_by_id = {};
         for (var i = 0; i < tables.length; i++) {

@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
+from odoo.osv.expression import AND, OR
+from .pos_loader import PosLoader
+
+logger = logging.getLogger(__name__)
+pos_loader = PosLoader()
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -1534,6 +1540,370 @@ class PosSession(models.Model):
             message_content.append(f'- Reason: {reason}')
         self.message_post(body='<br/>\n'.join(message_content))
 
+    @api.model
+    def get_onboarding_data(self, loading_infos):
+        # 1. get the demo products and categories
+        category_refs = ["pos_category_furniture", "pos_category_miscellaneous"]
+        product_refs = ["wall_shelf", "small_shelf", "monitor_stand", "desk_organizer", "whiteboard_pen"]
+        categories = self.env["pos.category"]
+        products = self.env["product.product"]
+        for category_ref in category_refs:
+            categories |= self.env.ref("point_of_sale." + category_ref)
+        for product_ref in product_refs:
+            products |= self.env.ref("point_of_sale." + product_ref)
+
+        # 2. properly load them by calling load_model
+        pos_category_info = loading_infos['pos.category']
+        product_product_info = loading_infos['product.product']
+        pos_category_info['ids'] = categories.ids
+        product_product_info['ids'] = products.ids
+        result_categories = self.load_model('pos.category', {}, info_result=pos_category_info)
+        result_products = self.load_model('product.product', {}, info_result=product_product_info)
+        return {
+            "categories": result_categories,
+            "products": result_products,
+        }
+
+    def default_load_method(self, model, info_vals, search_options=None):
+        search_options = search_options or {}
+        info_vals_copy = {**info_vals}
+        info_vals_copy.pop("model", None)
+        ids = info_vals_copy.pop("ids", None)
+        context = info_vals_copy.pop("context", False)
+        if context:
+            Model = self.env[model].with_context(**context)
+        else:
+            Model = self.env[model]
+        if ids:
+            # NOTE: Should add load=False as param in the read call to avoid loading the display_name of many2one field.
+            return Model.browse(ids).read(info_vals_copy.get('fields', []))
+        return Model.search_read(**info_vals_copy, **search_options)
+
+    def _exec_info(self, model, loader_info, data):
+        info_method = getattr(self, loader_info["method"])
+        result = info_method(**{name: data.get(model, None) for (name, model) in loader_info["requires"]})
+        return result and {"model": model, **result}
+
+    def _exec_load(self, model, load, info_result, data):
+        load_method = getattr(self, load["method"])
+        return load_method(model, info_result, **{name: data.get(model, None) for (name, model) in load["requires"]})
+
+    def _exec_post(self, post, result, data):
+        post_method = getattr(self, post["method"])
+        post_method(result, **{name: data.get(model, None) for (name, model) in post["requires"]})
+
+    def load_model(self, model, data, info_result=False, load=False, post=False):
+        _loader = pos_loader._loaders[model]
+        info = _loader.get("info", False)
+        load = load or _loader.get("load", {"method": "default_load_method", "requires": []})
+        post = post or _loader.get("post", False)
+        # 1. Calculate loader info
+        info_result = info_result or self._exec_info(model, info, data)
+        if not info_result:
+            return
+        # 2. Load the records based on the loader info
+        load_result = self._exec_load(model, load, info_result, data)
+        # 3. Execute post process method if there is any
+        if post:
+            self._exec_post(post, load_result, data)
+        return load_result, info_result
+
+    def load_pos_data(self):
+        data = {}
+        loading_infos = {}
+        for model in pos_loader._sorted_models:
+            load_model_results = self.load_model(model, data)
+            if not load_model_results:
+                continue
+            loaded_records, info_result = load_model_results
+            data[model] = loaded_records
+            loading_infos[model] = info_result
+            logger.info("Finished loading '%s' model.", model)
+        return (data, loading_infos)
+
+    @pos_loader.info("res.company")
+    def _loader_info_res_company(self):
+        return {
+            "fields": ["currency_id", "email", "website", "company_registry", "vat", "name", "phone", "partner_id", "country_id", "state_id", "tax_calculation_rounding_method"],
+            "domain": [("id", "=", self.company_id.id)],
+        }
+
+    @pos_loader.info("decimal.precision")
+    def _loader_info_decimal_precision(self):
+        return {
+            "fields": ["name", "digits"],
+            "domain": [],
+        }
+
+    @pos_loader.info("uom.uom")
+    def _loader_info_uom_uom(self):
+        return {"fields": [], "domain": [], "context": {"active_test": False}}
+
+    @pos_loader.info("res.partner")
+    def _loader_info_res_partner(self):
+        return {
+            "domain": [],
+            "fields": [
+                "name",
+                "street",
+                "city",
+                "state_id",
+                "country_id",
+                "vat",
+                "lang",
+                "phone",
+                "zip",
+                "mobile",
+                "email",
+                "barcode",
+                "write_date",
+                "property_account_position_id",
+                "property_product_pricelist",
+            ],
+        }
+
+    @pos_loader.load("res.partner")
+    def _load_res_partner(self, model, info_vals):
+        if not self.config_id.limited_partners_loading:
+            return self.default_load_method(model, info_vals)
+        partner_ids = [res[0] for res in self.config_id.get_limited_partners_loading()]
+        return self.env[model].browse(partner_ids).read(info_vals.get('fields'))
+
+    @pos_loader.info("res.country.state")
+    def _loader_info_res_country_state(self):
+        return {
+            "domain": [],
+            "fields": ["name", "country_id"],
+        }
+
+    @pos_loader.info("res.country")
+    def _loader_info_res_country(self):
+        return {
+            "domain": [],
+            "fields": ["name", "vat_label", "code"],
+        }
+
+    @pos_loader.info("res.lang")
+    def _loader_info_res_lang(self):
+        return {
+            "domain": [],
+            "fields": ["name", "code"],
+        }
+
+    @pos_loader.info("account.tax")
+    def _loader_info_account_tax(self):
+        return {
+            "domain": [("company_id", "=", self.company_id.id)],
+            "fields": ["name", "amount", "price_include", "include_base_amount", "is_base_affected", "amount_type", "children_tax_ids"],
+        }
+
+    @pos_loader.post("account.tax")
+    def _post_account_tax(self, account_taxes):
+        account_taxes = {tax['id']: tax for tax in account_taxes}
+        tax_ids = account_taxes.keys()
+        real_tax_amounts = self.env["account.tax"].browse(tax_ids).get_real_tax_amount()
+        for real_tax in real_tax_amounts:
+            account_taxes[real_tax["id"]]["amount"] = real_tax["amount"]
+
+    @pos_loader.info("pos.session")
+    def _loader_info_pos_session(self):
+        return {
+            "domain": [("id", "=", self.id)],
+            "fields": ["id", "name", "user_id", "config_id", "start_at", "stop_at", "sequence_number", "payment_method_ids", "cash_register_id", "state", "login_number", "update_stock_at_closing"],
+        }
+
+    @pos_loader.info("pos.config")
+    def _loader_info_pos_config(self):
+        return {
+            "domain": [("id", "=", self.config_id.id)],
+            "fields": [],
+        }
+
+    @pos_loader.info("pos.bill")
+    def _loader_info_pos_bill(self):
+        return {
+            "domain": [("id", "in", self.config_id.default_bill_ids.ids)],
+            "fields": ['name', 'value'],
+        }
+
+    @pos_loader.info("stock.picking.type")
+    def _loader_info_stock_picking_type(self):
+        return {
+            "domain": [("id", "=", self.config_id.picking_type_id.id)],
+            "fields": ["use_create_lots", "use_existing_lots"],
+        }
+
+    @pos_loader.info("res.users")
+    def _loader_info_res_users(self):
+        domain = [
+            ("company_ids", "in", self.config_id.company_id.id),
+            "|",
+            ("groups_id", "=", self.config_id.group_pos_manager_id.id),
+            ("groups_id", "=", self.config_id.group_pos_user_id.id),
+        ]
+        return {
+            "domain": domain,
+            "fields": ["name", "company_id", "id", "groups_id", "lang"],
+        }
+
+    @pos_loader.info("product.pricelist")
+    def _loader_info_product_pricelist(self):
+        if self.config_id.use_pricelist:
+            domain = [("id", "in", self.config_id.available_pricelist_ids.ids)]
+        else:
+            domain = [("id", "=", self.config_id.pricelist_id.id)]
+        return {
+            "domain": domain,
+            "fields": ["name", "display_name", "discount_policy"],
+        }
+
+    @pos_loader.info("account.bank.statement")
+    def _loader_info_account_bank_statement(self):
+        return {
+            "domain": [("id", "=", self.cash_register_id.id)],
+            "fields": ["id", "balance_start"],
+        }
+
+    @pos_loader.info("product.pricelist.item", requires=[("pricelists", "product.pricelist")])
+    def _loader_info_product_pricelist_item(self, pricelists, **kwargs):
+        return {
+            "domain": [("pricelist_id", "in", [p["id"] for p in pricelists])],
+            "fields": [],
+        }
+
+    @pos_loader.info("product.category")
+    def _loader_info_product_category(self):
+        return {"domain": [], "fields": ["name", "parent_id"]}
+
+    @pos_loader.info("res.currency")
+    def _loader_info_res_currency(self):
+        return {
+            "domain": [("id", "in", [self.config_id.currency_id.id, self.company_id.currency_id.id])],
+            "fields": ["name", "symbol", "position", "rounding", "rate", "decimal_places"],
+        }
+
+    @pos_loader.info("pos.category")
+    def _loader_info_pos_category(self):
+        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
+            domain = [("id", "in", self.config_id.iface_available_categ_ids.ids)]
+        else:
+            domain = []
+        return {
+            "domain": domain,
+            "fields": ["id", "name", "parent_id", "child_id", "write_date"],
+        }
+
+    @pos_loader.info("product.product")
+    def _loader_info_product_product(self):
+        return {
+            "domain": self._get_product_product_domain(),
+            "order": "sequence,default_code,name",
+            "fields": [
+                "display_name",
+                "lst_price",
+                "standard_price",
+                "categ_id",
+                "pos_categ_id",
+                "taxes_id",
+                "barcode",
+                "default_code",
+                "to_weight",
+                "uom_id",
+                "description_sale",
+                "description",
+                "product_tmpl_id",
+                "tracking",
+                "write_date",
+                "available_in_pos",
+                "attribute_line_ids",
+                "active",
+            ],
+            "context": {
+                "display_default_code": False,
+            },
+        }
+
+    def _get_product_product_domain(self):
+        domain = ["&", "&", ("sale_ok", "=", True), ("available_in_pos", "=", True), "|", ("company_id", "=", self.config_id.company_id.id), ("company_id", "=", False)]
+        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
+            domain = AND(
+                [
+                    domain,
+                    [("pos_categ_id", "in", self.config_id.iface_available_categ_ids.ids)],
+                ]
+            )
+        if self.config_id.iface_tipproduct:
+            domain = OR([domain, [("id", "=", self.config_id.tip_product_id.id)]])
+        return domain
+
+    @pos_loader.load("product.product")
+    def _load_product_product(self, model, info_vals):
+        if not self.config_id.limited_products_loading:
+            return self.default_load_method(model, info_vals)
+        return self.config_id.get_limited_products_loading(info_vals.get('fields'))
+
+    @pos_loader.info("product.packaging")
+    def _loader_info_product_packaging(self):
+        return {
+            "domain": [("barcode", "!=", "")],
+            "fields": ["name", "barcode", "product_id", "qty"],
+        }
+
+    @pos_loader.info("product.attribute")
+    def _loader_info_product_attribute(self):
+        if not self.config_id.product_configurator:
+            return
+        return {
+            "domain": [("create_variant", "=", "no_variant")],
+            "fields": ["name", "display_type"],
+        }
+
+    @pos_loader.info("product.attribute.value", requires=[("attributes", "product.attribute")])
+    def _loader_info_product_attribute_value(self, attributes, **kwargs):
+        if not self.config_id.product_configurator:
+            return
+        return {
+            "domain": [("attribute_id", "in", [attr["id"] for attr in attributes])],
+            "fields": ["name", "attribute_id", "is_custom", "html_color"],
+        }
+
+    @pos_loader.info("product.template.attribute.value", requires=[("attributes", "product.attribute")])
+    def _loader_info_product_template_attribute_value(self, attributes, **kwargs):
+        if not self.config_id.product_configurator:
+            return
+        return {
+            "domain": [("attribute_id", "in", [attr["id"] for attr in attributes])],
+            "fields": ["product_attribute_value_id", "attribute_id", "attribute_line_id", "price_extra"],
+        }
+
+    @pos_loader.info("account.cash.rounding")
+    def _loader_info_account_cash_rounding(self):
+        return {
+            "domain": [("id", "=", self.config_id.rounding_method.id)],
+            "fields": ["name", "rounding", "rounding_method"],
+        }
+
+    @pos_loader.info("pos.payment.method")
+    def _loader_info_pos_payment_method(self):
+        return {
+            "domain": [("id", "in", self.config_id.payment_method_ids.ids)],
+            "fields": ["name", "is_cash_count", "use_payment_terminal", "split_transactions"],
+        }
+
+    @pos_loader.info("account.fiscal.position")
+    def _loader_info_account_fiscal_position(self):
+        return {
+            "domain": [("id", "in", self.config_id.fiscal_position_ids.ids)],
+            "fields": [],
+        }
+
+    @pos_loader.info("account.fiscal.position.tax", requires=[("fps", "account.fiscal.position")])
+    def _loader_info_account_fiscal_position_tax(self, fps, **kwargs):
+        fiscal_position_tax_ids = sum([fpos["tax_ids"] for fpos in fps], [])
+        return {
+            "domain": [("id", "in", fiscal_position_tax_ids)],
+            "fields": [],
+        }
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

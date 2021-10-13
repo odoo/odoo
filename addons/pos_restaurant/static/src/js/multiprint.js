@@ -22,8 +22,6 @@ models.PosModel = models.PosModel.extend({
 
 models.load_models({
     model: 'restaurant.printer',
-    fields: ['name','proxy_ip','product_categories_ids', 'printer_type'],
-    domain: null,
     loaded: function(self,printers){
         var active_printers = {};
         for (var i = 0; i < self.config.printer_ids.length; i++) {

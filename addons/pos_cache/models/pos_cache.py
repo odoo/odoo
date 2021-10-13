@@ -26,7 +26,7 @@ class pos_cache(models.Model):
     def refresh_cache(self):
         for cache in self:
             Product = self.env['product.product'].with_user(cache.compute_user_id.id)
-            products = Product.search(cache.get_product_domain())
+            products = Product.search(cache.get_product_domain(), order='sequence,default_code,name')
             prod_ctx = products.with_context(pricelist=cache.config_id.pricelist_id.id,
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
@@ -66,7 +66,7 @@ class pos_config(models.Model):
 
     def get_products_from_cache(self, fields, domain):
         fields_str = str(fields)
-        domain_str = str(domain)
+        domain_str = str([list(item) if isinstance(item, (list, tuple)) else item for item in domain])
         pos_cache = self.env['pos.cache']
         cache_for_user = pos_cache.search([
             ('id', 'in', self.cache_ids.ids),

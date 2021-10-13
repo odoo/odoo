@@ -250,8 +250,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             return '' + this._lastName.str + this._lastName.num;
         }
         async _save(table) {
-            const fields = this.env.pos.models.find((model) => model.model === 'restaurant.table')
-                .fields;
+            const fields = this.env.pos.loadingInfos['restaurant.table'].fields;
             const serializeTable = {};
             for (let field of fields) {
                 if (typeof table[field] !== 'undefined') {

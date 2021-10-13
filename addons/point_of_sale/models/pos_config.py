@@ -710,7 +710,7 @@ class PosConfig(models.Model):
         }
         self.env.cr.execute(query, params)
         product_ids = self.env.cr.fetchall()
-        products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
+        products = self.env['product.product'].with_context({'display_default_code': False}).search_read([('id', 'in', product_ids)], fields=fields)
         return products
 
     def get_limited_partners_loading(self):

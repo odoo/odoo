@@ -51,15 +51,14 @@
 
             <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
                 <div class="loader-feedback">
-                    <h1 class="message">
-                        <t t-esc="loading.message" />
-                    </h1>
-                    <div class="progressbar">
-                        <div class="progress" t-ref="progressbar"></div>
-                    </div>
-                    <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">
+                    <!-- spinner from https://loading.io/css/ -->
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    <t t-if="loading.skipButtonIsShown">
+                    <h1 class="message">Connecting to devices</h1>
+                    <div class="button skip" t-on-click="trigger('loading-skip-callback')">
                         Skip
                     </div>
+                    </t>
                 </div>
             </div>
 
