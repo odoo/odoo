@@ -237,7 +237,7 @@ class EventEvent(models.Model):
             self._cr.execute(query, (tuple(self.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
-                results[event_id][state_field[state]] += num
+                results[event_id][state_field[state]] = num
 
         # compute seats_available
         for event in self:

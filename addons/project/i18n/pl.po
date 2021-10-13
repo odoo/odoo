@@ -22,7 +22,6 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maja Stawicka <mjstwck@wp.pl>, 2020
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2020
-# Maksym <ms@myodoo.pl>, 2020
 # Natalia Gros <nag@odoo.com>, 2020
 # Grzegorz Michrowski <grzegorz.michrowski@openglobe.pl>, 2020
 # Martin Trigaux, 2020
@@ -30,6 +29,8 @@
 # Tomasz Leppich <t.leppich@gmail.com>, 2020
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2020
 # Piotr Strębski <strebski@gmail.com>, 2021
+# Maksym <ms@myodoo.pl>, 2021
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
+"Last-Translator: Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -331,6 +332,66 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            % if partner.name:\n"
+"                Dzień dobry ${partner.name},<br/><br/>\n"
+"            % else:\n"
+"                Dzień dobry,<br/><br/>\n"
+"            % endif\n"
+"            Poświęć chwilę, aby ocenić nasze usługi związane z zadaniem \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                przydzielonym do <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Powiedz nam, co myślisz o naszej usłudze</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(kliknij jedną z tych emotikonów)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_3.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Doceniamy twoją opinię. Pomaga nam stale się doskonalić.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ta ankieta dla klientów została wysłana, ponieważ Twoje zadanie zostało przeniesione na etap <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ta ankieta dla klientów będzie wysłana <b>${object.project_id.rating_status_period}</b> tak długo, jak zadanie jest na etapie <b>${object.stage_id.name}</b>.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -348,6 +409,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Drogi ${object.partner_id.name or 'customer'},<br/>\n"
+"    Dziękujemy za zapytanie.<br/>\n"
+"    W razie pytań prosimy o kontakt.\n"
+"    <br/><br/>\n"
+"    Dziękujemy,\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1037,7 +1110,7 @@ msgstr "Data utworzenia"
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_date
@@ -1047,7 +1120,7 @@ msgstr "Utworzona przez"
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form

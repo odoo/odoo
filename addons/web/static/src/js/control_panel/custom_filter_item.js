@@ -166,6 +166,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                         val => field_utils.format[type](val, { type }, { timezone: false })
                     );
                     descriptionArray.push(`"${dateValue.join(" " + this.env._t("and") + " ")}"`);
+                } else if (type === "selection") {
+                    domainValue = [condition.value];
+                    const formattedValue = field_utils.format[type](condition.value, field);
+                    descriptionArray.push(`"${formattedValue}"`);
                 } else {
                     domainValue = [condition.value];
                     descriptionArray.push(`"${condition.value}"`);

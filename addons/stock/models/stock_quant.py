@@ -134,8 +134,9 @@ class StockQuant(models.Model):
         """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
-        domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        domain_loc = self.env['product.product'].with_context(compute_child=False)._get_domain_locations()[0]
+        location_ids = self.env['stock.location']._search([('id', 'child_of', domain_loc[0][2])])
+        quant_ids = self.env['stock.quant']._search([('location_id', 'in', location_ids)])
         if (operator == '!=' and value is True) or (operator == '=' and value is False):
             domain_operator = 'not in'
         else:

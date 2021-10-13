@@ -2088,22 +2088,13 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.filename_value = this.recordData[this.attrs.filename];
     },
     _renderReadonly: function () {
-        this.do_toggle(!!this.value);
-        if (this.value) {
-            this.$el.empty().append($("<span/>").addClass('fa fa-download'));
-            if (this.recordData.id) {
-                this.$el.css('cursor', 'pointer');
-            } else {
-                this.$el.css('cursor', 'not-allowed');
-            }
-            if (this.filename_value) {
-                this.$el.append(" " + this.filename_value);
-            }
-        }
-        if (!this.res_id) {
-            this.$el.css('cursor', 'not-allowed');
-        } else {
-            this.$el.css('cursor', 'pointer');
+        var visible = !!(this.value && this.res_id);
+        this.$el.empty().css('cursor', 'not-allowed');
+        this.do_toggle(visible);
+        if (visible) {
+            this.$el.css('cursor', 'pointer')
+                    .text(this.filename_value || '')
+                    .prepend($('<span class="fa fa-download"/>'), ' ');
         }
     },
     _renderEdit: function () {

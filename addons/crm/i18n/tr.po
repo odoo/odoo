@@ -23,6 +23,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2021\n"
+"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,6 +203,8 @@ msgid ""
 "<p>As you don't belong to any Sales Team, Odoo opens the first one by "
 "default.</p>"
 msgstr ""
+"<p>Hiç bir satış ekibine dahil olmadığınız için, Odoo ilkini varsayılan "
+"olarak açar.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -292,6 +295,77 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- BAŞLIK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Fırsatınız</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: 48px;\" alt=\"${object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hi ${object.partner_id and object.partner_id.name or ''},<br/><br/>\n"
+"                            Welcome to ${object.company_id.name}.\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what ${object.company_id.name} has to offer. My name is ${object.user_id.name} and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
+"                            % if object.user_id:\n"
+"                                <b>${object.user_id.name}</b>\n"
+"                                <br/>Email: ${object.user_id.email or ''}\n"
+"                                <br/>Phone: ${object.user_id.phone or ''}\n"
+"                            % else:\n"
+"                                ${object.company_id.name}\n"
+"                            % endif\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b>${object.company_id.name}</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                ${object.company_id.phone}\n"
+"                % if object.company_id.email\n"
+"                    | <a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #999999;\">${object.company_id.email}</a>\n"
+"                % endif\n"
+"                % if object.company_id.website\n"
+"                    | <a href=\"'%s' % ${object.company_id.website}\" style=\"text-decoration:none; color: #999999;\">${object.company_id.website}</a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -1134,7 +1208,7 @@ msgstr "E-Posta (cc)"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
 msgid "Email: Welcome Demo"
-msgstr ""
+msgstr "Eposta: Hoşgeldin Demosu"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1325,7 +1399,7 @@ msgstr "From %(source_name)s : %(source_subject)s"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr ""
+msgstr "Kimden %(source_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2505,7 +2579,7 @@ msgstr ""
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr ""
+msgstr "Tahmini Aday Puanlama: Otomatize Olasılıkları Yeniden Hesapla "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority

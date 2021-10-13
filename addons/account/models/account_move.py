@@ -640,7 +640,7 @@ class AccountMove(models.Model):
             if move.move_type == 'entry':
                 repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
                 repartition_tags = base_line.tax_ids.flatten_taxes_hierarchy().mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').tag_ids
-                tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+                tags_need_inversion = self._tax_tags_need_inversion(move, is_refund, tax_type)
                 if tags_need_inversion:
                     balance_taxes_res['base_tags'] = base_line._revert_signed_tags(repartition_tags).ids
                     for tax_res in balance_taxes_res['taxes']:
@@ -771,6 +771,19 @@ class AccountMove(models.Model):
 
             if in_draft_mode:
                 taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
+
+    def _tax_tags_need_inversion(self, move, is_refund, tax_type):
+        """ Tells whether the tax tags need to be inverted for a given move.
+
+        :param move: the move for which we want to check inversion
+        :param is_refund: whether or not the operation we want the inversion value for is a refund
+        :param tax_type: the tax type of the operation we want the inversion value for
+
+        :return: True if the tags need to be inverted
+        """
+        if move.move_type == 'entry':
+            return (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+        return False
 
     @api.model
     def _get_base_amount_to_display(self, base_amount, tax_rep_ln, parent_tax_group=None):
@@ -1251,7 +1264,7 @@ class AccountMove(models.Model):
         param = {'journal_id': self.journal_id.id}
 
         if not relaxed:
-            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
@@ -2992,7 +3005,7 @@ class AccountMove(models.Model):
             return None
 
         unstruct_ref = self.ref if self.ref else self.name
-        rslt = self.partner_bank_id.build_qr_code_url(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=False)
+        rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=False)
 
         # We only set qr_code_method after generating the url; otherwise, it
         # could be set even in case of a failure in the QR code generation
@@ -3172,9 +3185,9 @@ class AccountMoveLine(models.Model):
     # ==== Analytic fields ====
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account',
-        index=True, compute="_compute_analytic_account", store=True, readonly=False, check_company=True, copy=True)
+        index=True, compute="_compute_analytic_account_id", store=True, readonly=False, check_company=True, copy=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
-        compute="_compute_analytic_account", store=True, readonly=False, check_company=True, copy=True)
+        compute="_compute_analytic_tag_ids", store=True, readonly=False, check_company=True, copy=True)
 
     # ==== Onchange / display purpose fields ====
     recompute_tax_line = fields.Boolean(store=False, readonly=True,
@@ -3429,7 +3442,7 @@ class AccountMoveLine(models.Model):
                 self.price_unit = business_vals['price_unit']
 
     @api.depends('product_id', 'account_id', 'partner_id', 'date')
-    def _compute_analytic_account(self):
+    def _compute_analytic_account_id(self):
         for record in self:
             if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
                 rec = self.env['account.analytic.default'].account_get(
@@ -3442,6 +3455,20 @@ class AccountMoveLine(models.Model):
                 )
                 if rec:
                     record.analytic_account_id = rec.analytic_id
+
+    @api.depends('product_id', 'account_id', 'partner_id', 'date')
+    def _compute_analytic_tag_ids(self):
+        for record in self:
+            if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
+                rec = self.env['account.analytic.default'].account_get(
+                    product_id=record.product_id.id,
+                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
+                    account_id=record.account_id.id,
+                    user_id=record.env.uid,
+                    date=record.date,
+                    company_id=record.move_id.company_id.id
+                )
+                if rec:
                     record.analytic_tag_ids = rec.analytic_tag_ids
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
@@ -4283,7 +4310,7 @@ class AccountMoveLine(models.Model):
             }
 
     def _get_tracking_field_string(self, fields):
-        ARROW_RIGHT = '<span aria-label="Changed" class="fa fa-long-arrow-alt-right" role="img" title="Changed"></span>'
+        ARROW_RIGHT = '<div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>'
         msg = '<ul>'
         for field in fields:
             redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
