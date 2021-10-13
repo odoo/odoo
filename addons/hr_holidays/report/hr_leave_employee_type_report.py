@@ -11,6 +11,7 @@ class LeaveReport(models.Model):
     _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
+    allocation_count = fields.Float(related='employee_id.allocation_count', search='_search_allocation_count')
     active_employee = fields.Boolean(related='employee_id.active', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True, group_operator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
@@ -102,3 +103,8 @@ class LeaveReport(models.Model):
                 'group_expand': True,
             }
         }
+
+    def _search_allocation_count(self, operator, value):
+        employees = self.env['hr.employee'].search([])
+        employees_with_remaining_leaves = employees.filtered_domain([('allocation_count', operator, value)])
+        return [('employee_id', 'in', employees_with_remaining_leaves.ids)]

@@ -271,5 +271,11 @@
         <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
+    <record id="hr_leave_employee_type_report_rule_multi_company" model="ir.rule">
+        <field name="name">Time off Analysis by Employee and Time Off Type: multi company rule</field>
+        <field name="model_id" ref="model_hr_leave_employee_type_report"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
     </data>
 </odoo>

@@ -8,12 +8,14 @@
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <filter name="year" date="date_from" default_period="this_year" string="Period"/>
+                <separator/>
+                <filter name="employee_with_holidays" string="Employee with holidays" domain="[('allocation_count', '>', 0)]"/>
                 <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                <filter string="Leave Type" name="Leave Type" context="{'group_by':'leave_type'}"/>
             </search>
         </field>
     </record>
-
 
     <record id="hr_leave_employee_type_report" model="ir.ui.view">
         <field name="name">hr.leave.employee.type.report.view.pivot</field>
