@@ -47,13 +47,22 @@ class AccountMove(models.Model):
         """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
         However for Argentinian Document Type's 99 (internal type = invoice) we are able to used in a refund invoices.
 
+<<<<<<< HEAD
         In this method we exclude the argentinian document type 99 from the generic constraint """
         ar_doctype_99 = self.filtered(
             lambda x: x.country_code == 'AR' and
             x.l10n_latam_document_type_id.code == '99' and
             x.move_type in ['out_refund', 'in_refund'])
+=======
+        In this method we exclude the argentinian documents that can be used as invoice and refund from the generic
+        constraint """
+        docs_used_for_inv_and_ref = self.filtered(
+            lambda x: x.l10n_latam_country_code == 'AR' and
+            x.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() and
+            x.type in ['out_refund', 'in_refund'])
+>>>>>>> 833c0bb6e63... temp
 
-        super(AccountMove, self - ar_doctype_99)._check_invoice_type_document_type()
+        super(AccountMove, self - docs_used_for_inv_and_ref)._check_invoice_type_document_type()
 
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """
@@ -87,6 +96,13 @@ class AccountMove(models.Model):
             afip_concept = '3'
         return afip_concept
 
+    @api.model
+    def _get_l10n_ar_codes_used_for_inv_and_ref(self):
+        """ List of document types that can be used as an invoice and refund. This list can be increased once needed
+        and demonstrated. As far as we've checked document types of wsfev1 don't allow negative amounts so, for example
+        document 60 and 61 could not be used as refunds. """
+        return ['99', '186', '188', '189']
+
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
@@ -96,8 +112,13 @@ class AccountMove(models.Model):
             codes = self.journal_id._get_journal_codes()
             if codes:
                 domain.append(('code', 'in', codes))
+<<<<<<< HEAD
             if self.move_type == 'in_refund':
                 domain = ['|', ('code', 'in', ['99'])] + domain
+=======
+            if self.type == 'in_refund':
+                domain = ['|', ('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref())] + domain
+>>>>>>> 833c0bb6e63... temp
         return domain
 
     def _check_argentinian_invoice_taxes(self):
@@ -237,6 +258,11 @@ class AccountMove(models.Model):
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
         sign = -1 if (company_currency and self.is_inbound()) else 1
+
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
+
         tax_lines = self.line_ids.filtered('tax_line_id')
         vat_taxes = tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
 
@@ -268,6 +294,11 @@ class AccountMove(models.Model):
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
         sign = -1 if (company_currency and self.is_inbound()) else 1
+
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
+
         res = []
         vat_taxable = self.env['account.move.line']
         # get all invoice lines that are vat taxable
