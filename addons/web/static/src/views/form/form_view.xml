@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="web.FormView" owl="1">
-      <div class="o_form_view">
-          <ControlPanel
-              t-props="props.info"
-              displayName="model.root.data.display_name"
-              display="{'top-right': false}"
-          >
-            <t t-set-slot="control-panel-bottom-right">
-                <div role="search" class="o_cp_pager">
-                    <Pager t-props="pagerProps"/>
-                </div>
-            </t>
-          </ControlPanel>
+    <t t-name="web.FormView" owl="1">
+        <div class="o_form_view">
+            <ControlPanel t-props="props.info" displayName="model.root.data.display_name" display="{'top-right': false}">
+                <t t-set-slot="control-panel-bottom-right">
+                    <div role="search" class="o_cp_pager">
+                        <Pager t-props="pagerProps"/>
+                    </div>
+                </t>
+                <t t-set-slot="control-panel-bottom-left">
+                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                </t>
+            </ControlPanel>
 
-          <div class="o_content">
-              <FormRenderer model="model" fields="props.fields" info="archInfo" mode="'readonly'" />
-          </div>
-      </div>
-  </t>
+            <div class="o_content">
+                <FormRenderer model="model" fields="props.fields" info="archInfo" mode="'readonly'" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.FormView.Buttons" owl="1">
+        <div role="toolbar" aria-label="Main actions">
+            <button t-if="canEdit" type="button" class="btn btn-secondary" data-tooltip="Save changes" data-hotkey="s" t-on-click="saveRecord">
+                Save
+            </button>
+            <button t-if="canCreate" type="button" class="btn btn-secondary" data-tooltip="Create record" data-hotkey="c" t-on-click="createRecord">
+                Create
+            </button>
+        </div>
+    </t>
 </templates>

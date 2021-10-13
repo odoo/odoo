@@ -2,6 +2,7 @@
 
 import { Field } from "../../fields/field";
 import { evaluateExpr } from "../../core/py_js/py";
+import { archParseBoolean } from "./utils";
 
 const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
@@ -77,6 +78,7 @@ export class FieldParser {
         const fieldName = node.getAttribute("name");
         const widget = node.getAttribute("widget");
         const field = this.fields[fieldName];
+        const onChange = archParseBoolean(node.getAttribute("on_change"));
         const options = evaluateExpr(node.getAttribute("options") || "{}");
         this.parsedFields[fieldName] = getFieldInfo ? getFieldInfo(fieldName) : fieldName;
         if (isRelational(field)) {
@@ -97,7 +99,7 @@ export class FieldParser {
                 field.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
             }
         }
-        return { name: fieldName, field, widget, options };
+        return { name: fieldName, field, widget, onChange, options };
     }
 
     /**
