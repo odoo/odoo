@@ -60,7 +60,7 @@ QUnit.module('Views', {
     },
 }, function () {
 
-    QUnit.module('KanbanModel');
+    QUnit.module('Legacy KanbanModel');
 
     QUnit.test('load grouped + add a new group', async function (assert) {
         var done = assert.async();
