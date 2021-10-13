@@ -5,6 +5,7 @@ import collections
 import json
 import os.path
 import re
+import markupsafe
 
 from lxml import etree, html
 from lxml.builder import E
@@ -1262,3 +1263,26 @@ class TestEmptyLines(TransactionCase):
         self.assertTrue(re.compile('^\s+\n').match(rendered))
         self.assertTrue(re.compile('\n\s+\n').match(rendered))
 
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = '\n                '
+        expected = markupsafe.Markup('Text 1' + emptyline + 'Text 2' + emptyline + 'ok')
+        self.assertEqual(view1._render(), expected)
