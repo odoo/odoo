@@ -10,7 +10,7 @@
         'iap_crm',
         'iap_mail',
         'crm_iap_mine',
-        'website'
+        'website_crm',
     ],
     'data': [
         'data/ir_cron_data.xml',
