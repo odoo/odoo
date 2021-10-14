@@ -1594,11 +1594,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(1);
         const expectedAction = {
             ...serverData.actions[3],
-            context: {
-                lang: "en",
-                uid: 7,
-                tz: "taht",
-            },
+            context: {},
         };
         patchWithCleanup(browser, {
             sessionStorage: Object.assign(Object.create(sessionStorage), {
