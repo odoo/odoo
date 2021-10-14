@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer" owl="1">
-        <div class="o_kanban_view" t-attf-class="o_kanban_{{ record.isGrouped ? '' : 'un' }}grouped {{ props.info.className }}">
-            <t t-foreach="record.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
+        <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.record.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
+            <t t-foreach="props.record.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
                 <t t-if="groupOrRecord.groupData">
                     <t t-set="group" t-value="groupOrRecord" />
-                    <div class="o_kanban_group ui-sortable">
+                    <div class="o_kanban_group">
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <t t-set="columnTitle" t-value="getColumnTitle(group)" />
@@ -14,18 +14,40 @@
                                     <t t-if="columnTitle" t-esc="columnTitle" />
                                     <t t-else="">Undefined</t>
                                 </span>
+                                <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                    <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
+                                </span>
                             </div>
                         </div>
+                        <t t-if="state.quickCreate[group.id]">
+                            <View resModel="props.record.resModel" type="'form'" views="[]" mode="'edit'" display="{ controlPanel: false }" />
+                        </t>
                         <t t-foreach="group.data" t-as="record" t-key="record.id">
                             <t t-call="{{ cardTemplate }}" />
                         </t>
                     </div>
                 </t>
                 <t t-else="">
-                    <t t-set="record" t-value="groupOrRecord" />
-                    <t t-call="{{ cardTemplate }}" />
+                    <t t-call="{{ cardTemplate }}">
+                        <t t-set="record" t-value="groupOrRecord" />
+                    </t>
                 </t>
+            </t>
+            <t t-if="!props.record.isGrouped">
+                <!-- kanban ghost cards are used to properly space last elements. -->
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost" />
             </t>
         </div>
     </t>
+
+    <t t-name="web.KanbanColorPicker" owl="1">
+        <ul class="oe_kanban_colorpicker">
+            <t t-foreach="colors" t-as="color" t-key="color">
+                <li role="menuitem" t-on-click="selectColor(record, color_index)" t-att-title="color" t-att-aria-label="color">
+                    <a href="#" t-attf-class="oe_kanban_color_{{ color_index }}" />
+                </li>
+            </t>
+        </ul>
+    </t>
+
 </templates>

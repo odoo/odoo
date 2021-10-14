@@ -1,8 +1,15 @@
 /* @odoo-module */
+import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { combineAttributes } from "../../core/utils/xml";
 import { registry } from "@web/core/registry";
+import { combineAttributes } from "@web/core/utils/xml";
+import { Field } from "@web/fields/field";
 
+const { Component, hooks, tags } = owl;
+const { useComponent } = hooks;
+const { xml } = tags;
+
+const templateIds = Object.create(null);
 const compilersRegistry = registry.category("form_compilers");
 
 /**
@@ -197,7 +204,7 @@ export class FormCompiler {
         }
         const classes = node.getAttribute("class");
         if (classes) {
-            compiled.classList.add(...classes.split(" "));
+            compiled.classList.add(...classes.split(/\s+/).filter(Boolean));
         }
 
         const isComponent = isComponentNode(compiled);
@@ -371,7 +378,6 @@ export class FormCompiler {
                         colspan = 1;
                     }
                 }
-                const finalColspan = colspan - (isLabeledField ? 1 : 0);
                 currentColspan += colspan;
 
                 if (currentColspan > colAttr) {
@@ -524,7 +530,7 @@ export class FormCompiler {
         return this.compileGenericNode(node, params);
     }
 
-    compileField(node, params) {
+    compileField(node) {
         const field = this.document.createElement("Field");
         const fieldName = node.getAttribute("name");
         const fieldId = `field_${fieldName}_${this.id++}`;
@@ -563,7 +569,7 @@ export class FormCompiler {
                 if (fieldString) {
                     label.textContent = fieldString;
                 } else {
-                    label.setAttribute("t-esc", `props.model.fields.${fieldName}.string`);
+                    label.setAttribute("t-esc", `record.fields.${fieldName}.string`);
                 }
             }
             this.handleReadonly(node, label);
@@ -734,6 +740,43 @@ export class FormCompiler {
         return tComponent;
     }
 }
+
+export const useFormCompiler = (templateKey, fields, xmlDoc) => {
+    const component = useComponent();
+
+    // Assigns special functions to the current component.
+    Object.assign(component, {
+        evalDomain(record, expr) {
+            return new Domain(expr).contains(record.data);
+        },
+        getWidget(widgetName) {
+            class ToImplement extends Component {}
+            ToImplement.template = xml`<div>${widgetName}</div>`;
+            return ToImplement;
+        },
+        isFieldEmpty(record, fieldName, widgetName) {
+            const cls = Field.getTangibleField(record, widgetName, fieldName);
+            if ("isEmpty" in cls) {
+                return cls.isEmpty(record, fieldName);
+            }
+            return !record.data[fieldName];
+        },
+    });
+
+    // Creates a new compiled template if the given template key hasn't been
+    // compiled already.
+    if (!templateIds[templateKey]) {
+        const { qweb } = component.env;
+        const compiledDoc = new FormCompiler(qweb, fields).compile(xmlDoc);
+        templateIds[templateKey] = xml`${compiledDoc.outerHTML}`;
+        // DEBUG -- start
+        console.group(`Compiled template (${templateIds[templateKey]}):`);
+        console.dirxml(compiledDoc);
+        console.groupEnd();
+        // DEBUG -- end
+    }
+    return templateIds[templateKey];
+};
 
 FormCompiler.INNER_GROUP_COL = 2;
 FormCompiler.OUTER_GROUP_COL = 2;

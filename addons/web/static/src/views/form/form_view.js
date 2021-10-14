@@ -1,15 +1,17 @@
-/* @odoo-module */
+/** @odoo-module **/
 
+import { registry } from "@web/core/registry";
+import { XMLParser } from "@web/core/utils/xml";
+import { Pager, usePager } from "@web/search/pager/pager";
+import { FormRenderer } from "@web/views/form/form_renderer";
+import { useModel } from "@web/views/helpers/model";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { registry } from "../../core/registry";
-import { XMLParser } from "../../core/utils/xml";
-import { ControlPanel } from "../../search/control_panel/control_panel";
-import { Pager, usePager } from "../../search/pager/pager";
-import { useModel } from "../../views/helpers/model";
-import { FieldParser } from "../helpers/view_utils";
-import { RelationalModel } from "../relational_model";
-import { FormRenderer } from "./form_renderer";
+import { FieldParser } from "@web/views/helpers/view_utils";
+import { Layout } from "@web/views/layout";
+import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
+
+const { Component } = owl;
 
 // -----------------------------------------------------------------------------
 
@@ -24,6 +26,7 @@ class FormArchParser extends XMLParser {
         });
         return {
             arch,
+            activeActions: this.getActiveActions(xmlDoc),
             xmlDoc,
             fields: ["display_name", ...fieldParser.getFields()],
             relations: fieldParser.getRelations(),
@@ -33,7 +36,7 @@ class FormArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class FormView extends owl.Component {
+class FormView extends Component {
     setup() {
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
@@ -46,12 +49,12 @@ class FormView extends owl.Component {
             viewMode: "form",
         });
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
+        const { create, edit } = this.archInfo.activeActions;
 
-        this.canCreate = true;
-        this.canEdit = true;
+        this.canCreate = create;
+        this.canEdit = edit;
 
         useViewButtons(this.model);
-
         useSetupView({
             /** TODO **/
         });
@@ -71,6 +74,7 @@ FormView.display_name = "Form";
 FormView.multiRecord = false;
 FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
-FormView.components = { ControlPanel, FormRenderer, Pager };
+FormView.display = { controlPanel: { ["top-right"]: false } };
+FormView.components = { Layout, FormRenderer, Pager };
 
 registry.category("views").add("form", FormView);

@@ -2,22 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormView" owl="1">
-        <div class="o_form_view">
-            <ControlPanel t-props="props.info" displayName="model.root.data.display_name" display="{'top-right': false}">
-                <t t-set-slot="control-panel-bottom-right">
-                    <div role="search" class="o_cp_pager">
-                        <Pager t-props="pagerProps"/>
-                    </div>
-                </t>
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
-                </t>
-            </ControlPanel>
-
-            <div class="o_content">
-                <FormRenderer model="model" fields="props.fields" info="archInfo" mode="'readonly'" />
-            </div>
-        </div>
+        <Layout viewType="'form'" useSampleModel="model.useSampleModel">
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}" />
+            </t>
+            <t t-set-slot="control-panel-bottom-right">
+                <div role="search" class="o_cp_pager">
+                    <Pager t-props="pagerProps" />
+                </div>
+            </t>
+            <FormRenderer record="model.root" fields="props.fields" info="archInfo" mode="'readonly'" />
+        </Layout>
     </t>
 
     <t t-name="web.FormView.Buttons" owl="1">
@@ -30,4 +25,5 @@
             </button>
         </div>
     </t>
+
 </templates>
