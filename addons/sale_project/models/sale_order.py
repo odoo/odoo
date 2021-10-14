@@ -201,6 +201,7 @@ class SaleOrderLine(models.Model):
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
+            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
@@ -379,9 +380,11 @@ class SaleOrderLine(models.Model):
                     values['analytic_account_id'] = analytic_account_ids.pop()
         if self.task_id.analytic_tag_ids:
             values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
+        if self.task_id.analytic_tag_ids or self.task_id.project_id.analytic_tag_ids:
+            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids | self.task_id.project_id.analytic_tag_ids]
         elif self.is_service and not self.is_expense:
             tag_ids = self.env['account.analytic.tag'].search([
-                ('task_ids.sale_line_id', '=', self.id)
+                '|', ('task_ids.sale_line_id', '=', self.id), ('project_ids.sale_line_id', '=', self.id)
             ])
             values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
         return values

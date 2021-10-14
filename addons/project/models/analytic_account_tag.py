@@ -7,3 +7,4 @@ class AccountAnalyticTag(models.Model):
     _inherit = 'account.analytic.tag'
 
     task_ids = fields.Many2many('project.task', string='Tasks')
+    project_ids = fields.Many2many('project.project', string='Projects')
