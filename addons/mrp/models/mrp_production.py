@@ -1118,7 +1118,9 @@ class MrpProduction(models.Model):
             production.workorder_ids._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
         self.move_raw_ids._trigger_scheduler()
-        self.state = 'confirmed'
+        # Force confirm state only for draft production not for more advanced state like
+        # 'progress' (in case of backorders with some qty_producing)
+        self.filtered(lambda mo: mo.state == 'draft').state = 'confirmed'
         return True
 
     def action_assign(self):
@@ -1464,7 +1466,6 @@ class MrpProduction(models.Model):
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
         backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
-        backorders.move_raw_ids._recompute_state()
 
         return backorders
 
