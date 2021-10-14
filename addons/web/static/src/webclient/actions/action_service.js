@@ -183,11 +183,13 @@ function makeActionManager(env) {
      * with a unique jsId.
      */
     function _preprocessAction(action, context = {}) {
-        action.context = makeContext(env.services.user.context, context, action.context);
+        action.context = makeContext([context, action.context], env.services.user.context);
         if (action.domain) {
             const domain = action.domain || [];
             action.domain =
-                typeof domain === "string" ? evaluateExpr(domain, action.context) : domain;
+                typeof domain === "string"
+                    ? evaluateExpr(domain, Object.assign(env.services.user.context, action.context))
+                    : domain;
         }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
         action._originalAction = JSON.stringify(action);
@@ -1111,7 +1113,7 @@ function makeActionManager(env) {
     async function doActionButton(params) {
         // determine the action to execute according to the params
         let action;
-        const context = makeContext(params.context, params.buttonContext);
+        const context = makeContext([params.context, params.buttonContext]);
         if (params.special) {
             action = { type: "ir.actions.act_window_close", infos: { special: true } };
         } else if (params.type === "object") {
@@ -1162,7 +1164,7 @@ function makeActionManager(env) {
             activeCtx.active_id = params.resId;
             activeCtx.active_ids = [params.resId];
         }
-        action.context = makeContext(currentCtx, params.buttonContext, activeCtx, action.context);
+        action.context = makeContext([currentCtx, params.buttonContext, activeCtx, action.context]);
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
