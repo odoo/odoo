@@ -4,6 +4,8 @@ odoo.define('web.datepicker_tests', function (require) {
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const testUtils = require('web.test_utils');
     const time = require('web.time');
+    const CustomFilterItem = require('web.CustomFilterItem');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
 
     const { createComponent } = testUtils;
 
@@ -162,6 +164,43 @@ odoo.define('web.datepicker_tests', function (require) {
             picker.destroy();
             testUtils.unpatch(time);
         });
+
+        QUnit.test('custom filter date', async function (assert) {
+            assert.expect(5);
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.description,
+                        'A date is equal to "05/05/2005"',
+                        "description should be in localized format");
+                    assert.deepEqual(preFilter.domain,
+                        '[["date_field","=","2005-05-05"]]',
+                        "domain should be in UTC format");
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const date_field = { name: 'date_field', string: "A date", type: 'date', searchable: true };
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: { date_field },
+                },
+                env: { searchModel },
+            });
+
+            await testUtils.controlPanel.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_field');
+            const valueInput = cfi.el.querySelector('.o_generator_menu_value .o_input');
+            await testUtils.dom.click(valueInput);
+            assert.containsOnce(document.body, '.datepicker');
+            await testUtils.fields.editSelect(valueInput, '05/05/2005');
+            await testUtils.controlPanel.applyFilter(cfi);
+            assert.containsNone(document.body, '.datepicker');
+            cfi.destroy();
+        });
+
 
         QUnit.module('DateTimePicker');
 
