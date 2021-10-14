@@ -1652,7 +1652,7 @@ class StockMove(models.Model):
             else:
                 moves_state_to_write['confirmed'].add(move.id)
         for state, moves_ids in moves_state_to_write.items():
-            self.browse(moves_ids).write({'state': state})
+            self.browse(moves_ids).filtered(lambda m: m.state != state).state = state
 
     @api.model
     def _consuming_picking_types(self):
