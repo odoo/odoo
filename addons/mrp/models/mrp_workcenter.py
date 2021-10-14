@@ -236,18 +236,21 @@ class MrpWorkcenter(models.Model):
             available_intervals = get_available_intervals(dt, dt + delta)
             workorder_intervals = get_workorder_intervals(dt, dt + delta)
             for start, stop, dummy in available_intervals:
-                interval_minutes = (stop - start).total_seconds() / 60
-                # If the remaining minutes has never decrease update start_interval
-                if remaining == duration:
-                    start_interval = start
-                # If there is a overlap between the possible available interval and a others WO
-                if Intervals([(start_interval, start + timedelta(minutes=min(remaining, interval_minutes)), dummy)]) & workorder_intervals:
-                    remaining = duration
-                    start_interval = start
-                elif float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
-                    return revert(start_interval), revert(start + timedelta(minutes=remaining))
-                # Decrease a part of the remaining duration
-                remaining -= interval_minutes
+                # Shouldn't loop more than 2 times because the available_intervals contains the workorder_intervals
+                # And remaining == duration can only occur at the first loop and at the interval intersection (cannot happen several time because available_intervals > workorder_intervals
+                for i in range(2):
+                    interval_minutes = (stop - start).total_seconds() / 60
+                    # If the remaining minutes has never decrease update start_interval
+                    if remaining == duration:
+                        start_interval = start
+                    # If there is a overlap between the possible available interval and a others WO
+                    if Intervals([(start_interval, start + timedelta(minutes=min(remaining, interval_minutes)), dummy)]) & workorder_intervals:
+                        remaining = duration
+                    elif float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
+                        return revert(start_interval), revert(start + timedelta(minutes=remaining))
+                    else:
+                        # Decrease a part of the remaining duration
+                        remaining -= interval_minutes
         return False, 'Not available slot 700 days after the planned start'
 
 
