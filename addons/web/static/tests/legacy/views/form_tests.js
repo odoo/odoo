@@ -11195,6 +11195,43 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: Selection radio click on value', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="state" widget="radio"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.model === 'partner' && args.method === 'write') {
+                    assert.step('Write');
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, 'input[type="radio"]:eq(0):checked');
+
+        // click on the last value
+        await testUtils.dom.click(form.$('.o_radio_item .o_form_label:contains(EF)'));
+
+        // should be switched in edit mode
+        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
+
+        assert.verifySteps([], "No write RPC done");
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: non-editable form', async function (assert) {
         assert.expect(3);
 
