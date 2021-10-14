@@ -20,3 +20,15 @@ export function computeVariation(value, comparisonValue) {
     }
     return (value - comparisonValue) / Math.abs(comparisonValue);
 }
+
+/**
+ * Returns value clamped to the inclusive range of min and max.
+ * 
+ * @param {Number} num
+ * @param {Number} min
+ * @param {Number} max 
+ * @returns {Number}
+ */
+export function clamp(num, min, max) {
+    return Math.max(Math.min(num, max), min);
+}

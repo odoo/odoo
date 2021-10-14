@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { isMacOS } from "@web/core/browser/feature_detection";
+import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { registerCleanup } from "./cleanup";
 import { download } from "@web/core/network/download";
@@ -168,6 +168,18 @@ const mouseEventNoBubble = (args) =>
         view: window,
     });
 
+const touchEventMapping = (args) => ({
+    ...args,
+    bubbles: true,
+    cancelable: true,
+    touches: args.touches ? [...args.touches.map((e) => new Touch(e))] : undefined,
+});
+
+const touchEventCancelMapping = (args) => ({
+    ...touchEventMapping(args),
+    cancelable: false,
+});
+
 const noBubble = (args) => Object.assign({}, args, { bubbles: false });
 
 const onlyBubble = (args) => Object.assign({}, args, { bubbles: true });
@@ -205,6 +217,15 @@ const EVENT_TYPES = {
     compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
     compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
 };
+
+if (typeof TouchEvent === "function") {
+    Object.assign(EVENT_TYPES, {
+        touchstart: { constructor: TouchEvent, processParameters: touchEventMapping },
+        touchend: { constructor: TouchEvent, processParameters: touchEventMapping },
+        touchmove: { constructor: TouchEvent, processParameters: touchEventMapping },
+        touchcancel: { constructor: TouchEvent, processParameters: touchEventCancelMapping },
+    });
+}
 
 export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
     let event;
