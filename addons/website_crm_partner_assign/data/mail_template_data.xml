@@ -19,7 +19,7 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your leads</span><br/>
                 </td><td valign="middle" align="right">
-                    <img t-attf-src="/logo.png?company={{ user.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
+                    <img t-attf-src="/logo.png?company={{ user.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % user.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
@@ -37,7 +37,7 @@
                             Hello,<br/>
                             We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-out="ctx['partner_id'].name or ''"></t>:<br/>
                             <ol>
-                                <li t-foreach="ctx['partner_leads']" t-as="lead"><a t-att-href="lead.lead_link" t-out="lead.lead_id.name or 'Subject Undefined'">Subject Undefined</a>, <t t-out="lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'">Contact Name Undefined</t>, <t t-out="lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined'">Country Undefined</t>, <t t-out="lead.lead_id.email_from or 'Email Undefined' or ''">Email Undefined</t>, <t t-out="lead.lead_id.phone or ''">+1 650-123-4567</t> </li><br/>
+                                <li t-foreach="ctx['partner_leads']" t-as="lead"><a t-att-href="lead['lead_link']" t-out="lead['lead_id'].name or 'Subject Undefined'">Subject Undefined</a>, <t t-out="lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'">Contact Name Undefined</t>, <t t-out="lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'">Country Undefined</t>, <t t-out="lead['lead_id'].email_from or 'Email Undefined' or ''">Email Undefined</t>, <t t-out="lead['lead_id'].phone or ''">+1 650-123-4567</t> </li><br/>
                             </ol>
                             <t t-if="ctx.get('partner_in_portal')">
                                 Please connect to your <a href="{{ record.get_portal_url() }}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" &amp; "I'm not interested".<br/>
