@@ -540,6 +540,21 @@ export class Record extends DataPoint {
         }
         return defaultValues;
     }
+
+    _sanitizeValues(values) {
+        if (this.resModel !== this.model.resModel) {
+            return values;
+        }
+        const sanitizedValues = {};
+        for (const fieldName in values) {
+            if (this.fields[fieldName].type === "char") {
+                sanitizedValues[fieldName] = values[fieldName] || "";
+            } else {
+                sanitizedValues[fieldName] = values[fieldName];
+            }
+        }
+        return sanitizedValues;
+    }
 }
 
 class DynamicList extends DataPoint {

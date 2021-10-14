@@ -65,6 +65,9 @@
                                 <span t-else="" class="o_column_unfold">
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
+                                <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                    <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
+                                </span>
                             </div>
                             <div t-if="!group.isFolded and group.progressValues.length" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">

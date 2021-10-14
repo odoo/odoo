@@ -422,6 +422,13 @@ export class KanbanRenderer extends Component {
         this.mousedownTarget = ev.target;
     }
 
+    onCardClicked(record, ev) {
+        if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
+            return;
+        }
+        this.openRecord(record);
+    }
+
     //-------------------------------------------------------------------------
     // KANBAN SPECIAL FUNCTIONS
     //
