@@ -1542,7 +1542,7 @@ class StockMove(models.Model):
             else:
                 moves_state_to_write['confirmed'].add(move.id)
         for state, move_ids in moves_state_to_write.items():
-            self.browse(move_ids).write({'state': state})
+            self.browse(move_ids).filtered(lambda m: m.state != state).state = state
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
