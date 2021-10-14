@@ -197,9 +197,9 @@
                     <field name="products_availability" options='{"lazy": true}'
                         optional="hide"
                         attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned'])]}"
-                        decoration-warning="products_availability_state == 'expected'"
-                        decoration-danger="products_availability_state == 'late'"
-                        decoration-success="products_availability_state == 'available'"/>
+                        decoration-success="state == 'assigned' or products_availability_state == 'available'"
+                        decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
+                        decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="date_done" string="Effective Date" optional="hide"/>
                     <field name="origin" optional="show"/>
@@ -326,9 +326,9 @@
                             <field name="products_availability_state" invisible="1"/>
                             <field name="products_availability"
                                 attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned'])]}"
-                                decoration-warning="products_availability_state == 'expected'"
-                                decoration-danger="products_availability_state == 'late'"
-                                decoration-success="products_availability_state == 'available'"/>
+                                decoration-success="state == 'assigned' or products_availability_state == 'available'"
+                                decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
+                                decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"

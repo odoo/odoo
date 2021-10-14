@@ -1539,12 +1539,12 @@ class TestMrpOrder(TestMrpCommon):
         (move1 | move2 | move3)._action_confirm()
 
         mo.invalidate_cache(['components_availability', 'components_availability_state'], mo.ids)
-        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'late')
 
         mo.date_planned_start = after_tommorrow
 
-        self.assertEqual(mo.components_availability, 'Exp %s' % format_date(self.env, tommorrow))
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'expected')
 
         (move1 | move2 | move3)._set_quantities_to_reservation()
@@ -1557,7 +1557,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
 
         self.assertEqual(mo.reservation_state, 'assigned')
-        self.assertEqual(mo.components_availability, 'Ready')
+        self.assertEqual(mo.components_availability, 'Available')
         self.assertEqual(mo.components_availability_state, 'available')
 
 
