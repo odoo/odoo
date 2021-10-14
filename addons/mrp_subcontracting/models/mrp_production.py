@@ -62,7 +62,7 @@ class MrpProduction(models.Model):
             backorder._set_qty_producing()
 
             self.product_qty = self.qty_producing
-            action = self._get_subcontract_move()._action_record_components()
+            action = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))._action_record_components()
             action['res_id'] = backorder.id
             return action
         return {'type': 'ir.actions.act_window_close'}
@@ -75,7 +75,7 @@ class MrpProduction(models.Model):
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
         self.ensure_one()
-        subcontract_move_id = self._get_subcontract_move()
+        subcontract_move_id = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))
         if subcontract_move_id:
             quantity = self.qty_producing
             if self.lot_producing_id:
@@ -140,6 +140,8 @@ class MrpProduction(models.Model):
             if float_is_zero(mo.qty_producing, precision_rounding=mo.product_uom_id.rounding):
                 return False
             if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
+                return False
+            if mo.product_id.tracking != 'none' and not mo.lot_producing_id:
                 return False
             return True
 
