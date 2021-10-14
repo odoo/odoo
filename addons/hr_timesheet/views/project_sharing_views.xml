@@ -155,8 +155,8 @@
                 <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
                 <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
-                <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
-                <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
+                <field name="total_hours_spent" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
+                <field name="progress" widget="progressbar" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}" optional="show"/>
             </field>
         </field>
     </record>
