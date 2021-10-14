@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields, Command, _
 from odoo.exceptions import ValidationError
 
 
@@ -14,6 +14,44 @@ class AccountTaxUnit(models.Model):
     vat = fields.Char(string="Tax ID", required=True, help="The identifier to be used when submitting a report for this unit.")
     company_ids = fields.Many2many(string="Companies", comodel_name='res.company', required=True, help="Members of this unit")
     main_company_id = fields.Many2one(string="Main Company", comodel_name='res.company', required=True, help="Main company of this unit; the one actually reporting and paying the taxes.")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        created_units = super().create(vals_list)
+        created_units._assign_no_tax_fiscal_positions()
+        return created_units
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'company_ids' in vals:
+            self._assign_no_tax_fiscal_positions()
+        return res
+
+    def _assign_no_tax_fiscal_positions(self):
+        for record in self:
+            for company in record.company_ids:
+                existing_fp = self.env.ref('account.tax_unit_fp_%s' % company.id, raise_if_not_found=False)
+                if not existing_fp:
+                    existing_fp = self.env['account.fiscal.position'].sudo().create({
+                        'name': self.name,
+                        'company_id': company.id
+                    })
+                    self.env['ir.model.data'].create({
+                        'name': 'tax_unit_fp_%s' % company.id,
+                        'module': 'account',
+                        'model': 'account.fiscal.position',
+                        'res_id': existing_fp.id,
+                        'noupdate': True,
+                    })
+                sales_taxes_to_map = self.env['account.tax'].search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount_type', '=', 'percent'),
+                    ('company_id', '=', company.id),
+                    ('id', 'not in', existing_fp.mapped('tax_ids.tax_src_id').ids)
+                ])
+                existing_fp.write({'tax_ids': [Command.create({'tax_src_id': tax.id}) for tax in sales_taxes_to_map]})
+                for c in record.company_ids - company:
+                    c.partner_id.sudo().with_company(company).property_account_position_id = existing_fp
 
     @api.constrains('country_id', 'company_ids')
     def _validate_companies_country(self):
