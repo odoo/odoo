@@ -385,7 +385,11 @@ function _createTable(attributes = []) {
         delete layoutStyles['line-height'];
         $table.css(layoutStyles);
     } else {
-        $table.css(tableStyles);
+        for (const styleName in tableStyles) {
+            if (!('style' in attributes && attributes.style.value.includes(styleName + ':'))) {
+                $table.css(styleName, tableStyles[styleName]);
+            }
+        }
     }
     return $table;
 }
