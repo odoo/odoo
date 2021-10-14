@@ -30,6 +30,7 @@ class MailMail(models.Model):
                         %(unsub)s: %(unsub_url)s
                     """ % vals
             body = tools.append_content_to_html(self.body, footer, container_tag='div')
+            body = self.env['mail.thread']._replace_local_links(body)
             return body
         else:
             return super(MailMail, self)._send_prepare_body()
