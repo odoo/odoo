@@ -13,9 +13,10 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 @tagged('out_of_office')
 class TestOutOfOffice(TestHrHolidaysCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.leave_type = self.env['hr.leave.type'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'requires_allocation': 'no',
@@ -60,26 +61,27 @@ class TestOutOfOffice(TestHrHolidaysCommon):
 @tagged('out_of_office')
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestOutOfOfficePerformance, self).setUp()
-        self.leave_type = self.env['hr.leave.type'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestOutOfOfficePerformance, cls).setUpClass()
+        cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'requires_allocation': 'no',
         })
-        self.leave_date_end = (datetime.today() + relativedelta(days=3))
-        self.leave = self.env['hr.leave'].create({
+        cls.leave_date_end = (datetime.today() + relativedelta(days=3))
+        cls.leave = cls.env['hr.leave'].create({
             'name': 'Christmas',
-            'employee_id': self.employee_hruser_id,
-            'holiday_status_id': self.leave_type.id,
+            'employee_id': cls.employee_hruser_id,
+            'holiday_status_id': cls.leave_type.id,
             'date_from': (datetime.today() - relativedelta(days=1)),
             'date_to': (datetime.today() + relativedelta(days=3)),
             'number_of_days': 4,
         })
 
-        self.hr_user = self.employee_hruser.user_id
-        self.hr_partner = self.employee_hruser.user_id.partner_id
-        self.employer_partner = self.user_employee.partner_id
+        cls.hr_user = cls.employee_hruser.user_id
+        cls.hr_partner = cls.employee_hruser.user_id.partner_id
+        cls.employer_partner = cls.user_employee.partner_id
 
     @users('__system__', 'demo')
     @warmup

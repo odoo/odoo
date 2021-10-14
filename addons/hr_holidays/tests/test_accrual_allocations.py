@@ -12,9 +12,10 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 @tagged('post_install', '-at_install')
 class TestAccrualAllocations(TestHrHolidaysCommon):
-    def setUp(self):
-        super(TestAccrualAllocations, self).setUp()
-        self.leave_type = self.env['hr.leave.type'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestAccrualAllocations, cls).setUpClass()
+        cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': 'yes',
