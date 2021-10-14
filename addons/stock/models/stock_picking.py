@@ -387,7 +387,8 @@ class Picking(models.Model):
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
     products_availability = fields.Char(
-        string="Product Availability", compute='_compute_products_availability')
+        string="Product Availability", compute='_compute_products_availability',
+        help="Latest product availability status of the picking")
     products_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
@@ -425,16 +426,12 @@ class Picking(models.Model):
     def _compute_products_availability(self):
         pickings = self.filtered(lambda picking: picking.state in ('waiting', 'confirmed', 'assigned') and picking.picking_type_code == 'outgoing')
         pickings.products_availability_state = 'available'
+        pickings.products_availability = _('Available')
         other_pickings = self - pickings
         other_pickings.products_availability = False
         other_pickings.products_availability_state = False
 
-        pickings_ready = pickings.filtered(lambda picking: picking.state == 'assigned')
-        pickings_ready.products_availability = _('Ready')
-        pickings_not_ready = pickings - pickings_ready
-        pickings_not_ready.products_availability = _('Available')
-
-        all_moves = pickings_not_ready.move_lines
+        all_moves = pickings.move_lines
         # Force to prefetch more than 1000 by 1000
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for picking in pickings:
