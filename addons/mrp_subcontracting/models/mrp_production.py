@@ -135,6 +135,8 @@ class MrpProduction(models.Model):
                 return False
             if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
                 return False
+            if mo.product_id.tracking != 'none' and not mo.lot_producing_id:
+                return False
             return True
 
         return self.filtered(filter_in)
