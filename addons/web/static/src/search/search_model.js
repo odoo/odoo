@@ -1336,7 +1336,7 @@ export class SearchModel extends EventBus {
         }
         let context;
         try {
-            context = makeContext(...contexts); // what we want?
+            context = makeContext(contexts);
             return context;
         } catch (error) {
             throw new Error(
@@ -1732,7 +1732,7 @@ export class SearchModel extends EventBus {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
-        const context = makeContext(this._getContext(), localContext);
+        const context = makeContext([this._getContext(), localContext]);
         const userContext = this.userService.context;
         for (const key in context) {
             if (key in userContext || /^search(panel)?_default_/.test(key)) {
@@ -1836,7 +1836,7 @@ export class SearchModel extends EventBus {
             case "favorite":
             case "filter": {
                 //Return a deep copy of the filter/favorite to avoid the view to modify the context
-                return makeContext(searchItem.context && deepCopy(searchItem.context));
+                return makeContext([searchItem.context && deepCopy(searchItem.context)]);
             }
             default: {
                 return null;
