@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/helpers/sample_server";
 import { useSetupView } from "@web/views/helpers/view_hook";
 
@@ -86,8 +86,7 @@ export function useModel(ModelClass, params, options = {}) {
     services.orm = services.orm || useService("orm");
 
     const model = new ModelClass(component.env, params, services);
-    const { processParams = (x) => x, onUpdate } = options;
-    useBus(model, "update", onUpdate || component.render);
+    useBus(model, "update", options.onUpdate || component.render);
 
     const globalState = component.props.globalState || {};
     let useSampleModel = Boolean(
@@ -102,7 +101,7 @@ export function useModel(ModelClass, params, options = {}) {
     let started = false;
     async function load(props) {
         model.orm = orm;
-        const searchParams = processParams(getSearchParams(props));
+        const searchParams = getSearchParams(props);
         await model.load(searchParams);
         if (useSampleModel && !model.hasData()) {
             sampleORM =

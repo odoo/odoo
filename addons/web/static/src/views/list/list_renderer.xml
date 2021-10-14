@@ -14,7 +14,7 @@
             </tr>
           </thead>
           <tbody class="ui-sortable">
-            <tr t-foreach="record.data" t-as="record" t-key="record.id" class="o_data_row">
+            <tr t-foreach="props.record.data" t-as="record" t-key="record.id" class="o_data_row">
               <td class="o_list_record_selector"><CheckBox /></td>
               <t t-foreach="columns" t-as="column" t-key="column_index">
                 <td class="o_data_cell" t-on-click="openRecord(record)">

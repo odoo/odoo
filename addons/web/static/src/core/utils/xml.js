@@ -49,10 +49,29 @@ export class XMLParser {
     isAttr(node, attr) {
         const value = node.getAttribute(attr);
         return {
-            truthy: () => value && /true|1/i.test(value),
-            falsy: () => !value || /false|0/i.test(value),
+            truthy: (canBeUndefined) => {
+                if (canBeUndefined && !value) {
+                    return true;
+                }
+                return value && /true|1/i.test(value);
+            },
+            falsy: (canBeUndefined) => {
+                if (canBeUndefined && !value) {
+                    return true;
+                }
+                return value && /false|0/i.test(value);
+            },
             equalTo: (expected) => value === expected,
             notEqualTo: (expected) => value !== expected,
+        };
+    }
+
+    getActiveActions(rootNode) {
+        return {
+            edit: this.isAttr(rootNode, "edit").truthy(true),
+            create: this.isAttr(rootNode, "create").truthy(true),
+            delete: this.isAttr(rootNode, "delete").truthy(true),
+            duplicate: this.isAttr(rootNode, "duplicate").truthy(true),
         };
     }
 }

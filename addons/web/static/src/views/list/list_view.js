@@ -1,14 +1,14 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { XMLParser } from "../../core/utils/xml";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { useService } from "@web/core/utils/hooks";
+import { XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { FieldParser } from "../helpers/view_utils";
-import { RelationalModel } from "../relational_model";
-import { ListRenderer } from "./list_renderer";
-import { useService } from "@web/core/utils/hooks";
+import { FieldParser } from "@web/views/helpers/view_utils";
+import { Layout } from "@web/views/layout";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { RelationalModel } from "@web/views/relational_model";
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
@@ -55,7 +55,9 @@ class ListView extends owl.Component {
 
         this.openRecord = this.openRecord.bind(this);
 
-        useSetupView({ /** TODO **/ });
+        useSetupView({
+            /** TODO **/
+        });
     }
 
     openRecord(record) {
@@ -69,6 +71,6 @@ ListView.display_name = "List";
 ListView.icon = "fa-list-ul";
 ListView.multiRecord = true;
 ListView.template = `web.ListView`;
-ListView.components = { ControlPanel, ListRenderer };
+ListView.components = { Layout, ListRenderer };
 
 registry.category("views").add("list", ListView);

@@ -59,6 +59,7 @@ export class FieldParser {
         this.fields = fields;
         this.viewType = viewType;
         this.parsedFields = Object.create(null);
+        this.widgets = Object.create(null);
         this.relations = {};
     }
 
@@ -81,6 +82,7 @@ export class FieldParser {
         const onChange = archParseBoolean(node.getAttribute("on_change"));
         const options = evaluateExpr(node.getAttribute("options") || "{}");
         this.parsedFields[fieldName] = getFieldInfo ? getFieldInfo(fieldName) : fieldName;
+        this.widgets[fieldName] = widget;
         if (isRelational(field)) {
             const relatedFields = [];
             const FieldClass = Field.getTangibleField(this.record, widget, fieldName);
@@ -120,6 +122,10 @@ export class FieldParser {
 
     getFields() {
         return Object.values(this.parsedFields);
+    }
+
+    getWidget(fieldName) {
+        return this.widgets[fieldName];
     }
 
     getRelations() {

@@ -159,18 +159,6 @@ export const requestBatcherService = {
 
 registry.category("services").add("requestBatcher", requestBatcherService);
 
-function sanitizeValues(values, fields) {
-    const sanitizedValues = {};
-    for (const fieldName in values) {
-        if (fields[fieldName].type === "char") {
-            sanitizedValues[fieldName] = values[fieldName] || "";
-        } else {
-            sanitizedValues[fieldName] = values[fieldName];
-        }
-    }
-    return sanitizedValues;
-}
-
 class DataPoint {
     /**
      * @param {RelationalModel} model
@@ -273,7 +261,7 @@ class DataRecord extends DataPoint {
                     [this.resId],
                     this.activeFields
                 );
-                data = sanitizeValues(result[0], this.fields);
+                data = this._sanitizeValues(result[0]);
             } else {
                 data = await this._performOnchange();
             }
@@ -349,15 +337,30 @@ class DataRecord extends DataPoint {
             fieldName ? [fieldName] : [],
             this._getOnchangeSpec(),
         ]);
-        return sanitizeValues(result.value, this.fields);
+        return this._sanitizeValues(result.value);
     }
 
     _getOnchangeSpec() {
         const onChangeSpec = {};
-        for (const fieldName in this.aciveFields) {
+        for (const fieldName in this.activeFields) {
             onChangeSpec[fieldName] = "1"; // FIXME: need to on_change info from arch
         }
         return onChangeSpec;
+    }
+
+    _sanitizeValues(values) {
+        if (this.resModel !== this.model.resModel) {
+            return values;
+        }
+        const sanitizedValues = {};
+        for (const fieldName in values) {
+            if (this.fields[fieldName].type === "char") {
+                sanitizedValues[fieldName] = values[fieldName] || "";
+            } else {
+                sanitizedValues[fieldName] = values[fieldName];
+            }
+        }
+        return sanitizedValues;
     }
 }
 

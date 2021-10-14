@@ -12,8 +12,8 @@ function compileChatter(node, params) {
     container.classList.add("o_FormRenderer_chatterContainer");
 
     const chatter = this.document.createElement("ChatterContainer");
-    chatter.setAttribute("threadModel", "props.model.resModel");
-    chatter.setAttribute("threadId", "props.model.resId");
+    chatter.setAttribute("threadModel", "props.record.resModel");
+    chatter.setAttribute("threadId", "props.record.resId");
     // TODO: pass chatterFields equivalent in props
 
     this.append(container, chatter);

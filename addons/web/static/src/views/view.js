@@ -168,7 +168,7 @@ export class View extends Component {
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = this.props;
 
-        const views = deepCopy(this.env.config.views);
+        const views = deepCopy(this.props.views || this.env.config.views);
         const view = views.find((v) => v[1] === type) || [];
         if (view.length) {
             view[0] = viewId !== undefined ? viewId : view[0];
@@ -317,6 +317,20 @@ export class View extends Component {
                 this.props.searchMenuTypes ||
                 descr.searchMenuTypes ||
                 this.constructor.searchMenuTypes;
+        }
+
+        if (ViewClass.display) {
+            if (!this.withSearchProps.display) {
+                this.withSearchProps.display = {};
+            }
+            const { display } = this.withSearchProps;
+            for (const key in ViewClass.display) {
+                if (typeof display[key] === "object") {
+                    Object.assign(display[key], ViewClass.display[key]);
+                } else if (!(key in display) || display[key]) {
+                    display[key] = ViewClass.display[key];
+                }
+            }
         }
 
         for (const key in this.withSearchProps) {

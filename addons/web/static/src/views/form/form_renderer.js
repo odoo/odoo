@@ -1,43 +1,26 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
-
-import { FormCompiler } from "@web/views/form/form_compiler";
 import { Field } from "@web/fields/field";
-import { ButtonBox } from "./button_box/button_box";
+import { useFormCompiler } from "@web/views/form/form_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { ButtonBox } from "./button_box/button_box";
 
-const { Component } = owl;
-const { useSubEnv, useState } = owl.hooks;
-
-const templateIds = Object.create(null);
-let nextId = 1;
+const { Component, hooks, tags } = owl;
+const { useSubEnv, useState } = hooks;
+const { xml } = tags;
 
 export class FormRenderer extends Component {
     setup() {
-        let templateId = templateIds[this.props.info.arch];
-        if (!templateId) {
-            const formCompiler = new FormCompiler(this.env.qweb, this.props.info.fields);
-            const xmldoc = formCompiler.compile(this.props.info.xmlDoc);
-            console.group("Compiled template:");
-            console.dirxml(xmldoc);
-            console.groupEnd();
-            templateId = `__form__${nextId++}`;
-            this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
-            templateIds[this.props.info.arch] = templateId;
-        }
-        this.owlifiedArch = templateId;
+        const { arch, fields, xmlDoc } = this.props.info;
+        this.owlifiedArch = useFormCompiler(arch, fields, xmlDoc);
         this.state = useState({});
-        useSubEnv({ model: this.props.model });
+        if (!this.env.model) {
+            useSubEnv({ model: this.props.record.model });
+        }
     }
 
     get record() {
-        return this.props.model.root;
-    }
-
-    evalDomain(record, expr) {
-        const domain = new Domain(expr);
-        return domain.contains(record.data);
+        return this.props.record;
     }
 
     getActivePage(record, invisibleDomains) {
@@ -47,21 +30,7 @@ export class FormRenderer extends Component {
             }
         }
     }
-
-    isFieldEmpty(record, fieldName, widgetName) {
-        const cls = Field.getTangibleField(record, widgetName, fieldName);
-        if ("isEmpty" in cls) {
-            return cls.isEmpty(record, fieldName);
-        }
-        return !record.data[fieldName];
-    }
-
-    getWidget(widgetName) {
-        class toImplement extends Component {}
-        toImplement.template = owl.tags.xml`<div>${widgetName}</div>`;
-        return toImplement;
-    }
 }
 
-FormRenderer.template = owl.tags.xml`<t t-call="{{ owlifiedArch }}" />`;
+FormRenderer.template = xml`<t t-call="{{ owlifiedArch }}" />`;
 FormRenderer.components = { Field, ButtonBox, ViewButton };

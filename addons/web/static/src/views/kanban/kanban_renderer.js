@@ -1,80 +1,129 @@
 /** @odoo-module **/
 
-import { Domain } from "../../core/domain";
-import { useService } from "../../core/utils/hooks";
-import { Field } from "../../fields/field";
-import { FormCompiler } from "../../views/form/form_compiler";
-import { ViewButton } from "../view_button/view_button";
-import { url } from "../../core/utils/urls";
-import { FieldColorPicker, fileTypeMagicWordMap } from "../../fields/basic_fields";
+import { Domain } from "@web/core/domain";
+import { useService } from "@web/core/utils/hooks";
+import { url } from "@web/core/utils/urls";
+import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
+import { Field } from "@web/fields/field";
+import { useFormCompiler } from "@web/views/form/form_compiler";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { View } from "@web/views/view";
+import { sprintf } from "../../core/utils/strings";
 
-const { Component } = owl;
-const { useState, useSubEnv } = owl.hooks;
+const { Component, hooks } = owl;
+const { useState, useSubEnv } = hooks;
 
 const { RECORD_COLORS } = FieldColorPicker;
 
-const templateIds = {};
-let nextKanbanCardId = 1;
-
+const GLOBAL_CLICK_CANCEL_SELECTORS = [".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 
 export class KanbanRenderer extends Component {
     setup() {
-        let templateId = templateIds[this.props.info.arch];
-        if (!templateId) {
-            const formCompiler = new FormCompiler(this.env.qweb, this.props.info.fields);
-            const xmldoc = formCompiler.compile(this.props.info.xmlDoc);
-            console.group("Compiled template:");
-            console.dirxml(xmldoc);
-            console.groupEnd();
-            templateId = `__kanban_card__${nextKanbanCardId++}`;
-            this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
-            templateIds[this.props.info.arch] = templateId;
-        }
-        this.record = this.props.record || this.props.model.root;
-        this.cardTemplate = templateId;
-        this.cards = this.props.info.cards;
-        this.className = this.props.info.className;
-        this.state = useState({});
+        const { arch, cards, className, fields, xmlDoc } = this.props.info;
+        this.cards = cards;
+        this.className = className;
+        this.cardTemplate = useFormCompiler(arch, fields, xmlDoc);
+        this.state = useState({
+            quickCreate: [],
+        });
         this.action = useService("action");
-        useSubEnv({ model: this.props.model });
-    }
-
-    openRecord(record) {
-        const resIds = this.props.model.root.data.map((datapoint) => datapoint.resId);
-        this.action.switchView("form", { resId: record.resId, resIds });
-    }
-
-    evalDomain(record, expr) {
-        const domain = new Domain(expr);
-        return domain.contains(record.data);
-    }
-
-    isFieldEmpty(record, fieldName, widgetName) {
-        const cls = Field.getTangibleField(record, widgetName, fieldName);
-        if ("isEmpty" in cls) {
-            return cls.isEmpty(record, fieldName);
+        this.notification = useService("notification");
+        this.colors = RECORD_COLORS;
+        if (!this.env.model) {
+            useSubEnv({ model: this.props.record.model });
         }
-        return !record.data[fieldName];
     }
 
-    getWidget(widgetName) {
-        class toImplement extends Component {}
-        toImplement.template = owl.tags.xml`<div>${widgetName}</div>`;
-        return toImplement;
+    quickCreate(group) {
+        const [groupByField] = this.props.record.model.root.groupBy;
+        const value = group.groupData[groupByField];
+        this.state.quickCreate[group.id] = {
+            [groupByField]: Array.isArray(value) ? value[0] : value,
+        };
+    }
+
+    openRecord(record, mode = "readonly") {
+        const resIds = this.props.record.data.map((datapoint) => datapoint.resId);
+        this.action.switchView("form", { resId: record.resId, resIds, mode });
+    }
+
+    selectColor(record, colorIndex) {
+        // TODO
+        console.warn("TODO: Update record", record.id, {
+            [this.props.info.colorField]: colorIndex,
+        });
+    }
+
+    triggerAction(record, params) {
+        const { type } = params;
+        switch (type) {
+            case "edit": {
+                this.openRecord(record, "edit");
+                break;
+            }
+            case "open": {
+                this.openRecord(record);
+                break;
+            }
+            case "delete": {
+                // TODO
+                console.warn("TODO: Delete record", record.id);
+                break;
+            }
+            case "action":
+            case "object": {
+                // TODO
+                console.warn("TODO: Button clicked for record", record.id, { params });
+                break;
+            }
+            case "set_cover": {
+                const { fieldName, widget, autoOpen } = params;
+                const field = this.props.record.fields[fieldName];
+                if (
+                    field.type === "many2one" &&
+                    field.relation === "ir.attachment" &&
+                    widget === "attachment_image"
+                ) {
+                    // TODO
+                    console.warn("TODO: Update record", record.id, { fieldName, autoOpen });
+                } else {
+                    const warning = sprintf(
+                        this.env._t(
+                            `Could not set the cover image: incorrect field ("%s") is provided in the view.`
+                        ),
+                        fieldName
+                    );
+                    this.notification.add({ title: warning, type: "danger" });
+                }
+                break;
+            }
+            default: {
+                this.notification.add(this.env._t("Kanban: no action for type: ") + type, {
+                    type: "danger",
+                });
+            }
+        }
     }
 
     getColumnTitle(group) {
         const { groupData } = group;
-        const [groupByField] = this.props.model.root.groupBy;
+        const [groupByField] = this.props.record.groupBy;
         const value = groupData[groupByField];
         return Array.isArray(value) ? value[1] : value;
+    }
+
+    onCardClicked(record, ev) {
+        if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
+            return;
+        }
+        this.openRecord(record);
     }
 
     //-------------------------------------------------------------------------
     // KANBAN SPECIAL FUNCTIONS
     //
-    // Note: these are snake_cased with a not-so-self-explanatory name for the
+    // Note: these are snake_cased with not-so-self-explanatory names for the
     // sake of compatibility.
     //-------------------------------------------------------------------------
 
@@ -88,7 +137,7 @@ export class KanbanRenderer extends Component {
      */
     kanban_image(model, field, idOrIds, placeholder) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = this.props.model.get({ resId: id }) || { data: {} };
+        const record = this.record.model.get({ resId: id }) || { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type
@@ -115,10 +164,10 @@ export class KanbanRenderer extends Component {
      */
     kanban_getcolor(value) {
         if (typeof value === "number") {
-            return Math.round(value) % RECORD_COLORS.length;
+            return Math.round(value) % this.colors.length;
         } else if (typeof value === "string") {
             const charCodeSum = [...value].reduce((acc, _, i) => acc + value.charCodeAt(i), 0);
-            return charCodeSum % RECORD_COLORS.length;
+            return charCodeSum % this.colors.length;
         } else {
             return 0;
         }
@@ -128,7 +177,7 @@ export class KanbanRenderer extends Component {
      * Returns the proper translated name of a record color.
      */
     kanban_getcolorname(value) {
-        return RECORD_COLORS[this.kanban_getcolor(value)];
+        return this.colors[this.kanban_getcolor(value)];
     }
 
     /**
@@ -140,4 +189,4 @@ export class KanbanRenderer extends Component {
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field, ViewButton };
+KanbanRenderer.components = { Field, View, ViewButton };
