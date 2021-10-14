@@ -261,6 +261,7 @@ export class Powerbox {
             );
             if (command) {
                 !command.isIntermediateStep &&
+                    (!command.shouldPreValidate || command.shouldPreValidate()) &&
                     this.options.preValidate &&
                     this.options.preValidate();
                 command.callback();
