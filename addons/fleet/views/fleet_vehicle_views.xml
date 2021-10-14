@@ -49,6 +49,9 @@
                             attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
+                        <button name="action_get_attachment_view" class="oe_stat_button" icon="fa-file-text" type="object">
+                            <field name="message_attachment_count" widget="statinfo" string="Documents"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>

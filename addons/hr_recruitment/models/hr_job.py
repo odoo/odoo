@@ -38,8 +38,7 @@ class Job(models.Model):
     hr_responsible_id = fields.Many2one(
         'res.users', "HR Responsible", tracking=True,
         help="Person responsible of validating the employee's contracts.")
-    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents")
-    documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
+    attachment_count = fields.Integer(compute='_compute_attachment_count', string="Document Count")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
@@ -109,7 +108,7 @@ class Job(models.Model):
         favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
         unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
-    def _compute_document_ids(self):
+    def _compute_attachment_count(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
         app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
         attachments = self.env['ir.attachment'].search([
@@ -124,8 +123,7 @@ class Job(models.Model):
                 result[attachment.res_id] |= attachment
 
         for job in self:
-            job.document_ids = result.get(job.id, False)
-            job.documents_count = len(job.document_ids)
+            job.attachment_count = len(result[job.id]) if result else False
 
     def _compute_all_application_count(self):
         read_group_result = self.env['hr.applicant'].with_context(active_test=False)._read_group([

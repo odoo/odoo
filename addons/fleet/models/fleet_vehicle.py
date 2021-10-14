@@ -336,6 +336,15 @@ class FleetVehicle(models.Model):
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
 
+    def action_get_attachment_view(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
+        action.update({
+            'name': _('Documents'),
+            'domain': [('res_id', '=', self.id), ('res_model', '=', 'fleet.vehicle')],
+            'context': dict(self._context, default_res_id=self.id, default_res_model=self._name)
+        })
+        return action
+
     def toggle_active(self):
         self.env['fleet.vehicle.log.contract'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
         self.env['fleet.vehicle.log.services'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
