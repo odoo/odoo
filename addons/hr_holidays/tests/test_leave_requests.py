@@ -27,43 +27,45 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(holiday_status.virtual_remaining_leaves, vrl,
                              'hr_holidays: wrong type days computation')
 
-    def setUp(self):
-        super(TestLeaveRequests, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super(TestLeaveRequests, cls).setUpClass()
 
         # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
-        LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True)
+        LeaveType = cls.env['hr.leave.type'].with_user(cls.user_hrmanager_id).with_context(tracking_disable=True)
 
-        self.holidays_type_1 = LeaveType.create({
+        cls.holidays_type_1 = LeaveType.create({
             'name': 'NotLimitedHR',
             'requires_allocation': 'no',
             'leave_validation_type': 'hr',
         })
-        self.holidays_type_2 = LeaveType.create({
+        cls.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
             'leave_validation_type': 'hr',
         })
-        self.holidays_type_3 = LeaveType.create({
+        cls.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',
             'requires_allocation': 'no',
             'leave_validation_type': 'manager',
         })
 
-        self.set_employee_create_date(self.employee_emp_id, '2010-02-03 00:00:00')
-        self.set_employee_create_date(self.employee_hruser_id, '2010-02-03 00:00:00')
+        cls.set_employee_create_date(cls.employee_emp_id, '2010-02-03 00:00:00')
+        cls.set_employee_create_date(cls.employee_hruser_id, '2010-02-03 00:00:00')
 
-    def set_employee_create_date(self, id, newdate):
+    @classmethod
+    def set_employee_create_date(cls, _id, newdate):
         """ This method is a hack in order to be able to define/redefine the create_date
             of the employees.
             This is done in SQL because ORM does not allow to write onto the create_date field.
         """
-        self.env.cr.execute("""
+        cls.env.cr.execute("""
                        UPDATE
                        hr_employee
                        SET create_date = '%s'
                        WHERE id = %s
-                       """ % (newdate, id))
+                       """ % (newdate, _id))
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_overlapping_requests(self):

@@ -10,28 +10,29 @@ import time
 @tests.tagged('access_rights', 'post_install', '-at_install')
 class TestAllocationRights(TestHrHolidaysCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.rd_dept.manager_id = False
-        self.hr_dept.manager_id = False
-        self.employee_emp.parent_id = False
-        self.employee_emp.leave_manager_id = False
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.rd_dept.manager_id = False
+        cls.hr_dept.manager_id = False
+        cls.employee_emp.parent_id = False
+        cls.employee_emp.leave_manager_id = False
 
-        self.lt_no_validation = self.env['hr.leave.type'].create({
+        cls.lt_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'allocation_validation_type': 'officer',
             'requires_allocation': 'no',
             'employee_requests': 'yes',
         })
 
-        self.lt_validation_manager = self.env['hr.leave.type'].create({
+        cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'allocation_validation_type': 'officer',
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
         })
 
-        self.lt_allocation_manager = self.env['hr.leave.type'].create({
+        cls.lt_allocation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'allocation_validation_type': 'set',
             'requires_allocation': 'yes',
@@ -85,11 +86,12 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
 
 class TestAccessRightsEmployeeManager(TestAllocationRights):
 
-    def setUp(self):
-        super().setUp()
-        self.managed_employee = self.env['hr.employee'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.managed_employee = cls.env['hr.employee'].create({
             'name': 'Jolly Jumper',
-            'leave_manager_id': self.user_employee.id,
+            'leave_manager_id': cls.user_employee.id,
         })
 
     def test_manager_request_allocation_other(self):

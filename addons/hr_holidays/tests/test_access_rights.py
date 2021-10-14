@@ -12,61 +12,62 @@ from odoo.tools import mute_logger
 
 @tests.tagged('access_rights', 'post_install', '-at_install')
 class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
-    def setUp(self):
-        super(TestHrHolidaysAccessRightsCommon, self).setUp()
-        self.leave_type = self.env['hr.leave.type'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestHrHolidaysAccessRightsCommon, cls).setUpClass()
+        cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
-        self.rd_dept.manager_id = False
-        self.hr_dept.manager_id = False
-        self.employee_emp.parent_id = False
-        self.employee_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+        cls.rd_dept.manager_id = False
+        cls.hr_dept.manager_id = False
+        cls.employee_emp.parent_id = False
+        cls.employee_leave = cls.env['hr.leave'].with_user(cls.user_employee_id).create({
             'name': 'Test',
-            'holiday_status_id': self.leave_type.id,
-            'department_id': self.employee_emp.department_id.id,
-            'employee_id': self.employee_emp.id,
+            'holiday_status_id': cls.leave_type.id,
+            'department_id': cls.employee_emp.department_id.id,
+            'employee_id': cls.employee_emp.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
 
-        self.lt_no_validation = self.env['hr.leave.type'].create({
+        cls.lt_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = no_validation',
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
 
-        self.lt_validation_hr = self.env['hr.leave.type'].create({
+        cls.lt_validation_hr = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
 
-        self.lt_validation_manager = self.env['hr.leave.type'].create({
+        cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
 
-        self.lt_validation_both = self.env['hr.leave.type'].create({
+        cls.lt_validation_both = cls.env['hr.leave.type'].create({
             'name': 'Validation = both',
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
 
-        self.draft_status = [
-            self.lt_validation_hr,
-            self.lt_validation_manager,
-            self.lt_validation_both
+        cls.draft_status = [
+            cls.lt_validation_hr,
+            cls.lt_validation_manager,
+            cls.lt_validation_both
         ]
 
-        self.confirm_status = [
-            self.lt_no_validation,
-            self.lt_validation_hr,
-            self.lt_validation_manager,
-            self.lt_validation_both
+        cls.confirm_status = [
+            cls.lt_no_validation,
+            cls.lt_validation_hr,
+            cls.lt_validation_manager,
+            cls.lt_validation_both
         ]
 
     def request_leave(self, user_id, date_from, number_of_days, values=None):
@@ -765,25 +766,26 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
 
 class TestMultiCompany(TestHrHolidaysCommon):
 
-    def setUp(self):
-        super(TestMultiCompany, self).setUp()
-        self.new_company = self.env['res.company'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestMultiCompany, cls).setUpClass()
+        cls.new_company = cls.env['res.company'].create({
             'name': 'Crocodile Dundee Company',
         })
-        self.leave_type = self.env['hr.leave.type'].create({
+        cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited - Company New',
-            'company_id': self.new_company.id,
+            'company_id': cls.new_company.id,
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
-        self.rd_dept.manager_id = False
-        self.hr_dept.manager_id = False
+        cls.rd_dept.manager_id = False
+        cls.hr_dept.manager_id = False
 
-        self.employee_leave = self.env['hr.leave'].create({
+        cls.employee_leave = cls.env['hr.leave'].create({
             'name': 'Test',
-            'holiday_status_id': self.leave_type.id,
-            'department_id': self.employee_emp.department_id.id,
-            'employee_id': self.employee_emp.id,
+            'holiday_status_id': cls.leave_type.id,
+            'department_id': cls.employee_emp.department_id.id,
+            'employee_id': cls.employee_emp.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
