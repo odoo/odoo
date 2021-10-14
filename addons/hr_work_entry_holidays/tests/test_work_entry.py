@@ -12,23 +12,24 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 
 @tagged('work_entry')
 class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
-    def setUp(self):
-        super(TestWorkeEntryHolidaysWorkEntry, self).setUp()
-        self.tz = pytz.timezone(self.richard_emp.tz)
-        self.start = datetime(2015, 11, 1, 1, 0, 0)
-        self.end = datetime(2015, 11, 30, 23, 59, 59)
-        self.resource_calendar_id = self.env['resource.calendar'].create({'name': 'Zboub'})
-        contract = self.env['hr.contract'].create({
-            'date_start': self.start.date() - relativedelta(days=5),
+    @classmethod
+    def setUpClass(cls):
+        super(TestWorkeEntryHolidaysWorkEntry, cls).setUpClass()
+        cls.tz = pytz.timezone(cls.richard_emp.tz)
+        cls.start = datetime(2015, 11, 1, 1, 0, 0)
+        cls.end = datetime(2015, 11, 30, 23, 59, 59)
+        cls.resource_calendar_id = cls.env['resource.calendar'].create({'name': 'Zboub'})
+        contract = cls.env['hr.contract'].create({
+            'date_start': cls.start.date() - relativedelta(days=5),
             'name': 'dodo',
-            'resource_calendar_id': self.resource_calendar_id.id,
+            'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
-            'employee_id': self.richard_emp.id,
+            'employee_id': cls.richard_emp.id,
             'state': 'open',
-            'date_generated_from': self.end.date() + relativedelta(days=5),
+            'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
-        self.richard_emp.resource_calendar_id = self.resource_calendar_id
-        self.richard_emp.contract_id = contract
+        cls.richard_emp.resource_calendar_id = cls.resource_calendar_id
+        cls.richard_emp.contract_id = contract
 
     def test_validate_non_approved_leave_work_entry(self):
         work_entry1 = self.env['hr.work.entry'].create({

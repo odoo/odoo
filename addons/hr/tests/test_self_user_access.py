@@ -78,28 +78,29 @@ class TestSelfAccessProfile(TestHrCommon):
 
 class TestSelfAccessRights(TestHrCommon):
 
-    def setUp(self):
-        super(TestSelfAccessRights, self).setUp()
-        self.richard = new_test_user(self.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
-        self.richard_emp = self.env['hr.employee'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestSelfAccessRights, cls).setUpClass()
+        cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
+        cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
-            'user_id': self.richard.id,
-            'address_home_id': self.env['res.partner'].create({'name': 'Richard', 'phone': '21454', 'type': 'private'}).id,
+            'user_id': cls.richard.id,
+            'address_home_id': cls.env['res.partner'].create({'name': 'Richard', 'phone': '21454', 'type': 'private'}).id,
         })
-        self.hubert = new_test_user(self.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
-        self.hubert_emp = self.env['hr.employee'].create({
+        cls.hubert = new_test_user(cls.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
+        cls.hubert_emp = cls.env['hr.employee'].create({
             'name': 'Hubert',
-            'user_id': self.hubert.id,
-            'address_home_id': self.env['res.partner'].create({'name': 'Hubert', 'type': 'private'}).id,
+            'user_id': cls.hubert.id,
+            'address_home_id': cls.env['res.partner'].create({'name': 'Hubert', 'type': 'private'}).id,
         })
 
-        self.protected_fields_emp = OrderedDict([(k, v) for k, v in self.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])
+        cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])
         # Compute fields and id field are always readable by everyone
-        self.read_protected_fields_emp = OrderedDict([(k, v) for k, v in self.env['hr.employee']._fields.items() if not v.compute and k != 'id'])
-        self.self_protected_fields_user = OrderedDict([
+        cls.read_protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if not v.compute and k != 'id'])
+        cls.self_protected_fields_user = OrderedDict([
             (k, v)
-            for k, v in self.env['res.users']._fields.items()
-            if v.groups == 'hr.group_hr_user' and k in self.env['res.users'].SELF_READABLE_FIELDS
+            for k, v in cls.env['res.users']._fields.items()
+            if v.groups == 'hr.group_hr_user' and k in cls.env['res.users'].SELF_READABLE_FIELDS
         ])
 
     # Read hr.employee #

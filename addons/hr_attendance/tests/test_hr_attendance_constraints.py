@@ -2,19 +2,21 @@
 
 import time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('jesaispas')
 class TestHrAttendance(TransactionCase):
     """Tests for attendance date ranges validity"""
 
-    def setUp(self):
-        super(TestHrAttendance, self).setUp()
-        self.attendance = self.env['hr.attendance']
-        self.test_employee = self.env['hr.employee'].create({'name': "Jacky"})
-        # demo data contains set up for self.test_employee
-        self.open_attendance = self.attendance.create({
-            'employee_id': self.test_employee.id,
+    @classmethod
+    def setUpClass(cls):
+        super(TestHrAttendance, cls).setUpClass()
+        cls.attendance = cls.env['hr.attendance']
+        cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky"})
+        # demo data contains set up for cls.test_employee
+        cls.open_attendance = cls.attendance.create({
+            'employee_id': cls.test_employee.id,
             'check_in': time.strftime('%Y-%m-10 10:00'),
         })
 

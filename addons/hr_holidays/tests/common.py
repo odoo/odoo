@@ -7,50 +7,51 @@ from odoo.tests import common
 
 class TestHrHolidaysCommon(common.TransactionCase):
 
-    def setUp(self):
-        super(TestHrHolidaysCommon, self).setUp()
-        self.env.user.tz = 'Europe/Brussels'
+    @classmethod
+    def setUpClass(cls):
+        super(TestHrHolidaysCommon, cls).setUpClass()
+        cls.env.user.tz = 'Europe/Brussels'
 
         # Test users to use through the various tests
-        self.user_hruser = mail_new_test_user(self.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
-        self.user_hruser_id = self.user_hruser.id
+        cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
+        cls.user_hruser_id = cls.user_hruser.id
 
-        self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
-        self.user_hrmanager_id = self.user_hrmanager.id
+        cls.user_hrmanager = mail_new_test_user(cls.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
+        cls.user_hrmanager_id = cls.user_hrmanager.id
 
-        self.user_employee = mail_new_test_user(self.env, login='david', groups='base.group_user')
-        self.user_employee_id = self.user_employee.id
+        cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
+        cls.user_employee_id = cls.user_employee.id
 
         # Hr Data
-        Department = self.env['hr.department'].with_context(tracking_disable=True)
+        Department = cls.env['hr.department'].with_context(tracking_disable=True)
 
-        self.hr_dept = Department.create({
+        cls.hr_dept = Department.create({
             'name': 'Human Resources',
         })
-        self.rd_dept = Department.create({
+        cls.rd_dept = Department.create({
             'name': 'Research and devlopment',
         })
 
-        self.employee_emp = self.env['hr.employee'].create({
+        cls.employee_emp = cls.env['hr.employee'].create({
             'name': 'David Employee',
-            'user_id': self.user_employee_id,
-            'department_id': self.rd_dept.id,
+            'user_id': cls.user_employee_id,
+            'department_id': cls.rd_dept.id,
         })
-        self.employee_emp_id = self.employee_emp.id
+        cls.employee_emp_id = cls.employee_emp.id
 
-        self.employee_hruser = self.env['hr.employee'].create({
+        cls.employee_hruser = cls.env['hr.employee'].create({
             'name': 'Armande HrUser',
-            'user_id': self.user_hruser_id,
-            'department_id': self.rd_dept.id,
+            'user_id': cls.user_hruser_id,
+            'department_id': cls.rd_dept.id,
         })
-        self.employee_hruser_id = self.employee_hruser.id
+        cls.employee_hruser_id = cls.employee_hruser.id
 
-        self.employee_hrmanager = self.env['hr.employee'].create({
+        cls.employee_hrmanager = cls.env['hr.employee'].create({
             'name': 'Bastien HrManager',
-            'user_id': self.user_hrmanager_id,
-            'department_id': self.hr_dept.id,
-            'parent_id': self.employee_hruser_id,
+            'user_id': cls.user_hrmanager_id,
+            'department_id': cls.hr_dept.id,
+            'parent_id': cls.employee_hruser_id,
         })
-        self.employee_hrmanager_id = self.employee_hrmanager.id
+        cls.employee_hrmanager_id = cls.employee_hrmanager.id
 
-        self.rd_dept.write({'manager_id': self.employee_hruser_id})
+        cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
