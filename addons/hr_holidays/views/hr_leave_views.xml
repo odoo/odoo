@@ -648,7 +648,11 @@
             'search_default_managed_people': 1,
             'hide_employee_name': 1}
         </field>
+<<<<<<< HEAD
         <field name="domain">[]</field>
+=======
+        <field name="domain">['|', '|', '&amp;', ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'manager'), '&amp;', ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.validation_type', '=', 'hr'), '&amp;', '|', ('holiday_status_id.responsible_id', '=', uid), ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'both')]</field>
+>>>>>>> 8565dd5eccb... temp
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.
