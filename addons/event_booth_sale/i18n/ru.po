@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_booth_sale
+#   * event_booth_sale
 # 
 # Translators:
 # Denis Baranov <baranov@itlibertas.com>, 2021
@@ -10,6 +10,7 @@
 # Константин Коровин <korovin74@gmail.com>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Vasiliy Korobatov <korobatov@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +88,6 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: event_booth_sale
-#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
 msgid "Configure an event booth"
 msgstr ""
 
@@ -137,6 +137,13 @@ msgstr "Создан"
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_date
 msgid "Created on"
 msgstr "Создан"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__currency_id
+msgid "Currency"
+msgstr "Валюта"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__partner_id
@@ -329,6 +336,11 @@ msgstr "Заказ на продажу"
 #: model:ir.model,name:event_booth_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Позиция заказа на продажу"
+
+#. module: event_booth_sale
+#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
+msgid "Select an event booth"
+msgstr ""
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/sale_order_line.py:0

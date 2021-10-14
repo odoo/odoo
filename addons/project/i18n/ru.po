@@ -110,13 +110,13 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s задачи)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 задача)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -449,6 +449,8 @@ msgid ""
 "<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
 "                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Создавать задачи отправляя email на </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Создавать задачи отправляя email на </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -473,6 +475,9 @@ msgid ""
 "                                    Milestones\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Вехи\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -481,6 +486,9 @@ msgid ""
 "                                Burndown Chart\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Диаграмма сгорания задач\n"
+"                            </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -527,7 +535,7 @@ msgstr "<strong class=\"d-block mb-2\">Вложения</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>Ответственные</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -562,7 +570,7 @@ msgstr "<strong>Проект:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>Вехи</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -663,7 +671,7 @@ msgstr "Типы действий"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "Добавить веху"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -753,17 +761,17 @@ msgstr "Все"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Все сотрудники"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
-msgstr ""
+msgstr "Все задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "Разрешить подзадачи"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -960,7 +968,7 @@ msgstr "Автор"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "Автоматически создавать повторяющиеся копии регулярных задач"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1053,7 +1061,7 @@ msgstr "Мозговой штурм"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Диаграмма сгорания задач"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -1280,7 +1288,7 @@ msgstr "Создайте новый этап в конвейере задач"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "Создавать задачи отправляя email на"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1334,7 +1342,7 @@ msgstr "Валюта"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Current project of the task"
-msgstr ""
+msgstr "Текущий проект задачи"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -1488,7 +1496,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "День"
+msgstr "Дни"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1553,7 +1561,7 @@ msgstr "Удалить"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Удалить веху"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1581,7 +1589,7 @@ msgstr "Доставлено"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "Зависимые задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1608,7 +1616,7 @@ msgstr "Проектирование"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "Определить порядок, в котором будут выполняться задачи"
 
 #. module: project
 #. openerp-web
@@ -1741,6 +1749,8 @@ msgid ""
 "Edit tasks' description collaboratively in real time. See each author's text"
 " in a distinct color."
 msgstr ""
+"Редактируйте описание задач совместно онлайн. Текст каждого автора будет "
+"уникального цвета."
 
 #. module: project
 #. openerp-web
@@ -1872,7 +1882,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed"
-msgstr "Подписано"
+msgstr "Я подписан"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
@@ -1937,6 +1947,7 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
+"Сохраните текущее состояние проекта и поделитесь им с ключевыми участниками."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2267,12 +2278,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Выбранные сотрудники"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr ""
+msgstr "Все сотрудники и приглашенные внешние пользователи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2482,7 +2493,7 @@ msgstr "Просроченные действия"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Tasks"
-msgstr ""
+msgstr "Просроченные задачи"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2663,12 +2674,12 @@ msgstr "Сообщения"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Веха"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Количество вех"
 
 #. module: project
 #. openerp-web
@@ -2676,7 +2687,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_milestone_all
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Вехи"
 
 #. module: project
 #. openerp-web
@@ -2757,7 +2768,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "Обозначение для задач"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2798,7 +2809,7 @@ msgstr "Новые"
 #: code:addons/project/static/src/js/right_panel/project_utils.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "Новая веха"
 
 #. module: project
 #. openerp-web
@@ -2898,7 +2909,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
 msgid "No milestones found. Let's create one!"
-msgstr ""
+msgstr "Нет информации о вехах. Создайте ее!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2929,7 +2940,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "Еще нет статусов по проекту. Создайте его!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3084,7 +3095,7 @@ msgstr "Раз в месяц"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Open"
-msgstr "Открыть"
+msgstr "В работе"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3097,7 +3108,7 @@ msgstr "Открытые задачи"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Open tasks"
-msgstr ""
+msgstr "Открытые задачи"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3206,7 +3217,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Персональный этап"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
@@ -3235,6 +3246,8 @@ msgid ""
 "Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"Планируйте использование ресурсов для проектов и задач, чтобы определять "
+"сроки более точно"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -3314,7 +3327,7 @@ msgstr "Личное"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Profitability"
-msgstr "доходность"
+msgstr "Доходность"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -3359,7 +3372,7 @@ msgstr "Прогресс в процентах"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Project"
-msgstr "Управление проектами"
+msgstr "Проект"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
@@ -3400,7 +3413,7 @@ msgstr "Руководитель проекта"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Веха по проекту"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3445,7 +3458,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "Этапы для проектов"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3467,7 +3480,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Сводки по проекту"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -4109,7 +4122,7 @@ msgstr "Спецификации"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr "Разбейте ваши задачи, чтобы организовать поэтапную работу"
+msgstr "Разделяйте ваши задачи, чтобы организовать поэтапную работу над ними"
 
 #. module: project
 #. openerp-web
@@ -4168,7 +4181,7 @@ msgstr "Описание этапа и Подсказки"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Владелец этапа"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4347,7 +4360,7 @@ msgstr "Задача создана"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
 msgid "Task Dependencies"
-msgstr ""
+msgstr "Зависимости между задачами"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_dependency_change
@@ -4394,7 +4407,7 @@ msgstr "Этап задачи изменен"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Этапы задач"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4541,12 +4554,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "Следующая веха была добавлена:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "Следующие вехи были добавлены:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4797,28 +4810,30 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the costs and revenues linked to your projects"
-msgstr ""
+msgstr "Отслеживайте доходы и затраты, относящиеся к конкретным проектам"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "Отслеживайте прогресс ваших проектов"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Track the progress of your projects from their creation to their closing."
 msgstr ""
+"Отслеживайте прогресс ваших проектов с момента создания и до их завершения."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
 msgstr ""
+"Отслеживайте прогресс ваших задач с момента создания и до их завершения."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Отслеживание времени, потраченное на проект и задачи"
+msgstr "Отслеживайте время, затраченное на проекты и задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -4861,7 +4876,7 @@ msgstr "Неназначенный"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Unassigned Tasks"
-msgstr ""
+msgstr "Задачи без ответственного"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4930,7 +4945,7 @@ msgstr "Используйте оценки в проекте"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "Использовать повторяющиеся задачи"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -4945,7 +4960,7 @@ msgstr "Использовать подзадачи"
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "Использовать зависимости между задачами"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -4962,7 +4977,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "Используйте теги, чтобы классифицировать ваши задачи."
 
 #. module: project
 #. openerp-web
@@ -5083,12 +5098,12 @@ msgstr "Рабочее время"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr "Кол-во рабочего времени для назначения"
+msgstr "Рабочего времени до назначения"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr "Кол-во рабочего времени до завершения"
+msgstr "Рабочего времени до завершения"
 
 #. module: project
 #. openerp-web
@@ -5161,6 +5176,8 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Вы не можете удалить повторяющиеся задачи.  Отключите повторение сначала, "
+"пожалуйста.."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5191,7 +5208,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "т.е. Корпоратив"
+msgstr "например, Корпоратив"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5232,12 +5249,12 @@ msgstr "задача"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline of the following milestone has been updated:"
-msgstr ""
+msgstr "крайний срок для следующей вехи был обновлен:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline of the following milestones has been updated:"
-msgstr ""
+msgstr "крайний срок для следующих вех был обновлен:"
 
 #. module: project
 #. openerp-web
