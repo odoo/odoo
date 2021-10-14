@@ -24,6 +24,7 @@ from glob import glob
 
 ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 TSTAMP = time.strftime("%Y%m%d", time.gmtime())
+TSEC = time.strftime("%H%M%S", time.gmtime())
 # Get some variables from release.py
 version = ...
 version_info = ...
@@ -365,8 +366,10 @@ class DockerRpm(Docker):
         logging.info('Finished testing rpm package')
 
     def gen_rpm_repo(self, args, rpm_filepath):
+        pub_repodata_path = os.path.join(args.pub, 'rpm', 'repodata')
         # Removes the old repodata
-        shutil.rmtree(os.path.join(args.pub, 'rpm', 'repodata'))
+        if os.path.isdir(pub_repodata_path):
+            shutil.rmtree(pub_repodata_path)
 
         # Copy files to a temp directory (required because the working directory must contain only the
         # files of the last release)
@@ -375,7 +378,7 @@ class DockerRpm(Docker):
 
         logging.info('Start creating rpm repo')
         self.run('createrepo /data/src/', temp_path, 'odoo-rpm-createrepo-%s' % TSTAMP)
-        shutil.copytree(os.path.join(temp_path, "repodata"), os.path.join(args.pub, 'rpm', 'repodata'))
+        shutil.copytree(os.path.join(temp_path, "repodata"), pub_repodata_path)
 
         # Remove temp directory
         shutil.rmtree(temp_path)
@@ -503,7 +506,7 @@ def test_exe(args):
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    build_dir = "%s-%s" % (ROOTDIR, TSTAMP)
+    build_dir = "%s-%s-%s" % (ROOTDIR, TSEC, TSTAMP)
     log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARN, "error": logging.ERROR, "critical": logging.CRITICAL}
 
     ap.add_argument("-b", "--build-dir", default=build_dir, help="build directory (%(default)s)", metavar="DIR")
