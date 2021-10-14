@@ -81,18 +81,18 @@ var SlideSocialEmbed = publicWidget.Widget.extend({
      * @param {Object} ev
      */
     _onChangePage: function (ev) {
-        ev.preventDefault();
-        var input = this.$('input');
+        var input = $(ev.currentTarget);
         var page = parseInt(input.val());
-        if (this.max_page && !(page > 0 && page <= this.max_page)) {
+        if (!page || page < 1 || this.max_page && page > this.max_page) {
             page = 1;
         }
+        input.val(page);
         this._updateEmbeddedCode(page);
     },
 });
 
 publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
+    selector: '.oe_slide_js_embed_code_widget',
 
     /**
      * @override
@@ -100,8 +100,25 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
      */
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
-        $('iframe.o_wslides_iframe_viewer').on('ready', this._onIframeViewerReady.bind(this));
+        this._timeout = setTimeout(this._checkIframeLoaded.bind(this), 100);
         return Promise.all(defs);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _checkIframeLoaded: function () {
+        var $iframe = $('iframe.o_wslides_iframe_viewer');
+        var iframeDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
+        
+        if (iframeDoc.readyState  == 'complete') {
+            clearTimeout(this._timeout);
+            this._onIframeViewerReady($iframe);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -110,13 +127,10 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {Event} ev
+     * @param {Object} $iframe
      */
-    _onIframeViewerReady: function (ev) {
-        // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
-        // still now set (the pdf is still loading)
-        var $iframe = $(ev.currentTarget);
-        var maxPage = $iframe.contents().find('#page_count').val();
+    _onIframeViewerReady: function ($iframe) {
+        var maxPage = parseInt($iframe.contents().find('#page_count').text());
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
     },
 });
