@@ -53,7 +53,7 @@ const LinkTools = Link.extend({
         if (!this.el) {
             return this._super(...arguments);
         }
-        $('.oe_edited_link').removeClass('oe_edited_link');
+        this.$link.removeClass('oe_edited_link');
         const $contents = this.$link.contents();
         if (!this.$link.attr('href') && !this.colorCombinationClass) {
             $contents.unwrap();
