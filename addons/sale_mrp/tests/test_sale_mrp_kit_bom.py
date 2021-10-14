@@ -296,3 +296,50 @@ class TestSaleMrpKitBom(TransactionCase):
         purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
 
+    def test_qty_delivered_with_bom(self):
+        """Check the quantity delivered, when a bom line has a non integer quantity"""
+
+        self.env['ir.model.data'].xmlid_to_object('product.decimal_product_uom').digits = 5
+
+        self.kit = self._create_product('Kit', 'product', 0.00)
+        self.comp = self._create_product('Component', 'product', 0.00)
+
+        # Create BoM for Kit
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.kit
+        bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.comp
+            bom_line.product_qty = 0.08600
+        self.bom = bom_product_form.save()
+
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit.name,
+                    'product_id': self.kit.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.kit.uom_id.id,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        self.assertTrue(so.picking_ids)
+        self.assertEqual(so.order_line.qty_delivered, 0)
+
+        picking = so.picking_ids
+        picking.move_lines.quantity_done = 0.86000
+        picking.button_validate()
+
+        # Checks the delivery amount (must be 10).
+        self.assertEqual(so.order_line.qty_delivered, 10)
