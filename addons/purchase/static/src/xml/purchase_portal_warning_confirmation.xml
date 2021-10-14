@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="purchase.purchase_portal_warning_confirmation">
+        <div>
+            <ul>
+                <t t-foreach="warnings" t-as="warning">
+                    <li>
+                        <t t-foreach="warning" t-as="warning_line">
+                            <div><t t-esc="warning_line"></t></div>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+</templates>

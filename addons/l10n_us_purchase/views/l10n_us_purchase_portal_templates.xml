@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_address" inherit_id="portal.portal_my_address">
+        <xpath expr="//input[@name='bank_name']/.." position="after">
+            <div t-attf-class="form-group #{error.get('aba_routing') and 'o_has_error' or ''} col-xl-6">
+                <label class="col-form-label label-optional" for="aba_routing">ABA/routing</label>
+                <input type="text" name="aba_routing" t-attf-class="form-control #{error.get('aba_routing') and 'is-invalid' or ''}"
+                    t-att-data-us_country_id="us_country_id" t-att-value="aba_routing" />
+            </div>
+        </xpath>
+    </template>
+</odoo>

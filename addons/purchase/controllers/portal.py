@@ -5,10 +5,11 @@ import base64
 from collections import OrderedDict
 from datetime import datetime
 
-from odoo import http
-from odoo.exceptions import AccessError, MissingError
+from odoo import fields, http
+from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request, Response
-from odoo.tools import image_process
+from odoo.tools import image_process, format_date
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -17,6 +18,19 @@ from odoo.osv.expression import OR
 
 
 class CustomerPortal(portal.CustomerPortal):
+
+    # fields for res.partner.bank
+    MANDATORY_PARTNER_BANK_FIELDS = {
+        "acc_number": "acc_number",
+    }
+    OPTIONAL_PARTNER_BANK_FIELDS = {
+        "acc_holder_name": "acc_holder_name",
+    }
+    # fields for res.bank
+    MANDATORY_BANK_FIELDS = {
+        "name": "bank_name",
+        "bic": "bic",
+    }
 
     def _prepare_portal_counters_values(self, counters):
         values = super()._prepare_portal_counters_values(counters)
@@ -45,6 +59,175 @@ class CustomerPortal(portal.CustomerPortal):
                 'counter': 'purchase_count',
             },
         ]
+        return values
+
+    def _get_main_address_bank_details_changes(self, bank_data, partner_bank_data):
+        """Compare the form data and the record data to see if there was any change and mark them.
+        Here are the conditions to trigger a "change":
+            * there is no record, but at least one value in the form is not falsy
+            * there is a record, the form value is different from the record value, and at least
+              one of them is not falsy
+        The main purpose of this function is to be able to preemptively catch a partner bank change
+        to warn the user that the operation will be logged and the commercial_partner will be notified
+        """
+        partner = request.env.user.partner_id
+        main_partner_bank = bank = None
+        if partner.bank_ids:
+            main_partner_bank = min(partner.bank_ids, key=lambda bank: bank.sequence)
+            bank = main_partner_bank.bank_id
+
+        bank_changes = []
+        for key, value in bank_data.items():
+            if (value and not bank) or (bank and value != getattr(bank, key) and
+                (value or getattr(bank, key))):
+                bank_changes.append(key)
+        partner_bank_changes = []
+        for key, value in partner_bank_data.items():
+            if (value and not main_partner_bank) or (main_partner_bank and value != getattr(main_partner_bank, key) and
+                (value or getattr(main_partner_bank, key))):
+                partner_bank_changes.append(key)
+        # if acc_holder_name is not set, it is equivalent to the partner name, and therefore the triggered "change" should be ignored
+        # and the data value updated to False
+        if partner_bank_data['acc_holder_name'] == partner.name and not main_partner_bank.acc_holder_name:
+            partner_bank_changes.remove('acc_holder_name')
+            partner_bank_data['acc_holder_name'] = False
+
+        return bank_changes, partner_bank_changes
+
+    @http.route(['/my/bank_account_warnings'], type='json', auth="user", website=True)
+    def main_address_bank_details_form_warnings(self, data, **kw):
+        """The feature allowing to edit a partner main bank account is touchy, so we want to inform the
+        user that the changes will be logged and the commercial_partner will be notified.
+        """
+        partner_bank_fields = {**self.MANDATORY_PARTNER_BANK_FIELDS, **self.OPTIONAL_PARTNER_BANK_FIELDS}
+        bank_fields = self.MANDATORY_BANK_FIELDS
+        partner_bank_data = {key: data.get(value, False) for key, value in partner_bank_fields.items()}
+        bank_data = {key: data.get(value, False) for key, value in bank_fields.items()}
+        warning_messages = []
+        partner = request.env.user.partner_id
+
+        bank_changes, partner_bank_changes = self._get_main_address_bank_details_changes(bank_data, partner_bank_data)
+
+        if bank_changes or partner_bank_changes:
+            warning_messages.append(_("You are changing a bank account of %(company_name)s. By default, payments coming from %(portal_company_name)s will go to the new bank account.\nThis change will be notified via email to: %(commercial_partner_name)s.",
+                company_name=partner.company_id.name, portal_company_name=request.env.company.name, commercial_partner_name=partner.commercial_partner_id.name))
+        if "acc_number" in partner_bank_changes and partner_bank_data['acc_number']:
+            warning_messages.append(_("By changing the bank account number, the previous bank account will be archived and a new one will be created."))
+        if "bic" in bank_changes or 'name' in bank_changes:
+            existing_bank_ids = request.env['res.bank'].search([('bic', '=', bank_data['bic'])])
+            matching_bank_id = existing_bank_ids.filtered(lambda bank_id: bank_id.name == bank_data['name'])
+            if existing_bank_ids and not matching_bank_id:
+                warning_messages.append(_("An existing bank with the provided BIC/SWIFT was found, but the names do not match.\nThe existing bank will be used instead:\nBIC/SWIFT: %(bic)s\nName: %(name)s",
+                bic=existing_bank_ids[0].bic, name=existing_bank_ids[0].name))
+        return warning_messages
+
+    def _send_main_address_bank_details_warning_message(self, partner):
+        date_reference = format_date(request.env, fields.Date.context_today(partner), lang_code=partner.lang, date_format="short")
+        portal_company_name = request.env.company.name
+        # chatter
+        odoobot = request.env.ref('base.partner_root')
+        message = _("On %(date_reference)s, %(partner_name)s modified a bank account of %(company_name)s.\n\
+            By default, payments coming from %(portal_company_name)s will go to the new bank account.",
+            date_reference=date_reference, partner_name=partner.name, company_name=partner.company_id.name, portal_company_name=portal_company_name)
+        partner.message_post(body=message,
+            message_type='comment',
+            subtype_xmlid='mail.mt_note',
+            author_id=odoobot.id)
+        # email
+        template = request.env.ref('purchase.mail_template_data_portal_bank_informations_changed')
+        if not template:
+            raise UserError(_('The template "Portal: Bank Informations Change" not found to warn the Commercial Entity of a Bank Information Change'))
+        template.with_context(portal_company_name=portal_company_name, date_reference=date_reference).send_mail(partner.id, force_send=True)
+
+    def main_address_bank_details_form_validate(self, bank_data, partner_bank_data):
+        error = dict()
+        error_message = []
+
+        partner = request.env.user.partner_id  # if not partner -> error because no validation possible
+
+        for field_name in self.MANDATORY_PARTNER_BANK_FIELDS:
+            if not partner_bank_data.get(field_name):
+                error[self.MANDATORY_PARTNER_BANK_FIELDS[field_name]] = 'missing'
+        for field_name in self.MANDATORY_BANK_FIELDS:
+            if not bank_data.get(field_name):
+                error[self.MANDATORY_BANK_FIELDS[field_name]] = 'missing'
+
+        partner_bank_changes = self._get_main_address_bank_details_changes(bank_data, partner_bank_data)[1]
+
+        if 'acc_number' in partner_bank_changes and partner_bank_data['acc_number']:
+            existing_partner_bank_id = request.env['res.partner.bank'].search(['&',
+                ('sanitized_acc_number', '=', sanitize_account_number(partner_bank_data['acc_number'])),
+                ('company_id', '=', partner.company_id.id)])
+            # unicity constraint is on sanitized_acc_number + company_id
+            if existing_partner_bank_id:
+                error['acc_number'] = 'error'
+                error_message.append(_('Account Number must be unique'))
+
+        if [err for err in error.values() if err == 'missing']:
+            error_message.append(_('Some required fields are empty.'))
+        return error, error_message
+
+    def _prepare_address_operation_values(self, read=True, partner_id=None, **post):
+        values = super()._prepare_address_operation_values(read, partner_id, **post)
+
+        partner = request.env.user.partner_id
+        Partner = request.env['res.partner'].with_context(show_address=1).sudo()
+        contact = Partner.browse(partner_id) if partner_id else False
+        is_main_address = contact and contact.id == partner.id
+        if not is_main_address:
+            return values
+
+        Bank = request.env['res.bank'].sudo()
+        PartnerBank = request.env['res.partner.bank'].sudo()
+        if contact and contact.bank_ids:
+            main_partner_bank = min(contact.bank_ids, key=lambda bank: bank.sequence)
+            bank = main_partner_bank.bank_id
+        else:
+            main_partner_bank = False
+            bank = False
+        partner_bank_fields = {**self.MANDATORY_PARTNER_BANK_FIELDS, **self.OPTIONAL_PARTNER_BANK_FIELDS}
+        partner_bank_data = {}
+        bank_fields = self.MANDATORY_BANK_FIELDS
+        bank_data = {}
+        bank_error = {}
+        bank_error_message = []
+
+        if not read:
+            partner_bank_data = {key: post.get(value, False) for key, value in partner_bank_fields.items()}
+            bank_data = {key: post.get(value, False) for key, value in bank_fields.items()}
+
+            bank_changes, partner_bank_changes = self._get_main_address_bank_details_changes(bank_data, partner_bank_data)
+            if bank_changes or partner_bank_changes:
+                bank_error, bank_error_message = self.main_address_bank_details_form_validate(bank_data, partner_bank_data)
+                if not bank_error:
+                    partner_bank_data['partner_id'] = contact.id
+                    # To avoid duplicating a bank due to a misspelled name, search only from bic and replace bank_data['name'] if necessary
+                    bank = Bank.search([('bic', '=', bank_data['bic'])], limit=1)
+                    if not bank:
+                        bank = Bank.create(bank_data)
+                    partner_bank_data['bank_id'] = bank.id
+                    if main_partner_bank and main_partner_bank.acc_number == partner_bank_data['acc_number']:
+                        # if the account number did not change, we edit the record
+                        main_partner_bank.sudo().write(partner_bank_data)
+                    else:
+                        # if the account number is new (or did change), we create a new record (and archive the old one)
+                        if main_partner_bank:
+                            main_partner_bank.sudo().action_archive()
+                        partner_bank_data['sequence'] = 1
+                        PartnerBank.create(partner_bank_data)
+                    self._send_main_address_bank_details_warning_message(contact)
+            partner_bank_view_data = {value: partner_bank_data.get(key, False) for key, value in partner_bank_fields.items()}
+            bank_view_data = {value: bank_data.get(key, False) for key, value in bank_fields.items()}
+        else:
+            partner_bank_view_data = {value: getattr(main_partner_bank, key) for key, value in partner_bank_fields.items() if main_partner_bank}
+            bank_view_data = {value: getattr(bank, key) for key, value in bank_fields.items() if bank}
+
+        values['error'].update(bank_error)
+        values.update({
+            **bank_view_data,
+            **partner_bank_view_data,
+            'bank_error_message': bank_error_message,
+        })
         return values
 
     def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key, searchbar_inputs, search_domain, search=None, search_in='all'):

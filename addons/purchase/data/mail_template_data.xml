@@ -102,5 +102,21 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <record id="mail_template_data_portal_bank_informations_changed" model="mail.template">
+            <field name="name">Portal: Bank Informations Change</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">Bank Informations Changed by ${object.name}</field>
+            <field name="email_from">${object.email}</field>
+            <field name="email_to">${object.commercial_partner_id.email}</field>
+            <field name="body_html" type="html">
+<div>
+    Dear ${object.commercial_partner_id.name},<br/><br/>
+    You are being notified because ${object.name} modified a bank account of ${object.company_id.name}.<br/>
+    By default, payments coming from ${ctx['portal_company_name']} will go to the new bank account.<br/>
+    The change occured on: ${ctx['date_reference']}.
+</div></field>
+            <field name="lang">${object.lang}</field>
+        </record>
+
     </data>
 </odoo>

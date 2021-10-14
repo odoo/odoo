@@ -32,6 +32,41 @@
     </xpath>
   </template>
 
+  <template id="portal_my_address" inherit_id="portal.portal_my_address">
+    <xpath expr="//button[@type='submit']/.." position="before">
+        <t t-if="is_main_address">
+            <div class="row">
+                <h3 class="o_page_header mt16 mb4">Bank Account</h3>
+            </div>
+            <div class="row">
+                <div t-if="bank_error_message" class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        <t t-foreach="bank_error_message" t-as="err" t-esc="err"><br/></t>
+                    </div>
+                </div>
+                <div t-attf-class="form-group #{error.get('acc_number') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="acc_number">Account Number</label>
+                    <input type="text" name="acc_number" t-attf-class="form-control #{error.get('acc_number') and 'is-invalid' or ''}" t-att-value="acc_number" />
+                </div>
+                <!-- display partner_id.name as the Account holder name if it is not set -->
+                <div t-attf-class="form-group #{error.get('acc_holder_name') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="acc_holder_name">Account Holder Name</label>
+                    <input type="text" name="acc_holder_name" t-attf-class="form-control #{error.get('acc_holder_name') and 'is-invalid' or ''}"
+                        t-att-value="acc_holder_name if acc_holder_name else (name if acc_number else '')" />
+                </div>
+                <div t-attf-class="form-group #{error.get('bic') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="bic">BIC/SWIFT</label>
+                    <input type="text" name="bic" t-attf-class="form-control #{error.get('bic') and 'is-invalid' or ''}" t-att-value="bic" />
+                </div>
+                <div t-attf-class="form-group #{error.get('bank_name') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="bank_name">Bank Name</label>
+                    <input type="text" name="bank_name" t-attf-class="form-control #{error.get('bank_name') and 'is-invalid' or ''}" t-att-value="bank_name" />
+                </div>
+            </div>
+        </t>
+    </xpath>
+  </template>
+
   <template id="portal_my_purchase_rfqs" name="My Requests For Quotation">
       <t t-call="portal.portal_layout">
           <t t-set="breadcrumbs_searchbar" t-value="True"/>
