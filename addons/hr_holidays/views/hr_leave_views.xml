@@ -649,7 +649,7 @@
             'search_default_my_team_leaves':1,
             'search_default_approve':1}
         </field>
-        <field name="domain">['|', '|', '&amp;', ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'manager'), '&amp;', ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.validation_type', '=', 'hr'), '&amp;', '|', ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.validation_type', '=', 'both')]</field>
+        <field name="domain">['|', '|', '&amp;', ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'manager'), '&amp;', ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.validation_type', '=', 'hr'), '&amp;', '|', ('holiday_status_id.responsible_id', '=', uid), ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'both')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off request
