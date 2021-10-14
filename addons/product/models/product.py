@@ -175,6 +175,15 @@ class ProductProduct(models.Model):
             else:
                 record.image_variant_1920 = record.image_1920
 
+    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
+    def compute_concurrency_field_with_access(self):
+        # Intentionally not calling super() to involve all fields explicitly
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
+                record.product_tmpl_id.write_date or record.product_tmpl_id.create_date,
+                record.write_date or record.create_date or fields.Datetime.now(),
+            )))
+
     def _compute_image_1024(self):
         """Get the image from the template if no image is set on the variant."""
         for record in self:
