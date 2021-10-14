@@ -153,7 +153,7 @@ msgstr "Fügen Sie eine neue Ausrüstung hinzu"
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr ""
+msgstr "Eine neue Ausrüstungskategorie hinzufügen"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -174,7 +174,7 @@ msgstr "Fügen Sie der Wartungsanforderung eine neue Stufe hinzu"
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
 msgid "Add a team in the maintenance request"
-msgstr ""
+msgstr "Hinzufügen eines Teams im Wartungsauftrag"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
@@ -375,6 +375,8 @@ msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
 msgstr ""
+"Datum, an dem das Gerät in Betrieb genommen wurde. Dieses Datum wird für die"
+" Berechnung der mittleren Ausfallzeit herangezogen."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -474,6 +476,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
+"E-Mail-Alias für diese Gerätekategorie. Bei neuen E-Mails wird automatisch "
+"ein neues Gerät unter dieser Kategorie angelegt."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -774,7 +778,7 @@ msgstr "Wartungskalender"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_count
 msgid "Maintenance Count"
-msgstr ""
+msgstr "Anzahl der Wartungen"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_duration
@@ -795,7 +799,7 @@ msgstr "Wartungsausrüstung"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr ""
+msgstr "Kategorie Wartungsgeräte"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -1181,7 +1185,7 @@ msgstr "Anfrage erledigt"
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
-msgstr ""
+msgstr "Antrag geplant für <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1416,6 +1420,8 @@ msgid ""
 "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
+"Verfolgen Sie Ausrüstungen und verknüpfen Sie sie mit einem Mitarbeiter oder einer Abteilung.\n"
+"Sie können Zuweisungen, Ausgaben und Wartung Ihrer Ausrüstung verwalten."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1479,7 +1485,7 @@ msgstr "Sehr gering"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
-msgstr ""
+msgstr "Ablaufdatum der Garantie"
 
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:0
