@@ -21,9 +21,9 @@
                 <field name="show_done_msg" invisible="1"/>
                 <field name="show_cancel_msg" invisible="1"/>
                 <sheet>
-                    <field name="image_128" widget="image" class="oe_avatar"/>
                     <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
                     <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
