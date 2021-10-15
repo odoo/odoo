@@ -63,5 +63,5 @@ odoo.define('point_of_sale.utils', function (require) {
         return errorToHandle || error;
     }
 
-    return { getFileAsText, nextFrame, posbus: new EventBus(), identifyError, isConnectionError };
+    return { getFileAsText, nextFrame, identifyError, isConnectionError };
 });

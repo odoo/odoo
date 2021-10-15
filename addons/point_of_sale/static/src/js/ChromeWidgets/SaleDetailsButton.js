@@ -21,7 +21,7 @@ odoo.define('point_of_sale.SaleDetailsButton', function(require) {
                     pos: this.env.pos,
                 })
             );
-            const printResult = await this.env.pos.proxy.printer.print_receipt(report);
+            const printResult = await this.env.proxy.printer.print_receipt(report);
             if (!printResult.successful) {
                 await this.showPopup('ErrorPopup', {
                     title: printResult.message.title,

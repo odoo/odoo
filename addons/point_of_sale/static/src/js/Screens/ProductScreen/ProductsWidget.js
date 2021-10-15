@@ -21,15 +21,11 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             useListener('update-product-list', this._updateProductList);
             this.state = useState({ searchWord: '' });
         }
-        mounted() {
-            this.env.pos.on('change:selectedCategoryId', this.render, this);
-        }
         willUnmount() {
-            this.env.pos.off('change:selectedCategoryId', null, this);
             this.trigger('toggle-mobile-searchbar', false);
         }
         get selectedCategoryId() {
-            return this.env.pos.get('selectedCategoryId');
+            return this.env.pos.selectedCategoryId;
         }
         get searchWord() {
             return this.state.searchWord.trim();
@@ -64,7 +60,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             return this.env.pos.db.get_category_childs_ids(0).length === 0;
         }
         _switchCategory(event) {
-            this.env.pos.set('selectedCategoryId', event.detail);
+            this.env.pos.setSelectedCategoryId(event.detail);
         }
         _updateSearch(event) {
             this.state.searchWord = event.detail;

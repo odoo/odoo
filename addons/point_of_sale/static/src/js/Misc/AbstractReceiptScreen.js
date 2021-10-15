@@ -19,8 +19,8 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
             this.orderReceipt = useRef('order-receipt');
         }
         async _printReceipt() {
-            if (this.env.pos.proxy.printer) {
-                const printResult = await this.env.pos.proxy.printer.print_receipt(this.orderReceipt.el.outerHTML);
+            if (this.env.proxy.printer) {
+                const printResult = await this.env.proxy.printer.print_receipt(this.orderReceipt.el.outerHTML);
                 if (printResult.successful) {
                     return true;
                 } else {

@@ -1,19 +1,21 @@
 odoo.define('pos_epson_printer.pos_epson_printer', function (require) {
 "use strict";
 
-var models = require('point_of_sale.models');
+var { PosGlobalState } = require('point_of_sale.models');
 var EpsonPrinter = require('pos_epson_printer.Printer');
+const Registries = require('point_of_sale.Registries');
 
-var posmodel_super = models.PosModel.prototype;
-models.PosModel = models.PosModel.extend({
-    after_load_server_data: function () {
+
+const PosEpsonPosGlobalState = (PosGlobalState) => class PosEpsonPosGlobalState extends PosGlobalState {
+    after_load_server_data() {
         var self = this;
-        return posmodel_super.after_load_server_data.apply(this, arguments).then(function () {
+        return super.after_load_server_data(...arguments).then(function () {
             if (self.config.other_devices && self.config.epson_printer_ip) {
-                self.proxy.printer = new EpsonPrinter(self.config.epson_printer_ip , self);
+                self.env.proxy.printer = new EpsonPrinter(self.config.epson_printer_ip , self);
             }
         });
-    },
-});
+    }
+}
+Registries.Model.extend(PosGlobalState, PosEpsonPosGlobalState);
 
 });

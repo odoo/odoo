@@ -2,7 +2,7 @@
 
 import { startWebClient } from "@web/start";
 
-import { ChromeAdapter } from "@point_of_sale/js/chrome_adapter";
+import { ChromeAdapter } from "@point_of_sale/entry/chrome_adapter";
 import Registries from "point_of_sale.Registries";
 import { registry } from "@web/core/registry";
 
@@ -30,6 +30,7 @@ PosApp.components = { ChromeAdapter };
 function startPosApp() {
     Registries.Component.add(Portal);
     Registries.Component.freeze();
+    Registries.Model.freeze();
     startWebClient(PosApp);
 }
 

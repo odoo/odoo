@@ -3,7 +3,6 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
 
     const { Gui } = require('point_of_sale.Gui');
     const { isConnectionError } = require('point_of_sale.utils');
-    const models = require('point_of_sale.models');
 
     const { EventBus } = owl;
 

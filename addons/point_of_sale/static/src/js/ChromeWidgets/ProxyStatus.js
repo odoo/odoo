@@ -10,7 +10,7 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
     class ProxyStatus extends PosComponent {
         constructor() {
             super(...arguments);
-            const initialProxyStatus = this.env.pos.proxy.get('status');
+            const initialProxyStatus = this.env.proxy.get('status');
             this.state = useState({
                 status: initialProxyStatus.status,
                 msg: initialProxyStatus.msg,
@@ -19,21 +19,10 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
             this.index = 0;
         }
         mounted() {
-            this.env.pos.proxy.on('change:status', this, this._onChangeStatus);
+            this.env.proxy.on('change:status', this, this._onChangeStatus);
         }
         willUnmount() {
-            this.env.pos.proxy.off('change:status', this, this._onChangeStatus);
-        }
-        async onClick() {
-            try {
-                await this.env.pos.connect_to_proxy();
-            } catch (error) {
-                if (error instanceof Error) {
-                    throw error;
-                } else {
-                    this.showPopup('ErrorPopup', error);
-                }
-            }
+            this.env.proxy.off('change:status', this, this._onChangeStatus);
         }
         _onChangeStatus(posProxy, statusChange) {
             this._setStatus(statusChange.newValue);

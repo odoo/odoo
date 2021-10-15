@@ -100,13 +100,12 @@ var JobQueue = function(){
 // methods are used both to signal an event, and to fetch information.
 
 var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
-    init: function(parent,options){
+    init: function(options){
         mixins.PropertiesMixin.init.call(this);
         var self = this;
-        this.setParent(parent);
         options = options || {};
 
-        this.pos = parent;
+        this.env = options.env;
 
         this.weighing = false;
         this.debug_weight = 0;
@@ -143,6 +142,10 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         this.posbox_supports_display = true;
 
         window.hw_proxy = this;
+    },
+    set_pos: function(pos) {
+        this.setParent(pos);
+        this.pos = pos;
     },
     set_connection_status: function(status, drivers, msg=''){
         var oldstatus = this.get('status');

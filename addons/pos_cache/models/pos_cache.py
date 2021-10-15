@@ -26,7 +26,7 @@ class pos_cache(models.Model):
     def refresh_cache(self):
         for cache in self:
             Product = self.env['product.product'].with_user(cache.compute_user_id.id)
-            products = Product.search(cache.get_product_domain())
+            products = Product.search(cache.get_product_domain(), order='sequence,default_code,name')
             prod_ctx = products.with_context(pricelist=cache.config_id.pricelist_id.id,
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
@@ -63,28 +63,6 @@ class pos_config(models.Model):
     def _compute_limit_products_per_request(self):
         limit = self.env['ir.config_parameter'].sudo().get_param('pos_cache.limit_products_per_request', 0)
         self.update({'limit_products_per_request': int(limit)})
-
-    def get_products_from_cache(self, fields, domain):
-        fields_str = str(fields)
-        domain_str = str(domain)
-        pos_cache = self.env['pos.cache']
-        cache_for_user = pos_cache.search([
-            ('id', 'in', self.cache_ids.ids),
-            ('compute_user_id', '=', self.env.uid),
-            ('product_domain', '=', domain_str),
-            ('product_fields', '=', fields_str),
-        ])
-
-        if not cache_for_user:
-            cache_for_user = pos_cache.create({
-                'config_id': self.id,
-                'product_domain': domain_str,
-                'product_fields': fields_str,
-                'compute_user_id': self.env.uid
-            })
-            cache_for_user.refresh_cache()
-
-        return cache_for_user.cache2json()
 
     def delete_cache(self):
         # throw away the old caches

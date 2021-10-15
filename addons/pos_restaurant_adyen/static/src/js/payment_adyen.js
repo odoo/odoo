@@ -2,7 +2,6 @@ odoo.define('pos_restaurant_adyen.payment', function (require) {
     "use strict";
 
     var PaymentAdyen = require('pos_adyen.payment');
-    var models = require('point_of_sale.models');
 
     PaymentAdyen.include({
         _adyen_pay_data: function () {
@@ -23,7 +22,7 @@ odoo.define('pos_restaurant_adyen.payment', function (require) {
             var data = {
                 originalReference: line.transaction_id,
                 modificationAmount: {
-                    value: parseInt(line.amount * Math.pow(10, this.pos.currency.decimals)),
+                    value: parseInt(line.amount * Math.pow(10, this.pos.currency.decimal_places)),
                     currency: this.pos.currency.name,
                 },
                 merchantAccount: this.payment_method.adyen_merchant_account,

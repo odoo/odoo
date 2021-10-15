@@ -11,9 +11,12 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
      * @param {Function} x superclass
      */
     const ControlButtonsMixin = (x) => {
+        const controlButtonsToPosition = [];
+        const sortedControlButtons = [];
+
         class Extended extends x {
             get controlButtons() {
-                return this.constructor.controlButtons
+                return sortedControlButtons
                     .filter((cb) => {
                         return cb.condition.bind(this)();
                     })
@@ -22,7 +25,6 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
                     );
             }
         }
-        Extended.controlButtons = [];
         /**
          * @param {Object} controlButton
          * @param {Function} controlButton.component
@@ -43,40 +45,61 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
 
             // If no position is set, we just push it to the array.
             if (!controlButton.position) {
-                this.controlButtons.push(controlButton);
+                sortedControlButtons.push(controlButton);
             } else {
-                // Find where to put the new controlButton.
-                const [locator, relativeTo] = controlButton.position;
-                let whereIndex = -1;
-                for (let i = 0; i < this.controlButtons.length; i++) {
-                    if (this.controlButtons[i].name === relativeTo) {
-                        if (['before', 'replace'].includes(locator)) {
-                            whereIndex = i;
-                        } else if (locator === 'after') {
-                            whereIndex = i + 1;
-                        }
-                        break;
-                    }
-                }
-
-                // If found where to put, then perform the necessary mutation of
-                // the buttons array.
-                // Else, we just push this controlButton to the array.
-                if (whereIndex > -1) {
-                    this.controlButtons.splice(
-                        whereIndex,
-                        locator === 'replace' ? 1 : 0,
-                        controlButton
-                    );
-                } else {
-                    let warningMessage =
-                        `'${controlButton.name}' has invalid 'position' ([${locator}, ${relativeTo}]).` +
-                        'It is pushed to the controlButtons stack instead.';
-                    console.warn(warningMessage);
-                    this.controlButtons.push(controlButton);
-                }
+                controlButtonsToPosition.push(controlButton);
             }
         };
+
+        /**
+         * Call this static method to make the added control buttons in proper
+         * order.
+         * NOTE: This isn't necessarily a fast algorithm. I doubt that the number
+         * of control buttons will exceed an order of hundreds, so for practical
+         * purposes, it is enough.
+         */
+        Extended.sortControlButtons = function () {
+            function setControlButton(locator, index, cb) {
+                if (locator == 'replace') {
+                    sortedControlButtons[index] = cb;
+                } else if (locator == 'before') {
+                    sortedControlButtons.splice(index, 0, cb);
+                } else if (locator == 'after') {
+                    sortedControlButtons.splice(index + 1, 0, cb);
+                }
+            }
+            function locate(cb) {
+                const [locator, reference] = cb.position;
+                const index = sortedControlButtons.findIndex((cb) => cb.name == reference);
+                return [locator, index, reference];
+            }
+            const cbMissingReference = [];
+            // 1. First pass. If the reference control button isn't there, collect it for second pass.
+            for (let cb of controlButtonsToPosition) {
+                const [locator, index] = locate(cb);
+                if (index == -1) {
+                    cbMissingReference.push(cb);
+                    continue;
+                }
+                setControlButton(locator, index, cb);
+            }
+            // 2. Second pass.
+            // If during the first pass, 1 -> 2, 2 -> 3, 3 -> 4, 4 -> 5 and 5 is already
+            // in the sorted control buttons, then 1, 2, 3 & 4 are put in `cbMissingReference`.
+            // This only means 2 things about the objects in `cbMissingReference`:
+            //  i) They are referencing the cb after them
+            //  ii) They really have missing reference.
+            // Thus, we have to iterate the cb with missing reference in reverse.
+            for (let cb of cbMissingReference.reverse()) {
+                const [locator, index, reference] = locate(cb);
+                if (index == -1) {
+                    console.warn(`'${cb.name}' is not properly position because '${reference}' is not found. Is '${reference}' spelled correctly?`);
+                    sortedControlButtons.push(cb);
+                } else {
+                    setControlButton(locator, index, cb);
+                }
+            }
+        }
         return Extended;
     };
 

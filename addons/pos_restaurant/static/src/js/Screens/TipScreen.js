@@ -5,12 +5,10 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const { parse } = require('web.field_utils');
 
-    const { useContext } = owl;
-
     class TipScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            this.state = useContext(this.currentOrder.uiState.TipScreen);
+            this.state = this.currentOrder.uiState.TipScreen;
             this._totalAmount = this.currentOrder.get_total_with_tax();
         }
         mounted () {
@@ -116,7 +114,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
                     total: this.env.pos.format_currency(this.totalAmount),
                 });
 
-                if (this.env.pos.proxy.printer) {
+                if (this.env.proxy.printer) {
                     await this._printIoT(receipt);
                 } else {
                     await this._printWeb(receipt);
@@ -125,7 +123,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
         }
 
         async _printIoT(receipt) {
-            const printResult = await this.env.pos.proxy.printer.print_receipt(receipt);
+            const printResult = await this.env.proxy.printer.print_receipt(receipt);
             if (!printResult.successful) {
                 await this.showPopup('ErrorPopup', {
                     title: printResult.message.title,

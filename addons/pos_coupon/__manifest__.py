@@ -30,6 +30,7 @@
             'pos_coupon/static/src/js/PaymentScreen.js',
             'pos_coupon/static/src/js/ProductScreen.js',
             'pos_coupon/static/src/js/ActivePrograms.js',
+            'pos_coupon/static/src/js/OrderWidget.js',
             'pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js',
             'pos_coupon/static/src/js/ControlButtons/ResetProgramsButton.js',
         ],
