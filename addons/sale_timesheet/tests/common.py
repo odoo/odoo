@@ -319,3 +319,20 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
         })
+
+        cls.service_prepaid = cls.env['product.product'].create({
+            'name': "Service delivered, create task in new project",
+            'standard_price': 10,
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'default_code': 'SERV-DELI3',
+            'service_type': 'manual',
+            'service_tracking': 'task_in_project',
+            'project_id': False,  # will create a project
+            'taxes_id': False,
+            'property_account_income_id': cls.account_sale.id,
+            'service_policy': 'ordered_timesheet'
+        })
