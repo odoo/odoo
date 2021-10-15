@@ -42,9 +42,9 @@ export class KanbanRenderer extends Component {
         };
     }
 
-    openRecord(record, mode = "readonly") {
+    openRecord(record) {
         const resIds = this.props.record.data.map((datapoint) => datapoint.resId);
-        this.action.switchView("form", { resId: record.resId, resIds, mode });
+        this.action.switchView("form", { resId: record.resId, resIds });
     }
 
     selectColor(record, colorIndex) {
@@ -57,10 +57,7 @@ export class KanbanRenderer extends Component {
     triggerAction(record, params) {
         const { type } = params;
         switch (type) {
-            case "edit": {
-                this.openRecord(record, "edit");
-                break;
-            }
+            case "edit":
             case "open": {
                 this.openRecord(record);
                 break;
