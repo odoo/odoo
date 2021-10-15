@@ -511,11 +511,13 @@ class SaleOrder(models.Model):
         return result
 
     def _compute_field_value(self, field):
+        if field.name == 'invoice_status':
+            filtered_self = self.filtered(lambda so: so.user_id and so._origin.invoice_status != 'upselling')
         super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
             return
 
-        filtered_self = self.filtered(lambda so: so.user_id and so.invoice_status == 'upselling')
+        filtered_self = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
         if not filtered_self:
             return
 
