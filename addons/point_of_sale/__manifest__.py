@@ -51,9 +51,61 @@
     'application': True,
     'website': 'https://www.odoo.com/app/point-of-sale-shop',
     'assets': {
+
+        ## In general, you DON'T NEED to declare new assets here, just put the files in the proper directory.
+        ## NOTABLE EXCEPTION: List the new .css files in the `point_of_sale.assets` bundle taking into consideration
+        ##   the order of the .css files.
+        ##
+        ## 1. When defining new component, put the .js files in `point_of_sale/static/src/js/`
+        ##    and the corresponding .xml files in `point_of_sale/static/src/xml/`
+        ##    * POS is setup to automatically include the .xml files in `web.assets_qweb` and the `.js` files
+        ##    * in `point_of_sale.assets`.
+        ## 2. When adding new tour tests, put the .js files in `point_of_sale/static/tests/tours/`.
+        ## 3. When adding new qunit tests, put the .js files in `point_of_sale/static/tests/unit/`.
+        ##
+        ## If your use case doesn't fit anything above, you might need to properly understand each "asset bundle"
+        ## defined here and check how they are used in the following "index templates":
+        ##      1. point_of_sale.index
+        ##          ->  This is the POS UI, accessible by opening a session.
+        ##      2. point_of_sale.qunit_suite
+        ##          ->  This is the unit test, accessible by clicking the "Run Point of Sale JS Tests" button
+        ##              in the "debug" button from the backend interface.
+
+        #####################################
+        ## Augmentation of existing assets ##
+        #####################################
+
+        'web.assets_backend': [
+            'point_of_sale/static/src/scss/pos_dashboard.scss',
+            'point_of_sale/static/src/backend/tours/point_of_sale.js',
+            'point_of_sale/static/src/backend/debug_manager.js',
+            'point_of_sale/static/src/backend/web_overrides/pos_config_form.js',
+        ],
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',
         ],
+        'web.assets_qweb': [
+            'point_of_sale/static/src/xml/**/*.xml',
+        ],
+
+        ####################################################
+        ## Exclusive POS Assets 1: For running the POS UI ##
+        ####################################################
+
+        'point_of_sale.pos_assets_backend_style': [
+            "web/static/src/core/ui/**/*.scss",
+        ],
+        # TODO: We need to control this asset bundle.
+        # We can reduce the size of loaded assets in POS UI by selectively
+        # loading the `web` assets. We should only include what POS needs.
+        'point_of_sale.pos_assets_backend': [
+            ('include', 'web.assets_common'),
+            ('include', 'web.assets_backend'),
+            ('remove', 'web/static/src/webclient/menus/menu_service.js'),
+            ('remove', 'web/static/src/core/errors/error_handlers.js'),
+            ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
+        ],
+        # This bundle includes the main pos assets.
         'point_of_sale.assets': [
             'web/static/fonts/fonts.scss',
             'web/static/lib/fontawesome/css/font-awesome.css',
@@ -66,120 +118,32 @@
             'point_of_sale/static/src/css/popups/closing_pos_popup.css',
             'point_of_sale/static/src/css/popups/money_details_popup.css',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
-            'point_of_sale/static/lib/html2canvas.js',
-            'point_of_sale/static/lib/backbone/backbone.js',
-            'point_of_sale/static/lib/waitfont.js',
-            'point_of_sale/static/lib/sha1.js',
-            'point_of_sale/static/src/js/utils.js',
-            'point_of_sale/static/src/js/ClassRegistry.js',
-            'point_of_sale/static/src/js/PosComponent.js',
-            'point_of_sale/static/src/js/PosContext.js',
-            'point_of_sale/static/src/js/ComponentRegistry.js',
-            'point_of_sale/static/src/js/Registries.js',
-            'point_of_sale/static/src/js/db.js',
-            'point_of_sale/static/src/js/models.js',
-            'point_of_sale/static/src/js/keyboard.js',
-            'point_of_sale/static/src/js/barcode_reader.js',
-            'point_of_sale/static/src/js/printers.js',
-            'point_of_sale/static/src/js/Gui.js',
-            'point_of_sale/static/src/js/PopupControllerMixin.js',
-            'point_of_sale/static/src/js/ControlButtonsMixin.js',
-            'point_of_sale/static/src/js/Chrome.js',
-            'point_of_sale/static/src/js/devices.js',
-            'point_of_sale/static/src/js/payment.js',
-            'point_of_sale/static/src/js/custom_hooks.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js',
-            'point_of_sale/static/src/js/Screens/ClientListScreen/ClientLine.js',
-            'point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js',
-            'point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/ReprintReceiptButton.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/OrderDetails.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/OrderlineDetails.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/ReprintReceiptScreen.js',
-            'point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PSNumpadInputButton.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenNumpad.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenElectronicPayment.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenPaymentLines.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenStatus.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentMethodButton.js',
-            'point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/Orderline.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/OrderSummary.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/NumpadWidget.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ActionpadWidget.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/CategoryBreadcrumb.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/CategoryButton.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/CategorySimpleButton.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/HomeCategoryBreadcrumb.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ProductList.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js',
-            'point_of_sale/static/src/js/Screens/ReceiptScreen/WrappedProductNameLines.js',
-            'point_of_sale/static/src/js/Screens/ReceiptScreen/OrderReceipt.js',
-            'point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js',
-            'point_of_sale/static/src/js/Screens/ScaleScreen/ScaleScreen.js',
-            'point_of_sale/static/src/js/ChromeWidgets/CashierName.js',
-            'point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js',
-            'point_of_sale/static/src/js/ChromeWidgets/SyncNotification.js',
-            'point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js',
-            'point_of_sale/static/src/js/ChromeWidgets/SaleDetailsButton.js',
-            'point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js',
-            'point_of_sale/static/src/js/ChromeWidgets/TicketButton.js',
-            'point_of_sale/static/src/js/Misc/CurrencyAmount.js',
-            'point_of_sale/static/src/js/Misc/Draggable.js',
-            'point_of_sale/static/src/js/Misc/NotificationSound.js',
-            'point_of_sale/static/src/js/Misc/IndependentToOrderScreen.js',
-            'point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js',
-            'point_of_sale/static/src/js/Misc/SearchBar.js',
-            'point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js',
-            'point_of_sale/static/src/js/Popups/AbstractAwaitablePopup.js',
-            'point_of_sale/static/src/js/Popups/ErrorPopup.js',
-            'point_of_sale/static/src/js/Popups/ErrorBarcodePopup.js',
-            'point_of_sale/static/src/js/Popups/ConfirmPopup.js',
-            'point_of_sale/static/src/js/Popups/CashMovePopup.js',
-            'point_of_sale/static/src/js/Popups/TextInputPopup.js',
-            'point_of_sale/static/src/js/Popups/TextAreaPopup.js',
-            'point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js',
-            'point_of_sale/static/src/js/Popups/SelectionPopup.js',
-            'point_of_sale/static/src/js/Popups/EditListInput.js',
-            'point_of_sale/static/src/js/Popups/EditListPopup.js',
-            'point_of_sale/static/src/js/Popups/NumberPopup.js',
-            'point_of_sale/static/src/js/Popups/OfflineErrorPopup.js',
-            'point_of_sale/static/src/js/Popups/OrderImportPopup.js',
-            'point_of_sale/static/src/js/Popups/ProductConfiguratorPopup.js',
-            'point_of_sale/static/src/js/Popups/CashOpeningPopup.js',
-            'point_of_sale/static/src/js/Popups/ProductInfoPopup.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js',
-            'point_of_sale/static/src/js/Popups/ClosePosPopup.js',
-            'point_of_sale/static/src/js/Popups/MoneyDetailsPopup.js',
+
+            # We declare these components first because they are referred in some components.
+            # We do this to get rid of the console warning message when opening the POS UI.
+            # TODO: Remove this special case by removing `ControlButtonsMixin`. It's better
+            #   to NOT rely on the order of loading of the js assets.
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/RefundButton.js',
-            'point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js',
-            'point_of_sale/static/src/js/Misc/NumberBuffer.js',
-            'point_of_sale/static/src/js/Misc/MobileOrderWidget.js',
-            'point_of_sale/static/src/js/Notification.js',
+
+            # Here includes the lib and POS UI assets.
+            'point_of_sale/static/lib/**/*.js',
+            'point_of_sale/static/src/js/**/*.js',
         ],
-        'web.assets_backend': [
-            'point_of_sale/static/src/scss/pos_dashboard.scss',
-            'point_of_sale/static/src/js/tours/point_of_sale.js',
-            'point_of_sale/static/src/js/debug_manager.js',
-            'point_of_sale/static/src/js/web_overrides/pos_config_form.js',
+        # This bundle contains the code responsible for starting the POS UI.
+        # It is practically the entry point.
+        'point_of_sale.assets_backend_prod_only': [
+            'point_of_sale/static/src/entry/chrome_adapter.js',
+            'point_of_sale/static/src/entry/main.js',
+            'web/static/src/start.js',
+            'web/static/src/legacy/legacy_setup.js',
         ],
-        'point_of_sale.pos_assets_backend': [
-            ('include', 'web.assets_backend'),
-            ('remove', 'web/static/src/webclient/menus/menu_service.js'),
-            ('remove', 'web/static/src/core/errors/error_handlers.js'),
-            ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
-        ],
-        'point_of_sale.pos_assets_backend_style': [
-            "web/static/src/core/ui/**/*.scss",
-        ],
+
+        #########################################################
+        ## Exclusive POS Assets 2: For running the QUnit tests ##
+        #########################################################
+
+        # This bundle includes the helper assets for the unit testing.
         'point_of_sale.tests_assets': [
             'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/lib/qunit/qunit-2.9.1.css',
@@ -203,18 +167,10 @@
 
             ('include', 'web.frontend_legacy'),
         ],
+        # This bundle includes the unit tests.
         'point_of_sale.qunit_suite_tests': [
             'web/static/tests/legacy/component_extension_tests.js',
             'point_of_sale/static/tests/unit/**/*',
-        ],
-        'point_of_sale.assets_backend_prod_only': [
-            'point_of_sale/static/src/js/chrome_adapter.js',
-            'point_of_sale/static/src/js/main.js',
-            'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
-        ],
-        'web.assets_qweb': [
-            'point_of_sale/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',
