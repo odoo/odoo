@@ -6,8 +6,8 @@
             <button class="button set-customer" t-att-class="{'decentered': isLongName}"
                     t-on-click="trigger('click-customer')">
                 <t t-if="!env.isMobile"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
-                <t t-if="client">
-                    <t t-esc="client.name" />
+                <t t-if="props.client">
+                    <t t-esc="props.client.name" />
                 </t>
                 <t t-else="">
                     Customer

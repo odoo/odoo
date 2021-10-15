@@ -3,7 +3,6 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
-    const { posbus } = require('point_of_sale.utils')
     const { ConnectionLostError } = require('@web/core/network/rpc_service')
 
     /**
@@ -29,7 +28,7 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
                     args: [[this.props.product.id],
                         this.props.product.get_price(order.pricelist, this.props.quantity),
                         this.props.quantity,
-                        this.env.pos.config_id],
+                        this.env.pos.config.id],
                     kwargs: {context: this.env.session.user_context},
                 });
 
@@ -67,7 +66,7 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
             }
         }
         searchProduct(productName) {
-            posbus.trigger('search-product-from-info-popup', productName);
+            this.env.posbus.trigger('search-product-from-info-popup', productName);
             this.cancel()
         }
         _hasMarginsCostsAccessRights() {

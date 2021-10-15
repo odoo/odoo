@@ -66,11 +66,11 @@
                     </li>
                 </t>
             </ul>
-            <t t-if="props.line.get_lot_lines()">
+            <t t-if="props.line.pack_lot_lines">
                 <ul class="info-list">
                     <t t-foreach="props.line.get_lot_lines()" t-as="lot" t-key="lot.cid">
                         <li>
-                            SN <t t-esc="lot.attributes['lot_name']"/>
+                            SN <t t-esc="lot.lot_name"/>
                         </li>
                     </t>
                 </ul>

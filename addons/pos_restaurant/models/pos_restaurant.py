@@ -70,11 +70,12 @@ class RestaurantTable(models.Model):
         if table.get('floor_id'):
             table['floor_id'] = table['floor_id'][0]
 
-        table_id = table.pop('id', False)
+        sanitized_table = dict([(key, val) for key, val in table.items() if key in self._fields and val is not None])
+        table_id = sanitized_table.pop('id', False)
         if table_id:
-            self.browse(table_id).write(table)
+            self.browse(table_id).write(sanitized_table)
         else:
-            table_id = self.create(table).id
+            table_id = self.create(sanitized_table).id
         return table_id
 
     @api.ondelete(at_uninstall=False)

@@ -12,14 +12,6 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
             super(...arguments);
             useListener('click', this.onClick);
         }
-        mounted() {
-            this.env.pos.get('orders').on('add remove change', () => this.render(), this);
-            this.env.pos.on('change:selectedOrder', () => this.render(), this);
-        }
-        willUnmount() {
-            this.env.pos.get('orders').off('add remove change', null, this);
-            this.env.pos.off('change:selectedOrder', null, this);
-        }
         get currentOrder() {
             return this.env.pos.get_order();
         }

@@ -105,7 +105,7 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
           this.env.pos.config.gift_card_product_id[0]
         ];
 
-      for (let line of order.orderlines.models) {
+      for (let line of order.orderlines) {
         if (line.product.id === giftProduct.id && line.price < 0) {
           if (line.gift_card_id === await this.getGiftCard().id) return line;
         }

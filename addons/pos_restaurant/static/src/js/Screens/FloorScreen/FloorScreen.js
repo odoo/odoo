@@ -4,7 +4,6 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
-    const { posbus } = require('point_of_sale.utils');
 
     const { debounce, useRef, useState } = owl;
 
@@ -46,7 +45,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
-            posbus.trigger('start-cash-control');
+            this.env.posbus.trigger('start-cash-control');
             this.floorMapRef.el.style.background = this.state.floorBackground;
             this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
             // call _tableLongpolling once then set interval of 5sec.
@@ -237,7 +236,13 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             if (this.state.isEditMode) {
                 this.state.selectedTableId = table.id;
             } else {
-                this.env.pos.set_table(table);
+                this.env.pos.set_table(table).then(() => {
+                    const order = this.env.pos.get_order();
+                    if (order) {
+                        const { name: screenName } = order.get_screen_data();
+                        this.showScreen(screenName);
+                    }
+                });
             }
         }
         _onDeselectTable() {
@@ -294,19 +299,12 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             return '' + this._lastName.str + this._lastName.num;
         }
         async _save(table) {
-            const fields = this.env.pos.models.find((model) => model.model === 'restaurant.table')
-                .fields;
-            const serializeTable = {};
-            for (let field of fields) {
-                if (typeof table[field] !== 'undefined') {
-                    serializeTable[field] = table[field];
-                }
-            }
-            serializeTable.id = table.id;
+            const tableCopy = { ...table };
+            delete tableCopy.floor;
             const tableId = await this.rpc({
                 model: 'restaurant.table',
                 method: 'create_from_ui',
-                args: [serializeTable],
+                args: [tableCopy],
             });
             table.id = tableId;
             this.env.pos.tables_by_id[tableId] = table;

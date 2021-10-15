@@ -16,13 +16,6 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
         constructor() {
             super(...arguments);
             useListener('click', this.onClick);
-            this._currentOrder = this.env.pos.get_order();
-            this._currentOrder.orderlines.on('change', this.render, this);
-            this.env.pos.on('change:selectedOrder', this._updateCurrentOrder, this);
-        }
-        willUnmount() {
-            this._currentOrder.orderlines.off('change', null, this);
-            this.env.pos.off('change:selectedOrder', null, this);
         }
         async onClick() {
             const order = this.env.pos.get_order();
@@ -38,21 +31,17 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
                 }
             }
         }
+        get currentOrder() {
+            return this.env.pos.get_order();
+        }
         get addedClasses() {
-            if (!this._currentOrder) return {};
-            const changes = this._currentOrder.hasChangesToPrint();
-            const skipped = changes ? false : this._currentOrder.hasSkippedChanges();
+            if (!this.currentOrder) return {};
+            const changes = this.currentOrder.hasChangesToPrint();
+            const skipped = changes ? false : this.currentOrder.hasSkippedChanges();
             return {
                 highlight: changes,
                 altlight: skipped,
             };
-        }
-        _updateCurrentOrder(pos, newSelectedOrder) {
-            this._currentOrder.orderlines.off('change', null, this);
-            if (newSelectedOrder) {
-                this._currentOrder = newSelectedOrder;
-                this._currentOrder.orderlines.on('change', this.render, this);
-            }
         }
     }
     SubmitOrderButton.template = 'SubmitOrderButton';
@@ -60,7 +49,7 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
     ProductScreen.addControlButton({
         component: SubmitOrderButton,
         condition: function() {
-            return this.env.pos.printers.length;
+            return this.env.pos.config.module_pos_restaurant && this.env.pos.unwatched.printers.length;
         },
     });
 

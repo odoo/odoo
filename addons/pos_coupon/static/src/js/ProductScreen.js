@@ -64,8 +64,9 @@ odoo.define('pos_coupon.ProductScreen', function (require) {
                             (couponCode) => couponCode.coupon_id === selectedLine.coupon_id
                         ).code;
                         delete selectedLine.order.bookedCouponCodes[coupon_code];
-                        selectedLine.order.trigger('reset-coupons', [selectedLine.coupon_id]);
-                        this.showNotification(`Coupon (${coupon_code}) has been deactivated.`);
+                        selectedLine.order.resetCoupons([selectedLine.coupon_id]).then(() => {
+                            this.showNotification(`Coupon (${coupon_code}) has been deactivated.`);
+                        });
                     } else if (selectedLine.program_id) {
                         // remove program from active programs
                         const index = selectedLine.order.activePromoProgramIds.indexOf(selectedLine.program_id);
@@ -78,7 +79,7 @@ odoo.define('pos_coupon.ProductScreen', function (require) {
                     }
                 }
                 if (!selectedLine.is_program_reward || (selectedLine.is_program_reward && val === 'remove')) {
-                    selectedLine.order.trigger('update-rewards');
+                    selectedLine.order._updateRewards();
                 }
             }
         };

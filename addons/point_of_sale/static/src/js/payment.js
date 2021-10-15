@@ -20,8 +20,8 @@ var core = require('web.core');
  * use_payment_terminal.
  *
  * If necessary new fields can be loaded on any model:
- *
- * models.load_fields('pos.payment.method', ['new_field1', 'new_field2']);
+ * by overriding the loader_params of the models in the back end
+ * in the `pos.session` model
  */
 var PaymentInterface = core.Class.extend({
     init: function (pos, payment_method) {

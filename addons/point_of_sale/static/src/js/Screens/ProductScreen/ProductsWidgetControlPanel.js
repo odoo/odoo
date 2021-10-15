@@ -5,7 +5,6 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    const { posbus } = require('point_of_sale.utils');
 
     const { debounce, useRef } = owl;
 
@@ -16,10 +15,10 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.updateSearch = debounce(this.updateSearch, 100);
         }
         mounted() {
-            posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
+            this.env.posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
         }
         willUnmount() {
-            posbus.off('search-product-from-info-popup', this);
+            this.env.posbus.off('search-product-from-info-popup', this);
         }
 
         clearSearch() {

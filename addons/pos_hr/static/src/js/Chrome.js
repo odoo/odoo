@@ -8,17 +8,19 @@ odoo.define('pos_hr.chrome', function (require) {
         class extends Chrome {
             async start() {
                 await super.start();
-                this.env.pos.on('change:cashier', this.render, this);
                 if (this.env.pos.config.module_pos_hr) this.showTempScreen('LoginScreen');
             }
             get headerButtonIsShown() {
-                return !this.env.pos.config.module_pos_hr || this.env.pos.get('cashier').role == 'manager' || this.env.pos.get_cashier().user_id[0] === this.env.pos.user.id;
+                return !this.env.pos.config.module_pos_hr || this.env.pos.cashier.role == 'manager' || this.env.pos.get_cashier_user_id() === this.env.pos.user.id;
             }
             showCashMoveButton() {
-                return super.showCashMoveButton() && this.env.pos.get('cashier').role == 'manager';
+                return super.showCashMoveButton() && (!this.env.pos.cashier || this.env.pos.cashier.role == 'manager');
             }
             shouldShowCashControl() {
-                return super.shouldShowCashControl() && this.env.pos.hasLoggedIn;
+                if (this.env.pos.config.module_pos_hr){
+                    return super.shouldShowCashControl() && this.env.pos.hasLoggedIn;
+                }
+                return super.shouldShowCashControl();
             }
         };
 

@@ -16,20 +16,17 @@
                     <CashMoveButton t-if="showCashMoveButton() and env.isMobile and !state.mobileSearchBarIsShown" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
                     <div class="search-bar-portal" />
-                    <div class="status-buttons-portal" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"/>
-                </div>
-            </div>
-            <t t-if="state.uiState === 'READY'">
-                <Portal target="'.pos .status-buttons-portal'">
-                    <div class="status-buttons">
+                    <div class="status-buttons" t-if="state.uiState === 'READY'" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }">
                         <CashierName />
-                        <SaleDetailsButton t-if="env.pos.proxy.printer" />
+                        <SaleDetailsButton t-if="env.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />
                         <SyncNotification />
                         <HeaderButton />
                     </div>
-                </Portal>
+                </div>
+            </div>
+            <t t-if="state.uiState === 'READY'">
                 <div class="pos-content">
                     <div class="window">
                         <div class="subwindow">
@@ -43,22 +40,20 @@
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown"
-                                 t-transition="fade" />
+                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown" t-transition="fade" />
                 </div>
             </t>
 
             <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
                 <div class="loader-feedback">
-                    <h1 class="message">
-                        <t t-esc="loading.message" />
-                    </h1>
-                    <div class="progressbar">
-                        <div class="progress" t-ref="progressbar"></div>
-                    </div>
-                    <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">
-                        Skip
-                    </div>
+                    <!-- spinner from https://loading.io/css/ -->
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    <t t-if="state.loadingSkipButtonIsShown">
+                        <h1 class="message">Connecting to devices</h1>
+                        <div class="button skip" t-on-click="trigger('loading-skip-callback')">
+                            Skip
+                        </div>
+                    </t>
                 </div>
             </div>
 

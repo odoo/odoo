@@ -3,7 +3,6 @@ odoo.define('point_of_sale.ProductItem', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    const models = require('point_of_sale.models');
 
     class ProductItem extends PosComponent {
         /**

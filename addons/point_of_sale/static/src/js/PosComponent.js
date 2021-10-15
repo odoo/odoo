@@ -59,6 +59,14 @@ odoo.define('point_of_sale.PosComponent', function (require) {
         closeNotification() {
             this.trigger('close-notification');
         }
+        render() {
+            return super.render().then((res) => {
+                if (this.env.isDebug()) {
+                    console.log('Rendered:', this.constructor.name);
+                }
+                return res;
+            })
+        }
     }
 
     return PosComponent;
