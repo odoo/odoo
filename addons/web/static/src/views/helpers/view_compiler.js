@@ -243,7 +243,7 @@ export class ViewCompiler {
         const form = this.document.createElement("div");
         form.setAttribute(
             `t-attf-class`,
-            "{{props.mode === 'readonly' ? 'o_form_readonly' : 'o_form_editable'}}"
+            "{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}"
         );
         for (let child of node.childNodes) {
             const toAppend = this.compileNode(child, params);
@@ -462,8 +462,13 @@ export class ViewCompiler {
             appendAttr(compiled, "class", tAttClass);
 
             if (compiled.nodeName === "Field") {
-                const defaultMode = compiled.getAttribute("mode") || "props.mode";
-                compiled.setAttribute("mode", `${readonlyExpr} ? "readonly" : ${defaultMode}`);
+                const defaultMode = compiled.getAttribute("mode");
+                compiled.setAttribute(
+                    "readonly",
+                    `${readonlyExpr} or ${
+                        defaultMode ? `${defaultMode} === 'readonly'` : "props.readonly"
+                    }`
+                );
             }
         }
     }
@@ -539,7 +544,7 @@ export class ViewCompiler {
 
         field.setAttribute("name", `"${fieldName}"`);
         field.setAttribute("record", `record`);
-        field.setAttribute("mode", `props.mode`);
+        field.setAttribute("readonly", `props.readonly`);
 
         if ("mode" in node.attributes) {
             const viewModes = node.getAttribute("mode").split(",");
@@ -734,7 +739,7 @@ export class ViewCompiler {
         const widgetName = node.getAttribute("name");
         tComponent.setAttribute("t-component", `getWidget("${widgetName}")`);
         tComponent.setAttribute("record", `record`);
-        tComponent.setAttribute("mode", `mode`);
+        tComponent.setAttribute("readonly", `props.readonly`);
         tComponent.setAttribute("t-att-class", `"o_widget"`);
         return tComponent;
     }

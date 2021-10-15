@@ -16,7 +16,7 @@ export class ListArchParser extends XMLParser {
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
                 if (
-                    this.isAttr(node, "invisible").falsy() &&
+                    this.isAttr(node, "invisible").falsy(true) &&
                     this.isAttr(node, "optional").notEqualTo("hide")
                 ) {
                     fieldParser.addField(node, (fieldName) => {
