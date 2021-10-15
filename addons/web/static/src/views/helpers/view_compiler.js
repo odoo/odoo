@@ -1,4 +1,5 @@
-/* @odoo-module */
+/** @odoo-module **/
+
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { combineAttributes } from "@web/core/utils/xml";
