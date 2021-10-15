@@ -6,7 +6,7 @@ from random import randint
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.osv.query import Query
 from odoo.tools.translate import _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 from dateutil.relativedelta import relativedelta
 
@@ -137,10 +137,10 @@ class Applicant(models.Model):
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
-    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True)
-    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True)
-    salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True)
-    salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant", tracking=True)
+    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
@@ -177,6 +177,7 @@ class Applicant(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
+    interviewer_id = fields.Many2one('res.users', string='Interviewer', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -255,7 +256,6 @@ class Applicant(models.Model):
                 applicant.meeting_display_text = _('Next Meeting')
             else:
                 applicant.meeting_display_text = _('Last Meeting')
-
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
@@ -340,6 +340,10 @@ class Applicant(models.Model):
             if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 
+    def _check_interviewer_access(self):
+        if self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer'):
+            raise AccessError(_('You are not allowed to perform this action.'))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -348,6 +352,7 @@ class Applicant(models.Model):
             if vals.get('email_from'):
                 vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
+        applicants.sudo().interviewer_id._create_recruitment_interviewers()
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
         if 'default_activity_date_deadline' in self.env.context:
             deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
@@ -371,6 +376,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if vals.get('email_from'):
             vals['email_from'] = vals['email_from'].strip()
+        old_interviewers = self.interviewer_id
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -381,6 +387,10 @@ class Applicant(models.Model):
                 res = super(Applicant, self).write(vals)
         else:
             res = super(Applicant, self).write(vals)
+        if 'interviewer_id' in vals:
+            interviewers_to_clean = old_interviewers - self.interviewer_id
+            interviewers_to_clean._remove_recruitment_interviewers()
+            self.sudo().interviewer_id._create_recruitment_interviewers()
         return res
 
     def get_empty_list_help(self, help):
@@ -405,6 +415,21 @@ class Applicant(models.Model):
             nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
 
         return nocontent_body % nocontent_values
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if view_type == 'form' and self.user_has_groups('hr_recruitment.group_hr_recruitment_interviewer'):
+            view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
+        return super().fields_view_get(view_id, view_type, toolbar, submenu)
+
+    def _notify_compute_recipients(self, message, msg_vals):
+        """
+            Do not notify members of the Recruitment Interviewer group, as this
+            might leak some data they shouldn't have access to.
+        """
+        recipients = super()._notify_compute_recipients(message, msg_vals)
+        interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
+        return [recipient for recipient in recipients if interviewer_group not in recipient['groups']]
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -546,7 +571,8 @@ class Applicant(models.Model):
 
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
-        employee = False
+        self._check_interviewer_access()
+
         for applicant in self:
             contact_name = False
             if applicant.partner_id:

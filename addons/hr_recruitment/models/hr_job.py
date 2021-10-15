@@ -44,6 +44,13 @@ class Job(models.Model):
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
+    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+    extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
+
+    @api.depends('application_ids.interviewer_id')
+    def _compute_extended_interviewer_ids(self):
+        for job in self:
+            job.extended_interviewer_ids = job.application_ids.interviewer_id
 
     def _compute_is_favorite(self):
         for job in self:
@@ -132,10 +139,17 @@ class Job(models.Model):
                 'job_id': job.id,
             } for job in jobs]
             self.env['hr.recruitment.source'].create(source_vals)
+        jobs.sudo().interviewer_ids._create_recruitment_interviewers()
         return jobs
 
     def write(self, vals):
+        old_interviewers = self.interviewer_ids
         res = super().write(vals)
+        if 'interviewer_ids' in vals:
+            interviewers_to_clean = old_interviewers - self.interviewer_ids
+            interviewers_to_clean._remove_recruitment_interviewers()
+            self.sudo().interviewer_ids._create_recruitment_interviewers()
+
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
         # List of fields to keep synched with the alias

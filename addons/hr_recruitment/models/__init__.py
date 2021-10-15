@@ -7,3 +7,5 @@ from . import calendar
 from . import digest
 from . import utm_campaign
 from . import utm_source
+from . import res_users
+from . import ir_ui_menu
