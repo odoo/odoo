@@ -181,10 +181,13 @@ function factory(dependencies) {
             if (!this.threadView) {
                 return 'tiled';
             }
+            if (this.isMinimized) {
+                return 'tiled';
+            }
             if (!this.threadView.thread.rtc) {
                 return 'tiled';
             }
-            if (!this.threadView.thread.videoCount || !this.mainParticipantCard) {
+            if (!this.mainParticipantCard) {
                 return 'tiled';
             }
             if (
