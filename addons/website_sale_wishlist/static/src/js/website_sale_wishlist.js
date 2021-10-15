@@ -139,7 +139,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         this._rpc({
             route: '/shop/wishlist/remove/' + wish,
         }).then(function () {
-            $(tr).hide();
+            $(tr).remove();
         });
 
         this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
