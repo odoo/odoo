@@ -63,7 +63,7 @@ Docs & License: https://fullcalendar.io/
         if (!(calendar instanceof core.Calendar)) {
             throw new Error('must supply a Calendar instance');
         }
-        return luxon.Duration.fromObject(__assign({}, duration, { locale: calendar.dateEnv.locale.codes[0] }));
+        return luxon.Duration.fromObject(__assign({}, duration), { locale: calendar.dateEnv.locale.codes[0] });
     }
     var LuxonNamedTimeZone = /** @class */ (function (_super) {
         __extends(LuxonNamedTimeZone, _super);
@@ -106,8 +106,6 @@ Docs & License: https://fullcalendar.io/
     }
     function arrayToLuxon(arr, timeZone, locale) {
         return luxon.DateTime.fromObject({
-            zone: timeZone,
-            locale: locale,
             year: arr[0],
             month: arr[1] + 1,
             day: arr[2],
@@ -115,6 +113,9 @@ Docs & License: https://fullcalendar.io/
             minute: arr[4],
             second: arr[5],
             millisecond: arr[6]
+        }, {
+            zone: timeZone,
+            locale: locale,
         });
     }
     function parseCmdStr(cmdStr) {
