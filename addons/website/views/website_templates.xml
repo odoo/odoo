@@ -69,8 +69,8 @@
         <meta name="generator" content="Odoo"/>
         <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
-        <meta t-if="main_object and 'website_indexed' in main_object
-            and not main_object.website_indexed" name="robots" content="noindex"/>
+        <meta t-if="(main_object and 'website_indexed' in main_object
+            and not main_object.website_indexed) or (website.domain and website.domain not in request.httprequest.url_root)" name="robots" content="noindex"/>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
                 and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
@@ -2309,6 +2309,10 @@
 <template id="robots">
 <t t-translation="off">
 User-agent: *
+<t t-if="website.domain and website.domain not in url_root">
+Disallow: /
+</t>
+<t t-else="">
 Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 
@@ -2317,6 +2321,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 ##############
 
 <t t-out="request.website.sudo().robots_txt" />
+</t>
 </t>
 </template>
 
