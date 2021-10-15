@@ -2,14 +2,14 @@
 
 import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
 import { Field } from "@web/fields/field";
-import { View } from "@web/views/view";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { sprintf } from "@web/views/core/utils/strings";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { View } from "@web/views/view";
+import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, hooks } = owl;
 const { useState, useSubEnv } = hooks;
@@ -136,7 +136,7 @@ export class KanbanRenderer extends Component {
      */
     kanban_image(model, field, idOrIds, placeholder) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = this.record.model.get({ resId: id }) || { data: {} };
+        const record = this.props.record.model.get({ resId: id }) || { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type
