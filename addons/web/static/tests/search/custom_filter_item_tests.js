@@ -444,10 +444,10 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
         assert.expect(4);
 
-        const originalZoneName = luxon.Settings.defaultZoneName;
-        luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
+        const originalZone = luxon.Settings.defaultZone;
+        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
-            luxon.Settings.defaultZoneName = originalZoneName;
+            luxon.Settings.defaultZone = originalZone;
         });
 
         const controlPanel = await makeWithSearch({
@@ -491,10 +491,10 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("custom filter datetime between operator", async function (assert) {
         assert.expect(4);
 
-        const originalZoneName = luxon.Settings.defaultZoneName;
-        luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
+        const originalZone = luxon.Settings.defaultZone;
+        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(-240);
         registerCleanup(() => {
-            luxon.Settings.defaultZoneName = originalZoneName;
+            luxon.Settings.defaultZone = originalZone;
         });
 
         const controlPanel = await makeWithSearch({

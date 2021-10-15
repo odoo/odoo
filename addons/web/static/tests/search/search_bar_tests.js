@@ -165,10 +165,10 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("search date and datetime fields. Support of timezones", async function (assert) {
         assert.expect(4);
 
-        const originalZoneName = luxon.Settings.defaultZoneName;
-        luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(360);
+        const originalZone = luxon.Settings.defaultZone;
+        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(360);
         registerCleanup(() => {
-            luxon.Settings.defaultZoneName = originalZoneName;
+            luxon.Settings.defaultZone = originalZone;
         });
 
         const controlPanel = await makeWithSearch({
