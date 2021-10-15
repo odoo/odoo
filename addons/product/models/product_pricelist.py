@@ -469,7 +469,7 @@ class PricelistItem(models.Model):
     def _check_date_range(self):
         for item in self:
             if item.date_start and item.date_end and item.date_start >= item.date_end:
-                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
+                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end, dt_format=False), format_datetime(self.env, item.date_start, dt_format=False)))
         return True
 
     @api.constrains('price_min_margin', 'price_max_margin')
