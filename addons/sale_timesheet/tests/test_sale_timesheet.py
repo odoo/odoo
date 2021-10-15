@@ -671,3 +671,63 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(self.partner_b, task_so1_timesheet2.partner_id, "The Task's second Timesheet entry should have its partner changed, as it was not invoiced and the Task's partner/customer changed.")
         self.assertEqual(so1_product_global_project_so_line, task_so1_timesheet1.so_line, "The Task's first Timesheet entry should not have changed as it was already invoiced (its so_line should still be equal to the first Sales Order line).")
         self.assertEqual(so2_product_global_project_so_line, task_so1_timesheet2.so_line, "The Task's second Timesheet entry should have it's so_line changed, as the Sales Order Item of the Task changed, and this entry was not invoiced.")
+
+    def test_timesheet_upsell(self):
+        """ Test timesheet upselling and email """
+
+        self.sale_order_with_user = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'user_id' : self.user_employee_company_B.id
+        })
+        # create SO and confirm it
+        uom_days = self.env.ref('uom.product_uom_day')
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order_with_user.id,
+            'name': self.service_prepaid.name,
+            'product_id': self.service_prepaid.id,
+            'product_uom_qty': 1,
+            'product_uom': uom_days.id,
+            'price_unit': self.service_prepaid.list_price,
+        })
+        self.sale_order_with_user.action_confirm()
+        task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
+
+        # let's log some timesheets
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 8,
+            'employee_id': self.employee_manager.id,
+        })
+        
+        self.sale_order_with_user._create_invoices()
+        id_max = self.env['mail.message'].search([], order='id desc', limit=1)
+        if id_max:
+            id_max = id_max[0].id
+        else:
+            id_max = 0
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        self.assertEqual(self.sale_order_with_user.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        message_sent = self.env['mail.message'].search([('id', '>', id_max), ('subject', 'like', 'Upsell')])
+        self.assertEqual(len(message_sent),1,'Sale Timesheet: An email should always be sent to the saleperson when the state of the sale order change to upselling')
+
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        message_sent = self.env['mail.message'].search([('id', '>', id_max), ('subject', 'like', 'Upsell')])
+        self.assertEqual(len(message_sent),1,'Sale Timesheet: An email should only be sent to the saleperson when the state of the sale order change to upselling')
