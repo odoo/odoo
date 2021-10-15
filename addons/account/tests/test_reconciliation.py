@@ -4,9 +4,11 @@
 import time
 import unittest
 from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo import api, fields
 from odoo.addons.account.tests.common import TestAccountReconciliationCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -454,6 +456,109 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(reversed_bank_line.full_reconcile_id.id, bank_line.full_reconcile_id.id)
         self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
 
+    # @freeze_time('2020-10-01')
+    def test_diff_exchange_revert_dates(self):
+        # rate 2016-01-01 = 3.0, rate 2017 = 2.0
+        currency = self.setup_multi_currency_data({'name': 'Shiny Metals'})['currency']
+
+        def get_reverted_exchange_date(exchange_move):
+            return self.env['account.move'].search(
+                [('reversed_entry_id', '=', exchange_move.id)]
+            ).date
+
+        def create_invoice(move_type, date_invoice, create_date='2020-10-01'):
+            with freeze_time(create_date):
+                inv = self._create_invoice(
+                    move_type=move_type,
+                    invoice_amount=111,
+                    currency_id=currency,
+                    date_invoice=date_invoice,
+                    auto_validate=True
+                )
+            return inv
+
+        def create_payment(invoice, payment_date, create_date='2020-10-01'):
+            with freeze_time(create_date):
+                payment = self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=invoice.ids,
+                ).create({
+                    'amount': 111,
+                    'currency_id': currency.id,
+                    'payment_date': payment_date,
+                })._create_payments()
+            return payment
+
+        def unreconcile_payment_and_get_exchange_move(payment, date='2020-10-01'):
+            with freeze_time(date):
+                exchange_move = payment.line_ids.full_reconcile_id.exchange_move_id
+                payment.line_ids.remove_move_reconcile()
+                return exchange_move
+
+        def assert_date(move_type, move_date, expected_date):
+            self.assertEqual(
+                move_date,
+                fields.Date.from_string(expected_date),
+                f'move date {move_date} for move type {move_type} should be {expected_date}',
+            )
+
+        # Testing exchange_move.date < today
+        for move_type in ('in_invoice', 'out_invoice'):
+            inv = create_invoice(move_type, '2016-06-01')
+            pay = create_payment(inv, '2020-08-01')
+            exchange_move = unreconcile_payment_and_get_exchange_move(pay)
+            reverted_exchange_date = get_reverted_exchange_date(exchange_move)
+            # exchange_move.date < today => reverted_exchange_move.date is last day of exchange_move.date month
+            assert_date(move_type, reverted_exchange_date, '2020-08-31')
+
+        # Testing exchange_move.date < lockdate
+        self.env.company.period_lock_date = '2020-09-01'
+        for move_type in ('in_invoice', 'out_invoice'):
+            inv = create_invoice(move_type, '2016-06-01')
+            pay = create_payment(inv, '2020-08-01')
+            exchange_move = unreconcile_payment_and_get_exchange_move(pay)
+            reverted_exchange_date = get_reverted_exchange_date(exchange_move)
+            # exchange_move.date < lockdate => reverted_exchange_move.date is last day of month of day after lockdate
+            assert_date(move_type, reverted_exchange_date, '2020-09-30')
+        self.env.company.period_lock_date = None
+
+        # Testing exchange_move.date = today
+        for move_type in ('in_invoice', 'out_invoice'):
+            inv = create_invoice(move_type, '2016-06-01')
+            pay = create_payment(inv, '2020-10-01')  # today
+            exchange_move = unreconcile_payment_and_get_exchange_move(pay)
+            reverted_exchange_date = get_reverted_exchange_date(exchange_move)
+            # exchange_move.date = today => reverted_exchange_move.date is today
+            assert_date(move_type, reverted_exchange_date, '2020-10-01')
+
+        # Testing making invoice and payment for past dates & with period_lock_date > unreconcile_date
+        self.env.company.period_lock_date = '2017-05-02'
+        for move_type in ('in_invoice', 'out_invoice'):
+            inv = create_invoice(move_type, '2016-01-01', '2016-02-01')
+            pay = create_payment(inv, '2017-03-01', '2017-04-01')
+            exchange_move = unreconcile_payment_and_get_exchange_move(pay, '2017-05-01')
+            reverted_exchange_date = get_reverted_exchange_date(exchange_move)
+            assert_date(move_type, reverted_exchange_date, '2017-05-03')
+
+            reversal_wizard = self.env['account.move.reversal'].with_context(
+                active_model="account.move",
+                active_ids=inv.ids
+            ).create({
+                'date': fields.Date.from_string('2017-05-01'),
+                'reason': 'no reason',
+                'refund_method': 'refund',
+            })
+            res = reversal_wizard.reverse_moves()
+            reverse_move_date = self.env['account.move'].browse(res['res_id']).date
+            # date in wizard overrides _get_reverse_date()
+            assert_date(move_type, reverse_move_date, '2017-05-01')
+
+            with freeze_time('2017-05-01'):
+                # default date is _get_reverse_date()
+                reverse_move_date = inv._reverse_moves().date
+                expected_date = '2017-05-03' if move_type == 'in_invoice' else '2017-05-01'
+                assert_date(move_type, reverse_move_date, expected_date)
+        self.env.company.period_lock_date = None
 
     def test_revert_payment_and_reconcile_exchange(self):
 

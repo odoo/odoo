@@ -358,43 +358,67 @@ class AccountMove(models.Model):
                 del cleaned_vals[field_name]
         return cleaned_vals
 
-    # -------------------------------------------------------------------------
-    # ONCHANGE METHODS
-    # -------------------------------------------------------------------------
-
-    def _get_accounting_date(self, invoice_date, has_tax):
+    def _get_accounting_date(self, move_date, has_tax):
         """Get correct accounting date for previous periods, taking tax lock date into account.
 
-        When registering an invoice in the past, we still want the sequence to be increasing.
+        :param move_date (datetime.date): Invoice date or move date to take into account
+        :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
+        :return (datetime.date):
+        """
+        self.ensure_one()
+        tax_lock_date = self.company_id.tax_lock_date
+        if move_date and tax_lock_date and has_tax and move_date <= tax_lock_date:
+            move_date = tax_lock_date + timedelta(days=1)
+
+        if self.is_purchase_document(include_receipts=True):
+            return self._get_earliest_accounting_date(move_date)
+        return move_date
+
+    def _get_earliest_accounting_date(self, move_date):
+        """ When registering an invoice in the past, we still want the sequence to be increasing.
         We then take the last day of the period, depending on the sequence format.
         If there is a tax lock date and there are taxes involved, we register the invoice at the
         last date of the first open period.
 
-        :param invoice_date (datetime.date): The invoice date
-        :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
-        :return (datetime.date):
+        :param invoice_date (datetime.date): The move date
         """
-        tax_lock_date = self.company_id.tax_lock_date
-        today = fields.Date.today()
-        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
-            invoice_date = tax_lock_date + timedelta(days=1)
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
+        number_reset = self._deduce_sequence_number_reset(highest_name)
+        if not highest_name or number_reset == 'month':
+            if (today.year, today.month) > (move_date.year, move_date.month):
+                return date_utils.get_month(move_date)[1]
+            else:
+                return max(move_date, today)
+        elif number_reset == 'year':
+            if today.year > move_date.year:
+                return date(move_date.year, 12, 31)
+            else:
+                return max(move_date, today)
+        return move_date
 
+    def _get_reverse_date(self):
+        """ Reverse non sale moves at reversed move date or the closest allowed by lockdates
+        and sequence number reset.
+        """
+        self.ensure_one()
         if self.is_sale_document(include_receipts=True):
-            return invoice_date
-        elif self.is_purchase_document(include_receipts=True):
-            highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
-            number_reset = self._deduce_sequence_number_reset(highest_name)
-            if not highest_name or number_reset == 'month':
-                if (today.year, today.month) > (invoice_date.year, invoice_date.month):
-                    return date_utils.get_month(invoice_date)[1]
-                else:
-                    return max(invoice_date, today)
-            elif number_reset == 'year':
-                if today.year > invoice_date.year:
-                    return date(invoice_date.year, 12, 31)
-                else:
-                    return max(invoice_date, today)
-        return invoice_date
+            return fields.Date.context_today(self)
+        else:
+            affect_tax_report = any(line._affect_tax_report() for line in self.line_ids)
+            max_lock_date = max(
+                affect_tax_report and self.company_id.tax_lock_date or date.min,
+                self.company_id.period_lock_date or date.min,
+                self.company_id.fiscalyear_lock_date or date.min,
+            )
+            # if self.date <= lockdate, return earliest accounting date for day after after lockdate
+            # else return earliest accounting date for self.date
+            return self._get_earliest_accounting_date(max(max_lock_date + timedelta(days=1), self.date))
+
+    # -------------------------------------------------------------------------
+    # ONCHANGE METHODS
+    # -------------------------------------------------------------------------
 
     @api.onchange('invoice_date', 'highest_name', 'company_id')
     def _onchange_invoice_date(self):
@@ -2450,6 +2474,7 @@ class AccountMove(models.Model):
                 'move_type': reverse_type_map[move.move_type],
                 'reversed_entry_id': move.id,
             })
+            default_values.setdefault('date', move._get_reverse_date())
             move_vals_list.append(move.with_context(move_reverse_cancel=cancel)._reverse_move_vals(default_values, cancel=cancel))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
@@ -4732,7 +4757,9 @@ class AccountMoveLine(models.Model):
             if not journal.company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
 
-            exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date())
+            lock_date = company._get_user_fiscal_lock_date()
+            if lock_date >= exchange_diff_move_vals['date']:
+                exchange_diff_move_vals['date'] = date_utils.get_month(lock_date + timedelta(days=1))[1]
 
             exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
         else:

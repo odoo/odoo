@@ -27,9 +27,7 @@ class AccountFullReconcile(models.Model):
         res = super().unlink()
 
         # Reverse all exchange moves at once.
-        today = fields.Date.context_today(self)
         default_values_list = [{
-            'date': today,
             'ref': _('Reversal of: %s') % move.name,
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
