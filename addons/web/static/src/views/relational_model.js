@@ -560,6 +560,8 @@ export class RelationalModel extends Model {
 
         await this.keepLast.add(this.root.load(params));
         this.notify();
+
+        console.log(this);
     }
 
     /**
