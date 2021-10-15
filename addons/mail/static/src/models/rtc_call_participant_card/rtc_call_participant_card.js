@@ -2,6 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -14,7 +15,7 @@ function factory(dependencies) {
             super._created();
             this.onChangeVolume = this.onChangeVolume.bind(this);
             this.onClick = this.onClick.bind(this);
-            this.onClickVideo = this.onClickVideo.bind(this);
+            this.onClickVolumeAnchor = this.onClickVolumeAnchor.bind(this);
         }
 
         //----------------------------------------------------------------------
@@ -32,7 +33,13 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
+            if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
+                return;
+            }
             if (!this.invitedPartner && !this.invitedGuest) {
+                if (!this.isMinimized) {
+                    this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+                }
                 return;
             }
             const channel = this.channel;
@@ -51,11 +58,12 @@ function factory(dependencies) {
         }
 
         /**
+         * Handled by the popover component.
+         *
          * @param {MouseEvent} ev
          */
-        async onClickVideo(ev) {
-            ev.stopPropagation();
-            this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+        async onClickVolumeAnchor(ev) {
+            markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
         }
 
         //----------------------------------------------------------------------

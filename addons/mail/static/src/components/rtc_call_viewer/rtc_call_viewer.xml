@@ -11,9 +11,9 @@
             <!-- Call members display -->
             <div class="o_RtcCallViewer_participantContainer" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
-                    <div class="o_RtcCallViewer_mainParticipantContainer">
+                    <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
-                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard o_RtcCallViewer_mainParticipant" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
+                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard w-100" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
                         </t>
                     </div>
                 </t>
