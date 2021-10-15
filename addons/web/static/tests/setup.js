@@ -52,11 +52,11 @@ function checkGlobalObjectsIntegrity() {
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
     luxon.Settings.defaultLocale = "en";
-    const originalZoneName = luxon.Settings.defaultZoneName;
-    luxon.Settings.defaultZoneName = "Europe/Brussels";
+    const originalZone = luxon.Settings.defaultZone;
+    luxon.Settings.defaultZone = "Europe/Brussels";
     registerCleanup(() => {
         luxon.Settings.defaultLocale = originalLocale;
-        luxon.Settings.defaultZoneName = originalZoneName;
+        luxon.Settings.defaultZone = originalZone;
     });
 }
 

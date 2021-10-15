@@ -181,7 +181,7 @@ export function formatDateTime(value, options = {}) {
         return "";
     }
     const format = options.format || localization.dateTimeFormat;
-    const zone = options.timezone ? "local" : "utc";
+    const zone = options.timezone ? "system" : "utc";
     value = value.setZone(zone, { keepLocaltime: options.timezone });
     return value.toFormat(format);
 }
@@ -241,7 +241,7 @@ export function parseDateTime(value, options = {}) {
     const valueDigitsOnly = value.replace(nonDigitsRegex, "");
     const parseOpts = {
         setZone: true,
-        zone: options.timezone ? "local" : "utc",
+        zone: options.timezone ? "system" : "utc",
         locale: options.locale,
     };
 
