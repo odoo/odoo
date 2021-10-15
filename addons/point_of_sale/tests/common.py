@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+from datetime import datetime
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -272,6 +273,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.env['res.currency.rate'].create({
             'rate': 0.5,
             'currency_id': cls.other_currency.id,
+            'name': datetime.today().date(),
         })
         other_cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Other',
