@@ -429,7 +429,7 @@ class DataList extends DataPoint {
         let fetchData;
         if (this.resIds) {
             fetchData = await this.loadRecords();
-        } else if (this.groupBy.length) {
+        } else if (this.isGrouped) {
             fetchData = await this.loadGroups();
         } else {
             fetchData = await this.searchRecords();
@@ -451,9 +451,7 @@ class DataList extends DataPoint {
             this.resModel,
             this.domain,
             this.activeFields,
-            {
-                limit: 40,
-            }
+            { limit: 40 }
         );
 
         return () =>

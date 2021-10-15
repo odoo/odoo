@@ -11,9 +11,7 @@ export class ListRenderer extends Component {
         this.fields = this.props.fields;
         this.columns = this.props.info.columns;
 
-        if (!this.env.model) {
-            useSubEnv({ model: this.props.record.model });
-        }
+        useSubEnv({ model: this.props.record.model });
     }
 
     openRecord(record) {
