@@ -23,7 +23,6 @@ Publish your customers as business references on your website to attract new pot
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
     ],
-    'qweb': [],
     'installable': True,
     'license': 'LGPL-3',
 }
