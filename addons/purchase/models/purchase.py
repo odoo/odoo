@@ -907,6 +907,7 @@ class PurchaseOrderLine(models.Model):
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
+    date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
     product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True)
     product_packaging_qty = fields.Float('Packaging Quantity')
 
@@ -1229,6 +1230,17 @@ class PurchaseOrderLine(models.Model):
                 line.product_uom_qty = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id)
             else:
                 line.product_uom_qty = line.product_qty
+
+    def action_purchase_history(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
+        action['domain'] = [('state', 'in', ['purchase', 'done']), ('product_id', '=', self.product_id.id)]
+        action['display_name'] = _("Purchase History for %s", self.product_id.display_name)
+        action['context'] = {
+            'search_default_partner_id': self.partner_id.id
+        }
+
+        return action
 
     def _suggest_quantity(self):
         '''
