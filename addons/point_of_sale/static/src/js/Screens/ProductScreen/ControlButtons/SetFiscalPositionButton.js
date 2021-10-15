@@ -11,14 +11,6 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
             super(...arguments);
             useListener('click', this.onClick);
         }
-        mounted() {
-            this.env.pos.get('orders').on('add remove change', () => this.render(), this);
-            this.env.pos.on('change:selectedOrder', () => this.render(), this);
-        }
-        willUnmount() {
-            this.env.pos.get('orders').off('add remove change', null, this);
-            this.env.pos.off('change:selectedOrder', null, this);
-        }
         get currentOrder() {
             return this.env.pos.get_order();
         }
@@ -54,13 +46,12 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
                 }
             );
             if (confirmed) {
-                this.currentOrder.fiscal_position = selectedFiscalPosition;
+                this.currentOrder.set_fiscal_position(selectedFiscalPosition);
                 // IMPROVEMENT: The following is the old implementation and I believe
                 // there could be a better way of doing it.
-                for (let line of this.currentOrder.orderlines.models) {
+                for (let line of this.currentOrder.orderlines) {
                     line.set_quantity(line.quantity);
                 }
-                this.currentOrder.trigger('change');
             }
         }
     }

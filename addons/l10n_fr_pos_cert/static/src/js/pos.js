@@ -2,18 +2,14 @@ odoo.define('l10n_fr_pos_cert.pos', function (require) {
 "use strict";
 
 const { Gui } = require('point_of_sale.Gui');
-var models = require('point_of_sale.models');
-var rpc = require('web.rpc');
-var session = require('web.session');
+var { PosGlobalState, Order, Orderline } = require('point_of_sale.models');
 var core = require('web.core');
-var utils = require('web.utils');
+const Registries = require('point_of_sale.Registries');
 
 var _t = core._t;
-var round_di = utils.round_decimals;
 
-var _super_posmodel = models.PosModel.prototype;
-models.PosModel = models.PosModel.extend({
-    is_french_country: function(){
+const L10nFrPosGlobalState = (PosGlobalState) => class L10nFrPosGlobalState extends PosGlobalState {
+    is_french_country(){
       var french_countries = ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF'];
       if (!this.company.country) {
         Gui.showPopup("ErrorPopup", {
@@ -23,38 +19,45 @@ models.PosModel = models.PosModel.extend({
         return false;
       }
       return _.contains(french_countries, this.company.country.code);
-    },
+    }
     disallowLineQuantityChange() {
-        let result = _super_posmodel.disallowLineQuantityChange.bind(this)();
+        let result = super.disallowLineQuantityChange(...arguments);
         return this.is_french_country() || result;
     }
-});
+    cashierHasPriceControlRights() {
+        if (this.is_french_country()) {
+            return false;
+        } else {
+            return super.cashierHasPriceControlRights();
+        }
+    }
+}
+Registries.Model.extend(PosGlobalState, L10nFrPosGlobalState);
 
 
-var _super_order = models.Order.prototype;
-models.Order = models.Order.extend({
-    initialize: function() {
-        _super_order.initialize.apply(this,arguments);
+const L10nFrOrder = (Order) => class L10nFrOrder extends Order {
+    constructor() {
+        super(...arguments);
         this.l10n_fr_hash = this.l10n_fr_hash || false;
         this.save_to_db();
-    },
-    export_for_printing: function() {
-      var result = _super_order.export_for_printing.apply(this,arguments);
+    }
+    export_for_printing() {
+      var result = super.export_for_printing(...arguments);
       result.l10n_fr_hash = this.get_l10n_fr_hash();
       return result;
-    },
-    set_l10n_fr_hash: function (l10n_fr_hash){
+    }
+    set_l10n_fr_hash (l10n_fr_hash){
       this.l10n_fr_hash = l10n_fr_hash;
-    },
-    get_l10n_fr_hash: function() {
+    }
+    get_l10n_fr_hash() {
       return this.l10n_fr_hash;
-    },
-    wait_for_push_order: function() {
-      var result = _super_order.wait_for_push_order.apply(this,arguments);
+    }
+    wait_for_push_order() {
+      var result = super.wait_for_push_order(...arguments);
       result = Boolean(result || this.pos.is_french_country());
       return result;
-    },
-    destroy: function(option) {
+    }
+    destroy (option) {
         // SUGGESTION: It's probably more appropriate to apply this restriction
         // in the TicketScreen.
         if (option && option.reason == 'abandon' && this.pos.is_french_country() && this.get_orderlines().length) {
@@ -63,23 +66,26 @@ models.Order = models.Order.extend({
                 'body':  _t("Deleting of orders is not allowed."),
             });
         } else {
-            _super_order.destroy.apply(this, arguments);
-        }
-    },
-});
-
-var orderline_super = models.Orderline.prototype;
-models.Orderline = models.Orderline.extend({
-    can_be_merged_with: function(orderline) {
-        let order = this.pos.get_order();
-        let lastId = order.orderlines.last().cid;
-
-        if(this.pos.is_french_country() && (order.orderlines._byId[lastId].product.id !== orderline.product.id || order.orderlines._byId[lastId].quantity < 0)) {
-            return false;
-        } else {
-            return orderline_super.can_be_merged_with.apply(this, arguments);
+            super.destroy(...arguments);
         }
     }
-});
+}
+Registries.Model.extend(Order, L10nFrOrder);
+
+
+const L10nFrOrderline = (Orderline) => class L10nFrOrderline extends Orderline {
+    can_be_merged_with(orderline) {
+        let order = this.pos.get_order();
+        let orderlines = order.orderlines;
+        let lastOrderline = order.orderlines.at(orderlines.length - 1);
+
+        if(this.pos.is_french_country() && (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0)) {
+            return false;
+        } else {
+            return super.can_be_merged_with(...arguments);
+        }
+    }
+}
+Registries.Model.extend(Orderline, L10nFrOrderline);
 
 });

@@ -134,8 +134,8 @@ var PaymentSix = PaymentInterface.extend({
     _printReceipts: function (receipts) {
         _.forEach(receipts, (receipt) => {
             var value = receipt.value.replace(/\n/g, "<br />");
-            if (receipt.recipient === timapi.constants.Recipient.merchant && this.pos.proxy.printer) {
-                this.pos.proxy.printer.print_receipt(
+            if (receipt.recipient === timapi.constants.Recipient.merchant && this.pos.env.proxy.printer) {
+                this.pos.env.proxy.printer.print_receipt(
                     "<div class='pos-receipt'><div class='pos-payment-terminal-receipt'>" +
                         value +
                     "</div></div>"
@@ -150,7 +150,7 @@ var PaymentSix = PaymentInterface.extend({
         var amount = new timapi.Amount(
             Math.round(this.pos.get_order().selected_paymentline.amount / this.pos.currency.rounding),
             timapi.constants.Currency[this.pos.currency.name],
-            this.pos.currency.decimals
+            this.pos.currency.decimal_places
         );
 
         return new Promise((resolve) => {

@@ -8,6 +8,18 @@ var utils = require('web.utils');
  * - persistent : must stay between reloads ( orders )
  */
 
+
+/**
+ * cache the data in memory to avoid roundtrips to the localstorage
+ *
+ * NOTE/TODO: Originally, this is a prop of PosDB. However, if we keep it that way,
+ * caching will result to infinite loop to calling the reactive callbacks.
+ * Another way to solve the infinite loop is to move the instance of PosDB to env.
+ * But I'm not sure if there is anything inside the object that needs to be observed,
+ * so I guess this strategy is good enough for the moment.
+ */
+const CACHE = {};
+
 var PosDB = core.Class.extend({
     name: 'openerp_pos_db', //the prefix of the localstorage data
     limit: 100,  // the maximum number of results returned by a search
@@ -19,9 +31,6 @@ var PosDB = core.Class.extend({
         if (options.uuid) {
             this.name = this.name + '_' + options.uuid;
         }
-
-        //cache the data in memory to avoid roundtrips to the localstorage
-        this.cache = {};
 
         this.product_by_id = {};
         this.product_by_barcode = {};
@@ -139,13 +148,13 @@ var PosDB = core.Class.extend({
     },
     /* loads a record store from the database. returns default if nothing is found */
     load: function(store,deft){
-        if(this.cache[store] !== undefined){
-            return this.cache[store];
+        if(CACHE[store] !== undefined){
+            return CACHE[store];
         }
         var data = localStorage[this.name + '_' + store];
         if(data !== undefined && data !== ""){
             data = JSON.parse(data);
-            this.cache[store] = data;
+            CACHE[store] = data;
             return data;
         }else{
             return deft;
@@ -154,7 +163,7 @@ var PosDB = core.Class.extend({
     /* saves a record store to the database */
     save: function(store,data){
         localStorage[this.name + '_' + store] = JSON.stringify(data);
-        this.cache[store] = data;
+        CACHE[store] = data;
     },
     _product_search_string: function(product){
         var str = product.display_name;
@@ -411,13 +420,10 @@ var PosDB = core.Class.extend({
      * or one of its child categories.
      */
     is_product_in_category: function(category_ids, product_id) {
-        if (!(category_ids instanceof Array)) {
-            category_ids = [category_ids];
-        }
-        var cat = this.get_product_by_id(product_id).pos_categ_id[0];
+        let cat = this.get_product_by_id(product_id).pos_categ_id[0];
         while (cat) {
-            for (var i = 0; i < category_ids.length; i++) {
-                if (cat == category_ids[i]) {   // The == is important, ids may be strings
+            for (let cat_id of category_ids) {
+                if (cat == cat_id) {   // The == is important, ids may be strings
                     return true;
                 }
             }
@@ -555,13 +561,6 @@ var PosDB = core.Class.extend({
         });
         this.save('unpaid_orders_to_remove', to_remove);
     },
-    set_cashier: function(cashier) {
-        // Always update if the user is the same as before
-        this.save('cashier', cashier || null);
-    },
-    get_cashier: function() {
-        return this.load('cashier');
-    }
 });
 
 return PosDB;

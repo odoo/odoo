@@ -30,6 +30,7 @@
                 'csrf_token': request.csrf_token(None),
                 '__session_info__': session_info,
                 'login_number': login_number,
+                'pos_session_id': pos_session_id,
                 'debug': debug,
             })"/>;
             odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());

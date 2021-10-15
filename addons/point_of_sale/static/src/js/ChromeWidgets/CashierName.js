@@ -11,8 +11,8 @@ odoo.define('point_of_sale.CashierName', function(require) {
             return name ? name : '';
         }
         get avatar() {
-            const { user_id } = this.env.pos.get_cashier();
-            const id = user_id && user_id.length ? user_id[0] : -1;
+            const user_id = this.env.pos.get_cashier_user_id();
+            const id = user_id ? user_id : -1;
             return `/web/image/res.users/${id}/avatar_128`;
         }
     }

@@ -1,12 +1,11 @@
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
 
-    const models = require('point_of_sale.models');
+    const { Order } = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener, useAutofocus } = require('web.custom_hooks');
-    const { posbus } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
 
     const { useState } = owl;
@@ -48,18 +47,14 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         //#region LIFECYCLE METHODS
         mounted() {
-            posbus.on('ticket-button-clicked', this, this.close);
-            this.env.pos.get('orders').on('add remove change', () => this.render(), this);
-            this.env.pos.on('change:selectedOrder', () => this.render(), this);
+            this.env.posbus.on('ticket-button-clicked', this, this.close);
             setTimeout(() => {
                 // Show updated list of synced orders when going back to the screen.
                 this._onFilterSelected({ detail: { filter: this._state.ui.filter } });
             });
         }
         willUnmount() {
-            posbus.off('ticket-button-clicked', this);
-            this.env.pos.get('orders').off('add remove change', null, this);
-            this.env.pos.off('change:selectedOrder', null, this);
+            this.env.posbus.off('ticket-button-clicked', this);
         }
         //#endregion
         //#region EVENT HANDLERS
@@ -71,7 +66,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             if (this._state.ui.filter == 'SYNCED') {
                 await this._fetchSyncedOrders();
             }
-            this.render();
         }
         async _onSearch(event) {
             Object.assign(this._state.ui.searchDetails, event.detail);
@@ -79,7 +73,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 this._state.syncedOrders.currentPage = 1;
                 await this._fetchSyncedOrders();
             }
-            this.render();
         }
         _onClickOrder({ detail: clickedOrder }) {
             if (!clickedOrder || clickedOrder.locked) {
@@ -99,10 +92,10 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             } else {
                 this._setOrder(clickedOrder);
             }
-            this.render();
         }
         _onCreateNewOrder() {
             this.env.pos.add_new_order();
+            this.showScreen('ProductScreen');
         }
         async _onDeleteOrder({ detail: order }) {
             const screen = order.get_screen_data();
@@ -118,7 +111,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             }
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 order.destroy({ reason: 'abandon' });
-                posbus.trigger('order-deleted');
             }
         }
         async _onNextPage() {
@@ -126,29 +118,25 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 this._state.syncedOrders.currentPage += 1;
                 await this._fetchSyncedOrders();
             }
-            this.render();
         }
         async _onPrevPage() {
             if (this._state.syncedOrders.currentPage > 1) {
                 this._state.syncedOrders.currentPage -= 1;
                 await this._fetchSyncedOrders();
             }
-            this.render();
         }
         async _onInvoiceOrder({ detail: orderId }) {
             this.env.pos._invalidateSyncedOrdersCache([orderId]);
             await this._fetchSyncedOrders();
-            this.render();
         }
         _onClickOrderline({ detail: orderline }) {
             const order = this.getSelectedSyncedOrder();
             this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
             NumberBuffer.reset();
-            this.render();
         }
         _onClickRefundOrderUid({ detail: orderUid }) {
             // Open the refund order.
-            const refundOrder = this.env.pos.get('orders').models.find((order) => order.uid == orderUid);
+            const refundOrder = this.env.pos.orders.find((order) => order.uid == orderUid);
             if (refundOrder) {
                 this._setOrder(refundOrder);
             }
@@ -159,7 +147,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             if (!order) return NumberBuffer.reset();
 
             const selectedOrderlineId = this.getSelectedOrderlineId();
-            const orderline = order.orderlines.models.find((line) => line.id == selectedOrderlineId);
+            const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
             if (!orderline) return NumberBuffer.reset();
 
             const toRefundDetail = this._getToRefundDetail(orderline);
@@ -189,13 +177,12 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     toRefundDetail.qty = quantity;
                 }
             }
-            this.render();
         }
         async _onDoRefund() {
             const order = this.getSelectedSyncedOrder();
             if (!order) {
                 this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
-                return this.render();
+                return;
             }
 
             if (this._doesOrderHaveSoleItem(order)) {
@@ -218,7 +205,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             );
             if (allToRefundDetails.length == 0) {
                 this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
-                return this.render();
+                return;
             }
 
             // The order that will contain the refund orderlines.
@@ -227,7 +214,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const destinationOrder =
                 this.props.destinationOrder && customer === this.props.destinationOrder.get_client()
                     ? this.props.destinationOrder
-                    : this.env.pos.add_new_order({ silent: true });
+                    : this.env.pos.add_new_order();
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
@@ -387,7 +374,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         _prepareAutoRefundOnOrder(order) {
             const selectedOrderlineId = this.getSelectedOrderlineId();
-            const orderline = order.orderlines.models.find((line) => line.id == selectedOrderlineId);
+            const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
             if (!orderline) return;
 
             const toRefundDetail = this._getToRefundDetail(orderline);
@@ -431,9 +418,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         _setOrder(order) {
             this.env.pos.set_order(order);
-            if (order === this.env.pos.get_order()) {
-                this.close();
-            }
+            this.close();
         }
         _getOrderList() {
             return this.env.pos.get_order_list();
@@ -555,7 +540,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
                 fetchedOrders.forEach((order) => {
-                    this._state.syncedOrders.cache[order.id] = new models.Order({}, { pos: this.env.pos, json: order });
+                    this._state.syncedOrders.cache[order.id] = Order.create({}, { pos: this.env.pos, json: order });
                 });
             }
             this._state.syncedOrders.totalCount = totalCount;

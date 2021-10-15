@@ -2,20 +2,20 @@ odoo.define('l10n_sa_pos.pos', function (require) {
 "use strict";
 
 const { Gui } = require('point_of_sale.Gui');
-var models = require('point_of_sale.models');
+var { Order } = require('point_of_sale.models');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var core = require('web.core');
 var utils = require('web.utils');
+var Registries = require('point_of_sale.Registries');
 
 var _t = core._t;
 var round_di = utils.round_decimals;
 
 
-var _super_order = models.Order.prototype;
-models.Order = models.Order.extend({
-    export_for_printing: function() {
-      var result = _super_order.export_for_printing.apply(this,arguments);
+const PosL10nSAOrder = (Order) => class PosL10nSAOrder extends Order {
+    export_for_printing() {
+      var result = super.export_for_printing(...arguments);
       if (this.pos.company.country.code === 'SA') {
           const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter()
           let qr_values = this.compute_sa_qr_code(result.company.name, result.company.vat, result.date.isostring, result.total_with_tax, result.total_tax);
@@ -23,7 +23,7 @@ models.Order = models.Order.extend({
           result.qr_code = "data:image/svg+xml;base64,"+ window.btoa(qr_code_svg);
       }
       return result;
-    },
+    }
     compute_sa_qr_code(name, vat, date_isostring, amount_total, amount_tax) {
         /* Generate the qr code for Saudi e-invoicing. Specs are available at the following link at page 23
         https://zatca.gov.sa/ar/E-Invoicing/SystemsDevelopers/Documents/20210528_ZATCA_Electronic_Invoice_Security_Features_Implementation_Standards_vShared.pdf
@@ -41,7 +41,7 @@ models.Order = models.Order.extend({
             binary += String.fromCharCode(str_to_encode[i]);
         }
         return btoa(binary);
-    },
+    }
 
     _compute_qr_code_field(tag, field) {
         const textEncoder = new TextEncoder();
@@ -49,8 +49,9 @@ models.Order = models.Order.extend({
         const name_tag_encoding = [tag];
         const name_length_encoding = [name_byte_array.length];
         return name_tag_encoding.concat(name_length_encoding, name_byte_array);
-    },
+    }
 
-});
+}
+Registries.Model.extend(Order, PosL10nSAOrder);
 
 });

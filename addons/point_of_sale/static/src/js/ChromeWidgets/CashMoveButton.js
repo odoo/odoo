@@ -29,11 +29,11 @@ odoo.define('point_of_sale.CashMoveButton', function (require) {
                 method: 'try_cash_in_out',
                 args: [[this.env.pos.pos_session.id], type, amount, reason, extras],
             });
-            if (this.env.pos.proxy.printer) {
+            if (this.env.proxy.printer) {
                 const renderedReceipt = this.env.qweb.renderToString('point_of_sale.CashMoveReceipt', {
                     _receipt: this._getReceiptInfo({ ...payload, translatedType, formattedAmount }),
                 });
-                const printResult = await this.env.pos.proxy.printer.print_receipt(renderedReceipt);
+                const printResult = await this.env.proxy.printer.print_receipt(renderedReceipt);
                 if (!printResult.successful) {
                     this.showPopup('ErrorPopup', { title: printResult.message.title, body: printResult.message.body });
                 }

@@ -105,6 +105,7 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0)
+    real_amount = fields.Float(string='Real amount to apply', compute='_compute_real_amount', store=True)
     description = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -295,6 +296,13 @@ class AccountTax(models.Model):
     def onchange_price_include(self):
         if self.price_include:
             self.include_base_amount = True
+
+    @api.depends('invoice_repartition_line_ids', 'amount', 'invoice_repartition_line_ids.factor')
+    def _compute_real_amount(self):
+        for tax in self:
+            tax_repartition_lines = tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+            total_factor = sum(tax_repartition_lines.mapped('factor'))
+            tax.real_amount = tax.amount * total_factor
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is

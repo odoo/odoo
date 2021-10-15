@@ -11,10 +11,7 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
      */
     class ActionpadWidget extends PosComponent {
         get isLongName() {
-            return this.client && this.client.name.length > 10;
-        }
-        get client() {
-            return this.props.client;
+            return this.props.client && this.props.client.name.length > 10;
         }
     }
     ActionpadWidget.template = 'ActionpadWidget';

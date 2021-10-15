@@ -1,12 +1,12 @@
 odoo.define('pos_mercury.pos_mercury', function (require) {
 "use strict";
 
-var pos_model = require('point_of_sale.models');
+var { PosGlobalState, Order, Payment } = require('point_of_sale.models');
+const Registries = require('point_of_sale.Registries');
 
-pos_model.load_fields('pos.payment.method', 'pos_mercury_config_id');
 
-pos_model.PosModel = pos_model.PosModel.extend({
-    getOnlinePaymentMethods: function () {
+const PosMercuryPosGlobalState = (PosGlobalState) => class PosMercuryPosGlobalState extends PosGlobalState {
+    getOnlinePaymentMethods() {
         var online_payment_methods = [];
 
         $.each(this.payment_methods, function (i, payment_method) {
@@ -16,8 +16,8 @@ pos_model.PosModel = pos_model.PosModel.extend({
         });
 
         return online_payment_methods;
-    },
-    decodeMagtek: function (magtekInput) {
+    }
+    decodeMagtek(magtekInput) {
         // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
         var _track1_regex = /%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
 
@@ -51,8 +51,8 @@ pos_model.PosModel = pos_model.PosModel.extend({
         } catch (e) {
             return 0;
         }
-    },
-    decodeMercuryResponse: function (data) {
+    }
+    decodeMercuryResponse(data) {
         // get rid of xml version declaration and just keep the RStream
         // from the response because the xml contains two version
         // declarations. One for the SOAP, and one for the content. Maybe
@@ -79,12 +79,13 @@ pos_model.PosModel = pos_model.PosModel.extend({
             authorize: parseFloat(tran_response.find("Authorize").text()),
         };
     }
-});
+}
+Registries.Model.extend(PosGlobalState, PosMercuryPosGlobalState);
 
-var _paylineproto = pos_model.Paymentline.prototype;
-pos_model.Paymentline = pos_model.Paymentline.extend({
-    init_from_JSON: function (json) {
-        _paylineproto.init_from_JSON.apply(this, arguments);
+
+const PosMercuryPayment = (Payment) => class PosMercuryPayment extends Payment {
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
 
         this.paid = json.paid;
         this.mercury_card_number = json.mercury_card_number;
@@ -98,9 +99,9 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.mercury_swipe_pending = json.mercury_swipe_pending;
 
         this.set_credit_card_name();
-    },
-    export_as_JSON: function () {
-        return _.extend(_paylineproto.export_as_JSON.apply(this, arguments), {paid: this.paid,
+    }
+    export_as_JSON() {
+        return _.extend(super.export_as_JSON(...arguments), {paid: this.paid,
                                                                               mercury_card_number: this.mercury_card_number,
                                                                               mercury_card_brand: this.mercury_card_brand,
                                                                               mercury_card_owner_name: this.mercury_card_owner_name,
@@ -110,30 +111,31 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
                                                                               mercury_auth_code: this.mercury_auth_code,
                                                                               mercury_data: this.mercury_data,
                                                                               mercury_swipe_pending: this.mercury_swipe_pending});
-    },
-    set_credit_card_name: function () {
+    }
+    set_credit_card_name() {
         if (this.mercury_card_number) {
             this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
         }
-    },
-    is_done: function () {
-        var res = _paylineproto.is_done.apply(this);
+    }
+    is_done() {
+        var res = super.is_done(...arguments);
         return res && !this.mercury_swipe_pending;
-    },
-    export_for_printing: function () {
-        const result = _paylineproto.export_for_printing.apply(this, arguments);
+    }
+    export_for_printing() {
+        const result = super.export_for_printing(...arguments);
         result.mercury_data = this.mercury_data;
         result.mercury_auth_code = this.mercury_auth_code;
         return result;
     }
-});
+}
+Registries.Model.extend(Payment, PosMercuryPayment);
 
-var _order_super = pos_model.Order.prototype;
-pos_model.Order = pos_model.Order.extend({
-    electronic_payment_in_progress: function() {
-        var res = _order_super.electronic_payment_in_progress.apply(this, arguments);
+
+const PosMercuryOrder = (Order) => class PosMercuryOrder extends Order {
+    electronic_payment_in_progress() {
+        var res = super.electronic_payment_in_progress(...arguments);
         return res || this.get_paymentlines().some(line => line.mercury_swipe_pending);
-    },
-});
-
+    }
+}
+Registries.Model.extend(Order, PosMercuryOrder);
 });

@@ -12,7 +12,7 @@ odoo.define('point_of_sale.OrderDetails', function (require) {
             return this.props.order;
         }
         get orderlines() {
-            return this.order ? this.order.orderlines.models : [];
+            return this.order ? this.order.orderlines : [];
         }
         get total() {
             return this.env.pos.format_currency(this.order ? this.order.get_total_with_tax() : 0);

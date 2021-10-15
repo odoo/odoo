@@ -20,7 +20,7 @@
                         <div class="subpads">
                             <t t-set="_actionName">Payment</t>
                             <ActionpadWidget client="client" actionName="_actionName" t-on-switchpane="switchPane" />
-                            <NumpadWidget activeMode="state.numpadMode" />
+                            <NumpadWidget activeMode="env.pos.numpadMode" />
                         </div>
                     </div>
                 </div>

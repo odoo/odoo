@@ -6,8 +6,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
-    const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
-    const { isConnectionError, posbus } = require('point_of_sale.utils');
+    const { useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { isConnectionError } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
 
     const { onMounted, useState } = owl;
@@ -16,7 +16,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         constructor() {
             super(...arguments);
             useListener('update-selected-orderline', this._updateSelectedOrderline);
-            useListener('new-orderline-selected', this._newOrderlineSelected);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);
             useListener('click-customer', this._onClickCustomer);
@@ -28,8 +27,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 client: this._barcodeClientAction,
                 discount: this._barcodeDiscountAction,
                 error: this._barcodeErrorAction,
-            })
-            onChangeOrder(null, (newOrder) => newOrder && this.render());
+            });
             NumberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
@@ -40,16 +38,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // the callbacks in `onMounted` hook.
             onMounted(() => NumberBuffer.reset());
             this.state = useState({
-                numpadMode: 'quantity',
                 mobile_pane: this.props.mobile_pane || 'right',
             });
         }
         mounted() {
-            posbus.trigger('start-cash-control');
-            this.env.pos.on('change:selectedClient', this.render, this);
-        }
-        willUnmount() {
-            this.env.pos.off('change:selectedClient', null, this);
+            this.env.posbus.trigger('start-cash-control');
         }
         /**
          * To be overridden by modules that checks availability of
@@ -60,7 +53,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             return true;
         }
         get client() {
-            return this.env.pos.get_client();
+            return this.currentOrder ? this.currentOrder.get_client() : null;
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -162,13 +155,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             const { mode } = event.detail;
             NumberBuffer.capture();
             NumberBuffer.reset();
-            this.state.numpadMode = mode;
+            this.env.pos.numpadMode = mode;
         }
         async _updateSelectedOrderline(event) {
-            if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
+            if (this.env.pos.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
                 let selectedLine = order.get_selected_orderline();
-                let lastId = order.orderlines.last().cid;
+                let orderlines = order.orderlines;
+                let lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
 
                 if(selectedLine.noDecrease) {
@@ -189,26 +183,23 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
                 this._setValue(val);
+                if (val == 'remove') {
+                    NumberBuffer.reset();
+                    this.env.pos.numpadMode = 'quantity';
+                }
             }
-        }
-        async _newOrderlineSelected() {
-            NumberBuffer.reset();
-            this.state.numpadMode = 'quantity';
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
-                if (this.state.numpadMode === 'quantity') {
+                if (this.env.pos.numpadMode === 'quantity') {
                     const result = this.currentOrder.get_selected_orderline().set_quantity(val);
                     if (!result) NumberBuffer.reset();
-                } else if (this.state.numpadMode === 'discount') {
+                } else if (this.env.pos.numpadMode === 'discount') {
                     this.currentOrder.get_selected_orderline().set_discount(val);
-                } else if (this.state.numpadMode === 'price') {
+                } else if (this.env.pos.numpadMode === 'price') {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
-                }
-                if (this.env.pos.config.iface_customer_facing_display) {
-                    this.env.pos.send_current_order_to_customer_facing_display();
                 }
             }
         }

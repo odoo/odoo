@@ -16,12 +16,6 @@ odoo.define('pos_hr.CashierName', function (require) {
                 this.selectEmployee = selectEmployee;
                 useBarcodeReader({ cashier: this._onCashierScan });
             }
-            mounted() {
-                this.env.pos.on('change:cashier', this.render, this);
-            }
-            willUnmount() {
-                this.env.pos.off('change:cashier', null, this);
-            }
             async selectCashier() {
                 if (!this.env.pos.config.module_pos_hr) return;
 

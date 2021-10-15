@@ -4,24 +4,19 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const BarcodeParser = require('barcodes.BarcodeParser');
     const PosComponent = require('point_of_sale.PosComponent');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
-    const contexts = require('point_of_sale.PosContext');
-    const { identifyError, posbus } = require('point_of_sale.utils');
+    const { identifyError } = require('point_of_sale.utils');
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
     const { useBus } = require("@web/core/utils/hooks");
+    const reactivity = require("@point_of_sale/js/reactivity");
 
-    // This is kind of a trick.
-    // We get a reference to the whole exports so that
-    // when we create an instance of one of the classes,
-    // we instantiate the extended one.
-    const models = require('point_of_sale.models');
-
-    const { debounce, useContext, useExternalListener, useRef, useState } = owl;
+    const { debounce, useExternalListener, useRef, useState } = owl;
 
     /**
      * Chrome is the root component of the PoS App.
@@ -36,15 +31,14 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('show-temp-screen', this.__showTempScreen);
             useListener('close-temp-screen', this.__closeTempScreen);
             useListener('close-pos', this._closePos);
-            useListener('loading-skip-callback', () => this._loadingSkipCallback());
+            useListener('loading-skip-callback', () => this.env.proxy.stop_searching());
             useListener('play-sound', this._onPlaySound);
             useListener('set-sync-status', this._onSetSyncStatus);
             useListener('show-notification', this._onShowNotification);
             useListener('close-notification', this._onCloseNotification);
-            useBus(posbus, 'start-cash-control', this.openCashControl);
+            useListener('connect-to-proxy', this.connect_to_proxy);
+            useBus(this.env.posbus, 'start-cash-control', this.openCashControl);
             NumberBuffer.activate();
-
-            this.chromeContext = useContext(contexts.chrome);
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
@@ -56,12 +50,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     isShown: false,
                     message: '',
                     duration: 2000,
-                }
-            });
-
-            this.loading = useState({
-                message: 'Loading',
-                skipButtonIsShown: false,
+                },
+                loadingSkipButtonIsShown: false,
             });
 
             this.mainScreen = useState({ name: null, component: null });
@@ -73,6 +63,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.progressbar = useRef('progressbar');
 
             this.previous_touch_y_coordinate = -1;
+
+            this.env.pos = reactivity.useState(this.env.pos);
         }
 
         // OVERLOADED METHODS //
@@ -135,46 +127,25 @@ odoo.define('point_of_sale.Chrome', function(require) {
          */
         async start() {
             try {
-                // Instead of passing chrome to the instantiation the PosModel,
-                // we inject functions needed by pos.
-                // This way, we somehow decoupled Chrome from PosModel.
-                // We can then test PosModel independently from Chrome by supplying
-                // mocked version of these default attributes.
-                const posModelDefaultAttributes = {
-                    env: this.env,
-                    rpc: this.rpc.bind(this),
-                    session: this.env.session,
-                    do_action: this.props.webClient.do_action.bind(this.props.webClient),
-                    setLoadingMessage: this.setLoadingMessage.bind(this),
-                    showLoadingSkip: this.showLoadingSkip.bind(this),
-                    setLoadingProgress: this.setLoadingProgress.bind(this),
-                };
-                this.env.pos = new models.PosModel(posModelDefaultAttributes);
-                await this.env.pos.ready;
+                await this.env.pos.load_server_data();
+                await this.setupBarcodeParser();
+                if(this.env.pos.config.use_proxy){
+                    await this.connect_to_proxy();
+                }
                 // Load the saved `env.pos.toRefundLines` from localStorage when
-                // the PosModel is ready.
+                // the PosGlobalState is ready.
                 Object.assign(this.env.pos.toRefundLines, this.env.pos.db.load('TO_REFUND_LINES') || {});
                 this._buildChrome();
                 this._closeOtherTabs();
-                this.env.pos.set(
-                    'selectedCategoryId',
-                    this.env.pos.config.iface_start_categ_id
-                        ? this.env.pos.config.iface_start_categ_id[0]
-                        : 0
-                );
+                this.env.pos.selectedCategoryId = this.env.pos.config.iface_start_categ_id
+                    ? this.env.pos.config.iface_start_categ_id[0]
+                    : 0;
                 this.state.uiState = 'READY';
-                this.env.pos.on('change:selectedOrder', this._showSavedScreen, this);
                 this._showStartScreen();
                 if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
                     this._loadDemoData();
                 }
-                setTimeout(() => {
-                    // push order in the background, no need to await
-                    this.env.pos.push_orders();
-                    // Allow using the app even if not all the images are loaded.
-                    // Basically, preload the images in the background.
-                    this._preloadImages();
-                });
+                setTimeout(() => this._runBackgroundTasks());
             } catch (error) {
                 let title = 'Unknown Error',
                     body;
@@ -207,6 +178,61 @@ odoo.define('point_of_sale.Chrome', function(require) {
             }
         }
 
+        _runBackgroundTasks() {
+            // push order in the background, no need to await
+            this.env.pos.push_orders();
+            // Allow using the app even if not all the images are loaded.
+            // Basically, preload the images in the background.
+            this._preloadImages();
+            if (this.env.pos.config.limited_partners_loading && this.env.pos.config.partner_load_background) {
+                this.env.pos.loadPartnersBackground();
+            }
+            if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
+                this.env.pos.loadProductsBackground().then(() => this.render());
+            }
+        }
+
+        setupBarcodeParser() {
+            const barcode_parser = new BarcodeParser({ nomenclature_id: this.env.pos.config.barcode_nomenclature_id });
+            this.env.barcode_reader.set_barcode_parser(barcode_parser);
+            return barcode_parser.is_loaded();
+        }
+
+        connect_to_proxy() {
+            return new Promise(function (resolve, reject) {
+                this.env.barcode_reader.disconnect_from_proxy();
+                this.state.loadingSkipButtonIsShown = true;
+                this.env.proxy.autoconnect({
+                    force_ip: this.env.pos.config.proxy_ip || undefined,
+                    progress: function(prog){},
+                }).then(
+                    function () {
+                        if (this.env.pos.config.iface_scan_via_proxy) {
+                            this.env.barcode_reader.connect_to_proxy();
+                        }
+                        resolve();
+                    },
+                    function (statusText, url) {
+                        // this should reject so that it can be captured when we wait for pos.ready
+                        // in the chrome component.
+                        // then, if it got really rejected, we can show the error.
+                        if (statusText == 'error' && window.location.protocol == 'https:') {
+                            reject({
+                                title: this.env._t('HTTPS connection to IoT Box failed'),
+                                body: _.str.sprintf(
+                                    this.env._t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
+                                    url
+                                ),
+                                popup: 'alert',
+                            });
+                        } else {
+                            resolve();
+                        }
+                    }
+                );
+            });
+        }
+
         openCashControl() {
             if (this.shouldShowCashControl()) {
                 this.showPopup('CashOpeningPopup', { notEscapable: true });
@@ -221,15 +247,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         _showStartScreen() {
             const { name, props } = this.startScreen;
-            this.showScreen(name, props);
-        }
-        /**
-         * Show the screen saved in the order when the `selectedOrder` of pos is changed.
-         * @param {models.PosModel} pos
-         * @param {models.Order} newSelectedOrder
-         */
-        _showSavedScreen(pos, newSelectedOrder) {
-            const { name, props } = this._getSavedScreen(newSelectedOrder);
             this.showScreen(name, props);
         }
         _getSavedScreen(order) {
@@ -252,10 +269,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.mainScreen.component = component;
             this.mainScreenProps = props;
 
-            // 2. Set some options
-            this.chromeContext.showOrderSelector = !component.hideOrderSelector;
-
-            // 3. Save the screen to the order.
+            // 2. Save the screen to the order.
             //  - This screen is shown when the order is selected.
             if (!(component.prototype instanceof IndependentToOrderScreen) && name !== "ReprintReceiptScreen") {
                 this._setScreenData(name, props);
@@ -291,7 +305,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     window.location = '/web#action=point_of_sale.action_client_pos_menu';
                 } catch (error) {
                     console.warn(error);
-                    const reason = this.env.pos.get('failed')
+                    const reason = this.env.pos.failed
                         ? this.env._t(
                               'Some orders could not be submitted to ' +
                                   'the server due to configuration errors. ' +
@@ -312,8 +326,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     });
                     if (confirmed) {
                         this.state.uiState = 'CLOSING';
-                        this.loading.skipButtonIsShown = false;
-                        this.setLoadingMessage(this.env._t('Closing ...'));
+                        this.state.loadingSkipButtonIsShown = false;
                         window.location = '/web#action=point_of_sale.action_client_pos_menu';
                     }
                 }
@@ -339,7 +352,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.state.sound.src = src;
         }
         _onSetSyncStatus({ detail: { status, pending }}) {
-            this.env.pos.set('synch', { status, pending });
+            this.env.pos.synch.status = status;
+            this.env.pos.synch.pending = pending;
         }
         _onShowNotification({ detail: { message, duration } }) {
             this.state.notification.isShown = true;
@@ -356,32 +370,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
          */
         _onBeforeUnload() {
             this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
-        }
-
-        // TO PASS AS PARAMETERS //
-
-        setLoadingProgress(fac) {
-            if (this.progressbar.el) {
-                this.progressbar.el.style.width = `${Math.floor(fac * 100)}%`;
-            }
-        }
-        setLoadingMessage(msg, progress) {
-            this.loading.message = msg;
-            if (typeof progress !== 'undefined') {
-                this.setLoadingProgress(progress);
-            }
-        }
-        /**
-         * Show Skip button in the loading screen and allow to assign callback
-         * when the button is pressed.
-         *
-         * @param {Function} callback function to call when Skip button is pressed.
-         */
-        showLoadingSkip(callback) {
-            if (callback) {
-                this.loading.skipButtonIsShown = true;
-                this._loadingSkipCallback = callback;
-            }
         }
 
         get isTicketScreenShown() {
@@ -403,7 +391,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 await this.rpc({
                     'route': '/pos/load_onboarding_data',
                 });
-                this.env.pos.load_server_data();
+                const result = await this.rpc({
+                    method: 'get_onboarding_data',
+                    model: 'pos.session',
+                    args: [[odoo.pos_session_id]]
+                });
+                this.env.pos.db.add_categories(result['categories']);
+                this.env.pos._loadProductProduct(result['products']);
             }
         }
 

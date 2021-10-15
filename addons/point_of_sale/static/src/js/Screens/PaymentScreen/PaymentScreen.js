@@ -7,7 +7,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
-    const { onChangeOrder } = require('point_of_sale.custom_hooks');
     const { isConnectionError } = require('point_of_sale.utils');
 
     class PaymentScreen extends PosComponent {
@@ -21,6 +20,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-cancel', this._sendPaymentCancel);
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
+            useListener('validate-order', () => this.validateOrder(false));
             NumberBuffer.use({
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
@@ -29,7 +29,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
             });
-            onChangeOrder(this._onPrevOrder, this._onNewOrder);
             useErrorHandlers();
             this.payment_interface = null;
             this.error = false;
@@ -100,7 +99,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             this.render();
         }
         openCashbox() {
-            this.env.pos.proxy.printer.open_cashbox();
+            this.env.proxy.printer.open_cashbox();
         }
         async addTip() {
             // click_tip
@@ -152,18 +151,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             NumberBuffer.reset();
             this.render();
         }
-        /**
-         * Returns false if the current order is empty and has no payments.
-         * @returns {boolean}
-         */
-        _isValidEmptyOrder() {
-            const order = this.currentOrder;
-            if (order.get_orderlines().length == 0) {
-                return order.get_paymentlines().length != 0;
-            } else {
-                return true;
-            }
-        }
         async validateOrder(isForceValidate) {
             if(this.env.pos.config.cash_rounding) {
                 if(!this.env.pos.get_order().check_paymentlines_rounding()) {
@@ -184,23 +171,47 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         async _finalizeValidation() {
             if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer) {
-                this.env.pos.proxy.printer.open_cashbox();
+                this.env.proxy.printer.open_cashbox();
             }
 
             this.currentOrder.initialize_validation_date();
             this.currentOrder.finalized = true;
 
-            let syncedOrderBackendIds = [];
+            let syncOrderResult, hasError;
 
             try {
+                // 1. Save order to server.
+                syncOrderResult = await this.env.pos.push_single_order(this.currentOrder);
+
+                // 2. Invoice.
                 if (this.currentOrder.is_to_invoice()) {
-                    syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
-                        this.currentOrder
+                    if (syncOrderResult.length) {
+                        await this.env.legacyActionManager.do_action('account.account_invoices', {
+                            additional_context: {
+                                active_ids: [syncOrderResult[0].account_move],
+                            },
+                        });
+                    } else {
+                        throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
+                    }
+                }
+
+                // 3. Post process.
+                if (syncOrderResult.length && this.currentOrder.wait_for_push_order()) {
+                    const postPushResult = await this._postPushOrderResolve(
+                        this.currentOrder,
+                        syncOrderResult.map((res) => res.id)
                     );
-                } else {
-                    syncedOrderBackendIds = await this.env.pos.push_single_order(this.currentOrder);
+                    if (!postPushResult) {
+                        this.showPopup('ErrorPopup', {
+                            title: this.env._t('Error: no internet connection.'),
+                            body: this.env._t('Some, if not all, post-processing after syncing order failed.'),
+                        });
+                    }
                 }
             } catch (error) {
+                hasError = true;
+
                 if (error.code == 700)
                     this.error = true;
 
@@ -221,37 +232,25 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         throw error;
                     }
                 }
-            }
-            if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
-                const result = await this._postPushOrderResolve(
-                    this.currentOrder,
-                    syncedOrderBackendIds
-                );
-                if (!result) {
-                    await this.showPopup('ErrorPopup', {
-                        title: this.env._t('Error: no internet connection.'),
-                        body: this.env._t('Some, if not all, post-processing after syncing order failed.'),
+            } finally {
+                // Always show the next screen regardless of error since pos has to
+                // continue working even offline.
+                this.showScreen(this.nextScreen);
+
+                // Ask the user to sync the remaining unsynced orders.
+                if (!hasError && syncOrderResult && this.env.pos.db.get_orders().length) {
+                    const { confirmed } = await this.showPopup('ConfirmPopup', {
+                        title: this.env._t('Remaining unsynced orders'),
+                        body: this.env._t(
+                            'There are unsynced orders. Do you want to sync these orders?'
+                        ),
                     });
-                }
-            }
-
-            this.showScreen(this.nextScreen);
-
-            // If we succeeded in syncing the current order, and
-            // there are still other orders that are left unsynced,
-            // we ask the user if he is willing to wait and sync them.
-            if (syncedOrderBackendIds.length && this.env.pos.db.get_orders().length) {
-                const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: this.env._t('Remaining unsynced orders'),
-                    body: this.env._t(
-                        'There are unsynced orders. Do you want to sync these orders?'
-                    ),
-                });
-                if (confirmed) {
-                    // NOTE: Not yet sure if this should be awaited or not.
-                    // If awaited, some operations like changing screen
-                    // might not work.
-                    this.env.pos.push_orders();
+                    if (confirmed) {
+                        // NOTE: Not yet sure if this should be awaited or not.
+                        // If awaited, some operations like changing screen
+                        // might not work.
+                        this.env.pos.push_orders();
+                    }
                 }
             }
         }
@@ -364,7 +363,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 return false;
             }
 
-            if (!this._isValidEmptyOrder()) return false;
+            if (!this.currentOrder._isValidEmptyOrder()) return false;
 
             return true;
         }
@@ -413,19 +412,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         async _sendForceDone({ detail: line }) {
             line.set_payment_status('done');
-        }
-        _onPrevOrder(prevOrder) {
-            prevOrder.off('change', null, this);
-            prevOrder.paymentlines.off('change', null, this);
-            if (prevOrder) {
-                prevOrder.stop_electronic_payment();
-            }
-        }
-        async _onNewOrder(newOrder) {
-            newOrder.on('change', this.render, this);
-            newOrder.paymentlines.on('change', this.render, this);
-            NumberBuffer.reset();
-            await this.render();
         }
     }
     PaymentScreen.template = 'PaymentScreen';

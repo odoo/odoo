@@ -15,7 +15,7 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                     try {
                         let giftProduct = this.env.pos.db.product_by_id[this.env.pos.config.gift_card_product_id[0]];
 
-                        for (let line of this.currentOrder.orderlines.models) {
+                        for (let line of this.currentOrder.orderlines) {
                             if(line.product.id === giftProduct.id && line.price <= 0) {
                                 let is_valid = await this.rpc({
                                     model: "gift.card",
@@ -62,8 +62,13 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                     method: 'get_new_card_ids',
                     args: [server_ids]
                 });
-                if(ids.length > 0)
-                    this.env.pos.print_gift_pdf(ids);
+                if (ids.length > 0) {
+                    this.env.legacyActionManager.do_action('pos_gift_card.gift_card_report_pdf', {
+                        additional_context: {
+                            active_ids: [ids],
+                        },
+                    });
+                }
             }
             return super._postPushOrderResolve(order, server_ids);
         }

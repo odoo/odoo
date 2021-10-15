@@ -2,18 +2,16 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
     'use strict';
 
     const { useListener } = require('web.custom_hooks');
-    const { onChangeOrder } = require('point_of_sale.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
-    const { onPatched, useRef, useState } = owl;
+    const { onPatched, useRef } = owl;
 
     class OrderWidget extends PosComponent {
         constructor() {
             super(...arguments);
             useListener('select-line', this._selectLine);
             useListener('edit-pack-lot-lines', this._editPackLotLines);
-            onChangeOrder(this._onPrevOrder, this._onNewOrder);
             this.scrollableRef = useRef('scrollable');
             this.scrollToBottom = false;
             onPatched(() => {
@@ -25,8 +23,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                     this.scrollToBottom = false;
                 }
             });
-            this.state = useState({ total: 0, tax: 0 });
-            this._updateSummary();
         }
         get order() {
             return this.env.pos.get_order();
@@ -65,42 +61,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 orderline.setPackLotLines({ modifiedPackLotLines, newPackLotLines });
             }
             this.order.select_orderline(event.detail.orderline);
-        }
-        _onNewOrder(order) {
-            if (order) {
-                order.orderlines.on(
-                    'new-orderline-selected',
-                    () => this.trigger('new-orderline-selected'),
-                    this
-                );
-                order.orderlines.on('change', this._updateSummary, this);
-                order.orderlines.on(
-                    'add remove',
-                    () => {
-                        this.scrollToBottom = true;
-                        this._updateSummary();
-                    },
-                    this
-                );
-                order.on('change', this.render, this);
-            }
-            this._updateSummary();
-            this.trigger('new-orderline-selected');
-        }
-        _onPrevOrder(order) {
-            if (order) {
-                order.orderlines.off('new-orderline-selected', null, this);
-                order.orderlines.off('change', null, this);
-                order.orderlines.off('add remove', null, this);
-                order.off('change', null, this);
-            }
-        }
-        _updateSummary() {
-            const total = this.order ? this.order.get_total_with_tax() : 0;
-            const tax = this.order ? total - this.order.get_total_without_tax() : 0;
-            this.state.total = this.env.pos.format_currency(total);
-            this.state.tax = this.env.pos.format_currency(tax);
-            this.render();
         }
     }
     OrderWidget.template = 'OrderWidget';

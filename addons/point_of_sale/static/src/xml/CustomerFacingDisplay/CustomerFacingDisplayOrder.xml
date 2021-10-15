@@ -58,7 +58,7 @@
             <div class="pos_orderlines_list">
                 <t t-if="order">
                     <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
-                        <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
+                        <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
                         <div t-esc="orderline.get_full_product_name()"/>
                         <div t-esc="orderline.get_quantity_str()"/>
                         <div t-esc="pos.format_currency(orderline.get_display_price())"/>

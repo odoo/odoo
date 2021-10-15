@@ -29,7 +29,7 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
             this.animations = {};
             for (let eventName of ['open_cashbox', 'print_receipt', 'scale_read']) {
                 this.eventElementsRef[eventName] = useRef(eventName);
-                this.env.pos.proxy.add_notification(
+                this.env.proxy.add_notification(
                     eventName,
                     (() => {
                         if (this.animations[eventName]) {
@@ -57,22 +57,22 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
         setWeight() {
             var weightInKg = parse.float(this.state.weightInput);
             if (!isNaN(weightInKg)) {
-                this.env.pos.proxy.debug_set_weight(weightInKg);
+                this.env.proxy.debug_set_weight(weightInKg);
             }
         }
         resetWeight() {
             this.state.weightInput = '';
-            this.env.pos.proxy.debug_reset_weight();
+            this.env.proxy.debug_reset_weight();
         }
         async barcodeScan() {
-            await this.env.pos.barcode_reader.scan(this.state.barcodeInput);
+            await this.env.barcode_reader.scan(this.state.barcodeInput);
         }
         async barcodeScanEAN() {
-            const ean = this.env.pos.barcode_reader.barcode_parser.sanitize_ean(
+            const ean = this.env.barcode_reader.barcode_parser.sanitize_ean(
                 this.state.barcodeInput || '0'
             );
             this.state.barcodeInput = ean;
-            await this.env.pos.barcode_reader.scan(ean);
+            await this.env.barcode_reader.scan(ean);
         }
         async deleteOrders() {
             const { confirmed } = await this.showPopup('ConfirmPopup', {
@@ -144,7 +144,7 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
             }
         }
         refreshDisplay() {
-            this.env.pos.proxy.message('display_refresh', {});
+            this.env.proxy.message('display_refresh', {});
         }
         _onBufferUpdate(buffer) {
             this.state.buffer = buffer;

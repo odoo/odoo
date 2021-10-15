@@ -13,7 +13,7 @@ odoo.define('pos_coupon.PaymentScreen', function (require) {
                         .map((couponCode) => couponCode.coupon_id)
                         .filter((coupon_id) => coupon_id)
                 );
-                const usedCouponIds = order.orderlines.models
+                const usedCouponIds = order.orderlines
                     .map((line) => line.coupon_id)
                     .filter((coupon_id) => coupon_id);
                 for (let coupon_id of usedCouponIds) {

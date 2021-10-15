@@ -11,9 +11,10 @@ odoo.define('pos_restaurant.TransferOrderButton', function(require) {
             super(...arguments);
             useListener('click', this.onClick);
         }
-        onClick() {
+        async onClick() {
             this.trigger('close-popup');
             this.env.pos.transfer_order_to_different_table();
+            this.showScreen('FloorScreen');
         }
     }
     TransferOrderButton.template = 'TransferOrderButton';

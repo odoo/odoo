@@ -38,18 +38,6 @@ odoo.define('pos_restaurant.chrome', function (require) {
                     return super.startScreen;
                 }
             }
-            /**
-             * @override
-             * Order is set to null when table is selected. There is no saved
-             * screen for null order so show `FloorScreen` instead.
-             */
-            _showSavedScreen(pos, newSelectedOrder) {
-                if (!newSelectedOrder) {
-                    this.showScreen('FloorScreen', { floor: pos.table ? pos.table.floor : null });
-                } else {
-                    super._showSavedScreen(pos, newSelectedOrder);
-                }
-            }
             _setActivityListeners() {
                 IDLE_TIMER_SETTER = this._setIdleTimer.bind(this);
                 for (const event of NON_IDLE_EVENTS) {

@@ -13,7 +13,7 @@ odoo.define('point_of_sale.ReprintReceiptScreen', function (require) {
                 this.showScreen('TicketScreen', { reuseSavedUIState: true });
             }
             async printReceipt() {
-                if(this.env.pos.proxy.printer && this.env.pos.config.iface_print_skip_screen) {
+                if(this.env.proxy.printer && this.env.pos.config.iface_print_skip_screen) {
                     let result = await this._printReceipt();
                     if(result)
                         this.showScreen('TicketScreen', { reuseSavedUIState: true });

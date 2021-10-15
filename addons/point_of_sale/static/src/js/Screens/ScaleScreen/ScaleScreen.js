@@ -23,7 +23,7 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
         }
         willUnmount() {
             // stop the scale reading
-            this.env.pos.proxy_queue.clear();
+            this.env.proxy_queue.clear();
         }
         back() {
             this.props.resolve({ confirmed: false, payload: null });
@@ -44,13 +44,13 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             }
         }
         _readScale() {
-            this.env.pos.proxy_queue.schedule(this._setWeight.bind(this), {
+            this.env.proxy_queue.schedule(this._setWeight.bind(this), {
                 duration: 500,
                 repeat: true,
             });
         }
         async _setWeight() {
-            const reading = await this.env.pos.proxy.scale_read();
+            const reading = await this.env.proxy.scale_read();
             this.state.weight = reading.weight;
         }
         get _activePricelist() {

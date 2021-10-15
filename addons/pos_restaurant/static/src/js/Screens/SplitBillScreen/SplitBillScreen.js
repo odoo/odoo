@@ -3,10 +3,10 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const { useListener } = require('web.custom_hooks');
-    const models = require('point_of_sale.models');
+    const { Order } = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
 
-    const { useState } = owl;
+    const { useState, onMounted } = owl;
 
     class SplitBillScreen extends PosComponent {
         constructor() {
@@ -14,20 +14,21 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
             useListener('click-line', this.onClickLine);
             this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
             this.newOrderLines = {};
-            this.newOrder = new models.Order(
-                {},
-                {
-                    pos: this.env.pos,
-                    temporary: true,
-                }
-            );
+            this.newOrder = undefined;
             this._isFinal = false;
-        }
-        mounted() {
-            this.env.pos.on('change:selectedOrder', this._resetState, this);
-        }
-        willUnmount() {
-            this.env.pos.off('change:selectedOrder', null, this);
+            onMounted(() => {
+                // Should create the new order outside of the constructor because
+                // sequence_number of pos_session is modified. which will trigger
+                // rerendering which will rerender this screen and will be infinite loop.
+                this.newOrder = Order.create(
+                    {},
+                    {
+                        pos: this.env.pos,
+                        temporary: true,
+                    }
+                );
+                this.render();
+            });
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -51,9 +52,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
             this._isFinal = true;
             delete this.newOrder.temporary;
 
-            if (this._isFullPayOrder()) {
-                this.showScreen('PaymentScreen');
-            } else {
+            if (!this._isFullPayOrder()) {
                 this._setQuantityOnCurrentOrder();
 
                 this.newOrder.set_screen_data({ name: 'PaymentScreen' });
@@ -75,9 +74,10 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 this.currentOrder.set_customer_count(newCustomerCount || 1);
                 this.currentOrder.set_screen_data({ name: 'ProductScreen' });
 
-                this.env.pos.get('orders').add(this.newOrder);
-                this.env.pos.set('selectedOrder', this.newOrder);
+                this.env.pos.orders.add(this.newOrder);
+                this.env.pos.selectedOrder = this.newOrder;
             }
+            this.showScreen('PaymentScreen');
         }
         /**
          * @param {models.Order} order
@@ -177,17 +177,6 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                     }
                 }
             }
-        }
-        _resetState() {
-            if (this._isFinal) return;
-
-            for (let id in this.splitlines) {
-                delete this.splitlines[id];
-            }
-            for (let line of this.currentOrder.get_orderlines()) {
-                this.splitlines[line.id] = { quantity: 0 };
-            }
-            this.newOrder.orderlines.reset();
         }
     }
     SplitBillScreen.template = 'SplitBillScreen';
