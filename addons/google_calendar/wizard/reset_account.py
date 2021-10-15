@@ -45,7 +45,7 @@ class ResetGoogleAccount(models.TransientModel):
                 'need_sync': True,
             })
 
-        self.user_id._set_auth_tokens(False, False, 0)
+        self._set_auth_tokens(False, False, 0)
         self.user_id.write({
             'google_calendar_sync_token': False,
             'google_calendar_cal_id': False,
