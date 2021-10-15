@@ -675,3 +675,19 @@ def encapsulate_email(old_email, new_email):
         name_part,
         new_email_split[0][1],
     ))
+
+
+def text_from_html(html_fragment, collapse_whitespace=False):
+    """
+    Returns the plain non-tag text from an html
+
+    :param html_fragment: document from which text must be extracted
+
+    :return: text extracted from the html
+    """
+    # lxml requires one single root element
+    tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True, resolve_entities=False))
+    content = ' '.join(tree.itertext())
+    if collapse_whitespace:
+        content = re.sub('\\s+', ' ', content).strip()
+    return content

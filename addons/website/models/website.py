@@ -19,13 +19,15 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
+from odoo.addons.website.tools import get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
+from odoo.tools.mail import text_from_html
+from odoo.tools.misc import similarity_score
 from odoo.tools.translate import _
 from odoo.tools import escape_psql, pycompat
 

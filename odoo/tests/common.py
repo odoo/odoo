@@ -37,11 +37,14 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch, _patch
+from unittest.mock import Mock, MagicMock, patch, _patch
 from xmlrpc import client as xmlrpclib
 
 import requests
+import werkzeug
 import werkzeug.urls
+from werkzeug.exceptions import NotFound
+from werkzeug.test import EnvironBuilder
 from lxml import etree, html
 
 import odoo
@@ -52,7 +55,7 @@ from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import DotDict, find_in_path, frozendict
 
 from . import case
 
@@ -1879,3 +1882,84 @@ def tagged(*tags):
             _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
+
+
+@contextlib.contextmanager
+def MockRequest(
+        env, *, path='/mockrequest', routing=True, multilang=True,
+        context=frozendict(), cookies=frozendict(), country_code=None,
+        website=None, remote_addr=HOST, environ_base=None,
+        # website_sale
+        sale_order_id=None, website_sale_current_pl=None,
+):
+    lang_code = context.get('lang', env.context.get('lang', 'en_US'))
+    env = env(context=dict(context, lang=lang_code))
+    request = Mock(
+        # request
+        httprequest=Mock(
+            host='localhost',
+            path=path,
+            app=odoo.http.root,
+            environ=dict(
+                EnvironBuilder(
+                    path=path,
+                    base_url=HttpCase.base_url(),
+                    environ_base=environ_base,
+                ).get_environ(),
+                REMOTE_ADDR=remote_addr,
+            ),
+            cookies=cookies,
+            referrer='',
+            remote_addr=remote_addr,
+        ),
+        type='http',
+        future_response=odoo.http.FutureResponse(),
+        params={},
+        redirect=env['ir.http']._redirect,
+        session=DotDict(
+            odoo.http.get_default_session(),
+            geoip={'country_code': country_code},
+            sale_order_id=sale_order_id,
+            website_sale_current_pl=website_sale_current_pl,
+        ),
+        geoip=odoo.http.GeoIP('127.0.0.1'),
+        db=env.registry.db_name,
+        env=env,
+        registry=env.registry,
+        cr=env.cr,
+        uid=env.uid,
+        context=env.context,
+        lang=env['res.lang']._lang_get(lang_code),
+        website=website,
+    )
+    if website:
+        request.website_routing = website.id
+    # The following code mocks match() to return a fake rule with a fake
+    # 'routing' attribute (routing=True) or to raise a NotFound
+    # exception (routing=False).
+    #
+    #   router = odoo.http.root.get_db_router()
+    #   rule, args = router.bind(...).match(path)
+    #   # arg routing is True => rule.endpoint.routing == {...}
+    #   # arg routing is False => NotFound exception
+    router = MagicMock()
+    match = router.return_value.bind.return_value.match
+    if routing:
+        match.return_value[0].routing = {
+            'type': 'http',
+            'website': True,
+            'multilang': multilang
+        }
+    else:
+        match.side_effect = NotFound
+
+    def update_context(**overrides):
+        request.context = dict(request.context, **overrides)
+
+    request.update_context = update_context
+    with contextlib.ExitStack() as s:
+        odoo.http._request_stack.push(request)
+        s.callback(odoo.http._request_stack.pop)
+        s.enter_context(patch('odoo.http.root.get_db_router', router))
+
+        yield request
