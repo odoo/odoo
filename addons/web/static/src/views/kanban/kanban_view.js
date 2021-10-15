@@ -103,7 +103,9 @@ export class KanbanArchParser extends XMLParser {
             if (node.tagName === "field") {
                 const { field, name, options } = fieldParser.addField(node);
                 lookForTooltip(field, options);
-                if (!fieldParser.getWidget(name)) {
+                if (fieldParser.getWidget(name)) {
+                    combineAttributes(node, "class", "oe_kanban_action");
+                } else {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
                     const tesc = document.createElement("span");
@@ -134,8 +136,20 @@ export class KanbanArchParser extends XMLParser {
         let dropdownInserted = false;
         dropdown.setAttribute("t-component", "Dropdown");
 
+        // Progressbar
+        for (const el of kanbanBox.getElementsByTagName("progressbar")) {
+            const { field: fieldName, colors, sum_field: sumField, help } = extractAttributes(el, [
+                "field",
+                "colors",
+                "sum_field",
+                "help",
+            ]);
+            // TODO
+            console.log({ fieldName, colors, sumField, help });
+        }
+
         // Dropdown element
-        for (const el of kanbanBox.querySelectorAll(".dropdown")) {
+        for (const el of kanbanBox.getElementsByClassName("dropdown")) {
             const classes = el
                 .getAttribute("class")
                 .split(/\s+/)
@@ -148,7 +162,7 @@ export class KanbanArchParser extends XMLParser {
         }
 
         // Dropdown menu content
-        for (const el of kanbanBox.querySelectorAll(".dropdown-menu")) {
+        for (const el of kanbanBox.getElementsByClassName("dropdown-menu")) {
             menuClass.push(el.getAttribute("class"));
             dropdown.append(...el.children);
             if (dropdownInserted) {
@@ -179,7 +193,7 @@ export class KanbanArchParser extends XMLParser {
         transfers.forEach((transfer) => transfer());
 
         // Color picker
-        for (const el of kanbanBox.querySelectorAll(".oe_kanban_colorpicker")) {
+        for (const el of kanbanBox.getElementsByClassName("oe_kanban_colorpicker")) {
             const field = el.getAttribute("data-field");
             if (field) {
                 colorField = field;

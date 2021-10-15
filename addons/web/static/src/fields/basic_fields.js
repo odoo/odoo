@@ -2,7 +2,7 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "../core/l10n/translation";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 const fieldRegistry = registry.category("fields");
 
 // -----------------------------------------------------------------------------
@@ -59,15 +59,19 @@ fieldRegistry.add("image", FieldImage);
 
 export class FieldSelection extends Component {
     setup() {
-        this.record = this.props.record;
-        const fields = this.record.fields;
-        const field = fields[this.props.name];
-        const selection = Object.fromEntries(field.selection);
-        const fieldValue = this.record.data[this.props.name];
-        this.value = fieldValue ? selection[fieldValue] : "";
+        const field = this.props.record.fields[this.props.name];
+        this.selection = Object.fromEntries(field.selection);
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
+
+    get string() {
+        return this.value ? this.selection[this.value] : "";
     }
 }
-FieldSelection.template = "web.FieldChar";
+FieldSelection.template = "web.FieldSelection";
 fieldRegistry.add("selection", FieldSelection);
 
 // -----------------------------------------------------------------------------
@@ -91,3 +95,26 @@ FieldColorPicker.RECORD_COLORS = [
     _lt("Purple"),
 ];
 fieldRegistry.add("color_picker", FieldColorPicker);
+
+// -----------------------------------------------------------------------------
+// FieldColorPicker
+// -----------------------------------------------------------------------------
+
+export class FieldPriority extends FieldSelection {
+    setup() {
+        super.setup();
+
+        this.state = useState({ index: -1 });
+    }
+
+    get index() {
+        return Math.max(this.state.index, Object.keys(this.selection).indexOf(this.value));
+    }
+
+    onStarClicked(value) {
+        const actualValue = this.value === value ? Object.keys(this.selection)[0] : value;
+        this.props.record.update(this.props.name, actualValue);
+    }
+}
+FieldPriority.template = "web.FieldPriority";
+fieldRegistry.add("priority", FieldPriority);
