@@ -599,6 +599,7 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         # copy the task
         task_copy = task.copy()
+<<<<<<< HEAD
         self.assertEqual(task_copy.sale_line_id, task.sale_line_id, "Duplicating task should keep its Sale line")
 
     def test_remaining_hours_prepaid_services(self):
@@ -656,3 +657,6 @@ class TestSaleService(TestCommonSaleTimesheet):
         })
         self.assertEqual(timesheet.so_line, prepaid_service_sol, "The SOL should be the same than one containing the prepaid service product.")
         self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")
+=======
+        self.assertEqual(task_copy.sale_line_id, task.sale_line_id, "Duplicating task should keep its Sale line")
+>>>>>>> cad0a1cfdc8... temp

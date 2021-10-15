@@ -520,13 +520,25 @@ class SaleOrder(models.Model):
         return result
 
     def _compute_field_value(self, field):
+        send_mail = True
+        for record in self:
+            if field.name == 'invoice_status' and record._origin.invoice_status == 'upselling':
+                send_mail = False
+
         super()._compute_field_value(field)
-        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip') or not send_mail:
             return
+<<<<<<< HEAD:addons/sale/models/sale_order.py
 
         upselling_orders = self.filtered(lambda so: (so.user_id or so.partner_id.user_id) and so.invoice_status == 'upselling')
         if not upselling_orders:
+=======
+        
+        filtered_self = self.filtered(lambda so: so.user_id and so.invoice_status == 'upselling')
+        if not filtered_self:
+>>>>>>> cad0a1cfdc8... temp:addons/sale/models/sale.py
             return
+    
 
         upselling_orders._create_upsell_activity()
 
