@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { Field } from "@web/fields/field";
-import { useFormCompiler } from "@web/views/form/form_compiler";
+import { ButtonBox } from "@web/views/form/button_box/button_box";
+import { FormCompiler } from "@web/views/form/form_compiler";
+import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { ButtonBox } from "./button_box/button_box";
 
 const { Component, hooks, tags } = owl;
 const { useSubEnv, useState } = hooks;
@@ -12,11 +13,9 @@ const { xml } = tags;
 export class FormRenderer extends Component {
     setup() {
         const { arch, fields, xmlDoc } = this.props.info;
-        this.owlifiedArch = useFormCompiler(arch, fields, xmlDoc);
+        this.templateId = useViewCompiler(FormCompiler, arch, fields, xmlDoc);
         this.state = useState({});
-        if (!this.env.model) {
-            useSubEnv({ model: this.props.record.model });
-        }
+        useSubEnv({ model: this.props.record.model });
     }
 
     get record() {
@@ -32,5 +31,5 @@ export class FormRenderer extends Component {
     }
 }
 
-FormRenderer.template = xml`<t t-call="{{ owlifiedArch }}" />`;
+FormRenderer.template = xml`<t t-call="{{ templateId }}" />`;
 FormRenderer.components = { Field, ButtonBox, ViewButton };

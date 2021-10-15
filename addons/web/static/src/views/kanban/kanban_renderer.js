@@ -5,10 +5,11 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
 import { Field } from "@web/fields/field";
-import { useFormCompiler } from "@web/views/form/form_compiler";
-import { ViewButton } from "@web/views/view_button/view_button";
 import { View } from "@web/views/view";
-import { sprintf } from "../../core/utils/strings";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { sprintf } from "@web/views/core/utils/strings";
+import { useViewCompiler } from "@web/views/helpers/view_compiler";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 
 const { Component, hooks } = owl;
 const { useState, useSubEnv } = hooks;
@@ -23,16 +24,14 @@ export class KanbanRenderer extends Component {
         const { arch, cards, className, fields, xmlDoc } = this.props.info;
         this.cards = cards;
         this.className = className;
-        this.cardTemplate = useFormCompiler(arch, fields, xmlDoc);
+        this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
         this.state = useState({
             quickCreate: [],
         });
         this.action = useService("action");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
-        if (!this.env.model) {
-            useSubEnv({ model: this.props.record.model });
-        }
+        useSubEnv({ model: this.props.record.model });
     }
 
     quickCreate(group) {
