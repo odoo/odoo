@@ -22,9 +22,21 @@ class AccountTaxGroup(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
-    property_tax_payable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (payable)')
-    property_tax_receivable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (receivable)')
-    property_advance_tax_payment_account_id = fields.Many2one('account.account', company_dependent=True, string='Advance Tax payment account')
+    property_tax_payable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        company_dependent=True,
+        string='Tax current account (payable)',
+        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.")
+    property_tax_receivable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        company_dependent=True,
+        string='Tax current account (receivable)',
+        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.")
+    property_advance_tax_payment_account_id = fields.Many2one(
+        comodel_name='account.account',
+        company_dependent=True,
+        string='Advance Tax payment account',
+        help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
     preceding_subtotal = fields.Char(
         string="Preceding Subtotal",
