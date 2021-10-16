@@ -241,6 +241,14 @@
                                                         Re-invoiced costs
                                                     </td>
                                                 </tr>
+                                                <tr t-if="display_cost &amp; (dashboard['profit']['expense_amount_untaxed_to_invoice'] != 0)">
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        <t t-esc="dashboard['profit']['expense_amount_untaxed_to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                    <td title="Costs from expenses that still need to be reinvoiced to your customer (provided that the Analytic Account of the Project was set on the Expense).">
+                                                        To re-invoice costs
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_total">
                                                         <b>

@@ -101,9 +101,10 @@ class Project(models.Model):
             'amount_untaxed_to_invoice': 'to_invoice',
             'timesheet_cost': 'cost',
             'expense_cost': 'expense_cost',
-            'expense_amount_untaxed_invoiced':  'expense_amount_untaxed_invoiced',
+            'expense_amount_untaxed_invoiced': 'expense_amount_untaxed_invoiced',
+            'expense_amount_untaxed_to_invoice': 'expense_amount_untaxed_to_invoice',
             'other_revenues': 'other_revenues'
-            }
+        }
         profit = dict.fromkeys(list(field_map.values()) + ['other_revenues', 'total'], 0.0)
         profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id'] + list(field_map), ['project_id'])   
         for data in profitability_raw_data:
