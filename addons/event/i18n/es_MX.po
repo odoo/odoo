@@ -50,7 +50,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Insignia plegable - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Insignia plegable - %s' % (object.name or 'Evento').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -59,7 +59,7 @@ msgid ""
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
 "'Boleto de página completa - %s - %s' % ((object.event_id.name or "
-"'Event').replace('/',''), object.name.replace('/',''))"
+"'Evento').replace('/',''), object.name.replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
@@ -2151,7 +2151,8 @@ msgstr "Insignia plegable"
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
-"Insignia plegable - {{ (object.event_id.name or 'Event').replace('/','_') }}"
+"Insignia plegable - {{ (object.event_id.name or 'Evento').replace('/','_') "
+"}}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge

@@ -458,6 +458,11 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
+"Satış etkinliğini artırmak için iyi bir ipucu da her fırsatta bir sonraki "
+"adımı tanımlamaktır. Süregelen aktiviteleri yönetmek için, durum çubuğunda "
+"herhangi bir yere tıklayarak bir sonraki aktivitelerinin durumuna göre "
+"fırsatları filtreleyin. Durum çubuğunda gri bir aralana tıklayarak bir "
+"sonraki aktivitesi olmayan tüm fırsatları görebilirsiniz. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -822,7 +827,7 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
-"gelen istekleri filtrelemek ve nitelendirmek için, bunlar bir adaya "
+"Gelen istekleri filtrelemek ve nitelendirmek için, bunlar bir adaya "
 "dönüşmeden ve satış temsilcisine atanmadan önce bu kutuyu işaretleyin."
 
 #. module: crm
@@ -1234,6 +1239,9 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
+"Şirketleri isim veya vergi numarasıyla aratarak tüm verisini anında "
+"doldurabileceğinizi biliyor muydunuz? Odoo sizin için tüm alanları doldurur:"
+" logo, adres, şirket büyüklüğü, iş bilgisi, sosyal medya hesapları vs"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1242,6 +1250,9 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
+"Üst sağdaki harita ikonunu kullanarak fırsat listesini harita görüntüsüne "
+"dönüştürebileceğinizi biliyor muydunuz? Odoo'daki birçok ekran haritaya "
+"dönüştürülebilir: görevler, kişiler, teslimat siparişleri, vs"
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1457,8 +1468,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Dezenfekte edilmiş telefon numarasını depolamak için kullanılan alan. "
-"Aramaları ve karşılaştırmaları hızlandırmaya yardımcı olur."
+"Düzeltilmiş telefon numarasını depolamak için kullanılan alan. Aramaları ve "
+"karşılaştırmaları hızlandırmaya yardımcı olur."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
@@ -1498,6 +1509,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
+"Bir satış ekibi için, hiç aday olmamasından daha kötü birşey yoktur. neyse "
+"ki, birkaç tıklama ile, ihtiyaçlarınızı hedefleyen özel adaylar "
+"oluşturabilirsiniz: şirket büyüklüğü, endüstri, vs. Bu özelliği denemeniz "
+"için, size ücretsiz 200 kredi veriyoruz."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1677,7 +1692,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Eğer temis telefon numarası kara listede ise, bağlantı, toplu sms "
+"Eğer düzeltilmiş telefon numarası kara listede ise, bağlantı, toplu sms "
 "gönderiminde, herhangi bir listeden almayacaktır.  "
 
 #. module: crm
@@ -1709,6 +1724,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Kara listedeki düzeltilmiş telefon numarasının cep telefonu olup olmadığını "
+"belirtir. Bir modelde hem cep telefonu hem de telefon alanı varsa hangi "
+"numaranın kara listede olduğunu ayırt etmeye yardımcı olur."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1717,6 +1735,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Kara listedeki düzeltilmiş telefon numarasının sabit telefon olup olmadığını"
+" belirtir. Bir modelde hem cep telefonu hem de telefon alanı varsa hangi "
+"numaranın kara listede olduğunu ayırt etmeye yardımcı olur."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1726,7 +1747,7 @@ msgstr "İç Notlar"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
-msgstr ""
+msgstr "Her cron arasındaki interval tipi (ör. her 2 gün veya her 2 saat)"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -1735,6 +1756,8 @@ msgid ""
 "Invalid repeat frequency. Consider changing frequency type instead of using "
 "large numbers."
 msgstr ""
+"Geçersiz tekrarlama frekansı. Büyük sayılar kullanmak yerine frekans tipini "
+"değiştirmeyi deneyin."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -2097,6 +2120,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to "
 "keep track of everything you have to do!</i>"
 msgstr ""
+"Hiç plan yok gibi :(<br><br><i>İpucu : Yapmanız gerekenleri takip etmek için"
+" aktivite oluşturun!</i>"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2158,6 +2183,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"Manuel atama, aksiyon butonu kullanarak ekip form görüntüsünden görev "
+"tetiklemeye izin verir. Otomatik tüm ekiplerde sürekli çalışan cron "
+"konfigüre eder. "
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2295,7 +2323,7 @@ msgstr "Aylık"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
-msgstr ""
+msgstr "Ekipteki tüm satışçılar için aylık ortalama aday kapasitesi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2527,6 +2555,7 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
+"Her cron arasındaki interval tipi sayısı (ör. her 2 gün veya her 4 gün)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2566,6 +2595,9 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Odoo'nun yapay zeka motoru geçmişinize bakarak her fırsatın başarı oranını "
+"tahminler. Her zaman başarı oranını elle güncelleyebilirsiniz, ama Odoo'ya "
+"bırakırsanız, satış döngünüzde fırsat ilerledikçe puan güncellenir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -3095,7 +3127,7 @@ msgstr "Satış görevlileri"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Temizlenmiş Numara"
+msgstr "Düzeltilmiş Numara"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -3433,7 +3465,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "This bar also allows you to switch stage."
-msgstr ""
+msgstr "Bu çubuk aşamayı değiştirmenize de izin verir."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3917,7 +3949,7 @@ msgstr "Örn. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr ""
+msgstr "for the leads created as of the"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

@@ -28,12 +28,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-error\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-error\">歸檔</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -71,7 +71,7 @@ msgstr "活動類型"
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid ""
 "Add members to automatically assign their documents to this sales team."
-msgstr ""
+msgstr "添加團隊成員，系統將自動將其檔分配給該銷售團隊。"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -79,7 +79,7 @@ msgstr ""
 msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
-msgstr ""
+msgstr "在此團隊中添加 %(user_name)s 會將他/她從其當前團隊 %(team_name)s 中刪除。"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -87,7 +87,7 @@ msgstr ""
 msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
-msgstr ""
+msgstr "在此團隊中添加 %(user_name)s 會將他/她從其當前團隊 %(team_names)s 中刪除。"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -95,7 +95,7 @@ msgstr ""
 msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
-msgstr ""
+msgstr "在此團隊中添加 %(user_names)s 會將他們從當前團隊 (%(team_names)s) 中刪除。"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -131,7 +131,7 @@ msgstr "大漂亮按鈕：）"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM 標籤"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -174,22 +174,22 @@ msgstr "聯繫人"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "創建 CRM 標籤"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "創建銷售團隊"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Create a new salesman"
-msgstr ""
+msgstr "創建一個新的銷售員"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "創建活動類型"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -302,7 +302,7 @@ msgstr "ID"
 msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
-msgstr ""
+msgstr "若勾選，則用戶可能屬於多個銷售團隊。否則，成員資格僅限於一個銷售團隊。"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -324,7 +324,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
-msgstr ""
+msgstr "如果設置，此銷售團隊將用於與此合作夥伴相關的銷售和分配"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -341,7 +341,7 @@ msgstr "圖像"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Image (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -381,6 +381,8 @@ msgid ""
 "Link salespersons to sales teams. Set their monthly lead capacity\n"
 "                and configure automatic lead assignment."
 msgstr ""
+"將銷售人員與銷售團隊聯繫起來。設置他們的每月潛在商機數量\n"
+"                並設置自動分配線索。"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
@@ -393,17 +395,17 @@ msgstr "主要附件"
 msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
-msgstr ""
+msgstr "設置主要的銷售團隊。將用於管道，或在應收憑單或訂閱中設置銷售團隊。"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "成員公司"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "成員警告"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -413,7 +415,7 @@ msgstr "會員"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "成員問題警告"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -436,7 +438,7 @@ msgstr "移動"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "允許歸屬於多個團隊"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -491,7 +493,7 @@ msgstr "POS"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "售前"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -507,12 +509,12 @@ msgstr "銷售"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "銷售人員"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 msgid "Sales Person"
-msgstr ""
+msgstr "銷售人員"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -529,18 +531,18 @@ msgstr "銷售團隊"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "銷售團隊成員"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "銷售團隊成員"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "銷售團隊成員（包括不活躍）"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -557,7 +559,7 @@ msgstr "銷售員"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Salespersons"
-msgstr ""
+msgstr "銷售人員"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
@@ -568,7 +570,7 @@ msgstr "銷售團隊查詢"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Sample data"
-msgstr ""
+msgstr "演示資料"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
@@ -610,7 +612,7 @@ msgstr "標籤"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "團隊詳情"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -643,7 +645,7 @@ msgstr "此使用者的預設公司。"
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
-msgstr ""
+msgstr "這些代表您必須做的不同類別的事情（例如“打電話”或“準備會議”）。"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -651,7 +653,7 @@ msgstr ""
 msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
-msgstr ""
+msgstr "要將銷售人員添加到多個團隊中，請在設置中勾選多團隊選項。"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -662,13 +664,13 @@ msgstr "培訓"
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
-msgstr ""
+msgstr "UX：讓用戶不要加入當前選擇的團隊以避免重複"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX：如果沒有公司，則僅限於團隊公司或全部"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -693,7 +695,7 @@ msgstr "未讀消息計數器"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
-msgstr ""
+msgstr "使用銷售團隊來組織您的銷售部門並建立報告。"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -702,28 +704,30 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"使用銷售團隊來組織您的銷售部門。\n"
+"                每個團隊將使用專屬的管道。"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
-msgstr ""
+msgstr "使用標籤來管理和追蹤您的商機（產品結構、銷售類型……）"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "用戶公司"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "團隊用戶"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "用戶銷售團隊"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -743,7 +747,7 @@ msgstr "使用者"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "歸屬該團隊的用戶。"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -756,17 +760,17 @@ msgstr "網站"
 msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
-msgstr ""
+msgstr "您正在嘗試創建重複的成員資格。我們發現 %(duplicates)s 已經存在。"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "例如,北美"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "例如,服務"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
