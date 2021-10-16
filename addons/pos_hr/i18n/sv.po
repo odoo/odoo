@@ -24,7 +24,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">Tillåtna Användare</span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -67,12 +67,12 @@ msgstr "Anställd"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Användare: %s - Kassa Configurering: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Användare med behörighet"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
@@ -85,14 +85,14 @@ msgstr "ID"
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr ""
+msgstr "Om tomt, alla användare kan logga in i kassa sessionen"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "Felaktigt Lösenord"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee____last_update
@@ -107,7 +107,7 @@ msgstr "Senast redigerad"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "Logga in i"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -121,7 +121,7 @@ msgstr ""
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
-msgstr ""
+msgstr "Lösenord ?"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
@@ -129,6 +129,8 @@ msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"Person som använder kassan. Det kan vara en avbytare, en student eller en "
+"tillfällig anställd."
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -160,14 +162,14 @@ msgstr ""
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "Skanna din bricka"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "Välj Kassör"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -176,6 +178,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Du kan inte radera en användare som kan använda en aktiv kassa session, "
+"stäng sessionen först\n"
 
 #. module: pos_hr
 #. openerp-web
@@ -189,4 +193,4 @@ msgstr "eller"
 #: code:addons/pos_hr/static/src/xml/CashierName.xml:0
 #, python-format
 msgid "selectCashier"
-msgstr ""
+msgstr "väljKassör"

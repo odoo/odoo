@@ -36,6 +36,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung Nr. ${object.origin} hversandt wurde.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Ihre Tracking-Referenz lautet ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -60,7 +70,7 @@ msgstr "Bestätigen"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "Bestätigen Sie die Bestands-SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -90,7 +100,7 @@ msgstr "Anzeigename"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "Hat eine Warnung per SMS erhalten"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
@@ -139,13 +149,13 @@ msgstr "SMS Vorlage"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "SMS-Validierung mit Lagerbewegung"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is done."
-msgstr ""
+msgstr "SMS an den Kunden, sobald die Bestellung abgeschlossen ist."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -158,3 +168,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"Sie sind im Begriff, diesen Lieferauftrag per SMS zu bestätigen.1\n"
+"Diese Funktion kann in den Einstellungen des Bestandsverzeichnisses oder durch Anklicken von \"SMS deaktivieren\" deaktiviert werden.<br/>"
