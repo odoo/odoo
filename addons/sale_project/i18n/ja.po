@@ -5,16 +5,17 @@
 # Translators:
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
 msgid "Create invoice"
-msgstr ""
+msgstr "請求書作成"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
@@ -280,12 +281,6 @@ msgid "Tasks associated to this sale"
 msgstr "この販売に関連するタスク"
 
 #. module: sale_project
-#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
-msgid ""
-"The Project should be linked to a Sale Order to select an Sale Order Items."
-msgstr ""
-
-#. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -307,6 +302,12 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
+msgid ""
+"The project should be linked to a sale order to select a sale order item."
 msgstr ""
 
 #. module: sale_project
