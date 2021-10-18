@@ -865,34 +865,41 @@ class IrModelFields(models.Model):
 
         return res
 
-    @api.model
-    def create(self, vals):
-        if 'model_id' in vals:
-            model_data = self.env['ir.model'].browse(vals['model_id'])
-            vals['model'] = model_data.model
+    @api.model_create_multi
+    def create(self, vals_list):
+        IrModel = self.env['ir.model']
+        models = set()
+        for vals in vals_list:
+            if 'model_id' in vals:
+                vals['model'] = IrModel.browse(vals['model_id']).model
+            assert vals.get('model'), f"missing model name for {vals}"
+            models.add(vals['model'])
 
         # for self._get_ids() in _update_selection()
         self.clear_caches()
 
-        res = super(IrModelFields, self).create(vals)
+        res = super(IrModelFields, self).create(vals_list)
 
-        if vals.get('state', 'manual') == 'manual':
-            if vals.get('relation') and not self.env['ir.model'].search([('model', '=', vals['relation'])]):
-                raise UserError(_("Model %s does not exist!", vals['relation']))
+        for vals in vals_list:
+            if vals.get('state', 'manual') == 'manual':
+                relation = vals.get('relation')
+                if relation and not IrModel._get_id(relation):
+                    raise UserError(_("Model %s does not exist!", vals['relation']))
 
-            if vals.get('ttype') == 'one2many':
-                if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
+                if vals.get('ttype') == 'one2many' and not self.search_count([
+                    ('ttype', '=', 'many2one'),
+                    ('model', '=', vals['relation']),
+                    ('name', '=', vals['relation_field']),
+                ]):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
-            self.clear_caches()                     # for _existing_field_data()
-
-            if vals['model'] in self.pool:
-                # setup models; this re-initializes model in registry
-                self.flush()
-                self.pool.setup_models(self._cr)
-                # update database schema of model and its descendant models
-                models = self.pool.descendants([vals['model']], '_inherits')
-                self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+        if any(model in self.pool for model in models):
+            # setup models; this re-initializes model in registry
+            self.flush()
+            self.pool.setup_models(self._cr)
+            # update database schema of models and their descendants
+            models = self.pool.descendants(models, '_inherits')
+            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
         return res
 
@@ -944,7 +951,6 @@ class IrModelFields(models.Model):
         res = super(IrModelFields, self).write(vals)
 
         self.flush()
-        self.clear_caches()                         # for _existing_field_data()
 
         if column_rename:
             # rename column in database, and its corresponding index if present
@@ -980,13 +986,6 @@ class IrModelFields(models.Model):
         for field in self:
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
-
-    @tools.ormcache('model_name')
-    def _existing_field_data(self, model_name):
-        """ Return the given model's existing field data. """
-        cr = self._cr
-        cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", [model_name])
-        return {row['name']: row for row in cr.dictfetchall()}
 
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
