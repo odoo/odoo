@@ -173,7 +173,7 @@ tour.register('rte_translator', {
 }, {
     content: "save new change",
     trigger: 'button[data-action=save]',
-    extra_trigger: '#wrap.o_dirty p u',
+    extra_trigger: '#wrap.o_dirty p span[style="text-decoration: underline;"]',
 
     }, {
     content: "click language dropdown (4)",
