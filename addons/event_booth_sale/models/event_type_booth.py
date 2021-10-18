@@ -9,6 +9,7 @@ class EventTypeBooth(models.Model):
 
     product_id = fields.Many2one(related='booth_category_id.product_id')
     price = fields.Float(related='booth_category_id.price')
+    price_reduce = fields.Float(related='booth_category_id.price_reduce')
     currency_id = fields.Many2one(related='booth_category_id.currency_id')
 
     @api.model
