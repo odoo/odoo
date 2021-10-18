@@ -1216,7 +1216,7 @@ function factory(dependencies) {
          * If true composer will log a note, else a comment will be posted.
          */
         isLog: attr({
-            default: false,
+            default: true,
         }),
         /**
          * Determines whether a post_message request is currently pending.
