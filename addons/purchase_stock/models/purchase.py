@@ -426,7 +426,7 @@ class PurchaseOrderLine(models.Model):
             move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
                 sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
                 self.product_uom, rounding_method='HALF-UP')
-            qty_to_attach = move_dests_initial_demand - qty
+            qty_to_attach = min(self.product_qty, move_dests_initial_demand) - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
         if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
