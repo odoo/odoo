@@ -649,20 +649,31 @@ function formatTables($editable) {
         const tablePaddingRight = +$table.css('padding-right').match(rePadding)[1];
         const tablePaddingBottom = +$table.css('padding-bottom').match(rePadding)[1];
         const tablePaddingLeft = +$table.css('padding-left').match(rePadding)[1];
-        for (const column of $table.find('td').filter((i, td) => $(td).closest('table').is($table))) {
+        const $columns = $table.find('td').filter((i, td) => $(td).closest('table').is($table));
+        let columnIndex = 0;
+        for (const column of $columns) {
             const $column = $(column);
             if ($column.css('padding')) {
-                const columnPaddingTop = +$column.css('padding-top').match(rePadding)[1];
                 const columnPaddingRight = +$column.css('padding-right').match(rePadding)[1];
-                const columnPaddingBottom = +$column.css('padding-bottom').match(rePadding)[1];
                 const columnPaddingLeft = +$column.css('padding-left').match(rePadding)[1];
                 $column.css({
-                    'padding-top': columnPaddingTop + tablePaddingTop,
                     'padding-right': columnPaddingRight + tablePaddingRight,
-                    'padding-bottom': columnPaddingBottom + tablePaddingBottom,
                     'padding-left': columnPaddingLeft + tablePaddingLeft,
                 });
+                if (!columnIndex) {
+                    const columnPaddingTop = +$column.css('padding-top').match(rePadding)[1];
+                    $column.css({
+                        'padding-top': columnPaddingTop + tablePaddingTop,
+                    });
+                }
+                if (columnIndex === $columns.length - 1) {
+                    const columnPaddingBottom = +$column.css('padding-bottom').match(rePadding)[1];
+                    $column.css({
+                        'padding-bottom': columnPaddingBottom + tablePaddingBottom,
+                    });
+                }
             }
+            columnIndex += 1;
         }
         $table.css('padding', '');
     }
