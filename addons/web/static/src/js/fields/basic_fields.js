@@ -606,6 +606,8 @@ var FieldDateRange = InputField.extend({
                 autoUpdateInput: false,
                 timePickerIncrement: 5,
                 locale: {
+                    applyLabel: _t('Apply'),
+                    cancelLabel: _t('Cancel'),
                     format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
                 },
             }
