@@ -284,3 +284,23 @@ class TestTimesheet(TestCommonTimesheet):
         }, {
             'amount': -12.0,
         }])
+
+    def test_recompute_partner_from_task_customer_change(self):
+        partner2 = self.env['res.partner'].create({
+            'name': 'Customer Task 2',
+            'email': 'customer2@task.com',
+            'phone': '43',
+        })
+
+        timesheet_entry = self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my only timesheet',
+            'unit_amount': 4,
+        })
+
+        self.assertEqual(timesheet_entry.partner_id, self.partner, "The timesheet entry's partner should be equal to the task's partner/customer")
+
+        self.task1.write({'partner_id': partner2})
+
+        self.assertEqual(timesheet_entry.partner_id, partner2, "The timesheet entry's partner should still be equal to the task's partner/customer, after the change")
