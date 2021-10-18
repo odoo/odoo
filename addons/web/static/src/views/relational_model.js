@@ -1,95 +1,26 @@
 /* @odoo-module */
 
-import { registry } from "../core/registry";
-import { KeepLast } from "../core/utils/concurrency";
-import { Model } from "../views/helpers/model";
+import { ORM } from "@web/core/orm_service";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { Model } from "./helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
 
-/**
- * @returns {{
- *  promise: Promise<any>,
- *  resolve: (result: any) => any,
- *  reject: (reason: any) => any,
- * }}
- */
-const makeResolvablePromise = () => {
-    const promiseWrapper = {};
-    promiseWrapper.promise = new Promise((resolve, reject) => {
-        Object.assign(promiseWrapper, { resolve, reject });
+function makeDeferred() {
+    let resolve;
+    let reject;
+    const prom = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
     });
-    return promiseWrapper;
-};
+    return Object.assign(prom, { resolve, reject });
+}
 
-class BenedictRequestbatch {
-    constructor(orm) {
-        this.orm = orm;
-        this.batches = {};
-        this.scheduled = false;
-    }
-
-    call() {
-        return this._batch("call", ...arguments);
-    }
-
-    create() {
-        return this._batch("create", ...arguments);
-    }
-
-    read() {
-        return this._batchRead(...arguments);
-    }
-
-    readGroup() {
-        return this._batch("readGroup", ...arguments);
-    }
-
-    search() {
-        return this._batch("search", ...arguments);
-    }
-
-    searchRead() {
-        return this._batch("searchRead", ...arguments);
-    }
-
-    unlink() {
-        return this._batch("unlink", ...arguments);
-    }
-
-    webReadGroup() {
-        return this._batch("webReadGroup", ...arguments);
-    }
-
-    webSearchRead() {
-        return this._batch("webSearchRead", ...arguments);
-    }
-
-    write() {
-        return this._batch("write", ...arguments);
-    }
-
-    /**
-     * Entry point to batch generic ORM method. Only calls with the same method
-     * and the exact same arguments can be "batched" (= return the same promise).
-     * @param {string} ormMethod
-     * @param  {...any} args
-     * @returns {Promise<any>}
-     */
-    async _batch(ormMethod, ...args) {
-        if (!this.batches[ormMethod]) {
-            this.batches[ormMethod] = {};
-        }
-        const batches = this.batches[ormMethod];
-        const key = JSON.stringify(args);
-        if (!(key in batches)) {
-            batches[key] = {
-                promiseWrapper: makeResolvablePromise(),
-                args,
-            };
-        }
-
-        this._startSchedule();
-
-        return batches[key].promiseWrapper.promise;
+class RequestBatcherORM extends ORM {
+    constructor() {
+        super(...arguments);
+        this.searchReadBatchId = 1;
+        this.searchReadBatches = {};
+        this.readBatches = {};
     }
 
     /**
@@ -98,66 +29,64 @@ class BenedictRequestbatch {
      * previous list of ids to perform a single read call. Once the server
      * responds, records are then dispatched to the callees based on the
      * given ids arguments (kept in the closure).
+     *
      * @param {string} resModel
-     * @param {number[]} ids
+     * @param {number[]} resIds
      * @param {string[]} fields
      * @returns {Promise<any>}
      */
-    async _batchRead(resModel, ids, fields) {
-        if (!this.batches.read) {
-            this.batches.read = {};
-        }
-        const batches = this.batches.read;
+    async read(resModel, resIds, fields) {
         const key = JSON.stringify([resModel, fields]);
-        if (!(key in batches)) {
-            batches[key] = {
-                promiseWrapper: makeResolvablePromise(),
-                args: [resModel, [], fields],
+        let batch = this.readBatches[key];
+        if (!batch) {
+            batch = {
+                deferred: makeDeferred(),
+                resModel,
+                fields,
+                resIds: [],
+                scheduled: false,
             };
+            this.readBatches[key] = batch;
         }
-        const [, prevIds] = batches[key].args;
-        batches[key].args[1] = [...new Set([...prevIds, ...ids])];
+        const prevIds = this.readBatches[key].resIds;
+        this.readBatches[key].resIds = [...new Set([...prevIds, ...resIds])];
 
-        this._startSchedule();
+        if (!batch.scheduled) {
+            batch.scheduled = true;
+            await Promise.resolve();
+            delete this.readBatches[key];
+            const allRecords = await super.read(resModel, batch.resIds, fields);
+            batch.deferred.resolve(allRecords);
+        }
 
-        const records = await batches[key].promiseWrapper.promise;
-        return records.filter((r) => ids.includes(r.id));
+        const records = await batch.deferred;
+        const rec = records.filter((r) => resIds.includes(r.id));
+        return rec;
     }
 
-    /**
-     * Starts flushing the current batches, if not already started.
-     * A resolved promise is awaited to batch all methodes comprised in the same
-     * microtask.
-     * @returns {Promise<void>}
-     */
-    async _startSchedule() {
-        if (this.scheduled) {
-            return;
+    async searchRead(/*model*/) {
+        // FIXME: discriminate on model? (it is always the same in our usecase)
+        const batchId = this.searchReadBatchId;
+        let batch = this.searchReadBatches[batchId];
+        if (!batch) {
+            batch = {
+                deferred: makeDeferred(),
+                count: 0,
+            };
+            Promise.resolve().then(() => this.searchReadBatchId++);
+            this.searchReadBatches[batchId] = batch;
         }
-        this.scheduled = true;
-
-        await Promise.resolve();
-
-        for (const action in this.batches) {
-            for (const key in this.batches[action]) {
-                const { args, promiseWrapper } = this.batches[action][key];
-                this.orm[action](...args)
-                    .then(promiseWrapper.resolve)
-                    .catch(promiseWrapper.reject);
-            }
+        batch.count++;
+        const result = await super.searchRead(...arguments);
+        batch.count--;
+        if (batch.count === 0) {
+            delete this.searchReadBatches[batchId];
+            batch.deferred.resolve();
         }
-
-        this.batches = {};
-        this.scheduled = false;
+        await batch.deferred;
+        return result;
     }
 }
-
-export const requestBatcherService = {
-    dependencies: ["orm"],
-    start: (env, { orm }) => new BenedictRequestbatch(orm),
-};
-
-registry.category("services").add("requestBatcher", requestBatcherService);
 
 class DataPoint {
     /**
@@ -256,7 +185,7 @@ class DataRecord extends DataPoint {
         let { data } = params;
         if (!data) {
             if (this.resId) {
-                const result = await this.requestBatcher.read(
+                const result = await this.model.orm.read(
                     this.resModel,
                     [this.resId],
                     this.activeFields
@@ -428,20 +357,13 @@ class DataList extends DataPoint {
         }
         this.orderByColumn = params.orderByColumn ? params.orderByColumn : {};
 
-        let fetchData;
         if (this.resIds) {
-            fetchData = await this.loadRecords();
+            this.data = await this.loadRecords();
         } else if (this.isGrouped) {
-            fetchData = await this.loadGroups();
+            this.data = await this.loadGroups();
         } else {
-            fetchData = await this.searchRecords();
+            this.data = await this.searchRecords();
         }
-
-        const loadData = async () => {
-            this.data = await fetchData();
-        };
-
-        return params.defer ? loadData : loadData();
     }
 
     /**
@@ -452,7 +374,7 @@ class DataList extends DataPoint {
         const order = this.orderByColumn.name
             ? `${this.orderByColumn.name} ${this.orderByColumn.asc ? "ASC" : "DESC"}`
             : "";
-        const recordsData = await this.requestBatcher.searchRead(
+        const recordsData = await this.model.orm.searchRead(
             this.resModel,
             this.domain,
             this.activeFields,
@@ -462,14 +384,13 @@ class DataList extends DataPoint {
             }
         );
 
-        return () =>
-            Promise.all(
-                recordsData.map(async (data) => {
-                    const record = this.createRecord(this.resModel, data.id);
-                    await record.load({ data });
-                    return record;
-                })
-            );
+        return Promise.all(
+            recordsData.map(async (data) => {
+                const record = this.createRecord(this.resModel, data.id);
+                await record.load({ data });
+                return record;
+            })
+        );
     }
 
     /**
@@ -478,16 +399,15 @@ class DataList extends DataPoint {
      */
     async loadRecords() {
         if (!this.resIds.length) {
-            return () => [];
+            return [];
         }
-        return () =>
-            Promise.all(
-                this.resIds.map(async (resId) => {
-                    const record = this.createRecord(this.resModel, resId);
-                    await record.load();
-                    return record;
-                })
-            );
+        return Promise.all(
+            this.resIds.map(async (resId) => {
+                const record = this.createRecord(this.resModel, resId);
+                await record.load();
+                return record;
+            })
+        );
     }
 
     /**
@@ -495,7 +415,7 @@ class DataList extends DataPoint {
      * @returns {Promise<() => Promise<DataRecord>>}
      */
     async loadGroups() {
-        const { groups } = await this.requestBatcher.webReadGroup(
+        const { groups } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
             this.activeFields,
@@ -506,22 +426,13 @@ class DataList extends DataPoint {
         );
 
         const groupBy = this.groupBy.slice(1);
-
-        return async () => {
-            const preloadedLists = await Promise.all(
-                groups.map(async (groupData) => {
-                    const list = this.createList(this.resModel, { groupData });
-                    const loadData = await list.load({ groupBy, defer: true });
-                    return [list, loadData];
-                })
-            );
-            return Promise.all(
-                preloadedLists.map(async ([list, loadData]) => {
-                    await loadData();
-                    return list;
-                })
-            );
-        };
+        return await Promise.all(
+            groups.map(async (groupData) => {
+                const list = this.createList(this.resModel, { groupData });
+                await list.load({ groupBy });
+                return list;
+            })
+        );
     }
 
     async toggle() {
@@ -532,7 +443,7 @@ class DataList extends DataPoint {
 }
 
 export class RelationalModel extends Model {
-    setup(params, { requestBatcher }) {
+    setup(params, { rpc, user }) {
         window.basicmodel = this; // debug
         this.db = Object.create(null);
 
@@ -545,7 +456,7 @@ export class RelationalModel extends Model {
         this.activeFields = params.activeFields || {};
         this.viewMode = params.viewMode || null;
 
-        this.requestBatcher = requestBatcher;
+        this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
     }
 
@@ -612,4 +523,4 @@ export class RelationalModel extends Model {
     }
 }
 
-RelationalModel.services = ["requestBatcher"];
+RelationalModel.services = ["rpc", "user"];
