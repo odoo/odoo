@@ -68,22 +68,35 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(parent.el.outerHTML, '<a href="#" class="dropdown-item">coucou</a>');
     });
 
-    QUnit.test("DropdownItem: prevents click default when item clicked", async (assert) => {
-        assert.expect(2);
+    QUnit.test("DropdownItem: prevents click default with href", async (assert) => {
+        assert.expect(4);
         // A DropdownItem should preventDefault a click as it may take the shape
         // of an <a/> tag with an [href] attribute and e.g. could change the url when clicked.
         patchWithCleanup(DropdownItem.prototype, {
             onClick(ev) {
                 assert.ok(!ev.defaultPrevented);
                 this._super(...arguments);
-                assert.ok(ev.defaultPrevented);
+                const href = ev.target.getAttribute("href");
+                // defaultPrevented only if props.href is defined
+                assert.ok(href !== null ? ev.defaultPrevented : !ev.defaultPrevented);
             },
         });
         class Parent extends owl.Component {}
-        Parent.template = owl.tags.xml`<DropdownItem/>`;
+        Parent.template = owl.tags.xml`
+            <Dropdown>
+                <DropdownItem class="link" href="'#'"/>
+                <DropdownItem class="nolink" />
+            </Dropdown>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        await click(target, ".dropdown-item");
+        // The item containing the link class contains an href prop,
+        // which will turn it into <a href=> So it must be defaultPrevented
+        // The other one not contain any href props, it must not be defaultPrevented,
+        // so as not to prevent the background change flow for example
+        await click(parent.el, "button.dropdown-toggle");
+        await click(parent.el, ".link");
+        await click(parent.el, "button.dropdown-toggle");
+        await click(parent.el, ".nolink");
     });
 
     QUnit.test("can be styled", async (assert) => {
