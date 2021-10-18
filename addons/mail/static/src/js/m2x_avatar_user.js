@@ -194,6 +194,11 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
 
 export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
     _template: 'mail.KanbanMany2OneAvatarUser',
+
+    init() {
+        this._super(...arguments);
+        this.displayAvatarName = this.nodeOptions.display_avatar_name || false;
+    },
 });
 
 const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
