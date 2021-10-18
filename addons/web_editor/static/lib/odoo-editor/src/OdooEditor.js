@@ -678,7 +678,11 @@ export class OdooEditor extends EventTarget {
             } else if (record.type === 'attributes') {
                 const node = this.idFind(record.id);
                 if (node) {
-                    this._safeSetAttribute(node, record.attributeName, record.value);
+                    if (this._collabClientId) {
+                        this._safeSetAttribute(node, record.attributeName, record.value);
+                    } else {
+                        node.setAttribute(record.attributeName, record.value);
+                    }
                 }
             } else if (record.type === 'remove') {
                 const toremove = this.idFind(record.id);
@@ -687,13 +691,16 @@ export class OdooEditor extends EventTarget {
                 }
             } else if (record.type === 'add') {
                 let node = this.idFind(record.oid) || this.unserializeNode(record.node);
-                const fakeNode = document.createElement('fake-el');
-                fakeNode.appendChild(node);
-                DOMPurify.sanitize(fakeNode, { IN_PLACE: true });
-                node = fakeNode.childNodes[0];
-                if (!node) {
-                    continue;
+                if (this._collabClientId) {
+                    const fakeNode = document.createElement('fake-el');
+                    fakeNode.appendChild(node);
+                    DOMPurify.sanitize(fakeNode, { IN_PLACE: true });
+                    node = fakeNode.childNodes[0];
+                    if (!node) {
+                        continue;
+                    }
                 }
+
                 this.idSet(node, true);
 
                 if (record.append && this.idFind(record.append)) {
@@ -797,7 +804,11 @@ export class OdooEditor extends EventTarget {
                     const node = this.idFind(mutation.id);
                     if (node) {
                         if (mutation.oldValue) {
-                            this._safeSetAttribute(node, mutation.attributeName, mutation.oldValue);
+                            if (this._collabClientId) {
+                                this._safeSetAttribute(node, mutation.attributeName, mutation.oldValue);
+                            } else {
+                                node.setAttribute(mutation.attributeName, mutation.oldValue);
+                            }
                         } else {
                             node.removeAttribute(mutation.attributeName);
                         }
