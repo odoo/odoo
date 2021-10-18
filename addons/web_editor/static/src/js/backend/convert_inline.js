@@ -2,7 +2,7 @@
 'use strict';
 
 import FieldHtml from 'web_editor.field.html';
-import { rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
+import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 
@@ -426,6 +426,9 @@ function bootstrapToTable($editable) {
 
 
         // ROWS
+        // First give all siblings of rows a separate row/col parent combo.
+        $table.children().filter((i, child) => isBlock(child) && !$(child).hasClass('row')).wrap('<div class="row"><div class="col-12"/></div>');
+
         const $bootstrapRows = $table.children().filter('.row');
         for (const bootstrapRow of $bootstrapRows) {
             const $bootstrapRow = $(bootstrapRow);
