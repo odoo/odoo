@@ -171,7 +171,9 @@ models.Order = models.Order.extend({
             var old  = {};
             var found = false;
             for(var id in old_res) {
-                if(old_res[id].product_id === curr.product_id){
+                const old_line_id = id.split('|')[0];
+                const new_line_id = line_hash.split('|')[0];
+                if(old_line_id === new_line_id){
                     found = true;
                     old = old_res[id];
                     break;
