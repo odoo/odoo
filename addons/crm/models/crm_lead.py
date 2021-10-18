@@ -1453,8 +1453,8 @@ class Lead(models.Model):
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
 
-                    s_lead_won *= value_result['won'] / total_won
-                    s_lead_lost *= value_result['lost'] / total_lost
+                    s_lead_won *= value_result['won'] / total_won if total_won > 0 else value_result['won']
+                    s_lead_lost *= value_result['lost'] / total_lost if total_lost > 0 else value_result['lost']
 
             # 3. Compute Probability to win
             lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
