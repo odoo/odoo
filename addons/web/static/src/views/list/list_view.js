@@ -5,16 +5,20 @@ import { useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { FieldParser } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
-import { ListRenderer } from "@web/views/list/list_renderer";
-import { RelationalModel } from "@web/views/relational_model";
+import { FieldParser } from "../helpers/view_utils";
+import { RelationalModel } from "../relational_model";
+import { ListRenderer } from "./list_renderer";
+
+const { onWillStart } = owl.hooks;
 
 const { useSubEnv } = owl.hooks;
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
         const fieldParser = new FieldParser(fields, "list");
+        const xmlDoc = this.parseXML(arch);
+        const activeActions = this.getActiveActions(xmlDoc);
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
                 if (
@@ -22,11 +26,13 @@ export class ListArchParser extends XMLParser {
                     this.isAttr(node, "optional").notEqualTo("hide")
                 ) {
                     fieldParser.addField(node, (fieldName) => {
+                        const sortable = fields[fieldName].sortable;
                         const string = node.getAttribute("string") || fields[fieldName].string;
                         const widget = node.getAttribute("widget") || null;
                         return {
                             type: "field",
                             name: fieldName,
+                            sortable,
                             string,
                             widget,
                         };
@@ -35,6 +41,7 @@ export class ListArchParser extends XMLParser {
             }
         });
         return {
+            activeActions,
             columns: fieldParser.getFields(),
             relations: fieldParser.getRelations(),
         };
@@ -46,13 +53,20 @@ export class ListArchParser extends XMLParser {
 class ListView extends owl.Component {
     setup() {
         this.actionService = useService("action");
+        this.user = useService("user");
+
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
+        this.activeActions = this.archInfo.activeActions;
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
             relations: this.archInfo.relations,
             activeFields: this.archInfo.columns.map((col) => col.name),
             viewMode: "list",
+        });
+
+        onWillStart(async () => {
+            this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
         });
 
         this.openRecord = this.openRecord.bind(this);
@@ -68,13 +82,19 @@ class ListView extends owl.Component {
         const resIds = this.model.root.data.map((datapoint) => datapoint.resId);
         this.actionService.switchView("form", { resId: record.resId, resIds });
     }
+
+    onClickCreate() {
+        this.actionService.switchView("form", { resId: undefined });
+    }
 }
 
 ListView.type = "list";
 ListView.display_name = "List";
 ListView.icon = "fa-list-ul";
 ListView.multiRecord = true;
+ListView.components = { ListRenderer, Layout };
+
 ListView.template = `web.ListView`;
-ListView.components = { Layout, ListRenderer };
+ListView.buttonTemplate = "web.ListView.Buttons";
 
 registry.category("views").add("list", ListView);
