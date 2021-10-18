@@ -11,6 +11,9 @@
     'data': [
         'views/project_views.xml',
     ],
+    'demo': [
+        'data/project_purchase_demo.xml',
+    ],
     'application': False,
     'auto_install': True,
     'license': 'LGPL-3',

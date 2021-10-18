@@ -12,7 +12,9 @@
     'data': [
         'views/project_project_views.xml',
     ],
-    'demo': [],
+    'demo': [
+        'data/project_hr_expense_demo.xml',
+    ],
     'installable': True,
     'auto_install': True,
     'license': 'OEEL-1',
