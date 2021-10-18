@@ -769,3 +769,47 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         self.assertEqual(payment.name, '/')
         payment.action_post()
         self.assertRegex(payment.name, 'BNK1/\d{4}/\d{2}/0002')
+
+    def test_payment_without_default_company_account(self):
+        """ The purpose of this test is to check the specific behavior when duplicating an inbound payment, then change
+        the copy to an outbound payment when we set the outstanding accounts (payments and receipts) on a journal but
+        not on the company level.
+        """
+        company = self.company_data['company']
+        bank_journal = self.company_data['default_journal_bank']
+
+        bank_journal.outbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_credit_account_id
+        bank_journal.inbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_debit_account_id
+        company.account_journal_payment_debit_account_id = False
+        company.account_journal_payment_credit_account_id = False
+
+        payment = self.env['account.payment'].create({
+            'amount': 5.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'journal_id': bank_journal.id,
+        })
+        self.assertRecordValues(payment, [{
+            'amount': 5.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_reference': False,
+            'is_reconciled': False,
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': False,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'partner_bank_id': False,
+        }])
+
+        payment.payment_type = 'outbound'
+        self.assertRecordValues(payment, [{
+            'amount': 5.0,
+            'payment_type': 'outbound',
+            'partner_type': 'customer',
+            'payment_reference': False,
+            'is_reconciled': False,
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': False,
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'partner_bank_id': False,
+        }])
