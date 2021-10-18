@@ -204,6 +204,10 @@ export class ListView extends owl.Component {
 
         this.archiveEnabled = "active" in this.props.fields || "x_active" in this.props.fields;
 
+        onWillStart(async () => {
+            this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
+        });
+
         this.openRecord = this.openRecord.bind(this);
         this.getSelectedResIds = this.getSelectedResIds.bind(this);
 
@@ -391,6 +395,10 @@ export class ListView extends owl.Component {
             cancel: () => {},
         };
         this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    onClickCreate() {
+        this.actionService.switchView("form", { resId: undefined });
     }
 }
 
