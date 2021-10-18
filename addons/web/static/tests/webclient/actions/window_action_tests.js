@@ -1592,10 +1592,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("current act_window action is stored in session_storage", async function (assert) {
         assert.expect(1);
-        const expectedAction = {
-            ...serverData.actions[3],
-            context: {},
-        };
+        const expectedAction = serverData.actions[3];
         patchWithCleanup(browser, {
             sessionStorage: Object.assign(Object.create(sessionStorage), {
                 setItem(k, value) {
@@ -1610,52 +1607,6 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
     });
-
-    QUnit.test(
-        "store evaluated context of current action in session_storage",
-        async function (assert) {
-            // this test ensures that we don't store stringified instances of
-            // CompoundContext in the session_storage, as they would be meaningless
-            // once restored
-            assert.expect(1);
-            const expectedAction = {
-                ...serverData.actions[4],
-                context: {
-                    lang: "en",
-                    uid: 7,
-                    tz: "taht",
-                    active_model: "partner",
-                    active_id: 1,
-                    active_ids: [1],
-                },
-            };
-            let checkSessionStorage = false;
-            patchWithCleanup(browser, {
-                sessionStorage: Object.assign(Object.create(sessionStorage), {
-                    setItem(k, value) {
-                        if (checkSessionStorage) {
-                            assert.strictEqual(
-                                value,
-                                JSON.stringify(expectedAction),
-                                "should store the executed action in the sessionStorage"
-                            );
-                        }
-                    },
-                }),
-            });
-            const webClient = await createWebClient({ serverData });
-            // execute an action and open a record in form view
-            await doAction(webClient, 3);
-            await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-            await legacyExtraNextTick();
-            // click on 'Execute action' button (it executes an action with a CompoundContext as context)
-            checkSessionStorage = true;
-            await testUtils.dom.click(
-                $(webClient.el).find(".o_form_view button:contains(Execute action)")
-            );
-            await legacyExtraNextTick();
-        }
-    );
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
         assert.expect(6);
