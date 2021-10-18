@@ -115,6 +115,11 @@ const Wysiwyg = Widget.extend({
                 return node.hasAttribute &&
                     (node.hasAttribute('data-target') || node.hasAttribute('data-oe-model'));
             },
+            filterMutationRecords: (records) => {
+                return records.filter((record) => {
+                    return !(record.target.classList && record.target.classList.contains('o_header_standard'))
+                })
+            },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
             plugins: options.editorPlugins,
