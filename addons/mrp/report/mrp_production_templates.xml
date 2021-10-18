@@ -43,7 +43,7 @@
                         </div>
                     </div>
 
-                    <div t-if="o.workorder_ids">
+                    <div t-if="o.workorder_ids" groups="mrp.group_mrp_routings">
                         <h3>
                             <span t-if="o.state == 'done'">Operations Done</span>
                             <span t-else="">Operations Planned</span>
