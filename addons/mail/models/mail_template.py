@@ -271,7 +271,11 @@ class MailTemplate(models.Model):
             try:
                 template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (email_layout_xmlid, self.name))
+                _logger.warning(
+                    'QWeb template %s not found when sending template %s. Sending without layout.',
+                    email_layout_xmlid,
+                    self.name
+                )
             else:
                 record = self.env[self.model].browse(res_id)
                 model = self.env['ir.model']._get(record._name)

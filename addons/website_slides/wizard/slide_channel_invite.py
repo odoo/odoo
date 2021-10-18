@@ -97,7 +97,7 @@ class SlideChannelInvite(models.TransientModel):
             try:
                 template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (email_layout_xmlid))
+                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layout.', email_layout_xmlid)
             else:
                 # could be great to use _notify_prepare_template_context someday
                 template_ctx = {
