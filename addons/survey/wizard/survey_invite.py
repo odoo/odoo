@@ -218,7 +218,7 @@ class SurveyInvite(models.TransientModel):
             try:
                 template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (email_layout_xmlid))
+                _logger.warning('QWeb template %s not found when sending survey mails. Sending without layout', email_layout_xmlid)
             else:
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),
