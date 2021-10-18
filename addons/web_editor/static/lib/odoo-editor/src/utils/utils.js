@@ -902,6 +902,26 @@ export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
     return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
 }
+/**
+ * Return true if the given node font style equal italic
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isItalic(node) {
+    const fontStyle = getComputedStyle(closestElement(node)).fontStyle;
+    return fontStyle === 'italic';
+}
+/**
+ * Return true if the given node text-decoration style equal underline
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isUnderline(node) {
+    const textDecoration = getComputedStyle(closestElement(node)).textDecorationLine;
+    return textDecoration === 'underline';
+}
 
 export function isUnbreakable(node) {
     if (!node || node.nodeType === Node.TEXT_NODE) {

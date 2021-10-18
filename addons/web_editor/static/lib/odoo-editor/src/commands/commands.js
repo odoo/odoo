@@ -18,6 +18,8 @@ import {
     insertText,
     isBlock,
     isBold,
+    isItalic,
+    isUnderline,
     isColorGradient,
     isContentTextNode,
     isShrunkBlock,
@@ -296,6 +298,16 @@ function deleteTable(editor, table) {
     setSelection(p, 0);
 }
 
+function getTextNodes(editor) {
+    const selection = editor.document.getSelection();
+    if (!selection.rangeCount || selection.getRangeAt(0).collapsed) {
+        return null;
+    }
+    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+    return getSelectedNodes(editor.editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+}
+
 // This is a whitelist of the commands that are implemented by the
 // editor itself rather than the node prototypes. It might be
 // possible to switch the conditions and test if the method exist on
@@ -353,12 +365,9 @@ export const editorCommands = {
     // Formats
     // -------------------------------------------------------------------------
     bold: editor => {
-        const selection = editor.document.getSelection();
-        if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
-        getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-        const isAlreadyBold = getSelectedNodes(editor.editable)
-            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-            .find(n => isBold(n.parentElement));
+        const nodes = getTextNodes(editor);
+        if (!nodes) return;
+        const isAlreadyBold = nodes.find(n => isBold(n.parentElement));
         applyInlineStyle(editor, el => {
             if (isAlreadyBold) {
                 const block = closestBlock(el);
@@ -368,8 +377,22 @@ export const editorCommands = {
             }
         });
     },
-    italic: editor => editor.document.execCommand('italic'),
-    underline: editor => editor.document.execCommand('underline'),
+    italic: editor => {
+        const nodes = getTextNodes(editor);
+        if (!nodes) return;
+        const isAlreadyItalic = nodes.find(n => isItalic(n.parentElement));
+        applyInlineStyle(editor, el => {
+            el.style.fontStyle = isAlreadyItalic ? 'normal' : 'italic';
+        });
+    },
+    underline: editor => {
+        const nodes = getTextNodes(editor);
+        if (!nodes) return;
+        const isAlreadyUnderline = nodes.find(n => isUnderline(n.parentElement));
+        applyInlineStyle(editor, el => {
+            el.style.textDecoration = isAlreadyUnderline ? 'none' :  'underline';
+        });
+    },
     strikeThrough: editor => editor.document.execCommand('strikeThrough'),
     removeFormat: editor => editor.document.execCommand('removeFormat'),
 

@@ -155,9 +155,8 @@ tour.register('rte_translator', {
 }, {
     content: "save new change",
     trigger: 'button[data-action=save]',
-    extra_trigger: '#wrap.o_dirty p u',
-
-    }, {
+    extra_trigger: '#wrap.o_dirty p span[style="text-decoration: underline;"]',
+}, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
     extra_trigger: 'body:not(.o_wait_reload):not(:has(.note-editor)) a[data-action="edit"]',
