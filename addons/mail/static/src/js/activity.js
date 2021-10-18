@@ -79,30 +79,35 @@ BasicModel.include({
  * @return {Array} : list of modified activity Object
  */
 var setDelayLabel = function (activities){
+    // Alterado pela Multidados para filtrar apenas as atividades que estão ativas.
     var today = moment().startOf('day');
+    var activities_to_show = [];
     _.each(activities, function (activity){
-        var toDisplay = '';
-        var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
-        if (diff === 0){
-            toDisplay = _t("Today");
-        } else {
-            if (diff < 0){ // overdue
-                if (diff === -1){
-                    toDisplay = _t("Yesterday");
-                } else {
-                    toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
-                }
-            } else { // due
-                if (diff === 1){
-                    toDisplay = _t("Tomorrow");
-                } else {
-                    toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
+        if (activity.status == 'active'){
+            var toDisplay = '';
+            var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
+            if (diff === 0){
+                toDisplay = _t("Today");
+            } else {
+                if (diff < 0){ // overdue
+                    if (diff === -1){
+                        toDisplay = _t("Yesterday");
+                    } else {
+                        toDisplay = _.str.sprintf(_t("%d days overdue"), Math.abs(diff));
+                    }
+                } else { // due
+                    if (diff === 1){
+                        toDisplay = _t("Tomorrow");
+                    } else {
+                        toDisplay = _.str.sprintf(_t("Due in %d days"), Math.abs(diff));
+                    }
                 }
             }
+            activity.label_delay = toDisplay;
+            activities_to_show.push(activity);
         }
-        activity.label_delay = toDisplay;
     });
-    return activities;
+    return activities_to_show;
 };
 
 var BasicActivity = AbstractField.extend({
@@ -215,12 +220,19 @@ var BasicActivity = AbstractField.extend({
      * @return {$.Promise}
      */
     _sendActivityFeedback: function (activityID, feedback) {
+        // Alterado pela Multidados
+
+        // Adicionando 'no_unlink' no contexto para não excluir
+        // o registro após encerrar a atividade.
+        var context = this.record.getContext();
+        context.no_unlink = true;
+
         return this._rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
                 args: [[activityID]],
                 kwargs: {feedback: feedback},
-                context: this.record.getContext(),
+                context: context,
             });
     },
 
