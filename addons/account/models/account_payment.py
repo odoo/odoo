@@ -175,12 +175,7 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in (
-                    self.journal_id.default_account_id,
-                    self.payment_method_line_id.payment_account_id,
-                    self.journal_id.company_id.account_journal_payment_debit_account_id,
-                    self.journal_id.company_id.account_journal_payment_credit_account_id,
-            ):
+            if line.account_id in self._get_valid_liquidity_accounts():
                 liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
                 counterpart_lines += line
@@ -188,6 +183,16 @@ class AccountPayment(models.Model):
                 writeoff_lines += line
 
         return liquidity_lines, counterpart_lines, writeoff_lines
+
+    def _get_valid_liquidity_accounts(self):
+        return (
+            self.journal_id.default_account_id,
+            self.payment_method_line_id.payment_account_id,
+            self.journal_id.company_id.account_journal_payment_debit_account_id,
+            self.journal_id.company_id.account_journal_payment_credit_account_id,
+            self.journal_id.inbound_payment_method_line_ids.payment_account_id,
+            self.journal_id.outbound_payment_method_line_ids.payment_account_id,
+        )
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
