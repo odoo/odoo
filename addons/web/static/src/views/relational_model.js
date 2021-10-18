@@ -515,6 +515,12 @@ class DataList extends DataPoint {
             );
         };
     }
+
+    async toggle() {
+        this.isOpen = !this.isOpen;
+        // FIXME: load group here (and not by default);
+        this.model.notify();
+    }
 }
 
 export class RelationalModel extends Model {

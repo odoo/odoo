@@ -10,6 +10,8 @@ import { Layout } from "@web/views/layout";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { RelationalModel } from "@web/views/relational_model";
 
+const { useSubEnv } = owl.hooks;
+
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
         const fieldParser = new FieldParser(fields, "list");
@@ -54,6 +56,8 @@ class ListView extends owl.Component {
         });
 
         this.openRecord = this.openRecord.bind(this);
+
+        useSubEnv({ model: this.model }); // do this in useModel?
 
         useSetupView({
             /** TODO **/
