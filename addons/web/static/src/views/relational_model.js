@@ -384,6 +384,7 @@ class DataList extends DataPoint {
         this.groupBy = [];
         this.data = [];
         this.views = {};
+        this.orderByColumn = {};
 
         if (this.groupData) {
             this.domain = params.groupData.__domain;
@@ -415,7 +416,7 @@ class DataList extends DataPoint {
     }
 
     /**
-     * @param {{ domain?: any[], groupBy?: string[], defer?: boolean }} [params={}]
+     * @param {{ domain?: any[], groupBy?: string[], defer?: boolean, orderByColumn?: { name: string, asc: boolean } }} [params={}]
      * @returns {Promise<void> | () => Promise<void>}
      */
     async load(params = {}) {
@@ -425,6 +426,7 @@ class DataList extends DataPoint {
         if (params.groupBy) {
             this.groupBy = params.groupBy;
         }
+        this.orderByColumn = params.orderByColumn ? params.orderByColumn : {};
 
         let fetchData;
         if (this.resIds) {
@@ -447,11 +449,17 @@ class DataList extends DataPoint {
      * @returns {Promise<() => Promise<DataRecord>>}
      */
     async searchRecords() {
+        const order = this.orderByColumn.name
+            ? `${this.orderByColumn.name} ${this.orderByColumn.asc ? "ASC" : "DESC"}`
+            : "";
         const recordsData = await this.requestBatcher.searchRead(
             this.resModel,
             this.domain,
             this.activeFields,
-            { limit: 40 }
+            {
+                limit: 40,
+                order,
+            }
         );
 
         return () =>
@@ -591,6 +599,16 @@ export class RelationalModel extends Model {
             }
             return true;
         });
+    }
+
+    async sortByColumn(column) {
+        const { name, asc } = this.root.orderByColumn;
+        let orderByColumn = {
+            name: column.name,
+        };
+        orderByColumn.asc = column.name === name ? !asc : true;
+        await this.keepLast.add(this.root.load({ orderByColumn }));
+        this.notify();
     }
 }
 

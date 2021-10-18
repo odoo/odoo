@@ -72,6 +72,7 @@ commandProviderRegistry.add("data-hotkeys", {
             const description =
                 el.title ||
                 el.dataset.originalTitle || // LEGACY: bootstrap moves title to data-original-title
+                el.dataset.tooltip ||
                 el.placeholder ||
                 (el.innerText &&
                     `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
