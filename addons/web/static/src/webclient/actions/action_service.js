@@ -183,16 +183,19 @@ function makeActionManager(env) {
      * with a unique jsId.
      */
     function _preprocessAction(action, context = {}) {
+        action._originalAction = JSON.stringify(action);
         action.context = makeContext([context, action.context], env.services.user.context);
         if (action.domain) {
             const domain = action.domain || [];
             action.domain =
                 typeof domain === "string"
-                    ? evaluateExpr(domain, Object.assign(env.services.user.context, action.context))
+                    ? evaluateExpr(
+                          domain,
+                          Object.assign({}, env.services.user.context, action.context)
+                      )
                     : domain;
         }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
-        action._originalAction = JSON.stringify(action);
         action.jsId = `action_${++id}`;
         if (action.type === "ir.actions.act_window" || action.type === "ir.actions.client") {
             action.target = action.target || "current";
