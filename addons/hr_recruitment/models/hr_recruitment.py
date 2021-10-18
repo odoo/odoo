@@ -4,6 +4,7 @@
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.osv.query import Query
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -193,12 +194,38 @@ class Applicant(models.Model):
 
     @api.depends('email_from')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
-            ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
-        application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
-        applicants = self.filtered(lambda applicant: applicant.email_from)
+        self.flush(fnames=['email_from'])
+        # Filter and gather emails at the same time
+        applicants = self.env['hr.applicant']
+        mails = set()
+        for applicant in self:
+            if applicant.email_from:
+                applicants |= applicant
+                mails.add(applicant.email_from.lower())
+        # Done via SQL since read_group does not support grouping by lowercase field
+        if mails:
+            query = Query(self.env.cr, self._table, self._table_query)
+            query.add_where('LOWER("hr_applicant".email_from) in %s', [tuple(mails)])
+            self._apply_ir_rules(query)
+            from_clause, where_clause, where_clause_params = query.get_sql()
+            query_str = """
+            SELECT LOWER("%(table)s".email_from) as l_email_from,
+                COUNT("%(table)s".id) as count
+            FROM %(from)s
+            %(where)s
+        GROUP BY l_email_from
+            """ % {
+                'table': self._table,
+                'from': from_clause,
+                'where': ('WHERE %s' % where_clause) if where_clause else '',
+            }
+            self.env.cr.execute(query_str, where_clause_params)
+
+            application_data_mapped = dict((data['l_email_from'], data['count']) for data in self.env.cr.dictfetchall())
+        else:
+            application_data_mapped = dict()
         for applicant in applicants:
-            applicant.application_count = application_data_mapped.get(applicant.email_from, 1)
+            applicant.application_count = application_data_mapped.get(applicant.email_from.lower(), 1)
         (self - applicants).application_count = False
 
     @api.depends_context('lang')
@@ -402,12 +429,24 @@ class Applicant(models.Model):
         return action
 
     def action_applications_email(self):
+        # Security rules will apply when loading the view, here we just fetch the ids
+        mails = set()
+        for applicant in self:
+            if applicant.email_from:
+                mails.add(applicant.email_from.lower())
+        self.env.cr.execute("""
+        SELECT id
+          FROM hr_applicant
+         WHERE LOWER(email_from) in %s
+        """, (tuple(mails),)
+        )
+        ids = [res['id'] for res in self.env.cr.dictfetchall()]
         return {
             'type': 'ir.actions.act_window',
             'name': _('Job Applications'),
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
-            'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'domain': [('id', 'in', ids)],
             'context': {
                 'active_test': False
             },
