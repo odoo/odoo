@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="ClientDetailsEdit" t-name="ClientDetailsEdit" t-inherit="point_of_sale.ClientDetailsEdit" t-inherit-mode="extension"
+       owl="1">
+        <section class="client-details edit">
+            <div class="client-detail">
+                <span class="label">Type of Business</span>
+                <input class="detail x_type_of_business" name="x_type_of_business"
+                       t-on-change="captureChange"
+                       t-att-value="props.partner.x_type_of_business || ''" />
+            </div>
+        </section>
+    </t>
+</templates>

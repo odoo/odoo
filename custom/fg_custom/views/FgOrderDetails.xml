@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- add field and remove field in contact form (inherit)-->
+     <record id="fg_view_pos_pos_form_inherit" model="ir.ui.view">
+        <field name="name">fg.order.details.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='payment_method_id']" position="after" >
+               <field name="x_check_number"/>
+               <field name="x_issuing_bank"/>
+               <field name="x_check_date"/>
+            </xpath>
+
+            <field name="amount_paid" position="after">
+                <field name="x_total_so_pwd" string="PWD"/>
+            </field>
+            <field name="x_total_so_pwd" position="after">
+                <field name="x_balance" string="Balance"/>
+            </field>
+            <field name="x_balance" position="after">
+                <field name="x_date_from" string="Date From"/>
+            </field>
+            <field name="x_date_from" position="after">
+                <field name="x_date_to" string="Date Until"/>
+            </field>
+
+        </field>
+    </record>
+
+
+    <record id="pos_order_line_form_custom" model="ir.ui.view">
+        <field name="name">pos.order.line.form.custom</field>
+        <field name="model">pos.order.line</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_line_form"/>
+        <field name="arch" type="xml">
+            <form string="POS Order line">
+                <group col="4">
+                    <field name="price_subtotal_incl" position="after">
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+
+</odoo>

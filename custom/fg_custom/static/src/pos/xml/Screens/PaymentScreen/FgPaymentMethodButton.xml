@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="point_of_sale.template" xml:space="preserve">
+    <t t-name="PaymentMethodButton"  t-extend="PaymentMethodButton" t-inherit="point_of_sale.PaymentMethodButton" t-inherit-mode="extension"
+    owl="1">
+        <xpath expr="//div[@class='button paymentmethod']" position="replace">
+             <t t-if="props.paymentMethod.name == 'Check' ">
+                <div class="button paymentmethod" t-on-click="AddCheckDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+            <t t-elif="props.paymentMethod.name == 'Debit Card' ">
+                <div class="button paymentmethod" t-on-click="AddCardDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+            <t t-elif="props.paymentMethod.name == 'Credit Card' ">
+                <div class="button paymentmethod" t-on-click="AddCardDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+            <t t-elif="props.paymentMethod.name == 'Gift Card' ">
+                <div class="button paymentmethod" t-on-click="AddGiftCardDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+               <div class="button paymentmethod" t-on-click="trigger('new-payment-line', props.paymentMethod)">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
+
