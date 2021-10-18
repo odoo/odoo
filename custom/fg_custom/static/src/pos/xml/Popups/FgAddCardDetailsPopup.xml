@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="fg_custom.FgCardDetailsPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup drag-handle">
+                    <main class="body">
+                        <div class="fg-custom-pos-payment">
+                            <div class="card_number">
+                                <span class="input-type">
+                                    Card Number:
+                                </span>
+                                <div class="input-type">
+                                     <input style="text-align:center" type="text" name="x_card_number" t-model="state.x_card_number"/>
+                                </div>
+                            </div>
+                            <div class="card_name">
+                                <span class="input-type">
+                                    Card Name:
+                                </span>
+                                <div class="input-field">
+                                     <input style="text-align:center" type="text" name="x_card_name" t-model="state.x_card_name"/>
+                                </div>
+                            </div>
+                            <span t-if="state.inputHasError" class="error-message">
+                                <t t-esc="errorMessage" />
+                            </span>
+                        </div>
+                    </main>
+                    <footer class="footer">
+                        <div class="button confirm disable" t-on-click="confirm">
+                            Confirm
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

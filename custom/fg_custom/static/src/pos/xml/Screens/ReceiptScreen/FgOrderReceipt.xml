@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="point_of_sale.template" xml:space="preserve">
+    <t t-name="OrderReceipt"  t-extend="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension"
+       owl="1">
+
+    	<xpath expr="//img[@class='pos-receipt-logo']" position="replace" />
+
+        <xpath expr="//div[@class='pos-receipt-contact']" position="replace">
+                <div class="pos-receipt-contact">
+                    <t t-if="receipt.company.name">
+                        <div><t t-esc="receipt.company.name" /></div>
+                    </t>
+<!--                    <t t-if="receipt.company.partner_id">-->
+<!--                        <div><t t-esc="receipt.company.partner_id[1]" /></div>-->
+<!--                    </t>-->
+<!--                    for the meantime: company address display will depends on the setup of Header in pos-->
+                    <t t-if="receipt.header_html">
+                        <t t-raw="receipt.header_html" />
+                    </t>
+                    <t t-if="!receipt.header_html and receipt.header">
+                        <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
+                    </t>
+
+                    <t t-if="receipt.company.vat">
+                        <div><t t-esc="receipt.company.vat_label"/>:<t t-esc="receipt.company.vat" /></div>
+                    </t>
+
+<!--                    <t t-if="receipt.company.phone">-->
+<!--                        <div>Tel:<t t-esc="receipt.company.phone" /></div>-->
+<!--                    </t>-->
+
+                     <t t-if="receipt.cashier">
+                        <div class="cashier">
+                            <div>--------------------------------</div>
+                            <div>Served by <t t-esc="receipt.cashier" /></div>
+                        </div>
+                    </t>
+                </div>
+
+        </xpath>
+
+        <xpath expr="//div[@class='pos-receipt-contact']" position="after">
+
+            <div>----------------------------------------------------</div>
+
+            <t t-if="receipt.client">
+                <t t-if="receipt.client.name">
+                    <div style="font-size: 70%">Sold To: <span t-esc='receipt.client.name'/></div>
+                </t>
+                 <t t-else="">
+                    <div style="font-size: 70%">Sold To: _____________________________</div>
+                </t>
+
+                <t t-if="receipt.client.address">
+                    <div style="font-size: 70%">Address: <t t-esc='receipt.client.address'/></div>
+                </t>
+                 <t t-else="">
+                    <div style="font-size: 70%">Address: _____________________________</div>
+                </t>
+
+                <t t-if="receipt.client.vat">
+                    <div style="font-size: 70% ">TIN No.: <t t-esc='receipt.client.vat'/></div>
+                </t>
+                <t t-else="">
+                    <div style="font-size: 70%">TIN: _____________________________</div>
+                </t>
+
+                <t t-if="receipt.client.x_type_of_business">
+                    <div style="font-size: 70%">Business Style: <t t-esc='receipt.client.x_type_of_business'/></div>
+                </t>
+                <t t-else="">
+                    <div style="font-size: 70%">Business Style: _____________________________</div>
+                </t>
+            </t>
+            <t t-else="">
+                 <div style="font-size: 70%">Sold To: _____________________________________________</div>
+                 <div style="font-size: 70%">Address: ____________________________________________</div>
+                 <div style="font-size: 70%">TIN: _________________________________________________</div>
+                 <div style="font-size: 70%">Business Style: _____________________________________</div>
+            </t>
+
+            <div>----------------------------------------------------</div>
+    	</xpath>
+    </t>
+</templates>

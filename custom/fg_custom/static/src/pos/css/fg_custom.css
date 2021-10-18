@@ -1,0 +1,56 @@
+
+/** FgAddCheckDetailsPopup **/
+
+.fg-custom-pos-payment {
+    display: flex;
+    flex-flow: column;
+}
+
+.fg-custom-pos-payment .input-amount {
+    display: flex;
+    flex-flow: row;
+}
+
+.fg-custom-pos-payment .input-amount .input-type {
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    border-radius: 2px;
+    padding: 0 12px;
+    margin-right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: solid 1px rgba(60,60,60,0.1);
+    background: rgba(0,0,0,0.05);
+    white-space: nowrap;
+}
+
+.fg-custom-pos-payment .input-amount .input-type.highlight {
+    background: #6EC89B !important;
+    border: solid 1px #64AF8A !important;
+    color: white !important;
+}
+
+.check-details .input-amount input {
+    width: 200px;
+    min-height: auto;
+    text-align: right;
+    padding-right: 30px;
+}
+
+.fg-custom-pos-payment .input-amount .input-field span.currency {
+    position: relative;
+    left: -20px;
+}
+
+.fg-custom-pos-payment textarea {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fg-custom-pos-payment .error-message {
+    color: rgb(197, 52, 0);
+    text-align: center;
+    padding-left: 5px;
+}
