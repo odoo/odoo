@@ -383,15 +383,15 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8725'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_sales_tax')],
-            }),
-            (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8740'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_sales_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8725'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
         ]"/>
