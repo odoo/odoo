@@ -84,6 +84,12 @@ const Wysiwyg = Widget.extend({
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
         }
 
+        const getYoutubeVideoElement =  (url) => {
+            const videoWidget = new weWidgets.VideoWidget(this, undefined, {});
+            const src = videoWidget._createVideoNode(url).$video.attr('src');
+            return videoWidget.getWrappedIframe(src)[0];
+        };
+
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
             toolbar: this.toolbar.$el[0],
@@ -94,6 +100,7 @@ const Wysiwyg = Widget.extend({
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
+            getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
                 const selection = document.getSelection();
