@@ -4,33 +4,67 @@
     <t t-name="web.ListRenderer" owl="1">
         <div class="o_list_view">
             <div class="table-responsive">
-                <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped">
+                <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
                     <thead>
                         <tr>
                             <th class="o_list_record_selector">
-                                <CheckBox />
+                                <CheckBox/>
                             </th>
                             <t t-foreach="columns" t-as="header" t-key="header.name">
                                 <th class="o_column_sortable">
-                                    <t t-esc="header.string" />
+                                    <t t-esc="header.string"/>
                                 </th>
                             </t>
                         </tr>
                     </thead>
                     <tbody class="ui-sortable">
-                        <tr t-foreach="props.record.data" t-as="record" t-key="record.id" class="o_data_row">
-                            <td class="o_list_record_selector">
-                                <CheckBox />
-                            </td>
-                            <t t-foreach="columns" t-as="column" t-key="column_index">
-                                <td class="o_data_cell" t-on-click="openRecord(record)">
-                                    <Field name="column.name" record="record" readonly="true" type="column.widget" />
-                                </td>
-                            </t>
-                        </tr>
+                        <t t-call="web.ListRenderer.Rows">
+                            <t t-set="list" t-value="props.list"/>
+                        </t>
                     </tbody>
                 </table>
             </div>
         </div>
+    </t>
+
+    <t t-name="web.ListRenderer.Rows" owl="1">
+        <t t-if="!list.isGrouped">
+            <t t-foreach="list.data" t-as="record" t-key="record.id">
+                <t t-call="web.ListRenderer.RecordRow"/>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-foreach="list.data" t-as="group" t-key="group.id">
+                <t t-debug=""/>
+                <t t-call="web.ListRenderer.GroupRow"/>
+                <t t-if="group.isOpen">
+                    <t t-call="web.ListRenderer.Rows">
+                        <t t-set="list" t-value="group"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.ListRenderer.GroupRow" owl="1">
+        <tr t-attf-class="{{group.data.length ? 'o_group_has_content' : ''}} o_group_header" t-on-click="toggleGroup(group)">
+            <th class="o_group_name" t-att-colspan="columns.length + 1">
+                <span t-attf-class="fa {{group.isOpen ? 'fa-caret-down' : 'fa-caret-right'}} pl-1 pr-2"/>
+                <t t-esc="group.groupData[list.groupBy[0]][1]"/> (<t t-esc="group.data.length"/>)
+            </th>
+        </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.RecordRow" owl="1">
+        <tr class="o_data_row">
+            <td class="o_list_record_selector">
+                <CheckBox />
+            </td>
+            <t t-foreach="columns" t-as="column" t-key="column_index">
+                <td class="o_data_cell" t-on-click="openRecord(record)">
+                    <Field name="column.name" record="record" readonly="true" type="column.widget" />
+                </td>
+            </t>
+        </tr>
     </t>
 </templates>
