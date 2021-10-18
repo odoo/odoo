@@ -35,6 +35,14 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
 
 .o_survey_navigation_wrapper .o_survey_navigation_submit {
     cursor: pointer;
+
+    &:disabled {
+        cursor: default;
+        opacity: 1;
+        i {
+            opacity: .3;
+        }
+    }
 }
 
 .o_survey_timer {
