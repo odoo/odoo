@@ -51,7 +51,10 @@
         'wizard/project_delete_wizard_views.xml',
         'wizard/project_task_type_delete_views.xml',
     ],
-    'demo': ['data/project_demo.xml'],
+    'demo': [
+        'data/mail_template_demo.xml',
+        'data/project_demo.xml',
+    ],
     'test': [
     ],
     'installable': True,
