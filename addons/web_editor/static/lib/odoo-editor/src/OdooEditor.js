@@ -162,6 +162,7 @@ export class OdooEditor extends EventTarget {
                     }
                 },
                 isHintBlacklisted: () => false,
+                filterMutationRecords: (records) => records,
                 _t: string => string,
             },
             options,
@@ -422,9 +423,9 @@ export class OdooEditor extends EventTarget {
         this._observerUnactiveLabels.add(label);
         if (this.observer) {
             clearTimeout(this.observerTimeout);
-            this.observer.disconnect();
             this.observerFlush();
             this.dispatchEvent(new Event('observerUnactive'));
+            this.observer.disconnect();
         }
     }
     observerFlush() {
@@ -572,7 +573,7 @@ export class OdooEditor extends EventTarget {
             }
             filteredRecords.push(record);
         }
-        return filteredRecords;
+        return this.options.filterMutationRecords(filteredRecords);
     }
 
     // History
@@ -1505,6 +1506,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     _activateContenteditable() {
+        this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
         for (const node of this.options.getContentEditableAreas()) {
@@ -1512,8 +1514,10 @@ export class OdooEditor extends EventTarget {
                 node.setAttribute('contenteditable', true);
             }
         }
+        this.observerActive('_activateContenteditable');
     }
     _stopContenteditable() {
+        this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
             this.editable.setAttribute('contenteditable', !this.options.isRootEditable);
         }
@@ -1522,6 +1526,7 @@ export class OdooEditor extends EventTarget {
                 node.setAttribute('contenteditable', false);
             }
         }
+        this.observerActive('_stopContenteditable');
     }
 
     // HISTORY
