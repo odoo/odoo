@@ -204,7 +204,6 @@
             ('include', 'web.frontend_legacy'),
         ],
         'point_of_sale.qunit_suite_tests': [
-            'web/static/tests/legacy/component_extension_tests.js',
             'point_of_sale/static/tests/unit/**/*',
         ],
         'point_of_sale.assets_backend_prod_only': [
