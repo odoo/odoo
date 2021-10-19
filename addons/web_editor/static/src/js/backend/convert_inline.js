@@ -407,8 +407,13 @@ function bootstrapToTable($editable) {
     // height contents, which is only possible if the table itself has a set
     // height. We also need to restyle it because of the change in structure.
     $editable.find('.o_masonry_grid_container').css('padding', 0)
-        .find('> .o_fake_table').css('height', function() { return $(this).height() })
-        .find('.row').css('height', '');
+    .find('> .o_fake_table').css('height', function() { return $(this).height() });
+    for (const masonryRow of $editable.find('.o_masonry_grid_container > .o_fake_table > .row.h-100')) {
+        masonryRow.style.removeProperty('height');
+        masonryRow.parentElement.style.setProperty('height', '100%');
+        // Children will only take 100% height if the parent has a height property.
+        masonryRow.parentElement.parentElement.style.setProperty('height', 0);
+    }
 
     // Now convert all containers with rows to tables.
     for (const container of $editable.find('.container:has(.row), .container-fluid:has(.row), .o_fake_table:has(.row)')) {
@@ -666,6 +671,14 @@ function formatTables($editable) {
             columnIndex += 1;
         }
         $table.css('padding', '');
+    }
+    // Children will only take 100% height if the parent has a height property.
+    for (const node of $editable.find('*').filter((i, n) => (
+        n.style && n.style.getPropertyValue('height') === '100%' && (
+            !n.parentElement.style.getPropertyValue('height') ||
+            n.parentElement.style.getPropertyValue('height').includes('%'))
+    ))) {
+        node.parentElement.style.setProperty('height', '0');
     }
 }
 
