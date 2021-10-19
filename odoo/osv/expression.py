@@ -763,10 +763,16 @@ class expression(object):
                         subquery, subparams = ids2.subselect('"%s"."%s"' % (comodel._table, field.inverse_name))
                         push(('id', op1, (subquery, subparams)), model, alias, internal=True)
                     elif ids2 and comodel._fields[field.inverse_name].store:
-                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
-                        subparams = [tuple(ids2)]
-                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
+                        if len(ids2) == 1 and isinstance(ids2[0], bool):
+                            op1 = 'NOT exists' if operator in NEGATIVE_TERM_OPERATORS else 'exists'
+                            exists_alias = f"{comodel._table}_{field.inverse_name}"
+                            query = f'{op1} (SELECT "{field.inverse_name}" FROM {comodel._table} as {exists_alias} WHERE "{alias}"."id"="{exists_alias}"."{field.inverse_name}")'
+                            push_result(query, [])
+                        else:
+                            op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                            subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
+                            subparams = [tuple(ids2)]
+                            push(('id', op1, (subquery, subparams)), model, alias, internal=True)
                     else:
                         # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
