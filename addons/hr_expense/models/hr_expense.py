@@ -495,15 +495,17 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         self.ensure_one()
         account_dest = self.env['account.account']
         if self.payment_mode == 'company_account':
-            if not self.sheet_id.bank_journal_id.payment_credit_account_id:
-                raise UserError(_("No Outstanding Payments Account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
-            account_dest = self.sheet_id.bank_journal_id.payment_credit_account_id.id
+            journal = self.sheet_id.bank_journal_id
+            account_dest = (
+                journal.outbound_payment_method_line_ids[0].payment_account_id
+                or journal.company_id.account_journal_payment_credit_account_id
+            )
         else:
             if not self.employee_id.sudo().address_home_id:
                 raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
             partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id.id or partner.parent_id.property_account_payable_id.id
-        return account_dest
+            account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
+        return account_dest.id
 
     def _get_account_move_line_values(self):
         move_line_values_by_expense = {}
@@ -1071,7 +1073,7 @@ class HrExpenseSheet(models.Model):
                 'sticky': False,  #True/False will display for few seconds if false
             },
         }
-        
+
         filtered_sheet = self.filtered(lambda s: s.state in ['submit', 'draft'])
         if not filtered_sheet:
             return notification
@@ -1082,7 +1084,7 @@ class HrExpenseSheet(models.Model):
             'type': 'success',
             'next': {'type': 'ir.actions.act_window_close'},
         })
-        
+
         self.activity_update()
         return notification
 
