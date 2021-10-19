@@ -5,23 +5,23 @@
 # Translators:
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2021
 # Jonathan S <jonathan.c.strom@gmail.com>, 2021
-# Daniel Osser <danielosser@gmail.com>, 2021
 # Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2021
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
 # lasch a <bmail440@gmail.com>, 2021
 # Haojun Zou <apollo_zhj@msn.com>, 2021
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # fah_odoo <fah@odoo.com>, 2021
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Patrik Lermon <patrik.lermon@gmail.com>, 2021
 # lynnliuying <lynn.liu1971@gmail.com>, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # Tim Forsström <tim.forsstrom@arbetsformedlingen.se>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
-# Simon Strömberg <simon.stromberg@vertel.se>, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
+# Simon S, 2021
+# Daniel Osser <danielosser@gmail.com>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Simon Strömberg <simon.stromberg@vertel.se>, 2021\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr "poster"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "# Code editor"
-msgstr ""
+msgstr "# Kodredigerare"
 
 #. module: web
 #. openerp-web
@@ -98,14 +98,14 @@ msgstr "%d år sedan"
 #: code:addons/web/static/src/js/views/file_upload_mixin.js:0
 #, python-format
 msgid "%s Files"
-msgstr ""
+msgstr "%s Filer"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "%s days ago"
-msgstr ""
+msgstr "%s dagar sedan"
 
 #. module: web
 #. openerp-web
@@ -147,7 +147,7 @@ msgstr "'%s' är inte ett korrekt heltal"
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "'%s' är inte ett giltigt valutafält"
 
 #. module: web
 #. openerp-web
@@ -161,28 +161,28 @@ msgstr "'%s' är inte konverterbart till datum, datum/tid eller tid"
 #: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
 #, python-format
 msgid "(%s/%sMb)"
-msgstr ""
+msgstr "(%s/%sMb)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "(change)"
-msgstr ""
+msgstr "(växel)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(räkna)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #, python-format
 msgid "(no result)"
-msgstr ""
+msgstr "(inget resultat)"
 
 #. module: web
 #. openerp-web
@@ -201,19 +201,19 @@ msgstr "(ingen rubrik)"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "07/08/2020"
-msgstr ""
+msgstr "07/08/2020"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "08/07/2020"
-msgstr ""
+msgstr "08/07/2020"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 post"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -281,7 +281,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">Tax 15%</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">15% Moms</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -313,7 +313,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Belopp</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -326,11 +326,13 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2020/07/0003</span>"
 msgstr ""
+"<span>Faktura</span>\n"
+"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Betalvillkor: 30 Days</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -386,7 +388,7 @@ msgstr "<strong>Totalt</strong>"
 #: code:addons/web/static/src/js/control_panel/custom_favorite_item.js:0
 #, python-format
 msgid "A name for your favorite filter is required."
-msgstr ""
+msgstr "Ett namn för ditt favoritfilter krävs."
 
 #. module: web
 #. openerp-web
@@ -455,7 +457,7 @@ msgstr "Aktivitets ID:"
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Action Fönster Vy"
 
 #. module: web
 #. openerp-web
@@ -485,7 +487,7 @@ msgstr "Lägg till"
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "Lägg till %s"
 
 #. module: web
 #. openerp-web
@@ -506,7 +508,7 @@ msgstr "Lägg till gruppering"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Lägg till en kolumn"
 
 #. module: web
 #. openerp-web
@@ -529,7 +531,7 @@ msgstr "Lägg till rad"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr ""
+msgstr "Lägg till gren"
 
 #. module: web
 #. openerp-web
@@ -546,7 +548,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add filter"
-msgstr ""
+msgstr "lägg till filter"
 
 #. module: web
 #. openerp-web
@@ -665,7 +667,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
-msgstr ""
+msgstr "Ett fel uppstod"
 
 #. module: web
 #. openerp-web
@@ -1125,7 +1127,7 @@ msgstr "Bolag"
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Företagets dokumentlayout"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1159,7 +1161,7 @@ msgstr "Tillstånd:"
 #. module: web
 #: model:ir.actions.act_window,name:web.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Konfigurera er dokumentlayout"
 
 #. module: web
 #. openerp-web
@@ -1182,14 +1184,14 @@ msgstr "Bekräftelse"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection lost. Trying to reconnect..."
-msgstr ""
+msgstr "Tappade anslutningen. Försöker återansluta..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection restored. You are back online."
-msgstr ""
+msgstr "Anslutningen återställd. Du är tillbaka online."
 
 #. module: web
 #. openerp-web
@@ -1211,7 +1213,7 @@ msgstr "Sammanhang:"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Control"
-msgstr ""
+msgstr "Kontroll"
 
 #. module: web
 #. openerp-web
@@ -1219,7 +1221,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Control panel buttons"
-msgstr ""
+msgstr "Kontrollpanelens knappar"
 
 #. module: web
 #. openerp-web
@@ -1227,7 +1229,7 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Copied !"
-msgstr ""
+msgstr "Kopierad !"
 
 #. module: web
 #. openerp-web
@@ -1242,7 +1244,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "Copy the full error to clipboard"
-msgstr ""
+msgstr "Kopiera hela felet till urklipp"
 
 #. module: web
 #. openerp-web
@@ -1250,14 +1252,14 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Kopiera till Urklipp"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "Kunde inte ansluta till servern"
 
 #. module: web
 #. openerp-web
@@ -1265,14 +1267,14 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Could not display the selected image"
-msgstr ""
+msgstr "Kunde inte visa den valda bilden"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "Det gick inte att visa den angivna bildadressen."
 
 #. module: web
 #. openerp-web
@@ -1299,7 +1301,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Count"
-msgstr ""
+msgstr "Antal"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -1326,7 +1328,7 @@ msgstr "Skapa"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "Create "
-msgstr ""
+msgstr "Skapa"
 
 #. module: web
 #. openerp-web
@@ -1368,7 +1370,7 @@ msgstr "Skapa: "
 #: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Create: %s"
-msgstr ""
+msgstr "Skapa: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
@@ -1399,12 +1401,12 @@ msgstr "Skapa Användare:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "Nuvarande status"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
 msgid "Custom Colors"
-msgstr ""
+msgstr "Anpassade färger"
 
 #. module: web
 #. openerp-web
@@ -1413,7 +1415,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "Mörkblå"
 
 #. module: web
 #. openerp-web
@@ -1422,7 +1424,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "Mörklila"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -1441,7 +1443,7 @@ msgstr "Datum"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum & Tid"
 
 #. module: web
 #. openerp-web
@@ -1463,7 +1465,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "Decimal"
 
 #. module: web
 #. openerp-web
@@ -1501,14 +1503,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Delete node"
-msgstr ""
+msgstr "Ta bort nod"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Radera rad"
 
 #. module: web
 #. openerp-web
@@ -1516,7 +1518,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Descending"
-msgstr ""
+msgstr "Fallande"
 
 #. module: web
 #. openerp-web
@@ -1610,7 +1612,7 @@ msgstr "Domän"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain node"
-msgstr ""
+msgstr "Domain nod"
 
 #. module: web
 #. openerp-web
@@ -1669,7 +1671,7 @@ msgstr "Rita"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Rullgardinsmeny"
 
 #. module: web
 #. openerp-web
@@ -1723,7 +1725,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Edit Stage"
-msgstr ""
+msgstr "Redigera etapp"
 
 #. module: web
 #. openerp-web
@@ -2482,7 +2484,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
-msgstr ""
+msgstr "Mått"
 
 #. module: web
 #. openerp-web
@@ -3280,28 +3282,28 @@ msgstr "Lila"
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q1"
-msgstr ""
+msgstr "Q1"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q2"
-msgstr ""
+msgstr "Q2"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q3"
-msgstr ""
+msgstr "Q3"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q4"
-msgstr ""
+msgstr "Q4"
 
 #. module: web
 #: model:ir.model.fields.selection,name:web.selection__ir_actions_act_window_view__view_mode__qweb
@@ -3314,7 +3316,7 @@ msgstr "QWeb"
 #: code:addons/web/static/src/xml/pivot.xml:0
 #, python-format
 msgid "Quarter"
-msgstr ""
+msgstr "Kvartal"
 
 #. module: web
 #. openerp-web
@@ -4328,7 +4330,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upload your file"
-msgstr ""
+msgstr "Ladda upp din fil"
 
 #. module: web
 #. openerp-web

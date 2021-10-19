@@ -211,12 +211,10 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
              */
             _onYearDateClick(info) {
                 const calendar = this.context.calendar;
-                const events = Object.values(this.events)
+                const events = this.events
                     .filter(event => {
-                        const startUTC = calendar.dateEnv.toDate(event._instance.range.start);
-                        const endUTC = calendar.dateEnv.toDate(event._instance.range.end);
-                        const start = moment(startUTC);
-                        const end = moment(endUTC);
+                        const start = moment(event.start);
+                        const end = moment(event.end);
                         const inclusivity = start.isSame(end, 'day') ? '[]' : '[)';
                         return moment(info.date).isBetween(start, end, 'day', inclusivity);
                     })

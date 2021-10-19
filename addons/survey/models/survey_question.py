@@ -393,6 +393,7 @@ class SurveyQuestion(models.Model):
             if question.question_type in ['simple_choice', 'multiple_choice', 'matrix']:
                 answer_lines = all_lines.filtered(
                     lambda line: line.answer_type == 'suggestion' or (
+                        line.skipped and not line.answer_type) or (
                         line.answer_type == 'char_box' and question.comment_count_as_answer)
                     )
                 comment_line_ids = all_lines.filtered(lambda line: line.answer_type == 'char_box')

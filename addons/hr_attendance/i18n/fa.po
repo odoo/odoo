@@ -6,9 +6,10 @@
 # Martin Trigaux, 2020
 # Hamid Darabi, 2020
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Arash Sardari <arashss77@gmail.com>, 2020
 # Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Arash Sardari <arashss77@gmail.com>, 2020
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
+# Far Har <fhari1234@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
+"Last-Translator: Far Har <fhari1234@gmail.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,19 +29,19 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr ""
+msgstr "زمان \"خروج\" نمی‌تواند زودتر از زمان \"ورود\" باشد."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s از %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s از %(check_in)s تا %(check_out)s"
 
 #. module: hr_attendance
 #. openerp-web
@@ -50,16 +51,18 @@ msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
 msgstr ""
+"<b> هشدار! آخرین چک در بیش از 12 ساعت پیش بود. </ b> <br/> اگر این درست "
+"نیست، لطفا با کارکنان منابع انسانی تماس بگیرید"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "<i class = \"FA FA تقویم\" Aria-label = \"دوره\" نقش = \"img\" title = \"دوره\" />"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
-msgstr ""
+msgstr "<span class = \"o_form_label\"> پین کارمند </ span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -69,24 +72,27 @@ msgid ""
 "                            Last Month\n"
 "                        </span>"
 msgstr ""
+"<span class = \"o_stat_text\">\n"
+"ماه گذشته\n"
+"</ span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class = \"o_stat_text\"> حضور در </ span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attended Since</span>"
-msgstr ""
+msgstr "<span class = \"o_stat_text\"> حضور یافته از </ span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr ""
+msgstr "<span class = \"o_stat_text\"> از زمانی که </ span> حضور نداشته باشد"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -95,6 +101,9 @@ msgid ""
 "oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
 "title=\"Available\"/>"
 msgstr ""
+"<span id = \"oe_hr_attendance_status\" class = \"fa fa-circle "
+"oe_hr_attendance_status_green\" نقش = \"img\" aria-label = \"در دسترس\" "
+"title = \"در دسترس\" />"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -102,6 +111,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id = \"oe_hr_attendance_status\" class = \"fa-circle oe_hr_attendance_status_orange\" رمان \"img\" aria-label = \"در دسترس نیست\" title = \"در دسترس نیست\">\n"
+"</ span>"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -109,25 +120,27 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"اضافه کردن چند کارمند برای قادر شدن به انتخاب یک کارمند در اینجا و انجام ورود/خروج.\n"
+"         برای ایجاد کارکنان به منوی کارکنان بروید."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
-msgstr "مدیریت"
+msgstr "راهبر"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr ""
+msgstr "مصرف یک سیب در هر روز شما را از دکتر دور نگه می دارد"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr ""
+msgstr "یک روز کاری خوب دیگر! به زودی میبینمت!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -144,7 +157,7 @@ msgstr "حضور و غیاب"
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "تجزیه و تحلیل حضور و غیاب"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -152,7 +165,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr ""
+msgstr "وضعیت حضور و غیاب"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -163,7 +176,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
-msgstr "حضورغیاب ها"
+msgstr "حضوروغیاب‌ها"
 
 #. module: hr_attendance
 #. openerp-web
@@ -178,7 +191,7 @@ msgstr "موجود"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "کارمند پایه"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -187,6 +200,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"نمیتواند رکورد حضور جدید را برای %(empl_name)s, ایجاد کند، کارمند هنوز خروج "
+"نزده است از %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -196,6 +211,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"نمیتواند رکورد حضور جدید را برای %(empl_name)s ایجاد کند، کارمند قبلا در "
+"%(datetime)s وارد شده است"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -205,6 +222,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"نمی توان خروج %(empl_name)s را انجام داد، نمی تواند ورود مربوطه را در آن "
+"پیدا کند. حضور شما احتمالا ً به صورت دستی توسط منابع انسانی اصلاح شده است."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -214,12 +233,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
-msgstr ""
+msgstr "ورود"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "ورود به/خروج از سیستم"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -229,40 +248,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
-msgstr ""
+msgstr "خروج از سیستم"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "ورود به/خروج از سیستم"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_in
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_in
 msgid "Checked in"
-msgstr ""
+msgstr "واردشده"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Checked in at"
-msgstr ""
+msgstr "واردشده در"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_out
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_out
 msgid "Checked out"
-msgstr ""
+msgstr "خارح‌شده"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Checked out at"
-msgstr ""
+msgstr "خارج‌شده در"
 
 #. module: hr_attendance
 #. openerp-web
@@ -270,14 +289,14 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Click to"
-msgstr ""
+msgstr "کلیک کنید برای"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Company Logo"
-msgstr "لوگو شرکت"
+msgstr "لوگوی شرکت"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -292,17 +311,17 @@ msgstr "پیکربندی"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
-msgstr ""
+msgstr "ایجاد یک کارمند جدید"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجادشده توسط"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
 msgid "Created on"
-msgstr "ایجاد شده در"
+msgstr "ایجادشده در"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -323,6 +342,7 @@ msgstr "نام نمایشی"
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
+"زود به رختخواب و زود به بالا رفتن، مرد را سالم، ثروتمند و خردمند می کند"
 
 #. module: hr_attendance
 #. openerp-web
@@ -330,6 +350,7 @@ msgstr ""
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr ""
+"صبحانه را به عنوان پادشاه بخورید، ناهار به عنوان تاجر و شام به عنوان گدا"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
@@ -341,45 +362,45 @@ msgstr "کارمند"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 msgid "Employee PIN"
-msgstr ""
+msgstr "پین کارمند"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Employee attendances"
-msgstr ""
+msgstr "حضور کارکنان"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
 msgid "Employees"
-msgstr "کارمندان"
+msgstr "کارکنان"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
+msgstr "فعال کردن استفاده از PIN"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr ""
+msgstr "خطا: نمی تواند کارمند مربوطه را پیدا کند."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "First come, first served"
-msgstr ""
+msgstr "اولین وارده، ابتدا خدمت داده می‌شود"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr ""
+msgstr "خوشحالم که برگشتید، مدتی بی‌خبر گذشت!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -389,28 +410,28 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "برگرد"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good afternoon"
-msgstr ""
+msgstr "عصر بخیر"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good evening"
-msgstr ""
+msgstr "عصر بخیر"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good morning"
-msgstr ""
+msgstr "صبح بخیر"
 
 #. module: hr_attendance
 #. openerp-web
@@ -418,7 +439,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Good night"
-msgstr ""
+msgstr "شب بخیر"
 
 #. module: hr_attendance
 #. openerp-web
@@ -426,46 +447,46 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Goodbye"
-msgstr ""
+msgstr "خداحافظ"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
-msgstr "دسته بندی بر مبنای"
+msgstr "گروه‌بندی بر مبنای"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr ""
+msgstr "بعد از ظهر خوبی داشته باشید"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good day!"
-msgstr ""
+msgstr "روز خوبی داشته باشید!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a good evening"
-msgstr ""
+msgstr "عصر خوبی داشته باشید"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Have a nice lunch!"
-msgstr ""
+msgstr "ناهار خوبی داشته باشید!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Hours"
-msgstr "ساعت‌ها"
+msgstr "ساعت"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
@@ -473,7 +494,7 @@ msgstr "ساعت‌ها"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr ""
+msgstr "ساعات ماه گذشته"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
@@ -481,19 +502,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
-msgstr ""
+msgstr "ساعت گذشته ماه‌ها"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr ""
+msgstr "ساعات امروز"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "جستجوی حضوروغیاب منابع انسانی"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
@@ -508,38 +529,38 @@ msgstr "شناسه"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Identify Manually"
-msgstr ""
+msgstr "شناسایی دستی"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr ""
+msgstr "اگر یک شغل ارزش انجام دارد، ارزش انجام خوب آن را هم دارد!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Invalid request, please return to the main menu."
-msgstr ""
+msgstr "درخواست نامعتبر، لطفاً به منوی اصلی برگرد."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
 msgid "Kiosk Attendance"
-msgstr ""
+msgstr "حضور کیوسک"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
-msgstr ""
+msgstr "حالت کیوسک"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "حضور و غیاب آخرین"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
@@ -552,12 +573,12 @@ msgstr "آخرین تغییر در"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین به‌روز‌رسانی توسط"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روز‌رسانی در"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
@@ -567,7 +588,7 @@ msgstr "مدیر"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "حضور و غیاب دستی"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -577,34 +598,34 @@ msgstr "پیام"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr ""
+msgstr "حضورهای من"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "بدون خروج"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr ""
+msgstr "هیچ سوابق حضور و غیابی یافت نشد"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "No attendance records to display"
-msgstr ""
+msgstr "بدون فیلدهای حضور و غیاب برای نمایش"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph_filtered
 msgid "No data yet!"
-msgstr ""
+msgstr "هنوز اطلاعاتی وجود ندارد!"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr ""
+msgstr "هیچ کارمند مربوط به نشان شناسه '%(barcode)s.'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -617,7 +638,7 @@ msgstr "در دسترس نیست"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "OK"
-msgstr "تایید"
+msgstr "اوکی"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -629,19 +650,19 @@ msgstr "مسئول"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "لطفا پین‌کد خود را وارد کنید"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please return to the main menu."
-msgstr ""
+msgstr "لطفا به منوی اصلی برگردید ."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
-msgstr "گزارش گیری"
+msgstr "گزارش‌گیری"
 
 #. module: hr_attendance
 #. openerp-web
@@ -653,7 +674,7 @@ msgstr "نشان خود را اسکن کنید"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr ""
+msgstr "تنظیم پین کدها در فرم جزئیات کارکنان (در تب تنظیمات منابع انسانی)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -668,7 +689,7 @@ msgstr "تنظیمات"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign in"
-msgstr "ورود"
+msgstr "ورود به سیستم"
 
 #. module: hr_attendance
 #. openerp-web
@@ -680,32 +701,33 @@ msgstr "ورود"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign out"
-msgstr ""
+msgstr "خروج از سیستم"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "چنین گروه بندی مجاز نیست."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "رکوردهای حضور کارکنان شما در اینجا نمایش داده خواهد شد."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "The early bird catches the worm"
-msgstr ""
+msgstr "پرنده اول، کرم را می گیرد"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
 msgstr ""
+"کاربر قادر خواهد بود حالت کیوسک را باز کند و پین‌کد کارمند را معتبر کند."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -713,6 +735,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"کاربر به منوی حضور منابع انسانی دسترسی پیدا خواهد کرد و او را قادر می سازد "
+"تا حضور خودش را مدیریت کند."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -720,6 +744,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"کاربر باید برای ثبت ورود و خروج، پین‌کد خود را  بصورت دستی در صفحه نمایش "
+"شرکت واردکند."
 
 #. module: hr_attendance
 #. openerp-web
@@ -727,12 +753,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr ""
+msgstr "ساعات کاری امروز:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr ""
+msgstr "استفاده از پین‌کدها برای ورود به سیستم در حالت کیوسک"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -745,7 +771,7 @@ msgstr "کاربران"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "میخواهید خارج شوید؟"
 
 #. module: hr_attendance
 #. openerp-web
@@ -755,6 +781,8 @@ msgid ""
 "Warning : Your user should be linked to an employee to use attendance. "
 "Please contact your administrator."
 msgstr ""
+"هشدار : کاربر شما باید به یک کارمند برای استفاده از حضوروغیاب مرتبط باشد. "
+"لطفاً با راهبر خود تماس بگیرید."
 
 #. module: hr_attendance
 #. openerp-web
@@ -768,7 +796,7 @@ msgstr "خوش آمدید"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "خوش آمدید به"
 
 #. module: hr_attendance
 #. openerp-web
@@ -776,35 +804,35 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome!"
-msgstr ""
+msgstr "خوش آمدید!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr ""
+msgstr "ساعات کار"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "ساعات کارکرد"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "ساعت کارکرد در ماه گذشته"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Wrong PIN"
-msgstr ""
+msgstr "پین‌کد اشتباه"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
+msgstr "شما نمی توانید یک حضور را تکثیر کنید."
 
 #. module: hr_attendance
 #. openerp-web
@@ -813,7 +841,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check in"
-msgstr ""
+msgstr "ورود"
 
 #. module: hr_attendance
 #. openerp-web
@@ -822,14 +850,14 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check out"
-msgstr ""
+msgstr "خروج از سیستم"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_base__attendance_ids
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_public__attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "فهرست حضور برای کارمند"
 
 #. module: hr_attendance
 #. openerp-web

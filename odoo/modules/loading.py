@@ -117,6 +117,7 @@ def force_demo(cr):
 
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['ir.module.module'].invalidate_cache(['demo'])
+    env['res.groups']._update_user_groups_view()
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,

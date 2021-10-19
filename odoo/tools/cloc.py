@@ -17,6 +17,7 @@ DEFAULT_EXCLUDE = [
     "static/lib/**/*",
     "static/tests/**/*",
     "migrations/**/*",
+    "upgrades/**/*",
 ]
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'website_animate', 'base']

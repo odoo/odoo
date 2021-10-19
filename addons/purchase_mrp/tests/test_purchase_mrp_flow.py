@@ -3,6 +3,7 @@
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tests import Form
+from odoo import fields
 
 
 class TestSaleMrpFlow(TransactionCase):
@@ -409,3 +410,102 @@ class TestSaleMrpFlow(TransactionCase):
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
             self.assertEqual(move.product_qty, 1)
+
+    def test_concurent_procurements(self):
+        """ Check a production created to fulfill a procurement will not
+        replenish more that needed if others procurements have the same products
+        than the production component. """
+
+        warehouse = self.env.ref('stock.warehouse0')
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        vendor1 = self.env['res.partner'].create({'name': 'aaa', 'email': 'from.test@example.com'})
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'name': vendor1.id,
+            'price': 50,
+        })
+
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'route_ids': [(4, buy_route.id)],
+            'seller_ids': [(6, 0, [supplier_info1.id])],
+        })
+        finished = self.env['product.product'].create({
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [(4, manufacture_route.id)],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': component.id,
+            'route_id': buy_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': finished.id,
+            'route_id': manufacture_route.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'operation_ids': [
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ]})
+
+        # Delivery to trigger replenishment
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished
+            move.product_uom_qty = 3
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = component
+            move.product_uom_qty = 2
+        picking = picking_form.save()
+        picking.action_confirm()
+
+        # Find PO
+        purchase = self.env['purchase.order.line'].search([
+            ('product_id', '=', component.id),
+        ]).order_id
+        self.assertTrue(purchase)
+        self.assertEqual(purchase.order_line.product_qty, 5)
+
+    def test_01_purchase_mrp_kit_qty_change(self):
+        self.partner = self.env.ref('base.res_partner_1')
+
+        # Create a PO with one unit of the kit product
+        self.po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.kit_1.name, 'product_id': self.kit_1.id, 'product_qty': 1, 'product_uom': self.kit_1.uom_id.id, 'price_unit': 60.0, 'date_planned': fields.Datetime.now()})],
+        })
+        # Validate the PO
+        self.po.button_confirm()
+
+        # Check the component qty in the created picking
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,2, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,1, "The quantity of components must be created according to the BOM")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,3, "The quantity of components must be created according to the BOM")
+
+        # Update the kit quantity in the PO
+        self.po.order_line[0].product_qty = 2
+        # Check the component qty after the update
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,4, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,2, "The amount of the kit components must be updated when changing the quantity of the kit.")
+        self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,6, "The amount of the kit components must be updated when changing the quantity of the kit.")
+

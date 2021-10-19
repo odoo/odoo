@@ -4874,7 +4874,7 @@ msgstr ""
 "==================\n"
 "* Профілактичний ремонт проти корекції\n"
 "* Визначте різні етапи для ваших запитів на обслуговування\n"
-"* План запитів на обслуговування (також повторюваний профілактичний)\n"
+"* Плануйте запити на обслуговування (також повторюваний профілактичний ремонт)\n"
 "* Обладнання, пов'язане з робочими центрами\n"
 "* MTBF, MTTR, ...\n"
 
@@ -5991,11 +5991,11 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Управління життєвим циклом продукту\n"
+"Управління життєвим циклом товару\n"
 "=======================\n"
 "\n"
 "* Версії специфікації та маршрутів\n"
-"* Можливі різні процеси затвердження залежно від типу порядку зміни\n"
+"* Можливі різні процеси затвердження залежно від типу замовлення на зміни\n"
 "\n"
 
 #. module: base
@@ -6006,8 +6006,8 @@ msgid ""
 "base modules simple.\n"
 msgstr ""
 "\n"
-"Пропонує вдосконалені параметри маршрутизації, недоступні онлайн чи\n"
-"базові модулі.\n"
+"Пропонує розширені параметри маршруту, недоступні онлайн чи в базових\n"
+"модулях.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
@@ -6017,7 +6017,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Опублікуйте своїх клієнтів як бізнес-посилання на своєму веб-сайті, щоби залучити нових лідів.\n"
+"Опублікуйте своїх клієнтів як бізнес-референси на своєму веб-сайті, щоби залучити нових лідів.\n"
 "    "
 
 #. module: base
@@ -8676,8 +8676,8 @@ msgstr ""
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
-" Долає статичну кнопку на ліді з перегляду для доступу до їхніх сесій живого"
-" чату."
+"Додає статичну кнопку на ліді з перегляду для доступу до їхніх сесій живого "
+"чату."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
@@ -9232,6 +9232,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Адреса компанії</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Адреса рахунку</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Адреса дставки</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Інша адреса</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Приватна адреса</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Адреса</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -10370,7 +10378,7 @@ msgstr "Додати напрямок"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add directional information (not used for digital)"
-msgstr ""
+msgstr "Додайте інформацію про напрямок (не для цифрового використання)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
@@ -11325,12 +11333,12 @@ msgstr "Відвідування"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
 msgid "Attendances Barcode in Mobile"
-msgstr ""
+msgstr "Штрих-код відвідувань у мобільній версії"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
 msgid "Attendances Barcode scan in Mobile"
-msgstr ""
+msgstr "Сканер штрих-кодів відвідувань у мобільній версії"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -11341,7 +11349,7 @@ msgstr "Приверніть увагу відвідувачів до підпи
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
-msgstr ""
+msgstr "Значення атрибуту %(attribute)s очікує бульове %(value)s"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -11356,7 +11364,7 @@ msgstr "Австралія - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
 msgid "Australian Reports - Accounting"
-msgstr ""
+msgstr "Австралійські звіти - Бухоблік"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -11663,7 +11671,7 @@ msgstr "Мостовий модуль якості штрих-коду"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
 msgid "Barcode for Batch Transfer"
-msgstr ""
+msgstr "Штрих-код для групового переміщення"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
@@ -11690,7 +11698,7 @@ msgstr "Тип штрих-коду, напр: UPCA, EAN13, Code128"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control_picking_batch
 msgid "Barcode/Quality/Batch Transfer bridge module"
-msgstr ""
+msgstr "Мостовий модуль Штрих-код/Якість/Групове переміщення"
 
 #. module: base
 #: model:ir.model,name:base.model_base
@@ -11703,7 +11711,7 @@ msgstr "База"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_base_automation
 msgid "Base Automation Tests: Ensure Flow Robustness"
-msgstr ""
+msgstr "Базові автоматичні тести: Забезпечують надійність потоку"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -11719,12 +11727,14 @@ msgstr "Базову мову 'en_US' не можна видалити."
 #. module: base
 #: model:ir.module.module,summary:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms"
-msgstr ""
+msgstr "Базовий модуль Adyen для платформ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms, used in eCommerce and PoS"
 msgstr ""
+"Базовий модуль для Adyen для платформ, використовується в електронній "
+"комерції та точці продажу"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -12043,23 +12053,23 @@ msgstr "Бразилія - Бухгалтерський облік"
 #: model:ir.module.module,description:base.module_iap_crm
 #: model:ir.module.module,summary:base.module_iap_crm
 msgid "Bridge between IAP and CRM"
-msgstr ""
+msgstr "З'єднує IAP та CRM"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_mail
 #: model:ir.module.module,summary:base.module_iap_mail
 msgid "Bridge between IAP and mail"
-msgstr ""
+msgstr "З'єднує IAP та пошту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
 msgid "Bridge between Sale and Accounting"
-msgstr ""
+msgstr "З'єднує Продажі та Бухоблік"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_accountant
 msgid "Bridge between Stock and Accounting"
-msgstr ""
+msgstr "З'єднує Склад та Бухоблік"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon_delivery
@@ -12168,7 +12178,7 @@ msgstr "Бурунді"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Button must have a name"
-msgstr ""
+msgstr "Кнопка повинна мати назву"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -12179,7 +12189,7 @@ msgstr "Від"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field information"
-msgstr ""
+msgstr "За замовчування віджет використовує інформацію поля"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -13123,7 +13133,7 @@ msgstr "Конго"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
-msgstr ""
+msgstr "З'єднайте принтери кухні з вашою точкою продажу"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
@@ -23708,17 +23718,17 @@ msgstr "Точка продажу Adyen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_mobile
 msgid "POS Barcode in Mobile"
-msgstr ""
+msgstr "Штрих-код точки продажу у мобільній версії"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_mobile
 msgid "POS Barcode scan in Mobile"
-msgstr ""
+msgstr "Сканування штрих-коду точки продажу у мобільній версії"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_adyen
 msgid "POS Restaurant Adyen"
-msgstr ""
+msgstr "Adyen точки продажу ресторану"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -23924,7 +23934,7 @@ msgstr "Геолокація партнерів"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr ""
+msgstr "Партнери: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -23936,7 +23946,7 @@ msgstr "Пароль"
 #. module: base
 #: model:ir.model,name:base.model_res_users_identitycheck
 msgid "Password Check Wizard"
-msgstr ""
+msgstr "Помічник перевірки паролю"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy
@@ -24013,7 +24023,7 @@ msgstr "Платіжний еквайєр: впровадження Ingenico"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_odoo_by_adyen
 msgid "Payment Acquirer: Odoo Payments by Adyen"
-msgstr ""
+msgstr "Платіжний еквайєр: Платежі Odoo через Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
@@ -24262,7 +24272,7 @@ msgstr "Портал"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_rating
 msgid "Portal Rating"
-msgstr ""
+msgstr "Рейтинг порталу"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
@@ -24291,7 +24301,7 @@ msgstr "Португалія - Бухоблік"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
 msgid "Posted Employee"
-msgstr ""
+msgstr "Опублікований співробітник"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -24716,7 +24726,7 @@ msgstr "Угоди про купівлю"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_intrastat
 msgid "Purchase Intrastat"
-msgstr ""
+msgstr "Купівлі Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_product_matrix
@@ -28202,6 +28212,8 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"Це необхідно для змін, пов'язаних із безпекою. Авторизація триватиме кілька "
+"хвилин."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment

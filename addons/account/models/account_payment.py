@@ -426,7 +426,7 @@ class AccountPayment(models.Model):
                 and pay.currency_id:
 
                 if pay.partner_bank_id:
-                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, pay.ref, pay.currency_id, pay.partner_id)
+                    qr_code = pay.partner_bank_id.build_qr_code_base64(pay.amount, pay.ref, pay.ref, pay.currency_id, pay.partner_id)
                 else:
                     qr_code = None
 
@@ -539,6 +539,10 @@ class AccountPayment(models.Model):
         # recomputed correctly if we change the journal or the date, leading to inconsitencies
         if not self.move_id:
             self.name = False
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        self.move_id._onchange_journal()
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -714,7 +718,7 @@ class AccountPayment(models.Model):
 
         if not any(field_name in changed_fields for field_name in (
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id',
         )):
             return
 
@@ -724,7 +728,8 @@ class AccountPayment(models.Model):
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
 
-            if writeoff_lines:
+            if liquidity_lines and counterpart_lines and writeoff_lines:
+
                 counterpart_amount = sum(counterpart_lines.mapped('amount_currency'))
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
 
@@ -747,10 +752,15 @@ class AccountPayment(models.Model):
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
-            line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
-                (1, counterpart_lines.id, line_vals_list[1]),
-            ]
+            line_ids_commands = []
+            if liquidity_lines:
+                line_ids_commands.append((1, liquidity_lines.id, line_vals_list[0]))
+            else:
+                line_ids_commands.append((0, 0, line_vals_list[0]))
+            if counterpart_lines:
+                line_ids_commands.append((1, counterpart_lines.id, line_vals_list[1]))
+            else:
+                line_ids_commands.append((0, 0, line_vals_list[1]))
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))

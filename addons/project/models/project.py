@@ -761,6 +761,9 @@ class Task(models.Model):
             return [fn(n) for day, fn in DAYS.items() if self[day]]
         return [DAYS.get(self.repeat_weekday)(n)]
 
+    def _get_recurrence_start_date(self):
+        return fields.Date.today()
+
     @api.depends(
         'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
         'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
@@ -768,7 +771,7 @@ class Task(models.Model):
     def _compute_recurrence_message(self):
         self.recurrence_message = False
         for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
-            date = fields.Date.today()
+            date = task._get_recurrence_start_date()
             number_occurrences = min(5, task.repeat_number if task.repeat_type == 'after' else 5)
             delta = task.repeat_interval if task.repeat_unit == 'day' else 1
             recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
@@ -1290,6 +1293,8 @@ class Task(models.Model):
         task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
+        customer_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(tools.email_split(defaults['email_from']), records=task) if p]
+        partner_ids += customer_ids
         task.message_subscribe(partner_ids)
         return task
 

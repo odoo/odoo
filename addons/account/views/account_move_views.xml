@@ -91,7 +91,7 @@
             <field name="name">account.move.line.kanban</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" create="false" group_create="false">
                     <field name="date_maturity"/>
                     <field name="move_id"/>
                     <field name="name"/>

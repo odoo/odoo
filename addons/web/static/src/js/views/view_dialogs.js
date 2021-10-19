@@ -144,7 +144,7 @@ var FormViewDialog = ViewDialog.extend({
                                 .then(function () {
                                     // reset default name field from context when Save & New is clicked, pass additional
                                     // context so that when getContext is called additional context resets it
-                                    var additionalContext = self._createContext && self._createContext(false) || {};
+                                    const additionalContext = self._createContext && self._createContext(false);
                                     self.form_view.createRecord(self.parentID, additionalContext);
                                 })
                                 .then(function () {
@@ -461,14 +461,9 @@ var SelectCreateDialog = ViewDialog.extend({
                 classes: 'btn-primary o_select_button',
                 disabled: true,
                 close: true,
-                click: function () {
-                    var records = this.viewController.getSelectedRecords();
-                    var values = _.map(records, function (record) {
-                        return {
-                            id: record.res_id,
-                            display_name: record.data.display_name,
-                        };
-                    });
+                click: async () => {
+                    const resIds = await this.viewController.getSelectedIdsWithDomain();
+                    const values = resIds.map(e => ({id: e}));
                     this.on_selected(values);
                 },
             });

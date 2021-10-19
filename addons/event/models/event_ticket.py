@@ -97,6 +97,7 @@ class EventTicket(models.Model):
         for ticket in self:
             ticket.seats_unconfirmed = ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
         # aggregate registrations by ticket and by state
+        results = {}
         if self.ids:
             state_field = {
                 'draft': 'seats_unconfirmed',
@@ -111,10 +112,11 @@ class EventTicket(models.Model):
             self.env['event.registration'].flush(['event_id', 'event_ticket_id', 'state'])
             self.env.cr.execute(query, (tuple(self.ids),))
             for event_ticket_id, state, num in self.env.cr.fetchall():
-                ticket = self.browse(event_ticket_id)
-                ticket[state_field[state]] += num
+                results.setdefault(event_ticket_id, {})[state_field[state]] = num
+
         # compute seats_available
         for ticket in self:
+            ticket.update(results.get(ticket._origin.id or ticket.id, {}))
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 

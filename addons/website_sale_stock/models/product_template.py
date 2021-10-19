@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available
+            virtual_available = product.with_context(warehouse=website._get_warehouse_available()).virtual_available
             combination_info.update({
                 'virtual_available': virtual_available,
                 'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'precision': 0}),

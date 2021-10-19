@@ -144,7 +144,7 @@ class ProductProduct(models.Model):
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 component_res = qties.get(component.id, {

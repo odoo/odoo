@@ -130,9 +130,6 @@ class ReSequenceWizard(models.TransientModel):
 
     def resequence(self):
         new_values = json.loads(self.new_values)
-        # Can't change the name of a posted invoice, but we do not want to have the chatter
-        # logging 3 separate changes with [state to draft], [change of name], [state to posted]
-        self.with_context(tracking_disable=True).move_ids.state = 'draft'
         if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
             if self.ordering == 'date':
                 raise UserError(_('You can not reorder sequence by date when the journal is locked with a hash.'))
@@ -142,4 +139,3 @@ class ReSequenceWizard(models.TransientModel):
                     move_id.name = new_values[str(move_id.id)]['new_by_name']
                 else:
                     move_id.name = new_values[str(move_id.id)]['new_by_date']
-                move_id.with_context(tracking_disable=True).state = new_values[str(move_id.id)]['state']

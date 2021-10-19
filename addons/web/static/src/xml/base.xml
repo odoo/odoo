@@ -579,7 +579,7 @@
         </div>
         <input type="text"
             class="o_searchview_input"
-            autofocus=""
+            t-att-autofocus="!env.device.isMobileDevice"
             accesskey="Q"
             placeholder="Search..."
             role="searchbox"

@@ -663,7 +663,7 @@ class ProductProduct(models.Model):
         returned_quantities = defaultdict(float)
         for move in stock_moves:
             if move.origin_returned_move_id:
-                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.stock_valuation_layer_ids.mapped('quantity')))
+                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
             .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
@@ -672,6 +672,8 @@ class ProductProduct(models.Model):
         qty_to_take_on_candidates = qty_to_invoice
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
+            if not candidate.quantity:
+                continue
             candidate_quantity = abs(candidate.quantity)
             if candidate.stock_move_id.id in returned_quantities:
                 candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
