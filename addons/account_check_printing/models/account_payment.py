@@ -19,16 +19,20 @@ class AccountRegisterPayments(models.TransientModel):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
+        res = {}
         if hasattr(super(AccountRegisterPayments, self), '_onchange_journal_id'):
-            super(AccountRegisterPayments, self)._onchange_journal_id()
+            res = super(AccountRegisterPayments, self)._onchange_journal_id()
         if self.journal_id.check_manual_sequencing:
             self.check_number = self.journal_id.check_sequence_id.number_next_actual
+        return res
 
     @api.onchange('amount')
     def _onchange_amount(self):
+        res = {}
         if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
-            super(AccountRegisterPayments, self)._onchange_amount()
+            res = super(AccountRegisterPayments, self)._onchange_amount()
         self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else False
+        return res
 
     def _prepare_payment_vals(self, invoices):
         res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
