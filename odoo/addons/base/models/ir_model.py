@@ -524,8 +524,7 @@ class IrModelFields(models.Model):
     def _compute_related_field_id(self):
         for rec in self:
             if rec.state == 'manual' and rec.related:
-                field = rec._related_field()
-                rec.related_field_id = self._get(field.model_name, field.name)
+                rec.related_field_id = rec._related_field()
             else:
                 rec.related_field_id = False
 
@@ -578,17 +577,17 @@ class IrModelFields(models.Model):
     ]
 
     def _related_field(self):
-        """ Return the ``Field`` instance corresponding to ``self.related``. """
+        """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
         names = self.related.split(".")
         last = len(names) - 1
-        model = self.env[self.model or self.model_id.model]
+        model_name = self.model
         for index, name in enumerate(names):
-            field = model._fields.get(name)
-            if field is None:
+            field = self._get(model_name, name)
+            if not field:
                 raise UserError(_("Unknown field name '%s' in related field '%s'") % (name, self.related))
-            if index < last and not field.relational:
+            model_name = field.relation
+            if index < last and not field.relation:
                 raise UserError(_("Non-relational field name '%s' in related field '%s'") % (name, self.related))
-            model = model[name]
         return field
 
     @api.constrains('related')
@@ -596,9 +595,9 @@ class IrModelFields(models.Model):
         for rec in self:
             if rec.state == 'manual' and rec.related:
                 field = rec._related_field()
-                if field.type != rec.ttype:
+                if field.ttype != rec.ttype:
                     raise ValidationError(_("Related field '%s' does not have type '%s'") % (rec.related, rec.ttype))
-                if field.relational and field.comodel_name != rec.relation:
+                if field.relation != rec.relation:
                     raise ValidationError(_("Related field '%s' does not have comodel '%s'") % (rec.related, rec.relation))
 
     @api.onchange('related')
@@ -608,8 +607,8 @@ class IrModelFields(models.Model):
                 field = self._related_field()
             except UserError as e:
                 return {'warning': {'title': _("Warning"), 'message': e}}
-            self.ttype = field.type
-            self.relation = field.comodel_name
+            self.ttype = field.ttype
+            self.relation = field.relation
             self.readonly = True
 
     @api.constrains('depends')
