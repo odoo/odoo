@@ -402,10 +402,26 @@ class Picking(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late')], compute='_compute_products_availability')
+    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('show_validate', 'immediate_transfer',
+                 'move_ids.reserved_availability',
+                 'move_ids.quantity_done')
+    def _compute_show_qty_button(self):
+        self.show_set_qty_button = False
+        self.show_clear_qty_button = False
+        for picking in self:
+            if not picking.show_validate or picking.immediate_transfer:
+                continue
+            if any(float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.reserved_availability, precision_rounding=m.product_uom.rounding) for m in picking.move_ids):
+                picking.show_set_qty_button = True
+            elif any(not float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding) and float_compare(m.quantity_done, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0 for m in picking.move_ids):
+                picking.show_clear_qty_button = True
 
     def _compute_has_tracking(self):
         for picking in self:
@@ -1006,7 +1022,10 @@ class Picking(models.Model):
         return True
 
     def action_set_quantities_to_reservation(self):
-        self.move_ids._set_quantities_to_reservation()
+        self.move_ids.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))._set_quantities_to_reservation()
+
+    def action_clear_quantities_to_zero(self):
+        self.move_ids.filtered(lambda m: float_compare(m.quantity_done, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0)._clear_quantities_to_zero()
 
     def _pre_action_done_hook(self):
         if not self.env.context.get('skip_immediate'):

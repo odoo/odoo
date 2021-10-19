@@ -87,6 +87,8 @@
                 <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="is_wave" invisible="1"/>
+                <field name="show_set_qty_button" invisible="1"/>
+                <field name="show_clear_qty_button" invisible="1"/>
                 <header>
                     <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
@@ -109,10 +111,9 @@
                                     ('show_check_availability', '=', False),
                                     ('show_validate', '=', False)]}"/>
                     <button name="action_set_quantities_to_reservation" string="Set quantities" type="object"
-                        attrs="{'invisible': [
-                            '|',
-                                ('state', '!=', 'in_progress'),
-                                ('show_validate', '=', False)]}"/>
+                        attrs="{'invisible': [('show_set_qty_button', '=', False)]}"/>
+                    <button name="action_clear_quantities_to_zero" string="Clear quantities" type="object"
+                        attrs="{'invisible': [('show_clear_qty_button', '=', False)]}"/>
                     <button name="action_assign" string="Check Availability" type="object"
                         attrs="{'invisible': [
                             '|',

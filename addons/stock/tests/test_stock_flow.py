@@ -2101,3 +2101,58 @@ class TestStockFlow(TestStockCommon):
 
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking_out.id)])
         self.assertEqual(bo.state, 'assigned')
+
+    def test_picking_set_clear_qty(self):
+        picking_in = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        move_a = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        move_b = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        picking_in.action_confirm()
+
+        # test set qty button without manual change
+        self.assertTrue(picking_in.show_set_qty_button)
+        self.assertEqual(move_a.quantity_done, 0)
+        self.assertEqual(move_b.quantity_done, 0)
+        picking_in.action_set_quantities_to_reservation()
+        self.assertEqual(move_a.quantity_done, 10)
+        self.assertEqual(move_b.quantity_done, 10)
+        self.assertFalse(picking_in.show_set_qty_button)
+
+        # test clear qty button without manual change
+        self.assertTrue(picking_in.show_clear_qty_button)
+        picking_in.action_clear_quantities_to_zero()
+        self.assertEqual(move_a.quantity_done, 0)
+        self.assertEqual(move_b.quantity_done, 0)
+        self.assertFalse(picking_in.show_clear_qty_button)
+
+        # test set qty button with manual change
+        move_a.quantity_done = 5
+        self.assertTrue(picking_in.show_set_qty_button)
+        picking_in.action_set_quantities_to_reservation()
+        self.assertEqual(move_a.quantity_done, 5)
+        self.assertEqual(move_b.quantity_done, 10)
+        self.assertFalse(picking_in.show_set_qty_button)
+
+        # test clear qty button with manual change
+        self.assertTrue(picking_in.show_clear_qty_button)
+        picking_in.action_clear_quantities_to_zero()
+        self.assertEqual(move_a.quantity_done, 5)
+        self.assertEqual(move_b.quantity_done, 0)
+        self.assertFalse(picking_in.show_clear_qty_button)
