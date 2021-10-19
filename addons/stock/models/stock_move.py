@@ -1101,7 +1101,7 @@ class StockMove(models.Model):
             'location_dest_id': location_dest_id,
             'picking_id': self.picking_id.id,
         }
-        if quantity:
+        if quantity is not None:
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
             uom_quantity = float_round(uom_quantity, precision_digits=rounding)
