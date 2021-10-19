@@ -28,6 +28,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mt16 o_settings_container" name="lunch_notification_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="lunch_notification">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Reception notification</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-mutex">
+                                    Send this message to your users when their order has been delivered.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <field name="company_lunch_notify_message" widget="html" class="col col-lg w-100"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
         </field>
