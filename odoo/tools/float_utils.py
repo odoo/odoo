@@ -70,6 +70,8 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # Credit: discussion with OpenERP community members on bug 882036
 
     normalized_value = value / rounding_factor # normalize
+    if not normalized_value % 1:
+        return value
     sign = math.copysign(1.0, normalized_value)
     epsilon_magnitude = math.log(abs(normalized_value), 2)
     epsilon = 2**(epsilon_magnitude-52)
