@@ -21,6 +21,7 @@ have real delivered quantities in sales orders.
         'views/account_invoice_views.xml',
         'views/sale_order_views.xml',
         'views/product_views.xml',
+        'views/project_views.xml',
         'views/project_task_views.xml',
         'views/project_update_templates.xml',
         'views/hr_timesheet_views.xml',

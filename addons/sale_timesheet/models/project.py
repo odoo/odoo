@@ -54,6 +54,7 @@ class Project(models.Model):
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
+    margin = fields.Float(compute='_compute_project_margin')
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
@@ -66,6 +67,15 @@ class Project(models.Model):
             else:
                 project.pricing_type = 'task_rate'
         (self - billable_projects).update({'pricing_type': False})
+
+    def _compute_project_margin(self):
+        margin = self.env['project.profitability.report'].read_group(
+            [('project_id', '=', self.id)],
+            ['project_id', 'margin'],
+            ['project_id'], limit=1)
+        mapped_margin = {data['project_id'][0]: data['margin'] for data in margin}
+        for project in self:
+            project.margin = mapped_margin.get(project.id)
 
     def _search_pricing_type(self, operator, value):
         """ Search method for pricing_type field.
@@ -415,6 +425,17 @@ class Project(models.Model):
                 'show': self.allow_timesheets and bool(self.analytic_account_id),
                 'sequence': 9,
             })
+        if self.user_has_groups('analytic.group_analytic_accounting'):
+            button_index = next((index for (index, d) in enumerate(buttons) if d['text'] == _('Gross Margin')), None)
+            buttons[button_index] = {
+                'icon': 'usd',
+                'text': _('Gross Margin'),
+                'number': format_amount(self.env, self.margin, self.company_id.currency_id),
+                'action_type': 'object',
+                'action': 'action_view_analytic_account_entries',
+                'show': self.margin > 0,
+                'sequence': 18,
+            }
         return buttons
 
 class ProjectTask(models.Model):

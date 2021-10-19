@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edit_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.project.view.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="replace">
+                <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="margin"/>
+                        </span>
+                        <span class="o_stat_text">Gross Margin</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

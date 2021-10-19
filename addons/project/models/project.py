@@ -763,7 +763,7 @@ class Project(models.Model):
                 'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
                 'action_type': 'object',
                 'action': 'action_view_analytic_account_entries',
-                'show': True,
+                'show': self.analytic_account_balance > 0,
                 'sequence': 18,
             })
         return buttons
