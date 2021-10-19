@@ -236,13 +236,16 @@
                 <field name="has_packages" invisible="1"/>
                 <field name="picking_type_entire_packs" invisible="1"/>
                 <field name="use_create_lots" invisible="1"/>
+                <field name="show_set_qty_button" invisible="1"/>
+                <field name="show_clear_qty_button" invisible="1"/>
 
                 <header>
                     <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
-                    <button name="action_set_quantities_to_reservation" attrs="{'invisible': ['|', ('show_validate', '=', False), ('immediate_transfer', '=', True)]}" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
+                    <button name="action_set_quantities_to_reservation" attrs="{'invisible': [('show_set_qty_button', '=', False)]}" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
+                    <button name="action_clear_quantities_to_zero" attrs="{'invisible': [('show_clear_qty_button', '=', False)]}" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <widget name="signature" string="Sign" highlight="1"
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'done')]}"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
