@@ -501,8 +501,21 @@ class Profiler:
 
     def __enter__(self):
         self.init_thread = threading.current_thread()
-        self.init_frame = get_current_frame(self.init_thread)
-        self.init_stack_trace = _get_stack_trace(self.init_frame)
+        try:
+            self.init_frame = get_current_frame(self.init_thread)
+            self.init_stack_trace = _get_stack_trace(self.init_frame)
+        except KeyError:
+            # when using thread pools (gevent) the thread won't exist in the current_frames
+            # this case is managed by http.py but will still fail when adding a profiler
+            # inside a piece of code that may be called by a longpolling route.
+            # in this case, avoid crashing the caller and disable all collectors
+            self.init_frame = self.init_stack_trace = self.collectors = []
+            self.db = self.params = None
+            message = "Cannot start profiler, thread not found. Is the thread part of a thread pool?"
+            if not self.description:
+                self.description = message
+            _logger.warning(message)
+
         if self.description is None:
             frame = self.init_frame
             code = frame.f_code
