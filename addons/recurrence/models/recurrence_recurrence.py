@@ -274,7 +274,6 @@ class RecurrenceRecurrence(models.Model):
 
         return detached_events
 
-
     def _split_from(self, record, recurrence_values=None):
         """Stops the current recurrence at the given event and creates a new one starting
         with the event.
