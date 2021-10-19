@@ -46,10 +46,12 @@
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="display_reorder_button" invisible="1"/>
+                <field name="notified" invisible="1"/>
                 <button name="action_reorder" string="Re-order" type="object" icon="fa-history" attrs="{'invisible': [('display_reorder_button', '=', False)]}" groups="lunch.group_lunch_user"/>
                 <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_reset" string="Reset" type="object" icon="fa-undo" attrs="{'invisible': [('state', '!=', 'cancelled')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_notify" string="Send Notification" type="object" icon="fa-envelope" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('notified', '=', True)]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -66,6 +68,7 @@
                 <field name="date"/>
                 <field name="company_id"/>
                 <field name="currency_id"/>
+                <field name="notified"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -96,6 +99,9 @@
                                     </a>
                                     <a class="btn btn-sm btn-danger" role="button" name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
                                         <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
+                                    </a>
+                                    <a class="btn btn-sm btn-info" role="button" name="action_notify" string="Send Notification" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('notified', '=', True)]}" groups="lunch.group_lunch_manager">
+                                        <i class="fa fa-envelope" role="img" aria-label="Send notification" title="Send notification"/>
                                     </a>
                                 </div>
                                 <div class="col-6">
