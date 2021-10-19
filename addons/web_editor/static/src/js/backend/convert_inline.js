@@ -411,8 +411,6 @@ function bootstrapToTable($editable) {
     for (const masonryRow of $editable.find('.o_masonry_grid_container > .o_fake_table > .row.h-100')) {
         masonryRow.style.removeProperty('height');
         masonryRow.parentElement.style.setProperty('height', '100%');
-        // Children will only take 100% height if the parent has a height property.
-        masonryRow.parentElement.parentElement.style.setProperty('height', 0);
     }
 
     // Now convert all containers with rows to tables.
@@ -671,6 +669,10 @@ function formatTables($editable) {
             columnIndex += 1;
         }
         $table.css('padding', '');
+    }
+    // Ensure a tbody in every table and cancel its default style.
+    for (const table of $editable.find('table:not(:has(tbody))')) {
+        $(table).contents().wrap('<tbody style="vertical-align: top"/>');
     }
     // Children will only take 100% height if the parent has a height property.
     for (const node of $editable.find('*').filter((i, n) => (
