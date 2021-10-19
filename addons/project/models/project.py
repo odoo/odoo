@@ -1655,11 +1655,11 @@ class Task(models.Model):
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_recurring(self):
-        if any(self.mapped('recurrence_id')):
-            # TODO: show a dialog to stop the recurrence
-            raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
+    # arj fixme: is this relevant? Now it prevent to delete a task and 'continue the recurrence'
+    # @api.ondelete(at_uninstall=False)
+    # def _unlink_except_recurring(self):
+    #     if any(self.mapped('recurrence_id')):
+    #         raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
 
     # ---------------------------------------------------
     # Subtasks
@@ -1942,12 +1942,11 @@ class Task(models.Model):
 
     def action_stop_recurrence(self):
         tasks = self.env['project.task'].with_context(active_test=False).search([('recurrence_id', 'in', self.recurrence_id.ids)])
-        tasks.write({'recurring_task': False})
+        tasks.write({'recurrency': False, 'recurrence_update': 'self_only'})
         self.recurrence_id.unlink()
 
     def action_continue_recurrence(self):
-        self.recurrence_id = False
-        self.recurring_task = False
+        self.write({'recurrency': False, 'recurrence_update': 'self_only'})
 
     # ---------------------------------------------------
     # Rating business
@@ -2087,7 +2086,7 @@ class Task(models.Model):
         rec_tasks = all_tasks.filtered(lambda t: t.recurrence_id.id == recurrence.id)
         latest_task = rec_tasks[-1]
         create_values = latest_task._new_task_values()
-        create_values.update(start_datetime=start, stop_datetime=stop)
+        create_values.update(start_datetime=start, stop_datetime=stop, follow_recurrence=True, recurrency=True)
         new_task = self.env['project.task'].sudo().create(create_values)
         latest_task._create_subtasks(new_task, depth=3)
 

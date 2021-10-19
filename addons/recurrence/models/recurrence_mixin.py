@@ -178,11 +178,11 @@ class RecurrenceMixin(models.AbstractModel):
                 to_update |= new_recurrence
                 detached_records |= split_records
         to_update |= self.env['recurrence.recurrence'].create(recurrence_vals)
+        keep_base = self._keep_initiator()
         for rec in to_update:
             record = self.env[rec.model].browse(rec.base_id)
             values = {'recurrency': True, 'follow_recurrence': True, 'recurrence_id': rec.id}
             # Keep the base event and modifies his start_datetime to match the first event day
-            keep_base = self._keep_initiator()
             if keep_base:
                 duration = record.stop_datetime - record.start_datetime
                 ranges = list(rec._range_calculation(record, duration, bypass_batch=True))

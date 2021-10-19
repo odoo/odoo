@@ -541,6 +541,7 @@ class Meeting(models.Model):
         if partner not in self.partner_ids:
             self.write({'partner_ids': [(4, partner.id)]})
 
+    # arj fixme: put that in the mixin ?
     def action_mass_deletion(self, recurrence_update_setting):
         self.ensure_one()
         if recurrence_update_setting == 'all_records':
