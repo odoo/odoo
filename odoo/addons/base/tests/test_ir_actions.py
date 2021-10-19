@@ -514,8 +514,8 @@ class TestCustomFields(common.TransactionCase):
                 'store': True,
             })
 
-        # same with a related field, it only takes 2 extra queries
-        with self.assertQueryCount(query_count + 2):
+        # same with a related field, it only takes 5 extra queries
+        with self.assertQueryCount(query_count + 5):
             self.env.registry.clear_caches()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
