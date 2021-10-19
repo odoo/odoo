@@ -778,7 +778,8 @@ class expression(object):
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'NOT exists'
-                        query = f'{op1} (SELECT "{field.inverse_name}" FROM {comodel._table} WHERE "{alias}"."id"="{comodel._table}"."{field.inverse_name}")'
+                        exists_alias = f"{comodel._table}_{field.inverse_name}"
+                        query = f'{op1} (SELECT "{field.inverse_name}" FROM {comodel._table} as {exists_alias} WHERE "{alias}"."id"="{exists_alias}"."{field.inverse_name}")'
                         push_result(query, [])
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
