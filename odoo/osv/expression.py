@@ -777,10 +777,9 @@ class expression(object):
 
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
-                        # rewrite condition to match records with/without lines
-                        op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
-                        push(('id', op1, (subquery, [])), model, alias, internal=True)
+                        op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'NOT exists'
+                        query = f'{op1} (SELECT "{field.inverse_name}" FROM {comodel._table} WHERE "{alias}"."id"="{comodel._table}"."{field.inverse_name}")'
+                        push_result(query, [])
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
                         if inverse_is_int and domain:
