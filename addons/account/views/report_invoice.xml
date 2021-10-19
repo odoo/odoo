@@ -198,7 +198,7 @@
                     <td class="text-right">
                         <span
                             t-att-class="oe_subtotal_footer_separator"
-                            t-esc="subtotal['amount']"
+                            t-esc="subtotal['formatted_amount']"
                         />
                     </td>
                 </tr>
@@ -211,7 +211,7 @@
             <tr class="border-black o_total">
                 <td><strong>Total</strong></td>
                 <td class="text-right">
-                    <span t-esc="tax_totals['amount_total']"/>
+                    <span t-esc="tax_totals['formatted_amount_total']"/>
                 </td>
             </tr>
         </template>
