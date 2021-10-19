@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -33,7 +33,7 @@ msgid ""
 "<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Waarschuwing\" title=\"Zorg ervoor dat je genoeg postzegels hebt op jouw account.\"/>\n"
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Waarschuwing\" title=\"Zorg ervoor dat je genoeg postzegels hebt op je account.\"/>\n"
 "                                )"
 
 #. module: snailmail_account
@@ -173,7 +173,7 @@ msgstr "Relatie"
 #: model:ir.model.fields,field_description:snailmail_account.field_res_company__invoice_is_snailmail
 #: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
-msgstr "Verzenden via post"
+msgstr "Verzenden per post"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
@@ -184,3 +184,9 @@ msgstr "Snailmail factuur bevestigen."
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
 msgid "Stamp(s)"
 msgstr "Postzegel(s)"
+
+#. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#, python-format
+msgid "You cannot send an invoice which has no partner assigned."
+msgstr "Je kunt geen factuur verzenden waaraan geen klant is toegewezen."

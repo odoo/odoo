@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 function factory(dependencies) {
@@ -22,33 +22,18 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * Closes this channel invitation form.
-         */
-        close() {
-            this.component.trigger('o-popover-close');
-        }
-
-        /**
          * Handles click on the "invite" button.
          *
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
             if (this.thread.channel_type === 'chat') {
-                const channelData = await this.env.services.rpc(({
-                    model: 'mail.channel',
-                    method: 'create_group',
-                    kwargs: {
-                        partners_to: [...new Set([
-                            this.messaging.currentPartner.id,
-                            ...this.thread.members.map(member => member.id),
-                            ...this.selectedPartners.map(partner => partner.id),
-                        ])],
-                    },
-                }));
-                const channel = this.messaging.models['mail.thread'].insert(
-                    this.messaging.models['mail.thread'].convertData(channelData)
-                );
+                const partners_to = [...new Set([
+                    this.messaging.currentPartner.id,
+                    ...this.thread.members.map(member => member.id),
+                    ...this.selectedPartners.map(partner => partner.id),
+                ])];
+                const channel = await this.messaging.models['mail.thread'].createGroupChat({ partners_to });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
@@ -76,7 +61,7 @@ function factory(dependencies) {
                 searchTerm: "",
                 selectedPartners: unlinkAll(),
             });
-            this.close();
+            this.delete();
         }
 
         /**
@@ -157,14 +142,19 @@ function factory(dependencies) {
                     },
                     { shadow: true }
                 );
+                if (!this.exists()) {
+                    return;
+                }
                 this.update({
                     searchResultCount: count,
                     selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['mail.partner'].convertData(partnerData))),
                 });
             } finally {
-                this.update({ hasSearchRpcInProgress: false });
-                if (this.hasPendingSearchRpc) {
-                    this.searchPartnersToInvite();
+                if (this.exists()) {
+                    this.update({ hasSearchRpcInProgress: false });
+                    if (this.hasPendingSearchRpc) {
+                        this.searchPartnersToInvite();
+                    }
                 }
             }
         }
@@ -192,14 +182,14 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.thread}
+         * @returns {FieldCommand}
          */
         _computeThread() {
             if (this.threadView && this.threadView.thread) {
-                return link(this.threadView.thread);
+                return replace(this.threadView.thread);
             }
-            if (this.discuss && this.discuss.mostRecentMeetingChannel) {
-                return link(this.discuss.mostRecentMeetingChannel);
+            if (this.chatWindow && this.chatWindow.thread) {
+                return replace(this.chatWindow.thread);
             }
             return clear();
         }
@@ -207,15 +197,16 @@ function factory(dependencies) {
     }
 
     ChannelInvitationForm.fields = {
+        chatWindow: one2one('mail.chat_window', {
+            inverse: 'channelInvitationForm',
+            readonly: true,
+        }),
         /**
          * States the OWL component of this channel invitation form.
          * Useful to be able to close it with popover trigger, or to know when
          * it is open to update the button active state.
          */
         component: attr(),
-        discuss: one2one('mail.discuss', {
-            inverse: 'channelInvitationForm',
-        }),
         /**
          * Determines whether this search input needs to be focused.
          */
@@ -237,6 +228,10 @@ function factory(dependencies) {
          */
         inviteButtonText: attr({
             compute: '_computeInviteButtonText',
+        }),
+        popoverView: one2one('mail.popover_view', {
+            inverse: 'channelInvitationForm',
+            isCausal: true,
         }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
@@ -269,6 +264,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
+            readonly: true,
             required: true,
         }),
         /**
@@ -276,9 +272,10 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             inverse: 'channelInvitationForm',
+            readonly: true,
         }),
     };
-
+    ChannelInvitationForm.identifyingFields = [['chatWindow', 'threadView']];
     ChannelInvitationForm.modelName = 'mail.channel_invitation_form';
 
     return ChannelInvitationForm;

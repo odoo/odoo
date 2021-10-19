@@ -22,10 +22,6 @@
                                 class="o_ThreadView_messageList"
                                 getScrollableElement= "props.getScrollableElement"
                                 hasScrollAdjust="props.hasScrollAdjust"
-                                hasSquashCloseMessages="props.hasSquashCloseMessages"
-                                haveMessagesMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
-                                haveMessagesReplyIcon="props.haveMessagesReplyIcon"
-                                order="props.order"
                                 threadViewLocalId="threadView.localId"
                                 t-ref="messageList"
                             />
@@ -40,22 +36,21 @@
                                 </button>
                             </div>
                         </t>
-                        <t t-elif="props.hasComposer">
+                        <t t-elif="threadView.composerView">
                             <div class="o-autogrow"/>
                         </t>
-                        <t t-if="props.hasComposer">
+                        <t t-if="threadView.composerView">
                             <Composer
                                 class="o_ThreadView_composer"
-                                attachmentsDetailsMode="props.composerAttachmentsDetailsMode"
-                                composerLocalId="threadView.thread.composer.localId"
+                                composerViewLocalId="threadView.composerView.localId"
                                 hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+                                hasDiscardButton="props.hasComposerDiscardButton"
                                 hasSendButton="props.hasComposerSendButton"
+                                hasThreadName="props.hasComposerThreadName"
                                 hasThreadTyping="props.hasComposerThreadTyping"
-                                isDoFocus="props.isDoFocus"
                                 showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
                                 showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
                                 textInputSendShortcuts="threadView.textInputSendShortcuts"
-                                t-ref="composer"
                             />
                         </t>
                     </div>

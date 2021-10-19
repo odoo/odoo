@@ -143,8 +143,10 @@ class AccountMove(models.Model):
         else:
             document_type = 'TD0X'
 
+        # b64encode returns a bytestring, the template tries to turn it to string,
+        # but only gets the repr(pdf) --> "b'<base64_data>'"
         pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
-        pdf = base64.b64encode(pdf)
+        pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         # tax map for 0% taxes which have no tax_line_id
@@ -188,7 +190,7 @@ class AccountMove(models.Model):
         # OVERRIDE
         posted = super()._post(soft=soft)
 
-        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type == 'out_invoice' and m.company_id.country_id.code == 'IT'):
+        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type in ['out_invoice', 'out_refund'] and m.company_id.country_id.code == 'IT'):
             move.send_pec_mail()
 
         return posted

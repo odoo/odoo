@@ -2,8 +2,6 @@
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { replace } from '@mail/model/model_field_command';
 import {
     isEventHandled,
     markEventHandled,
@@ -20,7 +18,6 @@ export class Composer extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useUpdate({ func: () => this._update() });
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
          * contained "inside" the composer.
@@ -32,7 +29,8 @@ export class Composer extends Component {
          */
         this._fileUploaderRef = useRef('fileUploader');
         /**
-         * Reference of the text input component.
+         * Reference of the text input component. Useful to save state in store
+         * before inserting emoji.
          */
         this._textInputRef = useRef('textInput');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
@@ -51,10 +49,10 @@ export class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.composer}
+     * @returns {mail.composer_view}
      */
-    get composer() {
-        return this.messaging && this.messaging.models['mail.composer'].get(this.props.composerLocalId);
+    get composerView() {
+        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
     }
 
     /**
@@ -70,7 +68,7 @@ export class Composer extends Component {
         if (emojisPopover && emojisPopover.contains(node)) {
             return true;
         }
-        return this.el.contains(node);
+        return Boolean(this.el && this.el.contains(node));
     }
 
     /**
@@ -90,35 +88,18 @@ export class Composer extends Component {
     }
 
     /**
-     * Focus the composer.
-     */
-    focus() {
-        if (this.messaging.device.isMobile) {
-            this.el.scrollIntoView();
-        }
-        this._textInputRef.comp.focus();
-    }
-
-    /**
-     * Focusout the composer.
-     */
-    focusout() {
-        this._textInputRef.comp.focusout();
-    }
-
-    /**
      * Determine whether composer should display a footer.
      *
      * @returns {boolean}
      */
     get hasFooter() {
-        if (!this.composer) {
+        if (!this.composerView) {
             return false;
         }
         return (
             this.props.hasThreadTyping ||
-            this.composer.attachments.length > 0 ||
-            this.composer.messageInEditing ||
+            this.composerView.composer.attachments.length > 0 ||
+            this.composerView.messageViewInEditing ||
             !this.props.isCompact
         );
     }
@@ -129,22 +110,14 @@ export class Composer extends Component {
      * @returns {boolean}
      */
     get hasHeader() {
+        if (!this.composerView) {
+            return false;
+        }
         return (
-            (this.props.hasThreadName && this.composer.thread) ||
-            (this.props.hasFollowers && !this.composer.isLog)
+            (this.props.hasThreadName && this.composerView.composer.thread) ||
+            (this.props.hasFollowers && !this.composerView.composer.isLog) ||
+            this.composerView.threadView && this.composerView.threadView.replyingToMessageView
         );
-    }
-
-    /**
-     * Get an object which is passed to FileUploader component to be used when
-     * creating attachment.
-     *
-     * @returns {Object}
-     */
-    get newAttachmentExtraData() {
-        return {
-            composers: replace(this.composer),
-        };
     }
 
     //--------------------------------------------------------------------------
@@ -159,9 +132,9 @@ export class Composer extends Component {
      *
      * @private
      */
-    async _postMessage() {
-        if (!this.composer.canPostMessage) {
-            if (this.composer.hasUploadingAttachment) {
+    _postMessage() {
+        if (!this.composerView.composer.canPostMessage) {
+            if (this.composerView.composer.hasUploadingAttachment) {
                 this.env.services['notification'].notify({
                     message: this.env._t("Please wait while the file is uploading."),
                     type: 'warning',
@@ -169,26 +142,11 @@ export class Composer extends Component {
             }
             return;
         }
-        if (this.composer.messageInEditing && this.composer.messageInEditing.isEditing) {
-            await this.composer.updateMessage();
+        if (this.composerView.messageViewInEditing) {
+            this.composerView.updateMessage();
             return;
         }
-        await this.composer.postMessage();
-        // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
-        // task-2252858
-        this.trigger('o-message-posted');
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-        if (this.props.isDoFocus) {
-            this.focus();
-        }
-        if (!this.composer) {
-            return;
-        }
+        this.composerView.postMessage();
     }
 
     //--------------------------------------------------------------------------
@@ -203,7 +161,7 @@ export class Composer extends Component {
     _onClickAddAttachment() {
         this._fileUploaderRef.comp.openBrowserFileUploader();
         if (!this.env.device.isMobile) {
-            this.focus();
+            this.composerView.update({ doFocus: true });
         }
     }
 
@@ -222,10 +180,10 @@ export class Composer extends Component {
         if (isEventHandled(ev, 'MessageActionList.replyTo')) {
             return;
         }
-        if (!this.composer) {
+        if (!this.composerView) {
             return;
         }
-        this.composer.discard();
+        this.composerView.discard();
     }
 
     /**
@@ -234,7 +192,7 @@ export class Composer extends Component {
      * @private
      */
     _onClickFullComposer() {
-        this.composer.openFullComposer();
+        this.composerView.openFullComposer();
     }
 
     /**
@@ -244,7 +202,7 @@ export class Composer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDiscard(ev) {
-        this.composer.discard();
+        this.composerView.discard();
     }
 
     /**
@@ -254,14 +212,7 @@ export class Composer extends Component {
      */
     _onClickSend() {
         this._postMessage();
-        this.focus();
-    }
-
-    /**
-     * @private
-     */
-    _onComposerSuggestionClicked() {
-        this.focus();
+        this.composerView.update({ doFocus: true });
     }
 
     /**
@@ -296,9 +247,9 @@ export class Composer extends Component {
     _onEmojiSelection(ev) {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
-        this.composer.insertIntoTextInput(ev.detail.unicode);
+        this.composerView.insertIntoTextInput(ev.detail.unicode);
         if (!this.env.device.isMobile) {
-            this.focus();
+            this.composerView.update({ doFocus: true });
         }
     }
 
@@ -315,7 +266,7 @@ export class Composer extends Component {
                 return;
             }
             ev.preventDefault();
-            this.composer.discard();
+            this.composerView.discard();
         }
     }
 
@@ -327,7 +278,7 @@ export class Composer extends Component {
         if (ev.key === 'Escape') {
             if (this._emojisPopoverRef.comp) {
                 this._emojisPopoverRef.comp.close();
-                this.focus();
+                this.composerView.update({ doFocus: true });
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }
         }
@@ -355,15 +306,10 @@ Object.assign(Composer, {
         hasThreadName: false,
         hasThreadTyping: false,
         isCompact: true,
-        isDoFocus: false,
         isExpandable: false,
     },
     props: {
-        attachmentsDetailsMode: {
-            type: String,
-            optional: true,
-        },
-        composerLocalId: String,
+        composerViewLocalId: String,
         hasCurrentPartnerAvatar: Boolean,
         hasDiscardButton: Boolean,
         hasFollowers: Boolean,
@@ -374,10 +320,6 @@ Object.assign(Composer, {
         hasSendButton: Boolean,
         hasThreadName: Boolean,
         hasThreadTyping: Boolean,
-        /**
-         * Determines whether this should become focused.
-         */
-        isDoFocus: Boolean,
         showAttachmentsExtensions: {
             type: Boolean,
             optional: true,

@@ -1,4 +1,4 @@
-.o_graph_renderer {
+.o_legacy_graph_renderer {
     height: 100%;
     .o_graph_canvas_container {
         padding-top: 5px;
@@ -49,6 +49,9 @@
             padding-bottom: 1px;
         }
         td {
+            &:nth-child(1) {
+                min-width: 100px;
+            }
             span.o_square {
                 height: 12px;
                 width: 12px;

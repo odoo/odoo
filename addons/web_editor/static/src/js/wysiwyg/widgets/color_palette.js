@@ -45,6 +45,7 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string[]} [options.excluded=[]] Sections not to display.
      * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
      * @param {boolean} [options.withCombinations=false] Enable color combinations selection.
+     * @param {float} [options.noTransparency=false] Specify a default opacity (predefined gradients & color).
      * @param {float} [options.opacity=1] Specify a default opacity (predefined gradients & color).
      * @param {string} [options.selectedTab='theme-colors'] Tab initially selected.
      * @param {boolean} [options.withGradients=false] Enable gradient selection.
@@ -60,6 +61,7 @@ const ColorPaletteWidget = Widget.extend({
             excludeSectionOf: null,
             $editable: $(),
             withCombinations: false,
+            noTransparency: false,
             opacity: 1,
             selectedTab: 'theme-colors',
             withGradients: false,
@@ -294,6 +296,7 @@ const ColorPaletteWidget = Widget.extend({
             }
             this.colorPicker = new ColorpickerWidget(this, {
                 defaultColor: defaultColor,
+                noTransparency: !!this.options.noTransparency,
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
         }

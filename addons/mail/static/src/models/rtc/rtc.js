@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { annotateTraceback } from "@web/core/errors/error_utils";
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2many, one2one } from '@mail/model/model_field';
-import { clear, create, insert, unlink } from '@mail/model/model_field_command';
+import { clear, insert, unlink } from '@mail/model/model_field_command';
 
 import { monitorAudio } from '@mail/utils/media_monitoring/media_monitoring';
 
@@ -16,6 +15,14 @@ import { monitorAudio } from '@mail/utils/media_monitoring/media_monitoring';
 const TRANSCEIVER_ORDER = ['audio', 'video'];
 
 function factory(dependencies) {
+
+    const getRTCPeerNotificationNextTemporaryId = (function () {
+        let tmpId = 0;
+        return () => {
+            tmpId += 1;
+            return tmpId;
+        };
+    })();
 
     class Rtc extends dependencies['mail.model'] {
 
@@ -76,8 +83,15 @@ function factory(dependencies) {
              * This is distinct from this._recoverConnection which tries to restores
              * connection that were established but failed or timed out.
              */
-            this._intervalId = browser.setInterval(() => {
-                this.channel && this.currentRtcSession && this._callSessions();
+            this._intervalId = browser.setInterval(async () => {
+                if (!this.currentRtcSession || !this.channel) {
+                    return;
+                }
+                await this._pingServer();
+                if (!this.currentRtcSession || !this.channel) {
+                    return;
+                }
+                this._callSessions();
             }, 30000); // 30 seconds
         }
 
@@ -151,7 +165,7 @@ function factory(dependencies) {
             if (!this.isClientRtcCompatible) {
                 return;
             }
-            if (!this._peerConnections[sender] && (!channelId || channelId !== this.channel.id)) {
+            if (!this._peerConnections[sender] && (!channelId || !this.channel || channelId !== this.channel.id)) {
                 return;
             }
             switch (event) {
@@ -365,19 +379,25 @@ function factory(dependencies) {
          * @param {String} token
          * @param {String} entry
          * @param {Object} [param2]
+         * @param {Error} [param2.error]
          * @param {String} [param2.step] current step of the flow
          * @param {String} [param2.state] current state of the connection
          */
-        async _addLogEntry(token, entry, { step, state } = {}) {
+        _addLogEntry(token, entry, { error, step, state } = {}) {
             if (!this.env.isDebug()) {
                 return;
             }
             if (!(token in this.logs)) {
                 this.logs[token] = { step: '', state: '', logs: [] };
             }
-            const trace = await annotateTraceback(window.Error());
+            const trace = window.Error().stack || '';
             this.logs[token].logs.push({
                 event: `${window.moment().format('h:mm:ss')}: ${entry}`,
+                error: error && {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack && error.stack.split('\n'),
+                },
                 trace: trace.split('\n'),
             });
             if (step) {
@@ -462,7 +482,13 @@ function factory(dependencies) {
             };
             peerConnection.onnegotiationneeded = async (event) => {
                 const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
+                try {
+                    await peerConnection.setLocalDescription(offer);
+                } catch (e) {
+                    // Possibly already have a remote offer here: cannot set local description
+                    this._addLogEntry(token, `couldn't setLocalDescription`, { error: e });
+                    return;
+                }
                 this._addLogEntry(token, `sending notification: offer`, { step: 'sending offer' });
                 await this._notifyPeers([token], {
                     event: 'offer',
@@ -482,14 +508,21 @@ function factory(dependencies) {
                  * FIXME? it appears that the track yielded by the peerConnection's 'ontrack' event is always enabled,
                  * even when it is disabled on the sender-side.
                  */
-                await this._notifyPeers([token], {
-                    event: 'trackChange',
-                    type: 'peerToPeer',
-                    payload: {
-                        type: 'audio',
-                        state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
-                    },
-                });
+                try {
+                    await this._notifyPeers([token], {
+                        event: 'trackChange',
+                        type: 'peerToPeer',
+                        payload: {
+                            type: 'audio',
+                            state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
+                        },
+                    });
+                } catch (e) {
+                    if (!(e instanceof DOMException) || e.name !== "OperationError") {
+                        throw e;
+                    }
+                    this._addLogEntry(token, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`, { error: e });
+                }
             };
             this._peerConnections[token] = peerConnection;
             this._dataChannels[token] = dataChannel;
@@ -515,7 +548,7 @@ function factory(dependencies) {
          */
         async _handleRtcTransactionAnswer(fromToken, { sdp }) {
             const peerConnection = this._peerConnections[fromToken];
-            if (!peerConnection || peerConnection.connectionState === 'closed' || peerConnection.signalingState === 'stable') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState) || peerConnection.signalingState === 'stable') {
                 return;
             }
             if (peerConnection.signalingState === 'have-remote-offer') {
@@ -526,7 +559,7 @@ function factory(dependencies) {
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
-                this._addLogEntry(fromToken, 'answer handling: Failed at setting remoteDescription');
+                this._addLogEntry(fromToken, 'answer handling: Failed at setting remoteDescription', { error: e });
                 // ignored the transaction may have been resolved by another concurrent offer.
             }
         }
@@ -539,14 +572,14 @@ function factory(dependencies) {
          */
         async _handleRtcTransactionICECandidate(fromToken, { candidate }) {
             const peerConnection = this._peerConnections[fromToken];
-            if (!peerConnection || peerConnection.connectionState === 'closed') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
             const rtcIceCandidate = new window.RTCIceCandidate(candidate);
             try {
                 await peerConnection.addIceCandidate(rtcIceCandidate);
             } catch (error) {
-                this._addLogEntry(fromToken, 'ICE candidate handling: failed at adding the candidate to the connection');
+                this._addLogEntry(fromToken, 'ICE candidate handling: failed at adding the candidate to the connection', { error });
                 this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
             }
         }
@@ -560,7 +593,7 @@ function factory(dependencies) {
         async _handleRtcTransactionOffer(fromToken, { sdp }) {
             const peerConnection = this._peerConnections[fromToken] || this._createPeerConnection(fromToken);
 
-            if (!peerConnection || peerConnection.connectionState === 'closed') {
+            if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
             if (peerConnection.signalingState === 'have-remote-offer') {
@@ -571,14 +604,25 @@ function factory(dependencies) {
             try {
                 await peerConnection.setRemoteDescription(rtcSessionDescription);
             } catch (e) {
-                this._addLogEntry(fromToken, 'offer handling: failed at setting remoteDescription');
+                this._addLogEntry(fromToken, 'offer handling: failed at setting remoteDescription', { error: e });
                 return;
             }
             await this._updateRemoteTrack(peerConnection, 'audio', { token: fromToken });
             await this._updateRemoteTrack(peerConnection, 'video', { token: fromToken });
 
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
+            let answer;
+            try {
+                answer = await peerConnection.createAnswer();
+            } catch (e) {
+                this._addLogEntry(fromToken, 'offer handling: failed at creating answer', { error: e });
+                return;
+            }
+            try {
+                await peerConnection.setLocalDescription(answer);
+            } catch (e) {
+                this._addLogEntry(fromToken, 'offer handling: failed at setting localDescription', { error: e });
+                return;
+            }
 
             this._addLogEntry(fromToken, `sending notification: answer`, { step: 'sending answer' });
             await this._notifyPeers([fromToken], {
@@ -608,7 +652,14 @@ function factory(dependencies) {
                 });
             }
             if (type === 'video' && isSendingVideo === false) {
-                rtcSession.removeVideo({ stopTracks: false });
+                /**
+                 * Since WebRTC "unified plan", the local track is tied to the
+                 * remote transceiver.sender and not the remote track. Therefore
+                 * when the remote track is 'ended' the local track is not 'ended'
+                 * but only 'muted'. This is why we do not stop the local track
+                 * until the peer is completely removed.
+                 */
+                rtcSession.update({ videoStream: clear() });
             }
         }
 
@@ -627,9 +678,10 @@ function factory(dependencies) {
             }
             if (type === 'server') {
                 this.update({
-                    peerNotificationsToSend: create({
+                    peerNotificationsToSend: insert({
                         channelId: this.channel.id,
                         event,
+                        id: getRTCPeerNotificationNextTemporaryId(),
                         payload,
                         senderId: this.currentRtcSession.id,
                         targetTokens
@@ -650,6 +702,24 @@ function factory(dependencies) {
                         payload,
                     }));
                 }
+            }
+        }
+
+        /**
+         * Pings the server to ensure this session is kept alive.
+         */
+        async _pingServer() {
+            const channel = this.channel;
+            const { rtcSessions } = await this.env.services.rpc({
+                route: '/mail/channel/ping',
+                params: {
+                    'channel_id': channel.id,
+                    'check_rtc_session_ids': channel.rtcSessions.map(rtcSession => rtcSession.id),
+                    'rtc_session_id': this.currentRtcSession.id,
+                },
+            }, { shadow: true });
+            if (channel.exists()) {
+                channel.updateRtcSessions(rtcSessions);
             }
         }
 
@@ -679,9 +749,6 @@ function factory(dependencies) {
                 if (peerConnection.iceConnectionState === 'connected') {
                     return;
                 }
-                if (['connected', 'closed'].includes(peerConnection.connectionState)) {
-                    return;
-                }
                 this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
                 await this._notifyPeers([token], {
                     event: 'disconnect',
@@ -702,9 +769,12 @@ function factory(dependencies) {
             if (rtcSession) {
                 rtcSession.reset();
             }
-            const peerConnection = this._peerConnections[token];
             const dataChannel = this._dataChannels[token];
-            dataChannel.close();
+            if (dataChannel) {
+                dataChannel.close();
+            }
+            delete this._dataChannels[token];
+            const peerConnection = this._peerConnections[token];
             if (peerConnection) {
                 this._removeRemoteTracks(peerConnection);
                 peerConnection.close();
@@ -786,6 +856,31 @@ function factory(dependencies) {
         }
 
         /**
+         * Returns a string representation of a data channel for logging and
+         * debugging purposes.
+         *
+         * @private
+         * @param {RTCDataChannel} dataChannel
+         * @returns string
+         */
+        _serializeRTCDataChannel(dataChannel) {
+            const toLog = [
+                "binaryType",
+                "bufferedAmount",
+                "bufferedAmountLowThreshold",
+                "id",
+                "label",
+                "maxPacketLifeTime",
+                "maxRetransmits",
+                "negotiated",
+                "ordered",
+                "protocol",
+                "readyState",
+            ];
+            return JSON.stringify(Object.fromEntries(toLog.map(p => [p, dataChannel[p]])));
+        }
+
+        /**
          * Updates the "isTalking" state of the current user and sets the
          * enabled state of its audio track accordingly.
          *
@@ -817,23 +912,9 @@ function factory(dependencies) {
             for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
                 await this._updateRemoteTrack(peerConnection, 'video', { token });
             }
-            const isScreenSharingOn = !!this.sendDisplay;
-            const isCameraOn = !!this.sendUserVideo;
             this.currentRtcSession.updateAndBroadcast({
-                isScreenSharingOn,
-                isCameraOn,
-            });
-            if (isScreenSharingOn || isCameraOn) {
-                // the peer already gets notified through RTC transaction.
-                return;
-            }
-            this._notifyPeers(Object.keys(this._peerConnections), {
-                event: 'trackChange',
-                type: 'peerToPeer',
-                payload: {
-                    type: 'video',
-                    state: { isSendingVideo: false },
-                },
+                isScreenSharingOn: !!this.sendDisplay,
+                isCameraOn: !!this.sendUserVideo,
             });
         }
 
@@ -885,7 +966,6 @@ function factory(dependencies) {
                 });
             }
             if (track.kind === 'video') {
-                rtcSession.removeVideo({ stopTracks: false });
                 rtcSession.update({
                     videoStream: stream,
                 });
@@ -961,7 +1041,7 @@ function factory(dependencies) {
             if (videoTrack) {
                 videoTrack.addEventListener('ended', async () => {
                     await this.async(() =>
-                        this._toggleLocalVideoTrack({ force: false, type })
+                        this._toggleVideoBroadcast({ force: false, type })
                     );
                 });
             }
@@ -1016,6 +1096,16 @@ function factory(dependencies) {
                 transceiver.direction = transceiverDirection;
             } catch (e) {
                 // ignored, the transceiver is probably already removed
+            }
+            if (trackKind === 'video') {
+                this._notifyPeers([token], {
+                    event: 'trackChange',
+                    type: 'peerToPeer',
+                    payload: {
+                        type: 'video',
+                        state: { isSendingVideo: false },
+                    },
+                });
             }
         }
 
@@ -1157,6 +1247,14 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * list of connection states considered invalid, which means that
+         * no action should be taken on such peerConnection.
+         */
+        invalidIceConnectionStates: attr({
+            default: new Set(['disconnected', 'failed', 'closed']),
+            readonly: true,
+        }),
+        /**
          * true if the browser supports webRTC
          */
         isClientRtcCompatible: attr({
@@ -1229,7 +1327,7 @@ function factory(dependencies) {
          */
         videoTrack: attr(),
     };
-
+    Rtc.identifyingFields = ['messaging'];
     Rtc.modelName = 'mail.rtc';
 
     return Rtc;

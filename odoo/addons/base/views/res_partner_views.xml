@@ -88,8 +88,8 @@
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
-                            <field name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
+                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
@@ -168,8 +168,8 @@
                         <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
-                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
+                            <field id="individual" class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -187,8 +187,8 @@
                     <group>
                         <group>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
-                                <b class="position-absolute" attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
+                                <field name="type" attrs="{'invisible': [('is_company','=', True)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="font-weight-bold"/>
+                                <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"

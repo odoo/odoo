@@ -24,7 +24,7 @@ export class AddToBoard extends Component {
     setup() {
         this.notification = useService("notification");
         this.rpc = useService("rpc");
-        this.state = useState({ name: this.env.searchModel.displayName });
+        this.state = useState({ name: this.env.config.displayName });
 
         useAutofocus();
     }
@@ -34,39 +34,19 @@ export class AddToBoard extends Component {
     //---------------------------------------------------------------------
 
     async addToBoard() {
-        const {
-            action,
-            displayName,
-            domain,
-            context,
-            groupBy,
-            orderedBy,
-            view,
-        } = this.env.searchModel;
-
-        // Retrieves view context
-        const fns = this.env.__getContext__.callbacks;
-        const viewContext = Object.assign({}, ...fns.map((fn) => fn()));
-
+        const { context, domain } = this.env.searchModel.getIrFilterValues();
         const contextToSave = {
             ...context,
-            group_by: groupBy,
-            orderedBy,
+            orderedBy: this.env.searchModel.orderBy,
             dashboard_merge_domains_contexts: false,
-            ...viewContext,
         };
 
-        const detailedComparison = this.env.searchModel.getFullComparison();
-        if (detailedComparison) {
-            contextToSave.comparison = detailedComparison;
-        }
-
         const result = await this.rpc("/board/add_to_dashboard", {
-            action_id: action.id,
+            action_id: this.env.config.actionId,
             context_to_save: contextToSave,
             domain,
             name: this.state.name,
-            view_mode: view.type,
+            view_mode: this.env.config.viewType,
         });
 
         if (result) {
@@ -77,12 +57,11 @@ export class AddToBoard extends Component {
                     type: "warning",
                 }
             );
-            this.state.name = displayName;
+            this.state.name = this.env.config.displayName;
         } else {
-            this.notification.add(
-                this.env._t("Could not add filter to dashboard"),
-                { type: "danger" }
-            );
+            this.notification.add(this.env._t("Could not add filter to dashboard"), {
+                type: "danger",
+            });
         }
     }
 
@@ -106,7 +85,7 @@ AddToBoard.template = "board.AddToBoard";
 const addToBoardItem = {
     Component: AddToBoard,
     groupNumber: 4,
-    isDisplayed: ({ searchModel }) => searchModel.action.type === "ir.actions.act_window",
+    isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window",
 };
 
 favoriteMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });

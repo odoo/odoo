@@ -799,6 +799,33 @@ section, .oe_img_bg, [data-oe-shape-data] {
     @extend %o-we-background-layer;
 }
 
+.o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100vh !important;
+}
+.o_half_screen_height {
+    @extend .o_full_screen_height;
+    min-height: 55vh !important;
+}
+
+// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+.cover_full {
+    @extend .o_full_screen_height;
+}
+.cover_mid {
+    @extend .o_half_screen_height;
+}
+
+// Smaller container
+.o_container_small {
+    @extend .container;
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
+}
+
 // Gradient
 // TODO should be in the editor lib since it is handled there... but could not
 // find the right place for it.
@@ -815,4 +842,60 @@ section, .oe_img_bg, [data-oe-shape-data] {
         -webkit-background-clip: inherit;
         -webkit-text-fill-color: inherit;
     }
+}
+
+/* QWEB */
+
+.odoo-editor, .o_readonly {
+    t,
+    [t-if],
+    [t-elif],
+    [t-else],
+    [t-foreach] {
+        background-color: rgba(0, 0, 102, 0.1) !important;
+    }
+    t,
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        border-radius: 2px;
+    }
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        background-color: rgba(36, 154, 255, 0.16) !important;
+    }
+    [t-esc]:empty::before {
+        content: attr(t-esc);
+    }
+    [t-raw]:empty::before {
+        content: attr(t-raw);
+    }
+    [t-out]:empty::before {
+        content: attr(t-out);
+    }
+    t[t-set] {
+        display: none;
+    }
+    t[data-oe-t-inline] {
+        display: inline;
+    }
+    t:not([data-oe-t-inline]) {
+        display: block;
+    }
+    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+        display: unset;
+    }
+    [data-oe-t-group]:not([data-oe-t-group-active]) {
+        display: none !important;
+    }
+    [data-oe-t-group][data-oe-t-selectable] {
+        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+    }
+}
+
+.oe-qweb-select {
+    position: absolute;
+    z-index: 1051;
+    background-color: white;
 }

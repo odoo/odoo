@@ -263,7 +263,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" delete="0">
+                <form string="Project" class="o_form_project_project" delete="0">
                     <header>
                         <button name="%(project.project_share_wizard_action)d" string="Share Readonly" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read'}"/>
@@ -852,7 +852,7 @@
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('parent_id', '!=', False)]}" />
+                            <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>

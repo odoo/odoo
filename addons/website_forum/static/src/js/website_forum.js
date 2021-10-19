@@ -315,7 +315,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'post_non_flaggable') {
                     message = _t("This post can not be flagged");
                 }
-                this.displayNotification({
+                self.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
                     sticky: false,

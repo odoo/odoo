@@ -108,6 +108,7 @@ const Wysiwyg = Widget.extend({
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
+            plugins: options.editorPlugins,
         }, editorCollaborationOptions));
 
         const $wrapwrap = $('#wrapwrap');
@@ -436,7 +437,7 @@ const Wysiwyg = Widget.extend({
                     }
                 }
             },
-        }
+        };
         return editorCollaborationOptions;
     },
     /**
@@ -553,6 +554,7 @@ const Wysiwyg = Widget.extend({
         $editable.find('[data-original-title=""]').removeAttr('data-original-title');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
+        this.odooEditor.cleanForSave($editable[0]);
         return $editable.html();
     },
     /**
@@ -601,7 +603,8 @@ const Wysiwyg = Widget.extend({
             await this.snippetsMenu.cleanForSave();
         }
 
-        await this.saveModifiedImages();
+        const editables = this.options.getContentEditableAreas();
+        await this.saveModifiedImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
 
         this.trigger_up('edition_was_stopped');
@@ -684,6 +687,7 @@ const Wysiwyg = Widget.extend({
      */
     setValue: function (value) {
         this.$editable.html(value);
+        this.odooEditor.sanitize();
     },
     /**
      * Undo one step of change in the editor.
@@ -703,7 +707,7 @@ const Wysiwyg = Widget.extend({
      * Set cursor to the editor latest position before blur or to the last editable node, ready to type.
      */
     focus: function () {
-        if(!this.odooEditor.historyResetLatestComputedSelection()) {
+        if (!this.odooEditor.historyResetLatestComputedSelection()) {
             // If the editor don't have an history step to focus to,
             // We place the cursor after the end of the editor exiting content.
             const range = document.createRange();
@@ -1341,14 +1345,16 @@ const Wysiwyg = Widget.extend({
             }, 400);
         }
         // Update color of already opened colorpickers.
-        for (let eventName in this.colorpickers) {
-            const selectedColor = this._getSelectedColor($, eventName);
-            if (selectedColor) {
-                // If the palette was already opened (e.g. modifying a gradient), the new DOM state
-                // must be reflected in the palette, but the tab selection must not be impacted.
-                this.colorpickers[eventName].setSelectedColor(null, selectedColor, false);
+        setTimeout(() => {
+            for (let eventName in this.colorpickers) {
+                const selectedColor = this._getSelectedColor($, eventName);
+                if (selectedColor) {
+                    // If the palette was already opened (e.g. modifying a gradient), the new DOM state
+                    // must be reflected in the palette, but the tab selection must not be impacted.
+                    this.colorpickers[eventName].setSelectedColor(null, selectedColor, false);
+                }
             }
-        }
+        }, 0);
     },
     _updateMediaJustifyButton: function (commandState) {
         if (!this.lastMediaClicked) {

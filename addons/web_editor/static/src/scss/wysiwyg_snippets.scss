@@ -726,6 +726,7 @@ body.editor_enable.editor_has_snippets {
             + * {
                 display: none !important;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+                border-radius: $o-we-item-border-radius;
                 background-color: $o-we-sidebar-content-field-dropdown-bg;
                 box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
             }
@@ -793,10 +794,15 @@ body.editor_enable.editor_has_snippets {
                     we-button {
                         margin-top: 0 !important;
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
-                        padding: 0 $o-we-sidebar-content-field-multi-spacing;
+                        padding: 0 $o-we-sidebar-content-field-multi-spacing !important;
 
-                        &.fa, &[data-img] {
+                        &.fa, &.o_we_icon_button {
+                            box-sizing: content-box;
+                            width: 1.29em; // Fix width and override potential fa-fw
+                            padding: 0 0.15em !important;
                             margin-left: $o-we-sidebar-content-field-label-spacing;
+                            text-align: center;
+                            justify-content: center;
                         }
                     }
                 }
@@ -862,6 +868,14 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // TODO: Keep only the first class in master
+        .o_we_large, .o_we_large_input {
+            > div {
+                flex: 1 1 auto !important;
+                width: 100%;
+            }
+        }
+
         // Buttons
         we-button.o_we_user_value_widget {
             > div {
@@ -883,9 +897,17 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
-        // Buttons with an icon but no text, so no possible overflow
-        we-button.o_we_button_icon {
-            flex: 0 0 auto;
+        we-button {
+            // Prevent icon buttons to shrink
+            &.o_we_icon_button, &.fa {
+                flex: 0 0 auto;
+            }
+            // Buttons being `fa-fw`, prevent font-awesome hardcoded width
+            &.fa-fw {
+                padding: 0 .5em;
+                width: 2.29em; // .fa-fw = 1.28571429em (font-awesome.css)
+                justify-content: center;
+            }
         }
 
         // Checkboxes
@@ -994,6 +1016,7 @@ body.editor_enable.editor_has_snippets {
                     background-clip: padding-box;
                     background-color: $o-we-sidebar-content-field-dropdown-item-bg;
                     color: $o-we-sidebar-content-field-dropdown-item-color;
+                    border-radius: 0;
 
                     > we-title {
                         flex-grow: 1;
@@ -1119,10 +1142,10 @@ body.editor_enable.editor_has_snippets {
                     + we-button {
                         border-left: none;
                     }
-                    &:first-child {
+                    &:first-child, .active:first-child {
                         @include border-left-radius($o-we-sidebar-content-field-border-radius);
                     }
-                    &:last-child {
+                    &:last-child, .active:last-child {
                         @include border-right-radius($o-we-sidebar-content-field-border-radius);
                     }
                 }
@@ -1147,9 +1170,6 @@ body.editor_enable.editor_has_snippets {
             > div {
                 flex: 0 1 auto;
                 width: $o-we-sidebar-content-field-input-max-width;
-            }
-            &.o_we_large_input > div {
-                flex: 1 1 auto;
             }
             input {
                 flex: 1 1 auto;
@@ -1701,6 +1721,14 @@ body.editor_enable.editor_has_snippets {
 }
 
 // SNIPPET OPTIONS
+.o_we_border_preview {
+    display: inline-block;
+    width: 999px;
+    max-width: 100%;
+    margin-bottom: 2px;
+    border-width: 4px;
+    border-bottom: none !important;
+}
 #oe_snippets .colorpicker {
     $-wb-txt: $o-we-sidebar-content-field-colorpicker-dropdown-color;
 
@@ -2058,16 +2086,14 @@ body.editor_enable.editor_has_snippets {
                 &, > .o_overlay_move_options, .o_overlay_edit_options {
                     display: flex;
                 }
-                > .o_overlay_move_options, .o_overlay_edit_options {
-                    > * {
-                        @extend %we-generic-button;
-                        margin: 0 1px 0;
-                        min-width: 22px;
-                        padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
-                        color: $o-we-fg-lighter;
-                        &.oe_snippet_remove {
-                            background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
-                        }
+                .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                    @extend %we-generic-button;
+                    margin: 0 1px 0;
+                    min-width: 22px;
+                    padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
+                    color: $o-we-fg-lighter;
+                    &.oe_snippet_remove {
+                        background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2079,14 +2105,12 @@ body.editor_enable.editor_has_snippets {
                     background-repeat: no-repeat;
                 }
                 &:hover {
-                    > .o_overlay_move_options, .o_overlay_edit_options {
-                        > * {
-                            @include o-hover-opacity(.6);
+                    .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                        @include o-hover-opacity(.6);
 
-                            &:hover {
-                                border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
-                                background-color: $o-we-sidebar-content-field-pressed-bg;
-                            }
+                        &:hover {
+                            border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
+                            background-color: $o-we-sidebar-content-field-pressed-bg;
                         }
                     }
                 }

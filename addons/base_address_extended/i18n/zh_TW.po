@@ -3,18 +3,15 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Michael Yeung, 2019
-# sejun huang <sejun.huang@gmail.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,8 +49,6 @@ msgstr "門"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
 msgstr "門號"
 
@@ -70,9 +65,9 @@ msgstr ""
 "用於屬於這個國家的街道的格式\n"
 "\n"
 "您可以在街道的所有字段中使用python樣式的字元串模式（例如，如果要顯示街道名稱，則使用'%(street_name)s,%(street_number)s'，後跟逗號和房子數）\n"
-"%(street_name)s：街道的名字\n"
-"%(street_number)s：房屋號碼\n"
-"%(street_number2)s：門號"
+"%(street_name)s：街道名稱\n"
+"%(street_number)s：街道號碼\n"
+"%(street_number2)s：街道號碼2"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -82,8 +77,6 @@ msgstr "房屋"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
 msgstr "樓號"
 
@@ -112,8 +105,8 @@ msgid "Street format..."
 msgstr "街道格式..."
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
+#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr "街道格式無法識別的字段%s"

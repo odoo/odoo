@@ -87,6 +87,16 @@
     }
 
     /**
+     * Returns a promise that resolves after the next animation frame.
+     *
+     * @returns {Promise}
+     */
+    async function waitForNextAnimationFrame() {
+        await new Promise(setTimeout);
+        await new Promise((r) => requestAnimationFrame(r));
+    }
+
+    /**
      * Simulate all of the mouse events triggered during a click action.
      *
      * @param {EventTarget} target the element on which to perform the click
@@ -103,8 +113,7 @@
             const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
             target.dispatchEvent(event);
         });
-        await new Promise(setTimeout);
-        await new Promise((r) => requestAnimationFrame(r));
+        await waitForNextAnimationFrame();
     }
 
     /**
@@ -156,12 +165,12 @@
      * Make sure the apps menu is open (community only)
      */
     async function ensureAppsMenu() {
-        const appsMenu = document.querySelector(".o_navbar_apps_menu .o_dropdown_menu");
+        const appsMenu = document.querySelector(".o_navbar_apps_menu .dropdown-menu");
         if (!appsMenu) {
-            const toggler = document.querySelector(".o_navbar_apps_menu .o_dropdown_toggler");
+            const toggler = document.querySelector(".o_navbar_apps_menu .dropdown-toggle");
             await triggerClick(toggler, "apps menu toggle button");
             await waitForCondition(() =>
-                document.querySelector(".o_navbar_apps_menu .o_dropdown_menu")
+                document.querySelector(".o_navbar_apps_menu .dropdown-menu")
             );
         }
     }
@@ -173,14 +182,14 @@
      */
     async function getNextMenu() {
         const menus = document.querySelectorAll(
-            ".o_menu_sections > .o_dropdown > .o_dropdown_toggler, .o_menu_sections > .o_dropdown_item"
+            ".o_menu_sections > .dropdown > .dropdown-toggle, .o_menu_sections > .dropdown-item"
         );
         if (menuIndex === menus.length) {
             menuIndex = 0;
             return; // all menus done
         }
         let menu = menus[menuIndex];
-        if (menu.classList.contains("o_dropdown_toggler")) {
+        if (menu.classList.contains("dropdown-toggle")) {
             // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
             if (!menu.nextSibling) {
                 // might already be opened if the last menu was blacklisted
@@ -191,7 +200,7 @@
                 menuIndex = 0; // empty More menu has no dropdown (FIXME?)
                 return;
             }
-            const items = dropdown.querySelectorAll(".o_dropdown_item");
+            const items = dropdown.querySelectorAll(".dropdown-item");
             menu = items[subMenuIndex];
             if (subMenuIndex === items.length - 1) {
                 // this is the last item, so go to the next menu
@@ -220,7 +229,7 @@
             apps = document.querySelectorAll(".o_apps .o_app");
         } else {
             await ensureAppsMenu();
-            apps = document.querySelectorAll(".o_navbar_apps_menu .o_dropdown_item");
+            apps = document.querySelectorAll(".o_navbar_apps_menu .dropdown-item");
         }
         const app = apps[appIndex];
         appIndex++;
@@ -245,25 +254,36 @@
             `toggling menu "${filterMenuButton.innerText.trim()}"`
         );
 
-        const filterMenuItems = document.querySelectorAll(
-            ".o_control_panel .o_filter_menu > ul > li.o_menu_item"
-        );
+        const simpleFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown-item";
+        const dateFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown";
+        const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
         console.log("Testing", filterMenuItems.length, "filters");
-
         for (const filter of filterMenuItems) {
             const currentViewCount = viewUpdateCount;
-            const filterLink = filter.querySelector("a") || filter;
-            await triggerClick(filterLink, `filter "${filter.innerText.trim()}"`);
-            if (filterLink.classList.contains("o_menu_item_parent")) {
+            if (filter.classList.contains("dropdown")) {
+                await triggerClick(
+                    filter.querySelector(".dropdown-toggle"),
+                    `filter "${filter.innerText.trim()}"`
+                );
+                // the sub-dropdown opens 200ms after the mousenter, so we trigger an ArrayRight
+                // keydown s.t. it opens directly
+                window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+                await waitForNextAnimationFrame();
+
                 // If a fitler has options, it will simply unfold and show all options.
                 // We then click on the first one.
-                const firstOption = filter.querySelector(
-                    ".o_menu_item_options > li.o_item_option > a"
-                );
-                console.log();
-                await triggerClick(firstOption, `filter option "${firstOption.innerText.trim()}"`);
+                const firstOption = filter.querySelector(".dropdown-menu > .dropdown-item");
+                if (firstOption) {
+                    await triggerClick(
+                        firstOption,
+                        `filter option "${firstOption.innerText.trim()}"`
+                    );
+                    await waitForCondition(() => currentViewCount !== viewUpdateCount);
+                }
+            } else {
+                await triggerClick(filter, `filter "${filter.innerText.trim()}"`);
+                await waitForCondition(() => currentViewCount !== viewUpdateCount);
             }
-            await waitForCondition(() => currentViewCount !== viewUpdateCount);
         }
     }
 
@@ -295,7 +315,9 @@
                     triggerClick(target, `${viewType} view switcher`);
                 }
             }, 250);
-            await waitForCondition(() => document.querySelector(`.o_${viewType}_view`) !== null);
+            await waitForCondition(() => {
+                return document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null;
+            });
             await testFilters();
         }
     }
@@ -399,10 +421,10 @@
                     app = document.querySelector(`a.o_app.o_menuitem[data-menu-xmlid="${xmlId}"]`);
                 } else {
                     await triggerClick(
-                        document.querySelector(".o_navbar_apps_menu .o_dropdown_toggler")
+                        document.querySelector(".o_navbar_apps_menu .dropdown-toggle")
                     );
                     app = document.querySelector(
-                        `.o_navbar_apps_menu .o_dropdown_item[data-menu-xmlid="${xmlId}"]`
+                        `.o_navbar_apps_menu .dropdown-item[data-menu-xmlid="${xmlId}"]`
                     );
                 }
                 if (!app) {

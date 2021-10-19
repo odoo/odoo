@@ -16,9 +16,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 11:06+0000\n"
+"POT-Creation-Date: 2021-10-05 11:22+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -1383,6 +1383,27 @@ msgstr ""
 " Tento modul poskytuje jádro Odoo Mobile App."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_es_edi_sii
+msgid ""
+"\n"
+"        This module sends the taxes information (mostly VAT) of the \n"
+"        vendor bills and customer invoices to the SII.  It is called \n"
+"        Procedimiento G417 - IVA. Llevanza de libros registro.  It is \n"
+"        required for every company with a turnover of +6M€ and others can \n"
+"        already make use of it.  The invoices are automatically \n"
+"        sent after validation.  \n"
+"        \n"
+"        How the information is sent to the SII depends on the \n"
+"        configuration that is put in the taxes.  The taxes \n"
+"        that were in the chart template (l10n_es) are automatically \n"
+"        configured to have the right type.  It is possible however \n"
+"        that extra taxes need to be created for certain exempt/no sujeta reasons.   \n"
+"        \n"
+"        You need to configure your certificate and the tax agency.  \n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_maintenance
 msgid ""
 "\n"
@@ -2167,6 +2188,16 @@ msgstr ""
 "\n"
 "Účetní výkazy pro Indii\n"
 "==========================="
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_it_reports
+msgid ""
+"\n"
+"Accounting reports for Italy\n"
+"============================\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -7333,18 +7364,9 @@ msgid ""
 "This module consists of:\n"
 " - Generic Israel Chart of Accounts\n"
 " - Taxes and tax report\n"
-" - Fiscal position for Palestina\n"
+" - Multiple Fiscal positions\n"
 " "
 msgstr ""
-"\n"
-"Toto je nejnovější základní izraelská lokalizace nezbytná pro spuštění Odoo v Izraeli:\n"
-"================================================== ===============================\n"
-"\n"
-"Tento modul se skládá z:\n"
-"- Obecná izraelská účtová osnova\n"
-"- Daně a daňová zpráva\n"
-"- Fiskální pozice pro Palestinu\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -9677,6 +9699,8 @@ msgstr "<strong>Telefon</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr ""
+"<strong>Zadejte prosím své heslo a potvrďte, že jste vlastníkem tohoto "
+"účtu.</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10623,7 +10647,7 @@ msgstr "Přidat formulář pro návrh úkolů na své webové stránky"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_group
 msgid "Add a website snippet for the mail groups."
-msgstr ""
+msgstr "Přidání webového snippetu stránky pro mailové skupiny."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
@@ -11433,7 +11457,7 @@ msgstr "Pracovní schůzky"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
 msgid "Appraisal - Skills"
-msgstr ""
+msgstr "Hodnocení - dovednosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
@@ -13113,7 +13137,6 @@ msgstr ""
 "vrácená zpětná hodnota akce bude použita jako globální návratová hodnota."
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_localization_chile
 #: model:res.country,name:base.cl
 msgid "Chile"
 msgstr "Chile"
@@ -17579,7 +17602,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_pos_res_cert
 msgid "Germany - Certification for Point of Sale of type restaurant"
-msgstr ""
+msgstr "Německo - Certifikace pro prodejní místa typu restaurace"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_purchase
@@ -19653,6 +19676,11 @@ msgid "Italy - Accounting"
 msgstr "Itálie - účetnictví"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_reports
+msgid "Italy - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
 msgid "Italy - E-invoicing"
 msgstr "Itálie - elektronická fakturace"
@@ -20483,7 +20511,6 @@ msgstr "Národní kód"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations
-#: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
 msgstr "Lokalizace"
@@ -25226,7 +25253,6 @@ msgid "Profiling results"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project
 #: model:ir.module.category,name:base.module_category_services_project
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project"
@@ -25394,7 +25420,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
 msgid "Project accounting assets"
-msgstr ""
+msgstr "Účetní aktiva projektu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
@@ -26663,6 +26689,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Konfigurátor platů (Belgie)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_group_insurance
+msgid "Salary Configurator (Belgium) - Group Insurance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
 msgid "Salary Configurator - Holidays"
 msgstr "Konfigurátor platů - Dovolená"
@@ -26676,6 +26707,11 @@ msgstr "Konfigurátor platů - mzdy"
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
 msgid "Salary Package Configurator"
 msgstr "Konfigurátor platových balíčků"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_group_insurance
+msgid "Salary Package Configurator - Group Insurance"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
@@ -27777,6 +27813,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
 msgid "Spain - Real Estates"
 msgstr "Španělsko - Nemovitosti"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_sii
+msgid "Spain - SII EDI Suministro de Libros"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
@@ -29315,7 +29356,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "This is your company's currency."
-msgstr ""
+msgstr "Toto je měna vaší společnosti."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -30564,7 +30605,7 @@ msgstr "Použijte kupóny se slevou v prodejních objednávkách"
 #. module: base
 #: model:ir.module.module,summary:base.module_gift_card
 msgid "Use gift card"
-msgstr ""
+msgstr "Použít dárkovou kartu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_gift_card
@@ -31951,8 +31992,8 @@ msgid "_Import"
 msgstr "_Import"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_account
-#: model:ir.module.category,name:base.module_category_project_payroll_account
+#: model:ir.module.category,name:base.module_category_services_account
+#: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
 
@@ -31985,7 +32026,7 @@ msgid "and"
 msgstr "and"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_assets
+#: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
 msgstr ""
 
@@ -32012,7 +32053,7 @@ msgstr "bpost Shipping"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget
 msgid "budget"
-msgstr ""
+msgstr "rozpočet"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
@@ -32171,7 +32212,7 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_expenses
+#: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr ""
 
@@ -32338,7 +32379,7 @@ msgid "one2many"
 msgstr "one2many"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_payroll
+#: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
 msgstr ""
 
@@ -32409,7 +32450,7 @@ msgid "sale"
 msgstr "prodej"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_sales
+#: model:ir.module.category,name:base.module_category_services_sales
 msgid "sales"
 msgstr "prodeje"
 
@@ -32430,7 +32471,7 @@ msgid "snailmail_account"
 msgstr "snailmail_account"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_project_sales_subscriptions
+#: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
 msgstr ""
 

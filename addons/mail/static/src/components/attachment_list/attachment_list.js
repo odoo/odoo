@@ -17,10 +17,6 @@ export class AttachmentList extends Component {
 
 Object.assign(AttachmentList, {
     props: {
-        areAttachmentsEditable: {
-            type: Boolean,
-            optional: true,
-        },
         attachmentListLocalId: String,
     },
     template: 'mail.AttachmentList',

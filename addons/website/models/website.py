@@ -294,6 +294,13 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    @api.model
+    def get_theme_snippet_lists(self, theme_name):
+        default_snippet_lists = http.addons_manifest['theme_default'].get('snippet_lists', {})
+        theme_snippet_lists = http.addons_manifest[theme_name].get('snippet_lists', {})
+        snippet_lists = {**default_snippet_lists, **theme_snippet_lists}
+        return snippet_lists
+
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
@@ -333,11 +340,14 @@ class Website(models.Model):
         domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
         client_themes = request.env['ir.module.module'].search(domain).mapped('name')
         client_themes_img = dict([(t, http.addons_manifest[t].get('images_preview_theme', {})) for t in client_themes])
-        params = {
-            'palette': palette,
-            'client_themes': client_themes_img,
-        }
-        return self._website_api_rpc('/api/website/1/configurator/recommended_themes/%s' % industry_id, params)
+        themes_suggested = self._website_api_rpc(
+            '/api/website/2/configurator/recommended_themes/%s' % industry_id,
+            {'client_themes': client_themes_img}
+        )
+        process_svg = self.env['website.configurator.feature']._process_svg
+        for theme in themes_suggested:
+            theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
+        return themes_suggested
 
     @api.model
     def configurator_skip(self):
@@ -347,13 +357,15 @@ class Website(models.Model):
     @api.model
     def configurator_apply(self, **kwargs):
         def set_colors(selected_palette):
+            url = '/website/static/src/scss/options/user_values.scss'
+            selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
+            values = {'color-palettes-name': "'%s'" % selected_palette_name}
+            self.env['web_editor.assets'].make_scss_customization(url, values)
+
             if isinstance(selected_palette, list):
                 url = '/website/static/src/scss/options/colors/user_color_palette.scss'
                 values = {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
-            else:
-                url = '/website/static/src/scss/options/user_values.scss'
-                values = {'color-palettes-name': "'%s'" % selected_palette}
-            self.env['web_editor.assets'].make_scss_customization(url, values)
+                self.env['web_editor.assets'].make_scss_customization(url, values)
 
         def set_features(selected_features):
             features = self.env['website.configurator.feature'].browse(selected_features)
@@ -412,13 +424,13 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
+                    view_id = self.env['website'].with_context(website_id=website.id).viewref('website.' + snippet)
                     if view_id:
                         el = html.fromstring(view_id._render(values=cta_data))
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
-                        el.attrib['data-snippet'] = snippet.split('.', 1)[-1]
+                        el.attrib['data-snippet'] = snippet
 
                         # Tweak the shape of the first snippet to connect it
                         # properly with the header color in some themes
@@ -447,7 +459,7 @@ class Website(models.Model):
                 except Exception as e:
                     logger.warning("Failed to download image: %s.\n%s", url, e)
                 else:
-                    self.env['ir.attachment'].create({
+                    attachment = self.env['ir.attachment'].create({
                         'name': name,
                         'website_id': website.id,
                         'key': name,
@@ -455,10 +467,17 @@ class Website(models.Model):
                         'raw': response.content,
                         'public': True,
                     })
+                    self.env['ir.model.data'].create({
+                        'name': 'configurator_%s_%s' % (website.id, name.split('.')[1]),
+                        'module': 'website',
+                        'model': 'ir.attachment',
+                        'res_id': attachment.id,
+                        'noupdate': True,
+                    })
 
         website = self.get_current_website()
-
-        theme = self.env['ir.module.module'].search([('name', '=', kwargs['theme_name'])])
+        theme_name = kwargs['theme_name']
+        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         url = theme.button_choose_theme()
 
         # Force to refresh env after install of module
@@ -554,16 +573,16 @@ class Website(models.Model):
                 logger.warning(e)
 
         # Load suggestion from iap for selected pages
-        requested_pages = list(pages_views.keys()) + ['homepage']
-        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), {
-            'theme': kwargs.get('theme_name'),
-            'pages': requested_pages,
-        })
+        custom_resources = self._website_api_rpc(
+            '/api/website/2/configurator/custom_resources/%s' % kwargs['industry_id'],
+            {'theme': theme_name, }
+        )
 
         # Update pages
-        pages = custom_resources.get('pages', {})
-        for page_code, snippet_list in pages.items():
-            configure_page(page_code, snippet_list, pages_views, cta_data)
+        requested_pages = list(pages_views.keys()) + ['homepage']
+        snippet_lists = website.get_theme_snippet_lists(theme_name)
+        for page_code in requested_pages:
+            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data)
 
         images = custom_resources.get('images', {})
         set_images(images)

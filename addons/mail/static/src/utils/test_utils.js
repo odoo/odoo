@@ -6,6 +6,7 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
@@ -352,6 +353,53 @@ function afterEach(self) {
     self.unpatch();
 }
 
+
+function getAfterEvent({ messagingBus }) {
+    /**
+     * Returns a promise resolved after the expected event is received.
+     *
+     * @param {Object} param0
+     * @param {string} param0.eventName event to wait
+     * @param {function} param0.func function which, when called, is expected to
+     *  trigger the event
+     * @param {string} [param0.message] assertion message
+     * @param {function} [param0.predicate] predicate called with event data.
+     *  If not provided, only the event name has to match.
+     * @param {number} [param0.timeoutDelay=5000] how long to wait at most in ms
+     * @returns {Promise}
+     */
+    return async function afterEvent({ eventName, func, message, predicate, timeoutDelay = 5000 }) {
+        // Set up the timeout to reject if the event is not triggered.
+        let timeoutNoEvent;
+        const timeoutProm = new Promise((resolve, reject) => {
+            timeoutNoEvent = setTimeout(() => {
+                let error = message
+                    ? new Error(message)
+                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
+                console.error(error);
+                reject(error);
+            }, timeoutDelay);
+        });
+        // Set up the promise to resolve if the event is triggered.
+        const eventProm = new Promise(resolve => {
+            messagingBus.on(eventName, null, data => {
+                if (!predicate || predicate(data)) {
+                    resolve();
+                }
+            });
+        });
+        // Start the function expected to trigger the event after the
+        // promise has been registered to not miss any potential event.
+        const funcRes = func();
+        // Make them race (first to resolve/reject wins).
+        await Promise.race([eventProm, timeoutProm]);
+        clearTimeout(timeoutNoEvent);
+        // If the event is triggered before the end of the async function,
+        // ensure the function finishes its job before returning.
+        await funcRes;
+    };
+}
+
 /**
  * Creates and returns a new root Component with the given props and mounts it
  * on target.
@@ -374,6 +422,84 @@ async function createRootMessagingComponent(self, componentName, { props = {}, t
     self.components.push(component);
     await afterNextRender(() => component.mount(target));
     return component;
+}
+
+function getCreateComposerComponent({ components, env, modelManager, widget }) {
+    return async function createComposerComponent(composer, props) {
+        const composerView = modelManager.messaging.models['mail.composer_view'].create({
+            qunitTest: insertAndReplace({
+                composer: replace(composer),
+            }),
+        });
+        await createRootMessagingComponent({ components, env }, "Composer", {
+            props: { composerViewLocalId: composerView.localId, ...props },
+            target: widget.el,
+        });
+    };
+}
+
+function getCreateComposerSuggestionComponent({ components, env, modelManager, widget }) {
+    return async function createComposerSuggestionComponent(composer, props) {
+        const composerView = modelManager.messaging.models['mail.composer_view'].create({
+            qunitTest: insertAndReplace({
+                composer: replace(composer),
+            }),
+        });
+        await createRootMessagingComponent({ components, env }, "ComposerSuggestion", {
+            props: { ...props, composerViewLocalId: composerView.localId },
+            target: widget.el,
+        });
+    };
+}
+
+function getCreateMessageComponent({ components, env, modelManager, widget }) {
+    return async function createMessageComponent(message) {
+        const messageView = modelManager.messaging.models['mail.message_view'].create({
+            message: replace(message),
+            qunitTest: insertAndReplace(),
+        });
+        await createRootMessagingComponent({ components, env }, "Message", {
+            props: { messageViewLocalId: messageView.localId },
+            target: widget.el,
+        });
+    };
+}
+
+function getCreateThreadViewComponent({ afterEvent, components, env, widget }) {
+    return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
+        let target;
+        if (isFixedSize) {
+            // needed to allow scrolling in some tests
+            const div = document.createElement('div');
+            Object.assign(div.style, {
+                display: 'flex',
+                'flex-flow': 'column',
+                height: '300px',
+            });
+            widget.el.append(div);
+            target = div;
+        } else {
+            target = widget.el;
+        }
+        async function func() {
+            return createRootMessagingComponent({ components, env }, "ThreadView", { props: { threadViewLocalId: threadView.localId, ...otherProps }, target });
+        }
+        if (waitUntilMessagesLoaded) {
+            await afterNextRender(() => afterEvent({
+                eventName: 'o-thread-view-hint-processed',
+                func,
+                message: "should wait until thread loaded messages after creating thread view component",
+                predicate: ({ hint, threadViewer }) => {
+                    return (
+                        hint.type === 'messages-loaded' &&
+                        threadViewer.threadView === threadView
+                    );
+                },
+            }));
+        } else {
+            await func();
+        }
+    };
 }
 
 /**
@@ -505,6 +631,7 @@ async function start(param0 = {}) {
         },
         env.session
     );
+    env.isDebug = env.isDebug || (() => true);
     env = addMessagingToEnv(env);
     if (hasTimeControl) {
         env = addTimeControlToEnv(env);
@@ -645,50 +772,7 @@ async function start(param0 = {}) {
     }
     // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
-    /**
-     * Returns a promise resolved after the expected event is received.
-     *
-     * @param {Object} param0
-     * @param {string} param0.eventName event to wait
-     * @param {function} param0.func function which, when called, is expected to
-     *  trigger the event
-     * @param {string} [param0.message] assertion message
-     * @param {function} [param0.predicate] predicate called with event data.
-     *  If not provided, only the event name has to match.
-     * @param {number} [param0.timeoutDelay=5000] how long to wait at most in ms
-     * @returns {Promise}
-     */
-    const afterEvent = (async ({ eventName, func, message, predicate, timeoutDelay = 5000 }) => {
-        // Set up the timeout to reject if the event is not triggered.
-        let timeoutNoEvent;
-        const timeoutProm = new Promise((resolve, reject) => {
-            timeoutNoEvent = setTimeout(() => {
-                let error = message
-                    ? new Error(message)
-                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
-                console.error(error);
-                reject(error);
-            }, timeoutDelay);
-        });
-        // Set up the promise to resolve if the event is triggered.
-        const eventProm = new Promise(resolve => {
-            messagingBus.on(eventName, null, data => {
-                if (!predicate || predicate(data)) {
-                    resolve();
-                }
-            });
-        });
-        // Start the function expected to trigger the event after the
-        // promise has been registered to not miss any potential event.
-        const funcRes = func();
-        // Make them race (first to resolve/reject wins).
-        await Promise.race([eventProm, timeoutProm]);
-        clearTimeout(timeoutNoEvent);
-        // If the event is triggered before the end of the async function,
-        // ensure the function finishes its job before returning.
-        await funcRes;
-    });
-
+    const afterEvent = getAfterEvent({ messagingBus });
     let waitUntilEventPromise;
     if (waitUntilEvent) {
         waitUntilEventPromise = afterEvent({ func: () => testSetupDoneDeferred.resolve(), ...waitUntilEvent, });
@@ -696,9 +780,10 @@ async function start(param0 = {}) {
         testSetupDoneDeferred.resolve();
         waitUntilEventPromise = Promise.resolve();
     }
-
+    const components = [];
     const result = {
         afterEvent,
+        components,
         env: testEnv,
         mockServer,
         widget,
@@ -718,7 +803,13 @@ async function start(param0 = {}) {
     }
     returnCallbacks.forEach(callback => callback(result));
     await waitUntilEventPromise;
-    return result;
+    return {
+        ...result,
+        createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
+        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),
+        createMessageComponent: getCreateMessageComponent({ components, env: testEnv, modelManager, widget }),
+        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, components, env: testEnv, widget }),
+    };
 }
 
 //------------------------------------------------------------------------------

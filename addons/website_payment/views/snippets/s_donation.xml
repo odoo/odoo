@@ -48,7 +48,7 @@
 <template id="s_donation_options"  inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="Donation" data-selector=".s_donation">
-            <we-input class="o_we_large_input" string="Recipient Email" data-select-data-attribute=""
+            <we-input class="o_we_large" string="Recipient Email" data-select-data-attribute=""
                 data-attribute-name="donationEmail"/>
             <we-checkbox string="Display Options"
                     data-name="display_options_opt"
@@ -59,8 +59,7 @@
                     data-name="pre_filled_opt"
                     data-toggle-prefilled-options="true"
                     data-dependencies="!no_input_opt"
-                    data-no-preview="true"
-                    data-trigger="slider_opt">
+                    data-no-preview="true">
             </we-checkbox>
             <we-checkbox string="⌙ Descriptions"
                     data-toggle-option-description="true"
@@ -68,8 +67,8 @@
                     data-no-preview="true">
             </we-checkbox>
             <we-select string="Custom Amount" data-no-preview="true">
-                <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount" data-dependencies="pre_filled_opt">Input</we-button>
-                <we-button data-name="slider_opt" data-select-amount-input="slider">Slider</we-button>
+                <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount">Input</we-button>
+                <we-button data-name="slider_opt" data-select-amount-input="slider" data-dependencies="display_options_opt">Slider</we-button>
                 <we-button data-name="no_input_opt" data-select-amount-input="" data-dependencies="pre_filled_opt">None</we-button>
             </we-select>
             <we-input string="⌙ Minimum" data-step="1" data-set-minimum-amount="" data-dependencies="!no_input_opt"/>

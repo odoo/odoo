@@ -193,6 +193,10 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return this.render();
             }
 
+            if (this._doesOrderHaveSoleItem(order)) {
+                this._prepareAutoRefundOnOrder(order);
+            }
+
             const customer = order.get_client();
 
             // Select the lines from toRefundLines (can come from different orders)
@@ -230,6 +234,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     extras: { price_manually_set: true },
                     merge: false,
                     refunded_orderline_id: orderline.id,
+                    tax_ids: orderline.tax_ids,
+                    discount: orderline.discount,
                 });
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
@@ -355,6 +361,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         getHasItemsToRefund() {
             const order = this.getSelectedSyncedOrder();
             if (!order) return false;
+            if (this._doesOrderHaveSoleItem(order)) return true;
             const total = Object.values(this.env.pos.toRefundLines)
                 .filter(
                     (toRefundDetail) =>
@@ -366,6 +373,24 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         //#endregion
         //#region PRIVATE METHODS
+        _doesOrderHaveSoleItem(order) {
+            const orderlines = order.get_orderlines();
+            if (orderlines.length !== 1) return false;
+            const theOrderline = orderlines[0];
+            const refundableQty = theOrderline.get_quantity() - theOrderline.refunded_qty;
+            return this.env.pos.isProductQtyZero(refundableQty - 1);
+        }
+        _prepareAutoRefundOnOrder(order) {
+            const selectedOrderlineId = this.getSelectedOrderlineId();
+            const orderline = order.orderlines.models.find((line) => line.id == selectedOrderlineId);
+            if (!orderline) return;
+
+            const toRefundDetail = this._getToRefundDetail(orderline);
+            const refundableQty = orderline.get_quantity() - orderline.refunded_qty;
+            if (this.env.pos.isProductQtyZero(refundableQty - 1)) {
+                toRefundDetail.qty = 1;
+            }
+        }
         /**
          * Returns the corresponding toRefundDetail of the given orderline.
          * SIDE-EFFECT: Automatically creates a toRefundDetail object for
@@ -390,6 +415,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                         orderUid: orderline.order.uid,
                         orderBackendId: orderline.order.backendId,
                         orderPartnerId,
+                        tax_ids: orderline.get_taxes().map(tax => tax.id),
+                        discount: orderline.discount,
                     },
                     destinationOrderUid: false,
                 };

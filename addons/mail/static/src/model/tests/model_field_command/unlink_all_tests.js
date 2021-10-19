@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { create, unlinkAll } from '@mail/model/model_field_command';
+import { insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -32,7 +32,7 @@ QUnit.test('unlinkAll: should set x2one field undefined', async function (assert
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        address: create({ id: 20 }),
+        address: insertAndReplace({ id: 20 }),
     });
     const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: unlinkAll() });
@@ -54,11 +54,11 @@ QUnit.test('unlinkAll: should set x2many field an empty array', async function (
 
     const contact = this.messaging.models['test.contact'].create({
         id: 10,
-        tasks: create({
+        tasks: insertAndReplace({
             id: 20,
         }),
     });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id:20 });
+    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: unlinkAll() });
     assert.strictEqual(
         contact.tasks.length,

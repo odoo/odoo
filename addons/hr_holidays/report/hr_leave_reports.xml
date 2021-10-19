@@ -6,14 +6,14 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <search string="Search Time Off">
+                <field name="employee_id"/>
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
-                <filter string="My Department Time Off" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Time Off"/>
-                <filter name="my_team_leaves" string="My Department Time Off" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
+                <filter string="My Department" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department"/>
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <separator/>
@@ -22,7 +22,6 @@
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <group expand="0" string="Group By">

@@ -3,13 +3,14 @@
 # 	* bus
 # 
 # Translators:
+# 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -18,6 +19,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: bus
+#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
+msgid "A user can only have one IM status."
+msgstr "用户只能有一个IM状态"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -72,7 +78,7 @@ msgstr "IM的状态"
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -111,15 +117,15 @@ msgstr "在线"
 
 #. module: bus
 #. openerp-web
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
 #, python-format
 msgid "Refresh"
 msgstr "刷新"
 
 #. module: bus
 #. openerp-web
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
 #, python-format
 msgid "The page appears to be out of date."
 msgstr "‎该页面似乎已过期。‎"

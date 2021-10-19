@@ -6,19 +6,22 @@ import { session } from "@web/session";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
     click,
-    nextTick,
     legacyExtraNextTick,
     makeDeferred,
     mockDownload,
+    nextTick,
     patchDate,
     patchWithCleanup,
     triggerEvent,
     triggerEvents,
+    mouseEnter,
 } from "../helpers/utils";
-import { makeView } from "./helpers";
 import {
     applyGroup,
     editFavoriteName,
+    removeFacet,
+    saveFavorite,
+    selectGroup,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     toggleAddCustomGroup,
@@ -26,15 +29,14 @@ import {
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
+    toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
-    saveFavorite,
-    selectGroup,
-    removeFacet,
-    toggleMenu,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
+import { makeView } from "./helpers";
+import { browser } from "@web/core/browser/browser";
 
 const serviceRegistry = registry.category("services");
 
@@ -189,6 +191,7 @@ QUnit.module("Views", (hooks) => {
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("user", makeFakeUserService());
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     });
 
     QUnit.module("PivotView");
@@ -257,9 +260,9 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item").innerText,
+            pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item").innerText,
             "BAR"
         );
         assert.strictEqual(
@@ -316,12 +319,12 @@ QUnit.module("Views", (hooks) => {
 
         // there should be only one displayed measure as the other one is invisible
         assert.containsOnce(pivot, ".o_pivot_measure_row");
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         // there should be only one measure besides count, as the other one is invisible
-        assert.containsN(pivot, ".o_cp_bottom_left .o_dropdown_menu .dropdown-item", 2);
+        assert.containsN(pivot, ".o_cp_bottom_left .dropdown-menu .dropdown-item", 2);
         // the invisible field souldn't be in the groupable fields neither
         await click(pivot.el.querySelector(".o_pivot_header_cell_closed"));
-        assert.containsNone(pivot, '.o_dropdown_menu a[data-field="foo2"]');
+        assert.containsNone(pivot, '.dropdown-menu a[data-field="foo2"]');
     });
 
     QUnit.test('pivot view without "string" attribute', async function (assert) {
@@ -382,10 +385,10 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             });
 
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
             assert.containsOnce(
                 pivot,
-                ".o_cp_bottom_left .o_dropdown_menu .dropdown-item:contains(Computed and not stored)"
+                ".o_cp_bottom_left .dropdown-menu .dropdown-item:contains(Computed and not stored)"
             );
             assert.strictEqual(
                 pivot.el.querySelector(".o_pivot_measure_row").innerText,
@@ -438,12 +441,14 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             context: { someKey: true, search_default_test: 3 },
-            views: [
-                [2, "form"],
-                [5, "kanban"],
-                [false, "list"],
-                [false, "pivot"],
-            ],
+            config: {
+                views: [
+                    [2, "form"],
+                    [5, "kanban"],
+                    [false, "list"],
+                    [false, "pivot"],
+                ],
+            },
         });
 
         assert.hasClass(pivot.el.querySelector("table"), "o_enable_linking");
@@ -770,11 +775,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_toggler"));
-        assert.containsOnce(pivot.el, ".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item");
-        const measure = pivot.el.querySelector(
-            ".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item"
-        );
+        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-toggle"));
+        assert.containsOnce(pivot.el, ".o_cp_bottom_left .dropdown-menu .dropdown-item");
+        const measure = pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-item");
         assert.strictEqual(measure.innerText, "Count");
         assert.hasClass(measure, "selected", "The count measure should be selected");
     });
@@ -871,25 +874,23 @@ QUnit.module("Views", (hooks) => {
 
         // click on closed header to open dropdown
         await click(pivot.el, "tbody .o_pivot_header_cell_closed");
-        assert.containsOnce(pivot, ".o_pivot .o_dropdown_menu");
+        assert.containsOnce(pivot, ".o_pivot .dropdown-menu");
         assert.strictEqual(
-            pivot.el.querySelector(".o_pivot .o_dropdown_menu").innerText.replace(/\s/g, ""),
+            pivot.el.querySelector(".o_pivot .dropdown-menu").innerText.replace(/\s/g, ""),
             "CompanyTypeCustomerDateOtherProductProductbarAddCustomGroup"
         );
 
         // open the Date sub dropdown
-        await click(pivot.el, ".o_pivot .o_dropdown_menu .o_dropdown_toggler.o_menu_item");
+        await mouseEnter(pivot.el, ".o_pivot .dropdown-menu .dropdown-toggle.o_menu_item");
         assert.strictEqual(
             pivot.el
-                .querySelector(".o_pivot .o_dropdown_menu .o_dropdown_menu")
+                .querySelector(".o_pivot .dropdown-menu .dropdown-menu")
                 .innerText.replace(/\s/g, ""),
             "YearQuarterMonthWeekDay"
         );
 
         await click(
-            pivot.el.querySelectorAll(
-                ".o_pivot .o_dropdown_menu .o_dropdown_menu .o_dropdown_item"
-            )[2]
+            pivot.el.querySelectorAll(".o_pivot .dropdown-menu .dropdown-menu .dropdown-item")[2]
         );
 
         assert.containsN(pivot, "tbody tr", 4, "should have 4 rows: one for header, 3 for data");
@@ -917,9 +918,9 @@ QUnit.module("Views", (hooks) => {
         // open dropdown to zoom into first row
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
         // click on date by day
-        await click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_toggler"));
+        await mouseEnter(pivot.el.querySelector("tbody .dropdown-menu .dropdown-toggle"));
         await click(
-            pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_menu li:nth-child(5)")
+            pivot.el.querySelector("tbody .dropdown-menu .dropdown-menu span:nth-child(5)")
         );
 
         // open dropdown to zoom into second row
@@ -955,7 +956,7 @@ QUnit.module("Views", (hooks) => {
 
         // unfold it
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector(".o_dropdown_menu li:nth-child(5)"));
+        await click(pivot.el.querySelector(".dropdown-menu span:nth-child(5)"));
         assert.containsN(pivot, "thead tr", 3);
     });
 
@@ -979,7 +980,7 @@ QUnit.module("Views", (hooks) => {
 
         // unfold it
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed:last-child"));
-        await click(pivot.el.querySelector(".o_dropdown_menu li:nth-child(1)"));
+        await click(pivot.el.querySelector(".dropdown-menu span:nth-child(1)"));
         assert.containsN(pivot, "thead tr", 4);
         values = ["12", "3", "17", "32"];
         assert.strictEqual(getCurrentValues(pivot), values.join(","));
@@ -1013,13 +1014,13 @@ QUnit.module("Views", (hooks) => {
             await toggleGroupByMenu(pivot);
             assert.containsN(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 3,
                 "should have 3 dropdown items in searchview groupby"
             );
             assert.containsOnce(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_add_custom_group_menu",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
                 "should have custom group generator in searchview groupby"
             );
 
@@ -1027,26 +1028,26 @@ QUnit.module("Views", (hooks) => {
             await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
             assert.containsN(
                 pivot,
-                ".o_dropdown_menu > .dropdown-item",
+                ".dropdown-menu > .dropdown-item",
                 3,
                 "should have 3 dropdown items same as searchview groupby"
             );
             assert.containsOnce(
                 pivot,
-                ".o_dropdown_menu .o_add_custom_group_menu",
+                ".dropdown-menu .o_add_custom_group_menu",
                 "should have custom group generator same as searchview groupby"
             );
             // check custom groupby selection has groupable fields only
-            await click(pivot.el, ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_toggler");
+            await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
             assert.containsN(
                 pivot,
-                ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu option",
+                ".dropdown-menu .o_add_custom_group_menu .dropdown-menu option",
                 6,
                 "should have 6 fields in custom groupby"
             );
             const optionDescriptions = [
                 ...pivot.el.querySelectorAll(
-                    ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu option"
+                    ".dropdown-menu .o_add_custom_group_menu .dropdown-menu option"
                 ),
             ].map((option) => option.innerText.trim());
             assert.deepEqual(
@@ -1078,7 +1079,7 @@ QUnit.module("Views", (hooks) => {
         await toggleGroupByMenu(pivot);
         assert.containsN(
             pivot,
-            ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+            ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             2,
             "should have 2 dropdown items in searchview groupby"
         );
@@ -1087,7 +1088,7 @@ QUnit.module("Views", (hooks) => {
         await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
             pivot,
-            ".o_dropdown_menu .o_menu_item",
+            ".dropdown-menu .o_menu_item",
             2,
             "should have 2 dropdown items in pivot groupby"
         );
@@ -1098,28 +1099,28 @@ QUnit.module("Views", (hooks) => {
         await applyGroup(pivot);
         assert.containsN(
             pivot,
-            ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+            ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             3,
             "should have 3 dropdown items in searchview groupby now"
         );
         await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
             pivot,
-            ".o_dropdown_menu .o_menu_item",
+            ".dropdown-menu .o_menu_item",
             2,
             "should still have 2 dropdown items in pivot groupby"
         );
 
         // add a custom group in pivot groupby
-        await click(pivot.el, ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_toggler");
-        pivot.el.querySelector(".o_dropdown_menu .o_add_custom_group_menu select").value = "date";
-        await triggerEvent(pivot.el, ".o_dropdown_menu .o_add_custom_group_menu select", "change");
-        await click(pivot.el, ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu .btn");
+        await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
+        pivot.el.querySelector(".dropdown-menu .o_add_custom_group_menu select").value = "date";
+        await triggerEvent(pivot.el, ".dropdown-menu .o_add_custom_group_menu select", "change");
+        await click(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
         // click on closed header to open groupby selection dropdown
         await click(pivot.el, "tbody tr:last-child .o_pivot_header_cell_closed");
         assert.containsN(
             pivot,
-            ".o_dropdown_menu .o_menu_item",
+            ".dropdown-menu .o_menu_item",
             3,
             "should have 3 dropdown items in pivot groupby dropdown"
         );
@@ -1128,7 +1129,7 @@ QUnit.module("Views", (hooks) => {
         await toggleGroupByMenu(pivot);
         assert.containsN(
             pivot,
-            ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+            ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             3,
             "should still have 3 dropdown items in searchview groupby dropdown"
         );
@@ -1157,7 +1158,7 @@ QUnit.module("Views", (hooks) => {
             await toggleGroupByMenu(pivot);
             assert.containsN(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 2,
                 "should have 2 dropdown items in searchview groupby"
             );
@@ -1165,7 +1166,7 @@ QUnit.module("Views", (hooks) => {
             await applyGroup(pivot);
             assert.containsN(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 3,
                 "should have 3 dropdown items in searchview groupby now"
             );
@@ -1179,7 +1180,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.containsOnce(
                 pivot,
-                "tbody .o_dropdown_menu .dropdown-divider",
+                "tbody .dropdown-menu .dropdown-divider",
                 "pivot groupby menu should only have one separator"
             );
             assert.hasClass(
@@ -1189,17 +1190,14 @@ QUnit.module("Views", (hooks) => {
             );
 
             // add a custom group in pivot groupby
-            await click(pivot.el, ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_toggler");
+            await mouseEnter(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
             pivot.el.querySelector(".o_add_custom_group_menu select").value = "customer";
             await triggerEvent(
                 pivot.el,
-                ".o_dropdown_menu .o_add_custom_group_menu select",
+                ".dropdown-menu .o_add_custom_group_menu select",
                 "change"
             );
-            await click(
-                pivot.el,
-                ".o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu .btn"
-            );
+            await click(pivot.el, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
 
             await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
             items = pivot.el.querySelectorAll(".o_menu_item");
@@ -1209,7 +1207,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.containsN(
                 pivot,
-                "tbody .o_dropdown_menu .dropdown-divider",
+                "tbody .dropdown-menu .dropdown-divider",
                 2,
                 "pivot groupby menu should now have two separators"
             );
@@ -1259,9 +1257,9 @@ QUnit.module("Views", (hooks) => {
 
             // click on closed header to open dropdown and apply groupby on date field
             await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-            await click(
+            await mouseEnter(
                 pivot.el.querySelector(
-                    "thead .o_dropdown_menu .o_add_custom_group_menu .o_dropdown_toggler "
+                    "thead .dropdown-menu .o_add_custom_group_menu .dropdown-toggle "
                 )
             );
 
@@ -1289,25 +1287,25 @@ QUnit.module("Views", (hooks) => {
         await toggleGroupByMenu(pivot);
         assert.containsNone(
             pivot,
-            ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+            ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
             "should not have any dropdown item in searchview groupby"
         );
         assert.containsOnce(
             pivot,
-            ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_add_custom_group_menu",
+            ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
             "should have add custom group item in searchview groupby"
         );
         // click on closed header to open dropdown
         await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
         assert.containsN(
             pivot,
-            "tbody .o_dropdown_menu .o_menu_item",
+            "tbody .dropdown-menu .o_menu_item",
             6,
             "should have 6 dropdown items i.e. all groupable fields available"
         );
         assert.containsOnce(
             pivot,
-            ".o_dropdown_menu .o_add_custom_group_menu",
+            ".dropdown-menu .o_add_custom_group_menu",
             "should have custom group generator in groupby dropdown"
         );
     });
@@ -1359,12 +1357,12 @@ QUnit.module("Views", (hooks) => {
             await toggleGroupByMenu(pivot);
             assert.containsOnce(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_menu_item",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_menu_item",
                 "should have 1 dropdown item in searchview groupby"
             );
             assert.containsNone(
                 pivot,
-                ".o_control_panel .o_cp_bottom_right .o_dropdown_menu .o_add_custom_group_menu",
+                ".o_control_panel .o_cp_bottom_right .dropdown-menu .o_add_custom_group_menu",
                 "should not have custom group generator in searchview groupby"
             );
 
@@ -1372,12 +1370,12 @@ QUnit.module("Views", (hooks) => {
             await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
             assert.containsOnce(
                 pivot,
-                "tbody .o_dropdown_menu .o_dropdown_item",
+                "tbody .dropdown-menu .dropdown-item",
                 "should have 1 dropdown items"
             );
             assert.containsNone(
                 pivot,
-                ".o_dropdown_menu .o_add_custom_group_menu",
+                ".dropdown-menu .o_add_custom_group_menu",
                 "should not have custom group generator in groupby dropdown"
             );
         }
@@ -1405,24 +1403,24 @@ QUnit.module("Views", (hooks) => {
 
             // click on closed header to open dropdown
             await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-            assert.containsOnce(pivot, "thead .o_dropdown_menu .o_add_custom_group_menu");
-            await click(
+            assert.containsOnce(pivot, "thead .dropdown-menu .o_add_custom_group_menu");
+            await mouseEnter(
                 pivot.el.querySelector(
-                    "thead .o_dropdown_menu .o_add_custom_group_menu .o_dropdown_toggler"
+                    "thead .dropdown-menu .o_add_custom_group_menu .dropdown-toggle"
                 )
             );
             assert.containsOnce(
                 pivot,
-                "thead .o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu"
+                "thead .dropdown-menu .o_add_custom_group_menu .dropdown-menu"
             );
 
             // click on apply button should close dropdown
             await click(
                 pivot.el.querySelector(
-                    "thead .o_dropdown_menu .o_add_custom_group_menu .o_dropdown_menu .btn-primary"
+                    "thead .dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn-primary"
                 )
             );
-            assert.containsNone(pivot, "thead .o_dropdown_menu");
+            assert.containsNone(pivot, "thead .dropdown-menu");
         }
     );
 
@@ -1450,16 +1448,16 @@ QUnit.module("Views", (hooks) => {
             "should have 3 cells: 1 for the open header, and 2 for data"
         );
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.doesNotHaveClass(
-            $(pivot.el).find(".o_dropdown_item:contains(Count)"),
+            $(pivot.el).find(".dropdown-item:contains(Count)"),
             "selected",
             "the __count measure should not be selected"
         );
-        await click($(pivot.el).find(".o_cp_bottom_left .o_dropdown_item:contains(Count)")[0]);
+        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
         assert.hasClass(
-            $(pivot.el).find(".o_cp_bottom_left .o_dropdown_item:contains(Count)"),
+            $(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)"),
             "selected",
             "the __count measure should be selected"
         );
@@ -1471,10 +1469,10 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs to reload data");
 
-        await click($(pivot.el).find(".o_cp_bottom_left .o_dropdown_item:contains(Count)")[0]);
+        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
         assert.doesNotHaveClass(
-            $(pivot.el).find(".o_dropdown_item:contains(Count)")[0],
+            $(pivot.el).find(".dropdown-item:contains(Count)")[0],
             "selected",
             "the __count measure should not be selected"
         );
@@ -1498,8 +1496,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(pivot, ".o_view_nocontent");
         assert.containsOnce(pivot, "table");
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
-        await click($(pivot.el).find(".o_cp_bottom_left .o_dropdown_item:contains(Count)")[0]);
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        await click($(pivot.el).find(".o_cp_bottom_left .dropdown-item:contains(Count)")[0]);
 
         assert.containsOnce(pivot, ".o_view_nocontent");
         assert.containsNone(pivot, "table");
@@ -1575,7 +1573,7 @@ QUnit.module("Views", (hooks) => {
         // tries to open a field selection menu, to make sure it was not
         // removed from the dom.
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        assert.containsOnce(pivot, "tbody .o_dropdown_menu");
+        assert.containsOnce(pivot, "tbody .dropdown-menu");
     });
 
     QUnit.test("tries to restore previous state after domain change", async function (assert) {
@@ -1925,7 +1923,7 @@ QUnit.module("Views", (hooks) => {
 
         // expand header on field customer
         await click(pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["date:day", "customer"],
@@ -1939,7 +1937,7 @@ QUnit.module("Views", (hooks) => {
 
         // expand row on field product_id
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["date:day", "customer"],
@@ -2040,7 +2038,7 @@ QUnit.module("Views", (hooks) => {
 
         // Group row by product_id
         await click(pivot.el, "tbody .o_pivot_header_cell_closed");
-        await click(pivot.el, ".o_dropdown_menu li:nth-child(5)");
+        await click(pivot.el, ".dropdown-menu span:nth-child(5)");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: [],
@@ -2054,7 +2052,7 @@ QUnit.module("Views", (hooks) => {
 
         // Group column by customer
         await click(pivot.el, "thead .o_pivot_header_cell_closed");
-        await click(pivot.el, ".o_dropdown_menu li:nth-child(2)");
+        await click(pivot.el, ".dropdown-menu span:nth-child(2)");
         expectedContext = {
             group_by: [],
             pivot_column_groupby: ["customer"],
@@ -2212,7 +2210,7 @@ QUnit.module("Views", (hooks) => {
 
         // Group row by product_id
         await click(webClient.el, "tbody .o_pivot_header_cell_closed");
-        await click(webClient.el, ".o_dropdown_menu li:nth-child(5)");
+        await click(webClient.el, ".dropdown-menu span:nth-child(5)");
 
         assert.strictEqual(
             webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
@@ -2505,7 +2503,7 @@ QUnit.module("Views", (hooks) => {
 
         // Set a column groupby
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_item")[1]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-item")[1]);
 
         // Set a domain
         await toggleFilterMenu(pivot);
@@ -2526,7 +2524,7 @@ QUnit.module("Views", (hooks) => {
         // Set a column groupby
         await removeFacet(pivot); // remove previously saved favorite
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
 
         // Set a domain
         await toggleFilterMenu(pivot);
@@ -2568,14 +2566,14 @@ QUnit.module("Views", (hooks) => {
 
         // expand a col group
         await click(pivot.el.querySelectorAll("thead .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
 
         values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20"];
         assert.strictEqual(getCurrentValues(pivot), values.join(","));
 
         // expand a row group
         await click(pivot.el.querySelectorAll("tbody .o_pivot_header_cell_closed")[1]);
-        await click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[3]);
+        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[3]);
 
         values = ["29", "1", "2", "32", "12", "12", "17", "1", "2", "20", "17", "1", "2", "20"];
         assert.strictEqual(getCurrentValues(pivot), values.join(","));
@@ -2642,7 +2640,7 @@ QUnit.module("Views", (hooks) => {
 
         // Set a column groupby
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[1]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[1]);
 
         assert.containsOnce(pivot, "table");
 
@@ -2748,9 +2746,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector("thead .o_dropdown_menu .o_dropdown_toggler"));
+        await mouseEnter(pivot.el.querySelector("thead .dropdown-menu .dropdown-toggle"));
         await click(
-            pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_menu .o_dropdown_item")[3]
+            pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-menu .dropdown-item")[3]
         );
 
         // close and reopen row groupings after changing value
@@ -2758,14 +2756,14 @@ QUnit.module("Views", (hooks) => {
 
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_opened"));
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         assert.strictEqual(pivot.el.querySelectorAll(".o_pivot_cell_value")[4].innerText, ""); // xphone December 2016
 
         // invert axis, and reopen column groupings
         await click(pivot.el.querySelector(".o_cp_bottom_left .o_pivot_flip_button"));
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_opened"));
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[4]);
         assert.strictEqual(pivot.el.querySelectorAll(".o_pivot_cell_value")[3].innerText, ""); // December 2016 xphone
     });
 
@@ -3101,13 +3099,13 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .o_dropdown_item");
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-item");
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item").innerText,
+            pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
             "Count"
         );
-        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item"), "selected");
+        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
     });
 
     QUnit.test("not use a many2one as a measure by default", async function (assert) {
@@ -3123,13 +3121,13 @@ QUnit.module("Views", (hooks) => {
                     <field name="date" interval="month" type="col"/>
                 </pivot>`,
         });
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .o_dropdown_item");
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-item");
         assert.strictEqual(
-            pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item").innerText,
+            pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
             "Count"
         );
-        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item"), "selected");
+        assert.hasClass(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"), "selected");
     });
 
     QUnit.test(
@@ -3148,14 +3146,14 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
                 additionalMeasures: ["product_id"],
             });
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
-            assert.containsN(pivot, ".o_cp_bottom_left .o_dropdown_item", 2);
+            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            assert.containsN(pivot, ".o_cp_bottom_left .dropdown-item", 2);
             assert.strictEqual(
-                pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item").innerText,
+                pivot.el.querySelector(".o_cp_bottom_left .dropdown-item").innerText,
                 "Product"
             );
             assert.doesNotHaveClass(
-                pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item"),
+                pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"),
                 "selected"
             );
         }
@@ -3196,9 +3194,9 @@ QUnit.module("Views", (hooks) => {
         });
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
         // click on date by month
-        await click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_toggler"));
+        await mouseEnter(pivot.el.querySelector("tbody .dropdown-menu .dropdown-toggle"));
         await click(
-            pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_menu .o_dropdown_item")[3]
+            pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-menu .dropdown-item")[3]
         );
 
         assert.strictEqual(
@@ -3224,8 +3222,8 @@ QUnit.module("Views", (hooks) => {
                 additionalMeasures: ["product_id"],
             });
 
-            await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
-            await click(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_item"));
+            await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-item"));
             assert.strictEqual(
                 [...pivot.el.querySelectorAll(".o_pivot_cell_value")]
                     .map((c) => c.innerText)
@@ -3252,7 +3250,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-            await click(pivot.el.querySelectorAll("tbody .o_dropdown_item")[4]);
+            await click(pivot.el.querySelectorAll("tbody .dropdown-item")[4]);
 
             assert.strictEqual(
                 [...pivot.el.querySelectorAll(".o_pivot_cell_value")]
@@ -3295,11 +3293,11 @@ QUnit.module("Views", (hooks) => {
 
         // Set a column groupby
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_item")[1]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-item")[1]);
 
         // Set a Row groupby
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("tbody .dropdown-item")[4]);
 
         // Add a filter
         await toggleFilterMenu(pivot);
@@ -3402,9 +3400,9 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
         });
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         assert.strictEqual(
-            [...pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_item")]
+            [...pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-item")]
                 .map((i) => i.innerText)
                 .join(""),
             "bouhFoomoddZipCount"
@@ -3545,7 +3543,7 @@ QUnit.module("Views", (hooks) => {
 
         // with data, with row groupby
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("tbody .o_dropdown_menu .o_dropdown_item")[4]);
+        await click(pivot.el.querySelectorAll("tbody .dropdown-menu .dropdown-item")[4]);
         values = [
             "19",
             "0",
@@ -3574,12 +3572,12 @@ QUnit.module("Views", (hooks) => {
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
-        await click(pivot.el.querySelector(".o_cp_bottom_left button.o_dropdown_toggler"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
         await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item")[0]
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[0]
         );
         await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item")[1]
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]
         );
         values = [
             "1",
@@ -3610,10 +3608,10 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item")[2]
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[2]
         );
         await click(
-            pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_menu .o_dropdown_item")[1]
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]
         );
         values = [
             "2",
@@ -4083,21 +4081,21 @@ QUnit.module("Views", (hooks) => {
             arch: `<pivot><field name="foo" type="measure"/></pivot>`,
         });
 
-        assert.containsNone(pivot, ".o_cp_bottom_left .o_dropdown_menu");
+        assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu");
 
         // open the "Measures" menu
-        await click(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_toggler"));
-        assert.containsOnce(pivot, ".o_cp_bottom_left .o_dropdown_menu");
+        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-toggle"));
+        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
 
         // click on the divider in the "Measures" menu does not crash
-        await click(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_menu .dropdown-divider"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu .dropdown-divider"));
         // the menu should still be open
-        assert.containsOnce(pivot, ".o_cp_bottom_left .o_dropdown_menu");
+        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
 
         // click on the measure list but not on a menu item or the separator
-        await click(pivot.el.querySelector(".o_cp_bottom_left .o_dropdown_menu"));
+        await click(pivot.el.querySelector(".o_cp_bottom_left .dropdown-menu"));
         // the menu should still be open
-        assert.containsOnce(pivot, ".o_cp_bottom_left .o_dropdown_menu");
+        assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
     });
 
     QUnit.test(
@@ -4521,7 +4519,7 @@ QUnit.module("Views", (hooks) => {
 
             // Set a Row groupby
             await click(pivot.el, "tbody tr:nth-child(2) .o_pivot_header_cell_closed");
-            await click(pivot.el, "tbody .o_dropdown_menu .o_menu_item:nth-child(5)");
+            await click(pivot.el, "tbody .dropdown-menu .o_menu_item:nth-child(5)");
 
             assert.deepEqual(
                 [...pivot.el.querySelectorAll("thead th")].map((th) => th.innerText),
@@ -4569,7 +4567,7 @@ QUnit.module("Views", (hooks) => {
 
         // add a col groupby on Product
         await click(pivot.el.querySelector("thead th.o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelectorAll("thead .o_dropdown_menu .o_dropdown_item")[5]);
+        await click(pivot.el.querySelectorAll("thead .dropdown-menu .dropdown-item")[5]);
 
         // Click on the two header dropdown togglers
         await click(pivot.el.querySelectorAll("thead th.o_pivot_header_cell_closed")[0]);
@@ -4577,7 +4575,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             pivot,
-            "thead .o_dropdown_menu",
+            "thead .dropdown-menu",
             "Only one dropdown should be displayed at a time"
         );
     });
@@ -4689,7 +4687,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             context: { search_default_small_than_0: true },
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.containsOnce(pivot, ".o_view_nocontent .abc");
@@ -4720,7 +4720,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             context: { search_default_small_than_0: true },
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.hasClass(pivot.el, "o_view_sample_data");
@@ -4753,7 +4755,9 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             noContentHelp: '<p class="abc">click to add a foo</p>',
-            views: [[false, "search"]],
+            config: {
+                views: [[false, "search"]],
+            },
         });
 
         assert.doesNotHaveClass(pivot.el, "o_view_sample_data");
@@ -4840,7 +4844,7 @@ QUnit.module("Views", (hooks) => {
 
         // drill down first row group (group by company_type)
         await click(webClient.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(webClient.el.querySelector(".o_pivot .o_dropdown_menu .o_dropdown_item"));
+        await click(webClient.el.querySelector(".o_pivot .dropdown-menu .dropdown-item"));
 
         assert.strictEqual(getCurrentValues(webClient), ["4", "2", "1", "1", "2"].join(","));
 
@@ -4939,7 +4943,7 @@ QUnit.module("Views", (hooks) => {
 
         // drill down first row group (group by company_type)
         await click(webClient.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(webClient.el.querySelector(".o_pivot .o_dropdown_menu .o_dropdown_item"));
+        await click(webClient.el.querySelector(".o_pivot .dropdown-menu .dropdown-item"));
 
         assert.strictEqual(getCurrentValues(webClient), ["32", "12", "12", "20"].join(","));
 
@@ -5148,7 +5152,7 @@ QUnit.module("Views", (hooks) => {
         // Add a groupby (this operation should be ignored as it concerns the old
         // table, which will be replaced soon)
         await click(pivot.el.querySelector("thead .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector("thead .o_dropdown_menu .o_dropdown_item"));
+        await click(pivot.el.querySelector("thead .dropdown-menu .dropdown-item"));
         assert.strictEqual(getCurrentValues(pivot), ["32", "12", "20"].join(","));
 
         def.resolve();
@@ -5181,7 +5185,7 @@ QUnit.module("Views", (hooks) => {
 
         // Add a groupby, to have a group to expand afterwards
         await click(pivot.el.querySelector("tbody .o_pivot_header_cell_closed"));
-        await click(pivot.el.querySelector("tbody .o_dropdown_menu .o_dropdown_item"));
+        await click(pivot.el.querySelector("tbody .dropdown-menu .dropdown-item"));
 
         assert.strictEqual(getCurrentValues(pivot), ["32", "12", "12", "20"].join(","));
 
@@ -5323,12 +5327,12 @@ QUnit.module("Views", (hooks) => {
 
         // "Count" is the only measure available
         assert.deepEqual(
-            [...pivot.el.querySelectorAll(".o_cp_bottom_left .o_dropdown_menu li")].map(
+            [...pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .o_menu_item")].map(
                 (e) => e.innerText
             ),
             ["Count"]
         );
         // No separator should be displayed in the menu "Measures"
-        assert.containsNone(pivot, ".o_cp_bottom_left .o_dropdown_menu div.dropdown-divider");
+        assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu div.dropdown-divider");
     });
 });

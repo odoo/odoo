@@ -591,8 +591,8 @@ class MailCase(MockEmail):
     def _create_template(cls, model, template_values=None):
         create_values = {
             'name': 'TestTemplate',
-            'subject': 'About ${object.name}',
-            'body_html': '<p>Hello ${object.name}</p>',
+            'subject': 'About {{ object.name }}',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'model_id': cls.env['ir.model']._get(model).id,
         }
         if template_values:
@@ -932,6 +932,7 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.env, login='employee_c2',
             groups='base.group_user',
             company_id=cls.company_2.id,
+            company_ids=[(4, cls.company_2.id)],
             name='Enguerrand Employee C2',
             notification_type='inbox',
             signature='--\nEnguerrand'

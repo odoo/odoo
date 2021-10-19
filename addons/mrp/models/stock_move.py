@@ -394,16 +394,14 @@ class StockMove(models.Model):
     def _prepare_merge_moves_distinct_fields(self):
         return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share']
 
+    @api.model
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_production_id']
+
     def _merge_moves_fields(self):
         res = super()._merge_moves_fields()
         res['cost_share'] = sum(self.mapped('cost_share'))
         return res
-
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        keys_sorted = super()._prepare_merge_move_sort_method(move)
-        keys_sorted += [move.created_production_id.id, move.cost_share]
-        return keys_sorted
 
     def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
         """ Computes the quantity delivered or received when a kit is sold or purchased.
@@ -431,7 +429,7 @@ class StockMove(models.Model):
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])

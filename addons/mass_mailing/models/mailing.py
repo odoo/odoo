@@ -84,8 +84,8 @@ class MassMailing(models.Model):
     calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
-    body_arch = fields.Html(string='Body', translate=False)
-    body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
+    body_arch = fields.Html(string='Body', translate=False, sanitize=False)
+    body_html = fields.Html(string='Body converted to be sent by mail', sanitize=False)
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty",
                                    help='Technical field used to determine if the mail body is empty')
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -405,9 +405,10 @@ class MassMailing(models.Model):
 
         result = super(MassMailing, self).write(values)
 
-        if self.ab_testing_schedule_datetime:
+        if any(self.mapped('ab_testing_schedule_datetime')):
+            schedule_date = min(m.ab_testing_schedule_datetime for m in self if m.ab_testing_schedule_datetime)
             ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
-            ab_testing_cron._trigger(at=self.ab_testing_schedule_datetime)
+            ab_testing_cron._trigger(at=schedule_date)
 
         return result
 

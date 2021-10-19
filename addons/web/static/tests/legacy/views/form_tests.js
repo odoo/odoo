@@ -3664,7 +3664,7 @@ QUnit.module('Views', {
                         }
                         assert.strictEqual(params.title, 'Invalid fields:',
                             "should have a warning with correct title");
-                        assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
+                        assert.strictEqual(params.message.toString(), '<ul><li>Foo</li></ul>',
                             "should have a warning with correct message");
                     }
                 },
@@ -6252,8 +6252,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsNone(form, '.o_cp_action_menus .o_dropdown:contains(Print)');
-        assert.containsOnce(form, '.o_cp_action_menus .o_dropdown:contains(Action)');
+        assert.containsNone(form, '.o_cp_action_menus .dropdown:contains(Print)');
+        assert.containsOnce(form, '.o_cp_action_menus .dropdown:contains(Action)');
 
         await testUtils.controlPanel.toggleActionMenu(form);
 

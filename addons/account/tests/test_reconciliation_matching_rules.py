@@ -807,6 +807,58 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             {'partner_id': self.partner_1.id, 'debit': 7.26, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax12.id},
         ])
 
+    def test_auto_reconcile_with_tax_fpos(self):
+        """ Test the fiscal positions are applied by reconcile models when using taxes.
+        """
+        self.rule_1.write({
+            'auto_reconcile': True,
+            'rule_type': 'writeoff_suggestion',
+            'line_ids': [(1, self.rule_1.line_ids.id, {
+                'amount': 100,
+                'force_tax_included': True,
+                'tax_ids': [(6, 0, self.tax21.ids)],
+            })]
+        })
+
+        self.partner_1.country_id = self.env.ref('base.lu')
+        belgium = self.env.ref('base.be')
+        self.partner_2.country_id = belgium
+
+        self.bank_line_2.partner_id = self.partner_2
+
+        self.bank_line_1.amount = -121
+        self.bank_line_2.amount = -112
+
+        self.env['account.fiscal.position'].create({
+            'name': "Test",
+            'country_id': belgium.id,
+            'auto_apply': True,
+            'tax_ids': [
+                Command.create({
+                    'tax_src_id': self.tax21.id,
+                    'tax_dest_id': self.tax12.id,
+                }),
+            ]
+        })
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': [], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_2.partner_id},
+        }, statements=self.bank_st)
+
+        self.assertRecordValues(self.bank_line_1.line_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0, 'tax_ids': [], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+        ])
+
+        self.assertRecordValues(self.bank_line_2.line_ids, [
+            {'partner_id': self.partner_2.id, 'debit': 0.0, 'credit': 112.0, 'tax_ids': [], 'tax_line_id': False},
+            {'partner_id': self.partner_2.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax12.id], 'tax_line_id': False},
+            {'partner_id': self.partner_2.id, 'debit': 12.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax12.id},
+        ])
+
+
     def test_reverted_move_matching(self):
         partner = self.partner_1
         AccountMove = self.env['account.move']
@@ -841,7 +893,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         })
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': [payment_bnk_line.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
-            self.bank_line_2.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_1.id, self.invoice_line_2.id, self.invoice_line_3.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
         }, statements=self.bank_st)
 
     def test_match_different_currencies(self):
@@ -1186,3 +1238,33 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': (pmt_line_1 + pmt_line_2).ids, 'model': self.rule_1, 'partner': payment_partner},
         }, statements=self.bank_line_1.statement_id)
+
+    def test_no_amount_check_keep_first(self):
+        """ In case the reconciliation model doesn't check the total amount of the candidates,
+        we still don't want to suggest more than are necessary to match the statement.
+        For example, if a statement line amounts to 250 and is to be matched with three invoices
+        of 100, 200 and 300 (retrieved in this order), only 100 and 200 should be proposed.
+        """
+        self.rule_1.allow_payment_tolerance = False
+        self.bank_line_2.amount = 250
+        self.bank_line_1.partner_id = None
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_1.id, self.invoice_line_2.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
+        }, statements=self.bank_st)
+
+    def test_no_amount_check_exact_match(self):
+        """ If a reconciliation model finds enough candidates for a full reconciliation,
+        it should still check the following candidates, in case one of them exactly
+        matches the amount of the statement line. If such a candidate exist, all the
+        other ones are disregarded.
+        """
+        self.rule_1.allow_payment_tolerance = False
+        self.bank_line_2.amount = 300
+        self.bank_line_1.partner_id = None
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_3.id], 'model': self.rule_1, 'partner': self.bank_line_2.partner_id},
+        }, statements=self.bank_st)

@@ -84,7 +84,7 @@
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_time_counter"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
-                <field name="state" widget="badge" decoration-warning="state == 'waiting'" decoration-success="state == 'done'" decoration-info="state not in ('waiting', 'done', 'cancel')" 
+                <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
@@ -241,7 +241,6 @@
                 <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
-                <filter string="Available" name="available" domain="[('production_availability', '=', 'assigned')]"/>
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
@@ -471,7 +470,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!

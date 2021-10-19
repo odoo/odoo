@@ -36,10 +36,10 @@ ImportRecords.template = "base_import.ImportRecords";
 const importRecordsItem = {
     Component: ImportRecords,
     groupNumber: 4,
-    isDisplayed: ({ isSmall, searchModel }) =>
+    isDisplayed: ({ config, isSmall }) =>
         !isSmall &&
-        searchModel.action.type === "ir.actions.act_window" &&
-        ["kanban", "list"].includes(searchModel.view.type)
+        config.actionType === "ir.actions.act_window" &&
+        ["kanban", "list"].includes(config.viewType)
         // TODO: add arch info to searchModel?
         // !!JSON.parse(env.view.arch.attrs.import || "1") &&
         // !!JSON.parse(env.view.arch.attrs.create || "1"),

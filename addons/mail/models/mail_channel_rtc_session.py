@@ -48,13 +48,25 @@ class MailRtcSession(models.Model):
                 # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
                 # done before the delete to be able to know who was invited.
                 channel._rtc_cancel_invitations()
-        self.env['bus.bus'].sendmany([((self._cr.dbname, 'mail.channel', channel.id), {
+        notifications = [((self._cr.dbname, 'mail.channel', channel.id), {
             'type': 'rtc_sessions_update',
             'payload': {
                 'id': channel.id,
                 'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
             },
-        }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()])
+        }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
+        for rtc_session in self:
+            model_name, record_id = ('mail.guest', rtc_session.guest_id.id) if rtc_session.guest_id else ('res.partner', rtc_session.partner_id.id)
+            notifications.append([
+                (self._cr.dbname, model_name, record_id),
+                {
+                    'type': 'rtc_session_ended',
+                    'payload': {
+                        'sessionId': rtc_session.id,
+                    },
+                },
+            ])
+        self.env['bus.bus'].sendmany(notifications)
         return super().unlink()
 
     def _update_and_broadcast(self, values):
@@ -75,30 +87,14 @@ class MailRtcSession(models.Model):
             this can happen when the server or the user's browser crash
             or when the user's odoo session ends.
         """
-        rtc_sessions = self.search([('write_date', '<', fields.Datetime.now() - relativedelta(days=1))])
-        rtc_sessions._disconnect()
+        self.search(self._inactive_rtc_session_domain()).unlink()
 
     def action_disconnect(self):
-        self._disconnect()
-
-    def _disconnect(self):
-        """ Unlinks the sessions and notifies the associated partners/guests that
-            their session ended.
-        """
-        notifications = []
-        for rtc_session in self:
-            model_name, record_id = ('mail.guest', rtc_session.guest_id.id) if rtc_session.guest_id else ('res.partner', rtc_session.partner_id.id)
-            notifications.append([
-                (self._cr.dbname, model_name, record_id),
-                {
-                    'type': 'rtc_session_ended',
-                    'payload': {
-                        'sessionId': rtc_session.id,
-                    },
-                },
-            ])
         self.unlink()
-        self.env['bus.bus'].sendmany(notifications)
+
+    def _delete_inactive_rtc_sessions(self):
+        """Deletes the inactive sessions from self."""
+        self.filtered_domain(self._inactive_rtc_session_domain()).unlink()
 
     def _notify_peers(self, notifications):
         """ Used for peer-to-peer communication,
@@ -119,15 +115,18 @@ class MailRtcSession(models.Model):
             'payload': payload,
         }) for target, payload in payload_by_target.items()])
 
-    def _mail_rtc_session_format(self):
+    def _mail_rtc_session_format(self, complete_info=True):
         self.ensure_one()
         vals = {
             'id': self.id,
-            'isCameraOn': self.is_camera_on,
-            'isDeaf': self.is_deaf,
-            'isMuted': self.is_muted,
-            'isScreenSharingOn': self.is_screen_sharing_on,
         }
+        if complete_info:
+            vals.update({
+                'isCameraOn': self.is_camera_on,
+                'isDeaf': self.is_deaf,
+                'isMuted': self.is_muted,
+                'isScreenSharingOn': self.is_screen_sharing_on,
+            })
         if self.guest_id:
             vals['guest'] = [('insert', {
                 'id': self.guest_id.id,
@@ -145,3 +144,7 @@ class MailRtcSession(models.Model):
         for rtc_session in self:
             data.setdefault(rtc_session.channel_id, []).append(rtc_session._mail_rtc_session_format())
         return data
+
+    @api.model
+    def _inactive_rtc_session_domain(self):
+        return [('write_date', '<', fields.Datetime.now() - relativedelta(minutes=1))]

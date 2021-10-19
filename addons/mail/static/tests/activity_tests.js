@@ -311,6 +311,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
                     assert.step("do_action_compose");
                 } else if (action.res_model === 'mail.activity') {
                     assert.deepEqual({
+                        "default_activity_type_id": 2,
                         "default_res_id": 30,
                         "default_res_model": "task"
                     }, action.context);
@@ -402,16 +403,16 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
 
     assert.containsN(
         webClient,
-        ".o_search_options .o_dropdown button:visible",
+        ".o_search_options .dropdown button:visible",
         2,
         "only two elements should be available in view search"
     );
     assert.isVisible(
-        $(webClient.el).find(".o_search_options .o_dropdown.o_filter_menu > button"),
+        $(webClient.el).find(".o_search_options .dropdown.o_filter_menu > button"),
         "filter should be available in view search"
     );
     assert.isVisible(
-        $(webClient.el).find(".o_search_options .o_dropdown.o_favorite_menu > button"),
+        $(webClient.el).find(".o_search_options .dropdown.o_favorite_menu > button"),
         "favorites should be available in view search"
     );
 });

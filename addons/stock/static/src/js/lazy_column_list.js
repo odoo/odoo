@@ -16,9 +16,14 @@ function _findRecordsInState(entrypoint, result = []) {
     return result;
 }
 
-function _bindLazyColumnToState(entrypoint, lazyColumns, values) {
+function _bindLazyColumnToState(entrypoint, lazyColumns, values, startRequestTime) {
     let records = _findRecordsInState(entrypoint);
     for (const recordData of records.values()) {
+        // keep track of request start time (in _fetchRecord) when we fetch a particular record (can happens we
+        // modify the priority field) to avoids to erase the old data if the lazy loaded finished after.
+        if (startRequestTime && recordData.specialData && recordData.specialData.lastUpdateLazy && startRequestTime <= recordData.specialData.lastUpdateLazy){
+            continue
+        }
         for (const lazyCol of lazyColumns) {
             recordData.data[lazyCol] =
                 (values && values[recordData.data.id] && values[recordData.data.id][lazyCol]) ||
@@ -29,6 +34,9 @@ function _bindLazyColumnToState(entrypoint, lazyColumns, values) {
 
 function _getLazyColumns(fieldsInfo) {
     const lazyColumns = [];
+    if (!fieldsInfo) {
+        return lazyColumns;
+    }
     for (const [key, value] of Object.entries(fieldsInfo)) {
         if (value.options && value.options.lazy) {
             lazyColumns.push(key);
@@ -50,6 +58,10 @@ const LazyColumnListModel = ListModel.extend({
      */
     _getFieldNames: function (element, options) {
         const res = this._super.apply(this, arguments);
+        if (element.type !== "list") {
+            // lazy is only for list type element
+            return res;
+        }
         const fieldsInfo = element.fieldsInfo;
         const viewType = (options && options.viewType) || element.viewType;
         const lazyColumns = _getLazyColumns(fieldsInfo[viewType]);
@@ -66,6 +78,11 @@ const LazyColumnListModel = ListModel.extend({
         }
         return dataPoint;
     },
+    
+    _fetchRecord: function(record, options) {
+        record.specialData.lastUpdateLazy = Date.now();
+        return this._super.apply(this, arguments);
+    }
 });
 
 const LazyColumnListRenderer = ListRenderer.extend({
@@ -75,6 +92,7 @@ const LazyColumnListRenderer = ListRenderer.extend({
     },
 
     _lazyLoad: async function (state, lazyColumns) {
+        const startRequestTime = Date.now()
         const res = await this._rpc(
             {
                 model: state.model,
@@ -90,9 +108,9 @@ const LazyColumnListRenderer = ListRenderer.extend({
                 resById[element.id][lazyCol] = element[lazyCol];
             }
         }
-        _bindLazyColumnToState(this.state, lazyColumns, resById);
+        _bindLazyColumnToState(this.state, lazyColumns, resById, startRequestTime);
         this.currentNbLazyRpc -= 1;
-        // Render only thr
+        // Render only the lazy columns
         for (const lazyCol of lazyColumns) {
             const node = this.columns.find((colAttribute) => colAttribute.attrs.name === lazyCol);
             if (!node) {

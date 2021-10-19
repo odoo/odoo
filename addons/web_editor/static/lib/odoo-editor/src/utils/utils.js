@@ -285,10 +285,15 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  *
  * @param {Node} node
  * @param {string} [selector=undefined]
+ * @param {boolean} [restrictToEditable=false]
  * @returns {HTMLElement}
  */
-export function closestElement(node, selector) {
+export function closestElement(node, selector, restrictToEditable=false) {
     const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    if (restrictToEditable && selector && element) {
+        const elementFound = element.closest(selector);
+        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    }
     return selector && element ? element.closest(selector) : element || node;
 }
 
@@ -752,7 +757,7 @@ export function getDeepestPosition(node, offset) {
     while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
-        offset = 0;
+        offset = reversed ? nodeSize(node) : 0;
         didMove = true;
     }
     return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
@@ -851,7 +856,13 @@ export function isBlock(node) {
     }
     const tagName = node.nodeName.toUpperCase();
     // Every custom jw-* node will be considered as blocks.
-    if (tagName.startsWith('JW-') || tagName === 'T') {
+    if (
+        tagName.startsWith('JW-') ||
+        (tagName === 'T' &&
+            node.getAttribute('t-esc') === null &&
+            node.getAttribute('t-out') === null &&
+            node.getAttribute('t-raw') === null)
+    ) {
         return true;
     }
     if (tagName === 'BR') {
@@ -903,6 +914,16 @@ export function isUnbreakable(node) {
         isUnremovable(node) || // An unremovable node is always unbreakable.
         ['THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
         node.hasAttribute('t') ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.nodeName === 'T' ||
+                node.getAttribute('t-if') ||
+                node.getAttribute('t-esc') ||
+                node.getAttribute('t-elif') ||
+                node.getAttribute('t-else') ||
+                node.getAttribute('t-foreach') ||
+                node.getAttribute('t-value') ||
+                node.getAttribute('t-out') ||
+                node.getAttribute('t-raw'))) ||
         node.classList.contains('oe_unbreakable')
     );
 }
@@ -916,7 +937,12 @@ export function isUnremovable(node) {
         node.parentElement &&
         !node.parentElement.isContentEditable &&
         node.nodeName !== 'A'; // links can be their own contenteditable but should be removable by default.
-    return isEditableRoot || (node.classList && node.classList.contains('oe_unremovable'));
+    return (
+        isEditableRoot ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
+        (node.classList && node.classList.contains('oe_unremovable'))
+    );
 }
 
 export function containsUnbreakable(node) {
@@ -1213,7 +1239,11 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector('br');
+    return (
+        isEmptyBlock(blockEl) &&
+        !blockEl.querySelector('br') &&
+        blockEl.nodeName !== "IMG"
+    );
 }
 
 /**

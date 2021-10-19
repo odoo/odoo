@@ -30,7 +30,7 @@ function factory(dependencies) {
             this.audio.currentTime = 0;
             this.audio.loop = loop;
             this.audio.volume = volume;
-            this.audio.play().catch(()=>{});
+            Promise.resolve(this.audio.play()).catch(()=>{});
         }
 
         /**
@@ -43,16 +43,6 @@ function factory(dependencies) {
             }
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.path}_${data.filename}`;
-        }
     }
 
     SoundEffect.fields = {
@@ -68,6 +58,7 @@ function factory(dependencies) {
          * Name of the audio file.
          */
         filename: attr({
+            readonly: true,
             required: true,
         }),
         /**
@@ -75,10 +66,11 @@ function factory(dependencies) {
          */
         path: attr({
             default: '/mail/static/src/audio/',
+            readonly: true,
             required: true,
         }),
     };
-
+    SoundEffect.identifyingFields = ['path', 'filename'];
     SoundEffect.modelName = 'mail.sound_effect';
 
     return SoundEffect;

@@ -431,7 +431,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $ribbons.removeClass(htmlClasses);
 
         $ribbons.addClass(ribbon.html_class || '');
-        $ribbons.css('color', ribbon.text_color);
+        $ribbons.css('color', ribbon.text_color || '');
         $ribbons.css('background-color', ribbon.bg_color || '');
 
         if (!this.ribbons[widgetValue]) {
@@ -452,6 +452,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     createRibbon(previewMode, widgetValue, params) {
         this.saveMethod = 'create';
+        this.setRibbon(false);
         this.$ribbon.html('Ribbon text');
         this.$ribbon.addClass('bg-primary o_ribbon_left');
         this._toggleEditingUI(true);
@@ -589,7 +590,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 colorClasses,
                 isTag: /o_tag_(left|right)/.test(ribbon.html_class),
                 isLeft: /o_(tag|ribbon)_left/.test(ribbon.html_class),
-                textColor: ribbon.text_color || colorClasses ? 'currentColor' : defaultTextColor,
+                textColor: ribbon.text_color || (colorClasses ? 'currentColor' : defaultTextColor),
             }));
         });
     },

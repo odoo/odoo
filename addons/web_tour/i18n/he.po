@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
+# 	* web_tour
 # 
 # Translators:
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# שהאב חוסיין <shhab89@gmail.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# Martin Trigaux, 2021
+# ExcaliberX <excaliberx@gmail.com>, 2021
+# Yihya Hugirat <hugirat@gmail.com>, 2021
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,27 +25,35 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:386
+#: code:addons/web_tour/static/src/js/tour_manager.js:0
+#, python-format
+msgid ""
+"<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr ""
+msgstr "לחץ על <i>סמל הבית</i> כדי לנווט בין יישומים."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
 msgid "Consumed by"
-msgstr "נצרך על ידי"
+msgstr "בשימוש על ידי"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
-msgstr ""
+msgstr "השבת סיורים"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
-msgstr "הצג שם"
+msgstr "שם לתצוגה"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
@@ -68,43 +77,94 @@ msgstr "תפריט"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
 msgstr "שם"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tour_step_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "נתיב"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:76
+#: code:addons/web_tour/static/src/js/tip.js:0
 #, python-format
-msgid "Skip tour"
-msgstr "דלג על הסיור"
+msgid "Scroll to reach the next step."
+msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "רצף"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start"
+msgstr "התחל"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
+msgstr "התחל סיור"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start tour"
+msgstr "התחל סיור"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test"
+msgstr "בדוק"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test tour"
+msgstr ""
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
 msgstr ""
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
 msgid "Tip"
-msgstr "טיפ"
-
-#. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
-#, python-format
-msgid "Tour"
-msgstr ""
+msgstr "עצה"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
@@ -112,8 +172,11 @@ msgid "Tour name"
 msgstr "שם סיור"
 
 #. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "סיורים"

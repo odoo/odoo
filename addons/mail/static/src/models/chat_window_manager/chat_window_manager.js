@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { link, replace, unlink } from '@mail/model/model_field_command';
+import { insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -89,24 +89,24 @@ function factory(dependencies) {
         }
 
         openNewMessage() {
-            let newMessageChatWindow = this.newMessageChatWindow;
-            if (!newMessageChatWindow) {
-                newMessageChatWindow = this.messaging.models['mail.chat_window'].create({
-                    manager: link(this),
-                });
+            if (!this.newMessageChatWindow) {
+                this.update({ newMessageChatWindow: insertAndReplace({ manager: replace(this) }) });
             }
-            newMessageChatWindow.makeActive();
+            this.newMessageChatWindow.makeActive();
         }
 
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
+         * @param {boolean} [param1.focus] if set, set focus the chat window
+         *   to open.
          * @param {boolean} [param1.isFolded=false]
          * @param {boolean} [param1.makeActive=false]
          * @param {boolean} [param1.notifyServer]
          * @param {boolean} [param1.replaceNewMessage=false]
          */
         openThread(thread, {
+            focus,
             isFolded = false,
             makeActive = false,
             notifyServer,
@@ -134,7 +134,7 @@ function factory(dependencies) {
             if (makeActive) {
                 // avoid double notify at this step, it will already be done at
                 // the end of the current method
-                chatWindow.makeActive({ notifyServer: false });
+                chatWindow.makeActive({ focus, notifyServer: false });
             }
             // Flux specific: notify server of chat window being opened.
             if (notifyServer && !this.messaging.currentGuest) {
@@ -264,18 +264,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.chat_window|undefined}
-         */
-        _computeNewMessageChatWindow() {
-            const chatWindow = this.allOrdered.find(chatWindow => !chatWindow.thread);
-            if (!chatWindow) {
-                return unlink();
-            }
-            return link(chatWindow);
-        }
-
-        /**
-         * @private
          * @returns {integer}
          */
         _computeUnreadHiddenConversationAmount() {
@@ -392,7 +380,8 @@ function factory(dependencies) {
             compute: '_computeLastVisible',
         }),
         newMessageChatWindow: one2one('mail.chat_window', {
-            compute: '_computeNewMessageChatWindow',
+            inverse: 'managerAsNewMessage',
+            isCausal: true,
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
@@ -402,7 +391,7 @@ function factory(dependencies) {
             default: BASE_VISUAL,
         }),
     };
-
+    ChatWindowManager.identifyingFields = ['messaging'];
     ChatWindowManager.modelName = 'mail.chat_window_manager';
 
     return ChatWindowManager;

@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.addons.stock.models.stock_rule import ProcurementException
-from odoo.tools import OrderedSet
+from odoo.tools import float_compare, OrderedSet
 
 
 class StockRule(models.Model):
@@ -42,6 +42,9 @@ class StockRule(models.Model):
         productions_values_by_company = defaultdict(list)
         errors = []
         for procurement, rule in procurements:
+            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                # If procurement contains negative quantity, don't create a MO that would be for a negative value.
+                continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
@@ -55,7 +58,7 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.action_confirm()
+            productions.filtered(lambda p: not p.orderpoint_id).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False

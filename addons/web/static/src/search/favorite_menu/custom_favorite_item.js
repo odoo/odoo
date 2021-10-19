@@ -14,7 +14,7 @@ export class CustomFavoriteItem extends Component {
         this.descriptionRef = useRef("description");
         useAutofocus();
         this.state = useState({
-            description: this.env.searchModel.displayName,
+            description: this.env.config.displayName || "",
             isDefault: false,
             isShared: false,
         });
@@ -46,7 +46,7 @@ export class CustomFavoriteItem extends Component {
         this.env.searchModel.createNewFavorite({ description, isDefault, isShared });
 
         Object.assign(this.state, {
-            description: this.env.searchModel.displayName,
+            description: this.env.config.displayName || "",
             isDefault: false,
             isShared: false,
         });

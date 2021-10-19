@@ -6,14 +6,13 @@ var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
 var field_registry = require('web.field_registry');
+const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 require('web._field_registry');
 
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
-
-var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
 /**
  * FieldHtml Widget
@@ -68,6 +67,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.$iframe) {
             this.$iframe.remove();
         }
+        if (this._qwebPlugin) {
+            this._qwebPlugin.destroy();
+        }
         this._super();
     },
 
@@ -96,6 +98,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             return this._super();
         }
         var _super = this._super.bind(this);
+        this.wysiwyg.odooEditor.clean();
         return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
             this._isDirty = this.wysiwyg.isDirty();
             _super();
@@ -127,10 +130,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         value = this._textToHtml(value);
         if (!event || event.target !== this) {
-            if (this.cssReadonly) {
-                return Promise.resolve();
-            } else if (this.mode === 'edit') {
+            if (this.mode === 'edit' && this.wysiwyg) {
                 this.wysiwyg.setValue(value);
+            } else if (this.cssReadonly) {
+                return Promise.resolve();
             } else {
                 this.$content.html(value);
             }
@@ -146,7 +149,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _getValue: function () {
-        var value = this.wysiwyg.getValue();
+        let value;
+        if (!this._$codeview || this._$codeview.hasClass('d-none')) {
+           value = this.wysiwyg.getValue();
+        } else {
+            value = this._$codeview.val();
+        }
         if (this.nodeOptions.wrapper) {
             return this._unWrap(value);
         }
@@ -160,9 +168,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {$.Promise}
      */
     _createWysiwygIntance: async function () {
-        if (this.cssReadonly) {
-            return;
-        }
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
         this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
         return this.wysiwyg.appendTo(this.$el).then(() => {
@@ -203,6 +208,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             tabsize: 0,
             height: this.nodeOptions.height || 110,
             resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
+            editorPlugins: [QWebPlugin],
         });
     },
     /**
@@ -262,6 +268,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _renderEdit: function () {
+        if (this.nodeOptions.notEditable) {
+            return this._renderReadonly();
+        }
         var value = this._textToHtml(this.value);
         if (this.nodeOptions.wrapper) {
             value = this._wrap(value);
@@ -300,7 +309,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             resolver = resolve;
         });
         if (this.nodeOptions.cssReadonly) {
-            this.$iframe = $('<iframe class="o_readonly"/>');
+            this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
 
             var avoidDoubleLoad = 0; // this bug only appears on some computers with some chrome version.
@@ -340,7 +349,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                     return '<style type="text/css">' + cssContent + '</style>';
                                 }).join('\n') + '\n' +
                             '</head>\n' +
-                            '<body class="o_in_iframe o_readonly">\n' +
+                            '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
                                 '<div id="iframe_target">' + value + '</div>\n' +
                                 '<script type="text/javascript">' +
                                     'if (window.top.' + self._onUpdateIframeId + ') {' +
@@ -362,11 +371,17 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         } else {
             this.$content = $('<div class="o_readonly"/>').html(value);
             this.$content.appendTo(this.$el);
+            this._qwebPlugin = new QWebPlugin();
+            this._qwebPlugin.sanitizeElement(this.$content[0]);
             resolver();
         }
 
         def.then(function () {
             self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            if (self.$iframe) {
+                // Iframe is hidden until fully loaded to avoid glitches.
+                self.$iframe.removeClass('d-none');
+            }
         });
     },
     /**
@@ -376,9 +391,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (jinjaRegex.test(value)) { // is jinja
-            return value;
-        }
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
         } catch (e) {
@@ -520,10 +532,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     </button>
                 </div>
             `);
-            const $codeview = $('<textarea class="o_codeview d-none"/>');
-            this.wysiwyg.$editable.after($codeview);
+            this._$codeview = $('<textarea class="o_codeview d-none"/>');
+            this.wysiwyg.$editable.after(this._$codeview);
             this.wysiwyg.toolbar.$el.append($codeviewButton);
-            $codeviewButton.click(() => this._toggleCodeView($codeview, $codeviewButton));
+            $codeviewButton.click(() => this._toggleCodeView(this._$codeview, $codeviewButton));
         }
     },
     /**

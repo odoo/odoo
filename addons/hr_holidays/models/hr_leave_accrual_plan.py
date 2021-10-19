@@ -9,7 +9,9 @@ class AccrualPlan(models.Model):
     _description = "Accrual Plan"
 
     name = fields.Char('Name', required=True)
-    time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type")
+    time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
+        help="""Specify if this accrual plan can only be used with this Time Off Type.
+                Leave empty if this accrual plan can be used with any Time Off Type.""")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True)
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')
@@ -19,6 +21,18 @@ class AccrualPlan(models.Model):
         string="Level Transition", default="immediately", required=True,
         help="""Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level
                 After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds""")
+    level_count = fields.Integer('Levels', compute='_compute_level_count')
+
+    @api.depends('level_ids')
+    def _compute_level_count(self):
+        level_read_group = self.env['hr.leave.accrual.level'].read_group(
+            [('accrual_plan_id', 'in', self.ids)],
+            fields=['accrual_plan_id'],
+            groupby=['accrual_plan_id'],
+        )
+        mapped_count = {group['accrual_plan_id'][0]: group['accrual_plan_id_count'] for group in level_read_group}
+        for plan in self:
+            plan.level_count = mapped_count[plan.id]
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):

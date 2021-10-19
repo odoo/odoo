@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -21,14 +23,45 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"Values set here are "
+"company-specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"De hier ingestelde "
+"waarden zijn bedrijfsspecifiek.\" aria-label=\"De hier ingestelde waarden "
+"zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Account"
+msgstr "Rekening"
+
+#. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
 msgstr "Fooi toevoegen via betaalterminal (Adyen)."
 
 #. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Address"
+msgstr "Adres"
+
+#. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
 msgstr "Adyen API sleutel"
+
+#. module: pos_adyen
+#: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__adyen_account_id
+#: model:ir.ui.menu,name:pos_adyen.menu_pos_adyen_account
+msgid "Adyen Account"
+msgstr "Adyen-account"
 
 #. module: pos_adyen
 #. openerp-web
@@ -48,6 +81,16 @@ msgid "Adyen Latest Response"
 msgstr "Adyen laatste reactie"
 
 #. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Adyen Store"
+msgstr "Adyen winkel"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_id
+msgid "Adyen Terminal"
+msgstr "Adyen terminal"
+
+#. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
 msgstr "Adyen terminal ID"
@@ -56,6 +99,26 @@ msgstr "Adyen terminal ID"
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
 msgstr "Adyen test modus"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_account
+msgid "Adyen for Platforms Account"
+msgstr "Adyen voor Platforms-rekening"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_store
+msgid "Adyen for Platforms Store"
+msgstr "Adyen voor Platforms winkel"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_terminal
+msgid "Adyen for Platforms Terminal"
+msgstr "Adyen voor Platforms Terminal"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_transaction
+msgid "Adyen for Platforms Transaction"
+msgstr "Adyen voor platformtransactie"
 
 #. module: pos_adyen
 #. openerp-web
@@ -74,7 +137,7 @@ msgstr "Vraag klanten voor fooi"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "Authenticatie mislukt. Controleer jouw Adyen logingegevens."
+msgstr "Authenticatie mislukt. Controleer je Adyen logingegevens."
 
 #. module: pos_adyen
 #. openerp-web
@@ -95,6 +158,17 @@ msgid "Cannot process transactions with negative amount."
 msgstr "Kan transacties met een negatief bedrag niet verwerken."
 
 #. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "City"
+msgstr "Plaats"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
@@ -102,8 +176,76 @@ msgid ""
 "Could not connect to the Odoo server, please check your internet connection "
 "and try again."
 msgstr ""
-"Kon geen verbinding maken met de Odoo-server, controleer uw "
+"Kon geen verbinding maken met de Odoo-server, controleer je "
 "internetverbinding en probeer het opnieuw."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_id
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Country"
+msgstr "Land"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_code
+msgid "Country Code"
+msgstr "Landcode"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Create an account in 1 minute"
+msgstr "Maak binnen 1 minuut een account aan."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_date
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__house_number_or_name
+msgid "House Number Or Name"
+msgstr "Huisnummer of naam"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "House number or name"
+msgstr "Huisnummer of naam"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__id
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_uid
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_date
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
 
 #. module: pos_adyen
 #. openerp-web
@@ -113,12 +255,48 @@ msgid "Message from Adyen: %s"
 msgstr "Bericht van Adyen: %s"
 
 #. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_transaction__pos_order_id
+msgid "Order"
+msgstr "Order"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
+msgid "Order a Terminal"
+msgstr "Bestel een terminal"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_transaction__pos_payment_id
+msgid "POS Order"
+msgstr "Kassa-order"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__terminal_ids
+msgid "Payment Terminals"
+msgstr "Betaalterminals"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__phone_number
+msgid "Phone Number"
+msgstr "Telefoonnummer"
+
+#. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
 "Om fooien met Adyen te ondersteunen, stel een fooiproduct in voor kassa %s "
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/adyen_account.py:0
+#, python-format
+msgid "Please create a store first."
+msgstr "Maak eerst een winkel aan."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -136,9 +314,42 @@ msgid "Prompt the customer to tip."
 msgstr "Vraag de klanten om een fooi te geven."
 
 #. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
 msgstr "Transacties uitvoeren in de testomgeving."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "State"
+msgstr "Status"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_code
+msgid "State Code"
+msgstr "Satuscode"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__store_id
+msgid "Store"
+msgstr "Winkel"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
+msgid "Stores"
+msgstr "Winkels"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__street
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Street"
+msgstr "Straat"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
@@ -157,10 +368,29 @@ msgstr ""
 "verbonden is."
 
 #. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
+msgid "Terminal"
+msgstr "Terminal"
+
+#. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
 msgstr "Terminal %s wordt al gebruikt voor de betaalmethode %s."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
+msgid "Terminal ID"
+msgstr "Terminal ID"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_adyen_store__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"De ISO-landcode in twee letters.\n"
+"Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: pos_adyen
 #. openerp-web
@@ -170,8 +400,18 @@ msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
 msgstr ""
-"De connectie met jouw betaalterminal is mislukt. Controleren of deze nog "
+"De connectie met je betaalterminal is mislukt. Controleren of deze nog "
 "steeds verbonden is met het internet."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
+msgid "The state code."
+msgstr "De statuscode"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_uuid
+msgid "UUID"
+msgstr "UUID"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -181,6 +421,12 @@ msgid ""
 msgstr ""
 "Gebruikt bij het verbinden met Adyen: https://docs.adyen.com/user-management"
 "/how-to-get-the-api-key/#description"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "ZIP"
+msgstr "Postcode"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier

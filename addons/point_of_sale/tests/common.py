@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+from datetime import datetime
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -276,6 +277,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.env['res.currency.rate'].create({
             'rate': 0.5,
             'currency_id': cls.other_currency.id,
+            'name': datetime.today().date(),
         })
         other_cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Other',
@@ -502,7 +504,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'location_id': cls.stock_location_components.id,
             }).action_apply_inventory()
 
-    def open_new_session(self):
+    def open_new_session(self, opening_cash=0):
         """ Used to open new pos session in each configuration.
 
         - The idea is to properly set values that are constant
@@ -522,10 +524,11 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self.pos_session = self.config.current_session_id
         self.currency = self.pos_session.currency_id
         self.pricelist = self.pos_session.config_id.pricelist_id
+        self.pos_session.set_cashbox_pos(opening_cash, None)
         return self.pos_session
 
     def _run_test(self, args):
-        pos_session = self._start_pos_session(args['payment_methods'])
+        pos_session = self._start_pos_session(args['payment_methods'], args.get('opening_cash', 0))
         _logger.info('DONE: Start session.')
         orders_map = self._create_orders(args['orders'])
         _logger.info('DONE: Orders created.')
@@ -535,7 +538,9 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             _logger.info('DONE: Call of before_closing_cb.')
         self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
-        pos_session.action_pos_session_validate()
+        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        pos_session.post_closing_cash_details(total_cash_payment)
+        pos_session.close_session_from_ui()
         after_closing_cb = args.get('after_closing_cb')
         if after_closing_cb:
             after_closing_cb()
@@ -543,9 +548,9 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self._check_session_journal_entries(pos_session, expected_values=args['journal_entries_after_closing'])
         _logger.info('DONE: Checks for journal entries after closing the session.')
 
-    def _start_pos_session(self, payment_methods):
+    def _start_pos_session(self, payment_methods, opening_cash):
         self.config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
-        pos_session = self.open_new_session()
+        pos_session = self.open_new_session(opening_cash)
         self.assertEqual(self.config.payment_method_ids.ids, pos_session.payment_method_ids.ids, msg='Payment methods in the config should be the same as the session.')
         return pos_session
 

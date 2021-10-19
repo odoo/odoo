@@ -13,6 +13,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
 
     startSteps();
 
+    ProductScreen.do.confirmOpeningPopup();
     PosHr.check.loginScreenIsShown();
     PosHr.do.clickLoginButton();
     SelectionPopup.check.isShown();

@@ -17,8 +17,8 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
-                <filter string="My Department Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
+                <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
+                <filter string="My Department" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -84,8 +84,9 @@
                             </div>
                         </button>
                     </div>
-                    <div class="oe_title">
-                        <h2><field name="name" placeholder="e.g. Public Holiday Allocation" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/></h2>
+                    <div id="title" class="oe_title">
+                        <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
+                        <field name="name_validity" attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}"/></h2>
                     </div>
                     <group>
                         <group>
@@ -97,14 +98,15 @@
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')], 'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             <div class="o_td_label">
-                                <label for="date_from" string="Validity Period" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                                <label for="date_from" string="Validity Period" attrs="{'invisible': ['|', ('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <label for="date_from" string="Start Date" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
                             </div>
                             <div class="o_row" name="validity">
-                                <field name="date_from" widget="date" nolabel="1" readonly="1"/>
-                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                                <field name="date_from" widget="date" nolabel="1" readonly="1" attrs="{'invisible': ['&amp;', ('allocation_type', '=', 'regular'), ('state', 'not in', ('draft', 'confirm'))]}"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': ['|', ('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <label class="mx-2" for="date_to" string="Run until" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
-                                <field name="date_to" widget="date" nolabel="1" readonly="1"/>
+                                <field name="date_to" widget="date" nolabel="1" readonly="1" placeholder="No Limit"  attrs="{'invisible': ['&amp;', ('allocation_type', '=', 'regular'), ('state', 'not in', ('draft', 'confirm'))]}"/>
+                                <div id="no_limit_label" class="oe_read_only" attrs="{'invisible': ['|', '|', ('id', '=', False), ('date_to', '!=', False), ('state', 'not in', ('draft', 'confirm'))]}">No limit</div>
                             </div>
 
                             <field name="number_of_days" invisible="1"/>
@@ -151,6 +153,11 @@
                 <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
             </xpath>
+            <xpath expr="//div[@id='title']" position="replace">
+                <div class="oe_title">
+                    <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
+                </div>
+            </xpath>
             <xpath expr="//field[@name='employee_id']" position="before">
                 <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
             </xpath>
@@ -162,7 +169,7 @@
                 <field name="employee_ids" widget="many2many_tags"
                     groups="hr_holidays.group_hr_holidays_user"
                     attrs="{'required': [('holiday_type', '=', 'employee'), ('state', 'in', ('draft', 'cancel', 'confirm'))],
-                    'invisible': ['|', ('holiday_type', '!=', 'employee'), ('state', 'not in', ('draft', 'cancel', 'confirm'))]}"/>
+                    'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', 'not in', ('draft', 'cancel', 'confirm')), ('employee_id', '!=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="category_id"
@@ -179,13 +186,20 @@
             <xpath expr="//field[@name='allocation_type']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='date_from']" position="attributes">
-                <attribute name="readonly">0</attribute>
-                <attribute name="attrs">{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}</attribute>
+            <xpath expr="//label[@for='date_from']" position="replace">
+                <label for="date_from" string="Validity Period" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
             </xpath>
-            <xpath expr="//field[@name='date_to']" position="attributes">
-                <attribute name="readonly">0</attribute>
-                <attribute name="attrs">{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}</attribute>
+            <xpath expr="//field[@name='date_from']" position="replace">
+                <field name="date_from" widget="date" nolabel="1" readonly="0" attrs="{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
+            </xpath>
+            <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
+                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='date_to']" position="replace">
+                <field name="date_to" widget="date" nolabel="1" readonly="0" placeholder="No Limit"  attrs="{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
+            </xpath>
+            <xpath expr="//div[@id='no_limit_label']" position="replace">
+                <div id="no_limit_label" class="oe_read_only" attrs="{'invisible': ['|', ('id', '=', False), ('date_to', '!=', False)]}">No limit</div>
             </xpath>
         </field>
     </record>
@@ -209,12 +223,22 @@
             <label for="date_from" position="attributes">
                 <attribute name="invisible">1</attribute>
             </label>
-            <xpath expr="//sheet" position="after">
-                <footer>
-                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Discard" special="cancel" data-hotkey="z" />
-                </footer>
+        </field>
+    </record>
+
+     <record id="hr_leave_allocation_view_form_manager_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.form.manager.dashboard</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
+            <div name="button_box" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
         </field>
     </record>
 
@@ -281,7 +305,7 @@
             <xpath expr="//filter[@name='message_needaction']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//filter[@name='managed_people']" position="attributes">
+            <xpath expr="//filter[@name='my_team']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//filter[@name='my_team_leaves']" position="attributes">
@@ -442,7 +466,7 @@
         <field name="name">Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="context">{'search_default_managed_people': 1,'search_default_approve': 2, 'search_default_active_employee': 3}</field>
+        <field name="context">{'search_default_my_team': 1,'search_default_approve': 2, 'search_default_active_employee': 3}</field>
         <field name="domain">[]</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
         <field name="help" type="html">

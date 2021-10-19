@@ -168,10 +168,10 @@
             </xpath>
             <div name="button_box" position="inside">
                 <field name="show_leaves" invisible="1"/>
-                <field name="allocations_count" invisible="1"/>
                 <field name="is_absent" invisible="1"/>
                 <field name="hr_icon_display" invisible="1"/>
-                <button disabled="1"
+                <button name="action_time_off_dashboard"
+                        type="object"
                         class="oe_stat_button"
                         context="{'search_default_employee_id': active_id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
@@ -188,8 +188,8 @@
                         </span>
                     </div>
                 </button>
-                <button name="%(act_hr_employee_holiday_request)d"
-                        type="action"
+                <button name="action_time_off_dashboard"
+                        type="object"
                         class="oe_stat_button"
                         icon="fa-calendar"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
@@ -202,23 +202,6 @@
                         </span>
                         <span class="o_stat_text">
                             Time Off
-                        </span>
-                    </div>
-                </button>
-                 <button name="%(act_hr_employee_holiday_request)d"
-                        type="action"
-                        class="oe_stat_button"
-                        icon="fa-sun-o"
-                        attrs="{'invisible': [('allocations_count','&lt;', 1)]}"
-                        context="{'search_default_employee_id': active_id}"
-                        groups="base.group_user"
-                        help="Remaining leaves">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="allocations_count"/>
-                        </span>
-                        <span class="o_stat_text">
-                            Allocations
                         </span>
                     </div>
                 </button>

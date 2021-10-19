@@ -390,6 +390,11 @@ var CalendarController = AbstractController.extend({
                     self.reload();
                 },
             });
+            this.previousOpen.on('closed', this, () => {
+                if (event.data.on_close) {
+                    event.data.on_close();
+                }
+            })
             this.previousOpen.open();
         } else {
             this.do_action({

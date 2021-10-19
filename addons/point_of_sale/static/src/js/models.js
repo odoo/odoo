@@ -160,7 +160,7 @@ exports.PosModel = Backbone.Model.extend({
             return this.connect_to_proxy();
         }
         if(this.config.limited_products_loading) {
-            await this.env.pos._addProducts(await this.loadProductsFromOffset(0));
+            await this.loadLimitedProducts();
             if(this.config.product_load_background)
                 this.loadProductsBackground();
         }
@@ -350,6 +350,15 @@ exports.PosModel = Backbone.Model.extend({
             }
        },
     },{
+        model: 'pos.bill',
+        fields: ['name', 'value'],
+        domain: function (self) {
+            return [['id', 'in', self.config.default_bill_ids]];
+        },
+        loaded: function (self, bills) {
+            self.bills = bills;
+        },
+      }, {
         model:  'res.partner',
         label: 'load_partners',
         fields: ['name','street','city','state_id','country_id','vat','lang',
@@ -921,29 +930,37 @@ exports.PosModel = Backbone.Model.extend({
             partnerModel.loaded(this, partners);
         }
     },
-    loadProductsFromOffset: async function(offset) {
-        let ProductIds = [];
+    // Load the products following specific rules into the `db`
+    loadLimitedProducts: async function() {
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
-        ProductIds = await this.rpc({
-            model: 'product.product',
-            method: 'search',
-            args: [product_model.domain(this)],
-            kwargs: {
-                offset: this.env.pos.config.limited_products_amount * offset,
-                limit: this.env.pos.config.limited_products_amount,
-            },
-            context: this.env.session.user_context,
+        const products = await this.rpc({
+            model: 'pos.config',
+            method: 'get_limited_products_loading',
+            args: [this.config_id, product_model.fields],
+            context: { ...this.session.user_context, ...product_model.context() },
         });
-        return ProductIds;
+        product_model.loaded(this, products);
+        return products.length
     },
     loadProductsBackground: async function() {
-        let offset = 0
-        let ProductIds = [];
+        let page = 0;
+        let product_model = _.find(this.models, (model) => model.model === 'product.product');
+        let products = [];
         do {
-            ProductIds = await this.loadProductsFromOffset(offset)
-            this.env.pos._addProducts(ProductIds);
-            offset += 1;
-        } while(ProductIds.length);
+            products = await this.rpc({
+                model: 'product.product',
+                method: 'search_read',
+                kwargs: {
+                    'domain': product_model.domain(this),
+                    'fields': product_model.fields,
+                    'offset': page * this.env.pos.config.limited_products_amount,
+                    'limit': this.env.pos.config.limited_products_amount
+                },
+                context: { ...this.session.user_context, ...product_model.context() },
+            });
+            product_model.loaded(this, products);
+            page += 1;
+        } while(products.length == this.config.limited_products_amount);
     },
     loadPartnersBackground: async function() {
         let i = 1;
@@ -1518,6 +1535,11 @@ exports.PosModel = Backbone.Model.extend({
         return value.toFixed(decimals);
     },
 
+    round_decimals_currency(value) {
+        const decimals = this.currency.decimals;
+        return parseFloat(round_di(value, decimals).toFixed(decimals));
+    },
+
     /**
      * (value = 1.0000, decimals = 2) => '1'
      * (value = 1.1234, decimals = 2) => '1.12'
@@ -1827,6 +1849,7 @@ exports.Orderline = Backbone.Model.extend({
             var pack_lot_line = new exports.Packlotline({}, {'json': _.extend(packlotline, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
+        this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
         this.set_customer_note(json.customer_note);
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
@@ -2080,6 +2103,8 @@ exports.Orderline = Backbone.Model.extend({
         }else if (this.description !== orderline.description) {
             return false;
         }else if (orderline.get_customer_note() !== this.get_customer_note()) {
+            return false;
+        } else if (this.refunded_orderline_id) {
             return false;
         }else{
             return true;
@@ -3259,6 +3284,9 @@ exports.Order = Backbone.Model.extend({
         }
         if (options.refunded_orderline_id) {
             orderline.refunded_orderline_id = options.refunded_orderline_id;
+        }
+        if (options.tax_ids) {
+            orderline.tax_ids = options.tax_ids;
         }
     },
     get_selected_orderline: function(){

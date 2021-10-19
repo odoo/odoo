@@ -110,7 +110,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_get_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id', 'profile']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id', 'profile', 'raise_on_code']
 
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(
@@ -258,7 +258,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             nodeAttrs = {
                 'media': media,
             }
-        files, remains = self._get_asset_content(bundle, nodeAttrs)
+        files, remains = self._get_asset_content(bundle, nodeAttrs, defer_load=defer_load, lazy_load=lazy_load)
         asset = self.get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
@@ -267,8 +267,8 @@ class IrQWeb(models.AbstractModel, QWeb):
         asset_nodes = self._get_asset_nodes(bundle, js=False)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
-    @tools.ormcache_context('bundle', 'nodeAttrs and nodeAttrs.get("media")', keys=("website_id", "lang"))
-    def _get_asset_content(self, bundle, nodeAttrs=None):
+    @tools.ormcache_context('bundle', 'nodeAttrs and nodeAttrs.get("media")', 'defer_load', 'lazy_load', keys=("website_id", "lang"))
+    def _get_asset_content(self, bundle, nodeAttrs=None, defer_load=False, lazy_load=False):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []
@@ -295,8 +295,10 @@ class IrQWeb(models.AbstractModel, QWeb):
                     tag = 'script'
                     attributes = {
                         "type": mimetype,
-                        "src": path,
                     }
+                    attributes["data-src" if lazy_load else "src"] = path
+                    if defer_load or lazy_load:
+                        attributes["defer"] = "defer"
                 else:
                     tag = 'link'
                     attributes = {

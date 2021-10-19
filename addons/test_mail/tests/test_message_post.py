@@ -303,6 +303,16 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_email_with_multiline_subject(self):
+        _body, _body_alt, _subject = '<p>Test Body</p>', 'Test Body', '1st line\n2nd line'
+        msg = self.test_record.with_user(self.user_employee).message_post(
+            body=_body, subject=_subject,
+            message_type='comment', subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_1.id, self.partner_2.id]
+        )
+        self.assertEqual(msg.subject, '1st line 2nd line')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_portal_ok(self):
         self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
 
@@ -452,8 +462,8 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
             'email_to': 'test@example.com',
             'email_cc': self.partner_1.email,
-            # After the HTML sanitizer, it will become "<p>Body for: ${object.name}<a href="">link</a></p>"
-            'body_html': 'Body for: ${object.name}<script>test</script><a href="javascript:alert(1)">link</a>',
+            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
+            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
         })
 
         with self.mock_mail_gateway():

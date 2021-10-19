@@ -28,8 +28,9 @@ QUnit.module('discuss_tests.js', {
                 data: this.data,
                 hasDiscuss: true,
             }));
-            const { afterEvent, env, widget } = res;
+            const { afterEvent, components, env, widget } = res;
             this.afterEvent = afterEvent;
+            this.components = components;
             this.env = env;
             this.widget = widget;
             return res;
@@ -1174,7 +1175,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
 
 QUnit.test('basic rendering of message', async function (assert) {
     // AKU TODO: should be in message-only tests
-    assert.expect(14);
+    assert.expect(15);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1253,8 +1254,8 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
-        2,
-        "should have 2 actions in action list of message"
+        3,
+        "should have 3 actions in action list of message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
@@ -1265,6 +1266,11 @@ QUnit.test('basic rendering of message', async function (assert) {
         document.body,
         '.o_MessageActionList_actionReaction',
         "should have action to add a reaction"
+    );
+    assert.containsOnce(
+        message,
+        '.o_MessageActionList_actionReply',
+        "should have action to reply to message"
     );
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_content`).length,

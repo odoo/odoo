@@ -4,9 +4,7 @@ odoo.define('website.content.menu', function (require) {
 const config = require('web.config');
 var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
-var wUtils = require('website.utils');
 var animations = require('website.content.snippets.animation');
-
 const extraMenuUpdateCallbacks = [];
 
 const BaseAnimatedHeader = animations.Animation.extend({
@@ -238,24 +236,31 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
 
         const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
         const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
+        const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
+        const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
-        // Switch between static/fixed position of the header
-        if (this.fixedHeader !== mainPosScrolled) {
-            this.$el.css('transform', mainPosScrolled ? 'translate(0, -100%)' : '');
+        if (fixedUpdate || showUpdate) {
+            this.$el.css('transform',
+                reachPosScrolled
+                ? `translate(0, -${this.topGap}px)`
+                : mainPosScrolled
+                ? 'translate(0, -100%)'
+                : '');
             void this.$el[0].offsetWidth; // Force a paint refresh
-            this._toggleFixedHeader(mainPosScrolled);
         }
-        // Show/hide header
-        if (this.fixedHeaderShow !== reachPosScrolled) {
-            this.$el.css('transform', reachPosScrolled ? `translate(0, -${this.topGap}px)` : 'translate(0, -100%)');
-            this.fixedHeaderShow = reachPosScrolled;
+
+        this.fixedHeaderShow = reachPosScrolled;
+
+        if (fixedUpdate) {
+            this._toggleFixedHeader(mainPosScrolled);
+        } else if (showUpdate) {
             this._adaptToHeaderChange();
         }
     },
 });
 
 publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
-    selector: 'header.o_header_fixed',
+    selector: 'header.o_header_fixed:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -367,7 +372,7 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
 });
 
 publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
-    selector: 'header.o_header_disappears',
+    selector: 'header.o_header_disappears:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Private
@@ -390,7 +395,7 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
 });
 
 publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
-    selector: 'header.o_header_fade_out',
+    selector: 'header.o_header_fade_out:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Private
@@ -410,51 +415,6 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
         this._super(...arguments);
         this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
         this.$el.stop(false, true).fadeIn();
-    },
-});
-
-/**
- * Auto adapt the header layout so that elements are not wrapped on a new line.
- */
-publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
-    selector: 'header#top',
-    disabledInEditableMode: false,
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this.$topMenu = this.$('#top_menu');
-        this.noAutohide = this.$el.is('.o_no_autohide_menu');
-        if (!this.noAutohide) {
-            await wUtils.onceAllImagesLoaded(this.$('.navbar'), this.$('.o_mega_menu, .o_offcanvas_logo_container, .dropdown-menu .o_lang_flag'));
-
-            // The previous code will make sure we wait for images to be fully
-            // loaded before initializing the auto more menu. But in some cases,
-            // it is not enough, we also have to wait for fonts or even extra
-            // scripts. Those will have no impact on the feature in most cases
-            // though, so we will only update the auto more menu at that time,
-            // no wait for it to initialize the feature.
-            var $window = $(window);
-            $window.on('load.autohideMenu', function () {
-                $window.trigger('resize');
-            });
-
-            dom.initAutoMoreMenu(this.$topMenu, {unfoldable: '.divider, .divider ~ li, .o_no_autohide_item'});
-        }
-        this.$topMenu.removeClass('o_menu_loading');
-        this.$topMenu.trigger('menu_loaded');
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        if (!this.noAutohide && this.$topMenu) {
-            $(window).off('.autohideMenu');
-            dom.destroyAutoMoreMenu(this.$topMenu);
-        }
     },
 });
 

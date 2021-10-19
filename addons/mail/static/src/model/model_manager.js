@@ -2,9 +2,9 @@
 
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
+import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
-import { link, unlinkAll } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 /**
@@ -44,19 +44,21 @@ export class ModelManager {
 
         /**
          * Set of records that have been created during the current update
-         * cycle. Useful to trigger `_created()` hook methods.
+         * cycle and for which the compute/related methods still have to be
+         * executed a first time.
          */
-        this._createdRecords = new Set();
+        this._createdRecordsComputes = new Set();
         /**
-         * States whether an update cycle is currently in progress. The update
-         * cycle is considered in progress while there are computed fields still
-         * to compute or required fields for which to verify the existence.
-         * Life cycle hooks such as `_created()` or "on change" computes are not
-         * considerer part of the update cycle by this variable.
-         * The main goal of this variable is to detect programming errors: to
-         * prevent from calling create/update/delete from inside a compute.
+         * Set of records that have been created during the current update
+         * cycle and for which the _created method still has to be executed.
          */
-        this._isInUpdateCycle = false;
+        this._createdRecordsCreated = new Set();
+        /**
+         * Set of records that have been created during the current update
+         * cycle and for which the onChange methods still have to be executed
+         * a first time.
+         */
+        this._createdRecordsOnChange = new Set();
         /**
          * Set of active listeners. Useful to be able to register which records
          * or fields they accessed to be able to notify them when those change.
@@ -79,15 +81,15 @@ export class ModelManager {
          */
         this._listenersObservingFieldOfLocalId = new Map();
         /**
-         * Set of listeners that should be notified at the end of the current
-         * update cycle.
+         * Map of listeners that should be notified at the end of the current
+         * update cycle. Value contains list of info to help for debug.
          */
-        this._listenersToNotifyAfterUpdateCycle = new Set();
+        this._listenersToNotifyAfterUpdateCycle = new Map();
         /**
-         * Set of listeners that should be notified as part of the current
-         * update cycle.
+         * Map of listeners that should be notified as part of the current
+         * update cycle. Value contains list of info to help for debug.
          */
-        this._listenersToNotifyInUpdateCycle = new Set();
+        this._listenersToNotifyInUpdateCycle = new Map();
         /**
          * Map between listeners and a set of localId that they are using.
          * Useful for easily being able to clean up a listener without having to
@@ -95,18 +97,14 @@ export class ModelManager {
          */
         this._localIdsObservedByListener = new Map();
         /**
-         * The messaging singleton associated to this model manager.
-         */
-        this._messaging = undefined;
-        /**
          * All generated models. Keys are model name, values are model class.
          */
         this.models = {};
         /**
-         * Set of records that have been updated during the current update
-         * cycle.
+         * Set of records that have been updated during the current update cycle
+         * and for which required fields check still has to be executed.
          */
-        this._updatedRecords = new Set();
+        this._updatedRecordsCheckRequired = new Set();
     }
 
     /**
@@ -147,7 +145,8 @@ export class ModelManager {
         /**
          * Create the messaging singleton record.
          */
-        this.models['mail.messaging'].create(values);
+        const messaging = this.models['mail.messaging'].insert(values);
+        Object.assign(odoo.__DEBUG__, { messaging });
         this.messagingCreatedPromise.resolve();
         await this.messaging.start();
         this.messagingInitializedPromise.resolve();
@@ -166,7 +165,16 @@ export class ModelManager {
      */
     all(Model, filterFunc) {
         for (const listener of this._listeners) {
-            this._listenersObservingAllByModel.get(Model).add(listener);
+            const entry = this._listenersObservingAllByModel.get(Model);
+            const info = {
+                listener,
+                reason: `all() - ${Model}`,
+            };
+            if (entry.has(listener)) {
+                entry.get(listener).push(info);
+            } else {
+                entry.set(listener, [info]);
+            }
         }
         const allRecords = Object.values(Model.__records);
         if (filterFunc) {
@@ -176,18 +184,10 @@ export class ModelManager {
     }
 
     /**
-     * Register a record that has been created, and manage update of records
-     * from this record creation.
-     *
-     * @param {mail.model} Model class
-     * @param {Object|Object[]} [data={}]
-     *  If data is an iterable, multiple records will be created.
-     * @returns {mail.model|mail.model[]} newly created record(s)
+     * @deprecated use insert instead
      */
     create(Model, data = {}) {
-        const res = this._create(Model, data);
-        this._flushUpdateCycle();
-        return res;
+        return this.insert(Model, data);
     }
 
     /**
@@ -210,7 +210,8 @@ export class ModelManager {
      * @returns {boolean}
      */
     exists(Model, record) {
-        return Model.__records[record.localId] ? true : false;
+        const existingRecord = Model.__records[record.localId];
+        return Boolean(existingRecord && existingRecord === record);
     }
 
     /**
@@ -229,15 +230,13 @@ export class ModelManager {
     /**
      * Gets the unique record of provided model that matches the given
      * identifying data, if it exists.
-     * @see `_createRecordLocalId` for criteria of identification.
      *
      * @param {mail.model} Model class
      * @param {Object} data
      * @returns {mail.model|undefined}
      */
     findFromIdentifyingData(Model, data) {
-        const localId = Model._createRecordLocalId(data);
-        return Model.get(localId);
+        return this.get(Model, this._getRecordIndex(Model, data));
     }
 
     /**
@@ -257,12 +256,26 @@ export class ModelManager {
         if (!localId) {
             return;
         }
+        const modelName = localId.split('(')[0];
+        if (!isCheckingInheritance && modelName !== Model.modelName) {
+            throw Error(`wrong format of localId ${localId} for ${Model}.`);
+        }
         for (const listener of this._listeners) {
             this._localIdsObservedByListener.get(listener).add(localId);
+            listener.lastObservedLocalIds.add(this.localId);
             if (!this._listenersObservingLocalId.has(localId)) {
-                this._listenersObservingLocalId.set(localId, new Set());
+                this._listenersObservingLocalId.set(localId, new Map());
             }
-            this._listenersObservingLocalId.get(localId).add(listener);
+            const entry = this._listenersObservingLocalId.get(localId);
+            const info = {
+                listener,
+                reason: `get record - ${localId}`,
+            };
+            if (entry.has(listener)) {
+                entry.get(listener).push(info);
+            } else {
+                entry.set(listener, [info]);
+            }
         }
         const record = Model.__records[localId];
         if (record) {
@@ -316,15 +329,15 @@ export class ModelManager {
     /**
      * Returns the messaging singleton associated to this model manager.
      *
-     * @returns {mail.messaging}
+     * @returns {mail.messaging|undefined}
      */
     get messaging() {
-        if (!this.models || !this._messaging) {
+        if (!this.models['mail.messaging']) {
             return undefined;
         }
-        // Use "get" specifically to ensure the record still exists and to
-        // ensure listeners are properly notified of this access.
-        return this.get(this.models['mail.messaging'], this._messaging.localId);
+        // Use "findFromIdentifyingData" specifically to ensure the record still
+        // exists and to ensure listeners are properly notified of this access.
+        return this.models['mail.messaging'].findFromIdentifyingData({});
     }
 
     /**
@@ -362,6 +375,8 @@ export class ModelManager {
     startListening(listener) {
         this.removeListener(listener);
         this._listeners.add(listener);
+        listener.lastObservedLocalIds.clear();
+        listener.lastObservedFields.clear();
         this._localIdsObservedByListener.set(listener, new Set());
     }
 
@@ -395,6 +410,27 @@ export class ModelManager {
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the given data object completed with the default values of the
+     * given model.
+     *
+     * @private
+     * @param {mail.model} Model class
+     * @param {Object} [data={}]
+     */
+    _addDefaultData(Model, data = {}) {
+        const data2 = {};
+        for (const field of Model.__fieldList) {
+            // `undefined` should have the same effect as not passing the field
+            if (data[field.fieldName] !== undefined) {
+                data2[field.fieldName] = data[field.fieldName];
+            } else if (field.default !== undefined) {
+                data2[field.fieldName] = field.default;
+            }
+        }
+        return data2;
+    }
+
+    /**
      * @private
      * @param {mail.model} Model class
      * @param {Object} patch
@@ -416,11 +452,11 @@ export class ModelManager {
                 const field = Model.fields[fieldName];
                 // 0. Forbidden name.
                 if (fieldName in Model.prototype) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has a forbidden name.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has a forbidden name.`);
                 }
                 // 1. Field type is required.
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
                 }
                 // 2. Invalid keys based on field type.
                 if (field.fieldType === 'attribute') {
@@ -436,7 +472,7 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
                 }
                 if (field.fieldType === 'relation') {
@@ -456,36 +492,36 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
                     if (!Models[field.to]) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" targets to unknown model name "${field.to}".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" targets to unknown model name "${field.to}".`);
                     }
                     if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
                     }
                     if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
                     }
                 }
                 // 3. Computed field.
                 if (field.compute && !(typeof field.compute === 'string')) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" must be a string (instance method name).`);
+                    throw new Error(`Field "${Model}/${fieldName}" property "compute" must be a string (instance method name).`);
                 }
                 if (field.compute && !(Model.prototype[field.compute])) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
+                    throw new Error(`Field "${Model}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
                 }
                 // 4. Related field.
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
                 }
                 if (field.related) {
                     if (!(typeof field.related === 'string')) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
                     }
                     const [relationName, relatedFieldName, other] = field.related.split('.');
                     if (!relationName || !relatedFieldName || other) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
                     }
                     // find relation on self or parents.
                     let relatedRelation;
@@ -497,10 +533,10 @@ export class ModelManager {
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedRelation) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown relation name "${relationName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown relation name "${relationName}".`);
                     }
                     if (relatedRelation.fieldType !== 'relation') {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to non-relational field "${relationName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to non-relational field "${relationName}".`);
                     }
                     // Assuming related relation is valid...
                     // find field name on related model or any parents.
@@ -514,16 +550,16 @@ export class ModelManager {
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedField) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
+                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
                     }
                     if (relatedField.fieldType !== field.fieldType) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch type with its related model field.`);
+                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch type with its related model field.`);
                     }
                     if (
                         relatedField.fieldType === 'relation' &&
                         relatedField.to !== field.to
                     ) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch target model name with its related model field.`);
+                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch target model name with its related model field.`);
                     }
                 }
             }
@@ -537,25 +573,25 @@ export class ModelManager {
      */
     _checkProcessedFieldsOnModels(Models) {
         for (const Model of Object.values(Models)) {
-            for (const fieldName in Model.fields) {
-                const field = Model.fields[fieldName];
+            for (const field of Model.__fieldList) {
+                const fieldName = field.fieldName;
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
                 }
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
                 }
                 if (field.fieldType === 'attribute') {
                     continue;
                 }
                 if (!field.relationType) {
                     throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" must define a relation type in "relationType".`
+                        `Field "${Model}/${fieldName}" must define a relation type in "relationType".`
                     );
                 }
                 if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
                     throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" has invalid relation type "${field.relationType}".`
+                        `Field "${Model}/${fieldName}" has invalid relation type "${field.relationType}".`
                     );
                 }
                 if (!field.inverse) {
@@ -579,17 +615,17 @@ export class ModelManager {
                 const RelatedModel = Models[field.to];
                 if (!RelatedModel) {
                     throw new Error(
-                        `Model name of relation "${Model.modelName}/${fieldName}" does not exist.`
+                        `Model name of relation "${Model}/${fieldName}" does not exist.`
                     );
                 }
-                const inverseField = RelatedModel.fields[field.inverse];
+                const inverseField = RelatedModel.__fieldMap[field.inverse];
                 if (!inverseField) {
                     throw new Error(
                         `Relation "${
                             Model.modelName
                         }/${
                             fieldName
-                        }" has no inverse field "${RelatedModel.modelName}/${field.inverse}".`
+                        }" has no inverse field "${RelatedModel}/${field.inverse}".`
                     );
                 }
                 if (inverseField.inverse !== fieldName) {
@@ -651,126 +687,98 @@ export class ModelManager {
                     );
                 }
             }
+            for (const identifyingField of Model.__identifyingFieldsFlattened) {
+                const field = Model.__fieldMap[identifyingField];
+                if (!field) {
+                    throw new Error(`Identifying field "${identifyingField}" is not a field on model "${Model}".`);
+                }
+                if (!field.readonly) {
+                    throw new Error(`Identifying field "${identifyingField}" on model "${Model}" is lacking readonly.`);
+                }
+                if (field.to) {
+                    if (!(['one2one', 'many2one'].includes(field.relationType))) {
+                        throw new Error(`Identifying field "${identifyingField}" on model "${Model}" has a relation of type "${field.relationType}" but identifying field is only supported for "one2one" and "many2one".`);
+                    }
+                    const RelatedModel = Models[field.to];
+                    const inverseField = RelatedModel.__fieldMap[field.inverse];
+                    if (!inverseField.isCausal) {
+                        throw new Error(`Identifying field "${identifyingField}" on model "${Model}" has an inverse "${field.inverse}" not declared as "isCausal" on "${RelatedModel}".`);
+                    }
+                }
+            }
         }
     }
 
     /**
      * @private
      * @param {mail.model} Model class
-     * @param {Object|Object[]} [data={}]
-     * @returns {mail.model|mail.model[]}
+     * @param {string} localId
+     * @returns {mail.model}
      */
-    _create(Model, data = {}) {
-        const isMulti = typeof data[Symbol.iterator] === 'function';
-        const dataList = isMulti ? data : [data];
-        const records = [];
-        for (const data of dataList) {
-            /**
-             * 1. Ensure the record can be created: localId must be unique.
-             */
-            const localId = Model._createRecordLocalId(data);
-            if (Model.get(localId)) {
-                throw Error(`A record already exists for model "${Model.modelName}" with localId "${localId}".`);
-            }
-            /**
-             * 2. Prepare record state. Assign various keys and values that are
-             * expected to be found on every record.
-             */
-            const record = new Model({ valid: true });
-            if (Model.modelName === 'mail.messaging') {
-                if (this._messaging) {
-                    throw Error('messaging should be a singleton');
+    _create(Model, localId) {
+        /**
+         * Prepare record state. Assign various keys and values that are
+         * expected to be found on every record.
+         */
+        const nonProxyRecord = new Model({ localId, valid: true });
+        const record = !this.env.isDebug() ? nonProxyRecord : new Proxy(nonProxyRecord, {
+            get: function (record, prop) {
+                if (
+                    !Model.__fieldMap[prop] &&
+                    !['_super', 'then'].includes(prop) &&
+                    typeof prop !== 'symbol' &&
+                    !(prop in record)
+                ) {
+                    console.warn(`non-field read "${prop}" on ${record}`);
                 }
-                this._messaging = record;
-            }
-            Object.assign(record, {
-                // The unique record identifier.
-                localId,
-                // Listeners that are bound to this record, to be notified of
-                // change in dependencies of compute, related and "on change".
-                __listeners: [],
-                // Field values of record.
-                __values: {},
-            });
-            // Ensure X2many relations are Set initially (other fields can stay undefined).
-            for (const field of Model.__fieldList) {
-                record.__values[field.fieldName] = undefined;
-                if (field.fieldType === 'relation') {
-                    if (['one2many', 'many2many'].includes(field.relationType)) {
-                        record.__values[field.fieldName] = new Set();
-                    }
+                return record[prop];
+            },
+        });
+        // Ensure X2many relations are Set initially (other fields can stay undefined).
+        for (const field of Model.__fieldList) {
+            record.__values[field.fieldName] = undefined;
+            if (field.fieldType === 'relation') {
+                if (['one2many', 'many2many'].includes(field.relationType)) {
+                    record.__values[field.fieldName] = new Set();
                 }
             }
-            if (!this._listenersObservingLocalId.has(localId)) {
-                this._listenersObservingLocalId.set(localId, new Set());
-            }
-            this._listenersObservingFieldOfLocalId.set(localId, new Map());
-            for (const field of Model.__fieldList) {
-                this._listenersObservingFieldOfLocalId.get(localId).set(field, new Set());
-            }
-            /**
-             * 3. Register record and invoke the life-cycle hook `_willCreate.`
-             * After this step the record is in a functioning state and it is
-             * considered existing.
-             */
-            Model.__records[record.localId] = record;
-            record._willCreate();
-            /**
-             * 4. Write provided data, default data, and register computes.
-             */
-            const data2 = {};
-            for (const field of Model.__fieldList) {
-                // `undefined` should have the same effect as not passing the field
-                if (data[field.fieldName] !== undefined) {
-                    data2[field.fieldName] = data[field.fieldName];
-                } else {
-                    data2[field.fieldName] = field.default;
-                }
-            }
-            data2.messaging = link(this._messaging);
-            this._update(record, data2, { allowWriteReadonly: true });
-            for (const field of Model.__fieldList) {
-                if (field.compute) {
-                    const listener = new Listener({
-                        isPartOfUpdateCycle: true,
-                        onChange: () => {
-                            this.startListening(listener);
-                            const res = record[field.compute]();
-                            this.stopListening(listener);
-                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
-                        },
-                    });
-                    record.__listeners.push(listener);
-                    listener.onChange();
-                }
-                if (field.related) {
-                    const listener = new Listener({
-                        isPartOfUpdateCycle: true,
-                        onChange: () => {
-                            this.startListening(listener);
-                            const res = field.computeRelated(record);
-                            this.stopListening(listener);
-                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
-                        },
-                    });
-                    record.__listeners.push(listener);
-                    listener.onChange();
-                }
-            }
-            /**
-             * 5. Register post processing operation that are to be delayed at
-             * the end of the update cycle.
-             */
-            this._createdRecords.add(record);
-            for (const listener of this._listenersObservingAllByModel.get(Model)) {
-                this._markListenerToNotify(listener);
-            }
-            for (const listener of this._listenersObservingLocalId.get(localId)) {
-                this._markListenerToNotify(listener);
-            }
-            records.push(record);
         }
-        return isMulti ? records : records[0];
+        if (!this._listenersObservingLocalId.has(localId)) {
+            this._listenersObservingLocalId.set(localId, new Map());
+        }
+        this._listenersObservingFieldOfLocalId.set(localId, new Map());
+        for (const field of Model.__fieldList) {
+            this._listenersObservingFieldOfLocalId.get(localId).set(field, new Map());
+        }
+        /**
+         * Register record and invoke the life-cycle hook `_willCreate.`
+         * After this step the record is in a functioning state and it is
+         * considered existing.
+         */
+        Model.__records[record.localId] = record;
+        record._willCreate();
+        /**
+         * Register post processing operation that are to be delayed at
+         * the end of the update cycle.
+         */
+        this._createdRecordsComputes.add(record);
+        this._createdRecordsCreated.add(record);
+        this._createdRecordsOnChange.add(record);
+        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+            this._markListenerToNotify(listener, {
+                listener,
+                reason: `_create: allByModel - ${record}`,
+                infoList,
+            });
+        }
+        for (const [listener, infoList] of this._listenersObservingLocalId.get(localId).entries()) {
+            this._markListenerToNotify(listener, {
+                listener,
+                reason: `_create: localId - ${record}`,
+                infoList,
+            });
+        }
+        return record;
     }
 
     /**
@@ -778,6 +786,7 @@ export class ModelManager {
      * @param {mail.model} record
      */
     _delete(record) {
+        this._ensureNoLockingListener();
         const Model = record.constructor;
         if (!record.exists()) {
             throw Error(`Cannot delete already deleted record ${record.localId}.`);
@@ -792,17 +801,172 @@ export class ModelManager {
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
             }
         }
-        this._createdRecords.delete(record);
-        for (const listener of this._listenersObservingLocalId.get(record.localId)) {
-            this._markListenerToNotify(listener);
+        this._createdRecordsComputes.delete(record);
+        this._createdRecordsCreated.delete(record);
+        this._createdRecordsOnChange.delete(record);
+        this._updatedRecordsCheckRequired.delete(record);
+        for (const [listener, infoList] of this._listenersObservingLocalId.get(record.localId).entries()) {
+            this._markListenerToNotify(listener, {
+                listener,
+                reason: `_delete: localId - ${record}`,
+                infoList,
+            });
         }
-        for (const listener of this._listenersObservingAllByModel.get(Model)) {
-            this._markListenerToNotify(listener);
+        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+            this._markListenerToNotify(listener, {
+                listener,
+                reason: `_delete: allByModel - ${record}`,
+                infoList,
+            });
         }
         delete Model.__records[record.localId];
-        if (record === this._messaging) {
-            this._messaging = undefined;
+    }
+
+    /**
+     * Ensures there is currently no locking listener on this model manager, and
+     * throws if there is one.
+     *
+     * @throws {Error}
+     */
+    _ensureNoLockingListener() {
+        for (const listener of this._listeners) {
+            if (listener.isLocking) {
+                throw Error(`Model manager locked by ${listener}. It is not allowed to insert/update/delete from inside a lock.`);
+            }
         }
+    }
+
+    /**
+     * Executes the compute methods of the created records.
+     *
+     * @returns {boolean} whether any change happened
+     */
+    _executeCreatedRecordsComputes() {
+        const hasChanged = this._createdRecordsComputes.size > 0;
+        for (const record of this._createdRecordsComputes) {
+            // Delete at every step to avoid recursion, indeed compute/related
+            // method might trigger an update cycle itself.
+            this._createdRecordsComputes.delete(record);
+            if (!record.exists()) {
+                throw Error(`Cannot start compute/related for already deleted ${record}.`);
+            }
+            const listeners = [];
+            for (const field of record.constructor.__fieldList) {
+                if (field.compute) {
+                    const listener = new Listener({
+                        isPartOfUpdateCycle: true,
+                        name: `compute ${field} of ${record}`,
+                        onChange: (info) => {
+                            this.startListening(listener);
+                            const res = record[field.compute]();
+                            this.stopListening(listener);
+                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                        },
+                    });
+                    listeners.push(listener);
+                }
+                if (field.related) {
+                    const listener = new Listener({
+                        isPartOfUpdateCycle: true,
+                        name: `related ${field} of ${record}`,
+                        onChange: (info) => {
+                            this.startListening(listener);
+                            const res = field.computeRelated(record);
+                            this.stopListening(listener);
+                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                        },
+                    });
+                    listeners.push(listener);
+                }
+            }
+            record.__listeners.push(...listeners);
+            for (const listener of listeners) {
+                listener.onChange({
+                    listener,
+                    reason: `first call on ${record}`,
+                });
+            }
+        }
+        if (hasChanged) {
+            this._flushUpdateCycle();
+        }
+    }
+
+    /**
+     * Executes the _created method of the created records.
+     *
+     * @returns {boolean} whether any change happened
+     */
+    _executeCreatedRecordsCreated() {
+        for (const record of this._createdRecordsCreated) {
+            // Delete at every step to avoid recursion, indeed _created might
+            // trigger an update cycle itself.
+            this._createdRecordsCreated.delete(record);
+            if (!record.exists()) {
+                throw Error(`Cannot call _created for already deleted ${record}.`);
+            }
+            record._created();
+        }
+    }
+
+    /**
+     * Executes the onChange method of the created records.
+     *
+     * @returns {boolean} whether any change happened
+     */
+    _executeCreatedRecordsOnChange() {
+        for (const record of this._createdRecordsOnChange) {
+            // Delete at every step to avoid recursion, indeed _created
+            // might trigger an update cycle itself.
+            this._createdRecordsOnChange.delete(record);
+            if (!record.exists()) {
+                throw Error(`Cannot call onChange for already deleted ${record}.`);
+            }
+            for (const onChange of record.constructor.onChanges || []) {
+                const listener = new Listener({
+                    name: `${onChange} of ${record}`,
+                    onChange: (info) => {
+                        this.startListening(listener);
+                        for (const dependency of onChange.dependencies) {
+                            let target = record;
+                            for (const field of dependency.split('.')) {
+                                if (!target.constructor.__fieldMap[field]) {
+                                    throw Error(`onChange dependency "${field}" does not exist on ${record.constructor}.`);
+                                }
+                                target = target[field];
+                                if (!target) {
+                                    break;
+                                }
+                            }
+                        }
+                        this.stopListening(listener);
+                        record[onChange.methodName]();
+                    },
+                });
+                record.__listeners.push(listener);
+                listener.onChange({
+                    listener,
+                    reason: `first call on ${record}`,
+                });
+            }
+        }
+    }
+
+
+    /**
+     * Executes the check of the required field of updated records.
+     *
+     * @returns {boolean} whether any change happened
+     */
+    _executeUpdatedRecordsCheckRequired() {
+        for (const record of this._updatedRecordsCheckRequired) {
+            for (const required of record.constructor.__requiredFieldsList) {
+                if (record[required.fieldName] === undefined) {
+                    throw Error(`required ${required} of ${record} is missing`);
+                }
+            }
+        }
+        this._updatedRecordsCheckRequired.clear();
     }
 
     /**
@@ -812,59 +976,11 @@ export class ModelManager {
      * @private
      */
     _flushUpdateCycle(func) {
-        if (this._isInUpdateCycle) {
-            throw Error('Already in update cycle. You are probably trying to manually create/update/delete a record from inside a compute method, which is not supported.');
-        }
-        try {
-            this._isInUpdateCycle = true;
-            this._notifyListenersInUpdateCycle();
-            // Verify the existence of value for required fields (of non-deleted records).
-            for (const record of this._updatedRecords) {
-                if (!record.exists()) {
-                    continue;
-                }
-                for (const required of record.constructor.__requiredFieldsList) {
-                    if (record[required.fieldName] === undefined) {
-                        throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
-                    }
-                }
-            }
-            this._updatedRecords.clear();
-        } finally {
-            this._isInUpdateCycle = false;
-        }
-        // Execution of `_created` and "on change" (after the update cycle itself).
-        while (this._createdRecords.size > 0) {
-            for (const record of this._createdRecords) {
-                // Delete at every step to avoid recursion, indeed _created
-                // might trigger an update cycle itself.
-                this._createdRecords.delete(record);
-                if (!record.exists()) {
-                    throw Error(`Cannot call _created for already deleted record ${record.localId}.`);
-                }
-                record._created();
-                for (const onChange of record.constructor.onChanges || []) {
-                    const listener = new Listener({
-                        onChange: () => {
-                            this.startListening(listener);
-                            for (const dependency of onChange.dependencies) {
-                                let target = record;
-                                for (const field of dependency.split('.')) {
-                                    target = target[field];
-                                    if (!target) {
-                                        break;
-                                    }
-                                }
-                            }
-                            this.stopListening(listener);
-                            record[onChange.methodName]();
-                        },
-                    });
-                    listener.onChange();
-                    record.__listeners.push(listener);
-                }
-            }
-        }
+        this._executeCreatedRecordsComputes();
+        this._notifyListenersInUpdateCycle();
+        this._executeUpdatedRecordsCheckRequired();
+        this._executeCreatedRecordsCreated();
+        this._executeCreatedRecordsOnChange();
         this._notifyListenersAfterUpdateCycle();
     }
 
@@ -898,6 +1014,17 @@ export class ModelManager {
             * Contains all records. key is local id, while value is the record.
             */
             Model.__records = {};
+            Model.__identifyingFields = Model.identifyingFields;
+            const identifyingFieldsFlattened = new Set();
+            for (const identifyingElement of Model.identifyingFields) {
+                const identifyingFields = typeof identifyingElement === 'string'
+                    ? [identifyingElement]
+                    : identifyingElement;
+                for (const identifyingField of identifyingFields) {
+                    identifyingFieldsFlattened.add(identifyingField);
+                }
+            }
+            Model.__identifyingFieldsFlattened = identifyingFieldsFlattened;
             for (const patch of generatable.patches) {
                 switch (patch.type) {
                     case 'class':
@@ -909,18 +1036,21 @@ export class ModelManager {
                     case 'field':
                         this._applyModelPatchFields(Model, patch.patch);
                         break;
+                    case 'identifyingFields':
+                        patch.patch(Model.__identifyingFields);
+                        break;
                 }
             }
             if (!Object.prototype.hasOwnProperty.call(Model, 'modelName')) {
                 throw new Error(`Missing static property "modelName" on Model class "${Model.name}".`);
             }
             if (generatedNames.includes(Model.modelName)) {
-                throw new Error(`Duplicate model name "${Model.modelName}" shared on 2 distinct Model classes.`);
+                throw new Error(`Duplicate model name "${Model}" shared on 2 distinct Model classes.`);
             }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
             toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
-            this._listenersObservingAllByModel.set(Model, new Set());
+            this._listenersObservingAllByModel.set(Model, new Map());
         }
         /**
          * Check that declared model fields are correct.
@@ -941,19 +1071,76 @@ export class ModelManager {
     }
 
     /**
+     * Returns an index on the given model for the given data.
+     *
+     * @param {mail.model} Model class
+     * @param {Object|mail.model} data insert data or record
+     * @returns {string}
+     */
+    _getRecordIndex(Model, data) {
+        return `${Model.modelName}(${Model.__identifyingFields.map(identifyingElement => {
+            const fieldName = typeof identifyingElement === 'string'
+                ? identifyingElement
+                : identifyingElement.reduce((fieldName, currentFieldName) => {
+                    const fieldValue = data[currentFieldName] !== undefined
+                        ? data[currentFieldName]
+                        : Model.__fieldMap[currentFieldName].default;
+                    if (fieldValue === undefined) {
+                        return fieldName;
+                    }
+                    if (fieldName) {
+                        throw new Error(`Identifying element on ${Model} with "or" value should have only one of the conditional values given in data. Currently have both ${fieldName} and ${currentFieldName}.`);
+                    }
+                    return currentFieldName;
+                }, undefined);
+            if (!fieldName) {
+                throw new Error(`Identifying element "${identifyingElement}" on ${Model} is lacking a value.`);
+            }
+            const fieldValue = data[fieldName] !== undefined
+                ? data[fieldName]
+                : Model.__fieldMap[fieldName].default;
+            if (fieldValue === undefined) {
+                throw new Error(`Identifying field "${fieldName}" on ${Model} is lacking a value.`);
+            }
+            const relationTo = Model.__fieldMap[fieldName].to;
+            if (!relationTo) {
+                return `${fieldName}: ${fieldValue}`;
+            }
+            const OtherModel = this.models[relationTo];
+            if (fieldValue instanceof OtherModel) {
+                return `${fieldName}: ${this._getRecordIndex(OtherModel, fieldValue)}`;
+            }
+            if (!(fieldValue instanceof FieldCommand)) {
+                throw new Error(`Identifying element "${Model}/${fieldName}" is expecting a command for relational field.`);
+            }
+            if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue._name)) {
+                throw new Error(`Identifying element "${Model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue._name}" was given instead.`);
+            }
+            const relationValue = fieldValue._value;
+            if (!relationValue) {
+                throw new Error(`Identifying element "${Model}/${fieldName}" is lacking a relation value.`);
+            }
+            return `${fieldName}: ${this._getRecordIndex(OtherModel, relationValue)}`;
+        }).join(', ')})`;
+    }
+
+    /**
      * @private
      * @param {mail.model}
-     * @param {Object|Object[]} data
+     * @param {Object|Object[]} [data={}]
      * @returns {mail.model|mail.model[]}
      */
-    _insert(Model, data) {
+    _insert(Model, data = {}) {
+        this._ensureNoLockingListener();
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = isMulti ? data : [data];
         const records = [];
         for (const data of dataList) {
-            let record = Model.findFromIdentifyingData(data);
+            const localId = this._getRecordIndex(Model, data);
+            let record = Model.get(localId);
             if (!record) {
-                record = this._create(Model, data);
+                record = this._create(Model, localId);
+                this._update(record, this._addDefaultData(Model, data), { allowWriteReadonly: true });
             } else {
                 this._update(record, data);
             }
@@ -976,13 +1163,13 @@ export class ModelManager {
             : field.relationType === 'one2one' ? ModelField.one2one
             : undefined;
         if (!relFunc) {
-            throw new Error(`Cannot compute inverse Relation of "${Model.modelName}/${field.fieldName}".`);
+            throw new Error(`Cannot compute inverse Relation of "${Model}/${field.fieldName}".`);
         }
         const inverseField = new ModelField(Object.assign(
             {},
             relFunc(Model.modelName, { inverse: field.fieldName }),
             {
-                fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
+                fieldName: `_inverse_${Model}/${field.fieldName}`,
             }
         ));
         return inverseField;
@@ -997,12 +1184,25 @@ export class ModelManager {
      * @private
      * @param {Object} listener
      */
-    _markListenerToNotify(listener) {
+    _markListenerToNotify(listener, info) {
+        if (!(listener instanceof Listener)) {
+            throw new Error(`Listener is not a listener ${listener}`);
+        }
         if (listener.isPartOfUpdateCycle) {
-            this._listenersToNotifyInUpdateCycle.add(listener);
+            const entry = this._listenersToNotifyInUpdateCycle.get(listener);
+            if (entry) {
+                entry.push(info);
+            } else {
+                this._listenersToNotifyInUpdateCycle.set(listener, [info]);
+            }
         }
         if (!listener.isPartOfUpdateCycle) {
-            this._listenersToNotifyAfterUpdateCycle.add(listener);
+            const entry = this._listenersToNotifyAfterUpdateCycle.get(listener);
+            if (entry) {
+                entry.push(info);
+            } else {
+                this._listenersToNotifyAfterUpdateCycle.set(listener, [info]);
+            }
         }
     }
 
@@ -1013,11 +1213,13 @@ export class ModelManager {
      *
      * In particular this is the case of components using models that need to
      * re-render and for records with "on change".
+     *
+     * @returns {boolean} whether any change happened
      */
     _notifyListenersAfterUpdateCycle() {
-        for (const listener of this._listenersToNotifyAfterUpdateCycle) {
+        for (const [listener, infoList] of this._listenersToNotifyAfterUpdateCycle.entries()) {
             this._listenersToNotifyAfterUpdateCycle.delete(listener);
-            listener.onChange();
+            listener.onChange(infoList);
         }
     }
 
@@ -1030,13 +1232,17 @@ export class ModelManager {
      *
      * Note: A double loop is used because calling the `onChange` function might
      * lead to more listeners being flagged to be notified.
+     *
+     * @returns {boolean} whether any change happened
      */
     _notifyListenersInUpdateCycle() {
-        while (this._listenersToNotifyInUpdateCycle.size > 0) {
-            for (const listener of this._listenersToNotifyInUpdateCycle) {
-                this._listenersToNotifyInUpdateCycle.delete(listener);
-                listener.onChange();
-            }
+        const hasChanged = this._listenersToNotifyInUpdateCycle.size > 0;
+        for (const [listener, infoList] of this._listenersToNotifyInUpdateCycle.entries()) {
+            this._listenersToNotifyInUpdateCycle.delete(listener);
+            listener.onChange(infoList);
+        }
+        if (hasChanged) {
+            this._flushUpdateCycle();
         }
     }
 
@@ -1123,8 +1329,27 @@ export class ModelManager {
                     get() { // this is bound to record
                         for (const listener of this.modelManager._listeners) {
                             this.modelManager._localIdsObservedByListener.get(listener).add(this.localId);
-                            this.modelManager._listenersObservingLocalId.get(this.localId).add(listener);
-                            this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field).add(listener);
+                            listener.lastObservedLocalIds.add(this.localId);
+                            if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
+                                this.modelManager._listenersObservingLocalId.set(this.localId, new Map());
+                            }
+                            const entryLocalId = this.modelManager._listenersObservingLocalId.get(this.localId);
+                            const info = {
+                                listener,
+                                reason: `getField - ${field} of ${this}`,
+                            };
+                            if (entryLocalId.has(listener)) {
+                                entryLocalId.get(listener).push(info);
+                            } else {
+                                entryLocalId.set(listener, [info]);
+                            }
+                            const entryField = this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field);
+                            listener.lastObservedFields.add(field);
+                            if (entryField.has(listener)) {
+                                entryField.get(listener).push(info);
+                            } else {
+                                entryField.set(listener, [info]);
+                            }
                         }
                         return field.get(this);
                     },
@@ -1143,13 +1368,27 @@ export class ModelManager {
      * @returns {boolean} whether any value changed for the current record
      */
     _update(record, data, options = {}) {
+        this._ensureNoLockingListener();
         if (!record.exists()) {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
         const { allowWriteReadonly = false } = options;
         const Model = record.constructor;
         let hasChanged = false;
-        for (const fieldName of Object.keys(data)) {
+        const sortedFieldNames = Object.keys(data);
+        sortedFieldNames.sort((a, b) => {
+            // Always update identifying fields first because updating other relational field will
+            // trigger update of inverse field, which will require this identifying fields to be set
+            // beforehand to properly detect whether this is already linked or not on the inverse.
+            if (Model.__identifyingFieldsFlattened.has(a) && !Model.__identifyingFieldsFlattened.has(b)) {
+                return -1;
+            }
+            if (!Model.__identifyingFieldsFlattened.has(a) && Model.__identifyingFieldsFlattened.has(b)) {
+                return 1;
+            }
+            return 0;
+        });
+        for (const fieldName of sortedFieldNames) {
             if (data[fieldName] === undefined) {
                 // `undefined` should have the same effect as not passing the field
                 continue;
@@ -1159,19 +1398,23 @@ export class ModelManager {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
             }
             const newVal = data[fieldName];
-            if (field.readonly && !allowWriteReadonly && record[fieldName] !== newVal) {
-                throw new Error(`Can't update "${field.fieldName}" (record: "${record.localId}") because it's readonly.`);
-            }
             if (!field.parseAndExecuteCommands(record, newVal, options)) {
                 continue;
             }
+            if (field.readonly && !allowWriteReadonly) {
+                throw new Error(`read-only ${field} on ${record} was updated`);
+            }
             hasChanged = true;
-            for (const listener of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
-                this._markListenerToNotify(listener);
+            for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field).entries()) {
+                this._markListenerToNotify(listener, {
+                    listener,
+                    reason: `_update: ${field} of ${record}`,
+                    infoList,
+                });
             }
         }
         if (hasChanged) {
-            this._updatedRecords.add(record);
+            this._updatedRecordsCheckRequired.add(record);
         }
         return hasChanged;
     }

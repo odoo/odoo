@@ -602,12 +602,12 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
 
 // Function which returns if a color has contrast enough in comparaison to
 // another given color.
-@function has-enough-contrast($color1, $color2) {
+@function has-enough-contrast($color1, $color2, $threshold: 500) {
     $r: (max(red($color1), red($color2))) - (min(red($color1), red($color2)));
     $g: (max(green($color1), green($color2))) - (min(green($color1), green($color2)));
     $b: (max(blue($color1), blue($color2))) - (min(blue($color1), blue($color2)));
     $sum-rgb: $r + $g + $b;
-    @return ($sum-rgb >= 500);
+    @return ($sum-rgb >= $threshold);
 }
 
 // Function which transforms a color to increase its contrast in comparison to
@@ -628,6 +628,39 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
         $i: $i + 1;
     }
     @return $color1;
+}
+
+// Given a primary color (and eventually a secondary one), the function returns
+// a basic odoo palette in sass-map format. The palette will be generated using
+// the safest readability values possible.
+@function o-make-palette($-primary, $-secondary: null, $-overrides-map: null) {
+    $-o-color-2: $-secondary or increase-contrast(desaturate(mix(complement($-primary), #FFFFFF, 80%), 20%), $-primary);
+
+    $-palette: (
+        'o-color-1': $-primary,
+        'o-color-2': $-o-color-2,
+        'o-color-3': change-color(#F5F0F0, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#F5F0F0))),
+        'o-color-4': #FFFFFF,
+        'o-color-5': change-color(#2e1414, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#2e1414))),
+    );
+
+    // Check if primary/dark contrast is enough. If not adapt cc4 & cc5 schemes accordingly
+    @if not (has-enough-contrast(map-get($-palette, 'o-color-5'), map-get($-palette, 'o-color-1'), 300)) {
+        @each $-cc in (4, 5) {
+            $-palette: map-merge($-palette, (
+                'o-cc#{$-cc}-btn-primary': 'o-color-4',
+                'o-cc#{$-cc}-btn-secondary': 'o-color-2',
+                'o-cc#{$-cc}-text': 'o-color-3',
+                'o-cc#{$-cc}-link': 'o-color-4'
+            ));
+        }
+    }
+
+    @if $-overrides-map {
+        $-palette: map-merge($-palette, $-overrides-map);
+    }
+
+    @return $-palette;
 }
 
 // format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
@@ -662,7 +695,7 @@ $o-bg-shapes: ('web_editor': (
     'Blobs/08': ('position': right, 'size': 100% auto, 'colors': (1)),
     'Blobs/09': ('position': bottom, 'size': 100% auto, 'colors': (3)),
     'Blobs/10': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
-    'Blobs/10_001': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Blobs/10_001': ('position': top, 'size': 100% auto, 'colors': (1)),
     'Blobs/11': ('position': center, 'size': 100% auto, 'colors': (1)),
     'Blobs/12': ('position': bottom, 'size': 100% auto, 'colors': (1)),
     'Blocks/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5)),
@@ -695,7 +728,7 @@ $o-bg-shapes: ('web_editor': (
     'Floats/04': ('position': center, 'size': 100%, 'colors': (1, 2, 4, 5)),
     'Floats/05': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
     'Floats/06': ('position': center, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
-    'Floats/07': ('position': right bottom, 'size': auto 70%, 'colors': (1, 2, 3, 5)),
+    'Floats/07': ('position': right bottom, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
     'Floats/08': ('position': top left, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
     'Floats/09': ('position': center right, 'size': auto 100%, 'colors': (1, 2, 3)),
     'Floats/10': ('position': center, 'size': 100% auto, 'colors': (1, 2, 3, 5)),

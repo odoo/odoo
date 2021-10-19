@@ -6,15 +6,18 @@
 # liAnGjiA <liangjia@qq.com>, 2021
 # 凡 杨 <sailfan_yang@qq.com>, 2021
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
+# mrshelly <mrshelly@hotmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +104,11 @@ msgid "1x"
 msgstr ""
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "25"
+msgstr "25"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "25%"
 msgstr "25%"
@@ -143,14 +151,39 @@ msgid "5x"
 msgstr ""
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "<span>Blocks</span>"
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "90"
+msgstr "90"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"flex-grow-0 ml-1 text-white-50\">%</span>"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"flex-grow-0 ml-1 text-white-50\">deg</span>"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"mr-2 ml-3\">Y</span>"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"mr-2\">X</span>"
 msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "<span>Blocks</span>"
+msgstr "<span>区块</span>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "<span>Style</span>"
-msgstr ""
+msgstr "<span>样式</span>"
 
 #. module: web_editor
 #. openerp-web
@@ -237,7 +270,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Add document"
-msgstr ""
+msgstr "添加文档"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -293,6 +326,11 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Alt tag"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Angle"
 msgstr ""
 
 #. module: web_editor
@@ -385,7 +423,7 @@ msgstr "背景颜色"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Background Position"
-msgstr ""
+msgstr "背景位置"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -431,7 +469,7 @@ msgstr "加粗"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Border Color"
-msgstr ""
+msgstr "边框颜色"
 
 #. module: web_editor
 #. openerp-web
@@ -560,7 +598,7 @@ msgstr "确认"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Contrast"
-msgstr ""
+msgstr "对比度"
 
 #. module: web_editor
 #. openerp-web
@@ -616,6 +654,7 @@ msgstr "裁剪图片"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
@@ -658,6 +697,11 @@ msgstr "默认"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Default + Rounded"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Define a custom gradient"
 msgstr ""
 
 #. module: web_editor
@@ -797,6 +841,26 @@ msgstr ""
 #, python-format
 msgid "Expected "
 msgstr "预期"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the closest corner"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the closest side"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the farthest corner"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the farthest side"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1225,7 +1289,7 @@ msgstr "大"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_uid
@@ -1244,6 +1308,11 @@ msgstr "最后更新时间"
 #, python-format
 msgid "Left"
 msgstr "左"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Linear"
+msgstr "线性折旧"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -1477,6 +1546,11 @@ msgid "Pictogram"
 msgstr "小图片"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Position"
+msgstr "位置"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
@@ -1601,6 +1675,11 @@ msgid "Qweb Field qweb"
 msgstr "Qweb qweb字段"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Radial"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
@@ -1634,6 +1713,11 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Remove Link"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Remove Selected Color"
 msgstr ""
 
 #. module: web_editor
@@ -1690,7 +1774,7 @@ msgstr "替换"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Replace media"
-msgstr ""
+msgstr "替换媒体"
 
 #. module: web_editor
 #. openerp-web
@@ -1972,6 +2056,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Size"
@@ -2324,6 +2409,7 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #, python-format
 msgid "Type"
 msgstr "类型"

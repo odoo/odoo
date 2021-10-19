@@ -301,8 +301,8 @@ class Channel(models.Model):
         self.check_access_rule('write')
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
-        members_to_create = []
         for channel in self:
+            members_to_create = []
             if channel.public == 'groups':
                 invalid_partners = partners.filtered(lambda partner: channel.group_public_id not in partner.user_ids.groups_id)
                 if invalid_partners:
@@ -322,39 +322,48 @@ class Channel(models.Model):
                 'guest_id': partner.id,
                 'channel_id': channel.id,
             } for partner in guests - existing_guests]
-        new_members = self.env['mail.channel.partner'].sudo().create(members_to_create)
-        for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.partner_id):
-            user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
-            # notify invited members through the bus
-            if user:
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', channel_partner.partner_id.id), {
-                    'type': 'mail.channel_joined',
-                    'payload': {
-                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
-                        'invited_by_user_id': self.env.user.id,
-                    },
+            new_members = self.env['mail.channel.partner'].sudo().create(members_to_create)
+            members_data = []
+            guest_members_data = []
+            for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.partner_id):
+                user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
+                # notify invited members through the bus
+                if user:
+                    self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', channel_partner.partner_id.id), {
+                        'type': 'mail.channel_joined',
+                        'payload': {
+                            'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
+                            'invited_by_user_id': self.env.user.id,
+                        },
+                    })
+                # notify existing members with a new message in the channel
+                if channel_partner.partner_id == self.env.user.partner_id:
+                    notification = _('<div class="o_mail_notification">joined the channel</div>')
+                else:
+                    notification = _(
+                        '<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="%(new_partner_id)d">%(new_partner_name)s</a> to the channel</div>',
+                        new_partner_id=channel_partner.partner_id.id,
+                        new_partner_name=channel_partner.partner_id.name,
+                    )
+                channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+                members_data.append({
+                    'id': channel_partner.partner_id.id,
+                    'im_status': channel_partner.partner_id.im_status,
+                    'name': channel_partner.partner_id.name,
                 })
-            # notify existing members with a new message in the channel
-            if channel_partner.partner_id == self.env.user.partner_id:
-                notification = _('<div class="o_mail_notification">joined the channel</div>')
-            else:
-                notification = _(
-                    '<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="%(new_partner_id)d">%(new_partner_name)s</a> to the channel</div>',
-                    new_partner_id=channel_partner.partner_id.id,
-                    new_partner_name=channel_partner.partner_id.name,
-                )
-            channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
-            new_partner_data = {
-                'id': channel_partner.partner_id.id,
-                'im_status': channel_partner.partner_id.im_status,
-                'name': channel_partner.partner_id.name,
-            }
-            self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', channel_partner.channel_id.id), {
+            for channel_partner in new_members.filtered(lambda channel_partner: channel_partner.guest_id):
+                channel_partner.channel_id.message_post(body=_('<div class="o_mail_notification">joined the channel</div>'), message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+                guest_members_data.append({
+                    'id': channel_partner.guest_id.id,
+                    'name': channel_partner.guest_id.name,
+                })
+            self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', channel.id), {
                 'type': 'mail.channel_update',
                 'payload': {
-                    'id': channel_partner.channel_id.id,
-                    'memberCount': channel_partner.channel_id.member_count,
-                    'members': [('insert', new_partner_data)],
+                    'id': channel.id,
+                    'guestMembers': [('insert', guest_members_data)],
+                    'memberCount': channel.member_count,
+                    'members': [('insert', members_data)],
                 },
             })
         if invite_to_rtc_call:
@@ -583,7 +592,12 @@ class Channel(models.Model):
         return super(Channel, self)._message_receive_bounce(email, partner)
 
     def _message_compute_author(self, author_id=None, email_from=None, raise_exception=False):
-        return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_exception=False);
+        return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_exception=False)
+
+    def _message_compute_parent_id(self, parent_id):
+        # super() unravels the chain of parents to set parent_id as the first
+        # ancestor. We don't want that in channel.
+        return parent_id
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
@@ -793,9 +807,9 @@ class Channel(models.Model):
 
             # add RTC sessions info
             info.update({
-                'invitedGuests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in channel_partners.filtered('rtc_inviting_session_id').guest_id])],
-                'invitedPartners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in channel_partners.filtered('rtc_inviting_session_id').partner_id])],
-                'rtcSessions': [('insert-and-replace', rtc_sessions_by_channel.get(channel, []))],
+                'invitedGuests': [('insert', [{'id': guest.id, 'name': guest.name} for guest in channel_partners.filtered('rtc_inviting_session_id').guest_id])],
+                'invitedPartners': [('insert', [{'id': partner.id, 'name': partner.name} for partner in channel_partners.filtered('rtc_inviting_session_id').partner_id])],
+                'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
             })
 
             channel_infos.append(info)

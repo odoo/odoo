@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { registerCleanup } from "./cleanup";
@@ -228,6 +229,10 @@ export function click(el, selector) {
     return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
 }
 
+export async function mouseEnter(el, selector) {
+    return triggerEvent(el, selector, "mouseenter");
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *
@@ -273,4 +278,44 @@ export function mockDownload(cb) {
 export const hushConsole = Object.create(null);
 for (const propName of Object.keys(window.console)) {
     hushConsole[propName] = () => {};
+}
+
+export function mockTimeout() {
+    const timeouts = new Map();
+    let id = 0;
+    patchWithCleanup(browser, {
+        setTimeout(fn) {
+            timeouts.set(id, fn);
+            return id++;
+        },
+        clearTimeout(id) {
+            timeouts.delete(id);
+        },
+    });
+    return function execRegisteredTimeouts() {
+        for (const fn of timeouts.values()) {
+            fn();
+        }
+        timeouts.clear();
+    };
+}
+
+export function mockAnimationFrame() {
+    const callbacks = new Map();
+    let id = 0;
+    patchWithCleanup(browser, {
+        requestAnimationFrame(fn) {
+            callbacks.set(id, fn);
+            return id++;
+        },
+        cancelAnimationFrame(id) {
+            callbacks.delete(id);
+        },
+    });
+    return function execRegisteredCallbacks() {
+        for (const fn of callbacks.values()) {
+            fn();
+        }
+        callbacks.clear();
+    };
 }

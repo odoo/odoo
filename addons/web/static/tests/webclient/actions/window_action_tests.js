@@ -75,14 +75,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(webClient, ".o_cp_action_menus");
         await testUtils.dom.clickFirst($(webClient.el).find("input.custom-control-input"));
         assert.isVisible(
-            $(webClient.el).find(
-                '.o_cp_action_menus button.o_dropdown_toggler:contains("Print")'
-            )[0]
+            $(webClient.el).find('.o_cp_action_menus button.dropdown-toggle:contains("Print")')[0]
         );
         assert.isVisible(
-            $(webClient.el).find(
-                '.o_cp_action_menus button.o_dropdown_toggler:contains("Action")'
-            )[0]
+            $(webClient.el).find('.o_cp_action_menus button.dropdown-toggle:contains("Action")')[0]
         );
     });
 
@@ -1356,7 +1352,7 @@ QUnit.module("ActionManager", (hooks) => {
             $(webClient.el).find(".o_control_panel .o_cp_bottom_right button:contains(Group By)")
         );
         await testUtils.dom.click(
-            $(webClient.el).find(".o_control_panel .o_group_by_menu li:first")
+            $(webClient.el).find(".o_control_panel .o_group_by_menu .o_menu_item:first")
         );
         await legacyExtraNextTick();
         assert.containsN(
@@ -1485,6 +1481,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             },
         };
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
         const webClient = await createWebClient({ serverData, legacyParams });
         await doAction(webClient, 33);
         assert.containsN(webClient, ".o_data_row", 5, "should contain 5 records");
@@ -1575,19 +1572,19 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
             assert.isVisible(
-                webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+                webClient.el.querySelector(".o_search_options .dropdown.o_filter_menu"),
                 "the search options should be available"
             );
             await doAction(webClient, 3);
             assert.isVisible(
-                webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+                webClient.el.querySelector(".o_search_options .dropdown.o_filter_menu"),
                 "the search options should be available"
             );
             // go back using the breadcrumbs
             await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:first"));
             await legacyExtraNextTick();
             assert.isVisible(
-                webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+                webClient.el.querySelector(".o_search_options .dropdown.o_filter_menu"),
                 "the search options should be available"
             );
         }
@@ -1597,11 +1594,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(1);
         const expectedAction = {
             ...serverData.actions[3],
-            context: {
-                lang: "en",
-                uid: 7,
-                tz: "taht",
-            },
+            context: {},
         };
         patchWithCleanup(browser, {
             sessionStorage: Object.assign(Object.create(sessionStorage), {
@@ -2278,12 +2271,12 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
         assert.containsNone(
             webClient.el,
-            ".o_debug_manager .o_dropdown_item:contains('Edit View: Kanban')"
+            ".o_debug_manager .dropdown-item:contains('Edit View: Kanban')"
         );
-        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_toggler"));
+        await click(webClient.el.querySelector(".o_debug_manager .dropdown-toggle"));
         assert.containsOnce(
             webClient.el,
-            ".o_debug_manager .o_dropdown_item:contains('Edit View: Kanban')"
+            ".o_debug_manager .dropdown-item:contains('Edit View: Kanban')"
         );
     });
 

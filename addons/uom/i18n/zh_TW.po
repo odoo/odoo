@@ -3,17 +3,15 @@
 # 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:27+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +22,7 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
-"<span class=\"oe_grey\">\n"
+"<span class=\"oe_grey oe_inline\">\n"
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
@@ -32,7 +30,7 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
-"<span class=\"oe_grey\">\n"
+"<span class=\"oe_grey oe_inline\">\n"
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
@@ -55,7 +53,7 @@ msgstr "添加一個新的度量單位"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Archived"
-msgstr "封存"
+msgstr "歸檔"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -69,8 +67,19 @@ msgstr "大於參考單位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
 msgstr "類別"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "顏色"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -97,31 +106,6 @@ msgid "Days"
 msgstr "天數"
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
-msgid "Default Length"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
-msgid "Default Units"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
-msgid "Default Volume"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
-msgid "Default Weight"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
-msgid "Default Working Time"
-msgstr ""
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
@@ -130,7 +114,17 @@ msgstr "顯示名稱"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
+msgstr "打"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
+msgid "Dummy field to keep track of reference uom change"
 msgstr ""
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "分組按"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -181,11 +175,6 @@ msgid "Length / Distance"
 msgstr "長度或距離"
 
 #. module: uom
-#: model:uom.uom,name:uom.product_uom_litre
-msgid "Liters"
-msgstr ""
-
-#. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "管理多個計量單位"
@@ -202,6 +191,7 @@ msgstr "產品計量單位類別"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
 msgstr "比例"
 
@@ -211,6 +201,11 @@ msgid "Reference Unit of Measure for this category"
 msgstr "這個類別的參考計量單位"
 
 #. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
 msgstr "捨入精度"
@@ -218,12 +213,35 @@ msgstr "捨入精度"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
+msgstr "搜索 UOM"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
 msgstr ""
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
 msgstr "小於參考計量單位"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -236,6 +254,14 @@ msgstr "計算的數量將是這個值的倍數。  不能進一步分割的單�
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "計量單位的轉換比率不能為 0！"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -252,25 +278,15 @@ msgstr "小數點的精度必須為正數。"
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category than the unit of measure %s defined on the product. Please correct "
+"category as the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
-msgstr "訂單行上的計量單位%s與產品上的計量單位%s不是相同的類別。請改正訂單或產品上的計量單位，它們應該屬於相同的類別。 "
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
 msgstr "類型"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
-msgid "Type of Measure"
-msgstr "度量類型"
-
-#. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
-msgid "Type of measurement category"
-msgstr "測量類別的類型"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -300,6 +316,7 @@ msgstr "單位"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
@@ -308,7 +325,7 @@ msgstr "計量單位"
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "度量類別的單位"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
@@ -329,12 +346,10 @@ msgstr ""
 "您將有以下計量單位：小時，天。"
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
-msgid ""
-"UoM category %s should have a reference unit of measure. If you just created"
-" a new category, please record the 'reference' unit first."
-msgstr "計量單位類別%s應該有一個參考計量單位。如果您剛剛創建了一個新類別，請先記錄「參考」單位。"
+msgid "UoM category %s should have a reference unit of measure."
+msgstr ""
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -343,9 +358,26 @@ msgid "UoM category %s should only have one reference unit of measure."
 msgstr "計量單位類別%s應該有一個參考計量單位。"
 
 #. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+msgstr ""
+
+#. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
 msgstr "體積"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "%s 的警告"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "警告!"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
@@ -356,25 +388,6 @@ msgstr "重量"
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "工作時間"
-
-#. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_category_uom_category_unique_type
-msgid "You can have only one category per measurement type."
-msgstr "每個測量類型只能有一個類別。"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr "您不能刪除該計量單位類別，因為它已被系統使用。"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr "您不能刪除該計量單位，因為它已被系統使用。您應該把它存檔。"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -392,22 +405,37 @@ msgstr "cm"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz"
-msgstr "fl oz"
+msgid "fl oz (US)"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "foot(ft)"
-msgstr "英尺"
+msgid "ft"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gals"
+msgid "gal (US)"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "inches"
+msgid "in"
+msgstr "在"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
 msgstr ""
 
 #. module: uom
@@ -422,20 +450,35 @@ msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lbs"
+msgid "lb"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "miles"
+msgid "mi"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "ozs"
+msgid "oz"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt"
-msgstr "夸脫"
+msgid "qt (US)"
+msgstr ""

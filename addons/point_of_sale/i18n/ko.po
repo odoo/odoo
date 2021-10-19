@@ -5,20 +5,19 @@
 # Translators:
 # 경민기 <moonend@gmail.com>, 2021
 # nle_odoo, 2021
-# Goh Gangtai <gangtai.goh@gmail.com>, 2021
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Mark Lee <odoos@soti.33mail.com>, 2021
-# Martin Trigaux, 2021
-# JH CHOI <hwangtog@gmail.com>, 2021
 # SeongHyeon Cho <jaymz9634@gmail.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
+# Martin Trigaux, 2021
+# JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Linkup <link-up@naver.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -81,9 +80,11 @@ msgid "(update)"
 msgstr "(갱신)"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "+ Transactions"
-msgstr "+ 거래목록"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid ". Please contact your manager to accept the closing difference."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -174,8 +175,8 @@ msgstr "<span class=\"oe_inline\"><b>미리보기 화면 통과</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "<span>Cash Balance</span>"
-msgstr "<span>현금 잔액</span>"
+msgid "<span>Last Closing Cash Balance</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -188,14 +189,6 @@ msgid "<span>Reporting</span>"
 msgstr "<span>보고</span>"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
-msgid ""
-"<span>There is a difference between the expected and actual closing in cash."
-" Are you sure you want to close the session and post the accounting "
-"entries?</span>"
-msgstr "<span>현금의 예상 마감과 실제 마감 사이에 차이가 있습니다. 세션을 닫고 회계 항목을 게시 하시겠습니까?</span>"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
 msgstr "<span>보기</span>"
@@ -206,16 +199,6 @@ msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected in Cash"
-msgstr "= 예상 현금"
 
 #. module: point_of_sale
 #. openerp-web
@@ -290,6 +273,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
 msgstr "고객 팁 수락 또는 변경 사항을 팁으로 변환"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Accept payments difference and post a profit/loss journal entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -381,11 +371,6 @@ msgstr "활동 상태"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "활동 유형 아이콘"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Actual in Cash"
-msgstr "실제 현금"
 
 #. module: point_of_sale
 #. openerp-web
@@ -568,6 +553,15 @@ msgstr "총액"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid ""
+"An error has occurred when trying to close the session.\n"
+"You will be redirected to the back-end to manually close the session."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
@@ -688,19 +682,12 @@ msgstr "뒤로"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/NumberPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenNumpad.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
 msgstr "백스페이스"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "Balance control"
-msgstr "수지 균형"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -718,11 +705,6 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "예금거래 명세서"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
-msgid "Bank Statement Cashbox"
-msgstr "예금 거래 명세서 현금박스"
 
 #. module: point_of_sale
 #. openerp-web
@@ -765,6 +747,12 @@ msgid "Before Closing Difference"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
+msgid "Bills"
+msgstr "청구서"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Bills &amp; Receipts"
 msgstr "청구서 및 영수증"
@@ -802,6 +790,13 @@ msgstr ""
 #, python-format
 msgid "CHANGE"
 msgstr "변경"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "CLOSING CONTROL"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -853,6 +848,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Cannot close the session when offline."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot invoice order from closed session."
@@ -888,13 +890,6 @@ msgid "Cash Box Out"
 msgstr "현금 보관함 출금"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-#, python-format
-msgid "Cash Control"
-msgstr "현금 관리"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
@@ -905,7 +900,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CashMoveButton.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Cash In/Out"
 msgstr "현금 입출금"
@@ -1150,6 +1144,7 @@ msgstr "클라이언트 화면 경고"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/HeaderButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
@@ -1157,7 +1152,10 @@ msgid "Close"
 msgstr "닫기"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
 msgid "Close Session"
 msgstr ""
 
@@ -1194,6 +1192,36 @@ msgstr "마감 관리"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Closing Date"
 msgstr "마감 날짜"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Closing difference in %s (%s)"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Closing session error"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
+msgid "Coin/Bill Value"
+msgstr "주화/지폐 가치"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_bill
+#: model:ir.model,name:point_of_sale.model_pos_bill
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_bill_ids
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#, python-format
+msgid "Coins/Bills"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -1250,7 +1278,7 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "승인"
@@ -1354,7 +1382,10 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Continue Selling"
 msgstr "판매 계속"
 
@@ -1362,11 +1393,6 @@ msgstr "판매 계속"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Continue selling"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Control cash box at opening and closing"
-msgstr "개폐시 현금 상자 제어"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1384,6 +1410,13 @@ msgstr "회사 통화에서 주문 통화로의 전환 비율입니다."
 #, python-format
 msgid "Cost:"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Counted"
+msgstr "계산됨"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1427,7 +1460,7 @@ msgid "Create a new product variant"
 msgstr "신규 파생 품목 만들기"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
@@ -1443,7 +1476,7 @@ msgid "Created by"
 msgstr "작성자"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
@@ -1511,7 +1544,9 @@ msgid "Customer"
 msgstr "고객"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__pay_later
 #, python-format
 msgid "Customer Account"
@@ -1608,11 +1643,6 @@ msgstr "기본 계정"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_cashbox_id
-msgid "Default Balance"
-msgstr "기본 잔액"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -1756,7 +1786,10 @@ msgid "Destination account is readonly"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_difference
+#, python-format
 msgid "Difference"
 msgstr "차액"
 
@@ -1802,8 +1835,8 @@ msgstr "할인율 :"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
 #, python-format
 msgid "Discard"
 msgstr "작성 취소"
@@ -1865,7 +1898,7 @@ msgid "Display Category Pictures"
 msgstr "범주 사진 표시"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
@@ -2033,11 +2066,6 @@ msgid "End Date"
 msgstr "종료일"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "End of Session"
-msgstr "기간 종료"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
 msgstr "결산 잔액"
@@ -2063,7 +2091,10 @@ msgid "Error: no internet connection."
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
+#, python-format
 msgid "Expected"
 msgstr "예상됨"
 
@@ -2333,7 +2364,7 @@ msgid "How would you like to receive your receipt"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
@@ -2602,11 +2633,6 @@ msgid "IoT Box IP Address"
 msgstr "IoT Box IP 주소"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__is_a_template
-msgid "Is A Template"
-msgstr "서식 여부"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
 msgid "Is Follower"
 msgstr "팔로워임"
@@ -2694,6 +2720,13 @@ msgid "Journal Items"
 msgstr "분개 항목"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Keep Session Open"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
 msgstr "Kpi Pos 총합"
@@ -2722,7 +2755,7 @@ msgid "Large Scrollbars"
 msgstr "대형 스크롤바"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config____last_update
@@ -2744,17 +2777,12 @@ msgid "Last Session Closing Cash"
 msgstr "최종 세션 마감시 현금"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
-msgid "Last Session Closing Cashbox"
-msgstr "최종 세션 마감시 현금상자"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr "최종 세션 마감일"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
@@ -2770,7 +2798,7 @@ msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
@@ -2820,7 +2848,8 @@ msgid ""
 "Leave empty to use the receivable account of customer.\n"
 "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method."
+"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Only cash and bank journals are allowed."
 msgstr ""
 
 #. module: point_of_sale
@@ -3078,6 +3107,7 @@ msgstr "내 세션"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__name
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Name"
@@ -3091,7 +3121,23 @@ msgid "Need customer to invoice"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need loss account for the following journals to post the lost amount: %s\n"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need profit account for the following journals to post the gained amount: %s"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ProductInfoPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
@@ -3245,6 +3291,7 @@ msgstr "청구서 미발행"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Notes"
@@ -3307,6 +3354,13 @@ msgstr "읽지 않은 메시지 수"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "OPENING CASH CONTROL"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -3350,13 +3404,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "현금에만 반올림 적용"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid ""
-"Only cash and bank journals are allowed in the <strong>Journal</strong> "
-"field."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3408,9 +3455,23 @@ msgstr "이 결제 방법을 사용하는 PoS 세션을 엽니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
 msgstr "세션 열기"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Open session"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Open the money details popup"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -3430,6 +3491,13 @@ msgid "Opened by"
 msgstr "개설자"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Opening"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opening Control"
@@ -3440,6 +3508,18 @@ msgstr "개시 관리"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opening Date"
 msgstr "개시일"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_notes
+msgid "Opening Notes"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Opening cash"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -3720,9 +3800,12 @@ msgid "Payment Date"
 msgstr "지불일"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_method_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
+#, python-format
 msgid "Payment Method"
 msgstr "결제 방법"
 
@@ -3790,7 +3873,9 @@ msgid "Payment reversed"
 msgstr "결제 취소됨"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model,name:point_of_sale.model_account_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
@@ -3811,6 +3896,13 @@ msgstr "결제"
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
 msgstr "결제 수단"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Payments in"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -3903,6 +3995,13 @@ msgstr "IoT Box가 여전히 연결되어 있는지 확인하십시오."
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "프린터가 여전히 연결되어 있는지 확인하십시오."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Please check your internet connection and try again."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -4120,7 +4219,7 @@ msgid "Point of Sale User Group"
 msgstr "POS 사용자 그룹"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
 msgstr "POS 구성"
@@ -5085,11 +5184,6 @@ msgid "Sessions"
 msgstr "세션"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Set Closing Cash"
-msgstr "마감시 현금 설정"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -5097,9 +5191,9 @@ msgid "Set Customer"
 msgstr "고객 설정"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
-msgid "Set Default Cash Opening"
-msgstr "기본 현금 개설 설정"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
+msgid "Set Maximum Difference"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5107,6 +5201,20 @@ msgstr "기본 현금 개설 설정"
 #, python-format
 msgid "Set Weight"
 msgstr "무게 설정"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5120,6 +5228,11 @@ msgstr "재정 상태 설정"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "제품당 복합단가 설정, 자동 할인 등"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Set of coins/bills that will be used in opening and closing control"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5283,13 +5396,6 @@ msgid "Spefic route for products delivered later."
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Cash Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
 msgstr ""
@@ -5300,13 +5406,6 @@ msgid "Start Date"
 msgstr "시작일"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
 msgstr "기본 상품 범주에서 판매 시작"
@@ -5315,13 +5414,6 @@ msgstr "기본 상품 범주에서 판매 시작"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
 msgstr "개시 잔액"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Starting Cash"
-msgstr "시작시 현금"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5607,6 +5699,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "The maximum difference allowed is"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "점포판매시스템 세션 명은 유일해야 합니다!"
@@ -5854,6 +5953,12 @@ msgid "There is no cash register for this PoS Session"
 msgstr "점포판매시스템 세션에 대한 현금 등록기는 없습니다."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "There is no cash register in this session."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -5982,6 +6087,7 @@ msgstr "이 순서는 Odoo에 의해 자동으로 생성되나, 주문의 참조
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
 msgstr "이 세션은 이미 닫혀 있습니다."
@@ -5990,16 +6096,6 @@ msgstr "이 세션은 이미 닫혀 있습니다."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr "이 세금은 상품안내서에서 작성된 모든 신제품에 적용됩니다."
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_closing_balance_confirm_wizard
-msgid ""
-"This wizard is used to display a warning message if the manager wants to "
-"close a session with a too high difference between real and expected closing"
-" balance"
-msgstr ""
-"이 마법사는 관리자가 실제 마감 잔액과 예상 마감 잔액 간의 차이가 너무 높은 세션을 닫으려는 경우 경고 메시지를 표시하는 데 "
-"사용됩니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6080,6 +6176,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -6522,14 +6620,6 @@ msgid "Yes"
 msgstr "예"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"You are not allowed to change the cash control status while a session is "
-"already opened."
-msgstr "세션이 이미 열려있는 동안에는 현금 관리 상태를 변경할 수 없습니다."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid ""
@@ -6553,6 +6643,7 @@ msgid ""
 msgstr "열린 POS 세션에서는 사용된 은행 계좌 명세서를 확인할 수 없습니다."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -6682,16 +6773,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"Your ending balance is too different from the theoretical cash closing "
-"(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
-"it."
-msgstr ""
-"기말 잔액은 이론 현금 결산에서 너무 다릅니다(%.2f), 허용되는 최대치는 %.2f  입니다. 강제로 관리자에게 문의할 수 있습니다."
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
@@ -6789,6 +6870,13 @@ msgstr "노트"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "open sessions"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "orders"
+msgstr "주문"
 
 #. module: point_of_sale
 #. openerp-web

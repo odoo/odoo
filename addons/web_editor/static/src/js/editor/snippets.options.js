@@ -246,6 +246,7 @@ const UserValueWidget = Widget.extend({
         this.containerEl = document.createElement('div');
 
         if (this.imgEl) {
+            this.containerEl.appendChild(document.createTextNode('\u200B')); // Ensures proper vertical centering.
             this.containerEl.appendChild(this.imgEl);
         }
 
@@ -667,16 +668,6 @@ const ButtonUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start: function (parent, title, options) {
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
-        }
-
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
     async willStart() {
         await this._super(...arguments);
         if (this.options.dataAttributes.activeImg) {
@@ -688,10 +679,23 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      */
     _makeDescriptive() {
         const $el = this._super(...arguments);
+        if (this.imgEl) {
+            $el[0].classList.add('o_we_icon_button');
+        }
         if (this.activeImgEl) {
             this.containerEl.appendChild(this.activeImgEl);
         }
         return $el;
+    },
+    /**
+     * @override
+     */
+    start: function (parent, title, options) {
+        if (this.options && this.options.childNodes) {
+            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
+        }
+
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -813,7 +817,14 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
         this.menuEl = document.createElement('we-selection-items');
         if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => node && this.menuEl.appendChild(node));
+            this.options.childNodes.forEach(node => {
+                if (node) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        node.insertBefore(document.createTextNode('\u200B'), node.firstChild); // Ensures proper height.
+                    }
+                    this.menuEl.appendChild(node);
+                }
+            });
         }
         this.containerEl.appendChild(this.menuEl);
     },
@@ -902,6 +913,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
+        this.menuTogglerEl.appendChild(document.createTextNode('\u200B')); // Ensures proper height.
         this.iconEl = this.imgEl || null;
         const icon = this.el.dataset.icon;
         if (icon) {
@@ -960,11 +972,11 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             this.menuTogglerItemEl = null;
         }
 
-        let textContent = '';
+        let textContent = '\u200B'; // Ensures proper height.
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
             const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
-            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
+            const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.replace('\u200B', '').trim()));
             const imgSrc = activeWidget.el.dataset.img;
             if (value) {
                 textContent = value;
@@ -1168,7 +1180,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         unitEl.textContent = unit;
         this.containerEl.appendChild(unitEl);
         if (unit.length > 3) {
-            this.el.classList.add('o_we_large_input');
+            this.el.classList.add('o_we_large');
         }
     },
 
@@ -1485,6 +1497,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.withGradients) {
             options.withGradients = !!this.options.dataAttributes.withGradients;
         }
+        if (this.options.dataAttributes.noTransparency) {
+            options.noTransparency = !!this.options.dataAttributes.noTransparency;
+            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
+        }
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
@@ -1706,7 +1722,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         await this._super(...arguments);
 
         const datetimePickerId = _.uniqueId('datetimepicker');
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-left');
         this.inputEl.setAttribute('id', datetimePickerId);
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
@@ -1905,7 +1921,13 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.createWidget) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
-            this.createWidget.options.domain = [...this.createWidget.options.domain, ['id', 'not in', selectedIds]];
+            const selectedIdsDomain = ['id', 'not in', selectedIds];
+            const selectedIdsDomainIndex = this.createWidget.options.domain.findIndex(domain => domain[0] === 'id' && domain[1] === 'not in');
+            if (selectedIdsDomainIndex > -1) {
+                this.createWidget.options.domain[selectedIdsDomainIndex] = selectedIdsDomain;
+            } else {
+                this.createWidget.options.domain = [...this.createWidget.options.domain, selectedIdsDomain];
+            }
             this.createWidget.setValue('');
             this.createWidget.inputEl.value = '';
             $(this.createWidget.inputEl).trigger('input');
@@ -2371,6 +2393,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     init(parent, title, options, $target) {
         this.afterSearch = [];
         this.displayNameCache = {};
+        this._rpcCache = {};
         const {dataAttributes} = options;
         Object.assign(options, {
             limit: '5',
@@ -2412,7 +2435,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 
         if (this.options.createMethod) {
             this.createInput = new InputUserValueWidget(this, undefined, {
-                classes: ['o_we_large_input'],
+                classes: ['o_we_large'],
                 dataAttributes: { noPreview: 'true' },
             }, this.$target);
             this.createButton = new ButtonUserValueWidget(this, undefined, {
@@ -2489,6 +2512,18 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Caches the rpc.
+     *
+     * @override
+     */
+    async _rpc() {
+        const cacheId = JSON.stringify(...arguments);
+        if (!this._rpcCache[cacheId]) {
+            this._rpcCache[cacheId] = this._super(...arguments);
+        }
+        return this._rpcCache[cacheId];
+    },
     /**
      * Searches the database for corresponding records and updates the dropdown
      *
@@ -2950,8 +2985,9 @@ const SnippetOptionWidget = Widget.extend({
      * Called when the associated snippet is about to be removed from the DOM.
      *
      * @abstract
+     * @returns {Promise|undefined}
      */
-    onRemove: function () {},
+    onRemove: async function () {},
     /**
      * Called when the target is shown, only meaningful if the target was hidden
      * at some point (typically used for 'invisible' snippets).
@@ -3101,7 +3137,7 @@ const SnippetOptionWidget = Widget.extend({
         // method with background-color as property too, so it is automatically
         // reset anyway).
         let bgImageParts = undefined;
-        if (params.cssProperty === 'background-color') {
+        if (params.withGradients && params.cssProperty === 'background-color') {
             const styles = getComputedStyle(this.$target[0]);
             bgImageParts = backgroundImageCssToParts(styles['background-image']);
             delete bgImageParts.gradient;
@@ -3152,7 +3188,7 @@ const SnippetOptionWidget = Widget.extend({
         // In case of background-color edition, we could receive a gradient, in
         // which case the value has to be combined with the potential background
         // image (real image).
-        if (params.cssProperty === 'background-color' && weUtils.isColorGradient(widgetValue)) {
+        if (params.withGradients && params.cssProperty === 'background-color' && weUtils.isColorGradient(widgetValue)) {
             cssProps = ['background-image'];
             bgImageParts.gradient = widgetValue;
             widgetValue = backgroundImagePartsToCss(bgImageParts);
@@ -3517,7 +3553,7 @@ const SnippetOptionWidget = Widget.extend({
 
                 const styles = window.getComputedStyle(this.$target[0]);
 
-                if (params.cssProperty === 'background-color') {
+                if (params.withGradients && params.cssProperty === 'background-color') {
                     // Check if there is a gradient, in that case this is the
                     // value to be returned, we normally not allow color and
                     // gradient at the same time (the option would remove one
@@ -4164,6 +4200,10 @@ registry.sizing = SnippetOptionWidget.extend({
             $body.on('mouseup', bodyMouseUp);
         });
 
+        _.each(resizeValues, (value, key) => {
+            this.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
+
         return def;
     },
     /**
@@ -4171,12 +4211,6 @@ registry.sizing = SnippetOptionWidget.extend({
      */
     onFocus: function () {
         this._onResize();
-    },
-    /**
-     * @override
-     */
-    onBlur: function () {
-        this.$handles.addClass('readonly');
     },
 
     //--------------------------------------------------------------------------
@@ -4189,16 +4223,6 @@ registry.sizing = SnippetOptionWidget.extend({
     setTarget: function () {
         this._super(...arguments);
         this._onResize();
-    },
-    /**
-     * @override
-     */
-    updateUI: async function () {
-        await this._super(...arguments);
-        const resizeValues = this._getSize();
-        _.each(resizeValues, (value, key) => {
-            this.$handles.filter('.' + key).toggleClass('readonly', !value);
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -4306,6 +4330,315 @@ registry['sizing_y'] = registry.sizing.extend({
             s: [grid.map(v => sClass + v), grid, sProp],
         };
         return this.grid;
+    },
+});
+registry['sizing_x'] = registry.sizing.extend({
+    /**
+     * @override
+     */
+    onClone: function (options) {
+        this._super.apply(this, arguments);
+        // Below condition is added to remove offset of target element only
+        // and not its children to avoid design alteration of a container/block.
+        if (options.isCurrent) {
+            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
+            this.$target.attr('class', _class);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getSize: function () {
+        var width = this.$target.closest('.row').width();
+        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        this.grid = {
+            e: [_.map(gridE, v => ('col-lg-' + v)), _.map(gridE, v => width / 12 * v), 'width'],
+            w: [_.map(gridW, v => ('offset-lg-' + v)), _.map(gridW, v => width / 12 * v), 'margin-left'],
+        };
+        return this.grid;
+    },
+    /**
+     * @override
+     */
+    _onResize: function (compass, beginClass, current) {
+        if (compass === 'w') {
+            // don't change the right border position when we change the offset (replace col size)
+            var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+            var beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
+            var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
+            if (offset < 0) {
+                offset = 0;
+            }
+            var colSize = beginCol - (offset - beginOffset);
+            if (colSize <= 0) {
+                colSize = 1;
+                offset = beginOffset + beginCol - 1;
+            }
+            this.$target.attr('class', this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
+
+            this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
+            if (offset > 0) {
+                this.$target.addClass('offset-lg-' + offset);
+            }
+        }
+        this._super.apply(this, arguments);
+    },
+});
+
+/**
+ * Controls box properties.
+ */
+registry.Box = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    setShadow(previewMode, widgetValue, params) {
+        this.$target.toggleClass(params.shadowClass, !!widgetValue);
+        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
+        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
+        if (widgetValue === 'outset') {
+            // In this case, the shadowClass is enough
+            this.$target[0].style.setProperty('box-shadow', '');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setShadow') {
+            const shadowValue = this.$target.css('box-shadow');
+            if (!shadowValue || shadowValue === 'none') {
+                return '';
+            }
+            return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'fake_inset_shadow_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} shadowClass
+     * @returns {string}
+     */
+    _getDefaultShadow(type, shadowClass) {
+        const el = document.createElement('div');
+        if (type) {
+            el.classList.add(shadowClass);
+        }
+        document.body.appendChild(el);
+        switch (type) {
+            case 'outset': {
+                return $(el).css('box-shadow');
+            }
+            case 'inset': {
+                return $(el).css('box-shadow') + ' inset';
+            }
+        }
+        el.remove();
+        return '';
+    }
+});
+
+
+
+registry.layout_column = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        // Needs to be done manually for now because _computeWidgetVisibility
+        // doesn't go through this option for buttons inside of a select.
+        // TODO: improve this.
+        this.$el.find('we-button[data-name="zero_cols_opt"]')
+            .toggleClass('d-none', !this.$target.is('.s_allow_columns'));
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the number of columns.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectCount: async function (previewMode, widgetValue, params) {
+        const previousNbColumns = this.$('> .row').children().length;
+        let $row = this.$('> .row');
+        if (!$row.length) {
+            $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
+        }
+
+        const nbColumns = parseInt(widgetValue);
+        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length);
+        // Yield UI thread to wait for event to bubble before activate_snippet is called.
+        // In this case this lets the select handle the click event before we switch snippet.
+        // TODO: make this more generic in activate_snippet event handler.
+        await new Promise(resolve => setTimeout(resolve));
+        if (nbColumns === 0) {
+            $row.contents().unwrap().contents().unwrap();
+            this.trigger_up('activate_snippet', {$snippet: this.$target});
+        } else if (previousNbColumns === 0) {
+            this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'selectCount') {
+            return this.$('> .row').children().length;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Adds new columns which are clones of the last column or removes the
+     * last x columns.
+     *
+     * @private
+     * @param {jQuery} $row - the row in which to update the columns
+     * @param {integer} count - positif to add, negative to remove
+     */
+    _updateColumnCount: async function ($row, count) {
+        if (!count) {
+            return;
+        }
+
+        if (count > 0) {
+            var $lastColumn = $row.children().last();
+            for (var i = 0; i < count; i++) {
+                await new Promise(resolve => {
+                    this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
+                });
+            }
+        } else {
+            var self = this;
+            for (const el of $row.children().slice(count)) {
+                await new Promise(resolve => {
+                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
+                });
+            }
+        }
+
+        this._resizeColumns($row.children());
+        this.trigger_up('cover_update');
+    },
+    /**
+     * Resizes the columns so that they are kept on one row.
+     *
+     * @private
+     * @param {jQuery} $columns - the columns to resize
+     */
+    _resizeColumns: function ($columns) {
+        const colsLength = $columns.length;
+        var colSize = Math.floor(12 / colsLength) || 1;
+        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
+        var colClass = 'col-lg-' + colSize;
+        _.each($columns, function (column) {
+            var $column = $(column);
+            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
+            $column.addClass(colClass);
+        });
+        if (colOffset) {
+            $columns.first().addClass('offset-lg-' + colOffset);
+        }
+    },
+});
+
+/**
+ * Allows snippets to be moved before the preceding element or after the following.
+ */
+registry.SnippetMove = SnippetOptionWidget.extend({
+    displayOverlayOptions: true,
+
+    /**
+     * @override
+     */
+    start: function () {
+        var $buttons = this.$el.find('we-button');
+        var $overlayArea = this.$overlay.find('.o_overlay_move_options');
+        $overlayArea.prepend($buttons[0]);
+        $overlayArea.append($buttons[1]);
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // TODO improve this: hack to hide options section if snippet move is
+        // the only one.
+        const $allOptions = this.$el.parent();
+        if ($allOptions.find('we-customizeblock-option').length <= 1) {
+            $allOptions.addClass('d-none');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Moves the snippet around.
+     *
+     * @see this.selectClass for parameters
+     */
+    moveSnippet: function (previewMode, widgetValue, params) {
+        const isNavItem = this.$target[0].classList.contains('nav-item');
+        const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
+        switch (widgetValue) {
+            case 'prev':
+                this.$target.prev().before(this.$target);
+                if (isNavItem) {
+                    $tabPane.prev().before($tabPane);
+                }
+                break;
+            case 'next':
+                this.$target.next().after(this.$target);
+                if (isNavItem) {
+                    $tabPane.next().after($tabPane);
+                }
+                break;
+        }
+        if (!this.$target.is(this.data.noScroll)
+                && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
+            scrollTo(this.$target[0], {
+                extraOffset: 50,
+                easing: 'linear',
+                duration: 550,
+            });
+        }
     },
 });
 
@@ -6237,6 +6570,31 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
     },
 });
 
+registry.ContainerWidth = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        this.$target.removeClass('o_container_preview');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    selectClass: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (previewMode === 'reset') {
+            this.$target.removeClass('o_container_preview');
+        } else if (previewMode) {
+            this.$target.addClass('o_container_preview');
+        }
+    },
+});
+
 /**
  * Allows to replace a text value with the name of a database record.
  * @todo replace this mechanism with real backend m2o field ?
@@ -6692,6 +7050,31 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves a template either from cache or through RPC.
+     *
+     * @private
+     * @param {string} xmlid
+     * @returns {string}
+     */
+    async _getTemplate(xmlid) {
+        if (!this._templates[xmlid]) {
+            this._templates[xmlid] = await this._rpc({
+                model: 'ir.ui.view',
+                method: 'render_public_asset',
+                args: [`${xmlid}`, {}],
+                kwargs: {
+                    context: this.options.context,
+                },
+            });
+        }
+        return this._templates[xmlid];
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -6711,14 +7094,7 @@ registry.SelectTemplate = SnippetOptionWidget.extend({
             // TODO should be better and retrieve all rendering in one RPC (but
             // those ~10 RPC are only done once per edit mode if the option is
             // opened, so I guess this is acceptable).
-            this._templates[xmlid] = await this._rpc({
-                model: 'ir.ui.view',
-                method: 'render_public_asset',
-                args: [`${xmlid}`, {}],
-                kwargs: {
-                    context: this.options.context,
-                },
-            });
+            await this._getTemplate(xmlid);
         });
         this._templatesLoading = Promise.all(proms);
     },

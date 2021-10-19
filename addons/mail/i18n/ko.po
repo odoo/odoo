@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
 "Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -43,11 +43,6 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "${object.partner_id.lang}"
 msgstr ""
 
 #. module: mail
@@ -151,7 +146,7 @@ msgid "%s is typing..."
 msgstr "%s 입력중..."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
+#: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "%s started a live conference"
 msgstr ""
@@ -200,6 +195,13 @@ msgstr "(보낸사람"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "(원래 할당"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid ", enter to"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -2226,8 +2228,7 @@ msgstr "완료 및 다음 예정"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2315,6 +2316,7 @@ msgstr "동적 사전 표시 문자 생성기"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "편집하기"
@@ -2623,13 +2625,13 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
+msgid "Failed to render inline_template template : %s)"
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s"
+msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
 msgstr ""
 
 #. module: mail
@@ -3202,10 +3204,9 @@ msgstr "설정된 경우 대기열 관리자는 설정 날짜 이후에 이메�
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible. Jinja2 placeholders may be used."
+"the email will be send as soon as possible. You can use dynamic expressions "
+"expression."
 msgstr ""
-"설정된 경우 대기열 관리자는 설정 날짜 이후에 이메일을 보냅니다.설정되지 않은 경우, 가능한 한 빨리 이메일이 전송됩니다. Jinja2 "
-"자리 표시자를 사용할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -3523,6 +3524,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
+#, python-format
+msgid "Issue with audio"
 msgstr ""
 
 #. module: mail
@@ -4057,6 +4065,20 @@ msgid "Message"
 msgstr "메시지"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message #%s..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message %s..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
@@ -4115,7 +4137,7 @@ msgstr "메시지 설명 : 제목 또는 본문의 시작 부분"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/discuss/discuss.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Message posted on \"%s\""
 msgstr ""
@@ -4224,6 +4246,12 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr "내부 하위 유형이 있는 메시지는 직원, 즉 base_user 그룹 구성원만 볼 수 있습니다."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Messages with tracking values cannot be modified"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4807,13 +4835,6 @@ msgid "Only custom models can be modified."
 msgstr "사용자 정의 모델만 수정할 수 있습니다."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/dialog/dialog.xml:0
-#, python-format
-msgid "Only dialog linked to a record is currently supported!"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
@@ -4829,6 +4850,7 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
+#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Only users belonging to the \"%s\" group can modify dynamic templates."
 msgstr ""
@@ -4839,6 +4861,7 @@ msgid "Open"
 msgstr "열기"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "문서 열기"
@@ -4916,11 +4939,9 @@ msgstr "선택적으로 보고서를 인쇄하고 첨부하기"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"이메일을 보낼 때 번역(ISO 코드) 언어를 선택합니다. 설정하지 않으면 영어 버전이 사용됩니다. 이것은 일반적으로 적절한 언어를 "
-"제공해서 사전 표시 문자 표현에 사용됩니다. 예 : ${object.partner_id.lang}"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5137,6 +5158,7 @@ msgstr "대신 연락 주십시오."
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Please wait while the file is uploading."
 msgstr ""
@@ -5351,6 +5373,11 @@ msgstr "빠른 검색..."
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 msgid "RTC Session"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_partner__rtc_session_ids
+msgid "RTC Sessions"
 msgstr ""
 
 #. module: mail
@@ -5582,8 +5609,8 @@ msgstr "관계 필드"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
 msgstr "제거"
@@ -6446,7 +6473,9 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Template rendering supports only raw jinja or qweb (view or raw)."
+msgid ""
+"Template rendering supports only inline_template, qweb, or qweb_view (view "
+"or raw)."
 msgstr ""
 
 #. module: mail
@@ -6488,6 +6517,11 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr "세금 식별 번호. 세금 납부가 필요한 경우 기입하십시오. 특정 법적 고지에 사용됩니다."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
+msgid "The channel UUID must be unique"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6734,10 +6768,10 @@ msgstr "받는 사람 :"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -7035,14 +7069,15 @@ msgstr "파일 올리기"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #, python-format
 msgid "Uploaded"
 msgstr "업로드함"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Uploading"
 msgstr "업로드 중"
@@ -7365,8 +7400,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "어제"
@@ -7662,6 +7697,13 @@ msgid "by"
 msgstr "작성자"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "cancel"
+msgstr "취소"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid ""
 "cannot be processed. This address\n"
@@ -7753,6 +7795,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "escape to"
 msgstr ""
 
 #. module: mail
@@ -7961,6 +8010,13 @@ msgid "sales"
 msgstr "판매"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "save"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "some specific addresses"
@@ -8035,3 +8091,8 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "주"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "{{ object.partner_id.lang }}"
+msgstr ""

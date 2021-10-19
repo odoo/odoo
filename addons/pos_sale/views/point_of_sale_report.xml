@@ -2,11 +2,12 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="//td[@name='account_invoice_line_name']" position="inside">
-            <t t-if="o.pos_order_ids">
+            <t t-set="pos_orders" t-value="o.sudo().pos_order_ids"/>
+            <t t-if="pos_orders">
                 <div style="margin-left:15px; font-style: italic">
-                    <t t-set="down_payment_product" t-value="o.pos_order_ids[0].config_id.down_payment_product_id"/>
+                    <t t-set="down_payment_product" t-value="pos_orders[0].config_id.down_payment_product_id"/>
                     <t t-if="line.product_id == down_payment_product">
-                        <t t-set="sale_orders" t-value="o.pos_order_ids[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
+                        <t t-set="sale_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
                         <t t-if="sale_orders">
                             <t t-set="sale_order" t-value="sale_orders[0]"/>
                             <t t-foreach="sale_order.order_line" t-as="sale_order_line">
@@ -23,32 +24,6 @@
                         </t>
                     </t>
                 </div>
-            </t>
-        </xpath>
-        <xpath expr="//p[@name='payment_communication']" position="replace">
-            <t t-if="not o.pos_order_ids">
-                <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
-                </p>
-            </t>
-        </xpath>
-        <xpath expr="//div[@id='total']/div/table" position="inside">
-            <t t-if="o.pos_order_ids">
-                <tr>
-                    <td>
-                        <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="o.invoice_date" t-options='{"widget": "date"}'/></i>
-                    </td>
-                </tr>
-                <t t-foreach="o.pos_order_ids.mapped('payment_ids')" t-as="payment">
-                    <tr>
-                        <td>
-                            Paid with <t t-esc="payment.payment_method_id.name"/>
-                        </td>
-                        <td class="text-right">
-                            <t t-esc="payment.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                        </td>
-                    </tr>
-                </t>
             </t>
         </xpath>
     </template>

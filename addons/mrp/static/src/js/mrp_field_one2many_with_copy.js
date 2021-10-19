@@ -55,21 +55,15 @@ var MrpFieldOne2ManyWithCopy = FieldOne2Many.extend({
             this.displayNotification({ message: _t('Please click on the "save" button first'), type: 'danger' });
             return;
         }
-        var self = this;
         this.do_action({
             name: _t('Select Operations to Copy'),
             type: 'ir.actions.act_window',
             res_model: 'mrp.routing.workcenter',
-            views: [[false, 'list']],
+            views: [[false, 'list'], [false, 'form']],
             context: {
                 tree_view_ref: 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
                 bom_id: this.recordData.id,
             },
-            target: 'new',
-        }, {
-            on_close: function () {
-                self.trigger_up('reload');
-        }
         });
 
     },

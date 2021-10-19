@@ -5,23 +5,25 @@ import datetime
 import calendar
 
 from dateutil.relativedelta import relativedelta
+from num2words import num2words
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.date_utils import get_timedelta
+from odoo.tools.misc import get_lang
 
 
 DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+# Used for displaying the days and reversing selection -> integer
+DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
 
-def _get_date_check_month(year, month, day):
-    """
-    Returns the day it would be if day is outside of the month's range
-    Example: 2021 feb 30 -> 2021 mar 2
-    """
-    month_range = calendar.monthrange(year, month)
-    if day > month_range[1]:
-        return datetime.date(year, month, month_range[1]) + relativedelta(days=(day - month_range[1]))
-    return datetime.date(year, month, day)
+def _get_selection_days(self):
+    lang = get_lang(self.env).code
+    return [
+        (DAY_SELECT_VALUES[i - 1],
+        num2words(i, lang=lang, to='ordinal_num') if i < 29 else _('last day'))
+        for i in range(1, 30)
+    ]
 
 class AccrualPlanLevel(models.Model):
     _name = "hr.leave.accrual.level"
@@ -35,19 +37,20 @@ class AccrualPlanLevel(models.Model):
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True)
     start_count = fields.Integer(
         "Start after",
-        help="The accrual starts after a defined period from the employee start date. This field define the number of days, month or years after which accrual is used.", default="1")
+        help="The accrual starts after a defined period from the employee start date. This field defines the number of days, months or years after which accrual is used.", default="1")
     start_type = fields.Selection(
         [('day', 'day(s)'),
          ('month', 'month(s)'),
          ('year', 'year(s)')],
         default='day', string=" ", required=True,
-        help="This field define the unit of time after which the accrual starts.")
-    is_based_on_worked_time = fields.Boolean("Based on worked time")
+        help="This field defines the unit of time after which the accrual starts.")
+    is_based_on_worked_time = fields.Boolean("Based on worked time",
+        help="Only accrue for the time worked by the employee. This is the time when the employee did not take time off.")
 
     # Accrue of
     added_value = fields.Float(
-        "Gain", required=True,
-        help="The number of days that will be incremented for every period")
+        "Rate", required=True,
+        help="The number of hours/days that will be incremented in the specified Time Off Type for every period")
     added_value_type = fields.Selection(
         [('days', 'Days'),
          ('hours', 'Hours')],
@@ -70,8 +73,14 @@ class AccrualPlanLevel(models.Model):
         ('sun', 'Sunday'),
     ], default='mon', required=True, string="Allocation on")
     first_day = fields.Integer(default=1)
+    first_day_display = fields.Selection(
+        _get_selection_days, compute='_compute_days_display', inverse='_inverse_first_day_display')
     second_day = fields.Integer(default=15)
+    second_day_display = fields.Selection(
+        _get_selection_days, compute='_compute_days_display', inverse='_inverse_second_day_display')
     first_month_day = fields.Integer(default=1)
+    first_month_day_display = fields.Selection(
+        _get_selection_days, compute='_compute_days_display', inverse='_inverse_first_month_day_display')
     first_month = fields.Selection([
         ('jan', 'January'),
         ('feb', 'February'),
@@ -81,9 +90,11 @@ class AccrualPlanLevel(models.Model):
         ('jun', 'June'),
     ], default="jan")
     second_month_day = fields.Integer(default=1)
+    second_month_day_display = fields.Selection(
+        _get_selection_days, compute='_compute_days_display', inverse='_inverse_second_month_day_display')
     second_month = fields.Selection([
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
@@ -97,23 +108,25 @@ class AccrualPlanLevel(models.Model):
         ('may', 'May'),
         ('jun', 'June'),
         ('jul', 'July'),
-        ('aug', 'Augustus'),
+        ('aug', 'August'),
         ('sep', 'September'),
         ('oct', 'October'),
         ('nov', 'November'),
         ('dec', 'December')
     ], default="jan")
     yearly_day = fields.Integer(default=1)
+    yearly_day_display = fields.Selection(
+        _get_selection_days, compute='_compute_days_display', inverse='_inverse_yearly_day_display')
     maximum_leave = fields.Float(
         'Limit to', required=False, default=100,
-        help="Choose a maximum limit of days for this accrual. 0 means no limit.")
+        help="Choose a cap for this accrual. 0 means no cap.")
     parent_id = fields.Many2one(
         'hr.leave.accrual.level', string="Previous Level",
         help="If this field is empty, this level is the first one.")
     action_with_unused_accruals = fields.Selection(
-        [('postponed', 'Postponed to next year'),
+        [('postponed', 'Transferred to the next year'),
          ('lost', 'Lost')],
-        string="At the end of the year, unused accruals will be",
+        string="At the end of the calendar year, unused accruals will be",
         default='postponed', required='True')
 
     _sql_constraints = [
@@ -125,8 +138,8 @@ class AccrualPlanLevel(models.Model):
          "(first_month_day > 0 AND first_month_day <= 31 AND second_month_day > 0 AND second_month_day <= 31 AND frequency = 'biyearly') or "
          "(yearly_day > 0 AND yearly_day <= 31 AND frequency = 'yearly'))",
          "The dates you've set up aren't correct. Please check them."),
-        ('start_count_check', "CHECK( start_count >= 1 )", "You must start after more than 0 days."),
-        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give the gain greater than 0 in accrual plan levels.')
+        ('start_count_check', "CHECK( start_count >= 0 )", "You can not start an accrual in the past."),
+        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give a rate greater than 0 in accrual plan levels.')
     ]
 
     @api.depends('start_count', 'start_type')
@@ -153,90 +166,50 @@ class AccrualPlanLevel(models.Model):
             else:
                 level.level = 1
 
-    def _get_accrual_values(self, allocation_create_date):
-        """
-        This method returns all the accrual linked to their accrual_plan with the updated dynamic parameters depending
-        on the date.
-        :return: dict: {accrual_id, accrual_start, accrual_stop, nextcall, sufficient_seniority}
-         where accrual_start and accrual_stop are start and stop of the current period
-        """
-        today = fields.Date.context_today(self, )
-        results = []
-        for accrual in self:
-            seniority = allocation_create_date + get_timedelta(accrual.start_count, accrual.start_type)
-            frequency = accrual.frequency
-            if frequency == 'daily':
-                accrual_start = max(today, seniority.date())
-                accrual_stop = accrual_start + relativedelta(days=1)
-                nextcall = accrual_stop
-            elif frequency == 'weekly':
-                min_accrual_date = max(today, seniority.date())
-                if min_accrual_date.isoweekday() == DAYS.index(accrual.week_day):
-                    accrual_stop = min_accrual_date
-                else:
-                    accrual_stop = accrual._get_next_weekday(min_accrual_date, accrual.week_day)
-                accrual_start = accrual_stop - relativedelta(days=7)
-                nextcall = accrual._get_next_weekday(min_accrual_date, accrual.week_day)
-            elif frequency == 'bimonthly':
-                if today.day <= accrual.first_day:
-                    accrual_start = datetime.date(today.year, today.month, accrual.second_day) - relativedelta(months=1)
-                    accrual_stop = datetime.date(today.year, today.month, accrual.first_day)
-                    nextcall = datetime.date(today.year, today.month, accrual.second_day)
-                else:
-                    if today.day <= accrual.second_day:
-                        accrual_start = datetime.date(today.year, today.month, accrual.first_day)
-                        accrual_stop = datetime.date(today.year, today.month, accrual.second_day)
-                        nextcall = datetime.date(today.year, today.month, accrual.first_day) + relativedelta(months=1)
-                    else:
-                        accrual_start = datetime.date(today.year, today.month, accrual.second_day)
-                        accrual_stop = datetime.date(today.year, today.month, accrual.first_day) + relativedelta(months=1)
-                        nextcall = datetime.date(today.year, today.month, accrual.second_day) + relativedelta(months=1)
-            elif frequency == 'monthly':
-                if today.day <= accrual.first_day:
-                    accrual_start = datetime.date(today.year, today.month, accrual.first_day) - relativedelta(months=1)
-                    accrual_stop = datetime.date(today.year, today.month, accrual.first_day)
-                    nextcall = datetime.date(today.year, today.month, accrual.first_day) + relativedelta(months=1)
-                else:
-                    accrual_start = datetime.date(today.year, today.month, accrual.first_day)
-                    accrual_stop = datetime.date(today.year, today.month, accrual.first_day) + relativedelta(months=1)
-                    nextcall = datetime.date(today.year, today.month, accrual.first_day) + relativedelta(months=2)
-            elif frequency == 'biyearly':
-                first_month = MONTHS.index(accrual.first_month) + 1
-                second_month = MONTHS.index(accrual.second_month) + 1
-                potential_first_accrual_date = datetime.date(today.year, first_month, accrual.first_month_day)
-                potential_second_accrual_date = datetime.date(today.year, second_month, accrual.second_month_day)
-                if today <= potential_first_accrual_date:
-                    accrual_start = potential_second_accrual_date - relativedelta(years=1)
-                    accrual_stop = potential_first_accrual_date
-                    nextcall = potential_second_accrual_date
-                else:
-                    if today <= potential_second_accrual_date:
-                        accrual_start = potential_first_accrual_date
-                        accrual_stop = potential_second_accrual_date
-                        nextcall = potential_first_accrual_date + relativedelta(years=1)
-                    else:
-                        accrual_start = potential_second_accrual_date
-                        accrual_stop = potential_first_accrual_date + relativedelta(years=1)
-                        nextcall = potential_first_accrual_date + relativedelta(years=1)
-            elif frequency == 'yearly':
-                month = MONTHS.index(accrual.yearly_month) + 1
-                potential_accrual_date = datetime.date(today.year, month, accrual.yearly_day)
-                if today <= potential_accrual_date:
-                    accrual_start = potential_accrual_date - relativedelta(years=1)
-                    accrual_stop = potential_accrual_date
-                    nextcall = potential_accrual_date + relativedelta(years=1)
-                else:
-                    accrual_start = potential_accrual_date
-                    accrual_stop = potential_accrual_date + relativedelta(years=1)
-                    nextcall = accrual_stop
+    @api.depends('first_day', 'second_day', 'first_month_day', 'second_month_day', 'yearly_day')
+    def _compute_days_display(self):
+        days_select = _get_selection_days(self)
+        for level in self:
+            level.first_day_display = days_select[min(level.first_day - 1, 28)][0]
+            level.second_day_display = days_select[min(level.second_day - 1, 28)][0]
+            level.first_month_day_display = days_select[min(level.first_month_day - 1, 28)][0]
+            level.second_month_day_display = days_select[min(level.second_month_day - 1, 28)][0]
+            level.yearly_day_display = days_select[min(level.yearly_day - 1, 28)][0]
 
-            results.append({'accrual_level_id': accrual.id,
-                            'start_after': accrual.start_count,
-                            'accrual_start': datetime.datetime.combine(accrual_start, datetime.datetime.min.time()),
-                            'accrual_stop': datetime.datetime.combine(accrual_stop, datetime.datetime.min.time()),
-                            'nextcall': nextcall,
-                            'sufficient_seniority': seniority.date() <= today})
-        return results
+    def _inverse_first_day_display(self):
+        for level in self:
+            if level.first_day_display == 'last':
+                level.first_day = 31
+            else:
+                level.first_day = DAY_SELECT_VALUES.index(level.first_day_display) + 1
+
+    def _inverse_second_day_display(self):
+        for level in self:
+            if level.second_day_display == 'last':
+                level.second_day = 31
+            else:
+                level.second_day = DAY_SELECT_VALUES.index(level.second_day_display) + 1
+
+    def _inverse_first_month_day_display(self):
+        for level in self:
+            if level.first_month_day_display == 'last':
+                level.first_month_day = 31
+            else:
+                level.first_month_day = DAY_SELECT_VALUES.index(level.first_month_day_display) + 1
+
+    def _inverse_second_month_day_display(self):
+        for level in self:
+            if level.second_month_day_display == 'last':
+                level.second_month_day = 31
+            else:
+                level.second_month_day = DAY_SELECT_VALUES.index(level.second_month_day_display) + 1
+
+    def _inverse_yearly_day_display(self):
+        for level in self:
+            if level.yearly_day_display == 'last':
+                level.yearly_day = 31
+            else:
+                level.yearly_day = DAY_SELECT_VALUES.index(level.yearly_day_display) + 1
 
     def _get_next_date(self, last_call):
         """
@@ -246,47 +219,90 @@ class AccrualPlanLevel(models.Model):
         if self.frequency == 'daily':
             return last_call + relativedelta(days=1)
         elif self.frequency == 'weekly':
-            return self._get_next_weekday(last_call, self.week_day)
+            daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+            weekday = daynames.index(self.week_day)
+            return last_call + relativedelta(days=1, weekday=weekday)
         elif self.frequency == 'bimonthly':
-            if last_call.day < self.first_day:
-                return _get_date_check_month(last_call.year, last_call.month, self.first_day)
-            elif last_call.day < self.second_day:
-                return _get_date_check_month(last_call.year, last_call.month, self.second_day)
+            first_date = last_call + relativedelta(day=self.first_day)
+            second_date = last_call + relativedelta(day=self.second_day)
+            if last_call < first_date:
+                return first_date
+            elif last_call < second_date:
+                return second_date
             else:
-                return _get_date_check_month(last_call.year, last_call.month, self.first_day) + relativedelta(months=1)
+                return last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'monthly':
-            if last_call.day < self.first_day:
-                return _get_date_check_month(last_call.year, last_call.month, self.first_day)
+            date = last_call + relativedelta(self.first_day)
+            if last_call < date:
+                return date
             else:
-                return _get_date_check_month(last_call.year, last_call.month, self.first_day) + relativedelta(months=1)
+                return last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'biyearly':
             first_month = MONTHS.index(self.first_month) + 1
             second_month = MONTHS.index(self.second_month) + 1
-            if last_call < _get_date_check_month(last_call.year, first_month, self.first_month_day):
-                return _get_date_check_month(last_call.year, first_month, self.first_month_day)
-            elif last_call < _get_date_check_month(last_call.year, second_month, self.second_month_day):
-                return _get_date_check_month(last_call.year, second_month, self.second_month_day)
+            first_date = last_call + relativedelta(month=first_month, day=self.first_month_day)
+            second_date = last_call + relativedelta(month=second_month, day=self.second_month_day)
+            if last_call < first_date:
+                return first_date
+            elif last_call < second_date:
+                return second_date
             else:
-                return _get_date_check_month(last_call.year, first_month, self.first_month_day) + relativedelta(years=1)
+                return last_call + relativedelta(years=1, month=first_month, day=self.first_month_day)
         elif self.frequency == 'yearly':
             month = MONTHS.index(self.yearly_month) + 1
-            if last_call < _get_date_check_month(last_call.year, month, self.yearly_day):
-                return _get_date_check_month(last_call.year, month, self.yearly_day)
+            date = last_call + relativedelta(month=month, day=self.yearly_day)
+            if last_call < date:
+                return date
             else:
-                return _get_date_check_month(last_call.year, month, self.yearly_day) + relativedelta(years=1)
+                return last_call + relativedelta(years=1, month=month, day=self.yearly_day)
         else:
             return False
 
-    @api.model
-    def _get_next_weekday(self, day, weekday):
+    def _get_previous_date(self, last_call):
         """
-        :param day: a datetime object
-        :param weekday: Weekday as a decimal number, where 0 is Sunday and 6 is Saturday.
-        :return: datetime of the next weekday
+        Returns the date a potential previous call would have been at
+        For example if you have a monthly level giving 16/02 would return 01/02
+        Contrary to `_get_next_date` this function will return the 01/02 if that date is given
         """
-        daynames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-        weekday = daynames.index(weekday)
-        days_ahead = weekday - day.isoweekday()
-        if days_ahead <= 0:
-            days_ahead += 7
-        return day + relativedelta(days=days_ahead)
+        self.ensure_one()
+        if self.frequency == 'daily':
+            return last_call
+        elif self.frequency == 'weekly':
+            daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+            weekday = daynames.index(self.week_day)
+            return last_call + relativedelta(days=-6, weekday=weekday)
+        elif self.frequency == 'bimonthly':
+            second_date = last_call + relativedelta(day=self.second_day)
+            first_date = last_call + relativedelta(day=self.first_day)
+            if last_call >= second_date:
+                return second_date
+            elif last_call >= first_date:
+                return first_date
+            else:
+                return last_call + relativedelta(months=-1, day=self.second_day)
+        elif self.frequency == 'monthly':
+            date = last_call + relativedelta(day=self.first_day)
+            if last_call >= date:
+                return date
+            else:
+                return last_call + relativedelta(months=-1, day=self.first_day)
+        elif self.frequency == 'biyearly':
+            first_month = MONTHS.index(self.first_month) + 1
+            second_month = MONTHS.index(self.second_month) + 1
+            first_date = last_call + relativedelta(month=first_month, day=self.first_month_day)
+            second_date = last_call + relativedelta(month=second_month, day=self.second_month_day)
+            if last_call >= second_date:
+                return second_date
+            elif last_call >= first_date:
+                return first_date
+            else:
+                return last_call + relativedelta(years=-1, month=second_month, day=self.second_month_day)
+        elif self.frequency == 'yearly':
+            month = MONTHS.index(self.yearly_month) + 1
+            year_date = last_call + relativedelta(month=month, day=self.yearly_day)
+            if last_call >= year_date:
+                return year_date
+            else:
+                return last_call + relativedelta(years=-1, month=month, day=self.yearly_day)
+        else:
+            return False

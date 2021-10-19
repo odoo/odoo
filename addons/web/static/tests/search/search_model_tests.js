@@ -401,7 +401,7 @@ QUnit.module("Search", (hooks) => {
                         <searchpanel/>
                     </search>
                 `,
-            view: { type: "kanban" },
+            config: { viewType: "kanban" },
         });
         assert.deepEqual(model.getSections(), []);
     });
@@ -418,7 +418,7 @@ QUnit.module("Search", (hooks) => {
                     </search>
                 `,
             resModel: "partner",
-            view: { type: "kanban" },
+            config: { viewType: "kanban" },
         });
         const sections = model.getSections();
         for (const section of sections) {
@@ -488,7 +488,7 @@ QUnit.module("Search", (hooks) => {
                     </search>
                 `,
             resModel: "partner",
-            view: { type: "kanban" },
+            config: { viewType: "kanban" },
         });
         const sections = model.getSections();
         for (const section of sections) {
@@ -799,7 +799,7 @@ QUnit.module("Search", (hooks) => {
 
         const evaluatedDomains = [
             [["datetime", "=", "2021-09-16 22:00:00"]],
-            [["date", "=", "2020-09-17 00:00:00"]],
+            [["date", "=", "2020-09-17"]],
             [["create_date", ">", "2021-09-16"]],
             [["date_deadline", "<", "2021-09-17"]],
         ];

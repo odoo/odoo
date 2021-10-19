@@ -4,18 +4,19 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2021
-# Martin Trigaux, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # fausthuang, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 黎伟杰 <674416404@qq.com>, 2021
+# Martin Trigaux, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,9 +77,11 @@ msgid "(update)"
 msgstr "（更新）"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "+ Transactions"
-msgstr "+ 交易"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid ". Please contact your manager to accept the closing difference."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -168,8 +171,8 @@ msgstr "<span class=\"oe_inline\"><b>跳过预览屏幕</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "<span>Cash Balance</span>"
-msgstr "<span>现金余额 </span>"
+msgid "<span>Last Closing Cash Balance</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -182,14 +185,6 @@ msgid "<span>Reporting</span>"
 msgstr "<span>报告</span>"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
-msgid ""
-"<span>There is a difference between the expected and actual closing in cash."
-" Are you sure you want to close the session and post the accounting "
-"entries?</span>"
-msgstr "<span>预期现金和实际结算之间存在差异。 您确定要关闭会话并发布会计凭证吗？</span>"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
 msgstr "<span>查看</span>"
@@ -200,16 +195,6 @@ msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected"
-msgstr "预期"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected in Cash"
-msgstr "= 预计现金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -284,6 +269,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
 msgstr "接受客户小费（打赏）将其转换为小费收入"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Accept payments difference and post a profit/loss journal entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -375,11 +367,6 @@ msgstr "活动状态"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "活动类型图表"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Actual in Cash"
-msgstr "实际现金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -560,6 +547,15 @@ msgstr "合计金额"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid ""
+"An error has occurred when trying to close the session.\n"
+"You will be redirected to the back-end to manually close the session."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
@@ -682,19 +678,12 @@ msgstr "回退"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/NumberPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenNumpad.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
 msgstr "退格键"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "Balance control"
-msgstr "平衡控制"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -712,11 +701,6 @@ msgstr "银行付款"
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "银行对账单"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
-msgid "Bank Statement Cashbox"
-msgstr "银行资金调节表"
 
 #. module: point_of_sale
 #. openerp-web
@@ -759,6 +743,12 @@ msgid "Before Closing Difference"
 msgstr "结束前的差异"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
+msgid "Bills"
+msgstr "账单"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Bills &amp; Receipts"
 msgstr "账单和收据"
@@ -796,6 +786,13 @@ msgstr "现金"
 #, python-format
 msgid "CHANGE"
 msgstr "找零"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "CLOSING CONTROL"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -847,6 +844,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Cannot close the session when offline."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot invoice order from closed session."
@@ -882,13 +886,6 @@ msgid "Cash Box Out"
 msgstr "钱箱支出"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-#, python-format
-msgid "Cash Control"
-msgstr "现金管理"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
@@ -899,7 +896,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CashMoveButton.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Cash In/Out"
 msgstr "现金进出"
@@ -1142,6 +1138,7 @@ msgstr "客户端屏显警告"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/HeaderButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
@@ -1149,7 +1146,10 @@ msgid "Close"
 msgstr "关闭"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
 msgid "Close Session"
 msgstr ""
 
@@ -1186,6 +1186,36 @@ msgstr "结业管理"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Closing Date"
 msgstr "关闭日期"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Closing difference in %s (%s)"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Closing session error"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
+msgid "Coin/Bill Value"
+msgstr "硬币／账单 金额"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_bill
+#: model:ir.model,name:point_of_sale.model_pos_bill
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_bill_ids
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#, python-format
+msgid "Coins/Bills"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -1242,7 +1272,7 @@ msgstr "请至少配置一个POS营业点."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "确认"
@@ -1346,7 +1376,10 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Continue Selling"
 msgstr "继续销售"
 
@@ -1354,11 +1387,6 @@ msgstr "继续销售"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Continue selling"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Control cash box at opening and closing"
-msgstr "在打开和关闭时控制现金箱"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1376,6 +1404,13 @@ msgstr "从公司货币到订单货币的转换率。"
 #, python-format
 msgid "Cost:"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Counted"
+msgstr "计数"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1419,7 +1454,7 @@ msgid "Create a new product variant"
 msgstr "创建新产品变体"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
@@ -1435,7 +1470,7 @@ msgid "Created by"
 msgstr "创建人"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
@@ -1503,7 +1538,9 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__pay_later
 #, python-format
 msgid "Customer Account"
@@ -1600,11 +1637,6 @@ msgstr "默认帐号"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_cashbox_id
-msgid "Default Balance"
-msgstr "默认余额"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -1748,7 +1780,10 @@ msgid "Destination account is readonly"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_difference
+#, python-format
 msgid "Difference"
 msgstr "差异"
 
@@ -1794,8 +1829,8 @@ msgstr "折扣："
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
 #, python-format
 msgid "Discard"
 msgstr "丢弃"
@@ -1857,7 +1892,7 @@ msgid "Display Category Pictures"
 msgstr "展示类别图片"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
@@ -2023,11 +2058,6 @@ msgid "End Date"
 msgstr "终止日期"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "End of Session"
-msgstr "会话结束"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
 msgstr "期末余额"
@@ -2053,7 +2083,10 @@ msgid "Error: no internet connection."
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
+#, python-format
 msgid "Expected"
 msgstr "预期"
 
@@ -2323,7 +2356,7 @@ msgid "How would you like to receive your receipt"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
@@ -2590,11 +2623,6 @@ msgid "IoT Box IP Address"
 msgstr "IoT Box IP地址"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__is_a_template
-msgid "Is A Template"
-msgstr "是一个模板"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
 msgid "Is Follower"
 msgstr "关注者"
@@ -2681,6 +2709,13 @@ msgid "Journal Items"
 msgstr "会计分录"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Keep Session Open"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
 msgstr "终端销售总额的关键绩效指标"
@@ -2709,7 +2744,7 @@ msgid "Large Scrollbars"
 msgstr "大滚动条"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config____last_update
@@ -2723,7 +2758,7 @@ msgstr "大滚动条"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
@@ -2731,17 +2766,12 @@ msgid "Last Session Closing Cash"
 msgstr "上次会话关闭支付金额"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
-msgid "Last Session Closing Cashbox"
-msgstr "最后营业点关闭收银台"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr "最近会话关闭日期"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
@@ -2757,7 +2787,7 @@ msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
@@ -2807,7 +2837,8 @@ msgid ""
 "Leave empty to use the receivable account of customer.\n"
 "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method."
+"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Only cash and bank journals are allowed."
 msgstr ""
 
 #. module: point_of_sale
@@ -3063,6 +3094,7 @@ msgstr "我的营业区间"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__name
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Name"
@@ -3076,7 +3108,23 @@ msgid "Need customer to invoice"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need loss account for the following journals to post the lost amount: %s\n"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need profit account for the following journals to post the gained amount: %s"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ProductInfoPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
@@ -3230,6 +3278,7 @@ msgstr "未开票"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Notes"
@@ -3292,6 +3341,13 @@ msgstr "未读消息数量"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "OPENING CASH CONTROL"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -3335,13 +3391,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "仅对现金使用四舍五入"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid ""
-"Only cash and bank journals are allowed in the <strong>Journal</strong> "
-"field."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3393,9 +3442,23 @@ msgstr "打开使用此付款方式的POS营业点。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
 msgstr "打开销售会话"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Open session"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Open the money details popup"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -3415,6 +3478,13 @@ msgid "Opened by"
 msgstr "创建人"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Opening"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opening Control"
@@ -3425,6 +3495,18 @@ msgstr "开业管理"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opening Date"
 msgstr "开始日期"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_notes
+msgid "Opening Notes"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Opening cash"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -3705,9 +3787,12 @@ msgid "Payment Date"
 msgstr "付款日期"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_method_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
+#, python-format
 msgid "Payment Method"
 msgstr "付款方式"
 
@@ -3775,7 +3860,9 @@ msgid "Payment reversed"
 msgstr "付款被撤销"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model,name:point_of_sale.model_account_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
@@ -3796,6 +3883,13 @@ msgstr "支付"
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
 msgstr "付款方式"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Payments in"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -3888,6 +3982,13 @@ msgstr "请检查IoT Box是否仍连接。"
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "请检查打印机是否仍连接。"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Please check your internet connection and try again."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -4105,7 +4206,7 @@ msgid "Point of Sale User Group"
 msgstr "POS用户组"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
 msgstr "销售点配置"
@@ -4990,7 +5091,7 @@ msgstr "发送电子邮件失败. 请再试一次."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
@@ -5070,11 +5171,6 @@ msgid "Sessions"
 msgstr "会话"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Set Closing Cash"
-msgstr "设置现金结余"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -5082,9 +5178,9 @@ msgid "Set Customer"
 msgstr "设置客户"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
-msgid "Set Default Cash Opening"
-msgstr "设置默认期初现金"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
+msgid "Set Maximum Difference"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5092,6 +5188,20 @@ msgstr "设置默认期初现金"
 #, python-format
 msgid "Set Weight"
 msgstr "设置重量"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5105,6 +5215,11 @@ msgstr "设置财政位置"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "每一套产品，多种价格自动折扣等"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Set of coins/bills that will be used in opening and closing control"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5266,13 +5381,6 @@ msgid "Spefic route for products delivered later."
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Cash Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
 msgstr "开始类别"
@@ -5283,13 +5391,6 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
 msgstr "从默认产品类别开始销售"
@@ -5298,13 +5399,6 @@ msgstr "从默认产品类别开始销售"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
 msgstr "起始余额"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Starting Cash"
-msgstr "起始现金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5590,6 +5684,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "The maximum difference allowed is"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "销售会话名称必须唯一"
@@ -5836,6 +5937,12 @@ msgid "There is no cash register for this PoS Session"
 msgstr "这次POS交易没有收取现金"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "There is no cash register in this session."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -5957,6 +6064,7 @@ msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
 msgstr "此营业点已结束."
@@ -5965,14 +6073,6 @@ msgstr "此营业点已结束."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr "此税种适用于该目录中新创建的产品。"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_closing_balance_confirm_wizard
-msgid ""
-"This wizard is used to display a warning message if the manager wants to "
-"close a session with a too high difference between real and expected closing"
-" balance"
-msgstr "此向导用于显示警告消息，如果经理想要关闭实际和预期期末余额之间差异太大的营业点"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6053,6 +6153,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -6494,14 +6596,6 @@ msgid "Yes"
 msgstr "是"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"You are not allowed to change the cash control status while a session is "
-"already opened."
-msgstr "当营业点已经打开时，您不能更改现金控制状态."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid ""
@@ -6525,6 +6619,7 @@ msgid ""
 msgstr "您无法验证在营业点的营业点中使用的银行对帐单."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -6653,15 +6748,6 @@ msgid ""
 msgstr "您的 PoS营业点从 %(date)s 开始，我们建议您关闭它并创建一个新营业点."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"Your ending balance is too different from the theoretical cash closing "
-"(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
-"it."
-msgstr "计算余额跟实际关闭余额 (%.2f)差额超过系统允许的最大差额为： %.2f。请联系您的经理。"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
@@ -6759,6 +6845,13 @@ msgstr "备注"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "open sessions"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "orders"
+msgstr "订单"
 
 #. module: point_of_sale
 #. openerp-web

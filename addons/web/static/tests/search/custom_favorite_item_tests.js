@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { triggerEvent } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -62,6 +63,10 @@ QUnit.module("Search", (hooks) => {
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("CustomFavoriteItem");
@@ -75,7 +80,9 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
-            displayName: "Action Name",
+            config: {
+                displayName: "Action Name",
+            },
         });
 
         await toggleFavoriteMenu(controlPanel);
@@ -150,7 +157,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("save filter", async function (assert) {
-        assert.expect(1);
+        assert.expect(4);
 
         class TestComponent extends owl.Component {
             setup() {
@@ -177,11 +184,16 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             searchViewId: false,
         });
+        comp.env.bus.on("CLEAR-CACHES", comp, () => assert.step("CLEAR-CACHES"));
+
+        assert.verifySteps([]);
 
         await toggleFavoriteMenu(comp);
         await toggleSaveFavorite(comp);
         await editFavoriteName(comp, "aaa");
         await saveFavorite(comp);
+
+        assert.verifySteps(["CLEAR-CACHES"]);
     });
 
     QUnit.test("dynamic filters are saved dynamic", async function (assert) {
@@ -288,7 +300,7 @@ QUnit.module("Search", (hooks) => {
                     if (args.model === "ir.filters" && args.method === "create_or_replace") {
                         const irFilter = args.args[0];
                         assert.deepEqual(irFilter, {
-                            action_id: false,
+                            action_id: undefined,
                             context: { group_by: [] },
                             domain: "[]",
                             is_default: false,

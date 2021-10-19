@@ -24,6 +24,13 @@
 
                         <span attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}">
                             No tax template found for this country. Please install the corresponding localization module.
+                            <button
+                                string="Install new module"
+                                type="action"
+                                name="account.open_account_charts_modules"
+                                class="oe_link"
+                                groups="base.group_system"
+                                style="padding: 0; vertical-align: baseline;"/>
                         </span>
                     </div>
 
@@ -42,8 +49,8 @@
                         <group>
                             <field name="auto_apply"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
-                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="foreign_vat"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_id"
                                 attrs="{'required': [('foreign_vat', '!=', False)]}"
                                 options="{'no_open': True, 'no_create': True}"/>

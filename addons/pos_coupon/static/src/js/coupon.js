@@ -22,6 +22,7 @@ odoo.define('pos_coupon.pos', function (require) {
     const session = require('web.session');
     const concurrency = require('web.concurrency');
     const { Gui } = require('point_of_sale.Gui');
+    const { float_is_zero } = require('web.utils');
 
     const dp = new concurrency.DropPrevious();
 
@@ -258,7 +259,6 @@ odoo.define('pos_coupon.pos', function (require) {
                 () => {
                     if (!this.pos.config.use_coupon_programs) return;
                     dp.add(this._getNewRewardLines()).then(([newRewardLines, rewardsContainer]) => {
-                        this.orderlines.remove(this._getRewardLines());
                         this.orderlines.add(newRewardLines);
                         // We need this for the rendering of ActivePrograms component.
                         this.rewardsContainer = rewardsContainer;
@@ -288,7 +288,6 @@ odoo.define('pos_coupon.pos', function (require) {
             _order_super.set_orderline_options.apply(this, [orderline, options]);
             if (options && options.is_program_reward) {
                 orderline.is_program_reward = true;
-                orderline.tax_ids = options.tax_ids;
                 orderline.program_id = options.program_id;
                 orderline.coupon_id = options.coupon_id;
             }
@@ -298,11 +297,21 @@ odoo.define('pos_coupon.pos', function (require) {
          * rendered at the bottom of the orderlines list.
          */
         get_orderlines: function () {
-            return [...this._getRegularOrderlines(), ...this._getRewardLines()];
+            const orderlines = _order_super.get_orderlines.apply(this, arguments);
+            const rewardLines = [];
+            const nonRewardLines = [];
+            for (const line of orderlines) {
+                if (line.is_program_reward) {
+                    rewardLines.push(line);
+                } else {
+                    nonRewardLines.push(line);
+                }
+            }
+            return [...nonRewardLines, ...rewardLines];
         },
         _getRegularOrderlines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
-            return orderlines.filter((line) => !line.is_program_reward);
+            return orderlines.filter((line) => !line.is_program_reward && !line.refunded_orderline_id);
         },
         _getRewardLines: function () {
             const orderlines = _order_super.get_orderlines.apply(this, arguments);
@@ -418,6 +427,8 @@ odoo.define('pos_coupon.pos', function (require) {
          * @returns {[models.Orderline[], RewardsContainer]}
          */
         _getNewRewardLines: async function () {
+            // Remove the reward lines before recalculation of rewards.
+            this.orderlines.remove(this._getRewardLines());
             const rewardsContainer = await this._calculateRewards();
             // We set the programs that will generate coupons after validation of this order.
             // See `_postPushOrderResolve` in the `PaymentScreen`.
@@ -761,7 +772,12 @@ odoo.define('pos_coupon.pos', function (require) {
                     ? this.get_total_with_tax()
                     : this.get_total_without_tax();
             // TODO jcb rule_minimum_amount has to be converted.
-            if (!(amountToCheck >= program.rule_minimum_amount)) {
+            if (
+                !(
+                    amountToCheck > program.rule_minimum_amount ||
+                    float_is_zero(amountToCheck - program.rule_minimum_amount, this.pos.currency.decimals)
+                )
+            ) {
                 return {
                     successful: false,
                     reason: 'Minimum amount for this program is not satisfied.',

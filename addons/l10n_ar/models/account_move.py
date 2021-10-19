@@ -2,7 +2,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from dateutil.relativedelta import relativedelta
-from lxml import etree
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -162,11 +161,10 @@ class AccountMove(models.Model):
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
             if rec.company_id.currency_id == rec.currency_id:
-                l10n_ar_currency_rate = 1.0
-            else:
-                l10n_ar_currency_rate = rec.currency_id._convert(
+                rec.l10n_ar_currency_rate = 1.0
+            elif not rec.l10n_ar_currency_rate:
+                rec.l10n_ar_currency_rate = rec.currency_id._convert(
                     1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
-            rec.l10n_ar_currency_rate = l10n_ar_currency_rate
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
@@ -275,11 +273,12 @@ class AccountMove(models.Model):
         for line in self.line_ids:
             if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line['price_subtotal']:
                 vat_taxable |= line
-        for vat in vat_taxable:
-            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
-            res += [{'Id': vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code,
+        for tax_group in vat_taxable.mapped('tax_group_id'):
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
+            imp = sum(vat_taxable.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code).mapped('price_subtotal'))
+            res += [{'Id': tax_group.l10n_ar_vat_afip_code,
                      'BaseImp': base_imp,
-                     'Importe': vat['price_subtotal']}]
+                     'Importe': imp}]
 
         # Report vat 0%
         vat_base_0 = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped('price_subtotal'))
@@ -293,3 +292,26 @@ class AccountMove(models.Model):
         if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == 'AR':
             return 'l10n_ar.report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_ar_get_invoice_totals_for_report(self):
+        self.ensure_one()
+        tax_ids_filter = tax_line_id_filter = None
+        include_vat = self._l10n_ar_include_vat()
+
+        if include_vat:
+            tax_ids_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
+            tax_line_id_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
+
+        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
+            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
+
+        if include_vat:
+            amount_untaxed = self.currency_id.round(
+                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
+        else:
+            amount_untaxed = self.amount_untaxed
+        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+
+    def _l10n_ar_include_vat(self):
+        self.ensure_one()
+        return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']

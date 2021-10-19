@@ -4,7 +4,7 @@
         <t t-set="website_sale_order" t-value="website.sale_get_order()" />
         <t t-set="show_cart" t-value="true"/>
         <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+        <li t-attf-class="o_wsale_my_cart align-self-md-start #{not show_cart and 'd-none'} #{_item_class}">
             <a href="/shop/cart" t-attf-class="#{_link_class}">
                 <i t-if="_icon" class="fa fa-shopping-cart"/>
                 <span t-if="_text">My Cart</span>
@@ -124,7 +124,7 @@
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_item_class" t-value="'nav-item ml-md-auto'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
             </t>
         </xpath>
@@ -548,7 +548,7 @@
 
     <!-- /shop/product page -->
     <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
-        <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <xpath expr="//div[@id='edit-page-menu']" position="after">
             <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'website_sale.product_template_action_website'" />
         </xpath>
     </template>

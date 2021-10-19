@@ -24,7 +24,8 @@
                 </button>
             </xpath>
             <xpath expr="//header" position="inside">
-                <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
+                <!-- To be removed in master -->
+                <button name="action_make_billable" string="Create Sales Order" type="object" groups="sales_team.group_sale_salesman" invisible="1"/>
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
@@ -32,7 +33,7 @@
                         <group>
                             <field name="display_create_order" invisible="1"/>
                             <field name="pricing_type" invisible="1" widget="radio"/>
-                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
                             <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                             <field name="sale_line_id" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
@@ -104,7 +105,7 @@
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
                 <div role="menuitem" t-if="record.rating_active.raw_value" groups="project.group_project_manager">
-                   <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}"> 
+                   <a name="action_view_all_rating" type="object">
                     Customer Ratings
                     </a>
                 </div> 

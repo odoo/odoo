@@ -179,13 +179,11 @@
 
 <template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
     <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
-        <we-button title="Video"
+        <we-button title="Video" class="fa fa-fw fa-film"
                    data-name="bg_video_toggler_opt"
                    t-att-data-dependencies="images_dependencies"
                    data-toggle-bg-video="true"
-                   data-no-preview="true">
-            <i class="fa fa-fw fa-film"/>
-        </we-button>
+                   data-no-preview="true"/>
     </xpath>
     <xpath expr="//t[@t-set='color_filter_dependencies']" position="after">
         <t t-set="color_filter_dependencies" t-valuef="#{color_filter_dependencies}, bg_video_toggler_opt"/>
@@ -357,9 +355,9 @@
     <!-- H-ALIGN -->
     <div id="so_text_align" data-selector=".s_share, .s_text_highlight">
         <we-button-group string="Alignment">
-            <we-button title="Left" data-select-class="text-left"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="text-center"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="text-right"><i class="fa fa-fw fa-align-right"/></we-button>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-right"/>
         </we-button-group>
     </div>
 
@@ -374,9 +372,9 @@
 
     <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote, .s_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
-            <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
-            <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
-            <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
         </we-button-group>
     </div>
 
@@ -416,18 +414,10 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward">
-            <i class="fa fa-fw fa-angle-left"/>
-        </we-button>
-        <we-button data-slide="right" data-no-preview="true" class="mr-2" data-tooltip="true" title="Move Forward">
-            <i class="fa fa-fw fa-angle-right"/>
-        </we-button>
-        <we-button data-add-slide-item="true" data-no-preview="true" class="o_we_bg_success" data-tooltip="true" title="Add Slide">
-            <i class="fa fa-fw fa-plus"/>
-        </we-button>
-        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_bg_danger" data-tooltip="true" title="Remove Slide">
-            <i class="fa fa-fw fa-minus"/>
-        </we-button>
+        <we-button class="fa fa-fw fa-angle-left" data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward"/>
+        <we-button class="fa fa-fw fa-angle-right mr-2" data-slide="right" data-no-preview="true" data-tooltip="true" title="Move Forward"/>
+        <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" data-tooltip="true" title="Add Slide"/>
+        <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" data-tooltip="true" title="Remove Slide"/>
     </div>
 
     <!-- Accordion -->
@@ -1030,6 +1020,8 @@
         </we-select>
     </div>
 
+    <div data-js="MegaMenuNoDelete" data-selector=".o_mega_menu > section"/>
+
     <div data-selector=".o_mega_menu .nav > .nav-link"
          data-drop-in=".o_mega_menu nav"
          data-drop-near=".o_mega_menu .nav-link"/>
@@ -1042,8 +1034,7 @@
             </t>
             <we-button-group class="ml-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>
-                <we-button title="None" data-background="">
-                    <i class="fa fa-fw fa-ban"/>
+                <we-button class="fa fa-fw fa-ban" title="None" data-background="">
                 </we-button>
             </we-button-group>
         </we-row>
@@ -1090,7 +1081,7 @@
             <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
         </we-button-group>
 
-        <we-checkbox string="⌙ Scroll down button"
+        <we-checkbox string="Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
                      data-dependencies="full_height_opt"
@@ -1150,49 +1141,49 @@
             <t t-if="request.session.get('geoip', {}).get('country_code')">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">⌙ Country</t>
-                    <t t-set="attribute_rule">visibilityValueCountryRule</t>
-                    <t t-set="save_attribute">visibilityValueCountry</t>
-                    <t t-set="attribute_name">data-country</t>
-                    <t t-set="model">res.country</t>
-                    <t t-set="call_with">code</t>
-                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                    <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
+                    <t t-set="save_attribute" t-valuef="visibilityValueCountry"/>
+                    <t t-set="attribute_name" t-valuef="data-country"/>
+                    <t t-set="model" t-valuef="res.country"/>
+                    <t t-set="call_with" t-valuef="code"/>
+                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
                 </t>
             </t>
             <t t-if="len(current_website.language_ids) > 1">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">⌙ Languages</t>
-                    <t t-set="attribute_rule">visibilityValueLangRule</t>
-                    <t t-set="save_attribute">visibilityValueLang</t>
-                    <t t-set="attribute_name">lang</t>
-                    <t t-set="model">res.lang</t>
-                    <t t-set="call_with">code</t>
-                    <t t-set="domain">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
-                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                    <t t-set="attribute_rule" t-valuef="visibilityValueLangRule"/>
+                    <t t-set="save_attribute" t-valuef="visibilityValueLang"/>
+                    <t t-set="attribute_name" t-valuef="lang"/>
+                    <t t-set="model" t-valuef="res.lang"/>
+                    <t t-set="call_with" t-valuef="code"/>
+                    <t t-set="domain" t-translation="off">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
+                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
                 </t>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Campaign</t>
-                <t t-set="attribute_rule">visibilityValueUtmCampaignRule</t>
-                <t t-set="save_attribute">visibilityValueUtmCampaign</t>
-                <t t-set="attribute_name">data-utm-campaign</t>
-                <t t-set="model">utm.campaign</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmCampaignRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmCampaign"/>
+                <t t-set="attribute_name" t-valuef="data-utm-campaign"/>
+                <t t-set="model" t-valuef="utm.campaign"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Medium</t>
-                <t t-set="attribute_rule">visibilityValueUtmMediumRule</t>
-                <t t-set="save_attribute">visibilityValueUtmMedium</t>
-                <t t-set="attribute_name">data-utm-medium</t>
-                <t t-set="model">utm.medium</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmMediumRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmMedium"/>
+                <t t-set="attribute_name" t-valuef="data-utm-medium"/>
+                <t t-set="model" t-valuef="utm.medium"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
                 <t t-set="option_name">⌙ UTM Source</t>
-                <t t-set="attribute_rule">visibilityValueUtmSourceRule</t>
-                <t t-set="save_attribute">visibilityValueUtmSource</t>
-                <t t-set="attribute_name">data-utm-source</t>
-                <t t-set="model">utm.source</t>
-                <t t-set="call_with">display_name</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUtmSourceRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUtmSource"/>
+                <t t-set="attribute_name" t-valuef="data-utm-source"/>
+                <t t-set="model" t-valuef="utm.source"/>
+                <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <we-select string="⌙ Users"
                 data-dependencies="visibility_conditional"
@@ -1219,7 +1210,7 @@
     <!-- Website Animate -->
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
-         data-exclude=".o_not-animable">
+         data-exclude=".o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize">
         <we-select string="Animate" data-is-animation-type-selection="true">
             <we-button data-select-class="" data-name="no_animation_opt">No Animation</we-button>
             <we-divider/>
@@ -1274,10 +1265,10 @@
             <we-colorpicker data-name="color_1_opt" title="Primary"
                             data-customize-website-color="" data-color="o-color-1"
                             data-use-css-color="true" data-selected-tab="custom-colors"/>
+            <we-colorpicker data-customize-website-color="" data-color="o-color-3"
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-name="color_2_opt" title="Secondary"
                             data-customize-website-color="" data-color="o-color-2"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-3"
                             data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-customize-website-color="" data-color="o-color-4"
                             data-use-css-color="true" data-selected-tab="custom-colors"/>
@@ -1301,12 +1292,12 @@
                             data-customize-website-color=""
                             data-color="body"/>
             <we-button-group data-imagepicker="body_bg_image_opt">
-                <we-button title="Image"
-                           data-customize-body-bg-type="'image'"><i class="fa fa-fw fa-camera"/></we-button>
-                <we-button title="Pattern"
-                           data-customize-body-bg-type="'pattern'"><i class="fa fa-fw fa-th"/></we-button>
-                <we-button title="None"
-                           data-customize-body-bg-type="NONE"><i class="fa fa-fw fa-ban"/></we-button>
+                <we-button title="Image" class="fa fa-fw fa-camera"
+                           data-customize-body-bg-type="'image'"/>
+                <we-button title="Pattern" class="fa fa-fw fa-th"
+                           data-customize-body-bg-type="'pattern'"/>
+                <we-button title="None" class="fa fa-fw fa-ban"
+                           data-customize-body-bg-type="NONE"/>
             </we-button-group>
             <!-- Hidden imagepicker enabled by above button-group -->
             <we-imagepicker data-name="body_bg_image_opt"

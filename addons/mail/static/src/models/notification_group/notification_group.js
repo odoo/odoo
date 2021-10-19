@@ -65,13 +65,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
-        /**
          * Compute the most recent date inside the notification messages.
          *
          * @private
@@ -134,6 +127,7 @@ function factory(dependencies) {
             compute: '_computeDate',
         }),
         id: attr({
+            readonly: true,
             required: true,
         }),
         notification_type: attr(),
@@ -154,7 +148,7 @@ function factory(dependencies) {
             compute: '_computeThread',
         })
     };
-
+    NotificationGroup.identifyingFields = ['id'];
     NotificationGroup.modelName = 'mail.notification_group';
 
     return NotificationGroup;

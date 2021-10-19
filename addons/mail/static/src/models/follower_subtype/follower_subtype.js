@@ -42,21 +42,11 @@ function factory(dependencies) {
             return data2;
         }
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            return `${this.modelName}_${data.id}`;
-        }
-
     }
 
     FollowerSubtype.fields = {
         id: attr({
+            readonly: true,
             required: true,
         }),
         isDefault: attr({
@@ -72,7 +62,7 @@ function factory(dependencies) {
         resModel: attr(),
         sequence: attr(),
     };
-
+    FollowerSubtype.identifyingFields = ['id'];
     FollowerSubtype.modelName = 'mail.follower_subtype';
 
     return FollowerSubtype;

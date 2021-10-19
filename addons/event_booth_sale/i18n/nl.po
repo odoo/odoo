@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_booth_sale
+#   * event_booth_sale
 # 
 # Translators:
 # Martin Trigaux, 2021
@@ -83,7 +83,6 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: event_booth_sale
-#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
 msgid "Configure an event booth"
 msgstr "Configureer een evenementstand"
 
@@ -133,6 +132,13 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
+
+#. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__currency_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__currency_id
+msgid "Currency"
+msgstr "Valuta"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__partner_id
@@ -328,6 +334,11 @@ msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: event_booth_sale
+#: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
+msgid "Select an event booth"
+msgstr "Selecteer een evenementstand"
+
+#. module: event_booth_sale
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -377,4 +388,5 @@ msgstr "Je moet minimaal één stand selecteren."
 msgid ""
 "Your order has been cancelled because the following booths have been "
 "reserved"
-msgstr "Je order is geannuleerd omdat de volgende stands zijn gereserveerd"
+msgstr ""
+"Je bestelling is geannuleerd omdat de volgende stands zijn gereserveerd"

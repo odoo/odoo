@@ -9,69 +9,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
 
 
-class AccountBankStmtCashWizard(models.Model):
-    _inherit = 'account.bank.statement.cashbox'
-
-    @api.depends('pos_config_ids')
-    @api.depends_context('current_currency_id')
-    def _compute_currency(self):
-        super(AccountBankStmtCashWizard, self)._compute_currency()
-        for cashbox in self:
-            if cashbox.pos_config_ids:
-                cashbox.currency_id = cashbox.pos_config_ids[0].currency_id.id
-            elif self.env.context.get('current_currency_id'):
-                cashbox.currency_id = self.env.context.get('current_currency_id')
-
-    pos_config_ids = fields.One2many('pos.config', 'default_cashbox_id')
-    is_a_template = fields.Boolean(default=False)
-
-    @api.model
-    def default_get(self, fields):
-        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
-        if 'cashbox_lines_ids' not in fields:
-            return vals
-        config_id = self.env.context.get('default_pos_id')
-        if config_id:
-            config = self.env['pos.config'].browse(config_id)
-            if config.last_session_closing_cashbox.cashbox_lines_ids:
-                lines = config.last_session_closing_cashbox.cashbox_lines_ids
-            else:
-                lines = config.default_cashbox_id.cashbox_lines_ids
-            if self.env.context.get('balance', False) == 'start':
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
-            else:
-                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
-        return vals
-
-    def _validate_cashbox(self):
-        super(AccountBankStmtCashWizard, self)._validate_cashbox()
-        session_id = self.env.context.get('pos_session_id')
-        if session_id:
-            current_session = self.env['pos.session'].browse(session_id)
-            if current_session.state == 'new_session':
-                current_session.write({'state': 'opening_control'})
-
-    def set_default_cashbox(self):
-        self.ensure_one()
-        current_session = self.env['pos.session'].browse(self.env.context['pos_session_id'])
-        lines = current_session.config_id.default_cashbox_id.cashbox_lines_ids
-        context = dict(self._context)
-        self.cashbox_lines_ids.unlink()
-        self.cashbox_lines_ids = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
-
-        return {
-            'name': _('Cash Control'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.bank.statement.cashbox',
-            'view_id': self.env.ref('point_of_sale.view_account_bnk_stmt_cashbox_footer').id,
-            'type': 'ir.actions.act_window',
-            'context': context,
-            'target': 'new',
-            'res_id': self.id,
-        }
-
-
 class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
@@ -145,7 +82,8 @@ class PosConfig(models.Model):
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
         help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
-    cash_control = fields.Boolean(string='Advanced Cash Control', help="Check the amount of the cashbox at opening and closing.")
+    cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
+    set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
     proxy_ip = fields.Char(string='IP Address', size=45,
@@ -165,7 +103,6 @@ class PosConfig(models.Model):
     number_of_opened_session = fields.Integer(string="Number of Opened Session", compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
-    last_session_closing_cashbox = fields.Many2one('account.bank.statement.cashbox', compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
@@ -192,7 +129,7 @@ class PosConfig(models.Model):
         help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
-    default_cashbox_id = fields.Many2one('account.bank.statement.cashbox', string='Default Balance')
+    default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
@@ -241,6 +178,11 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean()
+
+    @api.depends('payment_method_ids')
+    def _compute_cash_control(self):
+        for config in self:
+            config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -297,14 +239,11 @@ class PosConfig(models.Model):
                 pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
                 if session[0]['cash_register_id']:
                     pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                    pos_config.last_session_closing_cashbox = self.env['account.bank.statement'].browse(session[0]['cash_register_id'][0]).cashbox_end_id
                 else:
                     pos_config.last_session_closing_cash = 0
-                    pos_config.last_session_closing_cashbox = False
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
-                pos_config.last_session_closing_cashbox = False
 
     @api.depends('session_ids')
     def _compute_current_session_user(self):
@@ -335,12 +274,6 @@ class PosConfig(models.Model):
     def _compute_customer_facing_display(self):
         for config in self:
             config.iface_customer_facing_display = config.iface_customer_facing_display_via_proxy or config.iface_customer_facing_display_local
-
-    @api.constrains('cash_control')
-    def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
-        if open_session:
-            raise ValidationError(_("You are not allowed to change the cash control status while a session is already opened."))
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
@@ -536,7 +469,7 @@ class PosConfig(models.Model):
         return result
 
     def _get_forbidden_change_fields(self):
-        forbidden_keys = ['module_pos_hr', 'cash_control', 'module_pos_restaurant', 'available_pricelist_ids',
+        forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
                           'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
                           'payment_method_ids', 'iface_tipproduc']
         return forbidden_keys
@@ -591,7 +524,8 @@ class PosConfig(models.Model):
          }
 
     def _force_http(self):
-        if self.other_devices:
+        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
+        if not enforce_https and self.other_devices:
             return True
         return False
 
@@ -609,7 +543,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         # check all constraints, raises if any is not met
-        self._validate_fields(set(self._fields) - {"cash_control"})
+        self._validate_fields(self._fields)
         return {
             'type': 'ir.actions.act_url',
             'url': self._get_pos_base_url() + '?config_id=%d' % self.id,
@@ -735,29 +669,39 @@ class PosConfig(models.Model):
             else:
                 pos_config.write({'module_account': False})
 
-    def get_limited_products_loading(self):
-        self.env.cr.execute("""
-            WITH pm AS
-            (
-                     SELECT   product_id,
-                              Max(write_date) date
-                     FROM     stock_quant
-                     GROUP BY product_id)
-            SELECT    p.id
-            FROM      product_product p
-            LEFT JOIN product_template t
-            ON        (
-                                product_tmpl_id=t.id)
-            LEFT JOIN pm
-            ON        (
-                                p.id=pm.product_id)
-            WHERE     p.active
-            AND       t.available_in_pos
-            ORDER BY  t.priority DESC,
+    def get_limited_products_loading(self, fields):
+        query = """
+            WITH pm AS (
+                  SELECT product_id,
+                         Max(write_date) date
+                    FROM stock_quant
+                GROUP BY product_id
+            )
+               SELECT p.id
+                 FROM product_product p
+            LEFT JOIN product_template t ON product_tmpl_id=t.id
+            LEFT JOIN pm ON p.id=pm.product_id
+                WHERE (
+                        t.available_in_pos
+                    AND t.sale_ok
+                    AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
+                    AND %(available_categ_ids)s IS NULL OR t.pos_categ_id=ANY(%(available_categ_ids)s)
+                )    OR p.id=%(tip_product_id)s
+             ORDER BY t.priority DESC,
                       t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC limit %s
-        """, [str(self.limited_products_amount)])
-        return self.env.cr.fetchall()
+                      COALESCE(pm.date,p.write_date) DESC 
+                LIMIT %(limit)s
+        """
+        params = {
+            'company_id': self.company_id.id,
+            'available_categ_ids': self.iface_available_categ_ids.mapped('id') if self.iface_available_categ_ids else None,
+            'tip_product_id': self.tip_product_id.id if self.tip_product_id else None,
+            'limit': self.limited_products_amount
+        }
+        self.env.cr.execute(query, params)
+        product_ids = self.env.cr.fetchall()
+        products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
+        return products
 
     def get_limited_partners_loading(self):
         self.env.cr.execute("""

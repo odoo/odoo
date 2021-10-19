@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockLocationRoute(models.Model):
@@ -20,13 +21,6 @@ class StockMove(models.Model):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
         distinct_fields.append('sale_line_id')
         return distinct_fields
-
-    @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        move.ensure_one()
-        keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
-        keys_sorted.append(move.sale_line_id.id)
-        return keys_sorted
 
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
@@ -73,6 +67,18 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
+
+    def _auto_init(self):
+        """
+        Create related field here, too slow
+        when computing it afterwards through _compute_related.
+
+        Since group_id.sale_id is created in this module,
+        no need for an UPDATE statement.
+        """
+        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
+            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
+        return super()._auto_init()
 
     def _action_done(self):
         res = super()._action_done()

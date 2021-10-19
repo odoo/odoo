@@ -43,7 +43,7 @@ Spanish charts of accounts (PGCE 2008).
         'data/account.account.template-assoc.csv',
         'data/account.account.template-full.csv',
         'data/account_chart_template_account_account_link.xml',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configure_data.xml',

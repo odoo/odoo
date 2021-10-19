@@ -17,14 +17,14 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
         cls.sms_template_sub = cls.env['sms.template'].create({
             'name': 'Test subscription',
             'model_id': cls.env.ref('event.model_event_registration').id,
-            'body': '${object.event_id.organizer_id.name} registration confirmation.',
-            'lang': '${object.partner_id.lang}'
+            'body': '{{ object.event_id.organizer_id.name }} registration confirmation.',
+            'lang': '{{ object.partner_id.lang }}'
         })
         cls.sms_template_rem = cls.env['sms.template'].create({
             'name': 'Test reminder',
             'model_id': cls.env.ref('event.model_event_registration').id,
-            'body': '${object.event_id.organizer_id.name} reminder',
-            'lang': '${object.partner_id.lang}'
+            'body': '{{ object.event_id.organizer_id.name }} reminder',
+            'lang': '{{ object.partner_id.lang }}'
         })
 
         cls.event_0.write({

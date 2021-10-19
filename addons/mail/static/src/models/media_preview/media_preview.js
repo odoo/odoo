@@ -69,9 +69,13 @@ function factory(dependencies) {
             if (!this.doesBrowserSupportMediaDevices) {
                 return;
             }
-            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            this.update({ audioStream });
-            this.audioRef.el.srcObject = this.audioStream;
+            try {
+                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                this.update({ audioStream });
+                this.audioRef.el.srcObject = this.audioStream;
+            } catch {
+                // TODO: display popup asking the user to re-enable their mic
+            }
         }
 
         /**
@@ -83,9 +87,13 @@ function factory(dependencies) {
             if (!this.doesBrowserSupportMediaDevices) {
                 return;
             }
-            const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-            this.update({ videoStream });
-            this.videoRef.el.srcObject = this.videoStream;
+            try {
+                const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                this.update({ videoStream });
+                this.videoRef.el.srcObject = this.videoStream;
+            } catch {
+                // TODO: display popup asking the user to re-enable their camera
+            }
         }
 
         /**
@@ -197,7 +205,7 @@ function factory(dependencies) {
             default: null,
         }),
     };
-
+    MediaPreview.identifyingFields = ['messaging'];
     MediaPreview.modelName = 'mail.media_preview';
 
     return MediaPreview;

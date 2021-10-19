@@ -55,7 +55,6 @@ class ProductTemplate(models.Model):
             ('consu', 'Consumable'),
             ('service', 'Service')
         ],
-        default='consu',
         compute='_compute_type',
         store=True,
         readonly=False,
@@ -417,12 +416,12 @@ class ProductTemplate(models.Model):
         for record in self:
             record.type = type_mapping.get(record.detailed_type, record.detailed_type)
 
-    # @api.constrains('type', 'detailed_type')
-    # def _constrains_detailed_type(self):
-    #     type_mapping = self._detailed_type_mapping()
-    #     for record in self:
-    #         if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
-    #             raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
+    @api.constrains('type', 'detailed_type')
+    def _constrains_detailed_type(self):
+        type_mapping = self._detailed_type_mapping()
+        for record in self:
+            if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
+                raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
@@ -445,6 +444,12 @@ class ProductTemplate(models.Model):
         return {}
 
     def _sanitize_vals(self, vals):
+        """Sanitize vales for writing/creating product templates and variants.
+
+        Values need to be sanitized to keep values synchronized, and to be able to preprocess the
+        vals in extensions of create/write.
+        :param vals: create/write values dictionary
+        """
         if 'type' in vals and 'detailed_type' not in vals:
             if vals['type'] not in self.mapped('type'):
                 vals['detailed_type'] = vals['type']
@@ -540,7 +545,10 @@ class ProductTemplate(models.Model):
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            products_ids = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
+            # Product._name_search has default value limit=100
+            # So, we either use that value or override it to None to fetch all products at once
+            kwargs = {} if limit else {'limit': None}
+            products_ids = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid, **kwargs)
             products = Product.browse(products_ids)
             new_templates = products.mapped('product_tmpl_id')
             if new_templates & templates:

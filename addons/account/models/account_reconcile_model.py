@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -322,7 +322,9 @@ class AccountReconcileModel(models.Model):
         self.ensure_one()
         balance = base_line_dict['balance']
 
-        res = tax.compute_all(balance)
+        tax_type = tax.type_tax_use
+        is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        res = tax.compute_all(balance, is_refund=is_refund)
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
@@ -356,7 +358,7 @@ class AccountReconcileModel(models.Model):
         base_line_dict['tax_tag_ids'] = [(6, 0, res['base_tags'])]
         return new_aml_dicts
 
-    def _get_write_off_move_lines_dict(self, st_line, residual_balance):
+    def _get_write_off_move_lines_dict(self, st_line, residual_balance, partner_id):
         ''' Get move.lines dict (to be passed to the create()) corresponding to the reconciliation model's write-off lines.
         :param st_line:             An account.bank.statement.line record.(possibly empty, if performing manual reconciliation)
         :param residual_balance:    The residual balance of the statement line.
@@ -420,13 +422,16 @@ class AccountReconcileModel(models.Model):
             residual_balance -= balance
 
             if line.tax_ids:
-                writeoff_line['tax_ids'] = [(6, None, line.tax_ids.ids)]
-                tax = line.tax_ids
+                taxes = line.tax_ids
+                detected_fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(partner_id)
+                if detected_fiscal_position:
+                    taxes = detected_fiscal_position.map_tax(taxes)
+                writeoff_line['tax_ids'] = [Command.set(taxes.ids)]
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
-                    tax = tax[0].with_context(force_price_include=True)
-                tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+                    taxes = taxes[0].with_context(force_price_include=True)
+                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line)
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
                     for tax_line in tax_vals_list:
@@ -799,26 +804,43 @@ class AccountReconcileModel(models.Model):
         new_treated_aml_ids = set()
         candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
 
-        # Special case: the amounts are the same, submit the line directly.
         st_line_currency = st_line.foreign_currency_id or st_line.currency_id
-        candidate_currencies = set(candidate['aml_currency_id'] or st_line.company_id.currency_id.id for candidate in candidates)
+        candidate_currencies = set(candidate['aml_currency_id'] for candidate in candidates)
+        kept_candidates = candidates
         if candidate_currencies == {st_line_currency.id}:
+            kept_candidates = []
+            sum_kept_candidates = 0
             for candidate in candidates:
-                residual_amount = candidate['aml_currency_id'] and candidate['aml_amount_residual_currency'] or candidate['aml_amount_residual']
-                if st_line_currency.is_zero(residual_amount + st_line.amount_residual):
-                    candidates, priorities = self._filter_candidates([candidate], aml_ids_to_exclude, reconciled_amls_ids)
+                candidate_residual = candidate['aml_amount_residual_currency']
+
+                if st_line_currency.compare_amounts(candidate_residual, -st_line.amount_residual) == 0:
+                    # Special case: the amounts are the same, submit the line directly.
+                    kept_candidates = [candidate]
                     break
 
+                elif st_line_currency.compare_amounts(abs(sum_kept_candidates), abs(st_line.amount_residual)) < 0:
+                    # Candidates' and statement line's balances have the same sign, thanks to _get_invoice_matching_query.
+                    # We hence can compare their absolute value without any issue.
+                    # Here, we still have room for other candidates ; so we add the current one to the list we keep.
+                    # Then, we continue iterating, even if there is no room anymore, just in case one of the following candidates
+                    # is an exact match, which would then be preferred on the current candidates.
+                    kept_candidates.append(candidate)
+                    sum_kept_candidates += candidate_residual
+
+        # It is possible kept_candidates now contain less different priorities; update them
+        kept_candidates_by_priority = self._sort_reconciliation_candidates_by_priority(kept_candidates, aml_ids_to_exclude, reconciled_amls_ids)
+        priorities = set(kept_candidates_by_priority.keys())
+
         # We check the amount criteria of the reconciliation model, and select the
-        # candidates if they pass the verification.
-        matched_candidates_values = self._process_matched_candidates_data(st_line, candidates)
+        # kept_candidates if they pass the verification.
+        matched_candidates_values = self._process_matched_candidates_data(st_line, kept_candidates)
         status = self._check_rule_propositions(matched_candidates_values)
         if 'rejected' in status:
             rslt = None
         else:
             rslt = {
                 'model': self,
-                'aml_ids': [candidate['aml_id'] for candidate in candidates],
+                'aml_ids': [candidate['aml_id'] for candidate in kept_candidates],
             }
             new_treated_aml_ids = set(rslt['aml_ids'])
 
@@ -828,6 +850,7 @@ class AccountReconcileModel(models.Model):
                 writeoff_vals_list = self._get_write_off_move_lines_dict(
                     st_line,
                     matched_candidates_values['balance_sign'] * residual_balance_after_rec,
+                    partner.id,
                 )
                 if writeoff_vals_list:
                     rslt['status'] = 'write_off'
@@ -839,7 +862,7 @@ class AccountReconcileModel(models.Model):
             if 'allow_auto_reconcile' in status:
 
                 # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
-                aml_ids = [candidate['aml_id'] for candidate in candidates]
+                aml_ids = [candidate['aml_id'] for candidate in kept_candidates]
                 lines_vals_list = [{'id': aml_id} for aml_id in aml_ids]
 
                 if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:
@@ -1043,6 +1066,7 @@ class AccountReconcileModel(models.Model):
         writeoff_vals_list = self._get_write_off_move_lines_dict(
             st_line,
             matched_candidates_values['balance_sign'] * residual_balance_after_rec,
+            partner.id,
         )
 
         rslt = {

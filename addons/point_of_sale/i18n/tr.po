@@ -19,22 +19,22 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
-# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
-# Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
-# Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ferat Tnc <hnghos@gmail.com>, 2021
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Martin Trigaux, 2021
+# Murat Kaplan <muratk@projetgrup.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -97,9 +97,11 @@ msgid "(update)"
 msgstr "(güncelle)"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "+ Transactions"
-msgstr "+ İşlemler"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid ". Please contact your manager to accept the closing difference."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -192,8 +194,8 @@ msgstr "<span class=\"oe_inline\"><b>Önizleme Ekranını Atla</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "<span>Cash Balance</span>"
-msgstr "<span>Kasa Bakiyesi</span>"
+msgid "<span>Last Closing Cash Balance</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -206,17 +208,6 @@ msgid "<span>Reporting</span>"
 msgstr "<span>Raporlama</span>"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
-msgid ""
-"<span>There is a difference between the expected and actual closing in cash."
-" Are you sure you want to close the session and post the accounting "
-"entries?</span>"
-msgstr ""
-"<span>There is a difference between the expected and actual closing in cash."
-" Are you sure you want to close the session and post the accounting "
-"entries?</span>"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
 msgstr "<span>Görünüm</span>"
@@ -227,16 +218,6 @@ msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected"
-msgstr "= Expected"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "= Expected in Cash"
-msgstr "= Expected in Cash"
 
 #. module: point_of_sale
 #. openerp-web
@@ -318,6 +299,13 @@ msgstr ""
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
 "Müşteri ipuçlarını kabul edin veya değişikliklerini bir ipucuna dönüştürün"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Accept payments difference and post a profit/loss journal entry"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -409,11 +397,6 @@ msgstr "Aktivite Durumu"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Aktivite Simge Tipi "
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Actual in Cash"
-msgstr "Actual in Cash"
 
 #. module: point_of_sale
 #. openerp-web
@@ -600,6 +583,15 @@ msgstr "Toplam Tutar"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid ""
+"An error has occurred when trying to close the session.\n"
+"You will be redirected to the back-end to manually close the session."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
@@ -726,19 +718,12 @@ msgstr "Geri"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/NumberPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenNumpad.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
 msgstr "Geri"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "Balance control"
-msgstr "Balance control"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -756,11 +741,6 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "Banka Hesap Ekstresi"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
-msgid "Bank Statement Cashbox"
-msgstr "Banka Hesap Ekstresi Kasası"
 
 #. module: point_of_sale
 #. openerp-web
@@ -803,6 +783,12 @@ msgid "Before Closing Difference"
 msgstr "Before Closing Difference"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
+msgid "Bills"
+msgstr "Faturalar"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Bills &amp; Receipts"
 msgstr "Faturalar &amp; Makbuzlar"
@@ -840,6 +826,13 @@ msgstr "NAKİT"
 #, python-format
 msgid "CHANGE"
 msgstr "PARA ÜSTÜ"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "CLOSING CONTROL"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -891,6 +884,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Cannot close the session when offline."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot invoice order from closed session."
@@ -926,13 +926,6 @@ msgid "Cash Box Out"
 msgstr "Nakit Çıkışı"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-#, python-format
-msgid "Cash Control"
-msgstr "Kasa Kontrolü"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
@@ -943,7 +936,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CashMoveButton.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Cash In/Out"
 msgstr "Cash In/Out"
@@ -1196,6 +1188,7 @@ msgstr "Client Screen Warning"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/HeaderButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
@@ -1203,7 +1196,10 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
 msgid "Close Session"
 msgstr ""
 
@@ -1240,6 +1236,36 @@ msgstr "Kapanış Kotrolü"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Closing Date"
 msgstr "Kapanış Tarihi"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Closing difference in %s (%s)"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Closing session error"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
+msgid "Coin/Bill Value"
+msgstr "Para Parası / Fatura Değeri"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_bill
+#: model:ir.model,name:point_of_sale.model_pos_bill
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_bill_ids
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#, python-format
+msgid "Coins/Bills"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -1296,7 +1322,7 @@ msgstr "Configure at least one Point of Sale."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #, python-format
 msgid "Confirm"
 msgstr "Onayla"
@@ -1400,7 +1426,10 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Continue Selling"
 msgstr "Satışa Devam Et"
 
@@ -1408,11 +1437,6 @@ msgstr "Satışa Devam Et"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Continue selling"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Control cash box at opening and closing"
-msgstr "Açılış ve Kapanış sırasında nakit kasayı kontrol et"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1430,6 +1454,13 @@ msgstr "Conversion rate from company currency to order currency."
 #, python-format
 msgid "Cost:"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Counted"
+msgstr "Sayılan"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1473,7 +1504,7 @@ msgid "Create a new product variant"
 msgstr "Yeni bir ürün varyantı oluştur"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
@@ -1489,7 +1520,7 @@ msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
@@ -1557,7 +1588,9 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__pay_later
 #, python-format
 msgid "Customer Account"
@@ -1654,11 +1687,6 @@ msgstr "Varsayılan Hesap"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_cashbox_id
-msgid "Default Balance"
-msgstr "Varsayılan Bakiye"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -1807,7 +1835,10 @@ msgid "Destination account is readonly"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_difference
+#, python-format
 msgid "Difference"
 msgstr "Fark"
 
@@ -1853,8 +1884,8 @@ msgstr "İnd:"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.closing_balance_confirm
 #, python-format
 msgid "Discard"
 msgstr "Vazgeç"
@@ -1916,7 +1947,7 @@ msgid "Display Category Pictures"
 msgstr "Kategori Görsellerini Görüntüle"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
@@ -2087,11 +2118,6 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "End of Session"
-msgstr "Oturum Sonu"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
 msgstr "Kapanış Bakiyesi"
@@ -2117,7 +2143,10 @@ msgid "Error: no internet connection."
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
+#, python-format
 msgid "Expected"
 msgstr "Beklenen"
 
@@ -2349,7 +2378,7 @@ msgstr "Nakit Kontrolü Var"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Mesaj Var"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
@@ -2387,7 +2416,7 @@ msgid "How would you like to receive your receipt"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
@@ -2659,11 +2688,6 @@ msgid "IoT Box IP Address"
 msgstr "IoT Box IP Address"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__is_a_template
-msgid "Is A Template"
-msgstr "Is A Template"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
 msgid "Is Follower"
 msgstr "Takipçi mi"
@@ -2752,6 +2776,13 @@ msgid "Journal Items"
 msgstr "Yevmiye Kalemleri"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Keep Session Open"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
 msgstr "Kpi Pos Total Value"
@@ -2780,7 +2811,7 @@ msgid "Large Scrollbars"
 msgstr "Büyük Kaydırma Çubukları"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config____last_update
@@ -2802,17 +2833,12 @@ msgid "Last Session Closing Cash"
 msgstr "Son Oturum Kapatma Sırasındaki Nakit"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
-msgid "Last Session Closing Cashbox"
-msgstr "Last Session Closing Cashbox"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr "Son Oturumun Kapanış Tarihi"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
@@ -2828,7 +2854,7 @@ msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
@@ -2878,7 +2904,8 @@ msgid ""
 "Leave empty to use the receivable account of customer.\n"
 "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method."
+"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Only cash and bank journals are allowed."
 msgstr ""
 
 #. module: point_of_sale
@@ -3130,7 +3157,7 @@ msgstr "Monitor Stand"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Aktivite Zaman Sınırım"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3141,6 +3168,7 @@ msgstr "My Sessions"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__name
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Name"
@@ -3154,7 +3182,23 @@ msgid "Need customer to invoice"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need loss account for the following journals to post the lost amount: %s\n"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Need profit account for the following journals to post the gained amount: %s"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ProductInfoPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
@@ -3192,7 +3236,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Sonraki Aktivite Takvim Etkinliği"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3310,6 +3354,7 @@ msgstr "Faturalanmadı"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Notes"
@@ -3372,6 +3417,13 @@ msgstr "Okunmamış mesaj adedi"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "OPENING CASH CONTROL"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -3415,13 +3467,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Yalnızca nakit üzerinde yuvarlamayı uygula"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid ""
-"Only cash and bank journals are allowed in the <strong>Journal</strong> "
-"field."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3476,9 +3521,23 @@ msgstr "Open PoS sessions that are using this payment method."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
 msgstr "Oturum Aç"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Open session"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Open the money details popup"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -3498,6 +3557,13 @@ msgid "Opened by"
 msgstr "Opened by"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Opening"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opening Control"
@@ -3508,6 +3574,18 @@ msgstr "Açılış Kontrolü"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opening Date"
 msgstr "Açılış Tarihi"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__opening_notes
+msgid "Opening Notes"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
+#, python-format
+msgid "Opening cash"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -3788,9 +3866,12 @@ msgid "Payment Date"
 msgstr "Ödeme Tarihi"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_method_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
+#, python-format
 msgid "Payment Method"
 msgstr "Ödeme Yöntemi"
 
@@ -3858,7 +3939,9 @@ msgid "Payment reversed"
 msgstr "Payment reversed"
 
 #. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
 #: model:ir.model,name:point_of_sale.model_account_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
@@ -3879,6 +3962,13 @@ msgstr "Ödemeler"
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
 msgstr "Payments Methods"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "Payments in"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -3971,6 +4061,13 @@ msgstr "Lütfen IoT kutusunun hala bağlı olup olmadığını kontrol edin."
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "Lütfen yazıcının hala bağlı olup olmadığını kontrol edin."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
+#, python-format
+msgid "Please check your internet connection and try again."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -4190,7 +4287,7 @@ msgid "Point of Sale User Group"
 msgstr "Satış Noktası Kullanıcı Grubu"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_cashbox__pos_config_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
 msgstr "POS Config"
@@ -5158,11 +5255,6 @@ msgid "Sessions"
 msgstr "Oturumlar"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Set Closing Cash"
-msgstr "Set Closing Cash"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
@@ -5170,9 +5262,9 @@ msgid "Set Customer"
 msgstr "Müşteri Seç"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
-msgid "Set Default Cash Opening"
-msgstr "Set Default Cash Opening"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
+msgid "Set Maximum Difference"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5180,6 +5272,20 @@ msgstr "Set Default Cash Opening"
 #, python-format
 msgid "Set Weight"
 msgstr "Ağırlık Belirle"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
+msgid ""
+"Set a maximum difference allowed between the expected and counted money "
+"during the closing of the session."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5195,6 +5301,11 @@ msgid "Set multiple prices per product, automated discounts, etc."
 msgstr ""
 "Her ürün için birden fazla birim fiyat ve otomatik iskontolar vb. özel "
 "fiyatları ayarlayın"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Set of coins/bills that will be used in opening and closing control"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5360,13 +5471,6 @@ msgid "Spefic route for products delivered later."
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Cash Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Start Category"
 msgstr "Başlangıç Kategorisi"
@@ -5377,13 +5481,6 @@ msgid "Start Date"
 msgstr "Başlama Tarihi"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Start Drawer"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
 msgstr "Varsayılan bir ürün kategorisinde satışa başla."
@@ -5392,13 +5489,6 @@ msgstr "Varsayılan bir ürün kategorisinde satışa başla."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
 msgstr "Açılış Bakiyesi"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
-#, python-format
-msgid "Starting Cash"
-msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5692,6 +5782,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "The maximum difference allowed is"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "Bu POS Oturum adı benzersiz olmalıdır!"
@@ -5961,6 +6058,12 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Bu POS Oturum için bir nakit kasa yok"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "There is no cash register in this session."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -6105,6 +6208,7 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
 msgstr ""
@@ -6113,17 +6217,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr "Bu vergi, katalogda oluşturulan herhangi yeni bir ürüne uygulanır."
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_closing_balance_confirm_wizard
-msgid ""
-"This wizard is used to display a warning message if the manager wants to "
-"close a session with a too high difference between real and expected closing"
-" balance"
-msgstr ""
-"This wizard is used to display a warning message if the manager wants to "
-"close a session with a too high difference between real and expected closing"
-" balance"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6204,6 +6297,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -6651,16 +6746,6 @@ msgid "Yes"
 msgstr "Evet"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"You are not allowed to change the cash control status while a session is "
-"already opened."
-msgstr ""
-"You are not allowed to change the cash control status while a session is "
-"already opened."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid ""
@@ -6688,6 +6773,7 @@ msgstr ""
 "Point of Sale."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -6826,18 +6912,6 @@ msgstr ""
 "create a new one."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"Your ending balance is too different from the theoretical cash closing "
-"(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
-"it."
-msgstr ""
-"Kapanış bakiyeniz teorik nakit kapanışından çok farklıdır (%.2f), izin "
-"verilen en fazla tutar %.2f'dir. Yöneticiniz ile iletişime geçerek bunu "
-"kaydedebilirsiniz."
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
@@ -6935,6 +7009,13 @@ msgstr "note"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "open sessions"
 msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#, python-format
+msgid "orders"
+msgstr "siparişler"
 
 #. module: point_of_sale
 #. openerp-web

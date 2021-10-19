@@ -42,7 +42,6 @@ class AccountMove(models.Model):
             domain += [('code', 'in', [])]
         return domain
 
-
     def _check_document_types_post(self):
         for rec in self.filtered(
                 lambda r: r.company_id.account_fiscal_country_id.code == "CL" and
@@ -84,10 +83,6 @@ class AccountMove(models.Model):
                 if tax_payer_type == '4' or country_id.code != "CL":
                     raise ValidationError(_('You need a journal without the use of documents for foreign '
                                             'suppliers'))
-            if rec.journal_id.type == 'purchase' and not rec.journal_id.l10n_latam_use_documents:
-                if tax_payer_type != '4':
-                    raise ValidationError(_('This supplier should be defined as foreigner tax payer type and '
-                                            'the country should be different from Chile to register purchases.'))
 
     @api.onchange('journal_id')
     def _l10n_cl_onchange_journal(self):
@@ -124,3 +119,26 @@ class AccountMove(models.Model):
         if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == 'CL':
             return 'l10n_cl.report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_cl_get_invoice_totals_for_report(self):
+        self.ensure_one()
+        tax_ids_filter = tax_line_id_filter = None
+        include_sii = self._l10n_cl_include_sii()
+
+        if include_sii:
+            tax_ids_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
+            tax_line_id_filter = (lambda aml, tax: bool(tax.l10n_cl_sii_code != 14))
+
+        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
+            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
+
+        if include_sii:
+            amount_untaxed = self.currency_id.round(
+                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
+        else:
+            amount_untaxed = self.amount_untaxed
+        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+
+    def _l10n_cl_include_sii(self):
+        self.ensure_one()
+        return self.l10n_latam_document_type_id.code in ['39', '41', '110', '111', '112', '34']

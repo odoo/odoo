@@ -219,6 +219,7 @@ export class MockModels {
                     name: { string: "Name", type: 'char' },
                     partner_latitude: { string: "Latitude", type: 'float' },
                     partner_longitude: { string: "Longitude", type: 'float' },
+                    partner_share: { string: "Share Partner", type: 'boolean', default: false }, // in python a compute, hard-coded value here for simplicity
                 },
                 records: [],
             },

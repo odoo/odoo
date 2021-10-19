@@ -7,7 +7,7 @@
                 Add Custom Filter
             </t>
             <t t-foreach="conditions" t-as="condition" t-key="condition_index">
-                <li class=" o_filter_condition dropdown-item-text">
+                <div class=" o_filter_condition dropdown-item-text">
                     <t t-set="fieldType" t-value="fields[condition.field].type"/>
                     <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
                     <span t-if="!condition_first" class="o_or_filter">or</span>
@@ -89,9 +89,9 @@
                         title="Delete"
                         t-on-click="onRemoveCondition(condition_index)"
                     />
-                </li>
+                </div>
             </t>
-            <DropdownItem class="px-3 py-2" t-att-class="{ o_dropdown_item: false }">
+            <div class="px-3 py-2">
                 <button type="button"
                     class="btn btn-primary o_apply_filter mr-2"
                     t-on-click="onApply"
@@ -105,7 +105,7 @@
                     <i class="fa fa-plus-circle"/>
                     <t>Add a condition</t>
                 </button>
-            </DropdownItem>
+            </div>
         </Dropdown>
     </t>
 

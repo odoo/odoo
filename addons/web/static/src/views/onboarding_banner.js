@@ -12,14 +12,14 @@ export class OnboardingBanner extends owl.Component {
         useActionLinks({
             resModel,
             reload: async () => {
-                this.bannerHTML = await this.loadBanner(this.props.bannerRoute);
+                this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
                 this.render();
             },
         });
     }
 
     async willStart() {
-        this.bannerHTML = await this.loadBanner(this.props.bannerRoute);
+        this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
     }
 
     async loadBanner(bannerRoute) {
@@ -47,4 +47,6 @@ export class OnboardingBanner extends owl.Component {
         return new XMLSerializer().serializeToString(banner);
     }
 }
-OnboardingBanner.template = owl.tags.xml`<div t-raw="bannerHTML" />`;
+
+OnboardingBanner.template = owl.tags.xml`<div class="w-100" t-raw="bannerHTML" />`;
+OnboardingBanner.props = {};

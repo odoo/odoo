@@ -131,6 +131,25 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".o_kanban_view");
     });
 
+    QUnit.test(
+        "'CLEAR-UNCOMMITTED-CHANGES' is not triggered for function client actions",
+        async function (assert) {
+            assert.expect(2);
+
+            registry.category("actions").add("my_action", async () => {
+                assert.step("my_action");
+            });
+
+            const webClient = await createWebClient({ serverData });
+            webClient.env.bus.on("CLEAR-UNCOMMITTED-CHANGES", webClient, () => {
+                assert.step("CLEAR-UNCOMMITTED-CHANGES");
+            });
+
+            await doAction(webClient, "my_action");
+            assert.verifySteps(["my_action"]);
+        }
+    );
+
     QUnit.test("client action with control panel (legacy)", async function (assert) {
         assert.expect(4);
         // LPE Fixme: at this time we don't really know the API that wowl ClientActions implement
@@ -313,9 +332,9 @@ QUnit.module("ActionManager", (hooks) => {
         class ClientAction extends Component {
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
-                const breadCrumbs = this.props.breadcrumbs;
-                assert.strictEqual(breadCrumbs.length, 1);
-                assert.strictEqual(breadCrumbs[0].name, "Favorite Ponies");
+                const { breadcrumbs } = this.env.config;
+                assert.strictEqual(breadcrumbs.length, 1);
+                assert.strictEqual(breadcrumbs[0].name, "Favorite Ponies");
             }
             mounted() {
                 this.trigger("controller-title-updated", this.breadcrumbTitle);
@@ -422,10 +441,12 @@ QUnit.module("ActionManager", (hooks) => {
                 title: "title",
                 message: "message %s <R&D>",
                 sticky: true,
-                links: [{
-                    label: "test <R&D>",
-                    url: '#action={action.id}&id={order.id}&model=purchase.order',
-                }],
+                links: [
+                    {
+                        label: "test <R&D>",
+                        url: "#action={action.id}&id={order.id}&model=purchase.order",
+                    },
+                ],
             },
         });
         const notificationSelector = ".o_notification_manager .o_notification";
@@ -460,10 +481,12 @@ QUnit.module("ActionManager", (hooks) => {
             params: {
                 message: "message %s <R&D>",
                 sticky: true,
-                links: [{
-                    label: "test <R&D>",
-                    url: '#action={action.id}&id={order.id}&model=purchase.order',
-                }],
+                links: [
+                    {
+                        label: "test <R&D>",
+                        url: "#action={action.id}&id={order.id}&model=purchase.order",
+                    },
+                ],
             },
         });
         assert.containsOnce(
@@ -473,7 +496,8 @@ QUnit.module("ActionManager", (hooks) => {
         );
         notificationElement = document.body.querySelector(notificationSelector);
         assert.containsNone(
-            notificationElement, ".o_notification_title",
+            notificationElement,
+            ".o_notification_title",
             "the notification should not have title"
         );
     });

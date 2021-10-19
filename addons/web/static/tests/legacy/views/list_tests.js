@@ -228,7 +228,7 @@ QUnit.module('Views', {
         assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
 
         await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
-        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .o_dropdown_menu');
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .dropdown-menu');
 
         list.destroy();
     });
@@ -557,7 +557,7 @@ QUnit.module('Views', {
         assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), 'btn btn-secondary');
         assert.containsOnce(cpButtons[0], '.o_list_selection_box');
         assert.strictEqual(
-            cpButtons[0].querySelector('button[name="x"]').previousElementSibling,
+            cpButtons[0].querySelector('button[name="x"]').nextElementSibling,
             cpButtons[0].querySelector('.o_list_selection_box')
         );
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -1405,15 +1405,15 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_group_header:first')); // open first group
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
-        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .o_dropdown',
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .dropdown',
             "should not have dropdown as delete item is not there");
 
         // reload withoud grouping by m2m
         await list.reload({groupBy: []});
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
         assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
-        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus .o_dropdown');
-        await testUtils.dom.click(list.$('div.o_control_panel .o_cp_action_menus .o_dropdown button'));
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus .dropdown');
+        await testUtils.dom.click(list.$('div.o_control_panel .o_cp_action_menus .dropdown button'));
         assert.deepEqual(
             [...list.el.querySelectorAll('.o_cp_action_menus .o_menu_item')].map((el) => el.innerText),
             ["Delete"]
@@ -2007,7 +2007,7 @@ QUnit.module('Views', {
             "create button should be invisible");
         assert.isVisible($(webClient.el).find('.o_list_button_save'), "save button should be visible");
 
-        await testUtils.dom.click($(webClient.el).find('.o_dropdown_toggler:contains("Group By")'));
+        await testUtils.dom.click($(webClient.el).find('.dropdown-toggle:contains("Group By")'));
         await testUtils.dom.click($(webClient.el).find('.o_group_by_menu .o_menu_item:contains("candle")'));
 
         assert.isNotVisible($(webClient.el).find('.o_list_button_add'), "create button should be invisible");
@@ -2230,6 +2230,38 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
         assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
         assert.strictEqual(list.$('.o_list_selection_box').text().trim(), 'All 4 selected');
+
+        list.destroy();
+    });
+
+    QUnit.test('selection box is displayed after header buttons', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <header>
+                         <button name="x" type="object" class="plaf" string="plaf"/>
+                         <button name="y" type="object" class="plouf" string="plouf"/>
+                    </header>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        const lastElement = list.$('.o_cp_buttons .o_list_buttons').children(":last")[0];
+        assert.strictEqual(lastElement, list.$('.o_cp_buttons .o_list_selection_box')[0],
+            "last element should selection box");
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
 
         list.destroy();
     });
@@ -3957,8 +3989,8 @@ QUnit.module('Views', {
         await click(webClient.el.querySelector('tbody td.o_list_record_selector input'));
         assert.containsOnce(webClient, '.o_cp_action_menus', 'sidebar should be visible');
 
-        await click(webClient.el.querySelector('.o_cp_action_menus .o_dropdown_toggler'));
-        const archiveItem = [...webClient.el.querySelectorAll('.o_cp_action_menus .o_dropdown_menu li > a')]
+        await click(webClient.el.querySelector('.o_cp_action_menus .dropdown-toggle'));
+        const archiveItem = [...webClient.el.querySelectorAll('.o_cp_action_menus .dropdown-menu li > a')]
             .filter((elem) => elem.textContent === 'Archive');
         await click(archiveItem[0]);
         assert.strictEqual(document.querySelectorAll('.modal').length, 1,
@@ -9497,7 +9529,7 @@ QUnit.module('Views', {
         // delete a record
         await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
         checkSearchRead = true;
-        await testUtils.dom.click(list.$('.o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('.dropdown-toggle:contains(Action)'));
         await testUtils.dom.click(list.$('a:contains(Delete)'));
         await testUtils.dom.click($('body .modal button span:contains(Ok)'));
         assert.strictEqual(list.$('.o_pager_counter').text().trim(), '1-3 / 3',
@@ -9547,7 +9579,7 @@ QUnit.module('Views', {
         // delete a record
         await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
         checkSearchRead = true;
-        await testUtils.dom.click(list.$('.o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('.dropdown-toggle:contains(Action)'));
         await testUtils.dom.click(list.$('a:contains(Delete)'));
         await testUtils.dom.click($('body .modal button span:contains(Ok)'));
 
@@ -9597,7 +9629,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_cp_action_menus', 'sidebar should be available');
 
         // archive all records of current page
-        await testUtils.dom.click(list.$('.o_cp_action_menus .o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('.o_cp_action_menus .dropdown-toggle:contains(Action)'));
         await testUtils.dom.click(list.$('a:contains(Archive)'));
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
 
@@ -12661,6 +12693,40 @@ QUnit.module('Views', {
         assert.verifySteps(["onchange:bar"], "onchange method should have been called");
         form.destroy();
     });
+
+    QUnit.test('selecting a row after another one containing a table within an html field should be the correct one', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.fields.html = {string: "HTML field", type: "html"}
+        this.data.foo.records[0].html = `
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td><br></td>
+                        <td><br></td>
+                    </tr>
+                     <tr>
+                        <td><br></td>
+                        <td><br></td>
+                    </tr>
+                </tbody>
+            </table>`;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top" multi_edit="1">' +
+                '<field name="html"/>' +
+                '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_cell:eq(1)'))
+        assert.ok($('table.o_list_table > tbody > tr:eq(1)')[0].classList.contains('o_selected_row'), "The second row should be selected")
+
+        list.destroy();
+    });
+
 });
 
 });

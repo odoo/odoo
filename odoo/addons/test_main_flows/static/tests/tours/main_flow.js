@@ -13,12 +13,12 @@ tour.register('main_flow_tour', {
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"),
 {
 // Add Stockable product
-    trigger: ".o_menu_sections .o_dropdown_toggler span:contains('Products')",
+    trigger: ".o_menu_sections .dropdown-toggle span:contains('Products')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let's create products."),
     position: "bottom",
 }, {
-    trigger: ".o_menu_sections .o_dropdown_item:contains('Products')",
+    trigger: ".o_menu_sections .dropdown-item:contains('Products')",
     content: _t("Let's create products."),
     position: "bottom"
 }, {
@@ -172,7 +172,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "right",
 }, {
     mobile: true,
-    trigger: "input[name=name]:not(.o_invisible_modifier)",
+    trigger: ".o_field_widget[name=name] input:not(.o_invisible_modifier)",
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_field_radio.o_field_widget[name=company_type]",
     content: _t('Select a seller'),
     position: 'top',
@@ -461,7 +461,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: "input[name=name]:not(.o_invisible_modifier)",
+    trigger: ".o_field_widget[name=name] input:not(.o_invisible_modifier)",
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
@@ -659,7 +659,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
     position: "bottom"
 }, {
     mobile: false,
-    trigger: ".o_menu_sections li[data-menu-xmlid='stock.menu_reordering_rules_config']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
@@ -675,7 +675,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections li.o_dropdown_item:not(.o_dropdown):contains('Reordering Rules')",
+    trigger: ".o_menu_sections .dropdown-item:not(.o_dropdown):contains('Reordering Rules')",
     content: _t("Click on Product Section"),
     position: "bottom"
 }, {
@@ -733,7 +733,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     content: _t("Go to Run Schedulers"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections li[data-menu-xmlid='stock.menu_procurement_compute']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_procurement_compute']",
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {
@@ -804,7 +804,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 }, {
     mobile: false,
-    trigger: ".o_menu_sections li[data-menu-xmlid='mrp.menu_mrp_production_action']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='mrp.menu_mrp_production_action']",
     content: _t('Open manufacturing orders'),
     position: 'bottom',
 }, {
@@ -820,7 +820,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: "bottom",
 }, {
     mobile: true,
-    trigger: ".o_menu_sections li.o_dropdown_item:contains('Manufacturing Orders')",
+    trigger: ".o_menu_sections .dropdown-item:contains('Manufacturing Orders')",
     content: _t("Let's go to manufacturing order."),
     position: "bottom"
 }, {
@@ -854,7 +854,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections li[data-menu-xmlid='sale.menu_sale_order']",
+    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {
@@ -904,17 +904,17 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('Open the full search field'),
     position: 'bottom',
 }, {
-    trigger: '.o_group_by_menu .o_dropdown_toggler',
+    trigger: '.o_group_by_menu .dropdown-toggle',
     content: _t('Click on the group by button'),
     position: 'bottom',
 }, {
     trigger: '.dropdown-item.selected:contains(Employee)',
-    extra_trigger: '.o_dropdown.show',
+    extra_trigger: '.dropdown.show',
     content: _t('Remove group by employee'),
     position: 'bottom',
 }, {
     trigger: '.dropdown-item.selected:contains(Billable Type)',
-    extra_trigger: '.o_dropdown.show',
+    extra_trigger: '.dropdown.show',
     content: _t('Remove group by billable type'),
     position: 'bottom',
 }, {

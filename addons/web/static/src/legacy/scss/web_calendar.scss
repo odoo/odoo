@@ -126,7 +126,6 @@ $o-cw-filter-avatar-size: 20px;
 
         .o_calendar_disabled {
             background-color: $gray-200;
-            border-color: white !important;
         }
 
         // ======  Specific agenda types ======
@@ -195,10 +194,10 @@ $o-cw-filter-avatar-size: 20px;
                 box-shadow: inset 0 1px 0 gray('400');
             }
 
-            .fc-day.fc-widget-content.fc-today {
+            .fc-day.fc-widget-content.fc-today:not(.o_calendar_disabled) {
                 border-left-color: rgba($o-brand-odoo, 0.3);
                 border-right-color: rgba($o-brand-odoo, 0.3);
-                background: rgba($o-brand-odoo, .05);
+                background: $o-view-background-color;
             }
 
             .fc-event {
@@ -305,8 +304,10 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .fc-bg .fc-today {
-                background: $o-view-background-color;
                 border-color: gray('300');
+            }
+            .fc-bg .fc-today:not(.o_calendar_disabled) {
+                background: $o-view-background-color;
             }
 
             .fc-content-skeleton .fc-today .fc-day-number {

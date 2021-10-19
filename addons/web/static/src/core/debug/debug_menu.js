@@ -1,18 +1,14 @@
 /** @odoo-module **/
 
+import { DebugMenuBasic } from "@web/core/debug/debug_menu_basic";
 import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useEnvDebugContext } from "./debug_context";
 
-const { Component } = owl;
-
-export class DebugMenu extends Component {
+export class DebugMenu extends DebugMenuBasic {
     setup() {
+        super.setup();
         const debugContext = useEnvDebugContext();
-        // Needs to be bound to this for use in template
-        this.getElements = async () => {
-            this.elements = await debugContext.getItems(this.env);
-        };
         this.command = useService("command");
         useCommand(
             this.env._t("Debug tools..."),
@@ -45,7 +41,7 @@ export class DebugMenu extends Component {
                     categoriesByNamespace: {
                         default: defaultCategories,
                     },
-                    emptyMessageByNamespace: { default: "No commands found" },
+                    emptyMessageByNamespace: { default: this.env._t("No commands found") },
                     placeholder: this.env._t("Choose a debug command..."),
                     providers: [provider],
                 };
@@ -57,4 +53,3 @@ export class DebugMenu extends Component {
         );
     }
 }
-DebugMenu.template = "web.DebugMenu";

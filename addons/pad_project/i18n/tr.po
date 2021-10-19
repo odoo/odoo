@@ -5,15 +5,16 @@
 # Translators:
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Martin Trigaux, 2021
-# Murat Kaplan <muratk@projetgrup.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
+# Murat Kaplan <muratk@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -24,9 +25,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__pad_availability
+#: model:ir.model.fields,field_description:pad_project.field_project_task__pad_availability
+msgid "Availability of collaborative pads"
+msgstr "Availability of collaborative pads"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Available to:"
+msgstr "Available to:"
+
+#. module: pad_project
 #: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
 msgid "Collaborative Pads"
 msgstr "İşbirliği Bloknotları"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Edit"
+msgstr "Düzenle"
 
 #. module: pad_project
 #: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
@@ -36,6 +53,16 @@ msgid ""
 msgstr ""
 "Edit tasks' description collaboratively in real time.<br/>\n"
 "                            See each author's text in a distinct color."
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__internal
+msgid "Internal Users"
+msgstr "İç Kullanıcı"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__portal
+msgid "Internal Users & Portal Users"
+msgstr "Internal Users & Portal Users"
 
 #. module: pad_project
 #: model:ir.model.fields,field_description:pad_project.field_project_project__description_pad
@@ -47,6 +74,11 @@ msgstr "PAD adresi"
 #: model:ir.model,name:pad_project.model_project_project
 msgid "Project"
 msgstr "Proje"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Save"
+msgstr "Kaydet"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task

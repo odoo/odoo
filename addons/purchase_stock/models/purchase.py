@@ -4,7 +4,7 @@ from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -351,9 +351,11 @@ class PurchaseOrderLine(models.Model):
         if values.get('date_planned'):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
             self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
+        lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+        previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+            lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
 
     def action_product_forecast_report(self):
@@ -446,13 +448,8 @@ class PurchaseOrderLine(models.Model):
         if self.product_id.type not in ['product', 'consu']:
             return res
 
-        qty = 0.0
         price_unit = self._get_stock_move_price_unit()
-        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
-        for move in outgoing_moves:
-            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        for move in incoming_moves:
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        qty = self._get_qty_procurement()
 
         move_dests = self.move_dest_ids
         if not move_dests:
@@ -471,12 +468,22 @@ class PurchaseOrderLine(models.Model):
         if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if float_compare(qty_to_push, 0.0, precision_rounding=self.product_uom.rounding) > 0:
+        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach
             res.append(extra_move_vals)
         return res
+
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        qty = 0.0
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        for move in outgoing_moves:
+            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        for move in incoming_moves:
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        return qty
 
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id

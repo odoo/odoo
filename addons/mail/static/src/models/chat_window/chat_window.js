@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
@@ -15,8 +15,11 @@ function factory(dependencies) {
         _created() {
             super._created();
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickHideInviteForm = this.onClickHideInviteForm.bind(this);
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
+            this.onClickShowInviteForm = this.onClickShowInviteForm.bind(this);
             this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
+            this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
         }
 
         //----------------------------------------------------------------------
@@ -61,7 +64,12 @@ function factory(dependencies) {
          * Programmatically auto-focus an existing chat window.
          */
         focus() {
-            this.update({ isDoFocus: true });
+            if (!this.thread) {
+                this.update({ isDoFocus: true });
+            }
+            if (this.threadView && this.threadView.composerView) {
+                this.threadView.composerView.update({ doFocus: true });
+            }
         }
 
         focusNextVisibleUnfoldedChatWindow() {
@@ -104,7 +112,9 @@ function factory(dependencies) {
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
-            this.focus();
+            if ((options && options.focus !== undefined) ? options.focus : true) {
+                this.focus();
+            }
         }
 
         /**
@@ -120,6 +130,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "stop adding users" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickHideInviteForm(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({ channelInvitationForm: clear() });
+        }
+
+        /**
          * @param {MouseEvent} ev
          */
         onClickHideMemberList(ev) {
@@ -131,11 +151,41 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the "add users" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickShowInviteForm(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({
+                channelInvitationForm: insertAndReplace({
+                    doFocusOnSearchInput: true,
+                }),
+                isMemberListOpened: false,
+            });
+            if (!this.messaging.isCurrentUserGuest) {
+                this.channelInvitationForm.searchPartnersToInvite();
+            }
+        }
+
+        /**
          * @param {MouseEvent} ev
          */
         onClickShowMemberList(ev) {
             markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
-            this.update({ isMemberListOpened: true });
+            this.update({
+                channelInvitationForm: clear(),
+                isMemberListOpened: true,
+            });
+        }
+
+        /**
+         * @param {Event} ev
+         */
+        onFocusInNewMessageFormInput(ev) {
+            if (this.exists()) {
+                this.update({ isFocused: true });
+            }
         }
 
         /**
@@ -177,7 +227,18 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasCallButtons() {
-            return this.thread && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+            return Boolean(this.thread) && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasInviteFeature() {
+            return Boolean(
+                this.thread && this.thread.hasInviteFeature &&
+                this.messaging && this.messaging.device && this.messaging.device.isMobile
+            );
         }
 
         /**
@@ -224,7 +285,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && !!this.thread;
+            return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm;
         }
 
         /**
@@ -266,15 +327,11 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer}
          */
         _computeThreadViewer() {
-            const threadViewerData = {
+            return insertAndReplace({
                 compact: true,
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
-            };
-            if (!this.threadViewer) {
-                return create(threadViewerData);
-            }
-            return update(threadViewerData);
+            });
         }
 
         /**
@@ -356,11 +413,25 @@ function factory(dependencies) {
 
     ChatWindow.fields = {
         /**
+         * Determines the channel invitation form displayed by this chat window
+         * (if any). Only makes sense if hasInviteFeature is true.
+         */
+        channelInvitationForm: one2one('mail.channel_invitation_form', {
+            inverse: 'chatWindow',
+            isCausal: true,
+        }),
+        /**
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
             default: false,
             compute: '_computeHasCallButtons',
+        }),
+        /**
+         * States whether this chat window has the invite feature.
+         */
+        hasInviteFeature: attr({
+            compute: '_computeHasInviteFeature',
         }),
         /**
          * Determines whether "new message form" should be displayed.
@@ -420,6 +491,11 @@ function factory(dependencies) {
         }),
         manager: many2one('mail.chat_window_manager', {
             inverse: 'chatWindows',
+            readonly: true,
+        }),
+        managerAsNewMessage: one2one('mail.chat_window_manager', {
+            inverse: 'newMessageChatWindow',
+            readonly: true,
         }),
         name: attr({
             compute: '_computeName',
@@ -430,6 +506,7 @@ function factory(dependencies) {
          */
         thread: one2one('mail.thread', {
             inverse: 'chatWindow',
+            readonly: true,
         }),
         /**
          * States the `mail.thread_view` displaying `this.thread`.
@@ -442,6 +519,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'chatWindow',
             isCausal: true,
             readonly: true,
             required: true,
@@ -459,7 +537,7 @@ function factory(dependencies) {
             compute: '_computeVisibleOffset',
         }),
     };
-
+    ChatWindow.identifyingFields = ['manager', ['thread', 'managerAsNewMessage']];
     ChatWindow.modelName = 'mail.chat_window';
 
     return ChatWindow;

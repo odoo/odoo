@@ -8,7 +8,7 @@
         </div>
         <form class="ml-auto">
             <!-- Uncomment the following line when the mobile preview will be available. -->
-            <!-- <button type="button" class="btn btn-secondary" name="mobile" data-action="mobilePreview"><i class="fa fa-mobile"></i></button> -->
+            <!-- <button type="button" class="btn btn-secondary fa fa-mobile" name="mobile" data-action="mobilePreview"/> -->
             <button type="button" class="btn btn-secondary" data-action="cancel" title="Discard record" accesskey="j">Discard</button>
             <button type="button" class="btn btn-primary" data-action="save" title="Save record" accesskey="s">Save</button>
         </form>
@@ -36,7 +36,7 @@
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">First Panel</div>
                 <div class="o_panel_body">
-                    <t t-snippet="web_editor.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
+                    <t t-snippet="web_editor.s_hr" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
                 </div>
             </div>
         </t>
@@ -140,12 +140,11 @@
         <we-row t-if="with_colors or with_images" string="Background" class="o_we_full_row">
             <t t-if="with_colors" t-call="web_editor.snippet_options_background_color_widget"/>
             <t t-if="with_images">
-                <we-button title="Image" class="ml-auto"
+                <we-button title="Image" class="ml-auto fa fa-fw fa-camera"
                            data-name="bg_image_toggle_opt"
                            t-att-data-dependencies="images_dependencies"
                            data-toggle-bg-image="true"
                            data-no-preview="true">
-                    <i class="fa fa-fw fa-camera"/>
                 </we-button>
                 <we-button title="Shape"
                            data-toggle-bg-shape="true"
@@ -184,9 +183,7 @@
                     <we-button data-background-type="cover">Cover</we-button>
                     <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
                 </we-select>
-                <we-button title="Background Position" data-background-position-overlay="true" data-no-preview="true">
-                    <i class="fa fa-fw fa-crosshairs"/>
-                </we-button>
+                <we-button class="fa fa-fw fa-crosshairs" title="Background Position" data-background-position-overlay="true" data-no-preview="true"/>
             </we-row>
             <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
                 <!-- &emsp; -->
@@ -356,8 +353,8 @@
                 </we-select-page>
             </we-select-pager>
             <we-row string=" ⌙ Flip"><!-- &emsp; -->
-                <we-button data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-h"/></we-button>
-                <we-button data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-v"/></we-button>
+                <we-button class="fa fa-fw fa-arrows-h" data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
+                <we-button class="fa fa-fw fa-arrows-v" data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
             </we-row>
             <we-row string=" ⌙ Colors" data-name="colors">
                 <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to="> .o_we_shape"/>
@@ -418,11 +415,11 @@
     </div>
 
     <div data-selector="img">
-        <we-input string="Description" class="o_we_large_input"
+        <we-input string="Description" class="o_we_large"
             data-select-attribute="" data-attribute-name="alt"
             placeholder="Alt tag"
             title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
-        <we-input string="Tooltip" class="o_we_large_input"
+        <we-input string="Tooltip" class="o_we_large"
             data-select-attribute="" data-attribute-name="title"
             placeholder="Title tag"
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
@@ -502,7 +499,7 @@
                         <we-button data-set-img-shape="web_editor/special/spl_circuit_1" data-select-label="Circuit" data-animated="true"/>
                     </we-select-page>
                 </we-select-pager>
-                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove"><i class="fa fa-fw fa-times"/></we-button>
+                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove fa fa-fw fa-times"/>
             </we-row>
             <we-row string=" ⌙ Colors">
                 <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-0" data-color-id="0" />
@@ -518,13 +515,11 @@
 
     <div data-js="ImageTools" data-selector="img">
         <we-row string="Transform">
-            <we-button data-crop="true" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
+            <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>
             <we-button class="ml-0 border-left-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
                 Reset
             </we-button>
-            <we-button data-transform="true" data-no-preview="true" title="Transform the picture">
-                <i class="fa fa-object-ungroup"></i>
-            </we-button>
+            <we-button class="fa fa-fw fa-object-ungroup" data-transform="true" data-no-preview="true" title="Transform the picture"/>
             <we-button class="ml-0 border-left-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
                 Reset
             </we-button>
@@ -547,10 +542,10 @@
         </we-select>
 
         <we-row string="Style">
-            <we-button data-select-class="rounded" title="Shape: Rounded"><i class="fa fa-square fa-fw"/></we-button>
-            <we-button data-select-class="rounded-circle" title="Shape: Circle"><i class="fa fa-circle-o fa-fw"/></we-button>
-            <we-button data-select-class="shadow" title="Shadow"><i class="fa fa-sun-o fa-fw"/></we-button>
-            <we-button data-select-class="img-thumbnail" title="Shape: Thumbnail"><i class="fa fa-picture-o fa-fw"/></we-button>
+            <we-button class="fa fa-fw fa-square" data-select-class="rounded" title="Shape: Rounded"/>
+            <we-button class="fa fa-fw fa-circle-o" data-select-class="rounded-circle" title="Shape: Circle"/>
+            <we-button class="fa fa-fw fa-sun-o" data-select-class="shadow" title="Shadow"/>
+            <we-button class="fa fa-fw fa-picture-o" data-select-class="img-thumbnail" title="Shape: Thumbnail"/>
         </we-row>
 
         <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>

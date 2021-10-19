@@ -5,16 +5,18 @@
 # Translators:
 # Kevin Wang <kevin@loyal-info.com>, 2021
 # niulin lnc. <admin@niulin.net>, 2021
-# Martin Trigaux, 2021
 # Felix Yuen <fyu@odoo.com>, 2021
+# 黎伟杰 <674416404@qq.com>, 2021
+# Martin Trigaux, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,11 +43,6 @@ msgstr ""
 #, python-format
 msgid "\"%s\" requires microphone access"
 msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "${object.partner_id.lang}"
-msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -148,7 +145,7 @@ msgid "%s is typing..."
 msgstr "%s 正在输入..."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
+#: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "%s started a live conference"
 msgstr ""
@@ -197,6 +194,13 @@ msgstr "(从"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
 msgstr "（最初分配给"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid ", enter to"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -1591,10 +1595,7 @@ msgstr "配置你的活动类型"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr ""
-"配置您的邮件服务器参数【老天提醒：如使用腾讯邮箱或阿里免费企业邮箱，让odoo用smtp代理发件的模式，请保证以下两点前提"
-"：一是odoo系统中默认发件邮箱账号是postmaster-"
-"odoo@xxx.com二是从技术菜单下的系统参数中删除mail.bounce.alias这行不要，详见各种中文文章，仁杰有篇文章深入研究了odoo的邮件配置写得很清楚，可参考】"
+msgstr "配置您的邮件服务器参数"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1823,7 +1824,7 @@ msgstr "正在创建记录"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Creation Date"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__credential
@@ -2221,8 +2222,7 @@ msgstr "完成&安排下一次"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2310,6 +2310,7 @@ msgstr "动态定位符生成器"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "编辑"
@@ -2618,13 +2619,13 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
+msgid "Failed to render inline_template template : %s)"
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s"
+msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
 msgstr ""
 
 #. module: mail
@@ -3196,8 +3197,9 @@ msgstr "如果设置完毕，队列管理员将在指定日期之后发送EMail�
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible. Jinja2 placeholders may be used."
-msgstr "如果设置完毕，队列管理员将在指定日期之后发送EMail。如果未设置完毕，EMail将尽快发送。可以使用 Jinja2 占位符。"
+"the email will be send as soon as possible. You can use dynamic expressions "
+"expression."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -3518,6 +3520,13 @@ msgid "Is sharing the screen"
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
+#, python-format
+msgid "Issue with audio"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
 msgstr "加入"
@@ -3605,7 +3614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_settings____last_update
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_last_seen_partner_ids
@@ -4049,6 +4058,20 @@ msgid "Message"
 msgstr "消息"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message #%s..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message %s..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
@@ -4107,7 +4130,7 @@ msgstr "消息描述：主题或正文的开始部分"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/discuss/discuss.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Message posted on \"%s\""
 msgstr ""
@@ -4215,6 +4238,12 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr "内部消息只有员工可见，即基础用户组成员"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Messages with tracking values cannot be modified"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4798,13 +4827,6 @@ msgid "Only custom models can be modified."
 msgstr "仅有自定义模型能被修改."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/dialog/dialog.xml:0
-#, python-format
-msgid "Only dialog linked to a record is currently supported!"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
@@ -4820,6 +4842,7 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
+#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Only users belonging to the \"%s\" group can modify dynamic templates."
 msgstr ""
@@ -4830,6 +4853,7 @@ msgid "Open"
 msgstr "打开"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "打开单据"
@@ -4906,11 +4930,9 @@ msgstr "可选的打印和附加报表"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"在发送邮件时可选择的语言代码（ISO "
-"代码）。如果没有设置，会使用英文版本。一般用占位符来确定合适的语言，例如：${object.partner_id.lang.code}。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5125,6 +5147,7 @@ msgstr "不要使用，请联系我们"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Please wait while the file is uploading."
 msgstr ""
@@ -5339,6 +5362,11 @@ msgstr "快速搜索..."
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 msgid "RTC Session"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_partner__rtc_session_ids
+msgid "RTC Sessions"
 msgstr ""
 
 #. module: mail
@@ -5570,8 +5598,8 @@ msgstr "关联字段"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
 msgstr "移除"
@@ -6013,7 +6041,7 @@ msgstr "已发送"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__sequence
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -6432,7 +6460,9 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Template rendering supports only raw jinja or qweb (view or raw)."
+msgid ""
+"Template rendering supports only inline_template, qweb, or qweb_view (view "
+"or raw)."
 msgstr ""
 
 #. module: mail
@@ -6474,6 +6504,11 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr "税号。 如果联系人需缴纳税款，请填写。 用于某些法律声明。"
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
+msgid "The channel UUID must be unique"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6718,10 +6753,10 @@ msgstr "至:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -7019,14 +7054,15 @@ msgstr "上传文件"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #, python-format
 msgid "Uploaded"
 msgstr "已上传"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Uploading"
 msgstr "上传中"
@@ -7347,8 +7383,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "昨天"
@@ -7642,6 +7678,13 @@ msgid "by"
 msgstr "单位"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "cancel"
+msgstr "取消"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid ""
 "cannot be processed. This address\n"
@@ -7733,6 +7776,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "escape to"
 msgstr ""
 
 #. module: mail
@@ -7941,6 +7991,13 @@ msgid "sales"
 msgstr "销售"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "save"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "some specific addresses"
@@ -8015,3 +8072,8 @@ msgstr "值"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "周"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "{{ object.partner_id.lang }}"
+msgstr ""

@@ -14,6 +14,8 @@ export function useUpdate({ func }) {
     const component = useComponent();
     const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
+        isLocking: false, // unfortunately onUpdate methods often have side effect
+        name: `useUpdate() of ${component}`,
         onChange: () => component.render(),
     });
     function onUpdate() {

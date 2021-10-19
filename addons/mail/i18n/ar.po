@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
-# Martin Trigaux, 2021
 # Talal Albahra <talal.albahra@outlook.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Talal Albahra <talal.albahra@outlook.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,11 +40,6 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "${object.partner_id.lang}"
 msgstr ""
 
 #. module: mail
@@ -148,7 +143,7 @@ msgid "%s is typing..."
 msgstr "%s يكتب..."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:0
+#: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "%s started a live conference"
 msgstr ""
@@ -196,6 +191,13 @@ msgstr "(من"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid ", enter to"
 msgstr ""
 
 #. module: mail
@@ -2245,8 +2247,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
@@ -2334,6 +2335,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
+#: code:addons/mail/static/src/components/message_action_list/message_action_list.xml:0
 #, python-format
 msgid "Edit"
 msgstr "تحرير"
@@ -2646,13 +2648,13 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
+msgid "Failed to render inline_template template : %s)"
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s"
+msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
 msgstr ""
 
 #. module: mail
@@ -3232,11 +3234,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
-"the email will be send as soon as possible. Jinja2 placeholders may be used."
+"the email will be send as soon as possible. You can use dynamic expressions "
+"expression."
 msgstr ""
-"إذا كان محددًا، سيقوم منظم قائمة الانتظار بإرسال الرسالة بعد التاريخ. إن لم "
-"يكن محددًا، سيتم إرسال الرسالة في أقرب فرصة. قد يتم استخدام العناصر النائبة "
-"Jinja2."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -3560,6 +3560,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/rtc_call_participant_card/rtc_call_participant_card.xml:0
+#, python-format
+msgid "Issue with audio"
 msgstr ""
 
 #. module: mail
@@ -4096,6 +4103,20 @@ msgid "Message"
 msgstr "الرسالة"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message #%s..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
+#, python-format
+msgid "Message %s..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_has_error
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
@@ -4154,7 +4175,7 @@ msgstr "وصف الرسالة: إما أن يكون موضوعها، أو بدا
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/discuss/discuss.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Message posted on \"%s\""
 msgstr ""
@@ -4270,6 +4291,12 @@ msgid ""
 "members of base_user group"
 msgstr ""
 "الرسائل ذات الأنواع الفرعية ستظهر للموظفين فقط، وهم أعضاء المجموعة base_user"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Messages with tracking values cannot be modified"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4859,13 +4886,6 @@ msgid "Only custom models can be modified."
 msgstr "يمكن تعديل الكائنات المخصصة فقط."
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/dialog/dialog.xml:0
-#, python-format
-msgid "Only dialog linked to a record is currently supported!"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
@@ -4881,6 +4901,7 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
+#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Only users belonging to the \"%s\" group can modify dynamic templates."
 msgstr ""
@@ -4891,6 +4912,7 @@ msgid "Open"
 msgstr "فتح"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "فتح مستند"
@@ -4971,12 +4993,9 @@ msgstr "تقرير اختياري يمكن طباعته أو إلحاقه"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"لغة ترجمة اختيارية (كود ISO) يمكن اختيارها عند إرسال رسالة. إذا لم تضبط، "
-"ستستخدم النسخة الإنجليزية. عادةً، ينبغي أن تحتوي هذه القيمة على تعبير الرمز "
-"النائب الذي يوفر اللغة المناسبة، مثلًا: ${object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5192,6 +5211,7 @@ msgstr "برجاء التواصل معنا بدلًا من"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer/composer.js:0
+#: code:addons/mail/static/src/models/composer_view/composer_view.js:0
 #, python-format
 msgid "Please wait while the file is uploading."
 msgstr ""
@@ -5406,6 +5426,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 msgid "RTC Session"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_partner__rtc_session_ids
+msgid "RTC Sessions"
 msgstr ""
 
 #. module: mail
@@ -5637,8 +5662,8 @@ msgstr "حقل العلاقة"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Remove"
 msgstr "إزالة"
@@ -6508,7 +6533,9 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Template rendering supports only raw jinja or qweb (view or raw)."
+msgid ""
+"Template rendering supports only inline_template, qweb, or qweb_view (view "
+"or raw)."
 msgstr ""
 
 #. module: mail
@@ -6552,6 +6579,11 @@ msgid ""
 msgstr ""
 "رقم التعريف الضريبي. قم بإكماله إذا كانت جهة الاتصال تخضع للضرائب الحكومية. "
 "يُستخدم في بعض المستندات القانونية."
+
+#. module: mail
+#: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
+msgid "The channel UUID must be unique"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6807,10 +6839,10 @@ msgstr "إلى:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/js/views/activity/activity_renderer.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #: code:addons/mail/static/src/xml/systray.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
@@ -7102,14 +7134,15 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
 #, python-format
 msgid "Uploaded"
 msgstr "رفع"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/attachment/attachment.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "Uploading"
 msgstr "تحميل"
@@ -7437,8 +7470,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/message/message.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "أمس"
@@ -7735,6 +7768,13 @@ msgid "by"
 msgstr "بواسطة"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "cancel"
+msgstr "إلغاء"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid ""
 "cannot be processed. This address\n"
@@ -7826,6 +7866,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "e.g. true.true..f"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "escape to"
 msgstr ""
 
 #. module: mail
@@ -8034,6 +8081,13 @@ msgid "sales"
 msgstr "مبيعات"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer/composer.xml:0
+#, python-format
+msgid "save"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "some specific addresses"
@@ -8108,3 +8162,8 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "أسابيع"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "{{ object.partner_id.lang }}"
+msgstr ""

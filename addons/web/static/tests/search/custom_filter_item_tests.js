@@ -4,6 +4,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { click, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { browser } from "@web/core/browser/browser";
 import {
     addCondition,
     applyFilter,
@@ -84,6 +85,10 @@ QUnit.module("Search", (hooks) => {
             },
         };
         setupControlPanelServiceRegistry();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("CustomFilterItem");
@@ -305,13 +310,13 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), []);
 
         assert.containsNone(controlPanel, ".o_menu_item");
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.o_dropdown_toggler");
+        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.dropdown-toggle");
         // the 'Add Custom Filter' menu should be closed;
-        assert.containsNone(controlPanel, ".o_add_custom_filter_menu ul.o_dropdown_menu");
+        assert.containsNone(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
 
         await toggleAddCustomFilter(controlPanel);
         // the 'Add Custom Filter' menu should be open;
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu ul.o_dropdown_menu");
+        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
 
         await applyFilter(controlPanel);
 
@@ -319,9 +324,9 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), [["boolean_field", "=", true]]);
 
         assert.containsOnce(controlPanel, ".o_menu_item");
-        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.o_dropdown_toggler");
-        // the 'Add Custom Filter' menu should be closed;
-        assert.containsNone(controlPanel, ".o_add_custom_filter_menu ul.o_dropdown_menu");
+        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu button.dropdown-toggle");
+        // the 'Add Custom Filter' menu should still be opened;
+        assert.containsOnce(controlPanel, ".o_add_custom_filter_menu .dropdown-menu");
     });
 
     QUnit.test("selection field: default and updated value", async function (assert) {

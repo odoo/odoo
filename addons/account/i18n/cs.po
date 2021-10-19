@@ -14,18 +14,18 @@
 # Martin Trigaux, 2021
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
 # milda dvorak <milda.dvorak@optimal4.cz>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:27+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,28 +83,6 @@ msgstr "# Mince / bankovky"
 #, python-format
 msgid "#Created by: %s"
 msgstr "#Vytvořil: %s"
-
-#. module: account
-#: model:mail.template,report_name:account.mail_template_data_payment_receipt
-msgid "${(object.name or '').replace('/','-')}"
-msgstr "${(object.name or '').replace('/','-')}"
-
-#. module: account
-#: model:mail.template,subject:account.email_template_edi_credit_note
-msgid "${object.company_id.name} Credit Note (Ref ${object.name or 'n/a'})"
-msgstr ""
-
-#. module: account
-#: model:mail.template,subject:account.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Faktura (Ref ${object.name or 'n/a'})"
-
-#. module: account
-#: model:mail.template,subject:account.mail_template_data_payment_receipt
-msgid ""
-"${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name} Platební doklad (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -256,29 +234,31 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
-"        % if object.partner_id.parent_id:\n"
-"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
-"        % else:\n"
-"            ${object.partner_id.name},\n"
-"        % endif\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
 "        <br/><br/>\n"
 "        Here is your\n"
-"        % if object.name:\n"
-"            credit note <strong>${object.name}</strong>\n"
-"        % else:\n"
+"        <t t-if=\"object.name\">\n"
+"            credit note <strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            credit note\n"
-"        %endif\n"
-"        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
-"        % endif\n"
-"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}.\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        amounting in <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        % if object.invoice_user_id.signature:\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
 "            <br/>\n"
-"            ${object.invoice_user_id.signature | safe}\n"
-"        % endif\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -290,98 +270,63 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
-"        % if object.partner_id.parent_id:\n"
-"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
-"        % else:\n"
-"            ${object.partner_id.name},\n"
-"        % endif\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
 "        <br/><br/>\n"
 "        Here is your\n"
-"        % if object.name:\n"
-"            invoice <strong>${object.name}</strong>\n"
-"        % else:\n"
+"        <t t-if=\"object.name\">\n"
+"            invoice <strong t-out=\"object.name or ''\">INV/2021/05/0005</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            invoice\n"
-"        %endif\n"
-"        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
-"        % endif\n"
-"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}.\n"
-"        % if object.payment_state in ('paid', 'in_payment'):\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        amounting in <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            This invoice is already paid.\n"
-"        % else:\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
-"            % if object.payment_reference:\n"
+"            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"                Please use the following communication for your payment: <strong>${object.payment_reference}</strong>.\n"
-"            % endif\n"
-"        % endif\n"
+"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.\n"
+"            </t>\n"
+"        </t>\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        % if object.invoice_user_id.signature:\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
 "            <br/>\n"
-"            ${object.invoice_user_id.signature | safe}\n"
-"        % endif\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený pane / paní\n"
-"        % if object.partner_id.parent_id:\n"
-"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
-"        % else:\n"
-"            ${object.partner_id.name},\n"
-"        % endif\n"
-"        <br/><br/>\n"
-"        Zde je vaše\n"
-"        % if object.name:\n"
-"            faktura <strong>${object.name}</strong>\n"
-"        % else:\n"
-"            faktura \n"
-"        %endif\n"
-"        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
-"        % endif\n"
-"        v částce <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        od ${object.company_id.name}.\n"
-"        % if object.payment_state in ('paid', 'in_payment'):\n"
-"            Tato faktura je již zaplacena.\n"
-"        % else:\n"
-"            Platbu odešlete co nejdříve.\n"
-"            % if object.payment_reference:\n"
-"                <br/><br/>\n"
-"                Pro platbu použijte následující referenci: <strong>${object.payment_reference}</strong>.\n"
-"            % endif\n"
-"        % endif\n"
-"        <br/><br/>\n"
-"        V případě jakýchkoli dotazů nás neváhejte kontaktovat.\n"
-"        % if object.invoice_user_id.signature:\n"
-"            <br/>\n"
-"            ${object.invoice_user_id.signature | safe}\n"
-"        % endif\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name}<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
 "        Thank you for your payment.\n"
-"        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting\n"
-"        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.\n"
+"        Here is your payment receipt <strong t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</strong> amounting\n"
+"        to <strong t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</strong> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <br/><br/>\n"
 "        Best regards,\n"
-"        % if user.signature:\n"
+"        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
-"            ${user.signature | safe}\n"
-"        % endif\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
@@ -494,14 +439,6 @@ msgstr ""
 "                                        <span>vybrané záznamy</span>\n"
 "                                    </span>\n"
 "                                    <span>sledujících dokument a</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
-msgid ""
-"<span attrs=\"{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}\">\n"
-"                            No tax template found for this country. Please install the corresponding localization module.\n"
-"                        </span>"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1152,6 +1089,12 @@ msgid "A bank statement line is a financial transaction on a bank account"
 msgstr "Řádek bankovního výpisu je finanční transakce na bankovním účtu"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "A fiscal position with a foreign VAT already exists in this region."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
@@ -1793,6 +1736,11 @@ msgid "Activate to create purchase receipt"
 msgstr "Aktivujte a vytvořte potvrzení o nákupu"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Activate to create sale receipt"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
@@ -1815,11 +1763,6 @@ msgstr "Aktivní účet"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
 msgid "Active domain"
 msgstr "Aktivní doména"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Active to create sale receipt"
-msgstr "Aktivní k vytvoření potvrzení o prodeji"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -4267,6 +4210,11 @@ msgid "Create a new tax"
 msgstr "Vytvořit novou daň"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_tax_group
+msgid "Create a new tax group"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
 msgstr "Vytvořte fakturu dodavatele"
@@ -4533,8 +4481,8 @@ msgstr ""
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_credit_note
 msgid ""
-"Credit_note_${(object.name or '').replace('/','_')}${object.state == 'draft'"
-" and '_draft' or ''}"
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 msgstr ""
 
 #. module: account
@@ -5076,6 +5024,19 @@ msgstr "Definujte své fiskální roky & amp; periodicita daňových přiznání
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
 msgstr "Definuje, jak budou bankovní výpisy zaregistrovány"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_persistent
+msgid ""
+"Defines how this report line creates carry over lines when performing tax "
+"closing.If true, the amounts carried over will always be added on top of "
+"each other: for example, a report line with a balance of 10 with an existing"
+" carryover of 50 will add an additional 10 to it when doing the closing, "
+"making a total carryover of 60. If false, the total carried over amount will"
+" be forced to the total of this report line: a report line with a balance of"
+" 10 with an existing carryover of 50 will create a new carryover line of "
+"-40, so that the total carryover becomes 10."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -6576,13 +6537,6 @@ msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr "Pokud je prázdný, použije deník položky deníku k obrácení."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_persistent
-msgid ""
-"If set, each new carryover amount is added to the previous ones. And the amounts are carried over from period to period.\n"
-"If not set, each new carryover amount overrides the former one."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
 #: model:ir.model.fields,help:account.field_account_tax_template__include_base_amount
 msgid ""
@@ -6998,6 +6952,11 @@ msgid "Install More Packages"
 msgstr "Instalovat další balíčky"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+msgid "Install new module"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
 msgid "Inter-Banks Transfer Account"
 msgstr "Mezibankovní převodní účet"
@@ -7293,11 +7252,9 @@ msgstr ""
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
 msgid ""
-"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
-" '_draft' or ''}"
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
 msgstr ""
-"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
-" '_draft' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7339,12 +7296,6 @@ msgid "Invoices Analysis"
 msgstr "Analýza faktur"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid "Invoices Matching Rule"
-msgstr "Pravidlo párování faktur"
-
-#. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
 msgstr "Statistiky faktur"
@@ -7372,6 +7323,18 @@ msgstr ""
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
 msgstr "Faktury bez úhrad"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Invoices/Bills Partial Match if Underpaid"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Invoices/Bills Perfect Match"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -8658,7 +8621,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Termín mé aktivity"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8709,7 +8672,7 @@ msgstr "Negativní zůstatek daně"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
-msgstr ""
+msgstr "Záporná hodnota pole částka, pokud je payment_type odchozí"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__open
@@ -8829,6 +8792,13 @@ msgstr ""
 #, python-format
 msgid "No possible action found with the selected lines."
 msgstr "U vybraných řádků nebyla nalezena žádná možná akce."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+msgid ""
+"No tax template found for this country. Please install the corresponding "
+"localization module."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -8951,6 +8921,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_search
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Notes"
 msgstr "Poznámky"
 
@@ -9199,7 +9170,7 @@ msgstr "Pouze správci mohou načíst účtovou osnovu"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Pouze faktury mohou být tištěny."
@@ -9356,13 +9327,9 @@ msgstr ""
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
-"e-mailu. Pokud není nastavena, bude použita anglická verze. To by mělo být "
-"obvykle zástupný výraz, který poskytuje vhodný jazyk, např.  "
-"${object.partner_id.lang}."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -10319,6 +10286,11 @@ msgid "Preview as a PDF"
 msgstr "Náhled jako PDF"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Preview invoice"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
 msgid "Previous Statement"
 msgstr "Předchozí prohlášení"
@@ -10399,6 +10371,7 @@ msgstr "Šablona produktu"
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.actions.act_window,name:account.product_product_action_sellable
+#: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__products
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 #: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
@@ -12092,6 +12065,7 @@ msgstr "Stav kroku při registraci daně z prodeje"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_id
 #: model:ir.model.fields,field_description:account.field_account_payment__statement_id
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_search
 #, python-format
 msgid "Statement"
 msgstr "Prohlášení"
@@ -12426,6 +12400,12 @@ msgstr "Daňové tabulky"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_group_id
 msgid "Tax Group"
 msgstr "Daňová skupina"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_tax_group
+#: model:ir.ui.menu,name:account.menu_action_tax_group
+msgid "Tax Groups"
+msgstr "daňové skupiny"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16418,6 +16398,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
 msgstr "s pdf faktury jako přílohy."
+
+#. module: account
+#: model:mail.template,report_name:account.mail_template_data_payment_receipt
+msgid "{{ (object.name or '').replace('/','-') }}"
+msgstr ""
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_credit_note
+msgid ""
+"{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_invoice
+msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: account
+#: model:mail.template,subject:account.mail_template_data_payment_receipt
+msgid ""
+"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
+"}})"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

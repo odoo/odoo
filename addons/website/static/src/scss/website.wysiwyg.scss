@@ -11,8 +11,6 @@
     // without duplicating the css.
     @include print-variable('o-we-toolbar-height', $o-navbar-height);
 
-    @include print-variable('priority-palette-prefix', $o-palette-priority-prefix);
-
     // Need the colors, name, menu background color and footer background color of each color palette
     $o-palette-names: ();
     $-default-cc: ();
@@ -24,27 +22,28 @@
         $-default-cc: map-merge($-default-cc, ($attr: map-get($o-base-color-palette, $attr)))
     }
 
-    @each $palette-name, $palette in $o-color-palettes {
-        @if $palette-name != 'user-palette' {
-            @each $key, $value in $palette {
-                @include print-variable('o-palette-#{$palette-name}-#{$key}', $value);
+    @each $-selected-palette-name in $o-selected-color-palettes-names {
+        $-palette: map-get($o-color-palettes, $-selected-palette-name);
+
+        @if $-selected-palette-name != 'user-palette' {
+            @each $key, $value in $-palette {
+                @include print-variable('o-palette-#{$-selected-palette-name}-#{$key}', $value);
             }
-            $o-palette-names: append($o-palette-names, $palette-name);
 
             @each $attr-name, $default-cc-idx in $-default-cc {
                 $-cc-idx: $default-cc-idx;
-                @if map-has-key($palette, $attr-name) {
-                    $-cc-idx: map-get($palette, $attr-name);
+                @if map-has-key($-palette, $attr-name) {
+                    $-cc-idx: map-get($-palette, $attr-name);
                 }
                 $-bg: $body-bg;
                 @if $-cc-idx != null {
                     $-cc: nth($o-color-combinations, $-cc-idx);
-                    $-bg: o-safe-get($palette, 'o-cc#{$-cc-idx}-bg', map-get($-cc, 'bg'));
+                    $-bg: o-safe-get($-palette, 'o-cc#{$-cc-idx}-bg', map-get($-cc, 'bg'));
                     @if type-of($-bg) != color {
-                        $-bg: map-get($palette, $-bg);
+                        $-bg: map-get($-palette, $-bg);
                     }
                 }
-                @include print-variable('o-palette-#{$palette-name}-#{$attr-name}-bg', $-bg);
+                @include print-variable('o-palette-#{$-selected-palette-name}-#{$attr-name}-bg', $-bg);
             }
         }
     }
@@ -56,7 +55,7 @@
         @include print-variable('o-default-#{$attr-name}-bg', $-default-bg);
     }
 
-    @include print-variable('palette-names', $o-palette-names);
+    @include print-variable('palette-names', $o-selected-color-palettes-names);
 
     // Need info about the base grays which are used to compute the final grays
     @each $name, $color in $o-base-gray-color-palette {
@@ -115,20 +114,33 @@ $i: 1;
 
 #oe_snippets > .o_we_customize_panel {
     .o_we_user_value_widget.o_palette_color_preview_button {
+        display: inline-flex;
+        margin: 1% 0;
+        padding-right: 0.3rem;
+        width: 50%;
+        background: transparent;
+
+        &.active, &:hover {
+            background: transparent;
+
+            > div {
+                box-shadow: 0 0 0 2px $o-we-bg-darkest, 0 0 0 3px $o-we-accent;
+            }
+        }
+
         > div {
             display: flex;
             flex: 1 1 auto;
             align-items: stretch;
+            justify-content: flex-end;
+            margin: 3px;
+            min-height: $o-we-sidebar-content-field-dropdown-grid-item-height * .5;
+            border-radius: $o-we-sidebar-content-field-dropdown-grid-item-height;
+            box-shadow: 0 0 0 1px $o-we-bg-darkest;
         }
+
         .o_palette_color_preview {
             flex: 1 0 0;
-            margin: 1px 0;
-            transition: flex 150ms ease 0s;
-        }
-        &:not(:hover) .o_palette_color_preview {
-            &:nth-child(4), &:nth-child(5) {
-                flex: 0 0 0;
-            }
         }
     }
 
@@ -184,7 +196,11 @@ $i: 1;
         .o_we_so_color_palette.o_we_user_value_widget {
 
             + .o_we_so_color_palette {
-                margin-left: 10px;
+                margin-left: $o-we-item-spacing * .5;
+
+                &:nth-child(4) {
+                    margin-left: $o-we-item-spacing * 3;
+                }
             }
             .o_we_color_preview {
                 width: $o-we-sidebar-content-field-colorpicker-size-large;
@@ -204,6 +220,12 @@ $i: 1;
 
             > div, we-toggler {
                 height: 100%;
+            }
+
+            we-selection-items {
+                padding-top: $o-we-dropdown-item-height * .5;
+                padding-bottom: $o-we-dropdown-item-height * .5;
+                background: $o-we-dropdown-item-active-bg;
             }
         }
         we-toggler {

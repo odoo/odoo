@@ -132,7 +132,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr "<strong>Er is geen geschikte betalingsverwerker gevonden.</strong>"
+msgstr "<strong>Er is geen geschikte betalingsprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -160,7 +160,7 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Waarschuwing</strong> Het maken van een betalingsverwerker via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
 "                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
@@ -169,8 +169,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
-"<strong>Waarschuwing</strong> Zorg ervoor dat u bent ingelogd als de juiste "
-"partner voordat u deze betaling uitvoert."
+"<strong>Waarschuwing</strong> Zorg ervoor dat je bent ingelogd als de juiste"
+" partner voordat je deze betaling uitvoert."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -180,7 +180,7 @@ msgstr "<strong>Waarschuwing</strong> De valuta ontbreekt of is onjuist."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr "<strong>Waarschuwing</strong> U moet ingelogd zijn om te betalen."
+msgstr "<strong>Waarschuwing</strong> Je moet ingelogd zijn om te betalen."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -482,7 +482,7 @@ msgid ""
 msgstr ""
 "Leg het bedrag vast van Odoo, wanneer de levering is voltooid.\n"
 "Gebruik dit als je je klantenkaarten alleen wilt opladen wanneer\n"
-"je zeker weet dat u de goederen naar hen kunt verzenden."
+"je zeker weet dat je de goederen naar hen kunt verzenden."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -601,7 +601,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Maak een nieuwe betalingsverwerker aan"
+msgstr "Maak een nieuwe betalingsprovider aan"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -822,7 +822,7 @@ msgid ""
 "Force the customer to pay via the specified payment acquirer. Leave empty to"
 " allow the customer to choose among all acquirers."
 msgstr ""
-"Dwing de klant om te betalen via de opgegeven betalingsverwerker. Laat leeg "
+"Dwing de klant om te betalen via de opgegeven betalingsprovider. Laat leeg "
 "zodat de klant kan kiezen uit alle acquirers."
 
 #. module: payment
@@ -1416,7 +1416,7 @@ msgstr "Aantal betaaltokens"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr "Betaal tokens"
+msgstr "Betaaltokens"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1573,7 +1573,7 @@ msgstr "Referentie moet uniek zijn!"
 #: model_terms:ir.ui.view,arch_db:payment.view_account_payment_form_inherit_payment
 #, python-format
 msgid "Refund"
-msgstr "Creditfacturen"
+msgstr "Creditfactuur"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
@@ -1620,7 +1620,7 @@ msgstr "SEPA automatische incasso"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr "OPSTELLING"
+msgstr "INSTELLEN"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1857,7 +1857,7 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
-"De landen waarvoor deze betalingsverwerker beschikbaar is.\n"
+"De landen waarvoor deze betalingsprovider beschikbaar is.\n"
 "Als er geen is ingesteld, is deze beschikbaar voor alle landen."
 
 #. module: payment
@@ -2061,7 +2061,7 @@ msgid ""
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
 "Deze partner heeft geen e-mailadres, wat problemen kan veroorzaken bij "
-"sommige betalingsverwerkers. Het instellen van een e-mail voor deze partner "
+"sommige betalingsproviders. Het instellen van een e-mail voor deze partner "
 "wordt aangeraden."
 
 #. module: payment
@@ -2100,7 +2100,7 @@ msgid ""
 "acquirers: %s"
 msgstr ""
 "Transactieautorisatie wordt niet ondersteund door de volgende "
-"betalingsverwerkers: %s"
+"betalingsproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2191,7 +2191,7 @@ msgstr "Waarschuwing!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr "We kunnen uw betaalmethode niet verwijderen."
+msgstr "We kunnen je betaalmethode niet verwijderen."
 
 #. module: payment
 #. openerp-web
@@ -2226,7 +2226,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr "We wachten op de betalingsverwerker om de betaling te bevestigen."
+msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2262,7 +2262,7 @@ msgid ""
 "You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
 "Linked acquirer(s): %s"
 msgstr ""
-"U kunt een betaalmethode die is gekoppeld aan een acquirer in de ingeschakelde of teststatus niet verwijderen.\n"
+"Je kunt een betaalmethode die is gekoppeld aan een acquirer in de ingeschakelde of teststatus niet verwijderen.\n"
 "Gelinkte verkrijger(s): %s"
 
 #. module: payment
@@ -2270,7 +2270,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
-"U kunt een weergave die wordt gebruikt door een betalingsprovider niet "
+"Je kunt een weergave die wordt gebruikt door een betalingsprovider niet "
 "verwijderen."
 
 #. module: payment
@@ -2307,14 +2307,14 @@ msgstr "Je ontvangt een bericht wanneer de betaling volledig bevestigd is"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your order has been processed."
-msgstr "Jouw order is verwerkt"
+msgstr "Je bestelling is verwerkt"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr "Jouw order wordt verwerkt, even geduld ..."
+msgstr "Je bestelling wordt verwerkt, even geduld ..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2425,7 +2425,7 @@ msgstr "Postcode"
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr "betaling: transacties na verwerking"
+msgstr "Betaling: transacties na verwerking"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list

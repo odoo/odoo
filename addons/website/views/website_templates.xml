@@ -263,14 +263,17 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
                         </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_div_classes" t-valuef="nav-item my-auto ml-lg-2"/>
-                        </t>
+                    </t>
+
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector">
+                        <t t-set="_div_classes" t-valuef="my-auto ml-lg-2"/>
                     </t>
                 </div>
                 <!-- Call To Action -->
-                <t t-call="website.placeholder_header_call_to_action"/>
+                <t t-call="website.placeholder_header_call_to_action">
+                    <t t-set="_div_classes" t-valuef="ml-lg-4"/>
+                </t>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-valuef="ml-auto"/>
@@ -305,13 +308,13 @@
                 <ul class="nav navbar-nav navbar-expand d-none d-sm-block">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item"/>
+                        <t t-set="_item_class" t-valuef="nav-item ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                         <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-right"/>
                     </t>
@@ -326,7 +329,7 @@
                 </t>
                 <!-- Call To Action -->
                 <t t-call="website.placeholder_header_call_to_action">
-                    <t t-set="_div_classes" t-valuef="ml-auto ml-sm-0"/>
+                    <t t-set="_div_classes" t-valuef="ml-3"/>
                 </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
@@ -439,7 +442,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="flex-lg-column shadow-sm py-0"/>
             <div id="top_menu_container" class="container align-items-center flex-lg-column flex-wrap">
-                <div class="d-flex flex-lg-row justify-content-between w-100 align-items-center flex-wrap">
+                <div class="d-flex flex-lg-row justify-content-between w-100 align-items-center flex-wrap flex-lg-nowrap">
                     <!-- Left -->
                     <div class="o_header_centered_logo">
                         <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_1"/>
@@ -462,17 +465,17 @@
                     </t>
                 </div>
                 <div class="d-lg-flex flex-lg-row align-items-center w-100">
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_btn_class" t-valuef="px-2"/>
-                        <t t-set="_div_classes" t-valuef="ml-2 d-none d-lg-block"/>
-                    </t>
                     <!-- Navbar Collapse -->
                     <div id="top_menu_collapse" class="collapse navbar-collapse flex-wrap">
                         <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_vertical_3"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_btn_class" t-valuef="px-2"/>
+                            <t t-set="_div_classes" t-valuef="d-none d-lg-block"/>
+                        </t>
                         <!-- Nav -->
                         <t t-call="website.navbar_nav">
-                            <t t-set="_nav_class" t-valuef="mx-auto"/>
+                            <t t-set="_nav_class" t-valuef="mx-auto order-first order-lg-12"/>
                             <!-- Menu -->
                             <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu">
@@ -497,11 +500,11 @@
                             <t t-set="_div_classes" t-valuef="d-block d-lg-none mb-2"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-static float-none"/>
                         </t>
+                        <!-- Call To Action -->
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="d-none d-lg-block order-lg-last"/>
+                        </t>
                     </div>
-                    <!-- Call To Action -->
-                    <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="d-none d-lg-block"/>
-                    </t>
                 </div>
             </div>
         </t>
@@ -583,14 +586,36 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ml-1 dropup"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-top position-absolute"/>
+                        <!-- Language Selector -->
+                        <li class="nav-item ml-lg-1">
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_div_classes" t-valuef="dropup"/>
+                                <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-lg-left"/>
+                            </t>
+                        </li>
+                        <!-- Call To Action -->
+                        <li class="nav-item mt-3">
+                            <t t-call="website.placeholder_header_call_to_action"/>
+                        </li>
+                        <li class="nav-item d-lg-none">
+                            <ul class="nav navbar-nav">
+                                <!-- Sign In -->
+                                <t t-call="portal.placeholder_user_sign_in">
+                                    <t t-set="_item_class" t-valuef="nav-item"/>
+                                    <t t-set="_link_class" t-valuef="nav-link"/>
+                                </t>
+                                <!-- User Dropdown -->
+                                <t t-call="portal.user_dropdown">
+                                    <t t-set="_icon" t-value="true"/>
+                                    <t t-set="_user_name" t-value="true"/>
+                                    <t t-set="_item_class" t-valuef="nav-item dropdown mr-auto"/>
+                                    <t t-set="_link_class" t-valuef="nav-link"/>
+                                </t>
+                            </ul>
+                        </li>
                     </t>
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_sidebar_1"/>
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav d-none d-lg-block">
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
@@ -659,7 +684,7 @@
                     <t t-set="_link_class" t-valuef="mr-4"/>
                 </t>
                 <!-- Slogan -->
-                <div class="ml-3 mr-auto">
+                <div class="ml-lg-3 mr-auto">
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_1"/>
                 </div>
                 <ul class="nav navbar-nav navbar-expand ml-auto order-last order-lg-0">
@@ -674,11 +699,13 @@
                         <t t-set="_user_name_class" t-valuef="font-weight-bold"/>
                         <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-absolute"/>
                     </t>
                     <li class="nav-item">
                         <!-- Call To Action -->
-                        <t t-call="website.placeholder_header_call_to_action"/>
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="ml-2"/>
+                        </t>
                     </li>
                 </ul>
                 <!-- Separator -->
@@ -699,10 +726,10 @@
                             </t>
                         </t>
                     </t>
-                        <!-- Language Selector -->
+                    <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ml-lg-2"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="position-lg-static float-none"/>
+                        <t t-set="_div_classes" t-valuef="mb-4 mb-lg-0 align-self-lg-center ml-lg-auto"/>
+                        <t t-set="_dropdown_menu_class" t-valuef="float-lg-right"/>
                     </t>
                 </div>
             </div>
@@ -782,14 +809,14 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_div_classes" t-valuef="nav-item my-auto ml-lg-2 align-self-lg-center"/>
-                        </t>
+                    </t>
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector">
+                        <t t-set="_div_classes" t-valuef="my-auto ml-lg-2 align-self-lg-center"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="d-none d-lg-block"/>
+                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ml-3"/>
                     </t>
                 </div>
             </div>
@@ -805,7 +832,8 @@
                     <div class="row align-items-center">
                         <div class="col-lg-8">
                             <small>
-                                <i class="fa fa-1x fa-fw fa-envelope ml-3 mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
+                                <i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="mr-3"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
+                                <i class="fa fa-1x fa-fw fa-envelope mr-2 d-inline"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                             </small>
                         </div>
                         <div class="col-lg-4 text-lg-right">
@@ -884,12 +912,12 @@
                     </t>
                     <!-- Language Selector -->
                     <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="d-block d-sm-none"/>
+                        <t t-set="_div_classes" t-valuef="d-block d-sm-none mb-2"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-right position-static float-none"/>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="d-none d-lg-block"/>
+                        <t t-set="_div_classes" t-valuef="ml-lg-3"/>
                     </t>
                 </div>
             </t>
@@ -942,6 +970,10 @@
                         <t t-set="_link_class" t-valuef="nav-link"/>
                         <t t-set="_dropdown_menu_class" t-valuef="position-absolute dropdown-menu-right"/>
                     </t>
+                    <!-- Call To Action -->
+                    <t t-call="website.placeholder_header_call_to_action">
+                        <t t-set="_div_classes" t-valuef="ml-2"/>
+                    </t>
                 </ul>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
@@ -958,7 +990,9 @@
                         </t>
                     </t>
                     <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector"/>
+                    <t t-call="website.placeholder_header_language_selector">
+                        <t t-set="_div_classes" t-valuef="ml-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                    </t>
                 </div>
             </div>
         </t>
@@ -973,12 +1007,16 @@
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
+                <!-- Call To Action -->
+                <t t-call="website.placeholder_header_call_to_action">
+                    <t t-set="_div_classes" t-valuef="d-lg-none mr-3"/>
+                </t>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
                     <t t-call="website.navbar_nav">
-                        <t t-set="_nav_class" t-valuef="ml-3 flex-grow-1"/>
+                        <t t-set="_nav_class" t-valuef="ml-lg-3 flex-grow-1"/>
                         <!-- Menu -->
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu">
@@ -998,16 +1036,14 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                        <!-- Language Selector -->
-                        <li class="nav-item d-flex">
-                            <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_div_classes" t-valuef="ml-lg-2 align-self-lg-center"/>
-                            </t>
-                        </li>
-                        <li class="nav-item d-none d-lg-block">
-                            <!-- Call To Action -->
-                            <t t-call="website.placeholder_header_call_to_action"/>
-                        </li>
+                    </t>
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector">
+                        <t t-set="_div_classes" t-valuef="ml-lg-2"/>
+                    </t>
+                    <!-- Call To Action -->
+                    <t t-call="website.placeholder_header_call_to_action">
+                        <t t-set="_div_classes" t-valuef="d-none d-lg-block ml-3"/>
                     </t>
                 </div>
             </div>
@@ -1047,7 +1083,7 @@
                 <div class="o_header_collapsed_content_wrapper container d-flex flex-column align-items-lg-center justify-content-lg-center">
                     <!-- Menu -->
                     <t t-call="website.navbar_nav">
-                        <t t-set="_nav_class" t-valuef="navbar-expand flex-column flex-lg-row text-center align-items-lg-center"/>
+                        <t t-set="_nav_class" t-valuef="navbar-expand flex-column flex-lg-row text-center"/>
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu">
                                 <t t-set="item_class" t-valuef="nav-item"/>
@@ -1055,9 +1091,9 @@
                             </t>
                         </t>
                         <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector"/>
-                        <!-- Call To Action -->
-                        <t t-call="website.placeholder_header_call_to_action"/>
+                        <li class="nav-item">
+                            <t t-call="website.placeholder_header_language_selector"/>
+                        </li>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
@@ -1069,6 +1105,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold ml-lg-3"/>
                         </t>
+                    </t>
+                    <!-- Call To Action -->
+                    <t t-call="website.placeholder_header_call_to_action">
+                        <t t-set="_div_classes" t-valuef="mx-auto mt-4"/>
                     </t>
                     <!-- Social Icons -->
                     <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1"/>
@@ -1114,6 +1154,7 @@
         <!-- Topbar -->
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1"/>
         <t t-call="website.navbar">
+            <t t-set="_navbar_expand_class" t-value="''"/>
             <div id="top_menu_container" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand"/>
@@ -1125,7 +1166,7 @@
                 </div>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse">
-                    <t t-set="_nav_class" t-valuef="text-right"/>
+                    <t t-set="_nav_class" t-valuef="text-right align-items-sm-end"/>
                     <t t-call="website.navbar_nav">
                         <!-- Menu -->
                         <t t-foreach="website.menu_id.child_id" t-as="submenu">
@@ -1136,7 +1177,13 @@
                         </t>
                         <li class="nav-item">
                             <!-- Language Selector -->
-                            <t t-call="website.placeholder_header_language_selector"/>
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_div_classes" t-valuef="pb-2"/>
+                            </t>
+                        </li>
+                        <!-- Call To Action -->
+                        <li class="nav-item">
+                            <t t-call="website.placeholder_header_call_to_action"/>
                         </li>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
@@ -1161,9 +1208,9 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_magazine_1">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row align-items-center">
+                    <div class="row align-items-center text-center text-md-left">
                         <div class="col-lg-8 pt16">
-                            <p class="mb-0 text-center"><small>We help you grow your business</small></p>
+                            <p class="mb-0"><small>We help you grow your business</small></p>
                         </div>
                         <div class="col-lg-4 text-lg-right pt16">
                             <div class="s_share no_icon_color" data-snippet="s_share" data-name="Social Media">
@@ -1823,7 +1870,7 @@
        t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
         <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
         <i class="fa fa-plus-circle"/>
-        Add a language...
+        <span>Add a language...</span>
     </a>
 </template>
 
@@ -1938,7 +1985,7 @@
         <div t-attf-class="oe_structure oe_structure_solo #{_div_classes}">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <a href="/contactus" class="btn btn-primary ml-lg-4 btn_cta">Contact Us</a>
+                    <a href="/contactus" class="btn btn-primary btn_cta">Contact Us</a>
                 </div>
             </section>
         </div>
@@ -2236,7 +2283,7 @@
     </xpath>
     <xpath expr="//div[@id='error_message']" position="after">
         <div class="container" t-if="view and editable">
-            <div class="alert alert-danger" t-if="debug" role="alert">
+            <div class="alert alert-danger" role="alert">
                 <h4>Template fallback</h4>
                 <p>An error occured while rendering the template <code t-esc="qweb_exception.name"/>.</p>
                 <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>

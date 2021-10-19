@@ -1,7 +1,6 @@
 // = jQueryUI dropdown adaptations
 // ----------------------------------------------------------------------------
 .ui-widget.ui-autocomplete {
-    @extend .dropdown-menu;
     top: 0;       // Compute initial position
     min-width: 0; // Compute initial width
 
@@ -10,11 +9,10 @@
     z-index: $zindex-modal + 1;
 
     .ui-menu-item {
-        padding: 0;
-
         > a {
-            @extend .dropdown-item;
-
+            &.dropdown-item {
+                padding: $o-dropdown-vpadding $o-dropdown-hpadding;
+            }
             &.ui-state-active {
                 margin: 0;
                 border: none;
@@ -24,11 +22,11 @@
             }
         }
 
-        &.o_m2o_dropdown_option, &.o_m2o_start_typing {
+        &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
             text-indent: $o-dropdown-hpadding * .5;
         }
 
-        &.o_m2o_start_typing {
+        &.o_m2o_start_typing, &.o_m2o_no_result {
             font-style: italic;
             cursor: default;
             a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {

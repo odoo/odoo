@@ -5,7 +5,8 @@ const searchUtils = require('web.searchUtils');
 const GraphView = require('web.GraphView');
 const testUtils = require('web.test_utils');
 const { sortBy } = require('web.utils');
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { browser } = require('@web/core/browser/browser');
+const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const legacyViewRegistry = require("web.view_registry");
 const { registry } = require("@web/core/registry");
@@ -196,7 +197,7 @@ QUnit.module('Views', {
                 </graph>`,
         });
 
-        assert.strictEqual(graph.$('.o_graph_renderer label').text(), "Partners",
+        assert.strictEqual(graph.$('.o_legacy_graph_renderer label').text(), "Partners",
             "should have 'Partners as title'");
 
         graph.destroy();
@@ -1614,6 +1615,8 @@ QUnit.module('Views', {
             this.data.foo.records = sortBy(this.data.foo.records, 'date');
 
             this.unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
 
             const graph = await createView({
                 View: GraphView,

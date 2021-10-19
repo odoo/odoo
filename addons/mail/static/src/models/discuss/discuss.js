@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink, unlinkAll, update } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -29,10 +29,6 @@ function factory(dependencies) {
             });
         }
 
-        clearReplyingToMessage() {
-            this.update({ replyingToMessage: unlinkAll() });
-        }
-
         /**
          * Close the discuss app. Should reset its internal state.
          */
@@ -40,25 +36,10 @@ function factory(dependencies) {
             this.update({ isOpen: false });
         }
 
-        async createMeetingChannel() {
-            const channelData = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'create_group',
-                kwargs: {
-                    default_display_mode: 'video_full_screen',
-                    partners_to: [this.messaging.currentPartner.id],
-                },
-            });
-            const channel = this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(channelData)
-            );
-            this.update({ mostRecentMeetingChannel: link(channel) });
-            this.channelInvitationForm.update({ doFocusOnSearchInput: true });
-            this.channelInvitationForm.searchPartnersToInvite();
-        }
-
         focus() {
-            this.update({ isDoFocus: true });
+            if (this.threadView && this.threadView.composerView) {
+                this.threadView.composerView.update({ doFocus: true });
+            }
         }
 
         /**
@@ -185,8 +166,17 @@ function factory(dependencies) {
          *
          * @param {MouseEvent} ev
          */
-        onClickStartAMeetingButton(ev) {
-            this.createMeetingChannel();
+        async onClickStartAMeetingButton(ev) {
+            const meetingChannel = await this.messaging.models['mail.thread'].createGroupChat({
+                default_display_mode: 'video_full_screen',
+                partners_to: [this.messaging.currentPartner.id],
+            });
+            meetingChannel.toggleCall({ startWithVideo: true });
+            await meetingChannel.open({ focus: false });
+            if (!meetingChannel.exists() || !this.threadView) {
+                return;
+            }
+            this.threadView.topbar.openInvitePopoverView();
         }
 
         /**
@@ -216,12 +206,16 @@ function factory(dependencies) {
          * Opens the given thread in Discuss, and opens Discuss if necessary.
          *
          * @param {mail.thread} thread
+         * @param {Object} [param1={}]
+         * @param {Boolean} [param1.focus=true]
          */
-        async openThread(thread) {
+        async openThread(thread, { focus = true } = {}) {
             this.update({
                 thread: link(thread),
             });
-            this.focus();
+            if (focus) {
+                this.focus();
+            }
             if (!this.isOpen) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
@@ -232,27 +226,6 @@ function factory(dependencies) {
                     },
                 });
             }
-        }
-
-        /**
-         * Action to initiate reply to given message in Inbox. Assumes that
-         * Discuss and Inbox are already opened.
-         *
-         * @param {mail.message} message
-         */
-        replyToMessage(message) {
-            // When already replying to this message, just stop replying to it.
-            if (this.replyingToMessage === message) {
-                this.clearReplyingToMessage();
-                return;
-            }
-            this.update({ replyingToMessage: link(message) });
-            // avoid to reply to a note by a message and vice-versa.
-            // subject to change later by allowing subtype choice.
-            this.replyingToMessageOriginThreadComposer.update({
-                isLog: !message.is_discussion && !message.is_notification
-            });
-            this.focus();
         }
 
         /**
@@ -303,25 +276,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.channel_invitation_form}
-         */
-        _computeChannelInvitationForm() {
-            if (!this.mostRecentMeetingChannel) {
-                return clear();
-            }
-            if (!this.channelInvitationForm) {
-                return create();
-            }
-            return update({
-                searchResultCount: clear(),
-                searchTerm: clear(),
-                selectablePartners: clear(),
-                selectedPartners: clear(),
-            });
-        }
-
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
@@ -363,27 +317,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsReplyingToMessage() {
-            return !!this.replyingToMessage;
-        }
-
-        /**
-         * Ensures the reply feature is disabled if discuss is not open.
-         *
-         * @private
-         * @returns {mail.message|undefined}
-         */
-        _computeReplyingToMessage() {
-            if (!this.isOpen) {
-                return unlinkAll();
-            }
-            return;
-        }
-
-        /**
          * Only pinned threads are allowed in discuss.
          *
          * @private
@@ -400,17 +333,12 @@ function factory(dependencies) {
          * @returns {mail.thread_viewer}
          */
         _computeThreadViewer() {
-            const threadViewerData = {
+            return insertAndReplace({
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
-                selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
                 thread: this.thread ? link(this.thread) : unlink(),
-            };
-            if (!this.threadViewer) {
-                return create(threadViewerData);
-            }
-            return update(threadViewerData);
+            });
         }
     }
 
@@ -435,23 +363,15 @@ function factory(dependencies) {
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one2one('mail.discuss_sidebar_category', {
+            inverse: 'discussAsChannel',
             isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
         categoryChat: one2one('mail.discuss_sidebar_category', {
+            inverse: 'discussAsChat',
             isCausal: true,
-        }),
-        /**
-         * Determines the channel invitation form to use for the invitation
-         * to the most recent meeting channel.
-         */
-        channelInvitationForm: one2one('mail.channel_invitation_form', {
-            compute: '_computeChannelInvitationForm',
-            inverse: 'discuss',
-            isCausal: true,
-            readonly: true,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -487,20 +407,10 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Determine whether this discuss should be focused at next render.
-         */
-        isDoFocus: attr({
-            default: false,
-        }),
-        /**
          * Whether the discuss app is open or not. Useful to determine
          * whether the discuss or chat window logic should be applied.
          */
         isOpen: attr({
-            default: false,
-        }),
-        isReplyingToMessage: attr({
-            compute: '_computeIsReplyingToMessage',
             default: false,
         }),
         /**
@@ -511,41 +421,17 @@ function factory(dependencies) {
             default: null,
         }),
         /**
-         * The channel created last time the user clicked on the "Start a
-         * meeting" button.
-         */
-        mostRecentMeetingChannel: one2one('mail.thread'),
-        /**
-         * The message that is currently selected as being replied to in Inbox.
-         * There is only one reply composer shown at a time, which depends on
-         * this selected message.
-         */
-        replyingToMessage: many2one('mail.message', {
-            compute: '_computeReplyingToMessage',
-        }),
-        /**
-         * The thread concerned by the reply feature in Inbox. It depends on the
-         * message set to be replied, and should be considered read-only.
-         */
-        replyingToMessageOriginThread: many2one('mail.thread', {
-            related: 'replyingToMessage.originThread',
-        }),
-        /**
-         * The composer to display for the reply feature in Inbox. It depends
-         * on the message set to be replied.
-         */
-        replyingToMessageOriginThreadComposer: one2one('mail.composer', {
-            inverse: 'discussAsReplying',
-            readonly: true,
-            related: 'replyingToMessageOriginThread.composer',
-        }),
-        /**
          * Quick search input value in the discuss sidebar (desktop). Useful
          * to filter channels and chats based on this input content.
          */
         sidebarQuickSearchValue: attr({
             default: "",
         }),
+        /**
+         * States the OWL ref of the start a meeting button in sidebar.
+         * Useful to provide anchor for the invite popover positioning.
+         */
+        startAMeetingButtonRef: attr(),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
@@ -563,12 +449,13 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             compute: '_computeThreadViewer',
+            inverse: 'discuss',
             isCausal: true,
             readonly: true,
             required: true,
         }),
     };
-
+    Discuss.identifyingFields = ['messaging'];
     Discuss.modelName = 'mail.discuss';
 
     return Discuss;

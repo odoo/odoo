@@ -28,27 +28,6 @@ odoo.define('point_of_sale.tests.ChromeWidgets', function (require) {
         parent.destroy();
     });
 
-    QUnit.test('HeaderButton', async function (assert) {
-        assert.expect(1);
-
-        class Parent extends PosComponent {}
-        Parent.env = makePosTestEnv();
-        Parent.template = xml/* html */ `
-            <div><HeaderButton></HeaderButton></div>
-        `;
-
-        const parent = new Parent();
-        await parent.mount(testUtils.prepareTarget());
-
-        const headerButton = parent.el.querySelector('.header-button');
-        await testUtils.dom.click(headerButton);
-        await testUtils.nextTick();
-        assert.ok(headerButton.classList.contains('confirm'));
-
-        parent.unmount();
-        parent.destroy();
-    });
-
     QUnit.test('SyncNotification', async function (assert) {
         assert.expect(5);
 

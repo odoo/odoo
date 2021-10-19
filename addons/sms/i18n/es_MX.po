@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "%sDestinatarios no válidos"
 #, python-format
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
-msgstr ""
+msgstr "%s de los %s SMS seleccionados se reenviaron con éxito."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -184,7 +185,7 @@ msgstr "Comprar créditos"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "Comprar créditos."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -272,8 +273,8 @@ msgstr "Cliente: SMS automatizado"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
-msgid "Dear ${object.display_name} this is an automated SMS."
-msgstr "Estimada/o ${object.display_name} este es un SMS automatizado"
+msgid "Dear {{ object.display_name }} this is an automated SMS."
+msgstr "Estimada/o {{ object.display_name }} este es un SMS automatizado"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -360,7 +361,7 @@ msgstr "Error"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "Tipo de fallo"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
@@ -773,20 +774,20 @@ msgstr "Número de mensajes no leidos"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Canceló"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"Lenguaje de traducción opcional (código ISO) para seleccionar cuando se está"
-" enviando un correo electrónico. Si no esta activado, se usará la versión en"
-" inglés. Esto normalmente debería ser una expresión con marcadores de "
-"posición que provee el lenguaje apropiado. Por ejemplo: "
+"Idioma de traducción opcional (código ISO) a seleccionar para el envío de "
+"correos electrónicos. Si no se selecciona esta opción, se utilizará la "
+"versión en inglés. Por lo general, se usa una expresión de marcador de "
+"posición para indicar el idioma adecuado, por ejemplo, "
 "${object.partner_id.lang}."
 
 #. module: sms
@@ -1212,13 +1213,13 @@ msgstr "Plantillas"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "No se pudieron reenviar los mensajes SMS"
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "El número que intenta alcanzar no está formateado correctamente."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1230,7 +1231,7 @@ msgstr "El tipo de plantilla de este documento puede ser usado con"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "No hay mensajes SMS para reenviar"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1372,13 +1373,13 @@ msgstr "No tiene acceso al mensaje y/o al documento relacionado."
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "No tiene una cuenta IAP elegible"
 
 #. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "No tiene créditos suficientes en su cuenta IAP"
 
 #. module: sms
 #. openerp-web
@@ -1401,17 +1402,17 @@ msgstr "p. ej. +1 415 555 0100"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "p. ej. recordatorio de calendario"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "p. ej. contacto"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
-msgid "e.g. en_US or ${object.partner_id.lang}"
-msgstr "e.g. en_US or ${object.partner_id.lang}"
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "p. ej. en_US o {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

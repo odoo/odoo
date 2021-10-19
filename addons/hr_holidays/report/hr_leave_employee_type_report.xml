@@ -5,8 +5,8 @@
         <field name="model">hr.leave.employee.type.report</field>
         <field name="arch" type="xml">
             <search string="Search Time Off">
-                <field name="date_from"/>
                 <field name="employee_id"/>
+                <field name="date_from"/>
                 <filter name="year" date="date_from" default_period="this_year" string="Period"/>
                 <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
@@ -33,7 +33,7 @@
         <field name="model_id" ref="hr_holidays.model_hr_leave_employee_type_report"/>
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
         <field name="code">
             action = model.action_time_off_analysis()
         </field>

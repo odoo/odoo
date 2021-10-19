@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +23,8 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Dear ${object.name},<br/><br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
 "                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
@@ -32,13 +32,12 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Estimado ${object.name},<br/><br/>\n"
-"                    Excepción hecha si hubo un error de nuestra parte, parece que no está en su oficina y no hay alguna solicitud de tiempo personal de su parte.<br/>\n"
-"                    Por favor, tome las medidas apropiadas con el fin de llevar a cabo esta ausencia laboral.<br/>\n"
+"                    Estimado <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
+"                    Ignore esto si es un error de nuestra parte, parece ser que no está en su oficina y no hay ninguna solicitud de tiempo personal de su parte.<br/>\n"
+"                    Tome las medidas adecuadas para poder llevar a cabo esta ausencia laboral.<br/>\n"
 "                    No dude en contactar a su gerente o al departamento de recursos humanos.\n"
-"                    <br/>Saluds,<br/><br/>\n"
+"                    <br/>Saludos,<br/><br/>\n"
 "                </div>\n"
 "            "
 
@@ -95,7 +94,7 @@ msgstr "Presencia del empleado"
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "Employee: Absence email"
-msgstr ""
+msgstr "Empleado: correo electrónico de ausencia"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -177,7 +176,7 @@ msgstr "SMS"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Set as absent"
-msgstr ""
+msgstr "Establecer como ausente"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban

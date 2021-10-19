@@ -691,6 +691,17 @@ class Message(models.Model):
             self.update(attachement_values)
         thread._message_update_content_after_hook(self)
 
+    def action_open_document(self):
+        """ Opens the related record based on the model and ID """
+        self.ensure_one()
+        return {
+            'res_id': self.res_id,
+            'res_model': self.model,
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
+
     # ------------------------------------------------------
     # DISCUSS API
     # ------------------------------------------------------
@@ -807,7 +818,7 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames):
+    def _message_format(self, fnames, format_reply=True):
         """Reads values from messages and formats them for the web client."""
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
@@ -873,6 +884,8 @@ class Message(models.Model):
                 'partners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id])],
                 'guests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id])],
             } for content, reactions in reactions_per_content.items()])]
+            if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
+                vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachments_formatted,
@@ -898,7 +911,7 @@ class Message(models.Model):
             domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit).message_format()
 
-    def message_format(self):
+    def message_format(self, format_reply=True):
         """ Get the message values in the format for web client. Since message values can be broadcasted,
             computed fields MUST NOT BE READ and broadcasted.
             :returns list(dict).
@@ -936,9 +949,10 @@ class Message(models.Model):
                     'is_note': True # only if the message is a note (subtype == note)
                     'is_discussion': False # only if the message is a discussion (subtype == discussion)
                     'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
+                    'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
                 }
         """
-        vals_list = self._message_format(self._get_message_format_fields())
+        vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
 
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')

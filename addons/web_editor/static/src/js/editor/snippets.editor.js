@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+const {Markup, sprintf} = require('web.utils');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
@@ -181,8 +182,8 @@ var SnippetEditor = Widget.extend({
         var $customize = this._customize$Elements[this._customize$Elements.length - 1];
 
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
-        this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
-        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
+        this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
+        this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !this.$target.hasClass('oe_unremovable');
         this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
 
         // Initialize move/clone/remove buttons
@@ -430,19 +431,8 @@ var SnippetEditor = Widget.extend({
      */
     removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-
-        // First enable a surrounding snippet (or just disable the current
-        // snippet if there is nothing around).
-        const parent = this.$target[0].parentElement;
-        const nextSibling = this.$target[0].nextElementSibling;
-        const previousSibling = this.$target[0].previousElementSibling;
-        await new Promise(resolve => {
-            this.trigger_up('activate_snippet', {
-                $snippet: $(previousSibling || nextSibling || parent),
-                onSuccess: () => resolve(),
-            });
-        });
-
+        this.toggleOverlay(false);
+        await this.toggleOptions(false);
         // If it is an invisible element, we must close it before deleting it
         // (e.g. modal).
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
@@ -451,13 +441,25 @@ var SnippetEditor = Widget.extend({
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: this.$target,
-                callback: function (editor, $snippet) {
+                callback: async function (editor, $snippet) {
                     for (var i in editor.styles) {
-                        editor.styles[i].onRemove();
+                        await editor.styles[i].onRemove();
                     }
                 },
                 onSuccess: resolve,
             });
+        });
+
+        // TODO this should probably be awaited but this is not possible right
+        // now as removeSnippet can be called in a locked editor mutex context
+        // and would thus produce a deadlock. Also, this awaited
+        // 'activate_snippet' call would allow to remove the 'toggleOverlay' and
+        // 'toggleOptions' calls at the start of this function.
+        const parent = this.$target[0].parentElement;
+        const nextSibling = this.$target[0].nextElementSibling;
+        const previousSibling = this.$target[0].previousElementSibling;
+        this.trigger_up('activate_snippet', {
+            $snippet: $(previousSibling || nextSibling || parent)
         });
 
         // Actually remove the snippet and its option UI.
@@ -483,7 +485,7 @@ var SnippetEditor = Widget.extend({
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
                     });
-                return isEmpty && !$el.hasClass('oe_structure')
+                return isEmpty && !$el.hasClass('oe_structure') && !$el.hasClass('oe_unremovable')
                     && (!editor || editor.isTargetParentEditable);
             };
 
@@ -1926,8 +1928,11 @@ var SnippetsMenu = Widget.extend({
      *        when the DOM elements must be in an editable environment to be
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
+     * @param {string} excludeParent
+     *        jQuery selector that the parents of DOM elements must *not* match
+     *        to be considered as potential snippet.
      */
-    _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren) {
+    _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren, excludeParent) {
         var self = this;
 
         exclude += `${exclude && ', '}.o_snippet_not_selectable`;
@@ -1939,6 +1944,12 @@ var SnippetsMenu = Widget.extend({
             const oldFilter = filterFunc;
             filterFunc = function () {
                 return oldFilter.apply(this) && $(this).find(target).length !== 0;
+            };
+        }
+        if (excludeParent) {
+            const oldFilter = filterFunc;
+            filterFunc = function () {
+                return oldFilter.apply(this) && !$(this).parent().is(excludeParent);
             };
         }
 
@@ -1993,10 +2004,12 @@ var SnippetsMenu = Widget.extend({
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
+        const snippetAdditionDropIn = $styles.filter('#so_snippet_addition').data('drop-in');
         $styles.each(function () {
             var $style = $(this);
             var selector = $style.data('selector');
             var exclude = $style.data('exclude') || '';
+            const excludeParent = $style.attr('id') === "so_content_addition" ? snippetAdditionDropIn : '';
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var optionID = $style.data('js') || $style.data('option-name'); // used in tour js as selector
@@ -2007,7 +2020,7 @@ var SnippetsMenu = Widget.extend({
                 'base_target': target,
                 'selector': self._computeSelectorFunctions(selector, exclude, target, noCheck),
                 '$el': $style,
-                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
+                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true, excludeParent),
                 'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
                 'data': _.extend({string: $style.attr('string')}, $style.data()),
             };
@@ -2381,14 +2394,15 @@ var SnippetsMenu = Widget.extend({
                     self._mutex.exec(() => prom);
                 },
                 stop: async function (ev, ui) {
+                    const doc = self.options.wysiwyg.odooEditor.document;
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
                     $toInsert.removeClass('oe_snippet_body');
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         const point = {x: ui.position.left, y: ui.position.top};
-                        const container = {container: document.body};
-                        let droppedOnNotNearest = $.touching(
+                        const container = {container: doc.body};
+                        let droppedOnNotNearest = doc.defaultView.$.touching(
                             point, '.oe_structure_not_nearest', container
                         ).first();
                         // If dropped outside of a dropzone with class oe_structure_not_nearest,
@@ -2396,7 +2410,7 @@ var SnippetsMenu = Widget.extend({
                         const selector = droppedOnNotNearest.length
                             ? '.oe_drop_zone'
                             : ':not(.oe_structure_not_nearest) > .oe_drop_zone';
-                        let $el = $.nearest(
+                        let $el = doc.defaultView.$.nearest(
                             point, selector, container
                         ).first();
                         if ($el.length) {
@@ -2576,7 +2590,7 @@ var SnippetsMenu = Widget.extend({
         const mutexExecResult = this._mutex.exec(action);
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
-                if (this._loadingEffectDisabled) {
+                if (this._loadingEffectDisabled || this.loadingElements[contentLoading]) {
                     return;
                 }
                 this.loadingElements[contentLoading] = this._createLoadingElement();
@@ -2767,11 +2781,11 @@ var SnippetsMenu = Widget.extend({
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
                         this.close();
+                        const message = sprintf(Markup(_t("Could not install module <strong>%s</strong>")), name);
                         self.displayNotification({
-                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), owl.utils.escape(name)),
+                            message: message,
                             type: 'danger',
                             sticky: true,
-                            messageIsHtml: true, // dynamic parts of the message are escaped above
                         });
                     });
                 },

@@ -61,6 +61,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/boot.js',
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
+            'web/static/src/legacy/js/core/menu.js',
         ],
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
@@ -79,6 +80,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/boot.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
+            ('remove', 'web/static/src/legacy/js/core/menu.js'),
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -116,7 +118,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/file_upload.scss',
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/graph_view.scss',
             'web/static/src/legacy/scss/form_view.scss',
             'web/static/src/legacy/scss/list_view.scss',
             'web/static/src/legacy/scss/kanban_dashboard.scss',
@@ -136,6 +137,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields_extra.scss',
             'web/static/src/legacy/scss/form_view_extra.scss',
             'web/static/src/legacy/scss/list_view_extra.scss',
+            'web/static/src/legacy/scss/profiling_qweb_view.scss',
 
             'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/debug_manager.js',
@@ -161,6 +163,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/data_comparison_utils.js',
             'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/core/profiling_qweb_view.js',
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/report/utils.js',
             'web/static/src/legacy/js/report/client_action.js',
@@ -186,7 +189,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
             ("remove", 'web/static/src/legacy/js/views/graph/**/*'),
-            ("remove", 'web/static/src/legacy/scss/graph_view.scss'),
             ("remove", 'web/static/src/legacy/js/views/pivot/**/*'),
         ],
         "web.assets_backend_legacy_lazy": [
@@ -198,6 +200,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/graph_view.scss',
             # pivot
             'web/static/src/legacy/js/views/pivot/**/*',
+            'web/static/src/legacy/scss/pivot_view.scss',
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/public/lazyloader.js',
@@ -212,8 +215,9 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap'),
 
             'web/static/src/env.js',
-            'web/static/src/core/utils/transitions.scss', # included early because used by other files
+            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/commands/**/*'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',

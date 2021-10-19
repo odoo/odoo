@@ -3,18 +3,18 @@
 # 	* web_editor
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2021
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +106,11 @@ msgid "1x"
 msgstr "1x"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "25"
+msgstr "25"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "25%"
 msgstr "25%"
@@ -146,6 +151,31 @@ msgstr "50%"
 #, python-format
 msgid "5x"
 msgstr "5x"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "90"
+msgstr "90"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"flex-grow-0 ml-1 text-white-50\">%</span>"
+msgstr "<span class=\"flex-grow-0 ml-1 text-white-50\">%</span>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"flex-grow-0 ml-1 text-white-50\">deg</span>"
+msgstr "<span class=\"flex-grow-0 ml-1 text-white-50\">graden</span>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"mr-2 ml-3\">Y</span>"
+msgstr "<span class=\"mr-2 ml-3\">Y</span>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "<span class=\"mr-2\">X</span>"
+msgstr "<span class=\"mr-2\">X</span>"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
@@ -301,6 +331,11 @@ msgstr "Alle afbeeldingen zijn geladen"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Alt tag"
 msgstr "Alt-tag"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Angle"
+msgstr "Hoek"
 
 #. module: web_editor
 #. openerp-web
@@ -581,7 +616,7 @@ msgstr "Kopieer link"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Copy-paste your URL or embed code here"
-msgstr "Kopieer jouw URL of jouw insluitcode hier"
+msgstr "Kopieer je URL of je insluitcode hier"
 
 #. module: web_editor
 #. openerp-web
@@ -623,6 +658,7 @@ msgstr "Afbeelding bijsnijden"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
@@ -666,6 +702,11 @@ msgstr "Standaard"
 #, python-format
 msgid "Default + Rounded"
 msgstr "Standaard + afgerond"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Define a custom gradient"
+msgstr "Een aangepast verloop definiëren"
 
 #. module: web_editor
 #. openerp-web
@@ -807,6 +848,26 @@ msgstr ""
 #, python-format
 msgid "Expected "
 msgstr "Verwacht"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the closest corner"
+msgstr "Uitbreiden naar de dichtstbijzijnde hoek"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the closest side"
+msgstr "Uitbreiden naar de dichtstbijzijnde kant"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the farthest corner"
+msgstr "Uitbreiden tot de verste hoek"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Extend to the farthest side"
+msgstr "Uitbreiden naar de verste kant"
 
 #. module: web_editor
 #. openerp-web
@@ -1100,7 +1161,7 @@ msgid ""
 "If you reset this file, all your customizations will be lost as it will be "
 "reverted to the default file."
 msgstr ""
-"Als je dit bestand reset, gaan al jouw aanpassingen verloren aangezien het "
+"Als je dit bestand reset, gaan al je aanpassingen verloren aangezien het "
 "wordt gereset naar het standaard bestand."
 
 #. module: web_editor
@@ -1261,6 +1322,11 @@ msgstr "Laatst bijgewerkt op"
 #, python-format
 msgid "Left"
 msgstr "Links"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Linear"
+msgstr "Lineair"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -1494,6 +1560,11 @@ msgid "Pictogram"
 msgstr "Pictogram"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Position"
+msgstr "Positie"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
@@ -1618,6 +1689,11 @@ msgid "Qweb Field qweb"
 msgstr "Qweb veld qweb"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Radial"
+msgstr "Schuin"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
@@ -1652,6 +1728,11 @@ msgstr "Huidige verwijderen"
 #, python-format
 msgid "Remove Link"
 msgstr "Link verwijderen"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Remove Selected Color"
+msgstr "Verwijder geselecteerde kleur"
 
 #. module: web_editor
 #. openerp-web
@@ -1989,6 +2070,7 @@ msgstr "Toon geoptimaliseerde afbeeldingen"
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Size"
@@ -2223,7 +2305,7 @@ msgid ""
 "To apply this change, we need to save all your previous modifications and "
 "reload the page."
 msgstr ""
-"Om deze wijziging toe te passen, moeten we al uw eerdere wijzigingen opslaan"
+"Om deze wijziging toe te passen, moeten we al je eerdere wijzigingen opslaan"
 " en de pagina opnieuw laden."
 
 #. module: web_editor
@@ -2351,6 +2433,7 @@ msgstr "Transparante kleuren"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
 #, python-format
 msgid "Type"
 msgstr "Soort"

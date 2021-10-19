@@ -8,6 +8,8 @@ import Registry from "web.Registry";
 import SearchBar from "web.SearchBar";
 import { registry } from "@web/core/registry";
 import * as cpHelpers from "@web/../tests/search/helpers";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 
 let serverData;
 QUnit.module("Search Bar (legacy)", (hooks) => {
@@ -74,6 +76,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test("navigation with facets", async function (assert) {
             assert.expect(4);
 
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 

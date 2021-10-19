@@ -6,7 +6,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-const dom = require('web.dom');
+const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
@@ -18,6 +18,26 @@ var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+
+options.UserValueWidget.include({
+    loadMethodsData() {
+        this._super(...arguments);
+
+        // Method names are sorted alphabetically by default. Exception here:
+        // we make sure, customizeWebsiteVariable is considered after
+        // customizeWebsiteViews so that the variable is used to show to active
+        // value when both methods are used at the same time.
+        // TODO find a better way.
+        const indexVariable = this._methodsNames.indexOf('customizeWebsiteVariable');
+        if (indexVariable >= 0) {
+            const indexView = this._methodsNames.indexOf('customizeWebsiteViews');
+            if (indexView >= 0) {
+                this._methodsNames[indexVariable] = 'customizeWebsiteViews';
+                this._methodsNames[indexView] = 'customizeWebsiteVariable';
+            }
+        }
+    },
+});
 
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     custom_events: _.extend({}, InputUserValueWidget.prototype.custom_events || {}, {
@@ -39,7 +59,7 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         linkButton.title = _t("Redirect to URL in a new tab");
         linkButton.appendChild(icon);
         this.containerEl.appendChild(linkButton);
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
@@ -284,7 +304,7 @@ const GPSPicker = InputUserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         if (!this._gmapLoaded) {
             return;
         }
@@ -1231,28 +1251,20 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     async _renderCustomXML(uiFragment) {
         const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-name"]');
         const style = window.getComputedStyle(document.documentElement);
-        const priorityPrefix = weUtils.getCSSVariableValue('priority-palette-prefix', style).replace(/'/g, "");
-        const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(' ').map((name) => {
+        const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(', ').map((name) => {
             return name.replace(/'/g, "");
         });
-        const themePaletteNames = allPaletteNames.filter((name) => {
-            return name.startsWith(priorityPrefix);
-        });
-        const otherPaletteNames = allPaletteNames.filter((name) => {
-            return !name.startsWith(priorityPrefix);
-        });
-        const sortedPaletteNames = themePaletteNames.concat(otherPaletteNames);
-        for (const paletteName of sortedPaletteNames) {
+        for (const paletteName of allPaletteNames) {
             const btnEl = document.createElement('we-button');
             btnEl.classList.add('o_palette_color_preview_button');
             btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
-            for (let c = 1; c <= 5; c++) {
+            [1, 3, 2].forEach(c => {
                 const colorPreviewEl = document.createElement('span');
                 colorPreviewEl.classList.add('o_palette_color_preview');
                 const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
                 colorPreviewEl.style.backgroundColor = color;
                 btnEl.appendChild(colorPreviewEl);
-            }
+            });
             paletteSelectorEl.appendChild(btnEl);
         }
 
@@ -1564,175 +1576,6 @@ options.registry.CarouselItem = options.Class.extend({
             case 'right':
                 this.$controls.filter('.carousel-control-next')[0].click();
                 break;
-        }
-    },
-});
-
-options.registry.sizing_x = options.registry.sizing.extend({
-    /**
-     * @override
-     */
-    onClone: function (options) {
-        this._super.apply(this, arguments);
-        // Below condition is added to remove offset of target element only
-        // and not its children to avoid design alteration of a container/block.
-        if (options.isCurrent) {
-            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
-            this.$target.attr('class', _class);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _getSize: function () {
-        var width = this.$target.closest('.row').width();
-        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        this.grid = {
-            e: [_.map(gridE, v => ('col-lg-' + v)), _.map(gridE, v => width / 12 * v), 'width'],
-            w: [_.map(gridW, v => ('offset-lg-' + v)), _.map(gridW, v => width / 12 * v), 'margin-left'],
-        };
-        return this.grid;
-    },
-    /**
-     * @override
-     */
-    _onResize: function (compass, beginClass, current) {
-        if (compass === 'w') {
-            // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
-            if (offset < 0) {
-                offset = 0;
-            }
-            var colSize = beginCol - (offset - beginOffset);
-            if (colSize <= 0) {
-                colSize = 1;
-                offset = beginOffset + beginCol - 1;
-            }
-            this.$target.attr('class', this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
-
-            this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
-            if (offset > 0) {
-                this.$target.addClass('offset-lg-' + offset);
-            }
-        }
-        this._super.apply(this, arguments);
-    },
-});
-
-options.registry.layout_column = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        // Needs to be done manually for now because _computeWidgetVisibility
-        // doesn't go through this option for buttons inside of a select.
-        // TODO: improve this.
-        this.$el.find('we-button[data-name="zero_cols_opt"]')
-            .toggleClass('d-none', !this.$target.is('.s_allow_columns'));
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Changes the number of columns.
-     *
-     * @see this.selectClass for parameters
-     */
-    selectCount: async function (previewMode, widgetValue, params) {
-        const previousNbColumns = this.$('> .row').children().length;
-        let $row = this.$('> .row');
-        if (!$row.length) {
-            $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
-        }
-
-        const nbColumns = parseInt(widgetValue);
-        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length);
-        // Yield UI thread to wait for event to bubble before activate_snippet is called.
-        // In this case this lets the select handle the click event before we switch snippet.
-        // TODO: make this more generic in activate_snippet event handler.
-        await new Promise(resolve => setTimeout(resolve));
-        if (nbColumns === 0) {
-            $row.contents().unwrap().contents().unwrap();
-            this.trigger_up('activate_snippet', {$snippet: this.$target});
-        } else if (previousNbColumns === 0) {
-            this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'selectCount') {
-            return this.$('> .row').children().length;
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * Adds new columns which are clones of the last column or removes the
-     * last x columns.
-     *
-     * @private
-     * @param {jQuery} $row - the row in which to update the columns
-     * @param {integer} count - positif to add, negative to remove
-     */
-    _updateColumnCount: async function ($row, count) {
-        if (!count) {
-            return;
-        }
-
-        if (count > 0) {
-            var $lastColumn = $row.children().last();
-            for (var i = 0; i < count; i++) {
-                await new Promise(resolve => {
-                    this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
-                });
-            }
-        } else {
-            var self = this;
-            for (const el of $row.children().slice(count)) {
-                await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
-                });
-            }
-        }
-
-        this._resizeColumns($row.children());
-        this.trigger_up('cover_update');
-    },
-    /**
-     * Resizes the columns so that they are kept on one row.
-     *
-     * @private
-     * @param {jQuery} $columns - the columns to resize
-     */
-    _resizeColumns: function ($columns) {
-        const colsLength = $columns.length;
-        var colSize = Math.floor(12 / colsLength) || 1;
-        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
-        var colClass = 'col-lg-' + colSize;
-        _.each($columns, function (column) {
-            var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
-            $column.addClass(colClass);
-        });
-        if (colOffset) {
-            $columns.first().addClass('offset-lg-' + colOffset);
         }
     },
 });
@@ -2346,11 +2189,11 @@ options.registry.anchor = options.Class.extend({
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
             const anchor = decodeURIComponent(this._getAnchorLink());
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
             this.displayNotification({
               type: 'success',
-              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), owl.utils.escape(anchor)),
+              message: message,
               buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
-              messageIsHtml: true, // dynamic parts of the message are escaped above
             });
         });
 
@@ -2461,79 +2304,6 @@ options.registry.anchor = options.Class.extend({
     _text2Anchor: function (text) {
         return encodeURIComponent(text.trim().replace(/\s+/g, '-'));
     },
-});
-
-/**
- * Controls box properties.
- */
-options.registry.Box = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @see this.selectClass for parameters
-     */
-    setShadow(previewMode, widgetValue, params) {
-        this.$target.toggleClass(params.shadowClass, !!widgetValue);
-        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
-        if (widgetValue === 'outset') {
-            // In this case, the shadowClass is enough
-            this.$target[0].style.setProperty('box-shadow', '');
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState(methodName, params) {
-        if (methodName === 'setShadow') {
-            const shadowValue = this.$target.css('box-shadow');
-            if (!shadowValue || shadowValue === 'none') {
-                return '';
-            }
-            return this.$target.css('box-shadow').includes('inset') ? 'inset' : 'outset';
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'fake_inset_shadow_opt') {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     * @param {string} type
-     * @param {string} shadowClass
-     * @returns {string}
-     */
-    _getDefaultShadow(type, shadowClass) {
-        const el = document.createElement('div');
-        if (type) {
-            el.classList.add(shadowClass);
-        }
-        document.body.appendChild(el);
-        switch (type) {
-            case 'outset': {
-                return $(el).css('box-shadow');
-            }
-            case 'inset': {
-                return $(el).css('box-shadow') + ' inset';
-            }
-        }
-        el.remove();
-        return '';
-    }
 });
 
 options.registry.HeaderBox = options.registry.Box.extend({
@@ -2779,97 +2549,6 @@ options.registry.CoverProperties = options.Class.extend({
     },
 });
 
-options.registry.ContainerWidth = options.Class.extend({
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.removeClass('o_container_preview');
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    selectClass: async function (previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (previewMode === 'reset') {
-            this.$target.removeClass('o_container_preview');
-        } else if (previewMode) {
-            this.$target.addClass('o_container_preview');
-        }
-    },
-});
-
-/**
- * Allows snippets to be moved before the preceding element or after the following.
- */
-options.registry.SnippetMove = options.Class.extend({
-    displayOverlayOptions: true,
-
-    /**
-     * @override
-     */
-    start: function () {
-        var $buttons = this.$el.find('we-button');
-        var $overlayArea = this.$overlay.find('.o_overlay_move_options');
-        $overlayArea.prepend($buttons[0]);
-        $overlayArea.append($buttons[1]);
-
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        // TODO improve this: hack to hide options section if snippet move is
-        // the only one.
-        const $allOptions = this.$el.parent();
-        if ($allOptions.find('we-customizeblock-option').length <= 1) {
-            $allOptions.addClass('d-none');
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Moves the snippet around.
-     *
-     * @see this.selectClass for parameters
-     */
-    moveSnippet: function (previewMode, widgetValue, params) {
-        const isNavItem = this.$target[0].classList.contains('nav-item');
-        const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
-        switch (widgetValue) {
-            case 'prev':
-                this.$target.prev().before(this.$target);
-                if (isNavItem) {
-                    $tabPane.prev().before($tabPane);
-                }
-                break;
-            case 'next':
-                this.$target.next().after(this.$target);
-                if (isNavItem) {
-                    $tabPane.next().after($tabPane);
-                }
-                break;
-        }
-        if (!this.$target.is(this.data.noScroll)
-                && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
-            dom.scrollTo(this.$target[0], {
-                extraOffset: 50,
-                easing: 'linear',
-                duration: 550,
-            });
-        }
-    },
-});
-
 options.registry.ScrollButton = options.Class.extend({
     /**
      * @override
@@ -2924,6 +2603,7 @@ options.registry.ScrollButton = options.Class.extend({
                     'justify-content-center',
                     'mx-auto',
                     'bg-primary',
+                    'o_not_editable',
                 );
                 anchor.href = '#';
                 anchor.contentEditable = "false";
@@ -3058,7 +2738,6 @@ options.registry.ConditionalVisibility = options.Class.extend({
             if (widgetValue === 'conditional') {
                 const collapseEl = this.$el.children('we-collapse')[0];
                 this._toggleCollapseEl(collapseEl);
-                this.trigger_up('snippet_option_visibility_update', { show: true });
             } else {
                 // TODO create a param to allow doing this automatically for genericSelectDataAttribute?
                 delete targetEl.dataset.visibility;
@@ -3067,8 +2746,8 @@ options.registry.ConditionalVisibility = options.Class.extend({
                     delete targetEl.dataset[attribute.saveAttribute];
                     delete targetEl.dataset[`${attribute.saveAttribute}Rule`];
                 }
-                this.trigger_up('snippet_option_visibility_update');
             }
+            this.trigger_up('snippet_option_visibility_update', {show: true});
         } else if (!params.isVisibilityCondition) {
             return;
         }
@@ -3182,6 +2861,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @override
      */
+    async onBuilt() {
+        this.$target[0].classList.toggle('o_animate_preview', this.$target[0].classList.contains('o_animate'));
+    },
+    /**
+     * @override
+     */
     onFocus() {
         if (this.isAnimatedText) {
             // For animated text, the animation options must be in the editor
@@ -3270,6 +2955,25 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    notify(name, data) {
+        if (name === 'reset_template') {
+            const xmlid = this._getCurrentTemplateXMLID();
+            this._getTemplate(xmlid).then(template => {
+                this.containerEl.insertAdjacentHTML('beforeend', template);
+                data.onSuccess();
+            });
+        } else {
+            this._super(...arguments);
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -3278,11 +2982,40 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectTemplate') {
-            const templateDefiningClass = this.containerEl.querySelector('section')
-                .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
-            return `website.${templateDefiningClass}`;
+            return this._getCurrentTemplateXMLID();
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {string} xmlid of the current template.
+     */
+    _getCurrentTemplateXMLID: function () {
+        const templateDefiningClass = this.containerEl.querySelector('section')
+            .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
+        return `website.${templateDefiningClass}`;
+    },
+});
+
+/**
+ * Hides delete button for Mega Menu block.
+ */
+options.registry.MegaMenuNoDelete = options.Class.extend({
+    forceNoDeleteButton: true,
+
+    /**
+     * @override
+     */
+    async onRemove() {
+        await new Promise(resolve => {
+            this.trigger_up('option_update', {
+                optionName: 'MegaMenuLayout',
+                name: 'reset_template',
+                data: {
+                    onSuccess: () => resolve(),
+                }
+            });
+        });
     },
 });
 

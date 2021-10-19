@@ -15,12 +15,10 @@
     }
 
     table {
-        th > .o_dropdown > .o_dropdown_toggler {
+        th > .dropdown > .dropdown-toggle {
             background: none!important;
             border: none!important;
             padding: 0!important;
-            // width: 100%!important;
-            // text-align: left!important;
         }
         background-color: $o-view-background-color;
         width: auto;  // bootstrap override
@@ -70,19 +68,29 @@
 
         .o_pivot_header_cell_closed {
             @include o-pivot-header-cell;
-            &::before {
+            &::after, &::before {
                 font-family: FontAwesome;
-                content: "";
                 margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
             }
         }
 
         .o_pivot_header_cell_opened {
             @include o-pivot-header-cell;
-            &::before {
+            &::after, &::before {
                 font-family: FontAwesome;
-                content: "";
                 margin-right: 8px;
+            }
+            &::after {
+                content: #{"/*!rtl:''*/"} none;
+            }
+            &::before {
+                content: #{"/*!rtl:none*/"} "";
             }
         }
 
@@ -112,9 +120,4 @@
         @include o-caret-down;
         top: 10px;
     }
-
-    // .o_pivot_field_menu .dropdown-item.disabled {
-    //     color: $text-muted;
-    //     cursor: default;
-    // }
 }

@@ -260,7 +260,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         }
 
     @classmethod
-    def setup_multi_currency_data(cls, default_values={}, rate2016=3.0, rate2017=2.0):
+    def setup_multi_currency_data(cls, default_values=None, rate2016=3.0, rate2017=2.0):
+        default_values = default_values or {}
         foreign_currency = cls.env['res.currency'].create({
             'name': 'Gold Coin',
             'symbol': '☺',
@@ -293,11 +294,13 @@ class AccountTestInvoicingCommon(TransactionCase):
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',
             'amount': 0.0,
+            'country_id': company_data['company'].account_fiscal_country_id.id,
             'children_tax_ids': [
                 (0, 0, {
                     'name': '%s (child 1)' % tax_name,
                     'amount_type': 'percent',
                     'amount': 20.0,
+                    'country_id': company_data['company'].account_fiscal_country_id.id,
                     'price_include': True,
                     'include_base_amount': True,
                     'tax_exigibility': 'on_invoice',
@@ -338,6 +341,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'name': '%s (child 2)' % tax_name,
                     'amount_type': 'percent',
                     'amount': 10.0,
+                    'country_id': company_data['company'].account_fiscal_country_id.id,
                     'tax_exigibility': 'on_payment',
                     'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
@@ -588,6 +592,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'name': 'cash basis 20%',
             'type_tax_use': 'purchase',
             'company_id': cls.company.id,
+            'country_id': cls.company.account_fiscal_country_id.id,
             'amount': 20,
             'tax_exigibility': 'on_payment',
             'cash_basis_transition_account_id': cls.tax_waiting_account.id,
@@ -672,7 +677,8 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             auto_validate=True
         )
 
-    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=[]):
+    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=None):
+        reconcile_param = reconcile_param or []
         bank_stmt = self.env['account.bank.statement'].create({
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',

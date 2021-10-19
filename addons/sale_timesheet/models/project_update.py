@@ -4,59 +4,64 @@
 from odoo import api, models
 from odoo.tools import float_utils, format_amount, formatLang
 
-from collections import defaultdict
 
 class ProjectUpdate(models.Model):
     _inherit = 'project.update'
 
     @api.model
     def _get_template_values(self, project):
+        template_values = super(ProjectUpdate, self)._get_template_values(project)
+        services = self._get_services_values(project)
+        profitability = self._get_profitability_values(project)
+        show_sold = template_values['project'].allow_billable and len(services.get('data', [])) > 0
         return {
-            **super(ProjectUpdate, self)._get_template_values(project),
-            'services': self._get_services_values(project),
-            'profitability': self._get_profitability_values(project),
+            **template_values,
+            'show_sold': show_sold,
+            'show_profitability': bool(profitability),
+            'show_activities': template_values['show_activities'] or show_sold or bool(profitability),
+            'services': services,
+            'profitability': profitability,
         }
 
     @api.model
     def _get_project_sols(self, project):
-        return self.env['sale.order.line'].search([('order_id', '=', project.sale_order_id.id), ('is_service', '=', True)])
+        # TODO: remove me in master
+	    return
 
     @api.model
     def _get_services_values(self, project):
         if not project.allow_billable:
             return {}
         services = []
-        total_sold_per_uom = defaultdict(float)
-        total_effective_per_uom = defaultdict(float)
         total_sold, total_effective, total_remaining = 0, 0, 0
-        sols = self._get_project_sols(project)
+        sols = project._get_sale_order_lines()
+        name_by_sol = dict(sols.name_get())
+        product_uom_unit = self.env.ref('uom.product_uom_unit')
         for sol in sols:
             #We only want to consider hours and days for this calculation
-            if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id:
+            is_unit = sol.product_uom == product_uom_unit
+            if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id or is_unit:
+                product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+                qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
                 services.append({
-                    'name': sol.name,
-                    'uom': sol.product_uom.name,
-                    'sold_value': sol.product_uom_qty,
-                    'effective_value': sol.qty_delivered,
-                    'remaining_value': sol.product_uom_qty - sol.qty_delivered,
+                    'name': name_by_sol[sol.id] if len(sols.order_id) > 1 else sol.name,
+                    'sold_value': product_uom_qty,
+                    'effective_value': qty_delivered,
+                    'remaining_value': product_uom_qty - qty_delivered,
+                    'unit': sol.product_uom.name if is_unit else self.env.company.timesheet_encode_uom_id.name,
+                    'is_unit': is_unit,
                     'sol': sol,
                 })
-                total_sold_per_uom[sol.product_uom] += sol.product_uom_qty
-                total_effective_per_uom[sol.product_uom] += sol.qty_delivered
-        total_sold = sum(
-            uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            for uom, quantity in total_sold_per_uom.items()
-        )
-        total_effective = sum(
-            uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            for uom, quantity in total_effective_per_uom.items()
-        )
+                if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id:
+                    total_sold += product_uom_qty
+                    total_effective += qty_delivered
         total_remaining = total_sold - total_effective
         return {
             'data': services,
             'total_sold': total_sold,
             'total_effective': total_effective,
             'total_remaining': total_remaining,
+            'company_unit_name': self.env.company.timesheet_encode_uom_id.name,
         }
 
     @api.model

@@ -33,17 +33,17 @@ class Project(models.Model):
                 )
         ).update({'sale_line_id': False})
 
-    @api.depends('sale_order_id')
+    @api.depends('sale_order_id.invoice_status', 'tasks.sale_order_id.invoice_status')
     def _compute_has_any_so_to_invoice(self):
         """Has any Sale Order whose invoice_status is set as To Invoice"""
-        if not self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
-            self.has_any_so_to_invoice = False
-        else:
-            for project in self:
-                has_any_so_to_invoice = project.sale_order_id and project.sale_order_id.invoice_status == "to invoice"
-                for task in project.task_ids:
-                    has_any_so_to_invoice = has_any_so_to_invoice or (task.sale_order_id and task.sale_order_id.invoice_status == "to invoice")
-                project.has_any_so_to_invoice = has_any_so_to_invoice
+        project_to_invoice = self.env['project.project'].search([
+            '|',
+                ('sale_order_id.invoice_status', '=', 'to invoice'),
+                ('tasks.sale_order_id.invoice_status', '=', 'to invoice'),
+            ('id', 'in', self.ids)
+        ])
+        project_to_invoice.has_any_so_to_invoice = True
+        (self - project_to_invoice).has_any_so_to_invoice = False
 
     def action_view_so(self):
         self.ensure_one()
@@ -58,15 +58,13 @@ class Project(models.Model):
         return action_window
 
     def action_create_invoice(self):
-        if not self.sale_order_id and self.sale_order_id.invoice_status != 'to invoice':
-            raise UserError(_("The selected Sales Order should contain something to invoice."))
+        if not self.has_any_so_to_invoice:
+            raise UserError(_("There is nothing to invoice in this project."))
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
-        sols = self.sale_order_id.ids
-        for task in self.task_ids:
-            if task.sale_order_id.id not in sols:
-                sols += [task.sale_order_id.id]
+        so_ids = (self.sale_order_id | self.task_ids.sale_order_id).filtered(lambda so: so.invoice_status == 'to invoice').ids
         action['context'] = {
-            'active_ids': sols
+            'active_id': so_ids[0] if len(so_ids) == 1 else False,
+            'active_ids': so_ids
         }
         return action
 

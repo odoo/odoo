@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    p.ej: 1*(unidad de referencia)=ratio*(esta unidad)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -34,6 +38,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    p.ej: 1*(esta unidad)=ratio*(unidad de referencia)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -79,7 +86,7 @@ msgstr "Color"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "Proporción combinada"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -123,6 +130,8 @@ msgstr "Docenas"
 #: model:ir.model.fields,help:uom.field_uom_category__reference_uom_id
 msgid "Dummy field to keep track of reference uom change"
 msgstr ""
+"Campo de simulación para llevar un registro de referencia para cambios de "
+"UdM"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -211,7 +220,7 @@ msgstr "Unidad de medida de referencia para esta categoría"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referencia UdM"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -226,7 +235,7 @@ msgstr "Buscar unidad de medida"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "Buscar categoría UdM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -245,11 +254,18 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Algunos campos críticos se modificaron en %s.\n"
+"Tome en cuenta que este cambio no modificará la información existente.\n"
+"\n"
+"Ya que las unidades de medida impactan a todo el sistema, esto puede traer problemas críticos\n"
+"P. ej. modificar el redondeo podría alterar el balance de su inventario.\n"
+"\n"
+"Por eso, cambiar las unidades de medida neutrales en una base de datos funcional no está recomendado."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "Superficie"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -272,6 +288,8 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"El sistema usa las unidades de medida que se muestran aquí, por lo tanto, no se pueden borrar: %s\n"
+"Mejor archívelas."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -366,6 +384,7 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
+"La categoría de UdM %s debería tener una unidad de medida de referencia."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -378,7 +397,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "UdM"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -434,7 +453,7 @@ msgstr "ft"
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -479,12 +498,12 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "m²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter

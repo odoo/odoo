@@ -5,6 +5,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
+from odoo.tools import groupby as groupbyelem
 from operator import itemgetter
 
 from odoo import _, api, fields, models
@@ -514,6 +515,9 @@ class StockMove(models.Model):
                     move_line_vals['product_uom_id'] = move.product_id.uom_id.id
                     move_line_vals['qty_done'] = 1
                     move_lines_commands.append((0, 0, move_line_vals))
+                else:
+                    move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
+                    move_line.qty_done = 1
             move.write({'move_line_ids': move_lines_commands})
 
     @api.depends('picking_type_id', 'date', 'priority')
@@ -647,7 +651,7 @@ class StockMove(models.Model):
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
-            self.next_serial = self.env['stock.production.lot'].get_next_serial(self.company_id, self.product_id)
+            self.next_serial = self.env['stock.production.lot']._get_next_serial(self.company_id, self.product_id)
 
         return {
             'name': _('Detailed Operations'),
@@ -806,13 +810,8 @@ class StockMove(models.Model):
         ]
 
     @api.model
-    def _prepare_merge_move_sort_method(self, move):
-        move.ensure_one()
-        return [
-            move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
-            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.description_picking or ""
-        ]
+    def _prepare_merge_negative_moves_excluded_distinct_fields(self):
+        return []
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
@@ -838,31 +837,51 @@ class StockMove(models.Model):
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
-        moves_to_merge = []
+        # Moves successfully merged
+        merged_moves = self.env['stock.move']
+
+        moves_by_neg_key = defaultdict(lambda: self.env['stock.move'])
+        # Need to check less fields for negative moves as some might not be set.
+        neg_qty_moves = self.filtered(lambda m: float_compare(m.product_qty, 0.0, precision_rounding=m.product_uom.rounding) < 0)
+        excluded_fields = self._prepare_merge_negative_moves_excluded_distinct_fields()
+        neg_key = itemgetter(*[field for field in distinct_fields if field not in excluded_fields])
+
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
-            candidate_moves = candidate_moves.with_context(prefetch_fields=False)
-            for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
-                moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
-                # If we have multiple records we will merge then in a single one.
+            candidate_moves = candidate_moves.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')) - neg_qty_moves
+            for k, g in groupbyelem(candidate_moves, key=itemgetter(*distinct_fields)):
+                moves = self.env['stock.move'].concat(*g)
+                # Merge all positive moves together
                 if len(moves) > 1:
-                    moves_to_merge.append(moves)
+                    # link all move lines to record 0 (the one we will keep).
+                    moves.mapped('move_line_ids').write({'move_id': moves[0].id})
+                    # merge move data
+                    moves[0].write(moves._merge_moves_fields())
+                    # update merged moves dicts
+                    moves_to_unlink |= moves[1:]
+                    merged_moves |= moves[0]
+                # Add the now single positive move to its limited key record
+                moves_by_neg_key[neg_key(moves[0])] |= moves[0]
 
-        # second step merge its move lines, initial demand, ...
-        for moves in moves_to_merge:
-            # link all move lines to record 0 (the one we will keep).
-            moves.mapped('move_line_ids').write({'move_id': moves[0].id})
-            # merge move data
-            moves[0].write(moves._merge_moves_fields())
-            # update merged moves dicts
-            moves_to_unlink |= moves[1:]
+        for neg_move in neg_qty_moves:
+            # Check all the candidates that matches the same limited key, and adjust their quantites to absorb negative moves
+            for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
+                # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
+                if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
+                    pos_move.product_uom_qty += neg_move.product_uom_qty
+                    merged_moves |= pos_move
+                    moves_to_unlink |= neg_move
+                    break
+                neg_move.product_uom_qty += pos_move.product_uom_qty
+                pos_move.product_uom_qty = 0
 
         if moves_to_unlink:
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
-        return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
+
+        return (self | merged_moves) - moves_to_unlink
 
     def _get_relevant_state_among_moves(self):
         # We sort our moves by importance of state:
@@ -1042,6 +1061,11 @@ class StockMove(models.Model):
                         'origin': False,
                     })
             else:
+                # Don't create picking for negative moves since they will be
+                # reverse and assign to another picking
+                moves = moves.filtered(lambda m: float_compare(m.product_uom_qty, 0.0, precision_rounding=m.product_uom.rounding) >= 0)
+                if not moves:
+                    continue
                 new_picking = True
                 picking = Picking.create(moves._get_new_picking_values())
 
@@ -1193,9 +1217,21 @@ class StockMove(models.Model):
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
 
+        # Transform remaining move in return in case of negative initial demand
+        neg_r_moves = moves.filtered(lambda move: float_compare(
+            move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) < 0)
+        for move in neg_r_moves:
+            move.location_id, move.location_dest_id = move.location_dest_id, move.location_id
+            move.product_uom_qty *= -1
+            if move.picking_type_id.return_picking_type_id:
+                move.picking_type_id = move.picking_type_id.return_picking_type_id
+        # detach their picking as we inverted the location and potentially picking type
+        neg_r_moves.picking_id = False
+        neg_r_moves._assign_picking()
+
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
         moves.filtered(lambda move: not move.picking_id.immediate_transfer
-                       and move.state == 'confirmed'
+                       and move.state in ('confirmed', 'partially_available')
                        and (move._should_bypass_reservation()
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
@@ -1316,17 +1352,16 @@ class StockMove(models.Model):
 
         # Find a candidate move line to update or create a new one.
         for reserved_quant, quantity in quants:
-            to_update = self.move_line_ids.filtered(lambda ml: ml._reservation_is_updatable(quantity, reserved_quant))
+            to_update = next((line for line in self.move_line_ids if line._reservation_is_updatable(quantity, reserved_quant)), False)
             if to_update:
-                uom_quantity = self.product_id.uom_id._compute_quantity(quantity, to_update[0].product_uom_id, rounding_method='HALF-UP')
+                uom_quantity = self.product_id.uom_id._compute_quantity(quantity, to_update.product_uom_id, rounding_method='HALF-UP')
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
-                uom_quantity_back_to_product_uom = to_update[0].product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
+                uom_quantity_back_to_product_uom = to_update.product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update[0].with_context(bypass_reservation_update=True).product_uom_qty += uom_quantity
+                to_update.with_context(bypass_reservation_update=True).product_uom_qty += uom_quantity
             else:
                 if self.product_id.tracking == 'serial':
-                    for i in range(0, int(quantity)):
-                        self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant))
+                    self.env['stock.move.line'].create([self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))])
                 else:
                     self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return taken_quantity
@@ -1715,7 +1750,7 @@ class StockMove(models.Model):
             else:
                 moves_state_to_write['confirmed'].add(move.id)
         for state, moves_ids in moves_state_to_write.items():
-            self.browse(moves_ids).write({'state': state})
+            self.browse(moves_ids).filtered(lambda m: m.state != state).state = state
 
     @api.model
     def _consuming_picking_types(self):
@@ -1742,7 +1777,7 @@ class StockMove(models.Model):
                         result.add((document, responsible, visited))
             return result
         else:
-            return [(self.picking_id, self.product_id.responsible_id, visited)]
+            return []
 
     def _set_quantity_done_prepare_vals(self, qty):
         res = []
@@ -1898,7 +1933,7 @@ class StockMove(models.Model):
                          ('procure_method', '=', 'make_to_stock'),
                          ('reservation_date', '<=', fields.Date.today())]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
-                                                         order='reservation_date, priority desc, date asc')
+                                                         order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests(self, seen):
@@ -1943,10 +1978,10 @@ class StockMove(models.Model):
 
         ids_in_self = set(self.ids)
         product_ids = self.product_id
-        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id)]).ids
+        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
 
         in_domain, out_domain = self.env['report.stock.report_product_product_replenishment']._move_confirmed_domain(
-            None, product_ids.ids, wh_location_ids
+            None, product_ids.ids, wh_location_query
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
         reserved_outs = self.env['stock.move'].search(
@@ -1956,7 +1991,8 @@ class StockMove(models.Model):
         # Prefetch data to avoid future request
         (outs - self).read(['product_id', 'product_uom', 'product_qty', 'state'], load=False)  # remove self because data is already fetch
         ins.read(['product_id', 'product_qty', 'date', 'move_dest_ids'], load=False)
-        currents = {c['id']: c['qty_available'] for c in product_ids.with_context(warehouse=warehouse.id).read(['qty_available'])}
+
+        currents = product_ids.with_context(warehouse=warehouse.id)._get_only_qty_available()
 
         outs_per_product = defaultdict(list)
         reserved_outs_per_product = defaultdict(list)

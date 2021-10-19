@@ -5,17 +5,17 @@
 # Translators:
 # Gary Wei <Gary.wei@elico-corp.com>, 2021
 # 稀饭~~ <wangwhai@qq.com>, 2021
-# 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # wopalm <wopalm@gmail.com>, 2021
+# 黎伟杰 <674416404@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: wopalm <wopalm@gmail.com>, 2021\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,11 +81,6 @@ msgid "# of Tasks"
 msgstr "#  任务"
 
 #. module: project
-#: model:mail.template,subject:project.rating_project_request_email_template
-msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr "${object.project_id.company_id.name}: 满意度调查"
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #, python-format
@@ -113,7 +108,12 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
-msgid "(due on"
+msgid "(due"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "(last project update),"
 msgstr ""
 
 #. module: project
@@ -254,11 +254,6 @@ msgid "31"
 msgstr "31"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "<b><u>Milestones</u></b>"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
@@ -288,22 +283,24 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    % set access_token = object.rating_get_access_token()\n"
-"    % set partner = object.rating_get_partner_id()\n"
+"    <t t-set=\"access_token\" t-value=\"object.rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object.rating_get_partner_id()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            % if partner.name:\n"
-"                Hello ${partner.name},<br/><br/>\n"
-"            % else:\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
 "                Hello,<br/><br/>\n"
-"            % endif\n"
-"            Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
-"            % if object.rating_get_rated_partner_id().name:\n"
-"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
-"            % else:\n"
+"            </t>\n"
+"            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
+"            <t t-if=\"object.rating_get_rated_partner_id().name\">\n"
+"                assigned to <strong t-out=\"object.rating_get_rated_partner_id().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
 "                .<br/>\n"
-"            % endif\n"
+"            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
@@ -315,17 +312,17 @@ msgid ""
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
 "                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
 "                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
 "                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
@@ -336,12 +333,12 @@ msgid ""
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
-"            % if object.project_id.rating_status == 'stage':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>\n"
-"            % endif\n"
-"            % if object.project_id.rating_status == 'periodic':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>\n"
-"            % endif\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
 "    </table>\n"
@@ -353,30 +350,18 @@ msgstr ""
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear ${object.partner_id.name or 'customer'},<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
 "    Thank you for your enquiry.<br/>\n"
 "    If you have any questions, please let us know.\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
-"    % if user.signature\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        ${user.signature | safe}\n"
-"    % endif\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div>\n"
-"    尊敬的 ${object.partner_id.name or 'customer'}：<br/>\n"
-"    感谢您的垂询。<br/>\n"
-"   如果您还有任何疑问，请随时联系我们。\n"
-"    <br/><br/>\n"
-"    此致，\n"
-"    % if user.signature\n"
-"        <br/>\n"
-"        ${user.signature | safe}\n"
-"    % endif\n"
-"</div>\n"
-"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -495,6 +480,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">Blocking</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
 msgstr ""
@@ -533,8 +523,8 @@ msgstr "<strong class=\"d-block mb-2\">附件</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<strong>Assigned to</strong>"
-msgstr "<strong>分派给</strong>"
+msgid "<strong>Assignees</strong>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -568,6 +558,11 @@ msgstr "<strong>项目:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "<u>Milestones</u>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
 msgstr ""
 
@@ -583,14 +578,6 @@ msgstr "为该别名创建新记录时，将对其进行评估以提供默认值
 msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"A sub-task cannot be a recurring task. Please consider making its parent "
-"task, a recurring task."
 msgstr ""
 
 #. module: project
@@ -898,25 +885,20 @@ msgid "Assigned Tasks"
 msgstr "已分派任务"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Assigned To"
-msgstr "分派给"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_id
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
 msgstr "分派给"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
 msgstr ""
@@ -1019,9 +1001,6 @@ msgstr "阻塞"
 #: model:project.task,legend_blocked:project.project_task_25
 #: model:project.task,legend_blocked:project.project_task_26
 #: model:project.task,legend_blocked:project.project_task_3
-#: model:project.task,legend_blocked:project.project_task_30
-#: model:project.task,legend_blocked:project.project_task_31
-#: model:project.task,legend_blocked:project.project_task_32
 #: model:project.task,legend_blocked:project.project_task_33
 #: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_9
@@ -1076,6 +1055,12 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_11
 #: model:project.task,legend_done:project.project_task_21
 #: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_27
+#: model:project.task,legend_done:project.project_task_28
+#: model:project.task,legend_done:project.project_task_29
+#: model:project.task,legend_done:project.project_task_30
+#: model:project.task,legend_done:project.project_task_31
+#: model:project.task,legend_done:project.project_task_32
 #: model:project.task,legend_done:project.project_task_4
 #: model:project.task,legend_done:project.project_task_5
 #: model:project.task,legend_done:project.project_task_6
@@ -1334,7 +1319,7 @@ msgstr "创建时间"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
@@ -1586,6 +1571,13 @@ msgid "Delivered"
 msgstr "已交付"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
+#, python-format
+msgid "Dependent Tasks"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
 #: model:ir.model.fields,field_description:project.field_project_task__description
 #: model:ir.model.fields,field_description:project.field_project_task_type__description
@@ -1726,6 +1718,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "编辑"
@@ -2180,6 +2173,9 @@ msgstr "重要"
 #: model:project.task,legend_normal:project.project_task_24
 #: model:project.task,legend_normal:project.project_task_25
 #: model:project.task,legend_normal:project.project_task_26
+#: model:project.task,legend_normal:project.project_task_27
+#: model:project.task,legend_normal:project.project_task_28
+#: model:project.task,legend_normal:project.project_task_29
 #: model:project.task,legend_normal:project.project_task_3
 #: model:project.task,legend_normal:project.project_task_30
 #: model:project.task,legend_normal:project.project_task_31
@@ -2390,7 +2386,7 @@ msgstr "近30天"
 #: model:ir.model.fields,field_description:project.field_project_update____last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2749,6 +2745,12 @@ msgstr ""
 #: model:project.task,legend_blocked:project.project_task_11
 #: model:project.task,legend_blocked:project.project_task_21
 #: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_27
+#: model:project.task,legend_blocked:project.project_task_28
+#: model:project.task,legend_blocked:project.project_task_29
+#: model:project.task,legend_blocked:project.project_task_30
+#: model:project.task,legend_blocked:project.project_task_31
+#: model:project.task,legend_blocked:project.project_task_32
 #: model:project.task,legend_blocked:project.project_task_4
 #: model:project.task,legend_blocked:project.project_task_5
 #: model:project.task,legend_blocked:project.project_task_6
@@ -3306,7 +3308,6 @@ msgstr "进程比例"
 #. openerp-web
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
 #: code:addons/project/static/src/js/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_project
@@ -3634,9 +3635,6 @@ msgstr "只读"
 #: model:project.task,legend_done:project.project_task_25
 #: model:project.task,legend_done:project.project_task_26
 #: model:project.task,legend_done:project.project_task_3
-#: model:project.task,legend_done:project.project_task_30
-#: model:project.task,legend_done:project.project_task_31
-#: model:project.task,legend_done:project.project_task_32
 #: model:project.task,legend_done:project.project_task_33
 #: model:project.task,legend_done:project.project_task_8
 #: model:project.task,legend_done:project.project_task_9
@@ -3678,8 +3676,8 @@ msgstr "点评的理由"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
-msgstr "接收 ${object.name}"
+msgid "Reception of {{ object.name }}"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -3986,11 +3984,6 @@ msgid "Security Token"
 msgstr "安全令牌"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "See More"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send"
 msgstr "发送"
@@ -4007,7 +4000,7 @@ msgstr "九月"
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -4060,6 +4053,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "显示所有的在今天之前的下一个行动日期的记录"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "Since"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -4513,22 +4511,12 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The deadline of the following milestone has been updated"
+msgid "The following milestone has been added:"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The deadline of the following milestones has been updated"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The following milestone has been added"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The following milestones have been added"
+msgid "The following milestones have been added:"
 msgstr ""
 
 #. module: project
@@ -4820,7 +4808,6 @@ msgstr "取消归档"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
 msgstr "未分派"
@@ -5186,15 +5173,20 @@ msgid "in status:"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "since the last project update ("
-msgstr ""
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
 msgstr "任务"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "the deadline of the following milestone has been updated:"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "the deadline of the following milestones has been updated:"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -5202,3 +5194,8 @@ msgstr "任务"
 #, python-format
 msgid "true"
 msgstr "真"
+
+#. module: project
+#: model:mail.template,subject:project.rating_project_request_email_template
+msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
+msgstr ""

@@ -10,6 +10,13 @@ const { Component, core, hooks, useState, QWeb } = owl;
 const { EventBus } = core;
 const { onWillStart, useExternalListener, useRef, useSubEnv } = hooks;
 
+const DIRECTION_CARET_CLASS = {
+    bottom: "dropdown",
+    top: "dropup",
+    left: "dropleft",
+    right: "dropright",
+};
+
 /**
  * @typedef DropdownState
  * @property {boolean} open
@@ -61,7 +68,6 @@ export class Dropdown extends Component {
         // Set up nested dropdowns ---------------------------------------------
         this.hasParentDropdown = this.env.inDropdown;
         useSubEnv({ inDropdown: true });
-        this.rootTag = this.props.tag || (this.hasParentDropdown ? "li" : "div");
 
         // Set up key navigation -----------------------------------------------
         useDropdownNavigation();
@@ -70,8 +76,8 @@ export class Dropdown extends Component {
         /** @type {string} **/
         let position =
             this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+        let [direction, variant = "middle"] = position.split("-");
         if (localization.direction === "rtl") {
-            let [direction, variant = "middle"] = position.split("-");
             if (["bottom", "top"].includes(direction)) {
                 variant = variant === "start" ? "end" : "start";
             } else {
@@ -82,8 +88,9 @@ export class Dropdown extends Component {
         const positioningOptions = {
             popper: "menuRef",
             position,
-            directionFlipOrder: { right: "rl", bottom: "bt", top: "tb", left: "lr" },
         };
+        this.directionCaretClass = DIRECTION_CARET_CLASS[direction];
+        this.togglerRef = useRef("togglerRef");
         if (this.props.toggler === "parent") {
             // Add parent click listener to handle toggling
             useEffect(
@@ -237,9 +244,6 @@ export class Dropdown extends Component {
      * NB: only if its siblings dropdown group is opened and if not a sub dropdown.
      */
     onTogglerMouseEnter() {
-        if (this.hasParentDropdown) {
-            return;
-        }
         if (this.state.groupIsOpen && !this.state.open) {
             this.open();
         }
@@ -289,10 +293,6 @@ Dropdown.props = {
     },
     beforeOpen: {
         type: Function,
-        optional: true,
-    },
-    tag: {
-        type: String,
         optional: true,
     },
     togglerClass: {

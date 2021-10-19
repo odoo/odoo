@@ -7,6 +7,8 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var FormView = require('web.FormView');
 
+const { browser } = require('@web/core/browser/browser');
+const { patchWithCleanup } = require('@web/../tests/helpers/utils');
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
@@ -526,6 +528,11 @@ QUnit.module('Views', {
             },
         });
 
+        // save favorite needs this
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
         var parent = await createParent({
             data: this.data,
             archs: {
@@ -581,6 +588,40 @@ QUnit.module('Views', {
         await cpHelpers.saveFavorite(modal);
 
         testUtils.mock.unpatch(ListController);
+        parent.destroy();
+    });
+
+    QUnit.test('SelectCreateDialog calls on_selected with every record matching the domain', async function (assert) {
+        assert.expect(1);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree limit="2" string="Partner">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                        '<field name="foo"/>' +
+                    '</search>',
+            },
+            session: {},
+        });
+
+        new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+            on_selected: function(records) {
+                assert.equal(records.length, 3)
+            }
+        }).open();
+        await testUtils.nextTick();
+
+        await testUtils.dom.click($('thead .o_list_record_selector input'));
+        await testUtils.dom.click($('.o_list_selection_box .o_list_select_domain'));
+        await testUtils.dom.click($('.modal .o_select_button'));
+
         parent.destroy();
     });
 

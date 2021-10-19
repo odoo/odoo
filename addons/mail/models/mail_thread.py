@@ -173,7 +173,7 @@ class MailThread(models.AbstractModel):
             operator_new = 'inselect'
         else:
             operator_new = 'not inselect'
-        return [('id', operator_new, ("SELECT distinct res_id FROM mail_message WHERE model=%s", [self._name]))]
+        return [('id', operator_new, ("SELECT res_id FROM mail_message WHERE model=%s", [self._name]))]
 
     def _compute_message_unread(self):
         partner_id = self.env.user.partner_id.id
@@ -1823,23 +1823,7 @@ class MailThread(models.AbstractModel):
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
 
-        MailMessage_sudo = self.env['mail.message'].sudo()
-        if self._mail_flat_thread and not parent_id:
-            parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
-            # parent_message searched in sudo for performance, only used for id.
-            # Note that with sudo we will match message with internal subtypes.
-            parent_id = parent_message.id if parent_message else False
-        elif parent_id:
-            old_parent_id = parent_id
-            parent_message = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
-            # avoid loops when finding ancestors
-            processed_list = []
-            if parent_message:
-                new_parent_id = parent_message.parent_id and parent_message.parent_id.id
-                while (new_parent_id and new_parent_id not in processed_list):
-                    processed_list.append(new_parent_id)
-                    parent_message = parent_message.parent_id
-                parent_id = parent_message.id
+        parent_id = self._message_compute_parent_id(parent_id)
 
         values = dict(msg_kwargs)
         values.update({
@@ -2095,6 +2079,25 @@ class MailThread(models.AbstractModel):
 
         return author_id, email_from
 
+    def _message_compute_parent_id(self, parent_id):
+        MailMessage_sudo = self.env['mail.message'].sudo()
+        if self._mail_flat_thread and not parent_id:
+            parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
+            # parent_message searched in sudo for performance, only used for id.
+            # Note that with sudo we will match message with internal subtypes.
+            parent_id = parent_message.id if parent_message else False
+        elif parent_id:
+            parent_message = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
+            # avoid loops when finding ancestors
+            processed_list = []
+            if parent_message:
+                new_parent_id = parent_message.parent_id and parent_message.parent_id.id
+                while (new_parent_id and new_parent_id not in processed_list):
+                    processed_list.append(new_parent_id)
+                    parent_message = parent_message.parent_id
+                parent_id = parent_message.id
+        return parent_id
+
     def _message_create(self, values_list):
         if not isinstance(values_list, (list)):
             values_list = [values_list]
@@ -2214,6 +2217,8 @@ class MailThread(models.AbstractModel):
             base_template = False
 
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        # Replace new lines by spaces to conform to email headers requirements
+        mail_subject = ' '.join((mail_subject or '').splitlines())
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
