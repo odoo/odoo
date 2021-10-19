@@ -129,11 +129,11 @@
                                 <field name="lang_code" invisible="1"/>
                                 <label for="lang_id" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}"/>
                                 <div class="o_row" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}">
-                                    <field name="lang_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                    <field name="lang_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     <button
                                         type="action"
                                         name="%(base.res_lang_act_window)d"
-                                        class="btn-sm btn-link mb4 fa fa-globe"
+                                        class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
                                         aria-label="More languages"
                                         groups="base.group_system"
                                         title="More languages"
@@ -309,11 +309,11 @@
                                         <field name="lang_active_count" invisible="1"/>
                                         <label for="lang_id" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}"/>
                                         <div class="o_row" attrs="{'invisible': [('lang_active_count', '&lt;=', 1)]}">
-                                            <field name="lang_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                            <field name="lang_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                             <button
                                                 type="action"
                                                 name="%(base.res_lang_act_window)d"
-                                                class="btn-sm btn-link mb4 fa fa-globe"
+                                                class="btn-sm btn-link mb4 oe_edit_only fa fa-globe"
                                                 aria-label="More languages"
                                                 groups="base.group_system"
                                                 title="More languages"

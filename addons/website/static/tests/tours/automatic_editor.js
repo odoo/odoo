@@ -17,15 +17,28 @@ tour.register('automatic_editor_on_new_website', {
         trigger: 'a.o_add_language',
     },
     {
-        content: "Select dropdown",
-        trigger: 'select[name=lang]',
-        run: () => {
-            $('select[name="lang"]').val('"pa_GB"').change();
-        }
+        content: "type Parseltongue",
+        trigger: 'div[name="lang_ids"] .o_input_dropdown input',
+        run: 'text Parseltongue',
+    },
+    {
+        content: 'select Parseltongue',
+        trigger: 'div[name="lang_ids"] .o_input_dropdown input',
+        extra_trigger: '.dropdown-item:contains(Parseltongue)',
+        run: function () {
+            // The dropdown element is outside the action manager, and can therefor not
+            // be selected directly by "trigger".
+            // That's why we need to simulate the click in JS
+            const element = $('.dropdown-item:contains(Parseltongue)');
+            if (!element.length) {
+                console.error('Lang not found');
+            }
+            element.click();
+        },
     },
     {
         content: "load parseltongue",
-        extra_trigger: '.modal select[name="lang"]:propValueContains(pa_GB)',
+        extra_trigger: '.modal div[name="lang_ids"] .badge-pill .o_tag_badge_text:contains(Parseltongue)',
         trigger: '.modal-footer button:first',
     },
     {

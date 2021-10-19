@@ -6,6 +6,9 @@
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
                 <tree string="Languages" limit="200">
+                    <header>
+                        <button name="action_activate_langs" type="object" string="Activate"/>
+                    </header>
                     <field name="name"/>
                     <field name="code" groups="base.group_no_one"/>
                     <field name="iso_code" groups="base.group_no_one"/>

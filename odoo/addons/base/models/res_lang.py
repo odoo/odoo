@@ -334,6 +334,22 @@ class Lang(models.Model):
 
         return formatted
 
+    def action_activate_langs(self):
+        """ Activate the selected languages """
+        for lang in self.filtered(lambda l: not l.active):
+            lang.toggle_active()
+        message = _("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'target': 'new',
+            'params': {
+                'message': message,
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
 def split(l, counts):
     """
