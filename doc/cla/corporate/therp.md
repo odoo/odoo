@@ -25,5 +25,5 @@ List of contributors:
 *  George Daramouskas gdaramouskas@therp.nl https://github.com/daramousk
 *  Nikos Tsirintanis ntsirintanis@therp.nl https://github.com/ntsirintanis
 *  Jan Verbeek jverbeek@therp.nl https://github.com/janverb
-*  Danny de Jong ddejong@therp.nl https://github.com/bamilab
+*  Danny de Jong ddejong@therp.nl https://github.com/ddejong-therp
 
