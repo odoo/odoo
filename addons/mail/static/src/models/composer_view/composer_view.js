@@ -433,7 +433,7 @@ function factory(dependencies) {
             body = this._generateEmojisOnHtml(body);
             let data = {
                 body: body,
-                attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.originThread.attachments).map(attachment => attachment.id),
+                attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
             try {
                 composer.update({ isPostingMessage: true });
