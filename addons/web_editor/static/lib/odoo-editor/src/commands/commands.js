@@ -555,8 +555,14 @@ export const editorCommands = {
                 } else {
                     font = [];
                 }
-            } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
-                // Node is a visible text node: wrap it in a <font>.
+            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || (node.nodeType === Node.ELEMENT_NODE &&
+                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                        isVisibleStr(node.textContent) &&
+                        !node.classList.contains('btn') &&
+                        !node.querySelector('font'))) {
+                // Node is a visible text or inline node without font nor a button:
+                // wrap it in a <font>.
                 const previous = node.previousSibling;
                 const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
                 if (
