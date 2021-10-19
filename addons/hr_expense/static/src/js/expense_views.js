@@ -39,7 +39,7 @@ odoo.define('hr_expense.expenses.tree', function (require) {
             };
             this.$el.find('img.o_expense_apple_store').on('click', function(event) {
                 event.preventDefault();
-                if (!config.device.isMobile) {
+                if (!config.device.isMobileDevice) {
                     self.do_action(_.extend(action_desktop, {params: {'url': apple_url}}));
                 } else {
                     self.do_action({type: 'ir.actions.act_url', url: apple_url});
@@ -47,7 +47,7 @@ odoo.define('hr_expense.expenses.tree', function (require) {
             });
             this.$el.find('img.o_expense_google_store').on('click', function(event) {
                 event.preventDefault();
-                if (!config.device.isMobile) {
+                if (!config.device.isMobileDevice) {
                     self.do_action(_.extend(action_desktop, {params: {'url': google_url}}));
                 } else {
                     self.do_action({type: 'ir.actions.act_url', url: google_url});
