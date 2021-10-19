@@ -35,6 +35,7 @@ class LunchOrder(models.Model):
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
+    notified = fields.Boolean(default=False)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
     currency_id = fields.Many2one(related='company_id.currency_id', store=True)
     quantity = fields.Float('Quantity', required=True, default=1)
@@ -229,3 +230,29 @@ class LunchOrder(models.Model):
 
     def action_reset(self):
         self.write({'state': 'ordered'})
+
+    def action_notify(self):
+        self -= self.filtered('notified')
+        if not self:
+            return
+        notified_users = set()
+        # (company, lang): (subject, body)
+        translate_cache = dict()
+        for order in self:
+            user = order.user_id
+            if user in notified_users:
+                continue
+            _key = (order.company_id, user.lang)
+            if _key not in translate_cache:
+                context = {'lang': user.lang}
+                translate_cache[_key] = (_('Lunch notification'), order.company_id.with_context(lang=user.lang).lunch_notify_message)
+                del context
+            subject, body = translate_cache[_key]
+            user.partner_id.message_notify(
+                subject=subject,
+                body=body,
+                partner_ids=user.partner_id.ids,
+                email_layout_xmlid='mail.mail_notification_light',
+            )
+            notified_users.add(user)
+        self.write({'notified': True})
