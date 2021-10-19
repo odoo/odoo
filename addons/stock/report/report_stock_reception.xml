@@ -44,13 +44,13 @@
         <div class="o_report_reception justify-content-between">
             <div class="o_report_reception_header my-4">
                 <h3>
-                    <t t-if="pickings">
-                        <t t-foreach="pickings" t-as="receipt">
+                    <t t-if="docs">
+                        <t t-foreach="docs" t-as="doc">
                             <div>
-                                <a href="#" res-model="stock.picking" view-type="form" t-att-res-id="receipt.id">
-                                    <t t-esc="receipt.display_name"/>
+                                <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
+                                    <t t-esc="doc.display_name"/>
                                 </a>
-                                <span t-field="receipt.state" t-attf-class="badge badge-pill #{'bg-success-light' if receipt.state == 'done' else 'bg-info-light'}"/>
+                                <span t-field="doc.state" t-attf-class="badge badge-pill #{'bg-success-light' if doc.state == 'done' else 'bg-info-light'}"/>
                             </div>
                         </t>
                     </t>
@@ -150,7 +150,7 @@
                 </t>
             </table>
             <p t-else="">
-                No allocation need found for incoming products.
+                No allocation need found.
             </p></div>
         </div>
     </template>
