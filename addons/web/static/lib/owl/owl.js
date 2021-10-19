@@ -891,16 +891,16 @@
         }
         return map;
     }
-    const hooks = ["create", "update", "remove", "destroy", "pre", "post"];
+    const hooks$1 = ["create", "update", "remove", "destroy", "pre", "post"];
     function init(modules, domApi) {
         let i, j, cbs = {};
         const api = domApi !== undefined ? domApi : htmlDomApi;
-        for (i = 0; i < hooks.length; ++i) {
-            cbs[hooks[i]] = [];
+        for (i = 0; i < hooks$1.length; ++i) {
+            cbs[hooks$1[i]] = [];
             for (j = 0; j < modules.length; ++j) {
-                const hook = modules[j][hooks[i]];
+                const hook = modules[j][hooks$1[i]];
                 if (hook !== undefined) {
-                    cbs[hooks[i]].push(hook);
+                    cbs[hooks$1[i]].push(hook);
                 }
             }
         }
@@ -2509,7 +2509,8 @@
             ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
             let keysID = ctx.generateID();
             let valuesID = ctx.generateID();
-            ctx.addLine(`let _${keysID} = _${valuesID} = _${arrayID};`);
+            ctx.addLine(`let _${keysID} = _${arrayID};`);
+            ctx.addLine(`let _${valuesID} = _${arrayID};`);
             ctx.addIf(`!(_${arrayID} instanceof Array)`);
             ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
             ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
@@ -4660,7 +4661,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             return acc;
         }, []);
     }
-    class Context extends EventBus {
+    class Context$1 extends EventBus {
         constructor(state = {}) {
             super();
             this.rev = 1;
@@ -4773,7 +4774,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
      * will return an observed object (or array).  Changes to that value will then
      * trigger a rerendering of the current component.
      */
-    function useState(state) {
+    function useState$1(state) {
         const component = Component.current;
         const __owl__ = component.__owl__;
         if (!__owl__.observer) {
@@ -4909,7 +4910,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
 
     var _hooks = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        useState: useState,
+        useState: useState$1,
         onMounted: onMounted,
         onWillUnmount: onWillUnmount,
         onWillPatch: onWillPatch,
@@ -4923,7 +4924,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
         useExternalListener: useExternalListener
     });
 
-    class Store extends Context {
+    class Store$1 extends Context$1 {
         constructor(config) {
             super(config.state);
             this.actions = config.actions;
@@ -4962,7 +4963,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
         const component = Component.current;
         const componentId = component.__owl__.id;
         const store = options.store || component.env.store;
-        if (!(store instanceof Store)) {
+        if (!(store instanceof Store$1)) {
             throw new Error(`No store found when connecting '${component.constructor.name}'`);
         }
         let result = selector(store.state, component.props);
@@ -5509,15 +5510,15 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
      *
      * Note that dynamic values, such as a date or a commit hash are added by rollup
      */
-    const Context$1 = Context;
-    const useState$1 = useState;
+    const Context = Context$1;
+    const useState = useState$1;
     const core = { EventBus, Observer };
     const router = { Router, RouteComponent, Link };
-    const Store$1 = Store;
+    const Store = Store$1;
     const utils = _utils;
     const tags = _tags;
     const misc = { AsyncRoot, Portal };
-    const hooks$1 = Object.assign({}, _hooks, {
+    const hooks = Object.assign({}, _hooks, {
         useContext: useContext,
         useDispatch: useDispatch,
         useGetters: useGetters,
@@ -5526,26 +5527,28 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     const __info__ = {};
 
     exports.Component = Component;
-    exports.Context = Context$1;
+    exports.Context = Context;
     exports.QWeb = QWeb;
-    exports.Store = Store$1;
+    exports.Store = Store;
     exports.__info__ = __info__;
     exports.browser = browser;
     exports.config = config;
     exports.core = core;
-    exports.hooks = hooks$1;
+    exports.hooks = hooks;
     exports.misc = misc;
     exports.mount = mount;
     exports.router = router;
     exports.tags = tags;
-    exports.useState = useState$1;
+    exports.useState = useState;
     exports.utils = utils;
 
+    Object.defineProperty(exports, '__esModule', { value: true });
 
-    __info__.version = '1.4.6';
-    __info__.date = '2021-10-04T13:18:44.608Z';
-    __info__.hash = 'c0f4956';
+
+    __info__.version = '1.4.7';
+    __info__.date = '2021-10-19T14:49:16.603Z';
+    __info__.hash = '4e3b7c7';
     __info__.url = 'https://github.com/odoo/owl';
 
 
-}(this.owl = this.owl || {}));
+})(this.owl = this.owl || {});
