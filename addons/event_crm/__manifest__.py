@@ -11,6 +11,7 @@
     'data': [
         'security/event_crm_security.xml',
         'security/ir.model.access.csv',
+        'data/crm_lead_merge_template.xml',
         'views/crm_lead_views.xml',
         'views/event_registration_views.xml',
         'views/event_lead_rule_views.xml',

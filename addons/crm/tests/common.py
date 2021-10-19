@@ -5,7 +5,7 @@ from ast import literal_eval
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.addons.crm.models.crm_lead import CRM_LEAD_FIELDS_TO_MERGE
+from odoo.addons.crm.models.crm_lead import PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
@@ -423,7 +423,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         finally:
             # support specific values caller may want to check in addition to generic tests
             for fname, expected in expected.items():
-                self.assertEqual(opportunity[fname], expected)
+                if expected is False:
+                    self.assertFalse(opportunity[fname], "%s must be False" % fname)
+                else:
+                    self.assertEqual(opportunity[fname], expected, "%s must be equal to %s" % (fname, expected))
 
             # classic fields: first not void wins or specific computation
             for fname in fields_all:
@@ -438,6 +441,9 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                     self.assertEqual(opp_value, _get_priority())
                 elif fname in ('order_ids', 'visitor_ids'):
                     self.assertEqual(opp_value, _aggregate(fname))
+                elif fname in PARTNER_ADDRESS_FIELDS_TO_SYNC:
+                    # Specific computation, has its own test
+                    continue
                 else:
                     self.assertEqual(
                         opp_value if opp_value or not isinstance(opp_value, models.BaseModel) else False,
@@ -607,6 +613,9 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'partner_id': cls.contact_1.id,
         })
         cls.lead_w_partner.write({'stage_id': False})
+
+        cls.tags = cls.env['crm.tag'].create([{'name': 'Tag %i' % i} for i in range(4)])
+        cls.lead_1.tag_ids = cls.tags[:3]
         cls.lead_w_partner_company = cls.env['crm.lead'].create({
             'name': 'New1',
             'type': 'lead',
@@ -616,6 +625,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             'partner_id': cls.contact_company_1.id,
             'contact_name': 'Hermes Conrad',
             'email_from': 'hermes.conrad@test.example.com',
+            'tag_ids': (cls.tags[:2] | cls.tags[3]),
         })
         cls.lead_w_contact = cls.env['crm.lead'].create({
             'name': 'LeadContact',
