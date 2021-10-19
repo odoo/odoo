@@ -21,7 +21,7 @@
                             </div>
                             <button string="Automatic Assignment" name="action_assign_partner" type="object" class="btn-link"/>
 
-                            <field name="partner_assigned_id" domain="[('grade_id','!=',False)]"/>
+                            <field name="partner_assigned_id" domain="[('grade_id','!=',False)]" context="{'partner_set_default_grade_activation': 1}"/>
                             <button string="Send Email" type="action" class="btn-link"
                                 attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                 name="%(crm_lead_forward_to_partner_act)d"
@@ -133,6 +133,28 @@
                 <xpath expr="//graph" position="inside">
                     <field name="partner_latitude" invisible="1"/>
                     <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_kanban" model="ir.ui.view">
+            <field name="name">crm.lead.view.kanban.inherit.website.crm.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="partner_assigned_id"/>
+                </field>
+                <xpath expr="//span[@t-esc='record.partner_id.value']" position="replace">
+                    <t t-if="record.partner_id.value or record.partner_assigned_id.value">
+                        <span class="o_text_overflow">
+                            <t t-esc="record.partner_id.value"/>
+                            <t t-if="record.partner_assigned_id.value">
+                                <i class="fa fa-arrow-circle-right" aria-label="Arrow icon" title="Arrow"/>
+                                <t t-esc="record.partner_assigned_id.value"/>
+                            </t>
+                        </span>
+                    </t>
                 </xpath>
             </field>
         </record>

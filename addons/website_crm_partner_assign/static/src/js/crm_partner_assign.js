@@ -1,6 +1,7 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
+const {_t} = require('web.core');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 
@@ -15,6 +16,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
         'change .edit_opp_form .next_activity': '_onChangeNextActivity',
+        'change #new-opp-dialog .contact_name': '_onChangeContactName',
         'click div.input-group.date[data-target-input="nearest"]': '_onCalendarInputGroupClick',
     },
 
@@ -233,6 +235,17 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
+    _onChangeContactName: function (ev) {
+        const contactName = ev.currentTarget.value.trim();
+        let titleEl = this.el.querySelector('.title');
+        if (!titleEl.value.trim()) {
+            titleEl.value = contactName ? _.str.sprintf(_t("%s's Opportunity"), contactName) : '';
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onChangeNextActivity: function (ev) {
         var $selected = $('.edit_opp_form .next_activity').find(':selected');
         if ($selected.attr('activity_summary')) {
@@ -259,12 +272,6 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
                 down: 'fa fa-chevron-down',
             },
         };
-        // in some screen sizes, the automatic position opens the picker below input,
-        // but because #next_activity_div is the last element, we always open the
-        // picker on top the input to prevent extra scroll
-        if ($calendarInputGroup.is('#next_activity_div')) {
-            calendarOptions.widgetPositioning = {vertical: 'top'};
-        }
         $calendarInputGroup.datetimepicker(calendarOptions);
     },
 

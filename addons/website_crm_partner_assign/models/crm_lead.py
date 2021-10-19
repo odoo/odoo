@@ -51,7 +51,21 @@ class CrmLead(models.Model):
             leads.write({'user_id': salesman_id})
 
     def action_assign_partner(self):
-        return self.assign_partner(partner_id=False)
+        """ While assigning a partner, geo-localization is performed only for leads having country
+            set (see method 'assign_geo_localize' and 'search_geo_partner'). So for leads that does not
+            have country set, we show the notification, and for the rest, we geo-localize them.
+        """
+        leads_with_country = self.filtered(lambda lead: lead.country_id)
+        leads_without_country = self - leads_with_country
+        if leads_without_country:
+            self.env['bus.bus'].sendone(
+                (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification',
+                 'title': _("Warning"),
+                 'message': _('There is no country set in addresses for %(lead_names)s.',
+                              lead_names=', '.join(leads_without_country.mapped('name')))
+                 })
+        return leads_with_country.assign_partner(partner_id=False)
 
     def assign_partner(self, partner_id=False):
         partner_dict = {}
