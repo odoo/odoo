@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_is_zero
 
 
@@ -12,6 +13,13 @@ class StockWarehouseOrderpoint(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+
+    @api.constrains('product_id')
+    def check_product_is_not_kit(self):
+        if self.env['mrp.bom'].search(['|', ('product_id', 'in', self.product_id.ids),
+                                            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
+                                       ('type', '=', 'phantom')], limit=1):
+            raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
