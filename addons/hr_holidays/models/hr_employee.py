@@ -14,6 +14,7 @@ class HrEmployeeBase(models.AbstractModel):
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off',
         compute='_compute_leave_manager', store=True, readonly=False,
+        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     remaining_leaves = fields.Float(
