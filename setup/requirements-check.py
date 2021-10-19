@@ -1,41 +1,38 @@
 #!/usr/bin/env python
 """
-Checks versions from the requirements files against distribution-provided
-versions, taking distribution's Python version in account e.g. if checking
-against a release which bundles Python 3.5, checks the 3.5 version of
-requirements.
-
-* only shows requirements for which at least one release diverges from the
-  matching requirements version
-* empty cells mean that specific release matches its requirement (happens when
-  checking multiple releases: one of the other releases may mismatch the its
-  requirements necessating showing the row)
-
-Only handles the subset of requirements files we're currently using:
-* no version spec or strict equality
-* no extras
-* only sys_platform and python_version environment markers
+Checks versions from the requirements files, either against a Debian/Ubuntu specific distribution
+, against a windows python version or against accessible locally installed versions.
 """
 
 import argparse
 import gzip
 import itertools
 import json
-import operator
+import pkg_resources
 import re
-import string
 
 from abc import ABC, abstractmethod
 from pathlib import Path
 from urllib.request import urlopen
 from sys import stdout, stderr
-from typing import Dict, List, Set, Optional, Any, Tuple
+from typing import Optional, Tuple
+
+
+def print_table(table, widthes):
+    # format table
+    for row in table:
+        stdout.write('| ')
+        for cell, width in zip(row, widthes):
+            stdout.write(f'{str(cell):<{width}} | ')
+        stdout.write('\n')
+
 
 Version = Tuple[int, ...]
 def parse_version(vstring: str) -> Optional[Version]:
     if not vstring:
         return None
     return tuple(map(int, vstring.split('.')))
+
 
 # shared beween debian and ubuntu
 SPECIAL = {
@@ -52,6 +49,7 @@ def unfuck(s: str) -> str:
         (?:~|\+|-|\.dfsg)
         .*
     ''', s, flags=re.VERBOSE)[1]
+
 
 class Distribution(ABC):
     def __init__(self, release):
@@ -75,6 +73,10 @@ class Distribution(ABC):
         except StopIteration:
             raise ValueError(f"Unknown distribution {name!r}")
 
+    def get_python_version(self):
+        return '.'.join(map(str, self.get_version('python3-defaults')[:2]))
+
+
 class Debian(Distribution):
     def get_version(self, package):
         """ Try to find which version of ``package`` is in Debian release {release}
@@ -96,6 +98,7 @@ class Debian(Distribution):
             if distr['area'] == 'main'
             if self._release in distr['suites']
         )
+
 
 class Ubuntu(Distribution):
     """ Ubuntu doesn't have an API, instead it has a huge text file
@@ -125,164 +128,62 @@ class Ubuntu(Distribution):
                 return parse_version(unfuck(v))
         return None
 
-class Markers:
-    """ Simplistic RD parser for requirements env markers.
 
-    Evaluation of the env markers is so basic it goes to brunch in uggs.
+class Windows(Distribution):
+    """Windows `Distribution` is a special case as it does not provide a Python package.
+    The `get_python_version` method simply returns the python verion chosen in the release
+    at object instanciation.
+
+    e.g.: when release is `amd_64-cp37` it will return '3.7' as python version.
+
+    Also, when searching for a suitable version for a package, the `get_version` method
+    searches on pypi for the latest version of the package that provides a binary wheel that
+    match the platform and the python version or a simple wheel when the package is pure python.
+    :param release: The release param is used to specify the windows architecture and the python version.
+    :type release: str
     """
-    def __init__(self, s=None):
-        self.rules = False
-        if s is not None:
-            self.rules, rest = self._parse_marker(s)
-            assert not rest
 
-    def evaluate(self, context: Dict[str, Any]) -> bool:
-        if not self.rules:
-            return True
-        return self._eval(self.rules, context)
+    def __init__(self, release):
+        super().__init__(release)
+        assert re.search(r'(win32|win_amd64)-cp\d+', release), "Invalid windows distribution speicification"
+        self.winver, self.pyver = release.split('-')
 
-    def _eval(self, rule, context):
-        if rule[0] == 'OR':
-            return self._eval(rule[1], context) or self._eval(rule[2], context)
-        elif rule[0] == 'AND':
-            return self._eval(rule[1], context) and self._eval(rule[2], context)
-        elif rule[0] == 'ENV':
-            return context[rule[1]]
-        elif rule[0] == 'LIT':
-            return rule[1]
-        else:
-            op, var1, var2 = rule
-            var1 = self._eval(var1, context)
-            var2 = self._eval(var2, context)
+    def get_python_version(self):
+        return f'{self.pyver[2]}.{self.pyver[3]}'
 
-            # NOTE: currently doesn't follow PEP440 version matching at all
-            if op == '==': return var1 == var2
-            elif op == '!=': return var1 != var2
-            elif op == '<': return var1 < var2
-            elif op == '<=': return var1 <= var2
-            elif op == '>': return var1 > var2
-            elif op == '>=': return var1 >= var2
-            else:
-                raise NotImplementedError(f"Operator {op!r}")
+    def get_version(self, package):
 
-    def _parse_marker(self, s):
-        return self._parse_or(s)
+        def info_filter(info):
+            if info['packagetype'] == 'bdist_wheel':
+                if (info['python_version'] == self.pyver and self.winver in info['filename']) or '-any.whl' in info['filename']:
+                    return True
+            return False
 
-    def _parse_or(self, s):
-        sub1, rest = self._parse_and(s)
-        expr, n = re.subn(r'^\s*or\b', '', rest, count=1)
-        if not n:
-            return sub1, rest
-        sub2, rest = self._parse_and(expr)
-        return ('OR', sub1, sub2), rest
+        res = json.load(urlopen(f'https://pypi.org/pypi/{package}/json'))
+        candidates = []
+        for version, infos in res['releases'].items():
+            if any(filter(info_filter, infos)):
+                candidates.append(version)
+        return candidates and sorted(candidates)[0].split('.') or []
 
-    def _parse_and(self, s):
-        sub1, rest = self._parse_expr(s)
-        expr, n = re.subn(r'\s*and\b', '', rest, count=1)
-        if not n:
-            return sub1, rest
-        sub2, rest = self._parse_expr(expr)
-        return ('AND', sub1, sub2), rest
 
-    def _parse_expr(self, s):
-        expr, n = re.subn(r'^\s*\(', '', s, count=1)
-        if n:
-            sub, rest = self.parse_marker(expr)
-            rest, n = re.subn(r'\s*\)', '', rest, count=1)
-            assert n, f"expected closing parenthesis, found {rest}"
-            return sub, rest
+def check_distros(args):
+    """ Checks versions from the requirements files against distribution-provided
+    versions, taking distribution's Python version in account e.g. if checking
+    against a release which bundles Python 3.5, checks the 3.5 version of
+    requirements.
 
-        var1, rest = self._parse_var(s)
-        op, rest = self._parse_op(rest)
-        var2, rest = self._parse_var(rest)
-        return (op, var1, var2), rest
+    Note that for the `windows` distribution, as no python is provided by the
+    dsitribution, it has to be specified iby the user in the release par of the
+    argument.
+    e.g.: `windows:win_amd64-cp37`, here the `cp37` means python 3.7.
 
-    def _parse_op(self, s):
-        m = re.match(r'''
-            \s*
-            (<= | < | != | >= | > | ~= | ===? | in \b | not \s+ in \b)
-            (.*)
-        ''', s, re.VERBOSE)
-        assert m, f"no operator in {s!r}"
-        return m.groups()
-
-    def _parse_var(self, s):
-        python_str = re.escape(string.printable.translate(str.maketrans({
-            '"': '',
-            "'": '',
-            '\\': '',
-            '-': '',
-        })))
-        m = re.match(fr'''
-            \s*
-            (:?
-                # TODO: add more envvars
-                (?P<env>python_version | os_name | sys_platform)
-              | " (?P<dquote>['{python_str}-]*) "
-              | ' (?P<squote>["{python_str}-]*) '
-            )
-            (?P<rest>.*)
-        ''', s, re.VERBOSE)
-        assert m, f"failed to find marker var in {s}"
-        if m['env']:
-            return ('ENV', m['env']), m['rest']
-        return ('LIT', m['dquote'] or m['squote'] or ''), m['rest']
-
-def parse_spec(line: str) -> (str, (Optional[str], Optional[str]), Markers):
-    """ Parse a requirements specification (a line of requirements)
-
-    Returns the package name, a version spec (operator and comparator) possibly
-    None and a Markers object.
-
-    Not correctly supported:
-
-    * version matching, not all operators are implemented and those which are
-      almost certainly don't match PEP 440
-
-    Not supported:
-
-    * url requirements
-    * multi-versions spec
-    * extras
-    * continuations
-
-    Full grammar is at https://www.python.org/dev/peps/pep-0508/#complete-grammar
+    * only shows requirements for which at least one release diverges from the
+    matching requirements version
+    * empty cells mean that specific release matches its requirement (happens when
+    checking multiple releases: one of the other releases may mismatch the its
+    requirements necessating showing the row)
     """
-    # weirdly a distribution name can apparently start with a number
-    name, rest = re.match(r'([\w\d](?:[._-]*[\w\d]+)*)\s*(.*)', line.strip()).groups()
-    # skipping extras
-    version_cmp = version = None
-    versionspec = re.match(r'''
-        (< | <= | != | == | >= | > | ~= | ===)
-        \s*
-        ([\w\d_.*+!-]+)
-        \s*
-        (.*)
-    ''', rest, re.VERBOSE)
-    if versionspec:
-        version_cmp, version, rest = versionspec.groups()
-    markers = Markers()
-    if rest[:1] == ';':
-        markers = Markers(rest[1:])
-
-    return name, (version_cmp, version), markers
-
-def parse_requirements(reqpath: Path) -> Dict[str, List[Tuple[str, Markers]]]:
-    """ Parses a requirement file to a dict of {package: [(version, markers)]}
-
-    The env markers express *whether* that specific dep applies.
-    """
-    reqs = {}
-    for line in reqpath.open('r', encoding='utf-8'):
-        if line.isspace() or line.startswith('#'):
-            continue
-
-        name, (op, version), markers = parse_spec(line)
-        assert op is None or op == '==', f"unexpected version comparator {op}"
-        reqs.setdefault(name, []).append((version, markers))
-    return reqs
-
-def main(args):
     checkers = [
         Distribution.get(distro)(release)
         for version in args.release
@@ -290,10 +191,7 @@ def main(args):
     ]
 
     stderr.write(f"Fetch Python versions...\n")
-    pyvers = [
-        '.'.join(map(str, checker.get_version('python3-defaults')[:2]))
-        for checker in checkers
-    ]
+    pyvers = [checker.get_python_version() for checker in checkers]
 
     uniq = sorted(v for v in set(pyvers))
     table = [
@@ -302,53 +200,51 @@ def main(args):
         + [f'{checker._release} ({version})' for checker, version in zip(checkers, pyvers)]
     ]
 
-    reqs = parse_requirements((Path.cwd() / __file__).parent.parent / 'requirements.txt')
+    with ((Path.cwd() / __file__).parent.parent / 'requirements.txt').open() as req_file:
+        reqs = [r for r in pkg_resources.parse_requirements(req_file)]
+
     tot = len(reqs) * len(checkers)
 
-    def progress(n=iter(range(tot+1))):
+    def progress(n=iter(range(tot + 1))):
         stderr.write(f"\rFetch requirements: {next(n)} / {tot}")
 
     progress()
-    for req, options in reqs.items():
-        row = [req]
+    for requirement in reqs:
+        row = [requirement.project_name]
         byver = {}
         for pyver in uniq:
-            # FIXME: when multiple options apply, check which pip uses
-            #        (first-matching. best-matching, latest, ...)
-            for version, markers in options:
-                if markers.evaluate({
-                    'python_version': pyver,
-                    'sys_platform': 'linux',
-                }):
-                    byver[pyver] = version
-                    break
-            row.append(byver.get(pyver) or '')
-        # this requirement doesn't apply, ignore
+            environment = {'python_version': pyver, 'sys_platform': 'linux'}
+            if requirement.marker and not requirement.marker.evaluate(environment=environment):
+                continue
+            byver[pyver] = requirement.specifier
+            row.append(str(requirement.specifier))
+
         if not byver:
-            # normally the progressbar is updated when processing each
-            # requirement against each checker, if the requirement doesn't apply
-            # to any checker we still need to consider the requirement fetched /
-            # resolved for each checker or our tally is incorrect
             for _ in checkers:
                 progress()
             continue
 
         mismatch = False
-        for i, c in enumerate(checkers):
-            req_version = byver.get(pyvers[i], '')
-            check_version = '.'.join(map(str, c.get_version(req.lower()) or ['<missing>']))
+        for i, checker in enumerate(checkers):
+            req_specifier = byver.get(pyvers[i], '')
+            check_version_string = '.'.join(map(str, checker.get_version(requirement.name.lower()) or ['<missing>']))
             progress()
-            if req_version != check_version:
-                row.append(check_version)
+            try:
+                check_version = pkg_resources.packaging.version.Version(check_version_string)
+            except pkg_resources.packaging.version.InvalidVersion:
+                row.append(check_version_string)
                 mismatch = True
             else:
-                row.append('')
+                if check_version_string not in req_specifier:
+                    mismatch = True
+                    row.append(check_version_string)
+                else:
+                    row.append('')
 
         # only show row if one of the items diverges from requirement
         if mismatch:
             table.append(row)
     stderr.write('\n')
-
     # evaluate width of columns
     sizes = [0] * (len(checkers) + len(uniq) + 1)
     for row in table:
@@ -357,21 +253,72 @@ def main(args):
             for s, cell in zip(sizes, row)
         ]
 
-    # format table
-    for row in table:
-        stdout.write('| ')
-        for cell, width in zip(row, sizes):
-            stdout.write(f'{cell:<{width}} | ')
-        stdout.write('\n')
+    print_table(table, sizes)
+
+
+def location_to_source(distrib):
+    """ returns a string that describes the source of the Python package based on its location
+    :param distrib: a pkg_resources.Distribution instance
+    :rtype: string
+    """
+    naive_kw = {
+        'Debian': r'/usr/lib/.+/dist-packages',
+        'pip global': r'/usr/local/lib/.+dist-packages',
+        'Pyenv': r'pyenv',
+        'User': str(Path.home())}
+    for source, keyword in naive_kw.items():
+        if re.search(keyword, distrib.location):
+            return source
+    return 'Other'
+
+
+def check_local(args):
+    results = [('Project', 'Expected', 'Installed', 'Source', 'Location')]
+    with ((Path.cwd() / __file__).parent.parent / 'requirements.txt').open() as req_file:
+        for requirement in pkg_resources.parse_requirements(req_file):
+            if requirement.marker and not requirement.marker.evaluate():
+                # skipping requirement that marker does not match
+                continue
+            try:
+                distrib = pkg_resources.get_distribution(requirement)
+            except pkg_resources.DistributionNotFound:
+                results.append((requirement.project_name, requirement.specifier, 'Not found', '--', '--'))
+            except pkg_resources.VersionConflict as e:
+                results.append((requirement.project_name, requirement.specifier, e.dist.version, location_to_source(e.dist), e.dist.location))
+            else:
+                results.append((requirement.project_name, requirement.specifier, '✔', location_to_source(distrib), distrib.location))
+
+    widthes = [0] * 5
+    for row in results:
+        for i, c in enumerate(row):
+            widthes[i] = max(widthes[i], len(str(c)))
+
+    print_table(results, widthes)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument(
+
+    def print_help(args):
+        # hack to set a default func that prints help when no command is chosen
+        parser.print_help()
+
+    parser.set_defaults(func=print_help)
+
+    subparsers = parser.add_subparsers()
+
+    parser_distro_check = subparsers.add_parser('distro', help='Check requirements against distributions')
+    parser_distro_check.add_argument(
         'release', nargs='+',
         help="Release to check against, should use the format '{distro}:{release}' e.g. 'debian:sid'"
     )
+    parser_distro_check.set_defaults(func=check_distros)
+
+    parser_local_check = subparsers.add_parser('local', help='Check requirements against local modules')
+    parser_local_check.set_defaults(func=check_local)
+
     args = parser.parse_args()
-    main(args)
+    args.func(args)
