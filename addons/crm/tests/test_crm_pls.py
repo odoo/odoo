@@ -399,3 +399,17 @@ class TestCRMPLS(TransactionCase):
         res_config_new = resConfig.new()
         self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
+
+    def test_pls_no_share_stage(self):
+        """ We test here the situation where all stages are team specific, as there is
+            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding 
+            the first stage (used to know how many lost and won there is) that requires 
+            to have no team assigned to it."""
+        Lead = self.env['crm.lead']
+        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
+        self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
+        lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
+        Lead._cron_update_automated_probabilities()
+        self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+

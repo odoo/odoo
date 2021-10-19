@@ -15,17 +15,14 @@ from odoo.addons.base.models.res_partner import _tz_get
 
 WEEKDAY_TO_NAME = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-def float_to_time(hours, moment='am', tz=None):
+def float_to_time(hours, moment='am'):
     """ Convert a number of hours into a time object. """
     if hours == 12.0 and moment == 'pm':
         return time.max
     fractional, integral = math.modf(hours)
     if moment == 'pm':
         integral += 12
-    res = time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
-    if tz:
-        res = res.replace(tzinfo=pytz.timezone(tz))
-    return res
+    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
 
 def time_to_float(t):
     return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
@@ -122,9 +119,10 @@ class LunchSupplier(models.Model):
         records = self.search([('send_by', '=', 'mail')])
 
         for supplier in records:
-            send_at = datetime.combine(fields.Date.today(),
-                                       float_to_time(supplier.automatic_email_time, supplier.moment, supplier.tz)).astimezone(pytz.UTC).replace(tzinfo=None)
-            if supplier.available_today and fields.Datetime.now() > send_at:
+            hours = float_to_time(supplier.automatic_email_time, supplier.moment)
+            date_tz = pytz.timezone(supplier.tz).localize(datetime.combine(fields.Date.today(), hours))
+            date_utc = date_tz.astimezone(pytz.UTC).replace(tzinfo=None)
+            if supplier.available_today and fields.Datetime.now() > date_utc:
                 lines = self.env['lunch.order'].search([('supplier_id', '=', supplier.id),
                                                              ('state', '=', 'ordered'), ('date', '=', fields.Date.today())])
 

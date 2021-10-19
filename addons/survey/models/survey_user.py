@@ -61,7 +61,9 @@ class SurveyUserInput(models.Model):
             # sum(multi-choice question scores) + sum(simple answer_type scores)
             total_possible_score = 0
             for question in user_input.predefined_question_ids:
-                if question.question_type in ['simple_choice', 'multiple_choice']:
+                if question.question_type == 'simple_choice':
+                    total_possible_score += max([score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0], default=0)
+                elif question.question_type == 'multiple_choice':
                     total_possible_score += sum(score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0)
                 elif question.is_scored_question:
                     total_possible_score += question.answer_score
@@ -268,6 +270,12 @@ class SurveyUserInput(models.Model):
     def _save_line_choice(self, question, old_answers, answers, comment):
         if not (isinstance(answers, list)):
             answers = [answers]
+
+        if not answers:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = [False]
+
         vals_list = []
 
         if question.question_type == 'simple_choice':
@@ -284,6 +292,11 @@ class SurveyUserInput(models.Model):
 
     def _save_line_matrix(self, question, old_answers, answers, comment):
         vals_list = []
+
+        if not answers and question.matrix_row_ids:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = {question.matrix_row_ids[0].id: [False]}
 
         if answers:
             for row_key, row_answer in answers.items():
@@ -529,8 +542,8 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            score_vals = self._get_answer_score_values(vals)
             if not vals.get('answer_score'):
+                score_vals = self._get_answer_score_values(vals)
                 vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
@@ -544,8 +557,8 @@ class SurveyUserInputLine(models.Model):
                 'question_id': line.question_id.id,
                 **vals_copy
             }
-            score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
             if not vals_copy.get('answer_score'):
+                score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
                 vals_copy.update(score_vals)
             res = super(SurveyUserInputLine, line).write(vals_copy) and res
         return res

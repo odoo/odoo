@@ -8,7 +8,6 @@
 # Aleksandr Jadov <a.jadov@tata.lt>, 2021
 # Arminas Grigonis <arminas@versada.lt>, 2021
 # vaalds <vaalds@gmail.com>, 2021
-# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
 # Rolandas <panauto1@gmail.com>, 2021
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2021
 # Anatolij, 2021
@@ -27,6 +26,9 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2021
 # Paulius Sladkevičius <paulius@versada.eu>, 2021
 # Jonas Zinkevicius <jozi@odoo.com>, 2021
+# Arunas V. <arunas@devoro.com>, 2021
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
+# Gailius Kazlauskas, 2021
 # 
 msgid ""
 msgstr ""
@@ -34,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2021\n"
+"Last-Translator: Gailius Kazlauskas, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -603,7 +605,7 @@ msgstr "<span> Nuo </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span> Manually</span>"
-msgstr ""
+msgstr "<span> Rankiniu būdu</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1841,7 +1843,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
 msgid "Allowed account types"
-msgstr ""
+msgstr "Leistinos sąskaitos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -2696,7 +2698,7 @@ msgstr "Sąskaitos skaitmeninimas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Bill Reference"
-msgstr "Mokėjimo numeris"
+msgstr "Sąskaitos numeris"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -3600,7 +3602,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
-msgstr ""
+msgstr "Sugadinti duomenys įrašant žurnalą su ID %s."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
@@ -5148,7 +5150,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
-msgstr ""
+msgstr "Neįtraukti žurnalai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -6036,6 +6038,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
+"Jei norite naudoti nebalansines sąskaitas, visos žurnalo įrašo sąskaitos "
+"turi būti tokio tipo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6263,7 +6267,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "Nurodo, kad šis žurnalo įrašas yra mokesčių eilutė"
 
 #. module: account
 #. openerp-web
@@ -6610,6 +6614,7 @@ msgstr "S/F patvirtinimui"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
 msgstr ""
+"Sąskaitos faktūros, kurių žurnalo įrašai buvo sudengti su šiais mokėjimais."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -8675,7 +8680,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Partially Paid"
-msgstr ""
+msgstr "Dalinai apmokėta"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0

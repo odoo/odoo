@@ -92,7 +92,7 @@ class PickingType(models.Model):
                     'company_id': wh.company_id.id,
                 }).id
             else:
-                vals['sequence_id'] = self.env['ir.sequence'].create({
+                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
                     'name': _('Sequence') + ' ' + vals['sequence_code'],
                     'prefix': vals['sequence_code'], 'padding': 5,
                     'company_id': vals.get('company_id') or self.env.company.id,
@@ -109,13 +109,13 @@ class PickingType(models.Model):
         if 'sequence_code' in vals:
             for picking_type in self:
                 if picking_type.warehouse_id:
-                    picking_type.sequence_id.write({
+                    picking_type.sequence_id.sudo().write({
                         'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
                         'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
                         'company_id': picking_type.warehouse_id.company_id.id,
                     })
                 else:
-                    picking_type.sequence_id.write({
+                    picking_type.sequence_id.sudo().write({
                         'name': _('Sequence') + ' ' + vals['sequence_code'],
                         'prefix': vals['sequence_code'], 'padding': 5,
                         'company_id': picking_type.env.company.id,

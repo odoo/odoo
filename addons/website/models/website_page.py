@@ -208,6 +208,15 @@ class Page(models.Model):
         self.ensure_one()
         return self.view_id.get_website_meta()
 
+    @staticmethod
+    def _get_cached_blacklist():
+        return ('data-snippet="s_website_form"', 'data-no-page-cache=', )
+
+    def _can_be_cached(self, response):
+        """ return False if at least one blacklisted's word is present in content """
+        blacklist = self._get_cached_blacklist()
+        return not any(black in str(response) for black in blacklist)
+
     def _get_cache_key(self, req):
         # Always call me with super() AT THE END to have cache_key_expr appended as last element
         # It is the only way for end user to not use cache via expr.

@@ -58,7 +58,7 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
         if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = tax_line.product_id.id
-            res['product_uom_id'] = tax_line.product_uom_id
+            res['product_uom_id'] = tax_line.product_uom_id.id
         return res
 
     @api.model
@@ -67,7 +67,7 @@ class AccountMove(models.Model):
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
         if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
             res['product_id'] = base_line.product_id.id
-            res['product_uom_id'] = base_line.product_uom_id
+            res['product_uom_id'] = base_line.product_uom_id.id
         return res
 
     @api.model
@@ -77,7 +77,7 @@ class AccountMove(models.Model):
 
         tax_key += [
             line.product_id.id,
-            line.product_uom_id,
+            line.product_uom_id.id,
         ]
         return tax_key
 
@@ -105,7 +105,7 @@ class AccountMove(models.Model):
                     company_name=company_unit_partner.name,
                     company_id=company_unit_partner.id
                 ))
-            elif self.journal_id.type == 'purchase':
+            elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
             shipping_partner = move._l10n_in_get_shipping_partner()
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
                     partner_id=shipping_partner.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
-            if self.journal_id.type == 'sale':
+            if move.journal_id.type == 'sale':
                 move.l10n_in_state_id = self._l10n_in_get_indian_state(shipping_partner)
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)

@@ -6,7 +6,6 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
@@ -67,7 +66,7 @@ msgstr "Afleveringsbedrag"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery will be updated after choosing a new delivery method"
-msgstr "Levering wordt bijgewerkt na het kiezen van een nieuwe levermethode"
+msgstr "Levering wordt bijgewerkt na het kiezen van een nieuwe verzendwijze"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -133,8 +132,18 @@ msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
 msgstr ""
-"Het lijkt erop dat een bezorgmethode niet klopt met je adres. Vernieuw de "
+"Het lijkt erop dat een verzendwijze niet klopt met je adres. Vernieuw de "
 "pagina en probeer het opnieuw."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"There is an issue with your delivery method. Please refresh the page and try"
+" again."
+msgstr ""
+"Er is een probleem met je verzendwijze. Ververs de pagina en probeer het "
+"opnieuw."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier____last_update

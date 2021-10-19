@@ -54,7 +54,11 @@ class AccountEdiFormat(models.Model):
 
         namespaces = _get_ubl_namespaces()
 
+        def _find_value(xpath, element=tree):
+            return self._find_value(xpath, element, namespaces)
+
         with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+            self_ctx = self.with_company(invoice.company_id.id)
 
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
@@ -88,55 +92,23 @@ class AccountEdiFormat(models.Model):
                 invoice_form.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', elements[0].text)], limit=1)
 
             # Partner
-            partner_element = tree.xpath('//cac:AccountingSupplierParty/cac:Party', namespaces=namespaces)
-            if partner_element:
-                domains = []
-                partner_element = partner_element[0]
-                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:Name', namespaces=namespaces)
-                if elements:
-                    partner_name = elements[0].text
-                    domains.append([('name', 'ilike', partner_name)])
-                else:
-                    partner_name = ''
-                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone', namespaces=namespaces)
-                if elements:
-                    partner_telephone = elements[0].text
-                    domains.append([('phone', '=', partner_telephone), ('mobile', '=', partner_telephone)])
-                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail', namespaces=namespaces)
-                if elements:
-                    partner_mail = elements[0].text
-                    domains.append([('email', '=', partner_mail)])
-                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID', namespaces=namespaces)
-                if elements:
-                    partner_id = elements[0].text
-                    domains.append([('vat', 'like', partner_id)])
-
-                if domains:
-                    partner = self.env['res.partner'].search(expression.OR(domains), limit=1)
-                    if partner:
-                        invoice_form.partner_id = partner
-                        partner_name = partner.name
-                    else:
-                        invoice_form.partner_id = self.env['res.partner']
+            invoice_form.partner_id = self_ctx._retrieve_partner(
+                name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
+                phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
+                mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
+                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID'),
+            )
 
             # Lines
             lines_elements = tree.xpath('//cac:InvoiceLine', namespaces=namespaces)
             for eline in lines_elements:
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
                     # Product
-                    elements = eline.xpath('cac:Item/cac:SellersItemIdentification/cbc:ID', namespaces=namespaces)
-                    domains = []
-                    if elements:
-                        product_code = elements[0].text
-                        domains.append([('default_code', '=', product_code)])
-                    elements = eline.xpath('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'GTIN\']', namespaces=namespaces)
-                    if elements:
-                        product_ean13 = elements[0].text
-                        domains.append([('barcode', '=', product_ean13)])
-                    if domains:
-                        product = self.env['product.product'].search(expression.OR(domains), limit=1)
-                        if product:
-                            invoice_line_form.product_id = product
+                    invoice_line_form.product_id = self_ctx._retrieve_product(
+                        default_code=_find_value('cac:Item/cac:SellersItemIdentification/cbc:ID', eline),
+                        name=_find_value('cac:Item/cbc:Name', eline),
+                        barcode=_find_value('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'0160\']', eline)
+                    )
 
                     # Quantity
                     elements = eline.xpath('cbc:InvoicedQuantity', namespaces=namespaces)
@@ -157,22 +129,19 @@ class AccountEdiFormat(models.Model):
                         invoice_line_form.name = invoice_line_form.name.replace('%month%', str(fields.Date.to_date(invoice_form.invoice_date).month))  # TODO: full name in locale
                         invoice_line_form.name = invoice_line_form.name.replace('%year%', str(fields.Date.to_date(invoice_form.invoice_date).year))
                     else:
+                        partner_name = _find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name')
                         invoice_line_form.name = "%s (%s)" % (partner_name or '', invoice_form.invoice_date)
 
                     # Taxes
-                    taxes_elements = eline.xpath('cac:TaxTotal/cac:TaxSubtotal', namespaces=namespaces)
+                    tax_element = eline.xpath('cac:TaxTotal/cac:TaxSubtotal', namespaces=namespaces)
                     invoice_line_form.tax_ids.clear()
-                    for etax in taxes_elements:
-                        elements = etax.xpath('cbc:Percent', namespaces=namespaces)
-                        if elements:
-                            tax = self.env['account.tax'].search([
-                                ('company_id', '=', self.env.company.id),
-                                ('amount', '=', float(elements[0].text)),
-                                ('type_tax_use', '=', invoice_form.journal_id.type),
-                            ], order='sequence ASC', limit=1)
-                            if tax:
-                                invoice_line_form.tax_ids.add(tax)
-
+                    for eline in tax_element:
+                        tax = self_ctx._retrieve_tax(
+                            amount=_find_value('cbc:Percent', eline),
+                            type_tax_use=invoice_form.journal_id.type
+                        )
+                        if tax:
+                            invoice_line_form.tax_ids.add(tax)
         invoice = invoice_form.save()
 
         # Regenerate PDF

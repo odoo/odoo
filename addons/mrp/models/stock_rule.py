@@ -57,7 +57,7 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.filtered(lambda p: p.move_raw_ids).action_confirm()
+            productions.filtered(lambda p: not p.orderpoint_id and p.move_raw_ids).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
@@ -89,7 +89,11 @@ class StockRule(models.Model):
                 # Create now the procurement group that will be assigned to the new MO
                 # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
                 # rather than the original record (MO or SO)
-                procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
+                group = procurement.values.get('group_id')
+                if group:
+                    procurement.values['group_id'] = group.copy({'name': name})
+                else:
+                    procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
         return super()._run_pull(procurements)
 
     def _get_custom_move_fields(self):

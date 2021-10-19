@@ -226,7 +226,7 @@ class AccountPaymentRegister(models.TransientModel):
         # it's a compute editable field and then, should be computed in a separated method.
         for wizard in self:
             if wizard.can_edit_wizard:
-                batches = self._get_batches()
+                batches = wizard._get_batches()
                 wizard.communication = wizard._get_batch_communication(batches[0])
             else:
                 wizard.communication = False

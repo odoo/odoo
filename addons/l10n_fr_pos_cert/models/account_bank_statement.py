@@ -10,7 +10,7 @@ class AccountBankStatement(models.Model):
 
     def unlink(self):
         for statement in self:
-            if not statement.company_id._is_accounting_unalterable() or not statement.s.journal_id.pos_payment_method_ids:
+            if not statement.company_id._is_accounting_unalterable() or not statement.journal_id.pos_payment_method_ids:
                 continue
             if statement.state != 'open':
                 raise UserError(_('You cannot modify anything on a bank statement (name: %s) that was created by point of sale operations.') % (statement.name))

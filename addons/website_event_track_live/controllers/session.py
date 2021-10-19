@@ -11,7 +11,7 @@ class WebsiteEventSessionLiveController(EventTrackController):
 
     def _event_track_page_get_values(self, event, track, **options):
         if 'widescreen' not in options:
-            options['widescreen'] = bool(track.youtube_video_url)
+            options['widescreen'] = track.youtube_video_url and (track.is_youtube_replay or track.is_track_soon or track.is_track_live or track.is_track_done)
         values = super(WebsiteEventSessionLiveController, self)._event_track_page_get_values(event, track, **options)
         # Youtube disables the chat embed on all mobile devices
         # This regex is a naive attempt at matching their behavior (should work for most cases)

@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "Вартість товару оновлена з %(previous)s на %(new_cost)s."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -34,6 +34,7 @@ msgstr ""
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
+"%(user)s оновлена вартість з %(previous)s на %(new_price)s - %(product)s"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -43,6 +44,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s змінена складська оцінка з %(previous)s на %(new_value)s - "
+"%(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -50,11 +53,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Використовуйте негативне додане значення для запису різниці в оцінці товару</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Встановіть інші вхідні/вихідні рахунки на відповідних</b>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -91,7 +96,7 @@ msgstr "Інформація бухобліку"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Додати значення вручну"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -103,12 +108,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Додане значення"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Додане значення"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -213,6 +218,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Елементи журналу для всіх вхідних складських переміщень будуть розміщені на цьому рахунку, якщо на місцезнаходженні не встановлено\n"
+"конкретний рахунок оцінки запасів. Це значення за замовчуванням для всіх товарів цієї категорії. Його також можна встановити безпосередньо на кожному товарі."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -224,7 +231,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
@@ -236,7 +243,7 @@ msgstr "Валюта"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "Поточна кількість"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -420,7 +427,7 @@ msgstr "Додаткові витрати"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
@@ -448,13 +455,13 @@ msgstr "Вручну"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Складська оцінка вручну: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Оцінка запасу вручну: без вказання причини."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -472,17 +479,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "Нове значення"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Нове значення за кількістю"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr ""
+msgstr "Значення в наявності"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -522,7 +529,7 @@ msgstr "Переміщення товару (Рядок складського �
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Переоцінка товару"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -560,12 +567,12 @@ msgstr "Причина"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Причина переоцінки"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "Супутній товар"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -591,12 +598,12 @@ msgstr "Повернути рядок комплектування"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Переоцінка %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Пероцінити"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -655,12 +662,12 @@ msgstr "Історія складської кількості"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Звіт поповнення запасів"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
-msgstr "Оцінка складу"
+msgstr "Оцінка запасів"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
@@ -701,6 +708,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Рахунки вхідних/або вихідних товарів не можуть збігатися з рахунком оцінки "
+"запасів."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -710,12 +719,13 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"Дія призведе до створення запису в журналі, для якого у вас немає доступу."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "Додана вартість не впливає на оцінку запасів"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -805,10 +815,11 @@ msgid ""
 "internal locations."
 msgstr ""
 "Використовується для оцінки інвентаризації в реальному часі. Якщо встановити"
-" на віртуальному розташуванні (не внутрішній тип), цей облік буде "
-"використовуватися для того, щоб зберегти вартість товарів, які переміщуються"
-" з внутрішнього місця розташування в це місце, замість загального обліку "
-"випуску, встановленого на товарі. Це не впливає на внутрішні розташування."
+" на віртуальному розташуванні (не внутрішній тип), цей рахунок буде "
+"використовуватися для того, щоби зберегти вартість товарів, які "
+"переміщуються з внутрішнього місцезнаходження в це місце, замість загального"
+" рахунку вихідних запасів, встановленого на товарі. Це не впливає на "
+"внутрішні розташування."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -820,10 +831,11 @@ msgid ""
 "internal locations."
 msgstr ""
 "Використовується для оцінки інвентаризації в реальному часі. Якщо встановити"
-" на віртуальному розташуванні (не внутрішній тип), цей облік буде "
+" на віртуальному розташуванні (не внутрішній тип), цей рахунок буде "
 "використовуватися для того, щоб тримати вартість товарів, які переміщуються "
-"з цього місця розташування та у внутрішнє місце, замість загальних обліків "
-"випуску, встановлених на товарі. Це не впливає на внутрішні розташування."
+"з цього місцезнаходження на внутрішнє, замість загального рахунку вихідних "
+"запасів, встановлених на товарі. Це не впливає на внутрішні "
+"місцезнаходження."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -836,7 +848,7 @@ msgstr "Оцінка"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr "Зміна методу оцінки для категорії товару %s: з %s на %s."
+msgstr "Зміна методу оцінки запасів для категорії товару %s: з %s на %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -886,19 +898,19 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "Модель помічника для переоцінки запасів для товару"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "Ви не можете переоцінити товар зі Стандартним методом оцінки."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "Ви не можете переоцінити товар з пустим чи негативним запасом."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -908,6 +920,8 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Ви не можете оновлювати вартість товару в Автоматичній оцінці, оскільки це "
+"призводить до створення запису в журналі, до якого у вас немає прав доступу."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -946,7 +960,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "Ви повинні встановити бухгалтерський рахунок на категорії товару."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -961,4 +975,4 @@ msgstr "для"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "місцезнаходження"

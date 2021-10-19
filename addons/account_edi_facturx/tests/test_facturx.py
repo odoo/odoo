@@ -82,7 +82,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         </SpecifiedTradeProduct>
                         <SpecifiedLineTradeAgreement>
                             <GrossPriceProductTradePrice>
-                                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                                <ChargeAmount currencyID="Gol">1100.000</ChargeAmount>
                                 <AppliedTradeAllowanceCharge>
                                     <ChargeIndicator>
                                         <Indicator>true</Indicator>
@@ -164,7 +164,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         applied_xpath = '''
             <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
-                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                <ChargeAmount currencyID="Gol">1000.000</ChargeAmount>
             </xpath>
             <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
                 <SpecifiedLineTradeSettlement>
@@ -244,3 +244,21 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         self.assertEqual(invoice.amount_total, 4610)
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
+
+    def test_invoice_edi_multicompany(self):
+        # Create taxes that will match the first line of the facturx invoice
+        my_company_id = TestAccountEdiFacturx.company_data['company'].id
+        other_company_id = TestAccountEdiFacturx.company_data_2['company'].id
+
+        common_tax_fields = dict(amount_type='percent', type_tax_use='purchase', amount=0.0)
+        self.env['account.tax'].create([
+            dict(name="OtherCompany Tax", company_id=other_company_id, sequence=10, **common_tax_fields),
+            dict(name="MyCompany Tax",    company_id=my_company_id,    sequence=20, **common_tax_fields),
+        ])
+
+        invoice = self._create_empty_vendor_bill()
+        self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml', invoice)
+
+        tax_ids = invoice.line_ids.tax_ids
+        self.assertEqual(len(tax_ids), 1)
+        self.assertEqual(tax_ids[0].name, "MyCompany Tax")

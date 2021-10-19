@@ -384,7 +384,7 @@
                     if (groupType === "LEFT_BRACE" &&
                         isLeftSeparator(prevToken) &&
                         isRightSeparator(nextToken)) {
-                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, { ...token });
+                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, Object.assign({}, token));
                         nextToken = tokens[i + 1];
                     }
                     if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
@@ -1454,12 +1454,12 @@
                 return result;
             }
             // this is already an object, but we may need to split keys:
-            // {'a': true, 'b c': true} should become {a: true, b: true, c: true}
+            // {'a b': true, 'a c': false} should become {a: true, b: true, c: false}
             for (let key in expr) {
                 const value = expr[key];
                 const words = key.split(/\s+/);
                 for (let word of words) {
-                    result[word] = value;
+                    result[word] = result[word] || value;
                 }
             }
             return result;
@@ -1614,6 +1614,9 @@
          * template, with the name given by the t-name attribute.
          */
         addTemplates(xmlstr) {
+            if (!xmlstr) {
+                return;
+            }
             const doc = typeof xmlstr === "string" ? parseXML(xmlstr) : xmlstr;
             const templates = doc.getElementsByTagName("templates")[0];
             if (!templates) {
@@ -1823,7 +1826,7 @@
                 return;
             }
             if (node.tagName !== "t" && node.hasAttribute("t-call")) {
-                const tCallNode = document.createElement("t");
+                const tCallNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                 tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
                 node.removeAttribute("t-call");
                 node.prepend(tCallNode);
@@ -1850,7 +1853,7 @@
                         throw new Error(`Unknown QWeb directive: '${attrName}'`);
                     }
                     if (node.tagName !== "t" && (attrName === "t-esc" || attrName === "t-raw")) {
-                        const tNode = document.createElement("t");
+                        const tNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                         tNode.setAttribute(attrName, node.getAttribute(attrName));
                         for (let child of Array.from(node.childNodes)) {
                             tNode.appendChild(child);
@@ -2905,7 +2908,9 @@
         },
     });
 
-    const config = {};
+    const config = {
+        translatableAttributes: TRANSLATABLE_ATTRS,
+    };
     Object.defineProperty(config, "mode", {
         get() {
             return QWeb.dev ? "dev" : "prod";
@@ -2917,9 +2922,6 @@
 
 This is not suitable for production use.
 See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
-            }
-            else {
-                console.log(`Owl is now running in 'prod' mode.`);
             }
         },
     });
@@ -3656,6 +3658,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             // build patchQueue
             const patchQueue = [];
             const doWork = function (f) {
+                f.component.__owl__.currentFiber = null;
                 patchQueue.push(f);
                 return f.child;
             };
@@ -3711,10 +3714,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
                         component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
                         component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                     }
-                }
-                const compOwl = component.__owl__;
-                if (fiber === compOwl.currentFiber) {
-                    compOwl.currentFiber = null;
                 }
             }
             // insert into the DOM (mount case)
@@ -4369,7 +4368,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
         __callMounted() {
             const __owl__ = this.__owl__;
             __owl__.status = 3 /* MOUNTED */;
-            __owl__.currentFiber = null;
             this.mounted();
             if (__owl__.mountedCB) {
                 __owl__.mountedCB();
@@ -5544,9 +5542,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.utils = utils;
 
 
-    __info__.version = '1.4.3';
-    __info__.date = '2021-07-08T09:54:52.593Z';
-    __info__.hash = '9fe2da7';
+    __info__.version = '1.4.6';
+    __info__.date = '2021-10-04T13:18:44.608Z';
+    __info__.hash = 'c0f4956';
     __info__.url = 'https://github.com/odoo/owl';
 
 

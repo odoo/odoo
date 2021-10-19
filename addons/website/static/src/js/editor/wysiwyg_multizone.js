@@ -111,7 +111,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 .then(() => this.editor.save(false))
                 .then(() => ({isDirty: true}));
         } else {
-            return {isDirty: false};
+            return Promise.resolve({isDirty: false});
         }
     },
     /**
