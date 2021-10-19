@@ -57,7 +57,10 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
 
     def test_01_configurator_translation(self):
         with mute_logger('odoo.addons.base.models.ir_translation'):
-            self.env["base.language.install"].create({'lang': 'fr_FR', 'overwrite': True}).lang_install()
+            self.env["base.language.install"].create({
+                'overwrite': True,
+                'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
+            }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
         feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
         website_fr = self.env['website'].create({
