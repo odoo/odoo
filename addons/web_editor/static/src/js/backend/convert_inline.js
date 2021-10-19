@@ -701,6 +701,11 @@ function classToStyle($editable) {
         if ($target.get(0).style.width) {
             $target.attr('width', $target.css('width')); // Widths need to be applied as attributes as well.
         }
+
+        // Media list images should not have an inline height
+        if (node.nodeName === 'IMG' && $target.hasClass('s_media_list_img')) {
+            $target.css('height', '');
+        }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
             $(node).html('&nbsp;');
@@ -818,7 +823,7 @@ FieldHtml.include({
             $editable.find('img').attr(attribute, function(){
                 return $(this)[attribute]();
             }).css(attribute, function(){
-                return $(this).get(0).style[attribute] || $(this)[attribute]() || 'auto';
+                return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : '';
             });
         });
         $odooEditor.addClass('odoo-editor');
