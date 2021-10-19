@@ -412,7 +412,7 @@ class StockWarehouseOrderpoint(models.Model):
             lot_stock_id = lot_stock_id_by_warehouse[warehouse]
             orderpoint_id = orderpoint_by_product_location.get((product, lot_stock_id))
             if orderpoint_id:
-                self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
+                self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)._compute_qty()
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, lot_stock_id)
                 orderpoint_values.update({

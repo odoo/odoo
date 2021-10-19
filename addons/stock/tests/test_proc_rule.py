@@ -238,6 +238,37 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
+    def test_reordering_set_to_0(self):
+        """ Creates a manual reorder rule and set its `qty_to_order` to 0. Then
+        reload the action and check its `qty_to_order` is correctly computed.
+        """
+        product = self.env['product.product'].create({
+            'name': 'My Little Product',
+            'type': 'product',
+        })
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 0.0,
+            'trigger': 'manual',
+            'create_uid': False,  # Must be different than `SUPERUSER_ID`
+        })
+        # Creates a delivery then checks qty to order.
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+        self.assertEqual(orderpoint.qty_to_order, 3)
+        # Set the qty_to_order to 0 and calls the action.
+        orderpoint.qty_to_order = 0
+        orderpoint.action_open_orderpoints()
+        self.assertEqual(orderpoint.qty_to_order, 3)  # Checks the qty to order is rightly computed.
+
     def test_fixed_procurement_01(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
         check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
