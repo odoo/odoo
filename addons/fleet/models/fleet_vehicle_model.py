@@ -5,10 +5,10 @@ from odoo import _, api, fields, models
 
 
 FUEL_TYPES = [
-    ('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('lpg', 'LPG'),
-    ('electric', 'Electric'), ('hybrid', 'Hybrid'), ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'),
-    ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'), ('full_hybrid_gasoline', 'Full Hybrid Gasoline'),
-    ('cng', 'CNG'), ('hydrogen', 'Hydrogen'),
+    ('diesel', 'Diesel'), ('gasoline', 'Gasoline'),
+    ('hybrid', 'Hybrid Diesel'), ('full_hybrid_gasoline', 'Hybrid Gasoline'),
+    ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'), ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'),
+    ('cng', 'CNG'), ('lpg', 'LPG'), ('hydrogen', 'Hydrogen'), ('electric', 'Electric'),
 ]
 
 class FleetVehicleModel(models.Model):
