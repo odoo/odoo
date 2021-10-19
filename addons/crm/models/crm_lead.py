@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split, is_html_empty
+from odoo.tools import date_utils, email_re, email_split, is_html_empty, groupby
 
 from . import crm_stage
 
@@ -33,31 +33,31 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     # description
     'name',
     'user_id',
+    'color',
     'company_id',
+    'lang_id',
     'team_id',
+    'referred',
     # pipeline
     'stage_id',
     # revenues
     'expected_revenue',
+    'recurring_plan',
+    'recurring_revenue',
     # dates
     'create_date',
     'date_action_last',
+    'date_deadline',
     # partner / contact
     'partner_id',
     'title',
     'partner_name',
     'contact_name',
     'email_from',
+    'function',
     'mobile',
     'phone',
     'website',
-    # address
-    'street',
-    'street2',
-    'zip',
-    'city',
-    'state_id',
-    'country_id',
 ]
 
 # Subset of partner fields: sync any of those
@@ -146,14 +146,12 @@ class Lead(models.Model):
     # Revenues
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
-    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues", tracking=True)
-    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", groups="crm.group_use_recurring_revenues")
+    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', tracking=True)
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan")
     recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
-                                               compute="_compute_recurring_revenue_monthly",
-                                               groups="crm.group_use_recurring_revenues")
+                                                compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
-                                               compute="_compute_recurring_revenue_monthly_prorated",
-                                               groups="crm.group_use_recurring_revenues")
+                                                         compute="_compute_recurring_revenue_monthly_prorated")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -1226,6 +1224,7 @@ class Lead(models.Model):
         if fnames is None:
             fnames = self._merge_get_fields()
         fcallables = self._merge_get_fields_specific()
+        address_values = self._merge_get_fields_address()
 
         # helpers
         def _get_first_not_null(attr, opportunities):
@@ -1246,6 +1245,8 @@ class Lead(models.Model):
             fcallable = fcallables.get(field_name)
             if fcallable and callable(fcallable):
                 data[field_name] = fcallable(field_name, self)
+            elif field_name in address_values:
+                data[field_name] = address_values[field_name]
             elif not fcallable and field.type in ('many2many', 'one2many'):
                 continue
             else:
@@ -1295,10 +1296,13 @@ class Lead(models.Model):
         if team_id:
             merged_data['team_id'] = team_id
 
+        merged_followers = opportunities_head._merge_followers(opportunities_tail)
+
         # log merge message
         opportunities_head.message_post_with_view(
             "crm.crm_lead_merge_summary",
             values={
+                "merged_followers": merged_followers,
                 "opportunities": opportunities_tail,
                 "is_html_empty": is_html_empty
             },
@@ -1323,15 +1327,36 @@ class Lead(models.Model):
 
         return opportunities_head
 
+    def _merge_get_fields_address(self):
+        """The address fields are propagated as a whole.
+
+        The address is taken from the lead with the most non-empty address field
+        (sorted by highest rank if multiple lead have the same amount of non-empty
+        fields).
+        """
+        source_lead = max(self, key=lambda lead: len(list(
+            lead[field] for field in PARTNER_ADDRESS_FIELDS_TO_SYNC
+            if lead[field]
+        )))
+        return {fname: source_lead[fname] for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
     def _merge_get_fields_specific(self):
         return {
             'description': lambda fname, leads: '<br/><br/>'.join(desc for desc in leads.mapped('description') if not is_html_empty(desc)),
             'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
             'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
+            'tag_ids': lambda fname, leads: leads.mapped('tag_ids'),
+            'lost_reason': lambda fname, leads:
+                False if leads and leads[0].probability
+                else next((lead.lost_reason for lead in leads if lead.lost_reason), False),
         }
 
     def _merge_get_fields(self):
-        return list(CRM_LEAD_FIELDS_TO_MERGE) + list(self._merge_get_fields_specific().keys())
+        return (
+            CRM_LEAD_FIELDS_TO_MERGE
+            + list(self._merge_get_fields_specific().keys())
+            + PARTNER_ADDRESS_FIELDS_TO_SYNC
+        )
 
     def _merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments,activities, calendar events,
@@ -1411,6 +1436,50 @@ class Lead(models.Model):
             'res_id': self.id,
             'opportunity_id': self.id,
         })
+
+    def _merge_followers(self, opportunities):
+        """Add the followers into the destination lead if they post a message in the last 30 days.
+
+        :param opportunities : Record<crm.lead> of opportunities to transfer
+        :return: {old_lead_id: Record<mail.followers>} Followers which have been added in
+            the destination lead grouped by source lead ID.
+        """
+        self.ensure_one()
+
+        self.env['mail.message'].flush()
+        self.env['mail.followers'].flush()
+
+        # Get the active followers (followers whose partner post a message on the
+        # leads in the last 30 days) which should be moved on the destination lead
+        self.env.cr.execute(
+            '''
+            SELECT MAX(mf.id) AS id
+              FROM mail_followers AS mf
+              JOIN mail_message AS mm
+                ON mm.author_id = mf.partner_id
+               AND mm.res_id = mf.res_id
+               AND mm.model = 'crm.lead'
+               AND mm.date > NOW() - INTERVAL '30 DAY'
+                   /* Check if the partner is already
+                      following the destination lead */
+         LEFT JOIN mail_followers AS destf
+                ON destf.res_model = 'crm.lead'
+               AND destf.res_id = %(lead_id)s
+               AND destf.partner_id = mf.partner_id
+                   /* Select only once each partner
+                      to not create duplicated followers */
+             WHERE mf.res_model = 'crm.lead'
+               AND mf.res_id IN %(lead_ids)s
+               AND destf IS NULL
+          GROUP BY mf.partner_id
+            ''',
+            {'lead_ids': tuple(opportunities.ids), 'lead_id': self.id},
+        )
+        followers_to_update = [r[0] for r in self.env.cr.fetchall()]
+        followers_to_update = self.env['mail.followers'].browse(followers_to_update).sudo()
+        followers_by_old_lead = dict(groupby(followers_to_update, lambda f: f.res_id))
+        followers_to_update.write({'res_id': self.id})
+        return followers_by_old_lead
 
     # CONVERT
     # ----------------------------------------------------------------------
