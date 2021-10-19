@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ResPartner(models.Model):
@@ -18,6 +18,7 @@ class ResPartner(models.Model):
 
     def geo_localize(self):
         # We need country names in English below
+        partners_not_geo_localized = self.env['res.partner']
         for partner in self.with_context(lang='en_US'):
             result = self._geo_localize(partner.street,
                                         partner.zip,
@@ -31,4 +32,15 @@ class ResPartner(models.Model):
                     'partner_longitude': result[1],
                     'date_localization': fields.Date.context_today(partner)
                 })
+            else:
+                partners_not_geo_localized |= partner
+        if partners_not_geo_localized:
+            self.env['bus.bus'].sendone(
+                (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification',
+                 'title': _("Warning"),
+                 'message': _('No address found for %(partner_names)s.',
+                              partner_names=', '.join(partners_not_geo_localized.mapped('name'))
+                              )
+                 })
         return True
