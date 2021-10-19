@@ -93,7 +93,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     json_lead_days_popover = fields.Char(compute='_compute_json_popover')
-    lead_days_date = fields.Date(compute='_compute_lead_days')
+    lead_days_date = fields.Datetime(compute='_compute_lead_days')
     allowed_route_ids = fields.Many2many('stock.location.route', compute='_compute_allowed_route_ids')
     route_id = fields.Many2one(
         'stock.location.route', string='Preferred Route', domain="[('id', 'in', allowed_route_ids)]")
@@ -157,7 +157,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.lead_days_date = False
                 continue
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
-            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
+            lead_days_date = fields.Datetime.now() + relativedelta.relativedelta(days=lead_days)
             orderpoint.lead_days_date = lead_days_date
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
@@ -466,7 +466,7 @@ class StockWarehouseOrderpoint(models.Model):
                 for orderpoint in orderpoints_batch:
                     if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                         date = datetime.combine(orderpoint.lead_days_date, time.min)
-                        values = orderpoint._prepare_procurement_values(date=date)
+                        values = orderpoint._prepare_procurement_values(date=orderpoint.lead_days_date)
                         procurements.append(self.env['procurement.group'].Procurement(
                             orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
                             orderpoint.location_id, orderpoint.name, orderpoint.name,
