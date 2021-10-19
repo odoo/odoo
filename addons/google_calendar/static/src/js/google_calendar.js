@@ -164,10 +164,12 @@ const GoogleCalendarController = CalendarController.include({
     },
 
     _restartGoogleSynchronization: function () {
+        // arj fixme: use this.context.uid when https://github.com/odoo/odoo/pull/78555 is merged
+        const user_id = this.getSession()['uid']
         return this._rpc({
             model: 'res.users',
             method: 'restart_google_synchronization',
-            args: [[this.context.uid]],
+            args: [[user_id]],
         });
     },
 

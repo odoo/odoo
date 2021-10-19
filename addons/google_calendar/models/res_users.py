@@ -101,6 +101,7 @@ class User(models.Model):
         self.ensure_one()
         if not self.google_cal_account_id:
             self.google_cal_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
+            print("RESTART GOOGLE ", self, self.google_cal_account_id)
         self.google_synchronization_stopped = False
         self.env['recurrence.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()

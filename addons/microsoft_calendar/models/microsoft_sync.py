@@ -62,7 +62,9 @@ class MicrosoftSync(models.AbstractModel):
 
     def write(self, vals):
         model_check = self._name in ['calendar.event', 'recurrence.recurrence']
-        if not model_check or self._name == 'recurrence.recurrence' and self.model != 'calendar.event':
+        recurrence_check = self._name == 'recurrence.recurrence' and self.mapped('model')
+        recurrence_check = recurrence_check and set(recurrence_check) != {'calendar.event'}
+        if not model_check or recurrence_check:
             return super().write(vals)
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         if 'microsoft_id' in vals:

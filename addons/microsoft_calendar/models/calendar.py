@@ -65,7 +65,7 @@ class Meeting(models.Model):
             values = dict(values, need_sync_m=False)
         elif recurrence_update_setting == 'self_only' and 'start_datetime' in values:
             previous_event_before_write = self.search([('recurrence_id', '=', self.recurrence_id.id),
-                                                       ('start_date', '<', self.start.date()),
+                                                       ('start_date', '<', self.start_datetime.date()),
                                                        ('id', '!=', self.id)
                                                        ])
             new_start = parse(values['start_datetime']).date()
