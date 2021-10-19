@@ -466,12 +466,18 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # test one2many operator with False
         partners = self._search(Partner, [('child_ids', '=', False)])
+        partners2 = self._search(Partner, [('child_ids', '!=', True)])
+        self.assertEqual(partners, partners2)
+
         for partner in partners:
             self.assertFalse(partner.child_ids)
 
         # verify domain evaluation for one2many != False and one2many == False
         categories = self.env['res.partner.category'].search([])
         parents = self._search(categories, [('child_ids', '!=', False)])
+        parents2 = self._search(categories, [('child_ids', '=', True)])
+
+        self.assertEqual(parents, parents)
         self.assertEqual(parents, categories.filtered(lambda c: c.child_ids))
         leafs = self._search(categories, [('child_ids', '=', False)])
         self.assertEqual(leafs, categories.filtered(lambda c: not c.child_ids))

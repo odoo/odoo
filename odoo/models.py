@@ -5324,7 +5324,10 @@ Fields:
                         if isinstance(v, str):
                             data = data.mapped('display_name')
                         else:
-                            data = data and data.ids or [False]
+                            if field and field.type == 'one2many' and isinstance(v, bool):
+                                data = data and [True] or [False]
+                            else:
+                                data = data and data.ids or [False]
                     elif field and field.type in ('date', 'datetime'):
                         # convert all date and datetime values to datetime
                         normalize = Datetime.to_datetime
