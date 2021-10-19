@@ -1107,12 +1107,20 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
-            return request.render("website_sale.confirmation", {
-                'order': order,
-                'order_tracking_info': self.order_2_return_dict(order),
-            })
+            values = self._prepare_shop_payment_confirmation_values(order)
+            return request.render("website_sale.confirmation", values)
         else:
             return request.redirect('/shop')
+
+    def _prepare_shop_payment_confirmation_values(self, order):
+        """
+        This method is called in the payment process route in order to prepare the dict
+        containing the values to be rendered by the confirmation template.
+        """
+        return {
+            'order': order,
+            'order_tracking_info': self.order_2_return_dict(order),
+        }
 
     @http.route(['/shop/print'], type='http', auth="public", website=True, sitemap=False)
     def print_saleorder(self, **kwargs):

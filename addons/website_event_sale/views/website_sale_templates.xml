@@ -37,4 +37,47 @@
         </xpath>
     </template>
 
+    <template id="event_confirmation" inherit_id="website_sale.confirmation">
+        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="inside">
+            <t t-if="events">
+                <section class="s_title pt40" data-snippet="s_title" data-name="Title">
+                    <div class="s_allow_columns container">
+                        <h4>
+                            We are looking forward to meeting you at the following <t t-if="len(events) == 1">event</t><t t-else="">events</t>:
+                        </h4>
+                    </div>
+                </section>
+                <section class="pb32 o_cc o_cc2 o_colored_level bg-transparent">
+                    <div class="s_nb_column_fixed s_col_no_bgcolor o_wevent_index" t-foreach="events" t-as="event">
+                        <div class="col-lg-12 card mt-3 mx-auto item pt16 pb16">
+                            <div class="row s_col_no_bgcolor no-gutters align-items-center o_cc1">
+                                <div class="col-lg-4 align-self-stretch d-block o_wevent_events_list">
+                                    <t t-call="website.record_cover">
+                                        <t t-set="_record" t-value="event" />
+                                        <div class="o_wevent_event_date position-absolute bg-white shadow-sm text-dark">
+                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'LLL'}" class="o_wevent_event_month" />
+                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit" />
+                                        </div>
+                                        <small class="o_wevent_participating bg-success">
+                                            <i class="fa fa-check mr-2" />
+                                            Registered
+                                        </small>
+                                        <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
+                                            <i class="fa fa-ban mr-2" />
+                                            Unpublished
+                                        </small>
+                                    </t>
+                                </div>
+                                <div class="col-lg-8 p-4">
+                                    <h3 t-esc="event.name" />
+                                    <a class="btn btn-primary mb-2" t-attf-href="/event/#{ slug(event) }">Go to Event</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
 </odoo>
