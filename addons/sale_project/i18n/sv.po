@@ -7,6 +7,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Simon S, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
+"Last-Translator: Simon S, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +26,17 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Create a new project but no task"
-msgstr ""
+msgstr "Skapa ett nytt projekt men ingen aktivitet"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Create a task in an existing project"
-msgstr ""
+msgstr "Skapa en aktivitet i ett befintligt projekt"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sales order's project"
-msgstr ""
+msgstr "Skapa en aktivitet i säljorderns projekt"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
@@ -61,7 +62,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Don't create task"
-msgstr ""
+msgstr "Skapa inte aktivitet"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -142,7 +143,7 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Projektmall"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
@@ -184,7 +185,7 @@ msgstr "Kundorder"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Säljorderobjekt"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -226,6 +227,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Välj ett fakturerbart projekt där aktiviteter kan skapas. Denna inställning "
+"måste ställas in för varje företag."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -234,17 +237,20 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Välj ett fakturerbart projekt som ska vara skelettet för det nyskapade "
+"projektet när den gällande produkten säljs. Dess steg och aktiviteter kommer"
+" att dupliceras."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "Välj ett ej fakturerbart projekt där aktiviteter kan skapas."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Service Tracking"
-msgstr ""
+msgstr "Spårning av tjänst"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -257,6 +263,8 @@ msgstr "Aktivitet"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Aktivitet skapad (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -316,6 +324,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Denna aktivitet har skapats från: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice

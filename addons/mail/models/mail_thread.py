@@ -1221,8 +1221,8 @@ class MailThread(models.AbstractModel):
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
         body, attachments = payload_dict['body'], payload_dict['attachments']
-        if not body:
-            return payload_dict
+        if not body.strip():
+            return {'body': body, 'attachments': attachments}
         try:
             root = lxml.html.fromstring(body)
         except ValueError:
@@ -1343,7 +1343,9 @@ class MailThread(models.AbstractModel):
         if dsn_part and len(dsn_part.get_payload()) > 1:
             dsn = dsn_part.get_payload()[1]
             final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-            bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
+            # old servers may hold void or invalid Final-Recipient header
+            if final_recipient_data and ";" in final_recipient_data:
+                bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
             if bounced_email:
                 bounced_partner = self.env['res.partner'].sudo().search([('email_normalized', '=', bounced_email)])
 
@@ -1593,7 +1595,7 @@ class MailThread(models.AbstractModel):
         return matching_user
 
     @api.model
-    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False):
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
         """ Utility method to find partners from email addresses. If no partner is
         found, create new partners if force_create is enabled. Search heuristics
 
@@ -1627,11 +1629,11 @@ class MailThread(models.AbstractModel):
         done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        user_partners = self._mail_search_on_user(remaining)
+        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
         done_partners += [user_partner for user_partner in user_partners]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        partners = self._mail_search_on_partner(remaining)
+        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
         done_partners += [partner for partner in partners]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
@@ -1994,8 +1996,8 @@ class MailThread(models.AbstractModel):
         MailThread = self.env['mail.thread']
         values = {
             'parent_id': parent_id,
-            'model': self._name if self else False,
-            'res_id': self.id if self else False,
+            'model': self._name if self else model,
+            'res_id': self.id if self else res_id,
             'message_type': 'user_notification',
             'subject': subject,
             'body': body,
@@ -2227,6 +2229,8 @@ class MailThread(models.AbstractModel):
             base_template = False
 
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        # Replace new lines by spaces to conform to email headers requirements
+        mail_subject = ' '.join((mail_subject or '').splitlines())
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,

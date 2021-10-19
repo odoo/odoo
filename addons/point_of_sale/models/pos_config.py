@@ -574,7 +574,8 @@ class PosConfig(models.Model):
          }
 
     def _force_http(self):
-        if self.other_devices:
+        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
+        if not enforce_https and self.other_devices:
             return True
         return False
 

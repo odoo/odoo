@@ -61,8 +61,8 @@ msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
-"<p>Raporu buradan onaylayın.</p><p>İpucu: Reddederseniz, buradaki mesaj "
-"aracı sayesinde sebebini belirtmeyi unutmayın.</p>"
+"<p>Formu buradan onaylayın.</p><p>İpucu: Reddederseniz, buradaki mesaj aracı"
+" sayesinde sebebini belirtmeyi unutmayın.</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -72,15 +72,15 @@ msgid ""
 "<p>Click on <b> Action Create Report </b> to submit selected expenses to "
 "your manager</p>"
 msgstr ""
-"<p>Tıkla<b>Eylem Oluşturma Raporu</b>Seçilen masrafları yöneticine "
-"gönder</p>"
+"<p>Seçilen masrafları yöneticine göndermek için<b>Form Oluşturma "
+"Eylemine</b>tıklayın</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Click on <b> Create Report </b> to create the report.</p>"
-msgstr "<p>Rapor oluşturmak için <b> Rapor Oluştur </b> üzerine tıklayın.</p>"
+msgstr "<p>Form oluşturmak için <b> Form Oluştur </b> üzerine tıklayın.</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -104,7 +104,7 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
-"<p>Onaylanmış masraf bildirimleriniz muhasebeciye ulaştı.</p><p>Vergiler ve "
+"<p>Onaylanmış masraf formlarınız muhasebeciye ulaşır.</p><p>Vergiler ve "
 "hesaplar doğruysa tek bir tıkla yevmiye girişlerini işleyebilir.</p>"
 
 #. module: hr_expense
@@ -222,7 +222,7 @@ msgstr "Tüm Onaylayanlar"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "Tüm Masraf Bildirimleri"
+msgstr "Tüm Masraf Formları"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
@@ -234,7 +234,7 @@ msgstr "Tüm Masraflarım"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
-msgstr "Tüm Raporlar"
+msgstr "Tüm Formlar"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -257,7 +257,7 @@ msgstr "Masraf hesabı gerekiyor"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr "Masraf raporu yalnızca aynı şirkete ait satırlar içermelidir."
+msgstr "Bir masraf formu yalnızca aynı şirkete ait satırlar içermelidir."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
@@ -284,13 +284,13 @@ msgstr "Onayla"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_sheet_approve_action_server
 msgid "Approve Report"
-msgstr "Onay Raporu"
+msgstr "Formu Onayla"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "Approve the new expense reports submitted by the employees you manage."
 msgstr ""
-"Yönettiğiniz personel tarafından iletilen yeni masraf raporlarını "
+"Yönettiğiniz personel tarafından iletilen yeni masraf formlarını "
 "onaylayınız."
 
 #. module: hr_expense
@@ -303,7 +303,7 @@ msgstr "Onaylanmış"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Approved Expenses"
-msgstr "Onaylı Masraflar"
+msgstr "Onaylanmış Masraflar"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -346,7 +346,7 @@ msgstr "Belge Numarası"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
 msgid "Can Reset"
-msgstr "Resetlenebilir"
+msgstr "Sıfırlayabilir"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
@@ -413,13 +413,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr "Rapor Oluştur"
+msgstr "Form Oluştur"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "Yeni bir masraf raporu uluştur"
+msgstr "Yeni bir masraf formu oluştur"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -429,7 +429,7 @@ msgstr "Gelen e-postalardan masraflar oluşturma"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr "İstatistik için yeni bir masraf raporu oluştur"
+msgstr "İstatistik için yeni bir masraf formu oluştur"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -515,7 +515,7 @@ msgid ""
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
 "Masraf belgelerini ceplerinizde taşımayın. Belgenin fotoğrafını çekin ve "
-"Odoo sizin için dijitalleştirsin. OCR ve Yapay Zeka veriyi otomarik olarak "
+"Odoo sizin için dijitalleştirsin. OCR ve Yapay Zeka veriyi otomatik olarak "
 "dolduracaktır."
 
 #. module: hr_expense
@@ -618,17 +618,17 @@ msgstr "Masraf İptal Nedeni Sihirbazı"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr "Masraf Bildirimi"
+msgstr "Masraf Formu"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
 msgid "Expense Report State"
-msgstr "Masraf Bildirimi Durumu"
+msgstr "Masraf Formu Durumu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "Masraf Bildirimi Özeti"
+msgstr "Masraf Formu Özeti"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -636,28 +636,28 @@ msgstr "Masraf Bildirimi Özeti"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "Masraf Bildirimleri"
+msgstr "Masraf Formları"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "Masraf Bildirimleri Analizi"
+msgstr "Masraf Formları Analizi"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr "Ödenecek Masraf Bildirimleri"
+msgstr "Ödenecek Masraf Formları"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr "İşlenecek Masraf Bildirimleri"
+msgstr "İşlenecek Masraf Formları"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "Onaylanacak Masraf Bildirimleri"
+msgstr "Onaylanacak Masraf Formları"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -672,25 +672,25 @@ msgstr "Masraf red nedeni"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "Masraf bildirimi onaylandı"
+msgstr "Masraf formu onaylandı"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Masraf bildirimi ödendi"
+msgstr "Masraf formu ödendi"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Masraf bildirimi reddedildi"
+msgstr "Masraf formu reddedildi"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
-"Masraf raporları belirli bir olay esnasında gerçekleşen tüm masrafları "
-"birlikte gruplar."
+"Masraf formları belirli bir etkinlik esnasında oluşan tüm masrafları "
+"biraraya gruplar."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -724,17 +724,17 @@ msgstr "Masraf Analizi"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Masraf Bildirimi"
+msgstr "Masraflar Raporu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "Onaylanacak Masraf Bildirimleri"
+msgstr "Onaylanacak Masraf Formları"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Expenses by Date"
-msgstr "Günlük Masraflar"
+msgstr "Tarihe Göre Masraflar"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -795,7 +795,7 @@ msgstr "Takipçiler (İş ortakları)"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Harika font ikonları örn. fa-görevler"
+msgstr "Font awesome ikonları örn. fa-tasks"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -841,7 +841,7 @@ msgstr "Grupla"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
 msgid "Handle lines with different currencies"
-msgstr "Farklı para birimlerine sahip satırları kullanma"
+msgstr "Farklı para birimlerine sahip satırların üstesinden gel"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
@@ -995,7 +995,7 @@ msgstr "Yönetici"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr "Yöneticiler bu menüden onaylanacak tüm bildirimleri görebilirler."
+msgstr "Yöneticiler bu menüden onaylanacak tüm formları görebilirler."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
@@ -1019,14 +1019,14 @@ msgstr "Masraflarım"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "My Expenses to Report"
-msgstr "Raporlanacak Masraflarım"
+msgstr "Gönderilecek Masraflarım"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "My Reports"
-msgstr "Raporlarım"
+msgstr "Formlarım"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1043,7 +1043,7 @@ msgstr "Adı"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
-msgstr "Yeni Masraf Raporu"
+msgstr "Yeni Masraf Formu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1085,7 +1085,7 @@ msgid ""
 "No Outstanding Payments Account found for the %s journal, please configure "
 "one."
 msgstr ""
-"%s yevmiyesi içinVadesi Geçen Ödemeler Hesabı bulunamadı. Lütfen "
+"%s yevmiyesi için Vadesi Geçen Ödemeler Hesabı bulunamadı. Lütfen "
 "ayarlayınız."
 
 #. module: hr_expense
@@ -1114,19 +1114,19 @@ msgstr "Masraf ürünü bulunamadı. Bir tane oluşturalım!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr "Masraf raporu bulunamadı. Bir tane oluşturalım!"
+msgstr "Masraf formu bulunamadı. Bir tane oluşturalım!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "No expense reports found"
-msgstr "Hiç masraf raporu bulunamadı"
+msgstr "Hiç masraf formu bulunamadı"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr "Masraf raporu bulunamadı. Bir tane oluşturalım!"
+msgstr "Masraf formu bulunamadı. Bir tane oluşturalım!"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -1138,37 +1138,37 @@ msgstr "Notlar..."
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Eylemlerin Sayısı"
+msgstr "Eylemlerin Adedi"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
-msgstr "Eklentilerin Sayısı"
+msgstr "Eklentilerin Adedi"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of errors"
-msgstr "Hata sayısı"
+msgstr "Hata adedi"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
+msgstr "Eylem gerektiren mesaj adedi"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Teslimat hatası olan mesaj sayısı"
+msgstr "Teslimat hatası olan mesaj adedi"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
+msgstr "Okunmamış mesaj adedi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1193,7 +1193,7 @@ msgid ""
 "Once your <b>Expense report</b> is ready, you can submit it to your manager "
 "and wait for the approval from your manager."
 msgstr ""
-"</b> Masraf raporu <b>hazır olunca, yöneticinize iletebilirsiniz ve "
+"<b>Masraf formunuz</b> hazır olunca, yöneticinize iletebilirsiniz ve "
 "yöneticiden onay bekleyebilirsiniz."
 
 #. module: hr_expense
@@ -1241,12 +1241,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_sheet_post_action_server
 msgid "Post Entries"
-msgstr "Post Kayıtlar"
+msgstr "Kayıtları İşle"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr "Yevmiye Kayıtlarını Onayla"
+msgstr "Yevmiye Kayıtlarını İşle"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
@@ -1254,13 +1254,13 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
-"Personelin yöneticisi tarafından onaylanan yeni masraf raporlarının y evmiye"
-" girişlerini onaylayınız."
+"Personelin yöneticisi tarafından onaylanan yeni masraf formlarının yevmiye "
+"girişlerini işleyiniz."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
 msgid "Posted"
-msgstr "Onaylandı"
+msgstr "İşlenmiş"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1316,7 +1316,7 @@ msgstr "Ürün: bulunamadı"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
 msgid "Public Employee"
-msgstr "Kamu Çalışanı"
+msgstr "Personel Herkese Açık"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1395,17 +1395,17 @@ msgstr "Ödeme Kaydet"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr "Maaş bordrosundaki masrafların geri ödenmesi"
+msgstr "Masrafları Maaş Bordrosunda Öde"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr "Maaş bordrosundaki masrafların geri ödenmeleri"
+msgstr "Masrafları maaş bordrosunda öde"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr "Maaş Bordrosunda Geri Ödeme"
+msgstr "Maaş Bordrosunda Öde"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -1419,12 +1419,12 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Report"
-msgstr "Rapor"
+msgstr "Form"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
 msgid "Report Company Currency"
-msgstr "Şirket Para Birimi Raporla"
+msgstr "Form Şirket Para Birimi"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1434,17 +1434,17 @@ msgstr "Raporlama"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 msgid "Reports to Approve"
-msgstr "Onaylanacak Bildirimler"
+msgstr "Onaylanacak Formlar"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 msgid "Reports to Pay"
-msgstr "Ödenecek Bildirimler"
+msgstr "Ödenecek Formlar"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 msgid "Reports to Post"
-msgstr "İşlenecek Bildirimler"
+msgstr "İşlenecek Formlar"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1466,14 +1466,14 @@ msgstr "SMS İleti hatası"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sample
 msgid "Sample"
-msgstr "Örneklem"
+msgstr "Örnekl"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr "Odoo uygulamasını indirmek için bu QR :"
+msgstr "Odoo uygulamasını indirmek için bu QR kodunu tara :"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1599,7 +1599,7 @@ msgstr "Vergiler"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr "Takım Onayı"
+msgstr "Ekip Onaycısı"
 
 #. module: hr_expense
 #. openerp-web
@@ -1619,7 +1619,7 @@ msgstr "Mevcut kullanıcının ilgili personeli yok. Lütfen oluşturunuz."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The expense reports were successfully approved."
-msgstr ""
+msgstr "Masraf formları başarılı bir şekilde onaylandı."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1633,7 +1633,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr "Yevmiye kaydedilen masraf üzerinden ayarlanmalıdır"
+msgstr "Yevmiye işlenen masraf üzerinden ayarlanmalıdır"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1649,7 +1649,7 @@ msgstr "Masraf şirket tarafından ödendiğinde kullanılan ödeme yöntemi."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
-msgstr ""
+msgstr "Onaylanacak masraf formu yok."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -1675,7 +1675,7 @@ msgstr "İşlenecek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr "Rapor Et"
+msgstr "Gönderilecek"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1696,7 +1696,7 @@ msgstr "Toplam"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
 msgid "Total (Company Currency)"
-msgstr "Toplam (Şirket para birimi)"
+msgstr "Toplam (Şirket Para Birimi)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
@@ -1728,7 +1728,7 @@ msgstr "Ölçü Birimi"
 #: model:product.template,uom_name:hr_expense.air_ticket_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "Units"
-msgstr "Adet"
+msgstr "Birim"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
@@ -1748,7 +1748,7 @@ msgstr "Okunmamış Mesaj Sayacı"
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #, python-format
 msgid "Upload"
-msgstr "Yükleme"
+msgstr "Yükle"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1774,7 +1774,7 @@ msgstr "Masrafları Görüntüle"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr "Bildirimi Göster"
+msgstr "Formu Göster"
 
 #. module: hr_expense
 #. openerp-web
@@ -1800,19 +1800,19 @@ msgstr "Websitesi iletişim geçmişi"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
-msgstr "Bu masraf raporunun referansını düzenleme yetkiniz yok."
+msgstr "Bu masraf formunun referansını düzenleme yetkiniz yok."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr "Bu masraf raporunu düzenleme yetkiniz yok."
+msgstr "Bu masraf formunu düzenleme yetkiniz yok."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without product."
-msgstr "Ürün olmadan rapor oluşturamazsınız."
+msgstr "Ürün olmadan form oluşturamazsınız."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1860,7 +1860,7 @@ msgstr "Kendi masraflarınızı onaylayamazsınız"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr "Gönderilmiş veya onaylanmış masrafları silemezsiniz."
+msgstr "İşlenmiş veya onaylanmış masrafları silemezsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1878,13 +1878,13 @@ msgstr "Kendi masraflarınızı reddedemezsiniz"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
-msgstr "Aynı raporda farklı çalışanların harcamalarını rapor edemezsiniz."
+msgstr "Aynı formda farklı çalışanların harcamalarını gönderemezsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr "Aynı satırı birden fazla bildiremezsiniz!"
+msgstr "Aynı satırı birden fazla gönderemezsiniz!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1941,7 +1941,7 @@ msgstr "personele geri ödenecek"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr "raporlanacak"
+msgstr "gönderilecek"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1953,3 +1953,9 @@ msgstr "doğrulama aşamasında"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "Fişin fotoğrafından veri doldurmak için OCR kullanınız"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Payment Cancelled"
+msgstr ""

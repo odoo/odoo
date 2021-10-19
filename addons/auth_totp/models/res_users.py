@@ -18,16 +18,21 @@ from odoo.http import request, db_list
 
 _logger = logging.getLogger(__name__)
 
+TRUSTED_DEVICE_SCOPE = '2fa_trusted_device'
+
 compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
+    totp_trusted_device_ids = fields.One2many('res.users.apikeys', 'user_id',
+        string="Trusted Devices", domain=[('scope', '=', TRUSTED_DEVICE_SCOPE)])
+    api_key_ids = fields.One2many(domain=[('scope', '!=', TRUSTED_DEVICE_SCOPE)])
 
     def __init__(self, pool, cr):
         init_res = super().__init__(pool, cr)
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled']
+        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
         return init_res
 
     def _mfa_url(self):
@@ -87,7 +92,9 @@ class Users(models.Model):
             _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
             return False
 
+        self.revoke_all_devices()
         self.sudo().write({'totp_secret': False})
+
         if request and self == self.env.user:
             self.flush()
             # update session token so the user does not get logged out (cache cleared by change)
@@ -129,6 +136,18 @@ class Users(models.Model):
             'res_id': w.id,
             'views': [(False, 'form')],
         }
+
+    @check_identity
+    def revoke_all_devices(self):
+        self._revoke_all_devices()
+
+    def _revoke_all_devices(self):
+        self.totp_trusted_device_ids._remove()
+
+    def change_password(self, old_passwd, new_passwd):
+        self.env.user._revoke_all_devices()
+        return super().change_password(old_passwd, new_passwd)
+
 
 class TOTPWizard(models.TransientModel):
     _name = 'auth_totp.wizard'

@@ -55,7 +55,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, partition
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -711,10 +711,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
+            missing = []
             for name in func._onchange:
                 if name not in cls._fields:
-                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                    missing.append(name)
                 methods[name].append(func)
+            if missing:
+                _logger.warning(
+                    "@api.onchange%r parameters must be field names -> not valid: %s",
+                    func._onchange, missing
+                )
 
         # add onchange methods to implement "change_default" on fields
         def onchange_default(field, self):
@@ -4669,13 +4675,13 @@ Fields:
 
         By convention, new records are returned as existing.
         """
-        ids, new_ids = [], []
-        for i in self._ids:
-            (new_ids if isinstance(i, NewId) else ids).append(i)
+        new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
-        query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
-        self._cr.execute(query, [tuple(ids)])
+        query = Query(self.env.cr, self._table, self._table_query)
+        query.add_where(f'"{self._table}".id IN %s', [tuple(ids)])
+        query_str, params = query.select()
+        self.env.cr.execute(query_str, params)
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 

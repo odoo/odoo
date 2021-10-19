@@ -76,6 +76,16 @@ class View(models.Model):
             if not view.key and not vals.get('key'):
                 view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
 
+            pages = view.page_ids
+
+            # Disable cache of page if we guess some dynamic content (form with csrf, ...)
+            if vals.get('arch'):
+                to_invalidate = pages.filtered(
+                    lambda p: p.cache_time and not p._can_be_cached(vals['arch'])
+                )
+                to_invalidate and _logger.info('Disable cache for page %s' % to_invalidate)
+                to_invalidate.cache_time = 0
+
             # No need of COW if the view is already specific
             if view.website_id:
                 super(View, view).write(vals)
@@ -87,7 +97,6 @@ class View(models.Model):
             # but in reality the values were only meant to go on the specific
             # page. Invalidate all fields and not only those in vals because
             # other fields could have been changed implicitly too.
-            pages = view.page_ids
             pages.flush(records=pages)
             pages.invalidate_cache(ids=pages.ids)
 

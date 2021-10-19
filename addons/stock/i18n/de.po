@@ -34,7 +34,6 @@
 # Johannes Croe <jcr@odoo.com>, 2020
 # Jérôme JEK <jek@odoo.com>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
-# Florian Pose <fp@igh.de>, 2020
 # Tobias Arndt, 2020
 # TomTietze <t.tietze94@web.de>, 2020
 # Gab_Odoo <gab@odoo.com>, 2020
@@ -43,6 +42,7 @@
 # Ermin Trevisan <trevi@twanda.com>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
+# Florian Pose <fp@igh.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # 
 msgid ""
@@ -940,7 +940,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr ""
+msgstr "Bestellung automatisieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1031,7 +1031,7 @@ msgstr "Strichcode"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Barcode Nomenkaltur"
+msgstr "Barcode-Nomenklatur"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -3845,7 +3845,7 @@ msgstr "Als zu erledigen markieren"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr ""
+msgstr "Maximalbestand"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_has_error
@@ -3877,7 +3877,7 @@ msgstr "Methode"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr ""
+msgstr "Minimalbestand"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -4351,7 +4351,7 @@ msgstr "Auftrag"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Order Once"
-msgstr ""
+msgstr "Einmalig Bestellen"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4755,7 +4755,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr ""
+msgstr "Bevorzugte Route"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -6665,6 +6665,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"Die Kombination von Seriennummer und Produkt muss in einem Unternehmen "
+"eindeutig sein. Die folgenden Kombinationen enthalten Dubletten:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -6785,6 +6787,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %s, Serial Number: %s"
 msgstr ""
+"Diese Seriennummer wurde bereits zugewiesen:\n"
+"Produkt: %s, Seriennummer: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

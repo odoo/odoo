@@ -55,6 +55,8 @@ class MailRenderMixin(models.AbstractModel):
 
         :return: updated content
         """
+        if not content:
+            return content
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         shortened_schema = base_url + '/r/'
         unsubscribe_schema = base_url + '/sms/'

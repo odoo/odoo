@@ -486,6 +486,67 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
+    def test_avco_ordered_return_and_receipt(self):
+        """ Sell and deliver some products before the user encodes the products receipt """
+        product = self.product
+        product.invoice_policy = 'order'
+        product.type = 'product'
+        product.categ_id.property_cost_method = 'average'
+        product.categ_id.property_valuation = 'real_time'
+        product.list_price = 100
+        product.standard_price = 50
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
+        })
+        so.action_confirm()
+
+        pick = so.picking_ids
+        pick.move_lines.write({'quantity_done': 5})
+        pick.button_validate()
+
+        product.standard_price = 40
+
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0], active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 1
+        return_wiz.product_return_moves.to_refund = False
+        res = return_wiz.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_lines.write({'quantity_done': 1})
+        return_pick.button_validate()
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
+        })
+        # We don't set the price_unit so that the `standard_price` will be used (see _get_price_unit()):
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_1',
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'picking_id': picking.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'quantity_done': 1,
+        })
+        picking.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
+
     # -------------------------------------------------------------------------
     # AVCO Delivered
     # -------------------------------------------------------------------------
@@ -1122,3 +1183,125 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         income_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_revenue'])
         self.assertEqual(income_aml_2.debit, 0)
         self.assertEqual(income_aml_2.credit, 12)
+
+    def test_fifo_uom_computation(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.categ_id.property_valuation = 'real_time'
+        quantity = 50.0
+        self.product.list_price = 1.5
+        self.product.standard_price = 2.0
+        unit_12 = self.env['uom.uom'].create({
+            'name': 'Pack of 12 units',
+            'category_id': self.product.uom_id.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 12,
+            'rounding': 1,
+        })
+
+        # Create, confirm and deliver a sale order for 12@1.5 without reception with std_price = 2.0 (SO1)
+        so_1 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': unit_12.id,
+                    'price_unit': 18,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        so_1.action_confirm()
+        so_1.picking_ids.move_lines.quantity_done = 12
+        so_1.picking_ids.button_validate()
+
+        # Invoice the sale order.
+        invoice_1 = so_1._create_invoices()
+        invoice_1.action_post()
+        """
+        Invoice 1
+
+        Correct Journal Items
+
+        Name                            Debit       Credit
+
+        Product Sales                    0.00$      18.00$
+        Account Receivable              18.00$       0.00$
+        Default Account Stock Out        0.00$      24.00$
+        Expenses                        24.00$       0.00$
+        """
+        aml = invoice_1.line_ids
+        # Product Sales
+        self.assertEqual(aml[0].debit,   0,0)
+        self.assertEqual(aml[0].credit, 18,0)
+        # Account Receivable
+        self.assertEqual(aml[1].debit,  18,0)
+        self.assertEqual(aml[1].credit,  0,0)
+        # Default Account Stock Out
+        self.assertEqual(aml[2].debit,   0,0)
+        self.assertEqual(aml[2].credit, 24,0)
+        # Expenses
+        self.assertEqual(aml[3].debit,  24,0)
+        self.assertEqual(aml[3].credit,  0,0)
+
+        # Create stock move 1
+        in_move_1 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': quantity,
+            'price_unit': 1.0,
+        })
+        in_move_1._action_confirm()
+        in_move_1.quantity_done = quantity
+        in_move_1._action_done()
+
+        # Create, confirm and deliver a sale order for 12@1.5 with reception (50 * 1.0, 50 * 0.0)(SO2)
+        so_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': unit_12.id,
+                    'price_unit': 18,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        so_2.action_confirm()
+        so_2.picking_ids.move_lines.quantity_done = 12
+        so_2.picking_ids.button_validate()
+
+        # Invoice the sale order.
+        invoice_2 = so_2._create_invoices()
+        invoice_2.action_post()
+
+        """
+        Invoice 2
+
+        Correct Journal Items
+
+        Name                            Debit       Credit
+
+        Product Sales                    0.00$       18.0$
+        Account Receivable              18.00$        0.0$
+        Default Account Stock Out        0.00$       12.0$
+        Expenses                        12.00$        0.0$
+        """
+        aml = invoice_2.line_ids
+        # Product Sales
+        self.assertEqual(aml[0].debit,   0,0)
+        self.assertEqual(aml[0].credit, 18,0)
+        # Account Receivable
+        self.assertEqual(aml[1].debit,  18,0)
+        self.assertEqual(aml[1].credit,  0,0)
+        # Default Account Stock Out
+        self.assertEqual(aml[2].debit,   0,0)
+        self.assertEqual(aml[2].credit, 12,0)
+        # Expenses
+        self.assertEqual(aml[3].debit,  12,0)
+        self.assertEqual(aml[3].credit,  0,0)

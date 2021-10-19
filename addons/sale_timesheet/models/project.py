@@ -202,6 +202,8 @@ class ProjectTask(models.Model):
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
     domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
+    # content in related parameter of the field definition is removed to manually define the compute and the search method.
+    project_sale_order_id = fields.Many2one(compute='_compute_project_sale_order_id', search='_search_project_sale_order_id', related=None)
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     bill_type = fields.Selection(related="project_id.bill_type")
     pricing_type = fields.Selection(related="project_id.pricing_type")
@@ -270,6 +272,14 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
+    @api.depends('project_id.bill_type', 'project_id.sale_order_id')
+    def _compute_project_sale_order_id(self):
+        for task in self:
+            if task.bill_type != 'customer_task':
+                task.project_sale_order_id = task.project_id.sale_order_id
+            else:
+                task.project_sale_order_id = False
+
     @api.depends('sale_line_id', 'project_id', 'allow_billable', 'non_allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
@@ -307,6 +317,9 @@ class ProjectTask(models.Model):
                 self.partner_id = self.project_id.partner_id
             if not self.sale_line_id:
                 self.sale_line_id = self.project_id.sale_line_id
+
+    def _search_project_sale_order_id(self, operator, value):
+        return [('bill_type', '!=', 'customer_task'), ('project_id.sale_order_id', operator, value)]
 
     def write(self, values):
         res = super(ProjectTask, self).write(values)

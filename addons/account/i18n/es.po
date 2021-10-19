@@ -20,8 +20,9 @@
 # Lucia Pacheco <lpo@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Alejandro Concepción <alconor23@hotmail.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1121,7 +1122,7 @@ msgstr "Plantilla de Plan de Cuentas"
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "Informe común de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
@@ -6935,7 +6936,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "Fue previamente '%(previous)s' y es ahora '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8931,61 +8932,61 @@ msgstr "Pagado Parcialmente"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Partner"
-msgstr "Partner"
+msgstr "Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Partner Company"
-msgstr "Empresa partner"
+msgstr "Empresa relacionada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
-msgstr "Contratos de partner"
+msgstr "Contratos de empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner
 msgid "Partner Is Set"
-msgstr "El partner está establecido"
+msgstr "La empresa está establecida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Is Set & Matches"
-msgstr "El partner está establecido y coincide"
+msgstr "La empresa está establecida y coincide"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Libro mayor de partner"
+msgstr "Libro mayor de empresa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Mapeo de partners "
+msgstr "Mapeo de empresas "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Líneas de mapeo de partners"
+msgstr "Líneas de mapeo de empresas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Nombre del partner"
+msgstr "Nombre de la empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Tipo de partner"
+msgstr "Tipo de empresa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Mapeo de partners para modelos de reconciliación"
+msgstr "Mapeo de empresas para modelos de conciliación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
@@ -9358,8 +9359,8 @@ msgstr "Por favor, establece un valor positivo para redondear un valor."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
-"Por favor, establece al menos uno de los textos de coincidencia para crear "
-"un mapeo de partners."
+"Por favor, establezca al menos uno de los textos de coincidencia para crear "
+"un mapeo de empresas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10082,12 +10083,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__require_partner_bank_account
 msgid "Require Partner Bank Account"
-msgstr "Requerir cuenta bancaria de partner"
+msgstr "Requerir cuenta bancaria de empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr "Banco del partner"
+msgstr "Cuenta bancaria de la empresa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
@@ -10153,13 +10154,13 @@ msgstr "Usuario responsable"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_category_ids
 msgid "Restrict Partner Categories to"
-msgstr "Restringir categorías de partner a"
+msgstr "Restringir categorías de empresa a"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_ids
 msgid "Restrict Partners to"
-msgstr "Restringir partners a "
+msgstr "Restringir empresas a "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
@@ -10605,10 +10606,10 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Selecciona un partner que utilizará la cuenta analítica especificada en el "
-"análisis por defecto (por ejemplo, creando una nueva factura de cliente o "
-"una orden de ventas, si seleccionamos este partner, automáticamente lo "
-"tomará como una cuenta analítica)"
+"Seleccione la empresa que utilizará la cuenta analítica especificada en el "
+"valor por defecto (por ejemplo, creando una nueva factura de cliente o un "
+"pedido de venta, si seleccionamos esta empresa, automáticamente utilizará "
+"esta cuenta analítica)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__product_id
@@ -10652,7 +10653,7 @@ msgstr "Selecciona una factura de proveedor antigua"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr "Selecciona el primer partner"
+msgstr "Seleccione la primera empresa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -10989,7 +10990,7 @@ msgstr "Mostrar advertencia de nombre"
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_partner_bank_account
 msgid "Show Partner Bank Account"
-msgstr "Mostrar cuenta bancaria del partner"
+msgstr "Mostrar cuenta bancaria de la empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -12582,7 +12583,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
-"La siguiente expresión regular no es válida para crear un mapeo de partners:"
+"La siguiente expresión regular no es válida para crear un mapeo de empresas:"
 " %s"
 
 #. module: account
@@ -12663,8 +12664,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, todos los elementos del diario cancelados deben compartir la misma cuenta."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, todos los apuntes contables de contrapartida deben compartir la misma cuenta."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12691,8 +12692,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same currency."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, los elementos del diario deben compartir la misma moneda."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, los apuntes contables deben compartir la misma moneda."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12701,8 +12702,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
-"El asiento de diario %s alcanzó un estado no válido en relación con su pago.\n"
-"Para ser coherente, los elementos del diario deben compartir el mismo socio."
+"El asiento contable %s alcanzó un estado no válido en relación con su pago.\n"
+"Para ser coherente, los apuntes deben compartir la misma empresa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -12857,8 +12858,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"El partner tiene al menos un débito o crédito no conciliado desde la última "
-"vez que se realizó la conciliación de facturas y pagos."
+"La empresa tiene al menos un saldo no conciliado desde la última vez que se "
+"realizó la conciliación de facturas y pagos."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13058,7 +13059,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "El formato de secuencia ha cambiado."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13077,6 +13078,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"La secuencia nunca se reiniciará.\n"
+"El número creciente en este caso es '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13086,6 +13089,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"La secuencia se reiniciará en 1 al comienzo de cada mes.\n"
+"El año detectado aquí es '%(year)s' Y el mes es '%(month)s'.\n"
+"El número creciente en este caso es '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13095,6 +13101,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"La secuencia se reiniciará en 1 al comienzo de cada año.\n"
+"El año detectado aquí es '%(year)s'.\n"
+"El número creciente en este caso es '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -13292,8 +13301,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Esta cuenta se utilizará en lugar de la cuenta predeterminada como la cuenta"
-" por pagar del partner actual"
+"Se utilizará esta cuenta en lugar de la cuenta predeterminada como la cuenta"
+" a pagar de la empresa actual"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -13302,8 +13311,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Esta cuenta se utilizará en lugar de la cuenta predeterminada como la cuenta"
-" por cobrar del partner actual"
+"Se utilizará esta cuenta en lugar de la cuenta predeterminada como la cuenta"
+" por cobrar de la empresa actual"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -13387,7 +13396,7 @@ msgid ""
 "database (or cannot be found)."
 msgstr ""
 "Este campo se usa para registrar el nombre de un tercero cuando se importan "
-"extractos bancarios en formato electrónico si el asociado no existe todavía "
+"extractos bancarios en formato electrónico si la empresa no existe todavía "
 "en la base de datos (o no puede ser encontrado)."
 
 #. module: account
@@ -13789,8 +13798,8 @@ msgid ""
 "Unable to create an open balance for a statement line because the receivable"
 " / payable accounts are missing on the partner."
 msgstr ""
-"No se puede crear un saldo pendiente para una línea de estado de cuenta "
-"porque faltan las cuentas por cobrar / por pagar en el partner."
+"No se puede crear un saldo pendiente para una línea del extracto porque "
+"faltan las cuentas por cobrar / a pagar en la empresa."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13798,8 +13807,8 @@ msgstr ""
 msgid ""
 "Unable to create an open balance for a statement line without a partner set."
 msgstr ""
-"No se puede crear un saldo abierto para una línea de extracto sin un "
-"conjunto de partners."
+"No se puede crear un saldo pendiente para una línea de extracto sin una "
+"empresa establecida."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14392,8 +14401,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Puedes marcar esta casilla para indicar que el apunte de diario corresponde "
-"a un litigio con el partner asociado."
+"Puede marcar esta casilla para indicar que el apunte contable está en "
+"litigio con la empresa asociada."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_model
@@ -14415,6 +14424,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"No puede archivar un diario que contenga borradores de entradas de diario.\n"
+"\n"
+"Proceder:\n"
+"1 / haga clic en el botón superior derecho 'Entradas de diario' de este formulario de diario\n"
+"2 / luego filtrar por entradas de 'Borrador'\n"
+"3 / selecciónelos todos y publíquelos o elimínelos a través del menú de acción"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0

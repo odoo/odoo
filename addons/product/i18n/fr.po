@@ -15,7 +15,6 @@
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Bertrand LATOUR <divoir@gmail.com>, 2020
-# Rémi CAZENAVE, 2020
 # gdp Odoo <gdp@odoo.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
 # thomas quertinmont <tqu@odoo.com>, 2020
@@ -35,6 +34,7 @@
 # Idir Talem <idir.talem@gmail.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
+# Rémi CAZENAVE, 2021
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2021\n"
+"Last-Translator: Rémi CAZENAVE, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr "Nb. produits"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% de remise et %(price)s de modification du prix"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -371,6 +371,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Vous pouvez en afficher au plus %d en parallèle. Déselectionnez-en une pour "
+"en ajouter d'autres."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -621,7 +623,7 @@ msgstr "Quantité contenue"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "Bureau d'angle avec siège à gauche"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -934,6 +936,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Date de fin pour la validation de la liste de prix\n"
+"La valeur affichée dépend du fuseau horaire sélectionné dans vos préférences."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1515,7 +1519,7 @@ msgstr "Type d'activités à venir"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "Aucune liste de prix fournisseur trouvée"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1647,7 +1651,7 @@ msgstr "Pourcentage du prix"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
-msgstr ""
+msgstr "Merci d'entrée un nombre entier positif"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1771,7 +1775,7 @@ msgstr "Nom de la liste de prix"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Rapport de liste de prix"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2103,6 +2107,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"Enregistrer les prix demandés par vos founrisseurs pour chaque article, avec"
+" la quantité et la période."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -2283,6 +2289,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Date de début pour la validation de la liste de prix\n"
+"La valeur affichée dépend du fuseau horaire sélectionné dans vos préférences."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2501,6 +2509,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"La précision d'arrondi est supérieurs à la Précision Décimale (%s chiffres).\n"
+"Cela peut causer des erreurs de calcul.\n"
+"Merci d'utiliser une précision entre %s et 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2848,7 +2859,7 @@ msgstr "Poids"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight UoM"
-msgstr ""
+msgstr "UdM de Poids"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2876,6 +2887,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"Vous configurez une Précision Décimale moins précise que les Unités de Mesure: %s\n"
+"Cela peut causer des erreurs de calcul.\n"
+"Merci d'augmenter l'arrondi de ces unités de mesure, ou le nombre de chiffres de cette Précision Décimale."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2982,6 +2996,8 @@ msgid ""
 "You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
 "%s"
 msgstr ""
+"Vous ne pouvez pas supprimer cette liste de prix (%s), car elle est utilisée dans une ou d'autres listes de prix : \n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0

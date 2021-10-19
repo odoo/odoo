@@ -33,7 +33,7 @@ msgstr "Створити завдання в існуючому проекті"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sales order's project"
-msgstr "Створіть завдання у замовленні на продаж"
+msgstr "Створити завдання у замовленні на продаж"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
@@ -96,7 +96,7 @@ msgstr "Є послугою"
 #: model:ir.model.fields,field_description:sale_project.field_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -152,7 +152,7 @@ msgstr "Проект створений за елементом замовлен
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Замовлення на продаж проекту"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -209,6 +209,11 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
+"Елемент замовлення на продаж, до якого належить проект. Зв'яжіть запис "
+"табелю з елементом замовлення на продаж, визначеного на проекті. "
+"Застосовується лише на завданнях без визначеного елементу замовлення на "
+"продаж, і якщо співробітник не є 'Співробітником/Узгодженням елементу "
+"замовлення на продаж' у проекті."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -228,6 +233,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Виберіть оплачуваний проект, за яким можна створювати завдання. Це "
+"налаштування потрібно встановити для кожної компанії."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -236,6 +243,8 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Виберіть оплачуваний проект, який буде скелетом нового створеного проекту "
+"під час продажу поточного товару. Його етапи та завдання будуть дублюватися."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -320,6 +329,8 @@ msgstr ""
 msgid ""
 "The project should be linked to a sale order to select a sale order item."
 msgstr ""
+"Проект повинен бути пов'язаним із замовленням на продаж, щоби обирати рядки "
+"замовлення на продаж."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -343,6 +354,9 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Ви не можете пов'язати елемент замовлення на продаж %(order_id)s - "
+"%(product_id)s до цього завдання, тому що це витрата, яка повторно "
+"виставлена у рахунку."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
