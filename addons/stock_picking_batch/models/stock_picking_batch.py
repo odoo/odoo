@@ -63,6 +63,22 @@ class StockPickingBatch(models.Model):
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
+    show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+
+    @api.depends('state', 'show_validate',
+                 'picking_ids.show_set_qty_button',
+                 'picking_ids.show_clear_qty_button')
+    def _compute_show_qty_button(self):
+        self.show_set_qty_button = False
+        self.show_clear_qty_button = False
+        for batch in self:
+            if not batch.show_validate or batch.state != 'in_progress':
+                continue
+            if any(p.show_set_qty_button for p in self.picking_ids):
+                batch.show_set_qty_button = True
+            elif any(p.show_clear_qty_button for p in self.picking_ids):
+                batch.show_clear_qty_button = True
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
@@ -196,8 +212,10 @@ class StockPickingBatch(models.Model):
         return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
     def action_set_quantities_to_reservation(self):
-        self.ensure_one()
-        self.picking_ids.filtered("show_validate").action_set_quantities_to_reservation()
+        self.picking_ids.filtered("show_set_qty_button").action_set_quantities_to_reservation()
+
+    def action_clear_quantities_to_zero(self):
+        self.picking_ids.filtered("show_clear_qty_button").action_clear_quantities_to_zero()
 
     def action_done(self):
         self.ensure_one()

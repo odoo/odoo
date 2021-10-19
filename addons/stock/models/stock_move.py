@@ -1847,6 +1847,9 @@ class StockMove(models.Model):
                     continue
                 move_line.qty_done = move_line.product_uom_qty
 
+    def _clear_quantities_to_zero(self):
+        self.filtered(lambda m: m.state in ('partially_available', 'assigned')).move_line_ids.qty_done = 0
+
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
