@@ -6,10 +6,11 @@
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Noma Yuki, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,6 +91,9 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                請求不可タスク\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -112,7 +116,7 @@ msgstr "<span class=\"o_label\">概要</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">記録済</span>"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -139,6 +143,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"製品構成に応じて、出荷数量はメカニズムによって自動的に計算できます。\n"
+"-手動:数量はライン上で手動で設定されます\n"
+"-分析から費用:数量は転記された費用からの数量合計です\n"
+"-タイムシート:数量は時間の合計ですこの販売ラインにリンクされたタスクに記録された\n"
+"-在庫移動:数量は確認済みのピッキングから取得されます"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -239,7 +248,7 @@ msgstr "前"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable"
-msgstr ""
+msgstr "請求可能"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -250,20 +259,20 @@ msgstr "請求可能タイプ"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "固定金額で請求"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "固定金額で請求"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "タイムシートによる請求"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -286,7 +295,7 @@ msgstr "ブザーまたは完了として設定"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "請求タイプ別"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -321,7 +330,7 @@ msgstr "会社"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr ""
+msgstr "サービスプロダクトを設定する"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
@@ -441,7 +450,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
+msgid "Invoice Tasks to"
 msgstr ""
 
 #. module: sale_timesheet
@@ -528,7 +537,7 @@ msgstr "休暇期間（日）"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
 msgid "Duration (hours)"
-msgstr ""
+msgstr "期間(時間)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -567,7 +576,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
+msgid "Project rate"
 msgstr ""
 
 #. module: sale_timesheet
@@ -673,7 +682,7 @@ msgstr "請求書"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
+msgid "A unique customer"
 msgstr ""
 
 #. module: sale_timesheet
@@ -683,7 +692,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
+msgid "Different customers"
 msgstr ""
 
 #. module: sale_timesheet
@@ -695,7 +704,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "顧客にタイムアンドマテリアル方式で請求する"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -785,6 +794,7 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -827,6 +837,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"注文時に手動で数量を設定:分析アカウントを作成せずに、手動で入力した数量に基づいて請求します。\n"
+"契約上のタイムシート:関連するタイムシートで追跡された時間に基づく請求書。\n"
+"タスクを作成して時間を追跡する:販売注文の検証でタスクを作成し、労働時間を追跡します。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__margin
@@ -836,7 +849,7 @@ msgstr "粗利益"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "納品数量を更新する方法"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -887,7 +900,7 @@ msgstr "請求対象外"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Tasks"
-msgstr ""
+msgstr "請求不可タスク"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable_timesheet
@@ -897,7 +910,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "請求不可タスク"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -930,8 +943,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "オーダ数量"
+msgid "Prepaid"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1045,7 +1058,7 @@ msgstr "プロジェクトマネジャー"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project Overview"
-msgstr ""
+msgstr "プロジェクト概要"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
@@ -1498,7 +1511,7 @@ msgstr "タイムシート"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Type"
-msgstr ""
+msgstr "請求タイプ別タイムシート"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form

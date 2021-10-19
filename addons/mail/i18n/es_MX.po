@@ -834,7 +834,7 @@ msgid ""
 "impact on the generated message-id."
 msgstr ""
 "No se incluyen las respuestas en el hilo de conversación del documento "
-"original. Esto tiene un impacto en el id del mensaje generado."
+"original. Esto tiene un impacto en el message-id generado."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
@@ -1443,14 +1443,14 @@ msgstr "Confirmación"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "¡Enhorabuena! Su bandeja de entrada está vacía."
+msgstr "¡Felicidades! Su bandeja de entrada está vacía."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss/discuss.js:0
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr "¡Enhorabuena! Su bandeja de entrada está vacía."
+msgstr "¡Felicidades! Su bandeja de entrada está vacía."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__smtp
@@ -2141,7 +2141,7 @@ msgstr "Seudónimos de correos"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr "Seudónimo de correos Mixin"
+msgstr "Mixin de seudónimos de correo"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3398,7 +3398,7 @@ msgstr "Oyentes de un canal"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Load more"
-msgstr "Cargar mas"
+msgstr "Cargar más"
 
 #. module: mail
 #. openerp-web
@@ -3495,7 +3495,7 @@ msgstr "Lista negra del correo "
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_blacklist
 msgid "Mail Blacklist mixin"
-msgstr "Lista negra de correos Mixin"
+msgstr "Mixin de la lista negra de correos"
 
 #. module: mail
 #. openerp-web
@@ -3519,7 +3519,7 @@ msgstr "Errores en el correo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr "Renderización de correo Mixin"
+msgstr "Mixin de renderización de correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -3793,8 +3793,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"A continuación, los subtipos de mensajes, es decir, los subtipos que se "
-"enviarán al muro del usuario."
+"Subtipos de mensajes seguidos, es decir, subtipos que saldrán en el muro del"
+" usuario."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_type
@@ -3818,7 +3818,7 @@ msgstr "Identificador único del mensaje"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_id
 msgid "Message-Id"
-msgstr "Id del mensaje"
+msgstr "Message-Id"
 
 #. module: mail
 #. openerp-web
@@ -4088,7 +4088,7 @@ msgstr "Mensaje nuevo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
 msgid "New Value Char"
-msgstr "Nuevo valor Char"
+msgstr "Nuevo caracter de valor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_datetime
@@ -4301,7 +4301,7 @@ msgstr "Ninguno"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr "Correo electrónico normal"
+msgstr "Correo electrónico normalizado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_note
@@ -4385,7 +4385,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -4469,7 +4469,7 @@ msgstr "Aceptar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
 msgid "Old Value Char"
-msgstr "Valor antiguo Char"
+msgstr "Caracter de valor antiguo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_datetime
@@ -5724,7 +5724,7 @@ msgstr "Descripción corta"
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
 msgid "Shortcodes"
-msgstr "Codigos cortos"
+msgstr "Códigos cortos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
@@ -5840,9 +5840,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Atrasado: Ya pasó la fecha de vencimiento\n"
-"Hoy: Hoy es la fecha de la actividad\n"
-"Planeado: Actividades futuras."
+"Vencida: ya pasó la fecha de vencimiento\n"
+"Hoy: hoy es la fecha de la actividad\n"
+"Planeado: futuras actividades."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
@@ -6188,7 +6188,7 @@ msgid ""
 "storage space of your Odoo database."
 msgstr ""
 "Esta opción elimina permanentemente cualquier rastro del correo electrónico "
-"después de enviarse, incluso desde el menú Técnico de la Configuración, con "
+"después de enviarse, incluso desde el menú técnico de la configuración, con "
 "el fin de cuidar el espacio de almacenamiento de su base de datos de Odoo."
 
 #. module: mail
@@ -7111,7 +7111,7 @@ msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
-"no puede ser procesado. Esta dirección\n"
+"no se puede procesar. Esta dirección\n"
 "    se utiliza para recopilar respuestas y no se debe utilizar para contactar directamente"
 
 #. module: mail

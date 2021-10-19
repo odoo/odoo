@@ -735,3 +735,75 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(avail_qty_comp1, -todo_nb)
         self.assertEqual(avail_qty_comp2, -todo_nb)
         self.assertEqual(avail_qty_finished, todo_nb)
+
+    def test_flow_tracked_backorder02(self):
+        """ Both component and finished product are tracked by lot. """
+        todo_nb = 4
+        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        finished_product, component = self.env['product.product'].create([{
+            'name': 'SuperProduct',
+            'type': 'product',
+            'tracking': 'lot',
+        }, {
+            'name': 'Component',
+            'type': 'product',
+            'tracking': 'lot',
+            'route_ids': [(4, resupply_sub_on_order_route.id)],
+        }])
+
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.type = 'subcontract'
+        bom_form.subcontractor_ids.add(self.subcontractor_partner1)
+        bom_form.product_tmpl_id = finished_product.product_tmpl_id
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = component
+            bom_line.product_qty = 1
+        bom = bom_form.save()
+
+        finished_lot, component_lot = self.env['stock.production.lot'].create([{
+            'name': 'lot_%s' % product.name,
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+        } for product in [finished_product, component]])
+
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb, lot_id=component_lot)
+
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished_product
+            move.product_uom_qty = todo_nb
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom.id)])
+
+        # Process the delivery of the components
+        compo_picking = mo.picking_ids
+        compo_picking.action_assign()
+        wizard_data = compo_picking.button_validate()
+        wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+        wizard.process()
+
+        for qty in [3, 1]:
+            # Record the receiption of <qty> finished products
+            picking_receipt = self.env['stock.picking'].search([('partner_id', '=', self.subcontractor_partner1.id), ('state', '!=', 'done')])
+            action = picking_receipt.action_record_components()
+            mo = self.env['mrp.production'].browse(action['res_id'])
+            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
+            mo_form.qty_producing = qty
+            mo_form.lot_producing_id = finished_lot
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                ml.lot_id = component_lot
+            mo = mo_form.save()
+            mo.subcontracting_record_component()
+
+            # Validate the picking and create a backorder
+            wizard_data = picking_receipt.button_validate()
+            if qty == 3:
+                wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+                wizard.process()
+
+            self.assertEqual(picking_receipt.state, 'done')

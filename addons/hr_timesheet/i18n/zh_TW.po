@@ -3,10 +3,10 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # sejun huang <sejun.huang@gmail.com>, 2020
 # 李振維, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +26,13 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
-msgstr ""
+msgstr "(%(sign)s%(hours)s:%(minutes)s 剩餘)"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%s days remaining)"
-msgstr ""
+msgstr "（還剩 %s 天）"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -42,7 +42,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
-msgstr ""
+msgstr "<em class=\"font-weight-normal text-muted\">員工工時表:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -52,12 +52,12 @@ msgstr "<em class=\"font-weight-normal text-muted\">專案工時表:</em>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
-msgstr ""
+msgstr "<em class=\"font-weight-normal text-muted\">任務工時表:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets on </em>"
-msgstr ""
+msgstr "<em class=\"font-weight-normal text-muted\">工時表於 </em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -94,16 +94,18 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Sub-tasks Hours Spent</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Sub-tasks Days Spent</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">子任務花費小時數</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">子任務花費天數</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">總計(天)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">總計(小時)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -118,7 +120,7 @@ msgstr "<span>說明</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Project</span>"
-msgstr ""
+msgstr "<span>專案</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -128,7 +130,7 @@ msgstr "<span>負責</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Task</span>"
-msgstr ""
+msgstr "<span>任務</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -143,7 +145,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
-msgstr ""
+msgstr "運作中的分析帳戶"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -208,7 +210,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr ""
+msgstr "相關工時表"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
@@ -253,7 +255,7 @@ msgstr "配置"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task_create_timesheet
 msgid "Create Timesheet from task"
-msgstr ""
+msgstr "從任務創建工時表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -289,7 +291,7 @@ msgstr "日期"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Days Spent"
-msgstr ""
+msgstr "花費天數"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -300,7 +302,7 @@ msgstr "部門"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Describe your activity..."
-msgstr ""
+msgstr "描述你的活動..."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -336,7 +338,7 @@ msgstr "顯示目前任務的進度。"
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "Download our App"
-msgstr ""
+msgstr "下載我們的應用程序"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_subtask_timesheet_tables
@@ -359,7 +361,7 @@ msgstr "持續時間（天）"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Duration (Hours)"
-msgstr ""
+msgstr "持續時間（小時）"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -388,7 +390,7 @@ msgstr "在專案上啟用工時表。"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr ""
+msgstr "以天為單位"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -450,7 +452,7 @@ msgstr "ID"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Initially Planned Days"
-msgstr ""
+msgstr "最初計劃的天數"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -468,7 +470,7 @@ msgstr "內部"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr ""
+msgstr "是否以天為單位"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line____last_update
@@ -553,7 +555,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "未找到任何活動。讓我們開始一個新的！"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -564,7 +566,7 @@ msgstr "無"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 msgid "Overtime"
-msgstr ""
+msgstr "逾時"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
@@ -602,7 +604,7 @@ msgstr "專案時間單位"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr ""
+msgstr "專案工時表"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
@@ -645,14 +647,14 @@ msgstr "儲存"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Save time"
-msgstr ""
+msgstr "儲存時間"
 
 #. module: hr_timesheet
 #. openerp-web
 #: code:addons/hr_timesheet/static/src/xml/qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Awesome Timesheet app:"
-msgstr ""
+msgstr "掃描此二維碼以下載 Awesome Timesheet APP："
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -664,13 +666,13 @@ msgstr "在全部範圍內搜尋"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr ""
+msgstr "在描述中搜尋"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr ""
+msgstr "在員工中搜尋"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -682,7 +684,7 @@ msgstr "在專案中搜尋"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr ""
+msgstr "在任務中搜尋"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
@@ -694,7 +696,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr ""
+msgstr "查看工時表細項"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -710,7 +712,7 @@ msgstr "子任務耗時"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Planned Days"
-msgstr ""
+msgstr "子任務估計工作日"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -731,12 +733,12 @@ msgstr "任務"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_create_timesheet__task_id
 msgid "Task for which we are creating a sales order"
-msgstr ""
+msgstr "我們為其創建銷售訂單的任務"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr ""
+msgstr "任務工時表"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
@@ -746,7 +748,7 @@ msgstr "任務分析"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Tasks in Overtime"
-msgstr ""
+msgstr "逾時任務"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -759,7 +761,7 @@ msgstr "您計時的專案未鏈接到活動的分析帳戶。可以在專案配
 #. module: hr_timesheet
 #: model:ir.model.constraint,message:hr_timesheet.constraint_project_task_create_timesheet_time_positive
 msgid "The timesheet's time must be positive"
-msgstr ""
+msgstr "工時表之時間紀錄必須為正數"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -772,7 +774,7 @@ msgstr "沒有工時表。"
 msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
-msgstr ""
+msgstr "這些專案有一些引用它們的工時表項目。在刪除這些專案之前，您必須刪除這些工時表。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -780,7 +782,7 @@ msgstr ""
 msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
-msgstr ""
+msgstr "這些任務有一些引用它們的工時表項目。在刪除這些任務之前，您必須刪除這些工時表。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -800,7 +802,7 @@ msgstr "本月"
 msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
-msgstr ""
+msgstr "該專案有一些引用它的工時表項目。在刪除此專案之前，您必須刪除這些工時表項目。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -808,7 +810,7 @@ msgstr ""
 msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
-msgstr ""
+msgstr "此任務有一些引用它的工時表項目。在刪除此任務之前，您必須刪除這些工時表項目。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -869,32 +871,32 @@ msgstr "休假"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Days)"
-msgstr ""
+msgstr "花費時間(天)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Hours)"
-msgstr ""
+msgstr "花費時間(小時)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr ""
+msgstr "在此任務的子任務（以及他們自己的子任務）上花費的時間。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Time spent on this task, excluding its sub-tasks."
-msgstr ""
+msgstr "花費在此任務上的時間，不包括其子任務。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr ""
+msgstr "花費在此任務上的時間，包括其子任務。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr ""
+msgstr "用於記錄工時表的時間單位"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -919,7 +921,7 @@ msgstr "工時表成本"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "工時表成本"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1005,7 +1007,7 @@ msgstr "總計"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr ""
+msgstr "總計天數"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1022,14 +1024,14 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr ""
+msgstr "總計時間"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
-msgstr ""
+msgstr "專案中記錄的總時間（以適當的計量單位表示），四捨五入到單位。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
@@ -1041,7 +1043,7 @@ msgstr "總剩餘時間，任務執行者可定期重估。"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
-msgstr ""
+msgstr "使用我們的手機APP隨時隨地追踪您的工時"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1053,7 +1055,7 @@ msgstr ""
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
-msgstr ""
+msgstr "每天按專案追踪您的工作時間，並在這次向您的客戶開立應收憑單。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
@@ -1083,7 +1085,7 @@ msgstr "當此單元是用於編碼時間表的單元時，webclient中使用的
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr ""
+msgstr "您無法訪問不屬於您的工時表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1091,12 +1093,12 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
-msgstr ""
+msgstr "您無法記錄此專案的工時表，因為它連接到非運作之分析帳戶。請更改此帳戶設定，或將重新設置適當帳戶到專案的工時表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "for the"
-msgstr ""
+msgstr "因"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form

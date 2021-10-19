@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_coupon_delivery
+# 	* sale_coupon_delivery
 # 
 # Translators:
-# Samkhann Seang <seangsamkhann@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5+e\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 14:06+0000\n"
-"PO-Revision-Date: 2018-09-21 14:06+0000\n"
-"Last-Translator: Samkhann Seang <seangsamkhann@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,64 +21,83 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_coupon_delivery
-#: selection:sale.coupon.reward,reward_type:0
-msgid "Discount"
-msgstr "បញ្ចុះតម្លៃ"
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_program
+msgid "Coupon Program"
+msgstr ""
 
 #. module: sale_coupon_delivery
-#: model:ir.model.fields,help:sale_coupon_delivery.field_sale_coupon_reward__reward_type
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_reward
+msgid "Coupon Reward"
+msgstr ""
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_reward__reward_type
 msgid ""
 "Discount - Reward will be provided as discount.\n"
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
+"ការបញ្ចុះតម្លៃ - រង្វាន់នឹងត្រូវបានផ្តល់ជូនជាការបញ្ចុះតម្លៃ។\n"
+" ផលិតផលឥតគិតថ្លៃ - ផលិតផលឥតគិតថ្លៃនឹងត្រូវផ្តល់ជូនជារង្វាន់។\n"
+" ការដឹកជញ្ជូនដោយឥតគិតថ្លៃ - ការដឹកជញ្ជូនឥតគិតថ្លៃនឹងត្រូវបានផ្តល់ជារង្វាន់ (ត្រូវការម៉ូឌុលដឹកជញ្ជូន)"
 
 #. module: sale_coupon_delivery
-#: code:addons/sale_coupon_delivery/models/sale_order.py:33
+#: code:addons/sale_coupon_delivery/models/sale_order.py:0
 #, python-format
-msgid "Discount: "
+msgid "Discount: %s"
 msgstr ""
 
 #. module: sale_coupon_delivery
-#: selection:sale.coupon.reward,reward_type:0
-msgid "Free Product"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__display_name
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: sale_coupon_delivery
-#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:18
-#: selection:sale.coupon.reward,reward_type:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:0
+#: model:ir.model.fields.selection,name:sale_coupon_delivery.selection__coupon_reward__reward_type__free_shipping
 #, python-format
 msgid "Free Shipping"
-msgstr ""
+msgstr "ដឹកជញ្ជូនដោយឥតគិតថ្លៃ"
 
 #. module: sale_coupon_delivery
-#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_coupon_reward__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__id
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__id
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order_line__id
+msgid "ID"
+msgstr "អត្តសញ្ញាណ"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward____last_update
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "ប្រភេទរង្វាន់"
 
 #. module: sale_coupon_delivery
 #: model:ir.model,name:sale_coupon_delivery.model_sale_order
-msgid "Sale Order"
-msgstr ""
-
-#. module: sale_coupon_delivery
-#: model:ir.model,name:sale_coupon_delivery.model_sale_coupon_program
-msgid "Sales Coupon Program"
-msgstr ""
-
-#. module: sale_coupon_delivery
-#: model:ir.model,name:sale_coupon_delivery.model_sale_coupon_reward
-msgid "Sales Coupon Reward"
-msgstr ""
+msgid "Sales Order"
+msgstr "លក់តាមការបញ្ជាទិញ"
 
 #. module: sale_coupon_delivery
 #: model:ir.model,name:sale_coupon_delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "លំដាប់បញ្ជាទិញ"
 
 #. module: sale_coupon_delivery
-#: code:addons/sale_coupon_delivery/models/sale_coupon.py:13
-#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:23
+#: code:addons/sale_coupon_delivery/models/sale_coupon.py:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:0
 #, python-format
 msgid "The shipping costs are not in the order lines."
-msgstr ""
+msgstr "ថ្លៃដឹកជញ្ជូនមិនស្ថិតក្នុងលំដាប់បញ្ជាទិញទេ។"
