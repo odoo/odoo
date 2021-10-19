@@ -4,6 +4,7 @@ import { useEffect, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
+import { browser } from "@web/core/browser/browser";
 
 const { Component, core, hooks } = owl;
 const { EventBus } = core;
@@ -116,7 +117,7 @@ export const uiService = {
         function updateSize() {
             ui.size = getSize();
         }
-        MEDIAS.forEach((media) => media.addEventListener("change", debounce(updateSize, 100)));
+        browser.addEventListener("resize", debounce(updateSize, 100));
 
         Object.assign(ui, {
             size: getSize(),
