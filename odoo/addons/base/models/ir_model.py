@@ -322,15 +322,18 @@ class IrModel(models.Model):
             self.pool.setup_models(self._cr)
         return res
 
-    @api.model
-    def create(self, vals):
-        res = super(IrModel, self).create(vals)
-        if vals.get('state', 'manual') == 'manual':
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(IrModel, self).create(vals_list)
+        manual_models = [
+            vals['model'] for vals in vals_list if vals.get('state', 'manual') == 'manual'
+        ]
+        if manual_models:
             # setup models; this automatically adds model in registry
             self.flush()
             self.pool.setup_models(self._cr)
             # update database schema
-            self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self._cr, manual_models, dict(self._context, update_custom_fields=True))
         return res
 
     @api.model
