@@ -923,10 +923,31 @@ class expression(object):
                         right = tuple(right)
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
-
-                    left = unaccent(model._generate_translated_field(alias, left, self.query))
                     instr = unaccent('%s')
-                    push_result(f"{left} {sql_operator} {instr}", [right])
+                    push_result(f'{alias}."{left}" {sql_operator} {instr}', [right])
+                    if model.env.lang:
+                        translation_sql = f"""select
+                            res_id
+                        from
+                            ir_translation
+                        where
+                            type = 'model'
+                        and
+                            name = '{model._name},{left}'
+                        and
+                            lang = '{model.env.lang}'
+                        and
+                            value {sql_operator} {instr}"""
+
+                        if operator not in NEGATIVE_TERM_OPERATORS:
+                            push('|', None, None)
+                        else:
+                            push('&', None, None)
+
+                        sql_operator = 'in'
+                        if operator in NEGATIVE_TERM_OPERATORS:
+                            sql_operator = 'not in'
+                        push_result(f'{alias}."id" {sql_operator} ({translation_sql})', [right])
 
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
