@@ -126,7 +126,12 @@
                     <field name="reserve_visible" invisible="1"/>
                     <field name="consumption" invisible="1"/>
                     <field name="is_planned" invisible="1"/>
+                    <field name="show_allocation" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_reception_report" string="Allocation" type="object"
+                            class="oe_stat_button" icon="fa-list"
+                            attrs="{'invisible': [('show_allocation', '=', False)]}"
+                            groups="mrp.group_mrp_reception_report"/>
                         <button class="oe_stat_button" name="action_view_mrp_production_childs" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_child_count', '=', 0)]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_child_count"/></span>

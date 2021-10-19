@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')
     group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
+    group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):

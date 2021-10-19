@@ -266,6 +266,9 @@ class MrpProduction(models.Model):
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     show_serial_mass_produce = fields.Boolean('Display the serial mass produce wizard action', compute='_compute_show_serial_mass_produce')
+    show_allocation = fields.Boolean(
+        compute='_compute_show_allocation',
+        help='Technical Field used to decide whether the button "Allocation" should be displayed.')
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
@@ -541,6 +544,30 @@ class MrpProduction(models.Model):
                     float_compare(order.product_qty, 1, precision_rounding=order.product_uom_id.rounding) > 0 and \
                     float_compare(order.qty_producing, order.product_qty, precision_rounding=order.product_uom_id.rounding) < 0:
                 order.show_serial_mass_produce = True
+
+    @api.depends('state', 'move_finished_ids')
+    def _compute_show_allocation(self):
+        self.show_allocation = False
+        if not self.user_has_groups('mrp.group_mrp_reception_report'):
+            return
+        for mo in self:
+            if not mo.picking_type_id:
+                return
+            lines = mo.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel')
+            if lines:
+                allowed_states = ['confirmed', 'partially_available', 'waiting']
+                if mo.state == 'done':
+                    allowed_states += ['assigned']
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', mo.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
+                if self.env['stock.move'].search([
+                    ('state', 'in', allowed_states),
+                    ('product_qty', '>', 0),
+                    ('location_id', 'in', wh_location_ids),
+                    ('raw_material_production_id', '!=', mo.id),
+                    ('product_id', 'in', lines.product_id.ids),
+                    '|', ('move_orig_ids', '=', False),
+                        ('move_orig_ids', 'in', lines.ids)], limit=1):
+                    mo.show_allocation = True
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -1708,6 +1735,12 @@ class MrpProduction(models.Model):
                     'res_id': self.id,
                     'target': 'main',
                 }
+            if self.user_has_groups('mrp.group_mrp_reception_report') and self.picking_type_id.auto_show_reception_report:
+                lines = self.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
+                if lines:
+                    if any(mo.show_allocation for mo in self):
+                        action = self.action_view_reception_report()
+                        return action
             return True
         context = self.env.context.copy()
         context = {k: v for k, v in context.items() if not k.startswith('default_')}
@@ -1781,6 +1814,9 @@ class MrpProduction(models.Model):
         action['domain'] = [('production_id', '=', self.id)]
         action['context'] = dict(self._context, default_origin=self.name)
         return action
+
+    def action_view_reception_report(self):
+        return self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_reception_action")
 
     @api.model
     def get_empty_list_help(self, help):

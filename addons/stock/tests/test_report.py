@@ -1384,7 +1384,7 @@ class TestReports(TestReportsCommon):
         # check that report correctly merges not draft incoming quantities
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
-        self.assertEqual(len(report_values['pickings']), 2, "There should be 2 receipts to assign from in this report")
+        self.assertEqual(len(report_values['docs']), 2, "There should be 2 receipts to assign from in this report")
         sources_to_lines = report_values['sources_to_lines']
         self.assertEqual(len(sources_to_lines), 1, "The report has wrong number of outgoing pickings.")
         all_lines = list(sources_to_lines.values())[0]
@@ -1410,7 +1410,7 @@ class TestReports(TestReportsCommon):
         # check that report doesn't allow done and non-done moves at same time
         receipt1.button_validate()
         reason = report._get_report_values(docids=[receipt1.id, receipt2.id])['reason']
-        self.assertEqual(reason, "This report cannot be used for done and not done transfers at the same time", "empty report reason not shown")
+        self.assertEqual(reason, "This report cannot be used for done and not done %s at the same time" % report._get_doc_types(), "empty report reason not shown")
 
     def test_report_reception_3_multiwarehouse(self):
         """ Check that reception report respects same warehouse for
