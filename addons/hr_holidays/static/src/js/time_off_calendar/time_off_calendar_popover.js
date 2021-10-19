@@ -9,7 +9,7 @@ export const TimeOffCalendarPopover = CalendarPopover.extend({
     init(parent, eventInfo) {
         this._super(...arguments);
         const state = this.event.extendedProps.record.state;
-        this.canDelete = state && ['validate', 'refuse'].includes(state);
+        this.canDelete = state && !['validate', 'refuse'].includes(state);
         this.canEdit = state !== undefined;
         this.displayFields = [];
 
