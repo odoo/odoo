@@ -33,6 +33,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         edition_was_stopped: '_onEditionWasStopped',
         request_save: '_onSnippetRequestSave',
         request_cancel: '_onSnippetRequestCancel',
+        menu_drag_and_drop_start: '_onMenuDragAndDropStart',
+        menu_drag_and_drop_stop: '_onMenuDragAndDropStop',
     }),
 
     /**
@@ -488,6 +490,31 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
     },
     /**
+     * Called when a snippet is being dragged from the menu.
+     * Enables the contenteditable because the snippet can already
+     * be added to the page when its just being dragged.
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onMenuDragAndDropStart(ev) {
+        this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .attr('contenteditable', true);
+    },
+    /**
+     * Called when the drag and drop from the menu is stopped.
+     * If it's empty when the drag and drop stopped, it means
+     * that its message should be re-added and its content editable should
+     * be back to false.
+     * @param {OdooEvent} ev 
+     */
+    _onMenuDragAndDropStop(ev) {
+        const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        if (!$editable.children().length) {
+            $editable.empty();
+            this._addEditorMessages();
+        }
+    },
+    /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
      * that is should start the public widgets for this snippet. Also marks the
      * wrapper element as non-empty and makes it editable.
@@ -496,8 +523,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetDropped: function (ev) {
-        this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]')
-            .attr('contenteditable', true);
         ev.data.addPostDropAsync(new Promise(resolve => {
             this.trigger_up('widgets_start_request', {
                 editableMode: true,

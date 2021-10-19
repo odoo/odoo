@@ -2315,6 +2315,7 @@ var SnippetsMenu = Widget.extend({
                     return dragSnip;
                 },
                 start: function () {
+                    self.trigger_up('menu_drag_and_drop_start');
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
 
@@ -2483,6 +2484,7 @@ var SnippetsMenu = Widget.extend({
                         dragAndDropResolve();
                         self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
+                    self.trigger_up('menu_drag_and_drop_stop');
                 },
             },
         });
