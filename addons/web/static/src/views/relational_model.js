@@ -1,19 +1,9 @@
 /* @odoo-module */
 
 import { ORM } from "@web/core/orm_service";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "./helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
-
-function makeDeferred() {
-    let resolve;
-    let reject;
-    const prom = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-    });
-    return Object.assign(prom, { resolve, reject });
-}
 
 class RequestBatcherORM extends ORM {
     constructor() {
@@ -40,7 +30,7 @@ class RequestBatcherORM extends ORM {
         let batch = this.readBatches[key];
         if (!batch) {
             batch = {
-                deferred: makeDeferred(),
+                deferred: new Deferred(),
                 resModel,
                 fields,
                 resIds: [],
@@ -70,7 +60,7 @@ class RequestBatcherORM extends ORM {
         let batch = this.searchReadBatches[batchId];
         if (!batch) {
             batch = {
-                deferred: makeDeferred(),
+                deferred: new Deferred(),
                 count: 0,
             };
             Promise.resolve().then(() => this.searchReadBatchId++);
@@ -102,8 +92,6 @@ class DataPoint {
         this.fields = params.fields;
         this.activeFields = params.activeFields;
         this.viewMode = params.viewMode || null;
-
-        this.requestBatcher = this.model.requestBatcher;
 
         this.model.db[this.id] = this;
     }
@@ -426,7 +414,7 @@ class DataList extends DataPoint {
         );
 
         const groupBy = this.groupBy.slice(1);
-        return await Promise.all(
+        return Promise.all(
             groups.map(async (groupData) => {
                 const list = this.createList(this.resModel, { groupData });
                 await list.load({ groupBy });
