@@ -78,7 +78,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 $editable.find('img').attr(attribute, function () {
                     return $(this)[attribute]();
                 }).css(attribute, function () {
-                    return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : 'auto';
+                    return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : '';
                 });
             });
 
