@@ -5,10 +5,10 @@
 # Translators:
 # Martin Trigaux, 2020
 # gogobook <O968041428@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 李振維, 2021
 # 226408 台北 <226408@so8d.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -412,7 +412,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">再次建立</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -536,7 +536,7 @@ msgstr "添加描述"
 msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
-msgstr ""
+msgstr "添加列以將您的任務組織成<b>階段，</b><i>例如 New-In Progress-Done</i> 。"
 
 #. module: project
 #. openerp-web
@@ -555,7 +555,7 @@ msgstr "管理員"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "敏捷 Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -1136,31 +1136,31 @@ msgstr "每天"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__date
 msgid "Date of the Month"
-msgstr ""
+msgstr "月份日期"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__date
 msgid "Date of the Year"
-msgstr ""
+msgstr "年度日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
-msgstr ""
+msgstr "一周中的一天"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__day
 msgid "Day of the Month"
-msgstr ""
+msgstr "月中的一天"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "一年中的一天"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1955,7 +1955,7 @@ msgstr "逾期活動"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Tasks"
-msgstr ""
+msgstr "逾期任務"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2007,7 +2007,7 @@ msgstr "開始進行您的任務。"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "讓我們等待您的客戶表現出來。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2373,7 +2373,7 @@ msgstr "確定"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "已完成的 Sprint"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2543,6 +2543,7 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"使用 %s 圖標確定任務的優先級。%s使用 %s 按鈕通知您的同事任務已準備好進入下一階段。%s使用 %s 指示問題或需要討論執行任務。%s"
 
 #. module: project
 #. openerp-web
@@ -2553,6 +2554,7 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
+"使用 %s 圖標確定任務的優先級。%s 使用 %s 按鈕向您的同事表示任務已準備好進入下一階段。%s 使用 %s 表示存在問題或需要關於任務的討論。%s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2915,13 +2917,13 @@ msgstr "重複"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_month
 msgid "Repeat On Month"
-msgstr ""
+msgstr "每月重複"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_year
 msgid "Repeat On Year"
-msgstr ""
+msgstr "每年重複"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_day
@@ -3178,21 +3180,21 @@ msgstr "分錄您的任務在子里程碑中組織您的工作"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "Sprint 待辦清單"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "Sprint 完成"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "Sprint 執行中"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3490,7 +3492,7 @@ msgstr "任務階段"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "重複性任務"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__is_closed
