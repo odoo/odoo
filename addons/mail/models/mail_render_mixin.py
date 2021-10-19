@@ -162,7 +162,14 @@ class MailRenderMixin(models.AbstractModel):
         _sub_relative2absolute.base_url = base_url
         html = re.sub(r"""(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
-        html = re.sub(r"""(<[^>]+\bstyle="[^"]+\burl\('?)(/[^/'][^'")]+)""", _sub_relative2absolute, html)
+        html = re.sub(re.compile(
+            r"""( # Group 1: element up to url in style
+                <[^>]+\bstyle=" # Element with a style attribute
+                [^"]+\burl\( # Style attribute contains "url(" style
+                (?:&\#34;|')?) # url style may start with (escaped) quote: capture it
+            ( # Group 2: url itself
+                /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
+        )""", re.VERBOSE), _sub_relative2absolute, html)
 
         return wrapper(html)
 
