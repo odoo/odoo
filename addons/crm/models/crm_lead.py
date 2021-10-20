@@ -177,7 +177,9 @@ class Lead(models.Model):
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
-    lang_id = fields.Many2one('res.lang', string='Language')
+    lang_id = fields.Many2one(
+        'res.lang', string='Language',
+        compute='_compute_lang_id', readonly=False, store=True)
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
     street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -340,6 +342,21 @@ class Lead(models.Model):
                 lead.website = lead.partner_id.website
 
     @api.depends('partner_id')
+    def _compute_lang_id(self):
+        """ compute the lang based on partner when partner_id has changed """
+        wo_lang = self.filtered(lambda lead: not lead.lang_id and lead.partner_id)
+        if not wo_lang:
+            return
+        # prepare cache
+        lang_codes = [code for code in wo_lang.mapped('partner_id.lang') if code]
+        lang_id_by_code = dict(
+            (code, self.env['res.lang']._lang_get_id(code))
+            for code in lang_codes
+        )
+        for lead in wo_lang:
+            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
+
+    @api.depends('partner_id')
     def _compute_partner_address_values(self):
         """ Sync all or none of address fields """
         for lead in self:
@@ -496,6 +513,8 @@ class Lead(models.Model):
 
         # For other fields, get the info from the partner, but only if set
         values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+        if partner.lang:
+            values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
