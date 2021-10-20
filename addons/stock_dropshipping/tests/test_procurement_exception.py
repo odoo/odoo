@@ -43,7 +43,7 @@ class TestProcurementException(common.TransactionCase):
         with Form(product_with_no_seller) as f:
             with f.seller_ids.new() as seller:
                 seller.delay = 1
-                seller.name = res_partner_2
+                seller.partner_id = res_partner_2
                 seller.min_qty = 2.0
 
         # I confirm the sales order, no error this time

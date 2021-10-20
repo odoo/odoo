@@ -12,7 +12,7 @@ class TestReplenishWizard(TestStockCommon):
 
         # Create a supplier info witch the previous vendor
         cls.supplierinfo = cls.env['product.supplierinfo'].create({
-            'name': cls.vendor.id,
+            'partner_id': cls.vendor.id,
             'price': cls.product1_price,
         })
 
@@ -73,14 +73,14 @@ class TestReplenishWizard(TestStockCommon):
 
         supplierinfo1 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'min_qty': 1,
             'price': 140,
             'sequence': 1,
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'min_qty': 10,
             'price': 100,
             'sequence': 2,
@@ -121,21 +121,21 @@ class TestReplenishWizard(TestStockCommon):
 
         supplierinfo1 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'min_qty': 1,
             'price': 140,
             'sequence': 1,
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor2.id,
+            'partner_id': vendor2.id,
             'min_qty': 10,
             'price': 90,
             'sequence': 2,
         })
         supplierinfo3 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'min_qty': 10,
             'price': 100,
             'sequence': 3,
@@ -175,13 +175,13 @@ class TestReplenishWizard(TestStockCommon):
 
         supplierinfo1 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
             'sequence': 2,
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'name': vendor2.id,
+            'partner_id': vendor2.id,
             'price': 50,
             'sequence': 1,
         })
@@ -217,19 +217,19 @@ class TestReplenishWizard(TestStockCommon):
         })
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         supplierinfo1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 100,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 2
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 60,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 10
         })
         supplierinfo3 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 80,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 5

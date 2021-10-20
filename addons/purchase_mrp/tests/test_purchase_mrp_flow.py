@@ -425,7 +425,7 @@ class TestPurchaseMrpFlow(TransactionCase):
 
         vendor1 = self.env['res.partner'].create({'name': 'aaa', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
 

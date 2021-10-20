@@ -55,7 +55,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
         product_test = self.env['product.product'].create({
@@ -119,7 +119,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Update the sequence of the blanket order's supplier info.
         supplier_info1.sequence = 2
         requisition_blanket.line_ids.supplier_info_ids.sequence = 1
-        # In [13]: [(x.sequence, x.min_qty, x.price, x.name.name) for x in supplier_info1 + requisition_blanket.line_ids.supplier_info_ids]
+        # In [13]: [(x.sequence, x.min_qty, x.price, x.partner_id.name) for x in supplier_info1 + requisition_blanket.line_ids.supplier_info_ids]
         # Out[13]: [(2, 0.0, 50.0, 'AAA'), (1, 0.0, 50.0, 'BBB')]
 
         # Second stock move
@@ -152,7 +152,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
         product_1 = self.env['product.product'].create({

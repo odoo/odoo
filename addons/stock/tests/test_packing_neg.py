@@ -26,7 +26,7 @@ class TestPackingNeg(TransactionCase):
             'standard_price': 70.0,
             'seller_ids': [(0, 0, {
                 'delay': 1,
-                'name': res_partner_2.id,
+                'partner_id': res_partner_2.id,
                 'min_qty': 2.0,})],
             'uom_id': self.ref('uom.product_uom_unit'),
             'uom_po_id': self.ref('uom.product_uom_unit'),

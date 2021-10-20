@@ -144,7 +144,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     mobile: false,
-    trigger: ".o_field_widget[name=name] input",
+    trigger: ".o_field_widget[name=partner_id] input",
     extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
@@ -160,7 +160,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'bottom',
 }, {
     mobile: true,
-    trigger: ".o_form_editable .o_field_many2one[name=name] input",
+    trigger: ".o_form_editable .o_field_many2one[name=partner_id] input",
     extra_trigger: ".modal:not(.o_inactive_modal) .o_form_editable div:contains('Vendor')",
     content: _t("Select a vendor, or create a new one on the fly."),
     position: "bottom",
@@ -208,7 +208,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: false,
     trigger: 'label:contains("Vendor Taxes")',
-    extra_trigger: ".o_field_widget[name=name] .o_external_button", // Wait name_create
+    extra_trigger: ".o_field_widget[name=partner_id] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
@@ -273,7 +273,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'bottom',
 }, {
     mobile: true,
-    trigger: '.o_form_editable .o_field_many2one[name="name"] input',
+    trigger: '.o_form_editable .o_field_many2one[name="partner_id"] input',
     extra_trigger: ".modal:not(.o_inactive_modal) .o_form_editable div:contains('Vendor')",
     content: _t("Select a vendor, or create a new one on the fly."),
     position: "bottom",
@@ -286,7 +286,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     mobile: false,
-    trigger: ".o_field_widget[name=name] input",
+    trigger: ".o_field_widget[name=partner_id] input",
     extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',

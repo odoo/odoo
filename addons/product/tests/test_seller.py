@@ -22,8 +22,8 @@ class TestSeller(TransactionCase):
 
     def test_10_sellers(self):
         self.product_service.write({'seller_ids': [
-            (0, 0, {'name': self.asustec.id, 'product_code': 'ASUCODE'}),
-            (0, 0, {'name': self.camptocamp.id, 'product_code': 'C2CCODE'}),
+            (0, 0, {'partner_id': self.asustec.id, 'product_code': 'ASUCODE'}),
+            (0, 0, {'partner_id': self.camptocamp.id, 'product_code': 'C2CCODE'}),
         ]})
 
         default_code = self.product_service.code
@@ -40,9 +40,9 @@ class TestSeller(TransactionCase):
             'name': 'Saucisson Inc.',
         })
         self.product_consu.write({'seller_ids': [
-            (0, 0, {'name': self.asustec.id, 'product_code': 'A', 'company_id': company_a.id}),
-            (0, 0, {'name': self.asustec.id, 'product_code': 'B', 'company_id': company_b.id}),
-            (0, 0, {'name': self.asustec.id, 'product_code': 'NO', 'company_id': False}),
+            (0, 0, {'partner_id': self.asustec.id, 'product_code': 'A', 'company_id': company_a.id}),
+            (0, 0, {'partner_id': self.asustec.id, 'product_code': 'B', 'company_id': company_b.id}),
+            (0, 0, {'partner_id': self.asustec.id, 'product_code': 'NO', 'company_id': False}),
         ]})
 
         names = self.product_consu.with_context(

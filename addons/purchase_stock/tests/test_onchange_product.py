@@ -39,7 +39,7 @@ class TestOnchangeProductId(TransactionCase):
                                                     amount='0.00',
                                                     type_tax_use='purchase'))
         supplierinfo_vals = {
-            'name': partner_id.id,
+            'partner_id': partner_id.id,
             'price': 121.0,
         }
 

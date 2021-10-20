@@ -56,13 +56,13 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
         })
 
         cls.supplierinfo1 = cls.env['product.supplierinfo'].create({
-            'name': cls.partner_vendor_service.id,
+            'partner_id': cls.partner_vendor_service.id,
             'price': 100,
             'product_tmpl_id': cls.service_purchase_1.product_tmpl_id.id,
             'delay': 1,
         })
         cls.supplierinfo2 = cls.env['product.supplierinfo'].create({
-            'name': cls.partner_vendor_service.id,
+            'partner_id': cls.partner_vendor_service.id,
             'price': 10,
             'product_tmpl_id': cls.service_purchase_2.product_tmpl_id.id,
             'delay': 5,

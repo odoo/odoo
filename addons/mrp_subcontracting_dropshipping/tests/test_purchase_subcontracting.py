@@ -31,7 +31,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
 
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
-            'name': self.subcontractor_partner1.id
+            'partner_id': self.subcontractor_partner1.id
         })
 
         partner = self.env['res.partner'].create({
@@ -39,7 +39,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         })
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.comp2.product_tmpl_id.id,
-            'name': partner.id
+            'partner_id': partner.id
         })
 
         # Create a receipt picking from the subcontractor
@@ -91,10 +91,10 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Create a supplier and set it to component
         vendor = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         self.env['product.supplierinfo'].create({
-            'name': vendor.id,
+            'partner_id': vendor.id,
             'price': 50,
         })
-        self.comp1.write({'seller_ids': [(0, 0, {'name': vendor.id, 'product_code': 'COMP1'})]})
+        self.comp1.write({'seller_ids': [(0, 0, {'partner_id': vendor.id, 'product_code': 'COMP1'})]})
         # Purchase 1 BOM to the subcontractor
         po = Form(self.env['purchase.order'])
         po.partner_id = self.subcontractor_partner1

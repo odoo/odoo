@@ -10,8 +10,8 @@ class ReportBomStructure(models.AbstractModel):
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
         ratio_uom_seller = seller.product_uom.ratio / bom.product_uom_id.ratio
         return {
-            'name': seller.name.display_name,
-            'partner_id': seller.name.id,
+            'name': seller.partner_id.display_name,
+            'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
             'prod_cost': seller.price / ratio_uom_seller,
