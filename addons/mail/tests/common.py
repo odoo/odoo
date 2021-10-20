@@ -860,15 +860,18 @@ class MailCase(MockEmail):
         for field_name, value_type, old_value, new_value in data:
             tracking = tracking_values.filtered(lambda track: track.field.name == field_name)
             self.assertEqual(len(tracking), 1)
-            if value_type in ('char', 'integer'):
+            if value_type == 'char':
                 self.assertEqual(tracking.old_value_char, old_value)
                 self.assertEqual(tracking.new_value_char, new_value)
-            elif value_type in ('many2one'):
+            elif value_type in ('boolean', 'integer'):
+                self.assertEqual(tracking.old_value_integer, old_value)
+                self.assertEqual(tracking.new_value_integer, new_value)
+            elif value_type == 'many2one':
                 self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
                 self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
                 self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
                 self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
-            elif value_type in ('monetary'):
+            elif value_type == 'monetary':
                 self.assertEqual(tracking.old_value_monetary, old_value)
                 self.assertEqual(tracking.new_value_monetary, new_value)
             else:
