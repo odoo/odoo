@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { combineAttributes, XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
+import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { FieldParser } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
@@ -272,5 +273,6 @@ KanbanView.icon = "fa-th-large";
 KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
+KanbanView.props = { ...standardViewProps };
 
 registry.category("views").add("kanban", KanbanView);
