@@ -174,19 +174,19 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                 </group>
                             </group>
-                            <group>
-                                <group string="Display" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="column_nb" string="Number of columns"/>
-                                    <field name="allow_value_image"/>
-                                </group>
-                                <group string="Conditional Display" attrs="{'invisible': [('questions_selection', '=', 'random')]}">
-                                    <field name="is_conditional"/>
-                                    <field name="triggering_question_id"  options="{'no_open': True, 'no_create': True}"
-                                           attrs="{'invisible': [('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
-                                    <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
-                                           attrs="{'invisible': ['|', ('is_conditional','=', False), ('triggering_question_id','=', False)],
-                                                   'required': [('is_conditional','=', True)]}"/>
-                                </group>
+                            <group string="Display" attrs="{'invisible':[('question_type','=', 'matrix')]}">
+                                <field name="question_placeholder" attrs="{'invisible': [('question_type', 'not in', ['text_box', 'char_box', 'date', 'datetime', 'numerical_box'])]}"
+                                       placeholder="When set, this text will appear in the field to help participants answer."/>
+                                <field name="column_nb" string="Number of columns" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}"/>
+                                <field name="allow_value_image" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}"/>
+                            </group>
+                            <group string="Conditional Display" attrs="{'invisible': [('questions_selection', '=', 'random')]}">
+                                <field name="is_conditional"/>
+                                <field name="triggering_question_id"  options="{'no_open': True, 'no_create': True}"
+                                       attrs="{'invisible': [('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
+                                <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
+                                       attrs="{'invisible': ['|', ('is_conditional','=', False), ('triggering_question_id','=', False)],
+                                               'required': [('is_conditional','=', True)]}"/>
                             </group>
                             <group string="Allow Comments" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
                                 <field name='comments_allowed' />

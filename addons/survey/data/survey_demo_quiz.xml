@@ -33,12 +33,14 @@
         <field name="constr_mandatory" eval="True"/>
         <field name="validation_email" eval="True"/>
         <field name="save_as_email" eval="True"/>
+        <field name="question_placeholder">ex@mple.com</field>
     </record>
     <record id="survey_demo_quiz_p1_q2" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">3</field>
         <field name="title">What is your nickname ?</field>
         <field name="question_type">char_box</field>
+        <field name="question_placeholder">Don't be shy, be wild!</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="save_as_nickname" eval="True"/>
     </record>
@@ -47,6 +49,7 @@
         <field name="sequence">4</field>
         <field name="title">Where are you from ?</field>
         <field name="question_type">char_box</field>
+        <field name="question_placeholder">Brussels, Belgium</field>
         <field name="constr_mandatory" eval="True"/>
     </record>
     <record id="survey_demo_quiz_p1_q4" model="survey.question">
