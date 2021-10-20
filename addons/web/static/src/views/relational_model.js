@@ -171,6 +171,9 @@ class DataRecord extends DataPoint {
         if (!fields.length) {
             return;
         }
+        if ("resId" in params) {
+            this.resId = params.resId; // FIXME: don't update internal state directly
+        }
         let { data } = params;
         if (!data) {
             if (this.resId) {
