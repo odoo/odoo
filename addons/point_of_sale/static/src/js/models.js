@@ -131,12 +131,12 @@ exports.PosModel = Backbone.Model.extend({
                 model: 'pos.session',
                 method: 'load_pos_data',
                 args: [[odoo.pos_session_id]],
-            }).then(async ([records, loadingInfos]) => {
+            }).then(async ([loadedModels, loadingInfos]) => {
                 self.loadingInfos = loadingInfos;
                 const tmp = {}
                 for (const model of self.models) {
                     if (model.condition ? !model.condition(self) : false) continue;
-                    await model.loaded(self, records[model.model] || [], tmp);
+                    await model.loaded(self, loadedModels[model.model] || [], tmp);
                 }
                 return self.after_load_server_data();
             });
@@ -725,18 +725,19 @@ exports.PosModel = Backbone.Model.extend({
     loadProductsBackground: async function() {
         let page = 0;
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
+        let productLoadingInfo = this.loadingInfos['product.product'];
         let products = [];
         do {
             products = await this.rpc({
-                model: 'pos.session',
-                method: 'default_load_method',
-                args: [[odoo.pos_session_id], "product.product", this.loadingInfos["product.product"]],
+                model: 'product.product',
+                method: 'search_read',
                 kwargs: {
-                    'search_options': {
-                        'offset': page * this.env.pos.config.limited_products_amount,
-                        'limit': this.env.pos.config.limited_products_amount
-                    },
+                    'domain': productLoadingInfo.domain,
+                    'fields': productLoadingInfo.fields,
+                    'offset': page * this.env.pos.config.limited_products_amount,
+                    'limit': this.env.pos.config.limited_products_amount
                 },
+                context: { ...this.session.user_context, ...product_model.context() },
             });
             product_model.loaded(this, products);
             page += 1;
@@ -746,18 +747,16 @@ exports.PosModel = Backbone.Model.extend({
         // Start at the first page since the first set of loaded partners are not actually in the
         // same order as this background loading procedure.
         let i = 0;
-
         let partners = [];
+        let partnerLoadingInfo = this.loadingInfos['res.partner'];
         do {
             partners = await this.rpc({
-                model: 'pos.session',
-                method: 'default_load_method',
-                args: [[odoo.pos_session_id], "res.partner", this.loadingInfos["res.partner"]],
+                model: 'res.partner',
+                method: 'search_read',
+                args: [[], partnerLoadingInfo.fields],
                 kwargs: {
-                    'search_options': {
-                        limit: this.env.pos.config.limited_partners_amount,
-                        offset: this.env.pos.config.limited_partners_amount * i,
-                    }
+                    limit: this.env.pos.config.limited_partners_amount,
+                    offset: this.env.pos.config.limited_partners_amount * i
                 },
                 context: this.env.session.user_context,
             });

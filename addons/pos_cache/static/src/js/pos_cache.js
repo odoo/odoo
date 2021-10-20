@@ -37,9 +37,9 @@ models.PosModel = models.PosModel.extend({
         Gui.showNotification(_t('All products are loaded.'), 5000);
     },
     async _getTotalProductsCount() {
-        const productMeta = this.loadingInfos['product.product'];
-        const domain = productMeta['domain']
-        const fields = productMeta['fields']
+        const productLoadingInfo = this.loadingInfos['product.product'];
+        const domain = productLoadingInfo['domain']
+        const fields = productLoadingInfo['fields']
         return this.rpc({
             model: 'pos.session',
             method: 'get_total_products_count',
@@ -48,9 +48,9 @@ models.PosModel = models.PosModel.extend({
         });
     },
     async _loadCachedProducts(start, end) {
-        const productMeta = this.loadingInfos['product.product'];
-        const domain = productMeta['domain']
-        const fields = productMeta['fields']
+        const productLoadingInfo = this.loadingInfos['product.product'];
+        const domain = productLoadingInfo['domain']
+        const fields = productLoadingInfo['fields']
         const products = await this.rpc({
             model: 'pos.session',
             method: 'get_cached_products',

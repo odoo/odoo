@@ -2,20 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.addons.point_of_sale.models.pos_session import pos_loader
 
 
 class PosSession(models.Model):
     _inherit = "pos.session"
 
-    @pos_loader.load('product.product')
-    def _load_product_product(self, model, meta_values):
+    def _get_pos_ui_product_product(self, params):
         """
         Replace the way products are loaded. We only load the first 100000 products.
         The UI will make further requests of the remaining products.
         """
-        domain = meta_values['domain']
-        fields = meta_values['fields']
+        domain = params['domain']
+        fields = params['fields']
         records = self.config_id.get_products_from_cache(fields, domain)
         return records[:100000]
 

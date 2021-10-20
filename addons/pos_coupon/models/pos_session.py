@@ -3,17 +3,24 @@
 
 from odoo import models
 from odoo.osv.expression import OR
-from odoo.addons.point_of_sale.models.pos_session import pos_loader
 
 
 class PosSession(models.Model):
     _inherit = "pos.session"
 
-    @pos_loader.info("coupon.program")
+    def _pos_ui_models_to_load(self):
+        result = super()._pos_ui_models_to_load()
+        result.append("coupon.program")
+        return result
+
     def _loader_info_coupon_program(self):
         if not self.config_id.program_ids:
             return
-        return {'domain': [("id", "in", self.config_id.program_ids.ids), ("active", "=", True)]}
+        return {'domain': [("id", "in", self.config_id.program_ids.ids), ("active", "=", True)], "fields": []}
+
+    def _get_pos_ui_coupon_program(self, params):
+        if params:
+            return self.env["coupon.program"].search_read(params["domain"], params["fields"])
 
     def _get_product_product_domain(self):
         result = super(PosSession, self)._get_product_product_domain()
