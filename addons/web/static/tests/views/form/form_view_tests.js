@@ -40,7 +40,6 @@ import {
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { makeView } from "../helpers";
 import { browser } from "@web/core/browser/browser";
-import { requestBatcherService } from "@web/views/relational_model";
 
 const serviceRegistry = registry.category("services");
 
