@@ -1786,8 +1786,19 @@ class PosSession(models.Model):
         return self.env["pos.category"].search_read(params["domain"], params["fields"])
 
     def _loader_info_product_product(self):
+        domain = ["&", "&", ("sale_ok", "=", True), ("available_in_pos", "=", True), "|", ("company_id", "=", self.config_id.company_id.id), ("company_id", "=", False)]
+        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
+            domain = AND(
+                [
+                    domain,
+                    [("pos_categ_id", "in", self.config_id.iface_available_categ_ids.ids)],
+                ]
+            )
+        if self.config_id.iface_tipproduct:
+            domain = OR([domain, [("id", "=", self.config_id.tip_product_id.id)]])
+
         return {
-            "domain": self._get_product_product_domain(),
+            "domain": domain,
             "order": "sequence,default_code,name",
             "fields": [
                 "display_name",
@@ -1813,19 +1824,6 @@ class PosSession(models.Model):
                 "display_default_code": False,
             },
         }
-
-    def _get_product_product_domain(self):
-        domain = ["&", "&", ("sale_ok", "=", True), ("available_in_pos", "=", True), "|", ("company_id", "=", self.config_id.company_id.id), ("company_id", "=", False)]
-        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
-            domain = AND(
-                [
-                    domain,
-                    [("pos_categ_id", "in", self.config_id.iface_available_categ_ids.ids)],
-                ]
-            )
-        if self.config_id.iface_tipproduct:
-            domain = OR([domain, [("id", "=", self.config_id.tip_product_id.id)]])
-        return domain
 
     def _get_pos_ui_product_product(self, params):
         if not self.config_id.limited_products_loading:

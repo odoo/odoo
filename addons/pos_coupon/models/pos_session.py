@@ -22,11 +22,11 @@ class PosSession(models.Model):
         if params:
             return self.env["coupon.program"].search_read(params["domain"], params["fields"])
 
-    def _get_product_product_domain(self):
-        result = super(PosSession, self)._get_product_product_domain()
-        if not self.config_id.program_ids:
-            return result
-        discount_product_ids = self.config_id.program_ids.mapped(lambda program: program.discount_line_product_id.id)
-        reward_product_ids = self.config_id.program_ids.mapped(lambda program: program.reward_product_id.id)
-        product_ids = [id for id in [*discount_product_ids, *reward_product_ids] if id]
-        return OR([result, [("id", "in", product_ids)]])
+    def _loader_info_product_product(self):
+        result = super(PosSession, self)._loader_info_product_product()
+        if len(self.config_id.program_ids) != 0:
+            discount_product_ids = self.config_id.program_ids.mapped(lambda program: program.discount_line_product_id.id)
+            reward_product_ids = self.config_id.program_ids.mapped(lambda program: program.reward_product_id.id)
+            product_ids = [id for id in [*discount_product_ids, *reward_product_ids] if id]
+            result["domain"] = OR([result["domain"], [("id", "in", product_ids)]])
+        return result

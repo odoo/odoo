@@ -22,8 +22,8 @@ class PosSession(models.Model):
     def _get_pos_ui_gift_card(self, params):
         return self.env["gift.card"].search_read(params["domain"], params["fields"])
 
-    def _get_product_product_domain(self):
-        result = super(PosSession, self)._get_product_product_domain()
+    def _loader_info_product_product(self):
+        result = super(PosSession, self)._loader_info_product_product()
         if self.config_id.use_gift_card and self.config_id.gift_card_product_id:
-            return OR([result, [("id", "=", self.config_id.gift_card_product_id.id)]])
+            result["domain"] = OR([result["domain"], [("id", "=", self.config_id.gift_card_product_id.id)]])
         return result

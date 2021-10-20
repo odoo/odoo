@@ -8,8 +8,8 @@ from odoo.osv.expression import OR
 class PosSession(models.Model):
     _inherit = "pos.session"
 
-    def _get_product_product_domain(self):
-        result = super(PosSession, self)._get_product_product_domain()
-        if not self.config_id.module_pos_discount:
-            return result
-        return OR([result, [("id", "=", self.config_id.discount_product_id.id)]])
+    def _loader_info_product_product(self):
+        result = super(PosSession, self)._loader_info_product_product()
+        if self.config_id.module_pos_discount:
+            result["domain"] = OR([result["domain"], [("id", "=", self.config_id.discount_product_id.id)]])
+        return result
