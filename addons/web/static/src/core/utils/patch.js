@@ -77,10 +77,15 @@ export function patch(obj, patchName, patchValue, options = {}) {
         } else {
             newDesc[key] = {
                 [patchedFnName](...args) {
-                    const prevSuper = this._super;
-                    this._super = _superFn.bind(this);
+                    let prevSuper;
+                    if (this) {
+                        prevSuper = this._super;
+                        this._super = _superFn.bind(this);
+                    }
                     const result = patchFn.call(this, ...args);
-                    this._super = prevSuper;
+                    if (this) {
+                        this._super = prevSuper;
+                    }
                     return result;
                 },
             }[patchedFnName];
