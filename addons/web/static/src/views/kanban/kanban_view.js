@@ -259,7 +259,7 @@ class KanbanView extends owl.Component {
             resModel,
             defaultGroupBy,
             viewMode: "kanban",
-            openGroupByDefault: true,
+            openGroupsByDefault: true,
         });
         useViewButtons(this.model);
         useSetupView({

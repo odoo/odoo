@@ -22,6 +22,10 @@ export class ListRenderer extends Component {
         this.cellClassByColumn = {};
     }
 
+    getGroupLevel(group) {
+        return this.env.model.root.groupBy.length - group.groupBy.length - 1;
+    }
+
     getColumnClass(column) {
         const classNames = [];
         if (column.sortable) {
