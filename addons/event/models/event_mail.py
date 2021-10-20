@@ -204,7 +204,21 @@ class EventMailRegistration(models.Model):
             reg_mail.scheduler_id.notification_type == 'mail'
         )
         for reg_mail in todo:
-            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id)
+            organizer = reg_mail.scheduler_id.event_id.organizer_id
+            company = self.env.company
+            author = self.env.ref('base.user_root')
+            if organizer.email:
+                author = organizer
+            elif company.email:
+                author = company.partner_id
+            elif self.env.user.email:
+                author = self.env.user
+            
+            email_values = {
+                'email_from': author.email_formatted,
+                'author_id': author.id,
+            }
+            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
