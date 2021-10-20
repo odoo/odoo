@@ -246,7 +246,7 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group name="opportunity_info" attrs="{'invisible': [('type', '=', 'lead')]}">
-                                <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
+                                <field name="lost_reason_id" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_company_ids" invisible="1"/>
@@ -985,7 +985,7 @@
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter name="city" string="City" context="{'group_by': 'city'}"/>
                         <filter string="Country" name="country" context="{'group_by':'country_id'}" />
-                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason_id'}"/>
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
