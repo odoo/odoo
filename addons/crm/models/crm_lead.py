@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
+from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError, AccessError
 from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict, defaultdict
@@ -263,6 +264,11 @@ class Lead(models.Model):
             if not partner_name and partner.is_company:
                 partner_name = partner.name
 
+            lang = (
+                get_lang(self.env, lang_code=partner.lang) if partner.lang
+                else self.env['res.lang']
+            )
+
             return {
                 'partner_name': partner_name,
                 'contact_name': partner.name if not partner.is_company else False,
@@ -278,6 +284,7 @@ class Lead(models.Model):
                 'zip': partner.zip,
                 'function': partner.function,
                 'website': partner.website,
+                'lang_id': lang.id,
             }
         return {}
 
