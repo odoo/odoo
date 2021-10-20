@@ -365,7 +365,7 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
     def setUp(self):
         super(AdvancedResponsibleNotifiedTest, self).setUp()
 
-        # patch registry to simulate a ready environment so that _message_auto_subscribe_notify
+        # patch registry to simulate a ready environment so that _message_auto_subscribe notifications
         # will be executed with the associated notification
         old = self.env.registry.ready
         self.env.registry.ready = True

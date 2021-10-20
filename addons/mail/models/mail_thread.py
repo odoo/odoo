@@ -2648,45 +2648,10 @@ class MailThread(models.AbstractModel):
             user = self.env['res.users'].sudo().browse(user_id)
             try: # avoid to make an exists, lets be optimistic and try to read it.
                 if user.active:
-                    return [(user.partner_id.id, default_subtype_ids, 'mail.message_user_assigned' if user != self.env.user else False)]
+                    return [(user.partner_id, default_subtype_ids, 'mail.message_user_assigned' if user != self.env.user else False)]
             except:
                 pass
         return []
-
-    def _message_auto_subscribe_notify(self, partner_ids, template):
-        """ Notify new followers, using a template to render the content of the
-        notification message. Notifications pushed are done using the standard
-        notification mechanism in mail.thread. It is either inbox either email
-        depending on the partner state: no user (email, customer), share user
-        (email, customer) or classic user (notification_type)
-
-        :param partner_ids: IDs of partner to notify;
-        :param template: XML ID of template used for the notification;
-        """
-        if not self or self.env.context.get('mail_auto_subscribe_no_notify'):
-            return
-        if not self.env.registry.ready:  # Don't send notification during install
-            return
-
-        view = self.env['ir.ui.view'].browse(self.env['ir.model.data']._xmlid_to_res_id(template))
-
-        for record in self:
-            model_description = self.env['ir.model']._get(record._name).display_name
-            values = {
-                'object': record,
-                'model_description': model_description,
-                'access_link': record._notify_get_action_link('view'),
-            }
-            assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
-            assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
-            record.message_notify(
-                subject=_('You have been assigned to %s', record.display_name),
-                body=assignation_msg,
-                partner_ids=partner_ids,
-                record_name=record.display_name,
-                email_layout_xmlid='mail.mail_notification_light',
-                model_description=model_description,
-            )
 
     def _message_auto_subscribe(self, updated_values, followers_existing_policy='skip'):
         """ Handle auto subscription. Auto subscription is done based on two
@@ -2695,9 +2660,10 @@ class MailThread(models.AbstractModel):
          * using subtypes parent relationship. For example following a parent record
            (i.e. project) with subtypes linked to child records (i.e. task). See
            mail.message.subtype ``_get_auto_subscription_subtypes``;
-         * calling _message_auto_subscribe_notify that returns a list of partner
+         * adding values for notification precommit hook that returns a list of partner
            to subscribe, as well as data about the subtypes and notification
            to send. Base behavior is to subscribe responsible and notify them;
+           UPDATE ME
 
         Adding application-specific auto subscription should be done by overriding
         ``_message_auto_subscribe_followers``. It should return structured data
@@ -2737,25 +2703,93 @@ class MailThread(models.AbstractModel):
                     else:
                         new_partner_subtypes[partner_id] = set(sids)
 
-        notify_data = dict()
         res = self._message_auto_subscribe_followers(updated_values, def_ids)
-        for partner_id, sids, template in res:
-            new_partner_subtypes.setdefault(partner_id, sids)
+        for partner, sids, template in res:
+            new_partner_subtypes.setdefault(partner.id, sids)
             if template:
-                partner = self.env['res.partner'].browse(partner_id)
-                lang = partner.lang if partner else None
-                notify_data.setdefault((template, lang), list()).append(partner_id)
+                self._notification_prepare(
+                    dict((record.id,
+                         {'lang': partner.lang if partner else self._context.get('lang'),
+                          'partner': partner,
+                          'template': template})
+                         for record in self
+                        )
+                )
 
         self.env['mail.followers']._insert_followers(
             self._name, self.ids,
             list(new_partner_subtypes), subtypes=new_partner_subtypes,
             check_existing=True, existing_policy=followers_existing_policy)
 
-        # notify people from auto subscription, for example like assignation
-        for (template, lang), pids in notify_data.items():
-            self.with_context(lang=lang)._message_auto_subscribe_notify(pids, template)
-
         return True
+
+    def _notification_prepare(self, notification_values):
+        print('_notification_prepare on', self, 'with', notification_values)
+        self.env.cr.precommit.add(self._notification_send)
+
+        current_global = self.env.cr.precommit.data.setdefault(f'mail.notification.{self._name}', {})
+        for record in self:
+            current = current_global.setdefault(record.id, [])
+            if current is not None:
+                current.append(notification_values[record.id])
+        print('after work', current_global)
+
+    def _notification_discard(self):
+        """ Prevent any notification sending. This is done by voiding notification
+        values linked to the current records. """
+        # if 'user_id' not in self:  # TDE FIXME
+        #     return
+        print('_notification_discard on', self)
+        self.env.cr.precommit.add(self._notification_send)
+
+        current_global = self.env.cr.precommit.data.setdefault(f'mail.notification.{self._name}', {})
+        for record_id in self.ids:
+            current_global[record_id] = None
+
+    def _notification_send(self):
+        print('_notification_send on', self)
+
+        notification_values = self.env.cr.precommit.data.pop(f'mail.notification.{self._name}', {})
+        print('\tnotification_values', notification_values)
+
+        record_ids = [record_id for record_id, values in notification_values.items() if values]
+        if not record_ids:
+            return
+
+        # make a group by template: for a given template-lang couple, give recipients and records
+        # to notify
+        template_to_recipients = {}
+        for record_id, values_list in notification_values.items():
+            for values in values_list:
+                lang, partner, template = values['lang'], values['partner'], values['template']
+                recipients = template_to_recipients.setdefault((template, lang), dict())
+                recipients.setdefault(partner, [])
+                recipients[partner].append(record_id)
+        print('template_to_recipients', template_to_recipients)
+
+        for (template, lang), recipients in template_to_recipients.items():
+            view = self.env['ir.ui.view'].browse(self.env['ir.model.data']._xmlid_to_res_id(template))
+            for partner, record_ids in recipients.items():
+                records = self.with_context(clean_context(self._context)).browse(record_ids).sudo()
+                model_description = self.env['ir.model']._get(records._name).display_name
+                for record in records:
+                    values = {
+                        'object': record,
+                        'model_description': model_description,
+                        'access_link': record._notify_get_action_link('view'),
+                    }
+                    assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
+                    assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
+                    record.message_notify(
+                        subject=_('You have been assigned to %s', record.display_name),
+                        body=assignation_msg,
+                        partner_ids=partner.ids,
+                        record_name=record.display_name,
+                        email_layout_xmlid='mail.mail_notification_light',
+                        model_description=model_description,
+                    )
+        # this method is called after the main flush() and just before commit(): should we flush ? probably not
+        # self.flush()
 
     # ------------------------------------------------------
     # DISCORDUSS API

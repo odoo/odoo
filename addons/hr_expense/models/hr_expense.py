@@ -983,7 +983,7 @@ class HrExpenseSheet(models.Model):
         if updated_values.get('employee_id'):
             employee = self.env['hr.employee'].browse(updated_values['employee_id'])
             if employee.user_id:
-                res.append((employee.user_id.partner_id.id, subtype_ids, False))
+                res.append((employee.user_id.partner_id, subtype_ids, False))
         return res
 
     # --------------------------------------------
