@@ -1014,6 +1014,9 @@ export class ModelManager {
             * Contains all records. key is local id, while value is the record.
             */
             Model.__records = {};
+            if (!Model.hasOwnProperty('identifyingFields')) {
+                throw new Error(`${Model} is lacking identifying fields.`);
+            }
             Model.__identifyingFields = Model.identifyingFields;
             const identifyingFieldsFlattened = new Set();
             for (const identifyingElement of Model.identifyingFields) {
