@@ -480,7 +480,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
-            if not getattr(self, attr):
+            # check whether 'attr' is explicitly set on self (from its field
+            # definition), and ignore its class-level value (only a default)
+            if attr not in self.__dict__:
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():

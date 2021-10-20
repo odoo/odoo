@@ -345,6 +345,7 @@ class Foo(models.Model):
     name = fields.Char()
     value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
+    text = fields.Char(trim=False)
 
 
 class Bar(models.Model):
@@ -355,6 +356,8 @@ class Bar(models.Model):
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
+    text1 = fields.Char('Text1', related='foo.text', readonly=False)
+    text2 = fields.Char('Text2', related='foo.text', readonly=False, trim=True)
 
     @api.depends('name')
     def _compute_foo(self):
