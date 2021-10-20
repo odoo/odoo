@@ -2724,7 +2724,7 @@ class MailThread(models.AbstractModel):
         return True
 
     def _notification_prepare(self, notification_values):
-        print('_notification_prepare on', self, 'with', notification_values)
+        # print('_notification_prepare on', self, 'with', notification_values)
         self.env.cr.precommit.add(self._notification_send)
 
         current_global = self.env.cr.precommit.data.setdefault(f'mail.notification.{self._name}', {})
@@ -2732,14 +2732,14 @@ class MailThread(models.AbstractModel):
             current = current_global.setdefault(record.id, [])
             if current is not None:
                 current.append(notification_values[record.id])
-        print('after work', current_global)
+        # print('after work', current_global)
 
     def _notification_discard(self):
         """ Prevent any notification sending. This is done by voiding notification
         values linked to the current records. """
         # if 'user_id' not in self:  # TDE FIXME
         #     return
-        print('_notification_discard on', self)
+        # print('_notification_discard on', self)
         self.env.cr.precommit.add(self._notification_send)
 
         current_global = self.env.cr.precommit.data.setdefault(f'mail.notification.{self._name}', {})
@@ -2747,10 +2747,10 @@ class MailThread(models.AbstractModel):
             current_global[record_id] = None
 
     def _notification_send(self):
-        print('_notification_send on', self)
+        # print('_notification_send on', self)
 
         notification_values = self.env.cr.precommit.data.pop(f'mail.notification.{self._name}', {})
-        print('\tnotification_values', notification_values)
+        # print('\tnotification_values', notification_values)
 
         record_ids = [record_id for record_id, values in notification_values.items() if values]
         if not record_ids:
@@ -2765,16 +2765,19 @@ class MailThread(models.AbstractModel):
                 recipients = template_to_recipients.setdefault((template, lang), dict())
                 recipients.setdefault(partner, [])
                 recipients[partner].append(record_id)
-        print('template_to_recipients', template_to_recipients)
+        # print('template_to_recipients', template_to_recipients)
 
         for (template, lang), recipients in template_to_recipients.items():
             view = self.env['ir.ui.view'].browse(self.env['ir.model.data']._xmlid_to_res_id(template))
             for partner, record_ids in recipients.items():
                 records = self.with_context(clean_context(self._context)).browse(record_ids).sudo()
                 model_description = self.env['ir.model']._get(records._name).display_name
-                for record in records:
+                # TDE bullshit value for test
+                if len(records) > 3:
+                    record = records[0]  # TDE FIXME
                     values = {
                         'object': record,
+                        'objects': records,
                         'model_description': model_description,
                         'access_link': record._notify_get_action_link('view'),
                     }
@@ -2788,6 +2791,25 @@ class MailThread(models.AbstractModel):
                         email_layout_xmlid='mail.mail_notification_light',
                         model_description=model_description,
                     )
+                # one-by-one fallback
+                else:
+                    for record in records:
+                        values = {
+                            'object': record,
+                            'objects': record,
+                            'model_description': model_description,
+                            'access_link': record._notify_get_action_link('view'),
+                        }
+                        assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
+                        assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
+                        record.message_notify(
+                            subject=_('You have been assigned to %s', record.display_name),
+                            body=assignation_msg,
+                            partner_ids=partner.ids,
+                            record_name=record.display_name,
+                            email_layout_xmlid='mail.mail_notification_light',
+                            model_description=model_description,
+                        )
         # this method is called after the main flush() and just before commit(): should we flush ? probably not
         # self.flush()
 
