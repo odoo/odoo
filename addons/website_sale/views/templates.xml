@@ -256,6 +256,8 @@
     <template id="products" name="Products">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop</t>
+            <t t-set="grid_block_name">Grid</t>
+            <t t-set="product_block_name">Product</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale pt-2">
@@ -285,7 +287,7 @@
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
                             <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
-                                <table class="table table-borderless m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort">
+                                <table class="table table-borderless m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
                                     <colgroup t-ignore="true">
                                         <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
                                         <col t-foreach="ppr" t-as="p"/>
@@ -299,7 +301,8 @@
                                                     <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
                                                         t-att-rowspan="td_product['y'] != 1 and td_product['y']"
                                                         t-attf-class="oe_product"
-                                                        t-att-data-ribbon-id="td_product['ribbon'].id">
+                                                        t-att-data-ribbon-id="td_product['ribbon'].id"
+                                                        t-att-data-name="product_block_name">
                                                         <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                             <t t-call="website_sale.products_item"/>
                                                         </div>
@@ -1941,7 +1944,8 @@
 
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-ride="carousel" data-interval="0">
+        <t t-set="product_carousel_block_name">Product Carousel</t>
+        <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-ride="carousel" data-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
                 <div class="carousel-inner h-100">
                     <t t-foreach="product_images" t-as="product_image">
