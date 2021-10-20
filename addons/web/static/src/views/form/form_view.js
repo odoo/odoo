@@ -5,6 +5,7 @@ import { XMLParser } from "@web/core/utils/xml";
 import { Pager, usePager } from "@web/search/pager/pager";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
+import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { FieldParser } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
@@ -76,5 +77,6 @@ FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
 FormView.components = { Layout, FormRenderer, Pager };
+FormView.props = { ...standardViewProps };
 
 registry.category("views").add("form", FormView);

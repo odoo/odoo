@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
+import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/views/layout";
 import { FieldParser } from "../helpers/view_utils";
@@ -93,6 +94,7 @@ ListView.display_name = "List";
 ListView.icon = "fa-list-ul";
 ListView.multiRecord = true;
 ListView.components = { ListRenderer, Layout };
+ListView.props = { ...standardViewProps };
 
 ListView.template = `web.ListView`;
 ListView.buttonTemplate = "web.ListView.Buttons";
