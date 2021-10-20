@@ -574,12 +574,12 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.comp2_bom.write({'type': 'subcontract', 'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)]})
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
-            'name': self.subcontractor_partner1.id,
+            'partner_id': self.subcontractor_partner1.id,
             'price': 10,
         })
         supplier = self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.comp2.product_tmpl_id.id,
-            'name': self.subcontractor_partner1.id,
+            'partner_id': self.subcontractor_partner1.id,
             'price': 5,
         })
         self.assertTrue(supplier.is_subcontractor)

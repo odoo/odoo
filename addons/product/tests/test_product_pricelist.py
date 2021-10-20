@@ -42,25 +42,25 @@ class TestProductPricelist(TransactionCase):
 
         self.env['product.supplierinfo'].create([
             {
-                'name': self.res_partner_1.id,
+                'partner_id': self.res_partner_1.id,
                 'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
                 'delay': 3,
                 'min_qty': 1,
                 'price': 750,
             }, {
-                'name': self.res_partner_4.id,
+                'partner_id': self.res_partner_4.id,
                 'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
                 'delay': 3,
                 'min_qty': 1,
                 'price': 790,
             }, {
-                'name': self.res_partner_4.id,
+                'partner_id': self.res_partner_4.id,
                 'product_tmpl_id': self.ipad_mini.product_tmpl_id.id,
                 'delay': 3,
                 'min_qty': 3,
                 'price': 785,
             }, {
-                'name': self.res_partner_4.id,
+                'partner_id': self.res_partner_4.id,
                 'product_tmpl_id': self.monitor.product_tmpl_id.id,
                 'delay': 3,
                 'min_qty': 3,

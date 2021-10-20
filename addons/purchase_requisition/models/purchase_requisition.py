@@ -189,7 +189,7 @@ class PurchaseRequisitionLine(models.Model):
         if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
             supplier_infos = self.env['product.supplierinfo'].search([
                 ('product_id', '=', vals.get('product_id')),
-                ('name', '=', res.requisition_id.vendor_id.id),
+                ('partner_id', '=', res.requisition_id.vendor_id.id),
             ])
             if not any(s.purchase_requisition_id for s in supplier_infos):
                 res.create_supplier_info()
@@ -218,7 +218,7 @@ class PurchaseRequisitionLine(models.Model):
         if purchase_requisition.type_id.quantity_copy == 'none' and purchase_requisition.vendor_id:
             # create a supplier_info only in case of blanket order
             self.env['product.supplierinfo'].create({
-                'name': purchase_requisition.vendor_id.id,
+                'partner_id': purchase_requisition.vendor_id.id,
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,

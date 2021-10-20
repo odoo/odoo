@@ -603,7 +603,7 @@
                         <group>
                             <group name="vendor" string="Vendor">
                                 <field name="product_variant_count" invisible="1"/>
-                                <field name="name" context="{'res_partner_search_mode': 'supplier'}"/>
+                                <field name="partner_id" context="{'res_partner_search_mode': 'supplier'}"/>
                                 <field name="product_name"/>
                                 <field name="product_code"/>
                                 <label for="delay"/>
@@ -638,13 +638,13 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <search string="Vendor">
-                    <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="product_tmpl_id"/>
                     <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                     <filter string="Archived" name="archived" domain="[('date_end', '&lt;',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
-                        <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'name'}"/>
+                        <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -658,14 +658,14 @@
                     <field name="min_qty"/>
                     <field name="delay"/>
                     <field name="price"/>
-                    <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="currency_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
                                     <strong class="col-6">
-                                        <span t-esc="record.name.value"/>
+                                        <span t-esc="record.partner_id.value"/>
                                     </strong>
                                     <strong class="col-6 text-right">
                                         <strong><field name="price" widget="monetary"/></strong>
@@ -690,7 +690,7 @@
             <field name="arch" type="xml">
                 <tree string="Vendor Information" multi_edit="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="name" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
                         groups="product.group_product_variant"/>

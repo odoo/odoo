@@ -306,7 +306,7 @@ class ProductProduct(models.Model):
     def _compute_product_code(self):
         for product in self:
             for supplier_info in product.seller_ids:
-                if supplier_info.name.id == product._context.get('partner_id'):
+                if supplier_info.partner_id.id == product._context.get('partner_id'):
                     product.code = supplier_info.product_code or product.default_code
                     break
             else:
@@ -316,7 +316,7 @@ class ProductProduct(models.Model):
     def _compute_partner_ref(self):
         for product in self:
             for supplier_info in product.seller_ids:
-                if supplier_info.name.id == product._context.get('partner_id'):
+                if supplier_info.partner_id.id == product._context.get('partner_id'):
                     product_name = supplier_info.product_name or product.default_code or product.name
                     product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
                     break
@@ -501,7 +501,7 @@ class ProductProduct(models.Model):
         if partner_ids:
             supplier_info = self.env['product.supplierinfo'].sudo().search([
                 ('product_tmpl_id', 'in', product_template_ids),
-                ('name', 'in', partner_ids),
+                ('partner_id', 'in', partner_ids),
             ])
             # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
             # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
@@ -583,7 +583,7 @@ class ProductProduct(models.Model):
             # still no results, partner in context: search on supplier info as last hope to find something
             if not product_ids and self._context.get('partner_id'):
                 suppliers_ids = self.env['product.supplierinfo']._search([
-                    ('name', '=', self._context.get('partner_id')),
+                    ('partner_id', '=', self._context.get('partner_id')),
                     '|',
                     ('product_code', operator, name),
                     ('product_name', operator, name)], access_rights_uid=name_get_uid)
@@ -636,7 +636,7 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     def _prepare_sellers(self, params=False):
-        return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
+        return self.seller_ids.filtered(lambda s: s.partner_id.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -657,13 +657,13 @@ class ProductProduct(models.Model):
                 continue
             if seller.date_end and seller.date_end < date:
                 continue
-            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
+            if partner_id and seller.partner_id not in [partner_id, partner_id.parent_id]:
                 continue
             if quantity is not None and float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
-            if not res or res.name == seller.name:
+            if not res or res.partner_id == seller.partner_id:
                 res |= seller
         return res.sorted('price')[:1]
 
@@ -813,8 +813,9 @@ class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Supplier Pricelist"
     _order = 'sequence, min_qty DESC, price, id'
+    _rec_name = 'partner_id'
 
-    name = fields.Many2one(
+    partner_id = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
         help="Vendor of this product", check_company=True)

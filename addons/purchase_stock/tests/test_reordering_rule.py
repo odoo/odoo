@@ -27,7 +27,7 @@ class TestReorderingRule(TransactionCase):
         product_form.detailed_type = 'product'
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
-            seller.name = cls.partner
+            seller.partner_id = cls.partner
         product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
         cls.product_01 = product_form.save()
 
@@ -205,7 +205,7 @@ class TestReorderingRule(TransactionCase):
         })
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 50,
         })
         product = self.env['product.product'].create({
@@ -265,7 +265,7 @@ class TestReorderingRule(TransactionCase):
         product_form.name = 'Simple Product'
         product_form.detailed_type = 'product'
         with product_form.seller_ids.new() as s:
-            s.name = partner
+            s.partner_id = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
@@ -274,7 +274,7 @@ class TestReorderingRule(TransactionCase):
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
-            s.name = partner
+            s.partner_id = partner
         product_buy_mto = product_form.save()
 
         # Create Delivery Order of 20 product and 10 buy + MTO
@@ -363,7 +363,7 @@ class TestReorderingRule(TransactionCase):
         product_form.name = 'Simple Product'
         product_form.detailed_type = 'product'
         with product_form.seller_ids.new() as s:
-            s.name = partner
+            s.partner_id = partner
         product = product_form.save()
 
         product_form = Form(self.env['product.product'])
@@ -372,7 +372,7 @@ class TestReorderingRule(TransactionCase):
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
-            s.name = partner
+            s.partner_id = partner
         product_buy_mto = product_form.save()
 
         # Create Delivery Order of 20 product and 10 buy + MTO
@@ -470,12 +470,12 @@ class TestReorderingRule(TransactionCase):
             "name": "Supplier B",
         })
         self.env["product.supplierinfo"].create({
-            "name": default_vendor.id,
+            "partner_id": default_vendor.id,
             "product_tmpl_id": product.product_tmpl_id.id,
             "delay": 7,
         })
         self.env["product.supplierinfo"].create({
-            "name": secondary_vendor.id,
+            "partner_id": secondary_vendor.id,
             "product_tmpl_id": product.product_tmpl_id.id,
             "delay": 10,
         })
@@ -578,7 +578,7 @@ class TestReorderingRule(TransactionCase):
             "name": "Supplier A",
         })
         self.env["product.supplierinfo"].create({
-            "name": default_vendor.id,
+            "partner_id": default_vendor.id,
             "product_tmpl_id": product.product_tmpl_id.id,
             "delay": 7,
         })

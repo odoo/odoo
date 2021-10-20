@@ -14,7 +14,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         cls.warehouse = cls.env.ref('stock.warehouse0')
         cust_location = cls.env.ref('stock.stock_location_customers')
         seller = cls.env['product.supplierinfo'].create({
-            'name': cls.customer.id,
+            'partner_id': cls.customer.id,
             'price': 100.0,
         })
         product = cls.env['product.product'].create({
@@ -260,7 +260,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
             'name': 'Steve'
         })
         seller = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 10.0,
         })
         product_car = self.env['product.product'].create({

@@ -113,7 +113,7 @@ class TestCreatePicking(common.TestProductCommon):
         })
 
         seller = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 12.0,
         })
 
@@ -247,7 +247,7 @@ class TestCreatePicking(common.TestProductCommon):
         })
 
         seller = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 12.0,
         })
 
@@ -389,7 +389,7 @@ class TestCreatePicking(common.TestProductCommon):
         picking_type_out = self.env.ref('stock.picking_type_out')
         partner = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 50,
         })
 
@@ -540,7 +540,7 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Jhon'
         })
         seller = self.env['product.supplierinfo'].create({
-            'name': partner.id,
+            'partner_id': partner.id,
             'price': 12.0,
         })
         vendor = self.env['res.partner'].create({

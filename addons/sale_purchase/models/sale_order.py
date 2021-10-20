@@ -192,7 +192,7 @@ class SaleOrderLine(models.Model):
             :rtype: dict
         """
         self.ensure_one()
-        partner_supplier = supplierinfo.name
+        partner_supplier = supplierinfo.partner_id
         fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
         date_order = self._purchase_get_date_order(supplierinfo)
         return {
@@ -268,7 +268,7 @@ class SaleOrderLine(models.Model):
             if not suppliers:
                 raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
             supplierinfo = suppliers[0]
-            partner_supplier = supplierinfo.name  # yes, this field is not explicit .... it is a res.partner !
+            partner_supplier = supplierinfo.partner_id
 
             # determine (or create) PO
             purchase_order = supplier_po_map.get(partner_supplier.id)
