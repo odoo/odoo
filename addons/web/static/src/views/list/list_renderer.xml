@@ -38,9 +38,8 @@
         </t>
         <t t-else="">
             <t t-foreach="list.data" t-as="group" t-key="group.id">
-                <t t-debug=""/>
                 <t t-call="web.ListRenderer.GroupRow"/>
-                <t t-if="group.isOpen">
+                <t t-if="group.isLoaded">
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="group"/>
                     </t>
@@ -50,10 +49,10 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow" owl="1">
-        <tr t-attf-class="{{group.data.length ? 'o_group_has_content' : ''}} o_group_header" t-on-click="toggleGroup(group)">
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header" t-on-click="toggleGroup(group)">
             <th class="o_group_name" t-att-colspan="columns.length + 1">
-                <span t-attf-class="fa {{group.isOpen ? 'fa-caret-down' : 'fa-caret-right'}} pl-1 pr-2"/>
-                <t t-esc="group.groupData[list.groupBy[0]][1]"/> (<t t-esc="group.data.length"/>)
+                <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}} pl-1 pr-2"/>
+                <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
             </th>
         </tr>
     </t>
