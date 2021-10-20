@@ -310,6 +310,7 @@ class DataList extends DataPoint {
         }
         this.count = params.groupCount;
         this.displayName = params.groupDisplay;
+        this.value = params.groupValue;
 
         for (const type in params.views || {}) {
             const [mode] = getX2MViewModes(type);
@@ -342,7 +343,7 @@ class DataList extends DataPoint {
      */
     async load(params = {}) {
         if (params.domain && !this.groupData) {
-            this.domain = params.domain;
+            this.domain = params.domain; // FIXME: do not modify internal state directly
         }
         if (params.groupBy) {
             this.groupBy = params.groupBy;
@@ -423,19 +424,26 @@ class DataList extends DataPoint {
         return Promise.all(
             groups.map(async (groupData) => {
                 let groupDisplay = groupData[`${this.groupBy[0]}`];
+                let groupValue = groupData[`${this.groupBy[0]}`];
                 if (this.fields[this.groupBy[0]].type === "many2one") {
-                    groupDisplay = groupDisplay[1] || _t("Undefined");
+                    groupDisplay = groupDisplay ? groupDisplay[1] : _t("Undefined");
+                    groupValue = groupValue ? groupValue[0] : false;
                 }
-                const params = {
-                    groupCount: groupData[`${this.groupBy[0]}_count`],
-                    groupDisplay,
-                    groupDomain: groupData.__domain,
-                };
-                const list = this.createList(this.resModel, params);
-                if (this.openGroupsByDefault) {
-                    await list.load({ groupBy });
+                // FIXME: only retrieve the former group if groupby same field
+                let group = this.data.find((g) => g.value === groupValue);
+                if (!group) {
+                    const params = {
+                        groupCount: groupData[`${this.groupBy[0]}_count`],
+                        groupDisplay,
+                        groupValue,
+                        groupDomain: groupData.__domain,
+                    };
+                    group = this.createList(this.resModel, params);
                 }
-                return list;
+                if (this.openGroupsByDefault || group.isLoaded) {
+                    await group.load({ groupBy });
+                }
+                return group;
             })
         );
     }
