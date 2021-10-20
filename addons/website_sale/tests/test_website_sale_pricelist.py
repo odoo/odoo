@@ -241,6 +241,44 @@ class TestWebsitePriceList(TransactionCase):
         self.assertEqual(sol.price_reduce, 27.75, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
 
+    def test_pricelist_with_no_list_price(self):
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 0,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'min_quantity': 0,
+                'compute_price': 'fixed',
+                'fixed_price': 10,
+            })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price,
+                'tax_id': False,
+            })]
+        })
+        sol = so.order_line
+        self.assertEqual(sol.price_total, 0)
+        so.pricelist_id = website_pricelist
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=5)
+        self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.price_reduce, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.price_total, 50.0)
+
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
