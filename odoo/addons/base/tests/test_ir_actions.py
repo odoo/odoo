@@ -501,20 +501,24 @@ class TestCustomFields(common.TransactionCase):
         ])
         partners.flush()
 
-        # determine how many queries it takes to create a non-computed field
-        query_count = self.cr.sql_log_count
-        self.env['ir.model.fields'].create({
-            'model_id': self.env['ir.model']._get_id('res.partner'),
-            'name': 'x_oh_box',
-            'field_description': 'x_oh_box',
-            'ttype': 'char',
-        })
-        query_count = self.cr.sql_log_count - query_count
-
-        # create the related field, and assert it only takes 1 extra query
-        with self.assertQueryCount(query_count + 1):
+        # create a non-computed field, and assert how many queries it takes
+        model_id = self.env['ir.model']._get_id('res.partner')
+        query_count = 42
+        with self.assertQueryCount(query_count):
+            self.env.registry.clear_caches()
             self.env['ir.model.fields'].create({
-                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'model_id': model_id,
+                'name': 'x_oh_box',
+                'field_description': 'x_oh_box',
+                'ttype': 'char',
+                'store': True,
+            })
+
+        # same with a related field, it only takes 2 extra queries
+        with self.assertQueryCount(query_count + 2):
+            self.env.registry.clear_caches()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
                 'name': 'x_oh_boy',
                 'field_description': 'x_oh_boy',
                 'ttype': 'char',
