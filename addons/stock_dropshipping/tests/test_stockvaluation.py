@@ -30,7 +30,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
         seller1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
+            'partner_id': vendor1.id,
             'price': 8,
         })
         self.product1.write({'seller_ids': [(6, 0, [seller1.id])]})

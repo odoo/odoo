@@ -34,20 +34,20 @@ class PurchaseTestCommon(TestStockCommon):
         cls.product_1.write({
             'type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]})
+            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})]})
 
         cls.t_shirt = cls.env['product.product'].create({
             'name': 'T-shirt',
             'description': 'Internal Notes',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]
+            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})]
         })
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
             'type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 2})]})
+            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})]})
 
         cls.res_users_purchase_user = cls.env['res.users'].create({
             'company_id': cls.env.ref('base.main_company').id,

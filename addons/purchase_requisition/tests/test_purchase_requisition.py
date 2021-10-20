@@ -46,19 +46,19 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # and check the quantity
         seller_partner1 = self.res_partner_1
         supplierinfo09 = self.env['product.supplierinfo'].search([
-            ('name', '=', seller_partner1.id),
+            ('partner_id', '=', seller_partner1.id),
             ('product_id', '=', self.product_09.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo09.name, seller_partner1, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo09.partner_id, seller_partner1, 'The supplierinfo is not the good one')
         self.assertEqual(supplierinfo09.price, price_product09, 'The supplierinfo is not the good one')
 
         supplierinfo13 = self.env['product.supplierinfo'].search([
-            ('name', '=', seller_partner1.id),
+            ('partner_id', '=', seller_partner1.id),
             ('product_id', '=', self.product_13.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo13.name, seller_partner1, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo13.partner_id, seller_partner1, 'The supplierinfo is not the good one')
         self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not the good one')
 
         # Put the requisition in done Status
@@ -82,7 +82,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
         supplier_info = self.env['product.supplierinfo'].create({
             'product_id': product.id,
-            'name': vendor.id,
+            'partner_id': vendor.id,
         })
 
         # create a empty blanquet order
@@ -110,6 +110,6 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
         new_si = self.env['product.supplierinfo'].search([
             ('product_id', '=', product.id),
-            ('name', '=', vendor.id)
+            ('partner_id', '=', vendor.id)
         ]) - supplier_info
         self.assertEqual(new_si.purchase_requisition_id, requisition_blanket, 'the blanket order is not linked to the supplier info')

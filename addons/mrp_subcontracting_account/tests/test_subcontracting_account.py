@@ -151,11 +151,11 @@ class TestBomPriceSubcontracting(TestBomPrice):
         })
         suppliers = self.env['product.supplierinfo'].create([
             {
-                'name': partner.id,
+                'partner_id': partner.id,
                 'product_tmpl_id': self.dining_table.product_tmpl_id.id,
                 'price': 150.0,
             }, {
-                'name': partner.id,
+                'partner_id': partner.id,
                 'product_tmpl_id': self.table_head.product_tmpl_id.id,
                 'price': 120.0,  # 10 by Unit because uom_po_id is in dozen
             }

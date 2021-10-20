@@ -21,7 +21,6 @@ class TestOnchangeProductId(TransactionCase):
         self.product_tmpl_model = self.env['product.template']
         self.product_model = self.env['product.product']
         self.product_uom_model = self.env['uom.uom']
-        self.supplierinfo_model = self.env["product.supplierinfo"]
         self.pricelist_model = self.env['product.pricelist']
 
     def test_onchange_product_id(self):

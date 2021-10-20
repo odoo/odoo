@@ -466,7 +466,7 @@ class AccountEdiFormat(models.Model):
                                             invoice_line_form.product_id = product
                                             break
                                     if partner:
-                                        product_supplier = self.env['product.supplierinfo'].search([('name', '=', partner.id), ('product_code', '=', code.text)])
+                                        product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)])
                                         if product_supplier and product_supplier.product_id:
                                             invoice_line_form.product_id = product_supplier.product_id
                                             break

@@ -71,7 +71,7 @@ class StockRule(models.Model):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
                 errors.append((procurement, msg))
 
-            partner = supplier.name
+            partner = supplier.partner_id
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
             procurement.values['propagate_cancel'] = rule.propagate_cancel
@@ -140,7 +140,7 @@ class StockRule(models.Model):
                     # If it does not exist a PO line for current procurement.
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
-                    partner = procurement.values['supplier'].name
+                    partner = procurement.values['supplier'].partner_id
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         procurement.product_id, procurement.product_qty,
                         procurement.product_uom, procurement.company_id,
@@ -229,7 +229,7 @@ class StockRule(models.Model):
         return merged_procurements
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
-        partner = values['supplier'].name
+        partner = values['supplier'].partner_id
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
@@ -269,7 +269,7 @@ class StockRule(models.Model):
         # the common procurements values. The common values are taken from an
         # arbitrary procurement. In this case the first.
         values = values[0]
-        partner = values['supplier'].name
+        partner = values['supplier'].partner_id
         purchase_date = schedule_date - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)

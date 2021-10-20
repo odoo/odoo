@@ -170,7 +170,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
             'route_ids': [(4, self.route_buy)],
-            'seller_ids': [(0, 0, {'name': self.partner_1.id, 'delay': 5})]
+            'seller_ids': [(0, 0, {'partner_id': self.partner_1.id, 'delay': 5})]
         })
 
         # create a move for product_1 from stock to output and reserve to trigger the
@@ -219,7 +219,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'product_name': 'Vendor Name',
             'product_code': 'Vendor Code',
         })
-        partner = self.t_shirt.seller_ids[:1].name
+        partner = self.t_shirt.seller_ids[:1].partner_id
         t_shirt = self.t_shirt.with_context(
             lang=partner.lang,
             partner_id=partner.id,
@@ -293,8 +293,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Chicory',
             'type': 'product',
             'seller_ids': [
-                (0, 0, {'name': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
-                (0, 0, {'name': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                (0, 0, {'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
+                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
             ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
@@ -351,7 +351,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_1.product_tmpl_id.id)]).unlink()
         self.env['product.supplierinfo'].create({
-            'name': self.partner_1.id,
+            'partner_id': self.partner_1.id,
             'min_qty': 1,
             'price': 1,
             'delay': 7,

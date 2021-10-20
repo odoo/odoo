@@ -93,7 +93,7 @@ class SupplierInfo(models.Model):
         product_templates_ids = random.sample(product_templates_ids, int(len(product_templates_ids) * 0.95))
 
         def get_company_id(values, counter, random):
-            partner = self.env['res.partner'].browse(values['name'])
+            partner = self.env['res.partner'].browse(values['partner_id'])
             if partner.company_id:
                 return partner.company_id.id
             return random.choice(company_ids)
@@ -105,7 +105,7 @@ class SupplierInfo(models.Model):
             return random.randint(1, 10)
 
         return [
-            ('name', populate.randomize(partner_ids)),
+            ('partner_id', populate.randomize(partner_ids)),
             ('company_id', populate.compute(get_company_id)),
             ('product_tmpl_id', populate.iterate(product_templates_ids)),
             ('product_name', populate.constant("SI-{counter}")),
