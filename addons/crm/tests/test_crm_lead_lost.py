@@ -34,7 +34,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         self.flush_tracking()
 
         lead = self.env['crm.lead'].browse(self.lead_1.ids)
-        self.assertFalse(lead.lost_reason)
+        self.assertFalse(lead.lost_reason_id)
         self.assertEqual(lead.probability, 32)
         self.assertEqual(len(lead.message_ids), 2, 'Should have tracked new responsible')
         update_message = lead.message_ids[0]
@@ -54,7 +54,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         # check lead update
         self.assertFalse(lead.active)
         self.assertEqual(lead.automated_probability, 0)
-        self.assertEqual(lead.lost_reason, self.lost_reason)  # TDE FIXME: should be called lost_reason_id non didjou
+        self.assertEqual(lead.lost_reason_id, self.lost_reason)  # TDE FIXME: should be called lost_reason_id non didjou
         self.assertEqual(lead.probability, 0)
         # check messages
         self.assertEqual(len(lead.message_ids), 3, 'Should have logged a tracking message for lost lead with reason')
@@ -64,7 +64,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         self.assertTracking(
             update_message,
             [('active', 'boolean', True, False),
-             ('lost_reason', 'many2one', False, self.lost_reason)
+             ('lost_reason_id', 'many2one', False, self.lost_reason)
             ]
         )
 
@@ -90,7 +90,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
             self.assertFalse(lead.active)
             self.assertEqual(lead.automated_probability, 0)
             self.assertEqual(lead.probability, 0)
-            self.assertEqual(lead.lost_reason, self.lost_reason)
+            self.assertEqual(lead.lost_reason_id, self.lost_reason)
             # check messages
             self.assertEqual(len(lead.message_ids), 3, 'Should have 3 messages: creation, lost, and log')
             lost_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('crm.mt_lead_lost'))
@@ -98,7 +98,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
             self.assertTracking(
                 lost_message,
                 [('active', 'boolean', True, False),
-                 ('lost_reason', 'many2one', False, self.lost_reason)
+                 ('lost_reason_id', 'many2one', False, self.lost_reason)
                 ]
             )
             note_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('mail.mt_note'))

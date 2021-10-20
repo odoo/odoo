@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.tools.mail import is_html_empty
 
 
@@ -18,7 +18,7 @@ class CrmLeadLost(models.TransientModel):
     def action_lost_reason_apply(self):
         self.ensure_one()
         leads = self.env['crm.lead'].browse(self.env.context.get('active_ids'))
-        res = leads.action_set_lost(lost_reason=self.lost_reason_id.id)
+        res = leads.action_set_lost(lost_reason_id=self.lost_reason_id.id)
         if not is_html_empty(self.lost_feedback):
             leads._message_log_batch(
                 bodies=dict(
