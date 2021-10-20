@@ -118,23 +118,23 @@ class Slide(models.Model):
     quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5,)
     quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
-    slide_type = fields.Selection([
+    slide_category = fields.Selection([
         ('infographic', 'Infographic'),
         ('webpage', 'Web Page'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
         ('video', 'Video'),
         ('quiz', "Quiz")],
-        string='Type', required=True,
+        string='Category', required=True,
         default='document',
-        help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
-    datas = fields.Binary('File', attachment=True)
+        help="The document category will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
+    binary_content = fields.Binary('File', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=False)
@@ -270,35 +270,35 @@ class Slide(models.Model):
         for slide in self:
             slide.embed_count = mapped_data.get(slide.id, 0)
 
-    @api.depends('slide_ids.sequence', 'slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
+    @api.depends('slide_ids.sequence', 'slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
-        keys = ['nbr_%s' % slide_type for slide_type in self.env['slide.slide']._fields['slide_type'].get_values(self.env)]
+        keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
         default_vals = dict((key, 0) for key in keys + ['total_slides'])
 
         res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
-            ['category_id', 'slide_type'], ['category_id', 'slide_type'],
+            ['category_id', 'slide_category'], ['category_id', 'slide_category'],
             lazy=False)
 
-        type_stats = self._compute_slides_statistics_type(res)
+        category_stats = self._compute_slides_statistics_category(res)
 
         for record in self:
-            record.update(type_stats.get(record._origin.id, default_vals))
+            record.update(category_stats.get(record._origin.id, default_vals))
 
-    def _compute_slides_statistics_type(self, read_group_res):
-        """ Compute statistics based on all existing slide types """
-        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
-        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
+    def _compute_slides_statistics_category(self, read_group_res):
+        """ Compute statistics based on all existing slide categories """
+        slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
+        keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
         result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['category_id'][0]
-            slide_type = res_group.get('slide_type')
-            if slide_type:
-                slide_type_count = res_group.get('__count', 0)
-                result[cid]['nbr_%s' % slide_type] = slide_type_count
-                result[cid]['total_slides'] += slide_type_count
+            slide_category = res_group.get('slide_category')
+            if slide_category:
+                slide_category_count = res_group.get('__count', 0)
+                result[cid]['nbr_%s' % slide_category] = slide_category_count
+                result[cid]['total_slides'] += slide_category_count
         return result
 
     @api.depends('slide_partner_ids.partner_id')
@@ -315,7 +315,7 @@ class Slide(models.Model):
                 self.env['slide.slide.partner']
             )
 
-    @api.depends('document_id', 'slide_type', 'mime_type')
+    @api.depends('document_id', 'slide_category', 'mime_type')
     def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root
 
@@ -326,13 +326,13 @@ class Slide(models.Model):
                 base_url = record.get_base_url()
             if base_url[-1] == '/':
                 base_url = base_url[:-1]
-            if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
+            if record.binary_content and (not record.document_id or record.slide_category in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
                 slide_url_external = base_url + url_for('/slides/embed_external/%s?page=1' % record.id)
                 base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>')
                 record.embed_code = base_embed_code % (slide_url, 315, 420)
                 embed_code_external = base_embed_code % (slide_url_external, 315, 420)
-            elif record.slide_type == 'video' and record.document_id:
+            elif record.slide_category == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
                     query = urls.url_parse(record.url).query
@@ -359,15 +359,15 @@ class Slide(models.Model):
             for key, value in values.items():
                 self[key] = value
 
-    @api.onchange('datas')
-    def _on_change_datas(self):
+    @api.onchange('binary_content')
+    def _on_change_binary_content(self):
         """ For PDFs, we assume that it takes 5 minutes to read a page.
             If the selected file is not a PDF, it is an image (You can
-            only upload PDF or Image file) then the slide_type is changed
-            into infographic and the uploaded dataS is transfered to the
+            only upload PDF or Image file) then the slide_category is changed
+            into infographic and the uploaded binary_content is transfered to the
             image field. (It avoids the infinite loading in PDF viewer)"""
-        if self.datas:
-            data = base64.b64decode(self.datas)
+        if self.binary_content:
+            data = base64.b64decode(self.binary_content)
             if data.startswith(b'%PDF-'):
                 pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
                 try:
@@ -376,9 +376,9 @@ class Slide(models.Model):
                     return
                 self.completion_time = (5 * len(pdf.pages)) / 60
             else:
-                self.slide_type = 'infographic'
-                self.image_1920 = self.datas
-                self.datas = None
+                self.slide_category = 'infographic'
+                self.image_1920 = self.binary_content
+                self.binary_content = None
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
@@ -409,8 +409,8 @@ class Slide(models.Model):
             # 'website_published' is handled by mixin
             values['date_published'] = False
 
-        if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
-            values['image_1920'] = values['datas']
+        if values.get('slide_category') == 'infographic' and not values.get('image_1920'):
+            values['image_1920'] = values['binary_content']
         if values.get('is_category'):
             values['is_preview'] = True
             values['is_published'] = True
@@ -794,7 +794,7 @@ class Slide(models.Model):
         if fetch_res.get('error'):
             return {'error': self._extract_google_error_message(fetch_res.get('error'))}
 
-        values = {'slide_type': 'video', 'document_id': document_id}
+        values = {'slide_category': 'video', 'document_id': document_id}
         items = fetch_res['values'].get('items')
         if not items:
             return {'error': _('Please enter valid Youtube or Google Doc URL')}
@@ -845,15 +845,15 @@ class Slide(models.Model):
 
     @api.model
     def _parse_google_document(self, document_id, only_preview_fields):
-        def get_slide_type(vals):
+        def get_slide_category(vals):
             # TDE FIXME: WTF ??
-            slide_type = 'presentation'
+            slide_category = 'presentation'
             if vals.get('image_1920'):
                 image = Image.open(io.BytesIO(base64.b64decode(vals['image_1920'])))
                 width, height = image.size
                 if height > width:
                     return 'document'
-            return slide_type
+            return slide_category
 
         # Google drive doesn't use a simple API key to access the data, but requires an access
         # token. However, this token is generated in module google_drive, which is not in the
@@ -886,18 +886,18 @@ class Slide(models.Model):
             'document_id': document_id,
         }
         if google_values['mimeType'].startswith('video/'):
-            values['slide_type'] = 'video'
+            values['slide_category'] = 'video'
         elif google_values['mimeType'].startswith('image/'):
-            values['datas'] = values['image_1920']
-            values['slide_type'] = 'infographic'
+            values['binary_content'] = values['image_1920']
+            values['slide_category'] = 'infographic'
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
-            values['slide_type'] = get_slide_type(values)
+            values['slide_category'] = get_slide_category(values)
             if 'exportLinks' in google_values:
-                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
+                values['binary_content'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
-            values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
-            values['slide_type'] = get_slide_type(values)
+            values['binary_content'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
+            values['slide_category'] = get_slide_category(values)
 
         return {'values': values}
 
@@ -942,7 +942,7 @@ class Slide(models.Model):
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        icon_per_type = {
+        icon_per_category = {
             'infographic': 'fa-file-picture-o',
             'webpage': 'fa-file-text',
             'presentation': 'fa-file-pdf-o',
@@ -953,7 +953,7 @@ class Slide(models.Model):
         }
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for slide, data in zip(self, results_data):
-            data['_fa'] = icon_per_type.get(slide.slide_type, 'fa-file-pdf-o')
+            data['_fa'] = icon_per_category.get(slide.slide_category, 'fa-file-pdf-o')
             data['url'] = slide.website_url
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_url

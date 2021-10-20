@@ -116,14 +116,14 @@
                                     <group name="lesson_details">
                                         <field name="active" invisible="1"/>
                                         <field name="channel_id"/>
-                                        <field name="slide_type" string="Content Type"/>
+                                        <field name="slide_category" string="Content Type"/>
                                         <field name="url" attrs="{
-                                            'required': [('slide_type', 'in', ('video'))],
-                                            'invisible': [('slide_type', 'not in', ('video'))]}" />
+                                            'required': [('slide_category', 'in', ('video'))],
+                                            'invisible': [('slide_category', 'not in', ('video'))]}" />
                                         <field name="document_id" invisible="1"/>
                                         <field name="mime_type" force_save="1" readonly="1" groups="base.group_no_one"/>
-                                        <field name="datas" string="Attachment"
-                                            attrs="{'invisible': [('slide_type', 'not in', ('document', 'presentation'))]}"/>
+                                        <field name="binary_content" string="Attachment"
+                                            attrs="{'invisible': [('slide_category', 'not in', ('document', 'presentation'))]}"/>
                                     </group>
                                     <group name="related_details">
                                         <field name="user_id" string="Responsible" widget="many2one_avatar"/>
@@ -133,7 +133,7 @@
                                             <span> hours</span>
                                         </div>
                                         <field name="is_preview"/>
-                                        <field name="slide_resource_downloadable" attrs="{'invisible': [('slide_type', 'not in', ['presentation', 'document'])]}"/>
+                                        <field name="slide_resource_downloadable" attrs="{'invisible': [('slide_category', 'not in', ['presentation', 'document'])]}"/>
                                         <field name="date_published" string="Published Date" attrs="{'invisible': [('date_published', '=', False)]}" groups="base.group_no_one"/>
                                     </group>
                                 </group>
@@ -211,7 +211,7 @@
                     sample="1">
                     <field name="id"/>
                     <field name="channel_id"/>
-                    <field name="slide_type"/>
+                    <field name="slide_category"/>
                     <field name="user_id"/>
                     <field name="image_128"/>
                     <templates>
@@ -242,20 +242,20 @@
                                     </div>
                                     <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
                                         <span>
-                                            <t t-if="record.slide_type.raw_value == 'infographic'">
+                                            <t t-if="record.slide_category.raw_value == 'infographic'">
                                                 <i class="fa fa-file-image-o mr-2" aria-label="Infographic" role="img" title="Infographic"/>
                                             </t>
-                                            <t t-elif="record.slide_type.raw_value == 'webpage'">
+                                            <t t-elif="record.slide_category.raw_value == 'webpage'">
                                                 <i class="fa fa-file-code-o mr-2" aria-label="Webpage" role="img" title="Webpage"/>
                                             </t>
-                                            <t t-elif="record.slide_type.raw_value == 'video'">
+                                            <t t-elif="record.slide_category.raw_value == 'video'">
                                                 <i class="fa fa-file-video-o mr-2" aria-label="Video" role="img" title="Video"/>
                                             </t>
-                                            <t t-elif="record.slide_type.raw_value == 'quiz'">
+                                            <t t-elif="record.slide_category.raw_value == 'quiz'">
                                                 <i class="fa fa-flag mr-2" aria-label="Quiz" role="img" title="Quiz"/>
                                             </t>
                                             <t t-else=""><i class="fa fa-file-pdf-o mr-2" aria-label="Document" role="img" title="Document"/></t>
-                                            <field name="slide_type"/>
+                                            <field name="slide_category"/>
                                         </span>
                                         <span>
                                             <i class="fa fa-clock-o mr-2" aria-label="Duration" role="img" title="Duration"/><field name="completion_time" widget="float_time"/>
@@ -324,7 +324,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Course" name="groupby_channel" domain="[]" context="{'group_by': 'channel_id'}"/>
                         <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'category_id'}"/>
-                        <filter string="Type" name="groupby_type" domain="[]" context="{'group_by': 'slide_type'}"/>
+                        <filter string="Type" name="groupby_type" domain="[]" context="{'group_by': 'slide_category'}"/>
                     </group>
                 </search>
             </field>
@@ -336,7 +336,7 @@
             <field name="arch" type="xml">
                 <graph string="Graph of Contents" stacked="0" sample="1">
                     <field name="channel_id"/>
-                    <field name="slide_type"/>
+                    <field name="slide_category"/>
                     <field name="total_views" type="measure"/>
                     <field name="quiz_first_attempt_reward" invisible="1"/>
                     <field name="quiz_second_attempt_reward" invisible="1"/>

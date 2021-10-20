@@ -29,7 +29,7 @@ var addVideoToSection = function (sectionName, saveAsDraft) {
 	trigger: 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
 }, {
 	content: 'eLearning: click on video',
-	trigger: 'a[data-slide-type=video]',
+	trigger: 'a[data-slide-category=video]',
 }, {
 	content: 'eLearning: fill video link',
 	trigger: 'input[name=url]',
@@ -63,7 +63,7 @@ var addWebPageToSection = function (sectionName, pageName) {
 	trigger: 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
 }, {
 	content: 'eLearning: click on webpage',
-	trigger: 'a[data-slide-type=webpage]',
+	trigger: 'a[data-slide-category=webpage]',
 }, {
 	content: 'eLearning: fill webpage title',
 	trigger: 'input[name=name]',

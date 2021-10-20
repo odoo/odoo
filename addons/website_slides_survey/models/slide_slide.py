@@ -30,27 +30,27 @@ class SlidePartnerRelation(models.Model):
 class Slide(models.Model):
     _inherit = 'slide.slide'
 
-    slide_type = fields.Selection(selection_add=[
+    slide_category = fields.Selection(selection_add=[
         ('certification', 'Certification')
     ], ondelete={'certification': 'set default'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
 
     _sql_constraints = [
-        ('check_survey_id', "CHECK(slide_type != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
-        ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
+        ('check_survey_id', "CHECK(slide_category != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
+        ('check_certification_preview', "CHECK(slide_category != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
 
     @api.onchange('survey_id')
     def _on_change_survey_id(self):
         if self.survey_id:
-            self.slide_type = 'certification'
+            self.slide_category = 'certification'
 
     @api.model
     def create(self, values):
         rec = super(Slide, self).create(values)
         if rec.survey_id:
-            rec.slide_type = 'certification'
+            rec.slide_category = 'certification'
         if 'survey_id' in values:
             rec._ensure_challenge_category()
         return rec
@@ -90,7 +90,7 @@ class Slide(models.Model):
             course can be enrolled multiple times.
         """
         certification_urls = {}
-        for slide in self.filtered(lambda slide: slide.slide_type == 'certification' and slide.survey_id):
+        for slide in self.filtered(lambda slide: slide.slide_category == 'certification' and slide.survey_id):
             if slide.channel_id.is_member:
                 user_membership_id_sudo = slide.user_membership_id.sudo()
                 if user_membership_id_sudo.user_input_ids:

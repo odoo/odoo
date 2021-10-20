@@ -4,7 +4,7 @@
          <record id="slide_template_published" model="mail.template">
             <field name="name">Slide Published</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="subject">New {{ object.slide_type }} published on {{ object.channel_id.name }}</field>
+            <field name="subject">New {{ object.slide_category }} published on {{ object.channel_id.name }}</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -36,14 +36,14 @@
         <record id="slide_template_shared" model="mail.template">
             <field name="name">Slide Shared</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="subject">{{ user.name }} shared a {{ object.slide_type }} with you!</field>
+            <field name="subject">{{ user.name }} shared a {{ object.slide_category }} with you!</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="email_to">{{ ctx.get('email', '') }}</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
                         Hello<br/><br/>
-                        <t t-out="user.name or ''">Mitchell Admin</t> shared the <t t-out="object.slide_type or ''">document</t> <strong t-out="object.name or ''">Trees</strong> with you!
+                        <t t-out="user.name or ''">Mitchell Admin</t> shared the <t t-out="object.slide_category or ''">document</t> <strong t-out="object.name or ''">Trees</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a t-att-href="(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url">
                                 <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>

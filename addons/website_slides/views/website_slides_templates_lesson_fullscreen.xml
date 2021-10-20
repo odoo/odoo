@@ -109,12 +109,12 @@
                     t-att-data-id="slide.id"
                     t-att-data-can-access="can_access"
                     t-att-data-name="slide.name"
-                    t-att-data-type="slide.slide_type"
+                    t-att-data-category="slide.slide_category"
                     t-att-data-slug="slug(slide)"
                     t-att-data-has-question="1 if slide.question_ids else 0"
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
-                    t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
+                    t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'presentation', 'infographic'] else False"
                     t-att-data-is-member="is_member"
                     t-att-data-session-answers="session_answers">
                     <span class="ml-3">
@@ -135,7 +135,7 @@
                                 <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
                             </div>
                         </span>
-                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
+                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.slide_resource_ids or (slide.question_ids and not slide.slide_category =='quiz')" >
                             <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
                             <li t-if="links" t-foreach="links" t-as="link" class="pl-0 mb-1">
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
@@ -159,11 +159,11 @@
                                     <t t-call="website_slides.join_course_link"/>
                                 </li>
                             </div>
-                            <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_type == 'quiz'"
+                            <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_category == 'quiz'"
                                 t-att-data-id="slide.id"
                                 t-att-data-can-access="can_access"
                                 t-att-data-name="slide.name"
-                                t-att-data-type="slide.slide_type"
+                                t-att-data-category="slide.slide_category"
                                 t-att-data-slug="slug(slide)"
                                 t-att-data-has-question="1 if slide.question_ids else 0"
                                 t-att-data-is-quiz="1"

@@ -148,7 +148,7 @@ class TestUi(TestUICommon):
                 (0, 0, {
                     'name': 'DIY Furniture Certification',
                     'sequence': 1,
-                    'slide_type': 'certification',
+                    'slide_category': 'certification',
                     'category_id': False,
                     'is_published': True,
                     'is_preview': False,

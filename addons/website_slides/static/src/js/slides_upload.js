@@ -10,7 +10,7 @@ var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
     events: _.extend({}, Dialog.prototype.events, {
         'click .o_wslides_js_upload_install_button': '_onClickInstallModule',
-        'click .o_wslides_select_type': '_onClickSlideTypeIcon',
+        'click .o_wslides_select_category': '_onClickSlideCategoryIcon',
         'change input#upload': '_onChangeSlideUpload',
         'change input#url': '_onChangeSlideUrl',
     }),
@@ -120,7 +120,7 @@ var SlideUploadDialog = Dialog.extend({
         return form[0].checkValidity() && this.isValidUrl;
     },
     /**
-     * Extract values to submit from form, force the slide_type according to
+     * Extract values to submit from form, force the slide_category according to
      * filled values.
      *
      * @private
@@ -136,30 +136,30 @@ var SlideUploadDialog = Dialog.extend({
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
 
-        // default slide_type (for webpage for instance)
-        if (_.contains(this.slide_type_data), this.get('state')) {
-            values['slide_type'] = this.get('state');
+        // default slide_category (for webpage for instance)
+        if (_.contains(this.slide_category_data), this.get('state')) {
+            values['slide_category'] = this.get('state');
         }
 
         if (this.file.type === 'application/pdf') {
             _.extend(values, {
                 'image_1920': canvas.toDataURL().split(',')[1],
-                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
+                'slide_category': canvas.height > canvas.width ? 'document' : 'presentation',
                 'mime_type': this.file.type,
-                'datas': this.file.data
+                'binary_content': this.file.data
             });
-        } else if (values['slide_type'] === 'webpage') {
+        } else if (values['slide_category'] === 'webpage') {
             _.extend(values, {
                 'mime_type': 'text/html',
                 'image_1920': this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
             const fileData = this.file.type === 'image/svg+xml' ? await this._svgToPNG() : this.file.data;
-            if (values['slide_type'] === 'presentation') {
+            if (values['slide_category'] === 'presentation') {
                 _.extend(values, {
-                    'slide_type': 'infographic',
+                    'slide_category': 'infographic',
                     'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                    'datas': fileData,
+                    'binary_content': fileData,
                 });
             } else {
                 _.extend(values, {
@@ -321,12 +321,12 @@ var SlideUploadDialog = Dialog.extend({
         return values;
     },
     /**
-     * Init the data relative to the support slide type to upload
+     * Init the data relative to the support slide category to upload
      *
      * @private
      */
     _setup: function () {
-        this.slide_type_data = {
+        this.slide_category_data = {
             presentation: {
                 icon: 'fa-file-pdf-o',
                 label: _t('Presentation'),
@@ -393,7 +393,7 @@ var SlideUploadDialog = Dialog.extend({
         } else if (currentType === '_import') {
             tmpl = 'website.slide.upload.modal.import';
         } else {
-            tmpl = this.slide_type_data[currentType]['template'];
+            tmpl = this.slide_category_data[currentType]['template'];
             this.$modal.find('.modal-dialog').addClass('modal-lg');
         }
         this.$('.o_w_slide_upload_modal_container').empty();
@@ -623,10 +623,10 @@ var SlideUploadDialog = Dialog.extend({
         }
     },
 
-    _onClickSlideTypeIcon: function (ev) {
+    _onClickSlideCategoryIcon: function (ev) {
         var $elem = this.$(ev.currentTarget);
-        var slideType = $elem.data('slideType');
-        this.set('state', slideType);
+        var slideCategory = $elem.data('slideCategory');
+        this.set('state', slideCategory);
 
         this._bindSelect2Dropdown();  // rebind select2 at each modal body rendering
     },

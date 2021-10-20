@@ -47,11 +47,11 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
             'is_published': True,
         })
 
-        # Step 2: link the certification to a slide of type 'certification'
+        # Step 2: link the certification to a slide of category 'certification'
         self.slide_certification = self.env['slide.slide'].sudo().create({
             'name': 'Certification slide',
             'channel_id': self.channel.id,
-            'slide_type': 'certification',
+            'slide_category': 'certification',
             'survey_id': certification.id,
             'is_published': True,
         })
