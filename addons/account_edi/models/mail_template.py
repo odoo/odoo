@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models
+from odoo import models
 
 
 class MailTemplate(models.Model):
@@ -32,11 +32,6 @@ class MailTemplate(models.Model):
         for record in records:
             record_data = (res[record.id] if multi_mode else res)
             for doc in record.edi_document_ids:
-
-                # The EDI format will be embedded directly inside the PDF and then, don't need to be added to the
-                # wizard.
-                if doc.edi_format_id._is_embedding_to_invoice_pdf_needed():
-                    continue
                 record_data.setdefault('attachments', [])
                 record_data['attachments'] += self._get_edi_attachments(doc)
 
