@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.tools.pdf import OdooPdfFileReader
 from odoo.osv import expression
 from odoo.tools import html_escape
 
@@ -108,28 +108,6 @@ class AccountEdiFormat(models.Model):
         :returns:       True if this format should be enabled by default on the journal, False otherwise.
         """
         return True
-
-    def _is_embedding_to_invoice_pdf_needed(self):
-        """ Indicate if the EDI must be embedded inside the PDF report.
-
-        :returns: True if the documents need to be embedded, False otherwise.
-        """
-        # TO OVERRIDE
-        return False
-
-    def _get_embedding_to_invoice_pdf_values(self, invoice):
-        """ Get the values to embed to pdf.
-
-        :returns:   A dictionary {'name': name, 'datas': datas} or False if there are no values to embed.
-        * name:     The name of the file.
-        * datas:    The bytes ot the file.
-        """
-        self.ensure_one()
-        attachment = invoice._get_edi_attachment(self)
-        if not attachment or not self._is_embedding_to_invoice_pdf_needed():
-            return False
-        datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
-        return {'name': attachment.name, 'datas': datas}
 
     def _support_batching(self, move, state, company):
         """ Indicate if we can send multiple documents in the same time to the web services.
@@ -296,37 +274,14 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
-    ####################################################
-    # Export Internal methods (not meant to be overridden)
-    ####################################################
-
-    def _embed_edis_to_pdf(self, pdf_content, invoice):
-        """ Create the EDI document of the invoice and embed it in the pdf_content.
-
-        :param pdf_content: the bytes representing the pdf to add the EDIs to.
-        :param invoice: the invoice to generate the EDI from.
-        :returns: the same pdf_content with the EDI of the invoice embed in it.
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
         """
-        attachments = []
-        for edi_format in self.filtered(lambda edi_format: edi_format._is_embedding_to_invoice_pdf_needed()):
-            attach = edi_format._get_embedding_to_invoice_pdf_values(invoice)
-            if attach:
-                attachments.append(attach)
-
-        if attachments:
-            # Add the attachments to the pdf file
-            reader_buffer = io.BytesIO(pdf_content)
-            reader = OdooPdfFileReader(reader_buffer, strict=False)
-            writer = OdooPdfFileWriter()
-            writer.cloneReaderDocumentRoot(reader)
-            for vals in attachments:
-                writer.addAttachment(vals['name'], vals['datas'])
-            buffer = io.BytesIO()
-            writer.write(buffer)
-            pdf_content = buffer.getvalue()
-            reader_buffer.close()
-            buffer.close()
-        return pdf_content
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
 
     ####################################################
     # Import Internal methods (not meant to be overridden)

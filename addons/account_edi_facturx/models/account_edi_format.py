@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty
+from odoo import models, fields, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, str2bool
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
 from datetime import datetime
-from lxml import etree
-from PyPDF2 import PdfFileReader
-import base64
 import markupsafe
-
-import io
 
 import logging
 
@@ -34,16 +29,25 @@ class AccountEdiFormat(models.Model):
             res[invoice] = {'success': True, 'attachment': attachment}
         return res
 
-    def _is_embedding_to_invoice_pdf_needed(self):
-        # OVERRIDE
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
         self.ensure_one()
-        return True if self.code == 'facturx_1_0_05' else super()._is_embedding_to_invoice_pdf_needed()
+        if self.code != 'facturx_1_0_05':
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if not edi_document.attachment_id:
+            return
 
-    def _get_embedding_to_invoice_pdf_values(self, invoice):
-        values = super()._get_embedding_to_invoice_pdf_values(invoice)
-        if values and self.code == 'facturx_1_0_05':
-            values['name'] = 'factur-x.xml'
-        return values
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception as e:
+                _logger.exception("Error while converting to PDF/A: %s", e)
+            metadata_template = self.env.ref('account_edi_facturx.account_invoice_pdfa_3_facturx_metadata', raise_if_not_found=False)
+            if metadata_template:
+                pdf_writer.add_file_metadata(metadata_template._render({
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                }).encode())
 
     def _export_facturx(self, invoice):
 
@@ -68,11 +72,10 @@ class AccountEdiFormat(models.Model):
 
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)
-        xml_name = '%s_facturx.xml' % (invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
-            'name': xml_name,
+            'name': 'factur-x.xml',
             'raw': xml_content.encode(),
-            'mimetype': 'application/xml'
+            'mimetype': '/application#2Fxml'
         })
 
     def _is_facturx(self, filename, tree):

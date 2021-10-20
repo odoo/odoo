@@ -115,10 +115,12 @@ class AccountEdiFormat(models.Model):
     # Export
     # -------------------------------------------------------------------------
 
-    def _is_embedding_to_invoice_pdf_needed(self):
-        # OVERRIDE
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
         self.ensure_one()
-        return True if self.code == 'fattura_pa' else super()._is_embedding_to_invoice_pdf_needed()
+        if self.code != 'fattura_pa':
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if edi_document.attachment_id:
+            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
 
     def _is_compatible_with_journal(self, journal):
         # OVERRIDE
