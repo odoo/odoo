@@ -972,6 +972,77 @@ class TestReconciliationExec(TestReconciliation):
         self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
         self.assertEqual(negative_line[0]['amount'], -50.0, 'The amount of the amls should be -50')
 
+    def test_diff_exchange_revert_dates(self):
+        def get_reverted_exchange_move(exchange_move):
+            return self.env['account.move'].search(
+                [
+                    ('journal_id', '=', exchange_move.journal_id.id),
+                    ('ref', 'ilike', exchange_move.name),
+                ],
+                limit=1,
+            )
+        self.env['res.currency.rate'].create({
+            'name': '2020-07-01',
+            'rate': 1.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2020-08-01',
+            'rate': 0.5,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv = self._create_invoice(
+            invoice_amount=111,
+            currency_id=self.currency_usd_id,
+            auto_validate=True,
+            date_invoice='2020-07-01',
+        )
+        payment_data = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=inv.ids,
+        ).create({
+            'payment_date': '2020-08-01',
+        }).create_payments()
+        payment = self.env['account.payment'].browse(payment_data['res_id'])
+
+        # Testing exchange_move.date < today
+        exchange_reconcile = payment.move_line_ids.mapped('full_reconcile_id')
+        exchange_move = exchange_reconcile.exchange_move_id
+        exchange_reconcile.unlink()
+        reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+        # exchange_move.date < today => reverted_exchange_move.date is last day of exchange_move.date month
+        self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-08-31'))
+
+        # Testing exchange_move.date < lockdate
+        credit_aml = payment.move_line_ids.filtered('credit')
+        inv.js_assign_outstanding_line(credit_aml.id)
+        exchange_reconcile = payment.move_line_ids.mapped('full_reconcile_id')
+        self.env.ref('base.main_company').period_lock_date = '2020-09-01'
+        exchange_move = exchange_reconcile.exchange_move_id
+        exchange_reconcile.unlink()
+        reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+        # exchange_move.date < lockdate => reverted_exchange_move.date is last day of lockdate+1day month
+        self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-09-30'))
+        self.env.ref('base.main_company').period_lock_date = None
+
+        # Testing exchange_move.date = today
+        frozen_today = fields.Date.from_string('2020-10-01')
+        payment.action_draft()
+        payment.name = None
+        payment.payment_date = frozen_today
+        payment.post()
+        credit_aml = payment.move_line_ids.filtered('credit')
+        inv.js_assign_outstanding_line(credit_aml.id)
+        exchange_reconcile = payment.move_line_ids.mapped('full_reconcile_id')
+        exchange_move = exchange_reconcile.exchange_move_id
+        with unittest.mock.patch.object(fields.Date, 'context_today', lambda *args, **kwargs: frozen_today):
+            exchange_reconcile.unlink()
+            reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+            # exchange_move.date = today => reverted_exchange_move.date is today
+            self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-10-01'))
+
     def test_revert_payment_and_reconcile_exchange(self):
 
         # A reversal of a reconciled payment which created a currency exchange entry, should create reversal moves

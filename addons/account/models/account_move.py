@@ -472,6 +472,27 @@ class AccountMove(models.Model):
             'tag_ids': [(6, 0, tax_vals['tag_ids'])],
         }
 
+    def _get_reverse_date(self):
+        """ Reverse non sale moves at reversed move date or earliest account date allowed by lockdates."""
+        self.ensure_one()
+        if self.is_sale_document(include_receipts=True):
+            return fields.Date.context_today(self)
+        else:
+            affect_tax_report = any(line._affect_tax_report() for line in self.line_ids)
+            max_lock_date = max(
+                affect_tax_report and self.company_id.tax_lock_date or date.min,
+                self.company_id.period_lock_date or date.min,
+                self.company_id.fiscalyear_lock_date or date.min,
+            )
+            # if self.date <= lockdate, return earliest accounting date for day after after lockdate
+            # else return earliest accounting date for self.date
+            earliest = max(max_lock_date + timedelta(days=1), self.date)
+            today = fields.Date.context_today(self)
+            if (today.year, today.month) > (earliest.year, earliest.month):
+                return date_utils.get_month(earliest)[1]
+            else:
+                return max(earliest, today)
+
     def _get_tax_force_sign(self):
         """ The sign must be forced to a negative sign in case the balance is on credit
             to avoid negatif taxes amount.
@@ -2193,6 +2214,7 @@ class AccountMove(models.Model):
                 'type': reverse_type_map[move.type],
                 'reversed_entry_id': move.id,
             })
+            default_values.setdefault('date', move._get_reverse_date())
             move_vals_list.append(move.with_context(move_reverse_cancel=cancel)._reverse_move_vals(default_values, cancel=cancel))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
@@ -4701,10 +4723,7 @@ class AccountPartialReconcile(models.Model):
                 full_to_unlink |= rec.full_reconcile_id
         #reverse the tax basis move created at the reconciliation time
         for move in self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self._ids)]):
-            if move.date > (move.company_id.period_lock_date or date.min):
-                move._reverse_moves([{'ref': _('Reversal of %s') % move.name}], cancel=True)
-            else:
-                move._reverse_moves([{'date': fields.Date.today(), 'ref': _('Reversal of %s') % move.name}], cancel=True)
+            move._reverse_moves([{'ref': _('Reversal of %s') % move.name}], cancel=True)
         res = super(AccountPartialReconcile, self).unlink()
         if full_to_unlink:
             full_to_unlink.unlink()
@@ -4733,12 +4752,7 @@ class AccountFullReconcile(models.Model):
                 # (reversing will cause a nested attempt to drop the full reconciliation)
                 to_reverse = rec.exchange_move_id
                 rec.exchange_move_id = False
-                if to_reverse.date > (to_reverse.company_id.period_lock_date or date.min):
-                    reverse_date = to_reverse.date
-                else:
-                    reverse_date = fields.Date.today()
                 to_reverse._reverse_moves([{
-                    'date': reverse_date,
                     'ref': _('Reversal of: %s') % to_reverse.name,
                 }], cancel=True)
         return super(AccountFullReconcile, self).unlink()
