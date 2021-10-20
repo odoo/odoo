@@ -351,11 +351,12 @@ class StockWarehouseOrderpoint(models.Model):
             pwh_per_day[(lead_days, warehouse)].append(product.id)
         # group product by lead_days and warehouse in order to read virtual_available
         # in batch
+        today = fields.datetime.now().replace(hour=23, minute=59, second=59)
         for (days, warehouse), p_ids in pwh_per_day.items():
             products = self.env['product.product'].browse(p_ids)
             qties = products.with_context(
                 warehouse=warehouse.id,
-                to_date=fields.datetime.now() + relativedelta.relativedelta(days=days)
+                to_date=today + relativedelta.relativedelta(days=days)
             ).read(['virtual_available'])
             for qty in qties:
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) >= 0:
