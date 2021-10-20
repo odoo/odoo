@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from io import BytesIO
+from logging import getLogger
+from PyPDF2 import PdfFileReader
 
-from odoo import models, fields, api, _
+from odoo import fields, models
+from odoo import tools
+from odoo.tools.pdf import OdooPdfFileWriter
 
-from PyPDF2 import PdfFileWriter, PdfFileReader
-
-import io
+_logger = getLogger(__name__)
 
 
 class IrActionsReport(models.Model):
@@ -17,16 +20,31 @@ class IrActionsReport(models.Model):
             if invoice.is_sale_document() and invoice.state != 'draft':
                 xml_content = invoice._export_as_facturx_xml()
 
-                # Add attachment.
-                reader_buffer = io.BytesIO(pdf_content)
+                reader_buffer = BytesIO(pdf_content)
                 reader = PdfFileReader(reader_buffer)
-                writer = PdfFileWriter()
+                writer = OdooPdfFileWriter()
                 writer.cloneReaderDocumentRoot(reader)
-                writer.addAttachment('factur-x.xml', xml_content)
-                buffer = io.BytesIO()
+
+                if tools.str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
+                    try:
+                        writer.convert_to_pdfa()
+                    except Exception as e:
+                        _logger.exception("Error while converting to PDF/A: %s", e)
+
+                    metadata_template = self.env.ref('account_facturx.account_invoice_pdfa_3_facturx_metadata', False)
+                    if metadata_template:
+                        metadata_content = metadata_template.render({
+                            'title': invoice.name,
+                            'date': fields.Date.context_today(self),
+                        })
+                        writer.add_file_metadata(metadata_content)
+
+                writer.addAttachment('factur-x.xml', xml_content, '/application#2Fxml')
+
+                buffer = BytesIO()
                 writer.write(buffer)
                 pdf_content = buffer.getvalue()
-
-                reader_buffer.close()
                 buffer.close()
+                reader_buffer.close()
+
         return super(IrActionsReport, self)._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=res_ids)
