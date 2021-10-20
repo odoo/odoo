@@ -1084,6 +1084,30 @@ QUnit.module("utils", () => {
             assert.verifySteps(["obj"]);
         });
 
+        QUnit.test("can call a non bound patched method", async function (assert) {
+            // use case: patching a function on window (e.g. setTimeout)
+            assert.expect(3);
+
+            const obj = {
+                fn() {
+                    assert.step("original");
+                },
+            };
+
+            const originalFn = obj.fn;
+            patch(obj, "patch", {
+                fn() {
+                    assert.step("patched");
+                    originalFn();
+                },
+            });
+
+            const fn = obj.fn; // purposely not bound
+            fn();
+
+            assert.verifySteps(["patched", "original"]);
+        });
+
         QUnit.module("patch 'pure' option");
 
         QUnit.test("function objects are preserved with 'pure' patch", async function (assert) {
