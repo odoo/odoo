@@ -300,7 +300,7 @@ class DataList extends DataPoint {
         this.resIds = params.resIds || null;
 
         this.domain = [];
-        this.groupBy = [];
+        this.groupBy = params.groupBy || [];
         this.data = [];
         this.views = {};
         this.orderByColumn = {};
@@ -431,12 +431,13 @@ class DataList extends DataPoint {
                 }
                 // FIXME: only retrieve the former group if groupby same field
                 let group = this.data.find((g) => g.value === groupValue);
-                if (!group) {
+                if (!group || !group.isLoaded) {
                     const params = {
                         groupCount: groupData[`${this.groupBy[0]}_count`],
                         groupDisplay,
                         groupValue,
                         groupDomain: groupData.__domain,
+                        groupBy,
                     };
                     group = this.createList(this.resModel, params);
                 }
@@ -484,7 +485,7 @@ export class RelationalModel extends Model {
         if (params.rootType === "record") {
             this.root = new DataRecord(this, this.resModel, this.resId, dataPointParams);
         } else {
-            dataPointParams.openGroupsByDefault = params.openGroupByDefault || false;
+            dataPointParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.root = new DataList(this, this.resModel, dataPointParams);
         }
 

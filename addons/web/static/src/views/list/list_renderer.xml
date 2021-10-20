@@ -51,7 +51,8 @@
     <t t-name="web.ListRenderer.GroupRow" owl="1">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header" t-on-click="toggleGroup(group)">
             <th class="o_group_name" t-att-colspan="columns.length + 1">
-                <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}} pl-1 pr-2"/>
+                <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
+                    t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                 <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
             </th>
         </tr>
