@@ -94,7 +94,13 @@ ListView.display_name = "List";
 ListView.icon = "fa-list-ul";
 ListView.multiRecord = true;
 ListView.components = { ListRenderer, Layout };
-ListView.props = { ...standardViewProps };
+ListView.props = {
+    ...standardViewProps,
+    hasSelectors: { type: Boolean, optional: 1 },
+};
+ListView.defaultProps = {
+    hasSelectors: true,
+};
 
 ListView.template = `web.ListView`;
 ListView.buttonTemplate = "web.ListView.Buttons";

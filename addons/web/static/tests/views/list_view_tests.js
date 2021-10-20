@@ -1186,7 +1186,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("basic grouped list rendering", async function (assert) {
+    QUnit.test("basic grouped list rendering", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
@@ -1230,51 +1230,40 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("basic grouped list rendering 1 col without selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 1 col without selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree ><field name="foo"/></tree>',
+            arch: '<tree><field name="foo"/></tree>',
             groupBy: ["bar"],
             hasSelectors: false,
         });
 
+        assert.containsOnce(list.el.querySelector(".o_group_header"), "th");
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            1,
-            "group header should have exactly 1 column"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "1",
-            "the header should span the whole table"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "1"
         );
     });
 
-    QUnit.skip("basic grouped list rendering 1 col with selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 1 col with selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree ><field name="foo"/></tree>',
+            arch: '<tree><field name="foo"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: true,
         });
 
+        assert.containsOnce(list.el.querySelector(".o_group_header"), "th");
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            1,
-            "group header should have exactly 1 column"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "2",
-            "the header should span the whole table"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "2"
         );
     });
 
@@ -1290,15 +1279,10 @@ QUnit.module("Views", (hooks) => {
             hasSelectors: false,
         });
 
+        assert.containsN(list.el.querySelector(".o_group_header"), "th", 2);
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            2,
-            "group header should have exactly 2 column"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "1",
-            "the header should not span the whole table"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "1"
         );
     });
 
@@ -1807,13 +1791,16 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
         });
 
-        await click($(list.el).find("th.o_group_name:nth(1)"));
-        await testUtils.nextTick();
-        assert.containsN(list, "tbody:eq(1) tr", 2, "open group should contain 2 records");
-        assert.containsN(list, "tbody", 3, "should contain 3 tbody");
+        assert.containsN(list, "tr.o_group_header", 3);
+        assert.containsNone(list, "tr.o_data_row");
+
+        await click(list.el.querySelectorAll("th.o_group_name")[1]);
+        await nextTick();
+        assert.containsN(list, "tr.o_group_header", 3);
+        assert.containsN(list, "tr.o_data_row", 2);
         assert.containsOnce(list, "td:contains(9)", "should contain 9");
         assert.containsOnce(list, "td:contains(-4)", "should contain -4");
-        assert.containsOnce(list, "td:contains(10)", "should contain 10");
+        assert.containsOnce(list, "td:contains(10)", "should contain 10"); // FIXME: missing aggregates
         assert.containsOnce(
             list,
             "tr.o_group_header td:contains(10)",

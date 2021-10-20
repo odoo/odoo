@@ -7,7 +7,7 @@
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}"/>
             </t>
-            <ListRenderer list="model.root" fields="props.fields" info="archInfo" openRecord="openRecord" />
+            <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord="openRecord" />
         </Layout>
     </t>
 

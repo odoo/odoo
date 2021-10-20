@@ -7,7 +7,7 @@
                 <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
                     <thead>
                         <tr>
-                            <th class="o_list_record_selector">
+                            <th t-if="props.hasSelectors" class="o_list_record_selector">
                                 <CheckBox/>
                             </th>
                             <t t-foreach="columns" t-as="column" t-key="column.name">
@@ -50,7 +50,7 @@
 
     <t t-name="web.ListRenderer.GroupRow" owl="1">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header" t-on-click="toggleGroup(group)">
-            <th class="o_group_name" t-att-colspan="columns.length + 1">
+            <th class="o_group_name" t-att-colspan="columns.length + (props.hasSelectors ? 1 : 0)">
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                 <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
@@ -60,7 +60,7 @@
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
         <tr class="o_data_row">
-            <td class="o_list_record_selector">
+            <td t-if="props.hasSelectors" class="o_list_record_selector">
                 <CheckBox />
             </td>
             <t t-foreach="columns" t-as="column" t-key="column_index">
