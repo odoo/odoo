@@ -191,7 +191,9 @@ class Lead(models.Model):
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True)
-    lang_id = fields.Many2one('res.lang', string='Language', compute='_compute_lang_id', readonly=False, store=True)
+    lang_id = fields.Many2one(
+        'res.lang', string='Language',
+        compute='_compute_lang_id', readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
     lang_active_count = fields.Integer(compute='_compute_lang_active_count')
     # Address fields
@@ -409,10 +411,13 @@ class Lead(models.Model):
         one if set. """
         # prepare cache
         lang_codes = [code for code in self.mapped('partner_id.lang') if code]
-        lang_id_by_code = dict(
-            (code, self.env['res.lang']._lang_get_id(code))
-            for code in lang_codes
-        )
+        if lang_codes:
+            lang_id_by_code = dict(
+                (code, self.env['res.lang']._lang_get_id(code))
+                for code in lang_codes
+            )
+        else:
+            lang_id_by_code = {}
         for lead in self.filtered('partner_id'):
             lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
