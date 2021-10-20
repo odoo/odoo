@@ -93,6 +93,7 @@
             <field name="arch" type="xml">
                 <form string="Pricelist Rule">
                     <sheet>
+                        <field name="name" invisible="1"/>
                         <group name="pricelist_rule_computation" groups="product.group_sale_pricelist" string="Price Computation">
                             <group name="pricelist_rule_method">
                                 <field name="compute_price" string="Computation" widget="radio"/>
@@ -105,6 +106,7 @@
                         </group>
                         <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
                             <group>
+                                <field name="price" invisible="1"/>
                                 <field name="fixed_price" widget="monetary" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}"/>
                                 <label for="percent_price" string="Discount" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}"/>
                                 <div class="o_row" attrs="{'invisible':[('compute_price', '!=', 'percentage')]}">
