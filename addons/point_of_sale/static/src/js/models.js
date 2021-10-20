@@ -132,9 +132,10 @@ exports.PosModel = Backbone.Model.extend({
                 method: 'load_pos_data',
                 args: [[odoo.pos_session_id]],
             }).then(async (loadedModels) => {
+                const tmp = {};
                 for (const model of self.models) {
                     if (model.condition ? !model.condition(self) : false) continue;
-                    await model.loaded(self, loadedModels[model.model] || [], {});
+                    await model.loaded(self, loadedModels[model.model] || [], tmp);
                 }
                 return self.after_load_server_data();
             }).then(() => {
