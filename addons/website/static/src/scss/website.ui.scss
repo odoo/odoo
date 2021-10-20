@@ -96,14 +96,13 @@ body.o_connected_user {
         font-size: inherit;
         border-radius: 0;
         color: $dropdown-link-active-color;
+        max-height: 500px; // Fallback
+        max-height: calc(90vh - #{$o-navbar-height});
+        overflow: auto;
     }
     #oe_applications .dropdown-menu {
         // Compensate #oe_applications's padding
         margin-left: $dropdown-item-padding-x * -0.5;
-
-        max-height: 500px; // Fallback
-        max-height: calc(90vh - #{$o-navbar-height});
-        overflow: auto;
     }
 
     .o_menu_sections {
