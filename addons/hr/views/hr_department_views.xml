@@ -7,6 +7,11 @@
             <field name="arch" type="xml">
                 <form string="department">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="%(hr.act_employee_from_department)d" icon="fa-users">
+                                <field string="Employees" name="total_employee" widget="statinfo"/>
+                            </button>
+                        </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <group col="4">
