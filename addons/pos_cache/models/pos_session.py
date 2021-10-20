@@ -32,11 +32,13 @@ class PosSession(models.Model):
 
     def _get_pos_ui_product_product(self, params):
         """
-        Replace the way products are loaded. We only load the first 100000 products.
+        Replace the way products are loaded. We only load the first `limited_products_amount` products.
         The UI will make further requests of the remaining products.
         """
         records = self.get_products_from_cache()
-        return records[:100000]
+        config = self.config_id
+        first_N_to_load = config.limited_products_amount if config.limited_products_loading else 100000
+        return records[:first_N_to_load]
 
     def get_cached_products(self, start, end):
         records = self.get_products_from_cache()

@@ -137,6 +137,15 @@ exports.PosModel = Backbone.Model.extend({
                     await model.loaded(self, loadedModels[model.model] || [], {});
                 }
                 return self.after_load_server_data();
+            }).then(() => {
+                // Remaining products and partners should be loaded in the background after
+                // `after_load_server_data`.
+                if (this.config.limited_products_loading && this.config.product_load_background) {
+                    this.loadProductsBackground();
+                }
+                if (this.config.limited_partners_loading && this.config.partner_load_background) {
+                    this.loadPartnersBackground();
+                }
             });
     },
     getDefaultSearchDetails: function() {
@@ -167,13 +176,6 @@ exports.PosModel = Backbone.Model.extend({
 
             return this.connect_to_proxy();
         }
-        if (this.config.limited_products_loading && this.config.product_load_background) {
-            this.loadProductsBackground();
-        }
-        if (this.config.limited_partners_loading && this.config.partner_load_background) {
-            this.loadPartnersBackground();
-        }
-        return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
     destroy: function(){
@@ -421,8 +423,6 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.product',
         label: 'load_products',
-        condition: function (self) { return !self.config.limited_products_loading; },
-        context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
             var conversion_rate = self.currency.rate / self.company_currency.rate;

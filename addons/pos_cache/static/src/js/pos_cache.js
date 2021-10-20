@@ -17,8 +17,8 @@ models.PosModel = models.PosModel.extend({
      * This method will make sense if you are aware that the behavior of
      * `_meta_product_product` method in the backend is modified by pos_cache module.
      * Basically, before `after_load_server_data`, initial number of products is loaded
-     * (100000 products to be exact). This method is extended, to basically perform
-     * background tasks to load the remaining products from the backend.
+     * This method is extended, to basically perform background tasks to load the remaining
+     * products from the backend.
      */
     async after_load_server_data() {
         await posmodel_super.after_load_server_data.call(this, ...arguments);
@@ -29,7 +29,7 @@ models.PosModel = models.PosModel.extend({
         const totalProductsCount = await this._getTotalProductsCount();
         const nRemaining = totalProductsCount - nInitiallyLoaded;
         if (!(nRemaining > 0)) return;
-        const multiple = 100000;
+        const multiple = this.config.limited_products_loading ? this.config.limited_products_amount : 100000;
         const nLoops = roundUpDiv(nRemaining, multiple);
         for (let i = 0; i < nLoops; i++) {
             await this._loadCachedProducts(i * multiple + nInitiallyLoaded, (i + 1) * multiple + nInitiallyLoaded);
