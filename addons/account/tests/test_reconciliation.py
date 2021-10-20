@@ -4,6 +4,7 @@
 import time
 import unittest
 from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo import api, fields
 from odoo.addons.account.tests.common import TestAccountReconciliationCommon
@@ -454,6 +455,60 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(reversed_bank_line.full_reconcile_id.id, bank_line.full_reconcile_id.id)
         self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
 
+    @freeze_time('2020-10-01')
+    def test_diff_exchange_revert_dates(self):
+        def get_reverted_exchange_move(exchange_move):
+            return self.env['account.move'].search(
+                [
+                    ('journal_id', '=', exchange_move.journal_id.id),
+                    ('ref', 'ilike', exchange_move.name),
+                ],
+                limit=1,
+            )
+        currency = self.setup_multi_currency_data({'name': 'Shiny Metals'})['currency']
+        inv = self._create_invoice(invoice_amount=111, currency_id=currency, date_invoice='2016-06-01', auto_validate=True)
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=inv.ids,
+        ).create({
+            'amount': 111,
+            'currency_id': currency.id,
+            'payment_date': '2020-08-01',
+        })._create_payments()
+
+        # Testing exchange_move.date < today
+        self.assertTrue(inv.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
+        exchange_reconcile = payment.line_ids.mapped('full_reconcile_id')
+        exchange_move = exchange_reconcile.exchange_move_id
+        exchange_reconcile.unlink()
+        reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+        # exchange_move.date < today => reverted_exchange_move.date is last day of exchange_move.date month
+        self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-08-31'))
+
+        # Testing exchange_move.date < lockdate
+        credit_aml = payment.line_ids.filtered('credit')
+        inv.js_assign_outstanding_line(credit_aml.id)
+        exchange_reconcile = payment.line_ids.mapped('full_reconcile_id')
+        self.company.period_lock_date = '2020-09-01'
+        exchange_move = exchange_reconcile.exchange_move_id
+        exchange_reconcile.unlink()
+        reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+        # exchange_move.date < lockdate => reverted_exchange_move.date is last day of lockdate+1day month
+        self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-09-30'))
+        self.company.period_lock_date = None
+
+        # Testing exchange_move.date = today
+        payment.action_draft()
+        payment.name = None
+        payment.date = '2020-10-01'  # today
+        payment.action_post()
+        inv.js_assign_outstanding_line(credit_aml.id)
+        exchange_reconcile = payment.line_ids.mapped('full_reconcile_id')
+        exchange_move = exchange_reconcile.exchange_move_id
+        exchange_reconcile.unlink()
+        reverted_exchange_move = get_reverted_exchange_move(exchange_move)
+        # exchange_move.date = today => reverted_exchange_move.date is today
+        self.assertEqual(reverted_exchange_move.date, fields.Date.from_string('2020-10-01'))
 
     def test_revert_payment_and_reconcile_exchange(self):
 
