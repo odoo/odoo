@@ -14,3 +14,4 @@ List of contributors:
 
 Pascal Pelzer pascal.pelzer@metrum.lu https://github.com/PascalPelzer
 Jonathan Nemry jonathan.nemry@metrum.lu https://github.com/JonathanNEMRY
+Lorenzo Ciciotti lorenzo.ciciotti@metrum.lu https://github.com/lorenzo6ioti
