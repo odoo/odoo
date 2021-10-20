@@ -4,6 +4,7 @@ import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "./helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
+import { _t } from "@web/core/l10n/translation";
 
 class RequestBatcherORM extends ORM {
     constructor() {
@@ -294,8 +295,9 @@ class DataList extends DataPoint {
     constructor(model, resModel, params = {}) {
         super(model, resModel, params);
 
+        this.openGroupsByDefault = params.openGroupsByDefault;
+
         this.resIds = params.resIds || null;
-        this.groupData = params.groupData || null;
 
         this.domain = [];
         this.groupBy = [];
@@ -303,9 +305,11 @@ class DataList extends DataPoint {
         this.views = {};
         this.orderByColumn = {};
 
-        if (this.groupData) {
-            this.domain = params.groupData.__domain;
+        if (params.groupDomain) {
+            this.domain = params.groupDomain;
         }
+        this.count = params.groupCount;
+        this.displayName = params.groupDisplay;
 
         for (const type in params.views || {}) {
             const [mode] = getX2MViewModes(type);
@@ -352,6 +356,7 @@ class DataList extends DataPoint {
         } else {
             this.data = await this.searchRecords();
         }
+        this.isLoaded = true;
     }
 
     /**
@@ -403,7 +408,7 @@ class DataList extends DataPoint {
      * @returns {Promise<() => Promise<DataRecord>>}
      */
     async loadGroups() {
-        const { groups } = await this.model.orm.webReadGroup(
+        const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
             this.activeFields,
@@ -412,20 +417,36 @@ class DataList extends DataPoint {
                 limit: 40,
             }
         );
+        this.count = length;
 
         const groupBy = this.groupBy.slice(1);
         return Promise.all(
             groups.map(async (groupData) => {
-                const list = this.createList(this.resModel, { groupData });
-                await list.load({ groupBy });
+                let groupDisplay = groupData[`${this.groupBy[0]}`];
+                if (this.fields[this.groupBy[0]].type === "many2one") {
+                    groupDisplay = groupDisplay[1] || _t("Undefined");
+                }
+                const params = {
+                    groupCount: groupData[`${this.groupBy[0]}_count`],
+                    groupDisplay,
+                    groupDomain: groupData.__domain,
+                };
+                const list = this.createList(this.resModel, params);
+                if (this.openGroupsByDefault) {
+                    await list.load({ groupBy });
+                }
                 return list;
             })
         );
     }
 
     async toggle() {
-        this.isOpen = !this.isOpen;
-        // FIXME: load group here (and not by default);
+        if (this.isLoaded) {
+            this.data = [];
+            this.isLoaded = false;
+        } else {
+            await this.load();
+        }
         this.model.notify();
     }
 }
@@ -436,13 +457,28 @@ export class RelationalModel extends Model {
         this.db = Object.create(null);
 
         this.resModel = params.resModel;
-        this.resId = params.resId;
-        this.resIds = params.resIds || [];
+        this.resId = params.resId; // not sure
+        this.resIds = params.resIds || []; // not sure
 
         this.relations = params.relations || {};
-        this.fields = params.fields || {};
-        this.activeFields = params.activeFields || {};
-        this.viewMode = params.viewMode || null;
+        // this.fields = params.fields || {};
+        // this.activeFields = params.activeFields || {};
+        // this.viewMode = params.viewMode || null;
+
+        const dataPointParams = {
+            activeFields: params.activeFields || {},
+            fields: params.fields || {},
+            viewMode: params.viewMode || null,
+        };
+        if (this.resIds.length) {
+            dataPointParams.resIds = this.resIds;
+        }
+        if (params.rootType === "record") {
+            this.root = new DataRecord(this, this.resModel, this.resId, dataPointParams);
+        } else {
+            dataPointParams.openGroupsByDefault = params.openGroupByDefault || false;
+            this.root = new DataList(this, this.resModel, dataPointParams);
+        }
 
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
@@ -453,24 +489,9 @@ export class RelationalModel extends Model {
      * @returns {Promise<void>}
      */
     async load(params = {}) {
-        if (params.resId) {
+        if ("resId" in params) {
             this.resId = params.resId;
         }
-        const dataPointParams = {
-            activeFields: this.activeFields,
-            fields: this.fields,
-            viewMode: this.viewMode,
-        };
-        if (this.resIds.length) {
-            dataPointParams.resIds = this.resIds;
-        }
-        if (this.resId) {
-            // FIXME: what if it's a new record in form view?
-            this.root = new DataRecord(this, this.resModel, this.resId, dataPointParams);
-        } else {
-            this.root = new DataList(this, this.resModel, dataPointParams);
-        }
-
         await this.keepLast.add(this.root.load(params));
         this.notify();
 

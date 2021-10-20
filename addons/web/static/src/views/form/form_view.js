@@ -48,6 +48,7 @@ class FormView extends Component {
             relations: this.archInfo.relations,
             activeFields: this.archInfo.fields,
             viewMode: "form",
+            rootType: "record",
         });
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
         const { create, edit } = this.archInfo.activeActions;
@@ -62,8 +63,7 @@ class FormView extends Component {
     }
 
     createRecord() {
-        this.model.resId = null;
-        this.model.load();
+        this.model.load({ resId: null });
     }
     async saveRecord() {
         this.model.root.save();

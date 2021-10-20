@@ -31,11 +31,11 @@ export class KanbanRenderer extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
-        useSubEnv({ model: this.props.record.model });
+        useSubEnv({ model: this.props.list.model });
     }
 
     quickCreate(group) {
-        const [groupByField] = this.props.record.model.root.groupBy;
+        const [groupByField] = this.props.list.model.root.groupBy;
         const value = group.groupData[groupByField];
         this.state.quickCreate[group.id] = {
             [groupByField]: Array.isArray(value) ? value[0] : value,
@@ -43,7 +43,7 @@ export class KanbanRenderer extends Component {
     }
 
     openRecord(record) {
-        const resIds = this.props.record.data.map((datapoint) => datapoint.resId);
+        const resIds = this.props.list.data.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });
     }
 
@@ -75,7 +75,7 @@ export class KanbanRenderer extends Component {
             }
             case "set_cover": {
                 const { fieldName, widget, autoOpen } = params;
-                const field = this.props.record.fields[fieldName];
+                const field = this.props.list.fields[fieldName];
                 if (
                     field.type === "many2one" &&
                     field.relation === "ir.attachment" &&
@@ -102,13 +102,6 @@ export class KanbanRenderer extends Component {
         }
     }
 
-    getColumnTitle(group) {
-        const { groupData } = group;
-        const [groupByField] = this.props.record.groupBy;
-        const value = groupData[groupByField];
-        return Array.isArray(value) ? value[1] : value;
-    }
-
     onCardClicked(record, ev) {
         if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
             return;
@@ -133,7 +126,7 @@ export class KanbanRenderer extends Component {
      */
     kanban_image(model, field, idOrIds, placeholder) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = this.props.record.model.get({ resId: id }) || { data: {} };
+        const record = this.props.list.model.get({ resId: id }) || { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type

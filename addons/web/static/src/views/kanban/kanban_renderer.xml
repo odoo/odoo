@@ -2,17 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer" owl="1">
-        <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.record.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
-            <t t-foreach="props.record.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
-                <t t-if="groupOrRecord.groupData">
+        <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
+            <t t-foreach="props.list.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
+                <t t-if="props.list.isGrouped">
                     <t t-set="group" t-value="groupOrRecord" />
                     <div class="o_kanban_group">
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
-                                <t t-set="columnTitle" t-value="getColumnTitle(group)" />
                                 <span class="o_column_title">
-                                    <t t-if="columnTitle" t-esc="columnTitle" />
-                                    <t t-else="">Undefined</t>
+                                    <t t-esc="group.displayName" />
                                 </span>
                                 <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
                                     <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
@@ -20,7 +18,7 @@
                             </div>
                         </div>
                         <t t-if="state.quickCreate[group.id]">
-                            <View resModel="props.record.resModel" type="'form'" views="[]" mode="'edit'" display="{ controlPanel: false }" />
+                            <View resModel="props.list.resModel" type="'form'" views="[]" mode="'edit'" display="{ controlPanel: false }" />
                         </t>
                         <t t-foreach="group.data" t-as="record" t-key="record.id">
                             <t t-call="{{ cardTemplate }}" />
@@ -33,7 +31,7 @@
                     </t>
                 </t>
             </t>
-            <t t-if="!props.record.isGrouped">
+            <t t-if="!props.list.isGrouped">
                 <!-- kanban ghost cards are used to properly space last elements. -->
                 <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost" />
             </t>
