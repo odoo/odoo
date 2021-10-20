@@ -778,7 +778,7 @@ class expression(object):
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'NOT exists'
-                        query = f'{op1} (SELECT "{field.inverse_name}" FROM {comodel._table} WHERE "{alias}"."id"="{comodel._table}"."{field.inverse_name}")'
+                        query = f'{op1} (SELECT 1 FROM {comodel._table} __xx WHERE "{alias}"."id"=__xx."{field.inverse_name}")'
                         push_result(query, [])
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
@@ -834,7 +834,7 @@ class expression(object):
 
                 else:
                     op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'NOT exists'
-                    query = f'{op1} (SELECT "{rel_id1}" FROM {rel_table} WHERE "{alias}"."id"="{rel_table}"."{rel_id1}")'
+                    query = f'{op1} (SELECT 1 FROM {rel_table} __xx WHERE "{alias}"."id"=__xx."{rel_id1}")'
                     push_result(query, [])
 
             elif field.type == 'many2one':
