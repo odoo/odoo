@@ -13,7 +13,7 @@
                             <a href="/slides">Courses</a>
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('active' if not slide else '')" />
-                        <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_type and not slide else '')">
+                        <li t-att-class="'breadcrumb-item %s' % ('active' if not search_category and not search_tag and not search_slide_category and not slide else '')">
                             <a t-att-href="'/slides/%s' % slug(channel)"><span t-esc="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
@@ -25,8 +25,8 @@
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized">
                             <a t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">Uncategorized</a>
                         </li>
-                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type">
-                            <a t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)"><span t-esc="slide_types[search_slide_type]"/></a>
+                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category">
+                            <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)"><span t-esc="slide_categories[search_slide_category]"/></a>
                         </li>
                         <li t-if="slide" class="breadcrumb-item active">
                             <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name"/></a>
@@ -58,7 +58,7 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/slides">Home</a>
                                 <t t-set="dropdown_class" t-value="'dropdown-item %s' % ('active' if not slide else '')"/>
-                                <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_type else '')" t-att-href="'/slides/%s' % slug(channel)">
+                                <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_category else '')" t-att-href="'/slides/%s' % slug(channel)">
                                     &#9492;<span class="ml-1" t-esc="channel.name"/>
                                 </a>
                                 <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
@@ -70,8 +70,8 @@
                                 <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
                                     &#9492;<span class="ml-1">Uncategorized</span>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type" t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)">
-                                    &#9492;<span class="ml-1" t-esc="slide_types[search_slide_type]"/>
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category" t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)">
+                                    &#9492;<span class="ml-1" t-esc="slide_categories[search_slide_category]"/>
                                 </a>
                                  <a t-if="slide" class="dropdown-item active" t-att-href="'/slides/slide/%s' % (slug(slide))">
                                     &#9492;<span class="ml-1" t-esc="slide.name"/>
@@ -526,7 +526,7 @@
                 <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
-                <a t-if="slide.slide_type == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
+                <a t-if="slide.slide_category == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
                 <a t-else="" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form" title="Edit in backend"><span class="fa fa-pencil"/></a>
                 <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive"><span class="fa fa-trash"/></a>
             </span>
@@ -537,7 +537,7 @@
 <!-- ======= Documentation Course content: cards / categories=======  -->
 <template id="course_promoted_slide" name="Documentation Course content: promoted slide">
     <div class="o_wslides_promoted_slide">
-        <div t-if="not search and not search_slide_type and slide_promoted" class="container py-1 mb-2">
+        <div t-if="not search and not search_slide_category and slide_promoted" class="container py-1 mb-2">
             <div class="card flex-column flex-lg-row">
                 <t t-set="image_url" t-value="website.image_url(slide_promoted, 'image_1024')"/>
 
@@ -574,7 +574,7 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-transparent col">
                     <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
 
-                    <div class="form-inline ml-auto d-lg-none" t-if="search_slide_type or search">
+                    <div class="form-inline ml-auto d-lg-none" t-if="search_slide_category or search">
                         <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info mr-3">
                             <i class="fa fa-eraser mr-1"/>Clear filters
                         </a>
@@ -588,23 +588,23 @@
                         <div class="col-12">
                             <ul class="navbar-nav mr-lg-auto align-items-lg-center">
 
-                                <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
-                                <t t-foreach="slide_type_keys" t-as="slide_type_key">
+                                <t t-set="slide_category_keys" t-value="slide_categories.keys()"/>
+                                <t t-foreach="slide_category_keys" t-as="slide_category_key">
                                     <t t-if="search_category">
-                                        <li t-if="search_category['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                            <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_type=slide_type_key))"
-                                               t-att-class="'nav-link d-flex align-items-center justify-content-between mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
-                                               <t t-esc="slide_types[slide_type_key]"/>
-                                               <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_type_key]"/>
+                                        <li t-if="search_category['nbr_%s' % slide_category_key] > 0" class="nav-item">
+                                            <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_category=slide_category_key))"
+                                               t-att-class="'nav-link d-flex align-items-center justify-content-between mr-1 %s' % ('active' if search_slide_category == slide_category_key else '')">
+                                               <t t-esc="slide_categories[slide_category_key]"/>
+                                               <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_category == slide_category_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_category_key]"/>
                                             </a>
                                         </li>
                                     </t>
                                     <t t-else="">
-                                        <li t-if="channel['nbr_%s' % slide_type_key] > 0" class="nav-item">
-                                            <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_type=slide_type_key))"
-                                               t-att-class="'nav-link d-flex align-items-center justify-content-between mr-1 %s' % ('active' if search_slide_type == slide_type_key else '')">
-                                               <t t-esc="slide_types[slide_type_key]"/>
-                                               <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_type == slide_type_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_type_key]"/>
+                                        <li t-if="channel['nbr_%s' % slide_category_key] > 0" class="nav-item">
+                                            <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_category=slide_category_key))"
+                                               t-att-class="'nav-link d-flex align-items-center justify-content-between mr-1 %s' % ('active' if search_slide_category == slide_category_key else '')">
+                                               <t t-esc="slide_categories[slide_category_key]"/>
+                                               <span t-attf-class="badge badge-pill ml-1 #{'badge-info' if search_slide_category == slide_category_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_category_key]"/>
                                             </a>
                                         </li>
                                     </t>
@@ -626,18 +626,18 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
                                         <h6 class="dropdown-header">Sort by</h6>
-                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='latest'))"
+                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_category', sorting='latest'))"
                                            t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
-                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_voted'))"
+                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_category', sorting='most_voted'))"
                                            t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
-                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_type', sorting='most_viewed'))"
+                                        <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_category', sorting='most_viewed'))"
                                            t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
                                     </div>
                                 </li>
                             </ul>
 
                             <div class="form-inline mr-3 d-none d-lg-inline-block">
-                                <a t-if="search_slide_type or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
+                                <a t-if="search_slide_category or search" t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-sm btn-info ml-1">
                                     <i class="fa fa-eraser mr-1"/>Clear filters
                                 </a>
                             </div>
@@ -805,13 +805,13 @@
 
 <template id="slide_icon">
     <t t-set="icon_class" t-value="icon_class if icon_class else 'mr-2 text-muted'"/>
-    <i t-if="slide.slide_type == 'document'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'presentation'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'infographic'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'link'" t-att-class="'fa fa-file-code-o %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'document'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'presentation'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'infographic'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'link'" t-att-class="'fa fa-file-code-o %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
+    <i t-if="slide.slide_category == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
 </template>
 
 </data></odoo>

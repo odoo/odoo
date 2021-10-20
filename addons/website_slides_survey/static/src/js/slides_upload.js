@@ -7,7 +7,7 @@ var sessionStorage = window.sessionStorage;
 var SlidesUpload = require('@website_slides/js/slides_upload')[Symbol.for("default")];
 
 /**
- * Management of the new 'certification' slide_type
+ * Management of the new 'certification' slide_category
  */
 SlidesUpload.SlideUploadDialog.include({
     events: _.extend({}, SlidesUpload.SlideUploadDialog.prototype.events || {}, {
@@ -32,14 +32,14 @@ SlidesUpload.SlideUploadDialog.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Overridden to add the "certification" slide type
+     * Overridden to add the "certification" slide category
      *
      * @override
      * @private
      */
     _setup: function () {
         this._super.apply(this, arguments);
-        this.slide_type_data['certification'] = {
+        this.slide_category_data['certification'] = {
             icon: 'fa-trophy',
             label: _t('Certification'),
             template: 'website.slide.upload.modal.certification',

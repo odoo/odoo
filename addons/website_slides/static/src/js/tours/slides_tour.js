@@ -45,7 +45,7 @@ tour.register('slides_tour', {
     content: Markup(_t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create a web page or link a video.")),
     position: 'bottom',
 }, {
-    trigger: 'a[data-slide-type="presentation"]',
+    trigger: 'a[data-slide-category="presentation"]',
     content: Markup(_t("First, let's add a <b>Presentation</b>. It can be a .pdf or an image.")),
     position: 'bottom',
 }, {

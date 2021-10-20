@@ -10,17 +10,17 @@
     </t>
 
     <!--
-        Slide Type Selection template
+        Slide Category Selection template
     -->
     <t t-name="website.slide.upload.modal.select">
         <div class="row p-1 mt-4 mb-2">
-            <div t-foreach="widget.slide_type_data" t-as="slide_type" class="col-6 col-md-3">
-                <t t-set="type_data" t-value="widget.slide_type_data[slide_type]"/>
+            <div t-foreach="widget.slide_category_data" t-as="slide_category" class="col-6 col-md-3">
+                <t t-set="category_data" t-value="widget.slide_category_data[slide_category]"/>
 
-                <a href="#" t-att-data-slide-type="slide_type"
-                    class="content-type d-flex flex-column align-items-center mb-4 o_wslides_select_type btn rounded border text-600 p-3">
-                    <i t-attf-class="fa #{type_data['icon']} mb-2 fa-3x"/>
-                    <t t-esc="type_data['label']"/>
+                <a href="#" t-att-data-slide-category="slide_category"
+                    class="content-type d-flex flex-column align-items-center mb-4 o_wslides_select_category btn rounded border text-600 p-3">
+                    <i t-attf-class="fa #{category_data['icon']} mb-2 fa-3x"/>
+                    <t t-esc="category_data['label']"/>
                 </a>
             </div>
         </div>
@@ -55,7 +55,7 @@
     </t>
 
     <!--
-        Slide Type common form part template
+        Slide Category common form part template
     -->
     <t t-name="website.slide.upload.modal.common">
         <div class="form-group">
@@ -82,7 +82,7 @@
     </t>
 
     <!--
-        Slide Type templates
+        Slide Category templates
     -->
     <t t-name="website.slide.upload.modal.presentation">
         <div>
