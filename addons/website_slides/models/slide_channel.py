@@ -300,18 +300,18 @@ class Channel(models.Model):
             channel.slide_category_ids = channel.slide_ids.filtered(lambda slide: slide.is_category)
             channel.slide_content_ids = channel.slide_ids - channel.slide_category_ids
 
-    @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
+    @api.depends('slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
         default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
-        keys = ['nbr_%s' % slide_type for slide_type in self.env['slide.slide']._fields['slide_type'].get_values(self.env)]
+        keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
         default_vals.update(dict((key, 0) for key in keys))
 
         result = dict((cid, dict(default_vals)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
-            ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
-            groupby=['channel_id', 'slide_type'],
+            ['channel_id', 'slide_category', 'likes', 'dislikes', 'total_views', 'completion_time'],
+            groupby=['channel_id', 'slide_category'],
             lazy=False)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
@@ -320,25 +320,25 @@ class Channel(models.Model):
             result[cid]['total_votes'] -= res_group.get('dislikes', 0)
             result[cid]['total_time'] += res_group.get('completion_time', 0)
 
-        type_stats = self._compute_slides_statistics_type(read_group_res)
-        for cid, cdata in type_stats.items():
+        category_stats = self._compute_slides_statistics_category(read_group_res)
+        for cid, cdata in category_stats.items():
             result[cid].update(cdata)
 
         for record in self:
             record.update(result.get(record.id, default_vals))
 
-    def _compute_slides_statistics_type(self, read_group_res):
-        """ Compute statistics based on all existing slide types """
-        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
-        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
+    def _compute_slides_statistics_category(self, read_group_res):
+        """ Compute statistics based on all existing slide categories """
+        slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
+        keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
         result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            slide_type = res_group.get('slide_type')
-            if slide_type:
-                slide_type_count = res_group.get('__count', 0)
-                result[cid]['nbr_%s' % slide_type] = slide_type_count
-                result[cid]['total_slides'] += slide_type_count
+            slide_category = res_group.get('slide_category')
+            if slide_category:
+                slide_category_count = res_group.get('__count', 0)
+                result[cid]['nbr_%s' % slide_category] = slide_category_count
+                result[cid]['total_slides'] += slide_category_count
         return result
 
     def _compute_rating_stats(self):
@@ -847,7 +847,7 @@ class Channel(models.Model):
         with_date = options['displayDetail']
         my = options.get('my')
         search_tags = options.get('tag')
-        slide_type = options.get('slide_type')
+        slide_category = options.get('slide_category')
         domain = [website.website_domain()]
         if my:
             domain.append([('partner_ids', '=', self.env.user.partner_id.id)])
@@ -865,8 +865,8 @@ class Channel(models.Model):
             # OR inside a group, AND between groups.
             for group in grouped_tags:
                 domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
-        if slide_type and 'nbr_%s' % slide_type in self:
-            domain.append([('nbr_%s' % slide_type, '>', 0)])
+        if slide_category and 'nbr_%s' % slide_category in self:
+            domain.append([('nbr_%s' % slide_category, '>', 0)])
         search_fields = ['name']
         fetch_fields = ['name', 'website_url']
         mapping = {

@@ -225,7 +225,7 @@
         //--------------------------------------------------------------------------
         /**
          * Handler called whenever the user clicks on a sub-quiz which is linked to a slide.
-         * This does NOT handle the case of a slide of type "quiz".
+         * This does NOT handle the case of a slide of category "quiz".
          * By going through this handler, the widget will be able to determine that it has to render
          * the associated quiz and not the main content.
          *
@@ -455,7 +455,7 @@
         // Private
         //--------------------------------------------------------------------------
         /**
-         * Fetches content with an rpc call for slides of type "webpage"
+         * Fetches content with an rpc call for slides of category "webpage"
          *
          * @private
          */
@@ -474,14 +474,14 @@
             });
         },
         /**
-        * Fetches slide content depending on its type.
+        * Fetches slide content depending on its category.
         * If the slide doesn't need to fetch any content, return a resolved deferred
         *
         * @private
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.type === 'webpage' && !slide.isQuiz) {
+            if (slide.category === 'webpage' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
@@ -494,14 +494,14 @@
         },
         /**
          * Extend the slide data list to add informations about rendering method, and other
-         * specific values according to their slide_type.
+         * specific values according to their slide_category.
          */
         _preprocessSlideData: function (slidesDataList) {
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
                 // compute embed url
-                if (slideData.type === 'video') {
+                if (slideData.category === 'video') {
                     slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
                     var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
                     var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
@@ -510,16 +510,16 @@
                         params.autoplay = 1;
                     }
                     slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
-                } else if (slideData.type === 'infographic') {
+                } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image_1024', slideData.id);
-                } else if (_.contains(['document', 'presentation'], slideData.type)) {
+                } else if (_.contains(['document', 'presentation'], slideData.category)) {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
                 // fill empty property to allow searching on it with _.filter(list, matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
                 slideData.hasQuestion = !!slideData.hasQuestion;
                 // technical settings for the Fullscreen to work
-                slideData._autoSetDone = _.contains(['infographic', 'presentation', 'document', 'webpage'], slideData.type) && !slideData.hasQuestion;
+                slideData._autoSetDone = _.contains(['infographic', 'presentation', 'document', 'webpage'], slideData.category) && !slideData.hasQuestion;
             });
             return slidesDataList;
         },
@@ -542,7 +542,7 @@
             history.pushState(null, '', fullscreenUrl);
         },
         /**
-         * Render the current slide content using specific mecanism according to slide type:
+         * Render the current slide content using specific mecanism according to slide category:
          * - simply append content (for webpage)
          * - template rendering (for image, document, ....)
          * - using a sub widget (quiz and video)
@@ -556,19 +556,19 @@
             $content.empty();
 
             // display quiz slide, or quiz attached to a slide
-            if (slide.type === 'quiz' || slide.isQuiz) {
+            if (slide.category === 'quiz' || slide.isQuiz) {
                 $content.addClass('bg-white');
                 var QuizWidget = new Quiz(this, slide, this.channel);
                 return QuizWidget.appendTo($content);
             }
 
             // render slide content
-            if (_.contains(['document', 'presentation', 'infographic'], slide.type)) {
+            if (_.contains(['document', 'presentation', 'infographic'], slide.category)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
-            } else if (slide.type === 'video') {
+            } else if (slide.category === 'video') {
                 this.videoPlayer = new VideoPlayer(this, slide);
                 return this.videoPlayer.appendTo($content);
-            } else if (slide.type === 'webpage'){
+            } else if (slide.category === 'webpage'){
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);
                 $content.append($wpContainer);
@@ -608,7 +608,7 @@
          * Triggered whenever the user changes slides.
          * When the current slide is changed, widget will be automatically updated
          * and allowed to: fetch the content if needed, render it, update the url,
-         * and set slide as "completed" according to its type requirements. In
+         * and set slide as "completed" according to its category requirements. In
          * mobile case (i.e. limited screensize), sidebar will be toggled since 
          * sidebar will block most or all of new slide visibility.
          *
@@ -627,7 +627,7 @@
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    if (['document', 'presentation'].includes(slide.type)) {
+                    if (['document', 'presentation'].includes(slide.category)) {
                         // only set the slide as completed after iFrame is loaded to avoid concurrent execution with 'embedUrl' controller
                         self.el.querySelector('iframe.o_wslides_iframe_viewer').addEventListener('load', () => self._setCompleted(slide.id));
                     } else {
