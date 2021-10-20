@@ -72,6 +72,7 @@ export class XMLParser {
             create: this.isAttr(rootNode, "create").truthy(true),
             delete: this.isAttr(rootNode, "delete").truthy(true),
             duplicate: this.isAttr(rootNode, "duplicate").truthy(true),
+            export_xlsx: this.isAttr(rootNode, "export_xlsx").truthy(true),
         };
     }
 }
