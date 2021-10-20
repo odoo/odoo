@@ -41,6 +41,7 @@ class TestCRMLead(TestCrmCommon):
             'country_id': self.country_ref.id,
             # other contact fields
             'function': 'Parmesan Rappeur',
+            'lang_id': False,
             # specific contact fields
             'email_from': self.test_email,
             'phone': self.test_phone,
@@ -54,6 +55,7 @@ class TestCRMLead(TestCrmCommon):
         for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function']):
             self.assertEqual(lead[fname], self.contact_1[fname], 'No user input -> take from contact for field %s' % fname)
         self.assertEqual(lead.function, 'Parmesan Rappeur', 'User input should take over partner value')
+        self.assertFalse(lead.lang_id)
         # specific contact fields
         self.assertEqual(lead.partner_name, self.contact_company_1.name)
         self.assertEqual(lead.contact_name, self.contact_1.name)
@@ -68,6 +70,8 @@ class TestCRMLead(TestCrmCommon):
         lead.write({'partner_id': self.contact_company_1.id})
         for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC:
             self.assertEqual(lead[fname], self.contact_company_1[fname])
+            self.assertEqual(self.contact_company_1.lang, self.lang_en.code)
+            self.assertEqual(lead.lang_id, self.lang_en)
 
     @users('user_sales_leads')
     def test_crm_lead_creation_no_partner(self):
