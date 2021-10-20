@@ -505,7 +505,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
-            if not getattr(self, attr):
+            # check whether 'attr' is explicitly set on self (from its field
+            # definition) with a value different from its default value
+            if getattr(self, attr) == self._slots[attr]:
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field._attrs.items():
