@@ -348,7 +348,9 @@ class DataList extends DataPoint {
         if (params.groupBy) {
             this.groupBy = params.groupBy;
         }
-        this.orderByColumn = params.orderByColumn ? params.orderByColumn : {};
+        if ("orderByColumn" in params) {
+            this.orderByColumn = params.orderByColumn; // FIXME: incorrect param name (could come from a favorite)
+        }
 
         if (this.resIds) {
             this.data = await this.loadRecords();
@@ -442,7 +444,7 @@ class DataList extends DataPoint {
                     group = this.createList(this.resModel, params);
                 }
                 if (this.openGroupsByDefault || group.isLoaded) {
-                    await group.load({ groupBy });
+                    await group.load({ groupBy, orderByColumn: this.orderByColumn });
                 }
                 return group;
             })
