@@ -117,6 +117,7 @@ class AccountEdiFormat(models.Model):
         :returns:   A dictionary {'name': name, 'datas': datas} or False if there are no values to embed.
         * name:     The name of the file.
         * datas:    The bytes ot the file.
+        To remove in master
         """
         self.ensure_one()
         attachment = invoice._get_edi_attachment(self)
@@ -287,6 +288,17 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        """
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        if self._is_embedding_to_invoice_pdf_needed():
+            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+
     ####################################################
     # Export Internal methods (not meant to be overridden)
     ####################################################
@@ -298,20 +310,15 @@ class AccountEdiFormat(models.Model):
         :param invoice: the invoice to generate the EDI from.
         :returns: the same pdf_content with the EDI of the invoice embed in it.
         """
-        attachments = []
-        for edi_format in self.filtered(lambda edi_format: edi_format._is_embedding_to_invoice_pdf_needed()):
-            attach = edi_format._get_embedding_to_invoice_pdf_values(invoice)
-            if attach:
-                attachments.append(attach)
-
-        if attachments:
-            # Add the attachments to the pdf file
+        to_embed = invoice.edi_document_ids
+        # Add the attachments to the pdf file
+        if to_embed:
             reader_buffer = io.BytesIO(pdf_content)
             reader = OdooPdfFileReader(reader_buffer, strict=False)
             writer = OdooPdfFileWriter()
             writer.cloneReaderDocumentRoot(reader)
-            for vals in attachments:
-                writer.addAttachment(vals['name'], vals['datas'])
+            for edi_document in to_embed:
+                edi_document.edi_format_id._prepare_invoice_report(writer, edi_document)
             buffer = io.BytesIO()
             writer.write(buffer)
             pdf_content = buffer.getvalue()
