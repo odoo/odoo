@@ -7,6 +7,7 @@ from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
 from collections import defaultdict
+from contextlib import contextmanager
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
@@ -2512,6 +2513,31 @@ class AccountMove(models.Model):
                     (line + counterpart_lines).with_context(move_reverse_cancel=cancel).reconcile()
 
         return reverse_moves
+
+    def _action_invoice_ready_to_be_sent(self):
+        """ Hook allowing custom code when an invoice becomes ready to be sent by mail to the customer.
+        For example, when an EDI document must be sent to the government and be signed by it.
+        """
+        pass
+
+    def _is_ready_to_be_sent(self):
+        """ Helper telling if a journal entry is ready to be sent by mail to the customer.
+
+        :return: True if the invoice is ready, False otherwise.
+        """
+        self.ensure_one()
+        return True
+
+    @contextmanager
+    def _send_only_when_ready(self):
+        moves_not_ready = self.filtered(lambda x: not x._is_ready_to_be_sent())
+
+        try:
+            yield
+        finally:
+            moves_now_ready = moves_not_ready.filtered(lambda x: x._is_ready_to_be_sent())
+            if moves_now_ready:
+                moves_now_ready._action_invoice_ready_to_be_sent()
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
