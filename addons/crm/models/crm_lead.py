@@ -263,7 +263,7 @@ class Lead(models.Model):
             if not partner_name and partner.is_company:
                 partner_name = partner.name
 
-            return {
+            onchange_values = {
                 'partner_name': partner_name,
                 'contact_name': partner.name if not partner.is_company else False,
                 'title': partner.title.id,
@@ -279,6 +279,9 @@ class Lead(models.Model):
                 'function': partner.function,
                 'website': partner.website,
             }
+            if partner.lang:
+                onchange_values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
+            return onchange_values
         return {}
 
     @api.onchange('partner_id')
