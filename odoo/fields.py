@@ -2343,10 +2343,14 @@ class Image(Binary):
         records.env.cache.update(records, self, [cache_value] * len(records))
 
     def _image_process(self, value):
-        return image_process(value,
-            size=(self.max_width, self.max_height),
-            verify_resolution=self.verify_resolution,
-        )
+        if value:
+            return base64.b64encode(
+                image_process(
+                    source=base64.b64decode(value),
+                    size=(self.max_width, self.max_height),
+                    verify_resolution=self.verify_resolution,
+                )
+            )
 
     def _process_related(self, value):
         """Override to resize the related value before saving it on self."""

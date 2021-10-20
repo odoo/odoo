@@ -49,7 +49,7 @@ IMAGE_MAX_RESOLUTION = 45e6
 
 class ImageProcess():
 
-    def __init__(self, base64_source, verify_resolution=True):
+    def __init__(self, source=False, verify_resolution=True):
         """Initialize the `base64_source` image for processing.
 
         :param base64_source: the original image base64 encoded
@@ -68,18 +68,13 @@ class ImageProcess():
         :raise: ValueError if `verify_resolution` is True and the image is too large
         :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
         """
-        self.base64_source = base64_source or False
+        self.source = source or False
         self.operationsCount = 0
 
-        if not base64_source or base64_source[:1] in (b'P', 'P'):
-            # don't process empty source or SVG
+        if not self.source or self.source[:1] in (b'<', '<'):
             self.image = False
-        else:
-            self.image = base64_to_image(self.base64_source)
-
-            # Original format has to be saved before fixing the orientation or
-            # doing any other operations because the information will be lost on
-            # the resulting image.
+        elif self.source:
+            self.image = Image.open(io.BytesIO(self.source))
             self.original_format = (self.image.format or '').upper()
 
             self.image = image_fix_orientation(self.image)
@@ -116,7 +111,7 @@ class ImageProcess():
         :rtype: bytes or False
         """
         if not self.image:
-            return self.image
+            return self.source
 
         output_image = self.image
 
@@ -127,7 +122,7 @@ class ImageProcess():
             output_format = 'JPEG'
 
         if not self.operationsCount and output_format == self.original_format and not quality:
-            return self.image
+            return self.source
 
         opt = {'output_format': output_format}
 
@@ -299,16 +294,16 @@ class ImageProcess():
         return self
 
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
+def image_process(source=False, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
     """
-    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
+    if (not source) or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
-        return base64_source
+        return source
 
-    image = ImageProcess(base64_source, verify_resolution)
+    image = ImageProcess(source, verify_resolution)
     if size:
         if crop:
             center_x = 0.5
@@ -322,7 +317,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
             image.resize(max_width=size[0], max_height=size[1])
     if colorize:
         image.colorize()
-    return image.image_quality_base64(quality=quality, output_format=output_format)
+    return image.image_quality(quality=quality, output_format=output_format)
 
 
 # ----------------------------------------

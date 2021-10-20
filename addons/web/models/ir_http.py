@@ -166,7 +166,7 @@ class Http(models.AbstractModel):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
         try:
-            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+            image_base64 = base64.b64encode(image_process(source=base64.b64decode(image_base64), size=(int(width), int(height)), crop=crop, quality=int(quality)))
         except Exception:
             return request.not_found()
         content = base64.b64decode(image_base64)

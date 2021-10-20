@@ -193,7 +193,7 @@ class Web_Editor(http.Controller):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+                data = b64encode(tools.image_process(source=b64decode(data), size=(width, height), quality=quality, verify_resolution=True))
                 mimetype = guess_mimetype(b64decode(data))
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}

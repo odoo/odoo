@@ -159,7 +159,8 @@ class Company(models.Model):
     @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
         for company in self:
-            company.logo_web = tools.image_process(company.partner_id.image_1920, size=(180, 0))
+            if company.partner_id.image_1920:
+                company.logo_web = base64.b64encode(tools.image_process(source=base64.b64decode(company.partner_id.image_1920), size=(180, 0)))
 
     @api.onchange('state_id')
     def _onchange_state(self):

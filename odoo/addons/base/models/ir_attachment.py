@@ -321,7 +321,7 @@ class IrAttachment(models.Model):
                         img.original_format = (img.image.format or '').upper()
                         fn_quality = img.image_quality
                     else:  # datas
-                        img = ImageProcess(values['datas'], verify_resolution=False)
+                        img = ImageProcess(source=base64.b64decode(values['datas']), verify_resolution=False)
                         fn_quality = img.image_quality_base64
 
                     w, h = img.image.size

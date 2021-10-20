@@ -90,8 +90,8 @@ class CustomerPortal(portal.CustomerPortal):
         #
         def resize_to_48(b64source):
             if not b64source:
-                b64source = base64.b64encode(request.env['ir.http']._placeholder())
-            return image_process(b64source, size=(48, 48))
+                return image_process(source=request.env['ir.http']._placeholder(), size=(48, 48))
+            return base64.b64encode(image_process(source=base64.b64decode(b64source), size=(48, 48)))
 
         values = {
             'order': order,
