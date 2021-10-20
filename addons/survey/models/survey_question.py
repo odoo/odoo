@@ -57,6 +57,7 @@ class SurveyQuestion(models.Model):
     description = fields.Html(
         'Description', translate=True, sanitize=False,  # TDE TODO: sanitize but find a way to keep youtube iframe media stuff
         help="Use this field to add additional explanations about your question or to illustrate it with pictures or a video")
+    question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
@@ -170,6 +171,13 @@ class SurveyQuestion(models.Model):
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
+
+    @api.depends('question_type')
+    def _compute_question_placeholder(self):
+        for question in self:
+            if question.question_type in ('simple_choice', 'multiple_choice', 'matrix') \
+                    or not question.question_placeholder:  # avoid CacheMiss errors
+                question.question_placeholder = False
 
     @api.depends('is_page')
     def _compute_question_type(self):
