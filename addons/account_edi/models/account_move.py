@@ -411,6 +411,17 @@ class AccountMove(models.Model):
         self.env['account.edi.document'].create(edi_document_vals_list)
         self.edi_document_ids._process_documents_no_web_services()
 
+    def _is_ready_to_be_sent(self):
+        # OVERRIDE
+        # Prevent a mail to be sent to the customer if the EDI document is not sent.
+        res = super()._is_ready_to_be_sent()
+
+        if not res:
+            return False
+
+        edi_documents_to_send = self.edi_document_ids.filtered(lambda x: x.state == 'to_send')
+        return not bool(edi_documents_to_send)
+
     def _post(self, soft=True):
         # OVERRIDE
         # Set the electronic document to be posted and post immediately for synchronous formats.

@@ -166,8 +166,10 @@ class AccountEdiDocument(models.Model):
         state = documents[0].state
         if doc_type == 'invoice':
             if state == 'to_send':
-                edi_result = edi_format._post_invoice_edi(documents.move_id)
-                _postprocess_post_edi_results(documents, edi_result)
+                invoices = documents.move_id
+                with invoices._send_only_when_ready():
+                    edi_result = edi_format._post_invoice_edi(invoices)
+                    _postprocess_post_edi_results(documents, edi_result)
             elif state == 'to_cancel':
                 edi_result = edi_format._cancel_invoice_edi(documents.move_id)
                 _postprocess_cancel_edi_results(documents, edi_result)

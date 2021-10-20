@@ -278,3 +278,17 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             vals['invoice_line_vals_list'][0]['tax_detail_vals_list'][0]['tag_ids'], set(account_tag.ids))
         self.assertEqual(
             vals['invoice_line_vals_list'][0]['tax_detail_vals_list'][0]['tags'].name, "Test Tag")
+
+    def test_invoice_ready_to_be_sent(self):
+        def _is_needed_for_invoice(edi_format, invoice):
+            return True
+
+        with self.mock_edi(
+                _needs_web_services_method=_generate_mocked_needs_web_services(True),
+                _is_required_for_invoice_method=_is_needed_for_invoice,
+        ):
+            self.invoice.action_post()
+            doc = self.invoice._get_edi_document(self.edi_format)
+            self.assertFalse(self.invoice._is_ready_to_be_sent())
+            doc._process_documents_web_services(with_commit=False)
+            self.assertTrue(self.invoice._is_ready_to_be_sent())
