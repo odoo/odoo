@@ -9,10 +9,6 @@ class TestMailCommon(MailCommon):
     """ Main entry point for functional tests. """
 
     @classmethod
-    def _create_channel_listener(cls):
-        cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
-
-    @classmethod
     def _create_records_for_batch(cls, model, count):
         # TDE note: to be cleaned in master
         records = cls.env[model]
