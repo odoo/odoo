@@ -6,6 +6,7 @@ var AltDialog = require('wysiwyg.widgets.AltDialog');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 var LinkTools = require('wysiwyg.widgets.LinkTools');
+var ImageLinkTools = require('wysiwyg.widgets.ImageLinkTools');
 var ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
 const LinkPopoverWidget = require('@web_editor/js/wysiwyg/widgets/link_popover_widget')[Symbol.for("default")];
 const {ColorpickerDialog} = require('web.Colorpicker');
@@ -18,6 +19,7 @@ return {
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
     LinkTools: LinkTools,
+    ImageLinkTools: ImageLinkTools,
     ImageCropWidget: ImageCropWidget,
     LinkPopoverWidget: LinkPopoverWidget,
     ColorpickerDialog: ColorpickerDialog,

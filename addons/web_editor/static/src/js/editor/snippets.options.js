@@ -4,6 +4,8 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Dialog = require('web.Dialog');
+const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
+const getInSelection = OdooEditorLib.getInSelection;
 const {scrollTo} = require('web.dom');
 const rpc = require('web.rpc');
 const time = require('web.time');
@@ -4018,6 +4020,11 @@ const SnippetOptionWidget = Widget.extend({
                 this.options.wysiwyg.odooEditor.historyStep();
             }
 
+            if (!previewMode && widget.$el.is('we-button') && (widget.$el.closest('[data-no-preview="true"]').length)) {
+                // Sometimes buttons with no preview should also need to display in editor option
+                return;
+            }
+
             if (previewMode) {
                 return;
             }
@@ -4668,6 +4675,14 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
  */
 registry.ImageTools = SnippetOptionWidget.extend({
 
+    /**
+     * @override
+     */
+     start: function () {
+        this._super(...arguments);
+        this.link = getInSelection(this.$target[0].ownerDocument, 'a');
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -4686,6 +4701,46 @@ registry.ImageTools = SnippetOptionWidget.extend({
             this.$target.one('image_cropper_destroyed', resolve);
         });
         this.trigger_up('enable_loading_effect');
+    },
+    /**
+     * Display the link options to add a link to image
+     */
+     async createLink() {
+        if (this.imageLinkTools) {
+            this.imageLinkTools.destroy();
+        }
+        const wysiwyg = this.options.wysiwyg;
+        var node = this.link || this.$target[0];
+        if (node && !$(node).is('a') && !$(node.parentElement).is('a')) {
+            $(node).wrap('<a href="#" contenteditable="true"/>');
+            this.link = node.parentElement;
+        }
+
+        const $btn = this.$el.find("#create-link");
+        this.imageLinkTools = new weWidgets.ImageLinkTools(this, {wysiwyg: wysiwyg}, wysiwyg.odooEditor.editable, {}, $btn, this.link);
+        const _onMousedown = ev => {
+            if (!ev.target.closest('.snippet-option-ImageTools') && !ev.target.closest('.ui-autocomplete')) {
+                // Destroy the image link tools on click anywhere outside the toolbar.
+                this.imageLinkTools && this.imageLinkTools.destroy();
+                this.imageLinkTools = undefined;
+                wysiwyg.odooEditor.document.removeEventListener('mousedown', _onMousedown, true);
+            }
+        };
+        wysiwyg.odooEditor.document.addEventListener('mousedown', _onMousedown, true);
+        await this.imageLinkTools.appendTo(this.$el);
+    },
+    /**
+     * Removes the link/anchor.
+     */
+    async unlink() {
+        if (this.link && this.link.tagName === 'A' && this.link.getAttribute('contenteditable') === 'true') {
+            // Note: document.execCommand('unlink') is now deprecated
+            this.imageLinkTools && this.imageLinkTools.destroy();
+            this.link.replaceWith(this.$target[0]);
+            this.options.wysiwyg.odooEditor.historyStep();
+            this.link = undefined;
+            this.updateUI();
+        }
     },
     /**
      * Displays the image transformation tools
