@@ -9,23 +9,29 @@ class TestMailCommon(MailCommon):
     """ Main entry point for functional tests. """
 
     @classmethod
-    def _create_records_for_batch(cls, model, count):
+    def _create_records_for_batch(cls, model, count, additional_values=None):
         # TDE note: to be cleaned in master
+        additional_values = additional_values if additional_values is not None else {}
         records = cls.env[model]
         partners = cls.env['res.partner']
         country_id = cls.env.ref('base.be').id
 
-        partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
-            'name': 'Partner_%s' % (x),
-            'email': '_test_partner_%s@example.com' % (x),
-            'country_id': country_id,
-            'mobile': '047500%02d%02d' % (x, x)
-        } for x in range(count)])
+        base_values = [dict(
+            {'name': 'Test_%s' % (idx)},
+            **additional_values) for idx in range(count)
+        ]
 
-        records = cls.env[model].with_context(**cls._test_context).create([{
-            'name': 'Test_%s' % (x),
-            'customer_id': partners[x].id,
-        } for x in range(count)])
+        if 'customer_id' in cls.env[model]:
+            partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
+                'name': 'Partner_%s' % (x),
+                'email': '_test_partner_%s@example.com' % (x),
+                'country_id': country_id,
+                'mobile': '047500%02d%02d' % (x, x)
+            } for x in range(count)])
+            for values, partner in zip(base_values, partners):
+                values['customer_id'] = partner.id
+
+        records = cls.env[model].with_context(**cls._test_context).create(base_values)
 
         cls.records = cls._reset_mail_context(records)
         cls.partners = partners
