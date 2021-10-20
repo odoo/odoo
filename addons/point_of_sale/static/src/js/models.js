@@ -131,12 +131,10 @@ exports.PosModel = Backbone.Model.extend({
                 model: 'pos.session',
                 method: 'load_pos_data',
                 args: [[odoo.pos_session_id]],
-            }).then(async ([loadedModels, loadingInfos]) => {
-                self.loadingInfos = loadingInfos;
-                const tmp = {}
+            }).then(async (loadedModels) => {
                 for (const model of self.models) {
                     if (model.condition ? !model.condition(self) : false) continue;
-                    await model.loaded(self, loadedModels[model.model] || [], tmp);
+                    await model.loaded(self, loadedModels[model.model] || [], {});
                 }
                 return self.after_load_server_data();
             });
@@ -725,7 +723,12 @@ exports.PosModel = Backbone.Model.extend({
     loadProductsBackground: async function() {
         let page = 0;
         let product_model = _.find(this.models, (model) => model.model === 'product.product');
-        let productLoadingInfo = this.loadingInfos['product.product'];
+        let productLoadingInfo = await this.rpc({
+            model: 'pos.session',
+            method: 'get_loading_info',
+            args: [[odoo.pos_session_id], 'product.product'],
+            context: this.session.user_context,
+        });
         let products = [];
         do {
             products = await this.rpc({
@@ -734,10 +737,11 @@ exports.PosModel = Backbone.Model.extend({
                 kwargs: {
                     'domain': productLoadingInfo.domain,
                     'fields': productLoadingInfo.fields,
+                    'order': productLoadingInfo.order.split(',').map(name => ({ name })),
                     'offset': page * this.env.pos.config.limited_products_amount,
-                    'limit': this.env.pos.config.limited_products_amount
+                    'limit': this.env.pos.config.limited_products_amount,
                 },
-                context: { ...this.session.user_context, ...product_model.context() },
+                context: { ...this.session.user_context, ...productLoadingInfo.context },
             });
             product_model.loaded(this, products);
             page += 1;
@@ -748,7 +752,12 @@ exports.PosModel = Backbone.Model.extend({
         // same order as this background loading procedure.
         let i = 0;
         let partners = [];
-        let partnerLoadingInfo = this.loadingInfos['res.partner'];
+        let partnerLoadingInfo = await this.rpc({
+            model: 'pos.session',
+            method: 'get_loading_info',
+            args: [[odoo.pos_session_id], 'res.partner'],
+            context: this.session.user_context,
+        });
         do {
             partners = await this.rpc({
                 model: 'res.partner',

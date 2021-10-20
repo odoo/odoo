@@ -1540,27 +1540,29 @@ class PosSession(models.Model):
 
     def get_onboarding_data(self):
         return {
-            "categories": self._load_model('pos.category')[1],
-            "products": self._load_model('product.product')[1],
+            "categories": self._load_model('pos.category'),
+            "products": self._load_model('product.product'),
         }
+
+    def get_loading_info(self, model):
+        model_name = model.replace('.', '_')
+        if hasattr(self, '_loader_info_%s' % model_name):
+            return getattr(self, '_loader_info_%s' % model_name)()
+        raise NotImplementedError(_("The function to get loading info of %s has not been implemented.", model))
 
     def _load_model(self, model):
         model_name = model.replace('.', '_')
         if hasattr(self, '_get_pos_ui_%s' % model_name) and hasattr(self, '_loader_info_%s' % model_name):
-            params = getattr(self, '_loader_info_%s' % model_name)()
-            return params, getattr(self, '_get_pos_ui_%s' % model_name)(params)
+            return getattr(self, '_get_pos_ui_%s' % model_name)(getattr(self, '_loader_info_%s' % model_name)())
         else:
-            raise NotImplementedError(_("The function to load %s has not been implemented.", model_name))
+            raise NotImplementedError(_("The function to load %s has not been implemented.", model))
 
     def load_pos_data(self):
         loaded_models = {}
-        loading_infos = {}
-        self = self.with_context(loaded_models=loaded_models, loading_infos=loading_infos)
+        self = self.with_context(loaded_models=loaded_models)
         for model in self._pos_ui_models_to_load():
-            params, records = self._load_model(model)
-            loading_infos[model] = params
-            loaded_models[model] = records
-        return (loaded_models, loading_infos)
+            loaded_models[model] = self._load_model(model)
+        return loaded_models
 
     @api.model
     def _pos_ui_models_to_load(self):

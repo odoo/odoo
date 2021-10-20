@@ -64,28 +64,6 @@ class pos_config(models.Model):
         limit = self.env['ir.config_parameter'].sudo().get_param('pos_cache.limit_products_per_request', 0)
         self.update({'limit_products_per_request': int(limit)})
 
-    def get_products_from_cache(self, fields, domain):
-        fields_str = str(fields)
-        domain_str = str([list(item) if isinstance(item, (list, tuple)) else item for item in domain])
-        pos_cache = self.env['pos.cache']
-        cache_for_user = pos_cache.search([
-            ('id', 'in', self.cache_ids.ids),
-            ('compute_user_id', '=', self.env.uid),
-            ('product_domain', '=', domain_str),
-            ('product_fields', '=', fields_str),
-        ])
-
-        if not cache_for_user:
-            cache_for_user = pos_cache.create({
-                'config_id': self.id,
-                'product_domain': domain_str,
-                'product_fields': fields_str,
-                'compute_user_id': self.env.uid
-            })
-            cache_for_user.refresh_cache()
-
-        return cache_for_user.cache2json()
-
     def delete_cache(self):
         # throw away the old caches
         self.cache_ids.unlink()

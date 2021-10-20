@@ -37,24 +37,18 @@ models.PosModel = models.PosModel.extend({
         Gui.showNotification(_t('All products are loaded.'), 5000);
     },
     async _getTotalProductsCount() {
-        const productLoadingInfo = this.loadingInfos['product.product'];
-        const domain = productLoadingInfo['domain']
-        const fields = productLoadingInfo['fields']
         return this.rpc({
             model: 'pos.session',
             method: 'get_total_products_count',
-            args: [[odoo.pos_session_id], domain, fields],
+            args: [[odoo.pos_session_id]],
             context: this.session.user_context,
         });
     },
     async _loadCachedProducts(start, end) {
-        const productLoadingInfo = this.loadingInfos['product.product'];
-        const domain = productLoadingInfo['domain']
-        const fields = productLoadingInfo['fields']
         const products = await this.rpc({
             model: 'pos.session',
             method: 'get_cached_products',
-            args: [[odoo.pos_session_id], domain, fields, start, end],
+            args: [[odoo.pos_session_id], start, end],
             context: this.session.user_context,
         });
         const productModel = _.find(this.models, function(model){return model.model === 'product.product';});

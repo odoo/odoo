@@ -250,18 +250,12 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             return '' + this._lastName.str + this._lastName.num;
         }
         async _save(table) {
-            const fields = this.env.pos.loadingInfos['restaurant.table'].fields;
-            const serializeTable = {};
-            for (let field of fields) {
-                if (typeof table[field] !== 'undefined') {
-                    serializeTable[field] = table[field];
-                }
-            }
-            serializeTable.id = table.id;
+            const tableCopy = { ...table };
+            delete tableCopy.floor;
             const tableId = await this.rpc({
                 model: 'restaurant.table',
                 method: 'create_from_ui',
-                args: [serializeTable],
+                args: [tableCopy],
             });
             table.id = tableId;
             this.env.pos.tables_by_id[tableId] = table;
