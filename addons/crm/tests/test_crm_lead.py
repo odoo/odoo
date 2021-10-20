@@ -70,6 +70,8 @@ class TestCRMLead(TestCrmCommon):
         lead.write({'partner_id': self.contact_company_1.id})
         for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC:
             self.assertEqual(lead[fname], self.contact_company_1[fname])
+            self.assertEqual(self.contact_company_1.lang, self.lang_en.code)
+            self.assertEqual(lead.lang_id, self.lang_en)
 
     @users('user_sales_leads')
     def test_crm_lead_creation_no_partner(self):
