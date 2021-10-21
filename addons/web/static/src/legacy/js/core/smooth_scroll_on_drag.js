@@ -328,11 +328,26 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {Object} ev The jQuery mousedown handler event parameter.
      */
     _onElementMouseDown(ev) {
-        const elementOffset = $(ev.target).offset();
-        this.options.jQueryDraggableOptions.cursorAt = {
-            top: ev.pageY - elementOffset.top,
-            left: ev.pageX - elementOffset.left,
-        };
+        if (typeof this.options.jQueryDraggableOptions.helper === 'function') {
+            const draggableEl = this.$element.has(ev.target)[0].cloneNode(true);
+            const helperEl = this.options.jQueryDraggableOptions.helper.call(
+                draggableEl
+            );
+            document.body.appendChild(helperEl);
+            const cursorAt = {
+                top: helperEl.clientHeight / 2,
+                left: helperEl.clientWidth / 2,
+            };
+            this.options.jQueryDraggableOptions.cursorAt = cursorAt;
+            this.$element.draggable('option', 'cursorAt', cursorAt);
+            document.body.removeChild(helperEl);
+        } else {
+            const elementOffset = $(ev.target).offset();
+            this.options.jQueryDraggableOptions.cursorAt = {
+                top: ev.pageY - elementOffset.top,
+                left: ev.pageX - elementOffset.left,
+            };
+        }
     },
     /**
      * Called when dragging the element.
