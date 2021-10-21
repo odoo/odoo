@@ -34,7 +34,7 @@
                                         />
                                     </t>
                                 </div>
-                                <t t-set="sumField" t-value="getProgressSumField()" />
+                                <t t-set="sumField" t-value="getProgressSumField(group)" />
                                 <div class="o_kanban_counter_side" t-att-title="sumField.string">
                                     <b t-esc="sumField.value" />
                                 </div>

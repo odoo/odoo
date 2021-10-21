@@ -127,13 +127,22 @@ export class KanbanRenderer extends Component {
         return `oe_kanban_card_${colorClass || "muted"}`;
     }
 
-    getProgressSumField() {
+    getProgressSumField(group) {
         const info = {};
         const { sumField } = this.progress;
         if (sumField) {
-            const field = this.props.list.fields[sumField];
+            const field = group.fields[sumField];
             if (field) {
                 info.string = field.string;
+                info.name = field.name;
+                if (group.activeProgressValue) {
+                    info.value = 0;
+                    for (const record of group.data) {
+                        info.value += record.data[sumField];
+                    }
+                } else {
+                    info.value = group.aggregates[sumField];
+                }
             }
         }
         return info;

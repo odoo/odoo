@@ -314,6 +314,8 @@ class DataList extends DataPoint {
         this.count = params.groupCount;
         this.displayName = params.groupDisplay;
         this.value = params.groupValue;
+        this.aggregates = params.groupAggregates;
+        this.shouldFold = params.groupFold;
 
         for (const type in params.views || {}) {
             const [mode] = getX2MViewModes(type);
@@ -426,23 +428,47 @@ class DataList extends DataPoint {
         const groupBy = this.groupBy.slice(1);
         return Promise.all(
             groups.map(async (groupData) => {
-                let groupDisplay = groupData[`${this.groupBy[0]}`];
-                let groupValue = groupData[`${this.groupBy[0]}`];
-                if (this.fields[this.groupBy[0]].type === "many2one") {
-                    groupDisplay = groupDisplay ? groupDisplay[1] : _t("Undefined");
-                    groupValue = groupValue ? groupValue[0] : false;
+                const [groupByFieldName] = this.groupBy;
+                const groupParams = {
+                    groupAggregates: Object.create(null),
+                    groupBy,
+                };
+                for (const key in groupData) {
+                    const value = groupData[key];
+                    switch (key) {
+                        case groupByFieldName: {
+                            let groupDisplay = value;
+                            let groupValue = value;
+                            if (this.fields[groupByFieldName].type === "many2one") {
+                                groupDisplay = groupDisplay ? groupDisplay[1] : _t("Undefined");
+                                groupValue = groupValue ? groupValue[0] : false;
+                            }
+                            Object.assign(groupParams, { groupDisplay, groupValue });
+                            break;
+                        }
+                        case `${groupByFieldName}_count`: {
+                            groupParams.groupCount = value;
+                            break;
+                        }
+                        case "__domain": {
+                            groupParams.groupDomain = value;
+                            break;
+                        }
+                        case "__fold": {
+                            groupParams.groupFold = value || false;
+                            break;
+                        }
+                        default: {
+                            if (key in this.fields) {
+                                groupParams.groupAggregates[key] = value;
+                            }
+                        }
+                    }
                 }
                 // FIXME: only retrieve the former group if groupby same field
-                let group = this.data.find((g) => g.value === groupValue);
+                let group = this.data.find((g) => g.value === groupParams.groupValue);
                 if (!group || !group.isLoaded) {
-                    const params = {
-                        groupCount: groupData[`${this.groupBy[0]}_count`],
-                        groupDisplay,
-                        groupValue,
-                        groupDomain: groupData.__domain,
-                        groupBy,
-                    };
-                    group = this.createList(this.resModel, params);
+                    group = this.createList(this.resModel, groupParams);
                 }
                 if (this.openGroupsByDefault || group.isLoaded) {
                     await group.load({ groupBy, orderByColumn: this.orderByColumn });
