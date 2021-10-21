@@ -218,6 +218,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/commands/**/*'),
+            ('remove', 'web/static/src/core/debug/debug_menu.js'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',
