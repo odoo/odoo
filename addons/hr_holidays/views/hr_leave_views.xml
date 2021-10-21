@@ -469,7 +469,8 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <tree string="Time Off Requests" sample="1">
-                <field name="employee_id" widget="many2one_avatar_employee" decoration-muted="not active_employee"/>
+                <field name="employee_id" invisible="1" />
+                <field name="all_employee_ids" widget="many2many_avatar_employee" decoration-muted="not active_employee" string="Employees" />
                 <field name="department_id" optional="hidden"/>
                 <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
                 <field name="holiday_status_id" class="font-weight-bold"/>
