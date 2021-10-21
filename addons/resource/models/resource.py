@@ -951,16 +951,16 @@ class ResourceResource(models.Model):
         end, revert_end_tz = make_aware(end)
         result = {}
         for resource in self:
-            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource)
-            search_range = None
-            tz = timezone(resource.tz)
-            if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
-                # Make sure to only search end after start
-                search_range = (
-                    start,
-                    end + relativedelta(days=1, hour=0, minute=0, second=0),
-                )
-            calendar_end = resource.calendar_id._get_closest_work_time(end, match_end=True, resource=resource, search_range=search_range)
+            resource_tz = timezone(resource.tz)
+            start, end = start.astimezone(resource_tz), end.astimezone(resource_tz)
+            search_range = [
+                start + relativedelta(hour=0, minute=0, second=0),
+                end + relativedelta(days=1, hour=0, minute=0, second=0),
+            ]
+            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource, search_range=search_range)
+            search_range[0] = start
+            calendar_end = resource.calendar_id._get_closest_work_time(end if end > start else start, match_end=True,
+                                                                       resource=resource, search_range=search_range)
             result[resource] = (
                 calendar_start and revert_start_tz(calendar_start),
                 calendar_end and revert_end_tz(calendar_end),
