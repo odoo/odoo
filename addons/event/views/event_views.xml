@@ -709,13 +709,16 @@
                         domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last 30 days" name="filter_last_month_creation" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Ticket Type" name ="group_event_ticket_id" domain="[]" context="{'group_by': 'event_ticket_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Date" name="group_by_create_date_week" domain="[]" context="{'group_by': 'create_date:week'}"/>
-                        <filter string="Creation Date" name="group_by_create_date_day" domain="[]" context="{'group_by': 'create_date:day'}" invisible="1"/>
+                        <filter string="Registration Date" name="group_by_create_date_week" domain="[]" context="{'group_by': 'create_date:week'}"
+                                invisible="context.get('registration_view_hide_group_by_create_date_week')"/>
+                        <filter string="Registration Date" name="group_by_create_date_day" domain="[]" context="{'group_by': 'create_date:day'}"
+                                invisible="not context.get('registration_view_hide_group_by_create_date_week')"/>
                    </group>
                 </search>
             </field>
@@ -727,10 +730,11 @@
             <field name="domain"></field>
             <field name="view_mode">graph,pivot,kanban,tree,form</field>
             <field name="context">{
-                    'search_default_filter_last_month': 1,
+                    'search_default_filter_last_month_creation': 1,
                     'search_default_status': 1,
-                    'search_default_group_by_create_day': 1,
+                    'search_default_group_by_create_date_day': 1,
                     'search_default_group_event': 1,
+                    'registration_view_hide_group_by_create_date_week': 1,
                 }
             </field>
             <field name="search_view_id" ref="view_registration_search"/>
