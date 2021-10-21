@@ -7,7 +7,7 @@ from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare
 from odoo.exceptions import UserError
 
 
@@ -110,10 +110,12 @@ class SaleOrder(models.Model):
                         You should probably update the partner on this document.""") % addresses
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 
-        if values.get('commitment_date'):
+        if 'commitment_date' in values:
             # protagate commitment_date as the deadline of the related stock move.
             # TODO: Log a note on each down document
-            self.order_line.move_ids.date_deadline = fields.Datetime.to_datetime(values.get('commitment_date'))
+            deadline_datetime = values.get('commitment_date')
+            for order in self:
+                order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
@@ -124,7 +126,7 @@ class SaleOrder(models.Model):
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                    documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
+                    documents = {k: v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
 
