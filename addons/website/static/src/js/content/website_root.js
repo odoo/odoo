@@ -3,6 +3,7 @@
 import ajax from 'web.ajax';
 import { _t } from 'web.core';
 import KeyboardNavigationMixin from 'web.KeyboardNavigationMixin';
+import {Markup} from 'web.utils';
 import session from 'web.session';
 import publicRootData from 'web.public.root';
 import "web.zoomodoo";
@@ -146,19 +147,16 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
 
                 if (!key) {
                     if (!editableMode && session.is_admin) {
+                        const message = _t("Cannot load google map.");
+                        const urlTitle = _t("Check your configuration.");
                         this.displayNotification({
                             type: 'warning',
                             sticky: true,
                             message:
-                                $('<div/>').append(
-                                    $('<span/>', {text: _t("Cannot load google map.")}),
-                                    $('<br/>'),
-                                    $('<a/>', {
-                                        href: "/web#action=website.action_website_configuration",
-                                        text: _t("Check your configuration."),
-                                    }),
-                                )[0].outerHTML,
-                            messageIsHtml: true, // HTML is built with only safe static parts
+                                Markup`<div>
+                                    <span>${message}</span><br/>
+                                    <a href="/web#action=website.action_website_configuration">${urlTitle}</a>
+                                </div>`,
                         });
                     }
                     resolve(false);

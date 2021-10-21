@@ -663,13 +663,10 @@ var FieldMany2One = AbstractField.extend({
         if (this.limit < values.length) {
             values = this._manageSearchMore(values, value, domain, context);
         }
-        if (!this.can_create) {
-            return values;
-        }
 
         // Additional options...
-        const canQuickCreate = !this.nodeOptions.no_quick_create;
-        const canCreateEdit = !this.nodeOptions.no_create_edit;
+        const canQuickCreate = this.can_create && !this.nodeOptions.no_quick_create;
+        const canCreateEdit = this.can_create && !this.nodeOptions.no_create_edit;
         if (value.length) {
             // "Quick create" option
             const nameExists = results.some((result) => result[1] === value);
@@ -699,7 +696,8 @@ var FieldMany2One = AbstractField.extend({
             // "No results" option
             if (!values.length) {
                 values.push({
-                    label: _t("No results to show..."),
+                    label: _t("No records"),
+                    classname: 'o_m2o_no_result',
                 });
             }
         } else if (!this.value && (canQuickCreate || canCreateEdit)) {
@@ -3431,6 +3429,34 @@ var FieldRadio = FieldSelection.extend({
 
     /**
      * @private
+     * @param {MouseEvent} ev
+     * @returns {Object}
+     */
+    _getQuickEditExtraInfo: function (ev) {
+        // can be either the input or the label
+        const $target = ev.target.nodeName === 'INPUT'
+            ? $(ev.target)
+            : $(ev.target).siblings('input');
+
+        const index = $target.data('index');
+        const value = this.values[index];
+        return {value};
+    },
+
+    /**
+     * @private
+     * @override
+     * @params {Object} extraInfo
+     */
+    _quickEdit: function (extraInfo) {
+        if (extraInfo.value) {
+            this._saveValue(extraInfo.value);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
+     * @private
      * @override
      */
     _render: function () {
@@ -3479,6 +3505,19 @@ var FieldRadio = FieldSelection.extend({
         }
     },
 
+    /**
+     * @private
+     * @param {Array} new value, [value] for a selection field,
+     *                           [id, display_name] for a Many2One
+     */
+    _saveValue: function (value) {
+        if (this.field.type === 'many2one') {
+            this._setValue({id: value[0], display_name: value[1]});
+        } else {
+            this._setValue(value[0]);
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -3488,12 +3527,12 @@ var FieldRadio = FieldSelection.extend({
      * @param {MouseEvent} event
      */
     _onInputClick: function (event) {
-        var index = $(event.target).data('index');
-        var value = this.values[index];
-        if (this.field.type === 'many2one') {
-            this._setValue({id: value[0], display_name: value[1]});
+        if (this.mode === 'readonly') {
+            this._onClick(...arguments);
         } else {
-            this._setValue(value[0]);
+            const index = $(event.currentTarget).data('index');
+            const value = this.values[index];
+            this._saveValue(value);
         }
     },
 });

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -40,15 +40,15 @@ msgid "Event Alarm Manager"
 msgstr "Gestore avviso evento"
 
 #. module: calendar_sms
-#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: ${object.name}, ${object.display_time}"
-msgstr "Promemoria evento: ${object.name}, ${object.display_time}"
-
-#. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
 msgstr "Promemoria evento: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid "Event reminder: {{ object.name }}, {{ object.display_time }}"
+msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited

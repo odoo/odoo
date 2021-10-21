@@ -115,15 +115,18 @@ class MailRtcSession(models.Model):
             'payload': payload,
         }) for target, payload in payload_by_target.items()])
 
-    def _mail_rtc_session_format(self):
+    def _mail_rtc_session_format(self, complete_info=True):
         self.ensure_one()
         vals = {
             'id': self.id,
-            'isCameraOn': self.is_camera_on,
-            'isDeaf': self.is_deaf,
-            'isMuted': self.is_muted,
-            'isScreenSharingOn': self.is_screen_sharing_on,
         }
+        if complete_info:
+            vals.update({
+                'isCameraOn': self.is_camera_on,
+                'isDeaf': self.is_deaf,
+                'isMuted': self.is_muted,
+                'isScreenSharingOn': self.is_screen_sharing_on,
+            })
         if self.guest_id:
             vals['guest'] = [('insert', {
                 'id': self.guest_id.id,

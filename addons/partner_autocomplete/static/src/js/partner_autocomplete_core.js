@@ -339,9 +339,8 @@ var PartnerAutocompleteMixin = {
             });
             self.displayNotification({
                 title,
-                message: content,
+                message: utils.Markup(content),
                 className: 'o_partner_autocomplete_no_credits_notify',
-                messageIsHtml: true, // the message is coming from a QWeb template using safe instructions
             });
         });
     },
@@ -360,9 +359,8 @@ var PartnerAutocompleteMixin = {
                 });
                 self.displayNotification({
                     title,
-                    message: content,
+                    message: utils.Markup(content),
                     className: 'o_partner_autocomplete_no_credits_notify',
-                    messageIsHtml: true, // the message is coming from a QWeb template using safe instructions
                 });
             }
             else {

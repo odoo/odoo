@@ -6,6 +6,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
@@ -2188,11 +2189,11 @@ options.registry.anchor = options.Class.extend({
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
             const anchor = decodeURIComponent(this._getAnchorLink());
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
             this.displayNotification({
               type: 'success',
-              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), owl.utils.escape(anchor)),
+              message: message,
               buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
-              messageIsHtml: true, // dynamic parts of the message are escaped above
             });
         });
 
@@ -2602,6 +2603,7 @@ options.registry.ScrollButton = options.Class.extend({
                     'justify-content-center',
                     'mx-auto',
                     'bg-primary',
+                    'o_not_editable',
                 );
                 anchor.href = '#';
                 anchor.contentEditable = "false";
@@ -2855,6 +2857,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
         await this._super(...arguments);
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
+    },
+    /**
+     * @override
+     */
+    async onBuilt() {
+        this.$target[0].classList.toggle('o_animate_preview', this.$target[0].classList.contains('o_animate'));
     },
     /**
      * @override

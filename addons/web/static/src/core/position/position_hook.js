@@ -1,7 +1,9 @@
 /** @odoo-module */
 
 import { useEffect } from "@web/core/utils/hooks";
-import { debounce, throttle } from "../utils/timing";
+import { throttleForAnimation } from "../utils/timing";
+
+const { onWillUnmount } = owl.hooks;
 
 /**
  * @typedef {{
@@ -9,8 +11,6 @@ import { debounce, throttle } from "../utils/timing";
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
- *  directionFlipOrder?: DirectionFlipOrder;
- *  variantFlipOrder?: VariantFlipOrder;
  * }} Options
  *
  * @typedef {{
@@ -59,13 +59,15 @@ const { hooks } = owl;
 const { useComponent, useExternalListener, useRef } = hooks;
 
 const POPPER_CLASS = "o-popper-position";
+/** @type DirectionFlipOrder */
+const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
+/** @type VariantFlipOrder */
+const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
 
 /** @type {Options} */
 export const DEFAULTS = {
     margin: 0,
     position: "bottom",
-    directionFlipOrder: { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" },
-    variantFlipOrder: { start: "sme", middle: "mse", end: "ems" },
 };
 
 /**
@@ -82,17 +84,19 @@ export const DEFAULTS = {
  *  - a method returning style to apply to the popper for a given direction and variant
  */
 export function computePositioning(reference, popper, options) {
-    const { container, margin, position, directionFlipOrder, variantFlipOrder } = options;
+    const { container, margin, position } = options;
 
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = directionFlipOrder[directionKey];
-    const variants = variantFlipOrder[variantKey];
+    const directions = DIRECTION_FLIP_ORDER[directionKey];
+    const variants = VARIANT_FLIP_ORDER[variantKey];
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const refBox = reference.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
+
+    const containerIsHTMLNode = container === document.firstElementChild;
 
     // Compute positioning data
     /** @type {DirectionsData} */
@@ -122,12 +126,22 @@ export function computePositioning(reference, popper, options) {
             const [directionSize, variantSize] = vertical
                 ? [popBox.height + margin, popBox.width]
                 : [popBox.width, popBox.height + margin];
-            const [directionMin, directionMax] = vertical
+            let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
-            const [variantMin, variantMax] = vertical
+            let [variantMin, variantMax] = vertical
                 ? [contBox.left, contBox.right]
                 : [contBox.top, contBox.bottom];
+
+            if (containerIsHTMLNode) {
+                if (vertical) {
+                    directionMin += container.scrollTop;
+                    directionMax += container.scrollTop;
+                } else {
+                    variantMin += container.scrollTop;
+                    variantMax += container.scrollTop;
+                }
+            }
 
             // Abort if outside container boundaries
             const directionOverflow =
@@ -235,6 +249,8 @@ export function usePosition(reference, options) {
         }
     };
     useEffect(update);
-    useExternalListener(document, "scroll", throttle(update, 50), { capture: true });
-    useExternalListener(window, "resize", debounce(update, 250));
+    const throttledUpdate = throttleForAnimation(update);
+    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+    useExternalListener(window, "resize", throttledUpdate);
+    onWillUnmount(throttledUpdate.cancel);
 }

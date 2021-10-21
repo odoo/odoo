@@ -87,6 +87,16 @@
     }
 
     /**
+     * Returns a promise that resolves after the next animation frame.
+     *
+     * @returns {Promise}
+     */
+    async function waitForNextAnimationFrame() {
+        await new Promise(setTimeout);
+        await new Promise((r) => requestAnimationFrame(r));
+    }
+
+    /**
      * Simulate all of the mouse events triggered during a click action.
      *
      * @param {EventTarget} target the element on which to perform the click
@@ -103,8 +113,7 @@
             const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
             target.dispatchEvent(event);
         });
-        await new Promise(setTimeout);
-        await new Promise((r) => requestAnimationFrame(r));
+        await waitForNextAnimationFrame();
     }
 
     /**
@@ -245,25 +254,36 @@
             `toggling menu "${filterMenuButton.innerText.trim()}"`
         );
 
-        const filterMenuItems = document.querySelectorAll(
-            ".o_control_panel .o_filter_menu > ul > li.o_menu_item"
-        );
+        const simpleFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown-item";
+        const dateFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown";
+        const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
         console.log("Testing", filterMenuItems.length, "filters");
-
         for (const filter of filterMenuItems) {
             const currentViewCount = viewUpdateCount;
-            const filterLink = filter.querySelector("a") || filter;
-            await triggerClick(filterLink, `filter "${filter.innerText.trim()}"`);
-            if (filterLink.classList.contains("o_menu_item_parent")) {
+            if (filter.classList.contains("dropdown")) {
+                await triggerClick(
+                    filter.querySelector(".dropdown-toggle"),
+                    `filter "${filter.innerText.trim()}"`
+                );
+                // the sub-dropdown opens 200ms after the mousenter, so we trigger an ArrayRight
+                // keydown s.t. it opens directly
+                window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+                await waitForNextAnimationFrame();
+
                 // If a fitler has options, it will simply unfold and show all options.
                 // We then click on the first one.
-                const firstOption = filter.querySelector(
-                    ".o_menu_item_options > li.o_item_option > a"
-                );
-                console.log();
-                await triggerClick(firstOption, `filter option "${firstOption.innerText.trim()}"`);
+                const firstOption = filter.querySelector(".dropdown-menu > .dropdown-item");
+                if (firstOption) {
+                    await triggerClick(
+                        firstOption,
+                        `filter option "${firstOption.innerText.trim()}"`
+                    );
+                    await waitForCondition(() => currentViewCount !== viewUpdateCount);
+                }
+            } else {
+                await triggerClick(filter, `filter "${filter.innerText.trim()}"`);
+                await waitForCondition(() => currentViewCount !== viewUpdateCount);
             }
-            await waitForCondition(() => currentViewCount !== viewUpdateCount);
         }
     }
 

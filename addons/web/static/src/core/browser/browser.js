@@ -23,6 +23,8 @@ try {
 export const browser = Object.assign({}, owl.browser, {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
+    requestAnimationFrame: window.requestAnimationFrame.bind(window),
+    cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,
     location: window.location,
     history: window.history,

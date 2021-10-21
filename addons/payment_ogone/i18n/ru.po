@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ingenico
+# 	* payment_ogone
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Vasiliy Korobatov <korobatov@gmail.com>, 2019
-# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Martin Trigaux, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Oleg Kuryan <oleg@ventor.tech>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,122 +21,140 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid "; multiple order found"
-msgstr "; найден многократный заказ"
-
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid "; no order found"
-msgstr "; заказ не найден"
-
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_userid
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "API User ID"
-msgstr "API Пользователя ID"
+msgstr "ID API Пользователя"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_password
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
 msgid "API User Password"
-msgstr "API Пароль пользователя"
+msgstr "Пароль API пользователя"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_alias_usage
-msgid "Alias Usage"
-msgstr "Использование псевдонимов"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "CVC"
-msgstr "CVC"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Card number"
-msgstr "Номер карты"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Cardholder name"
-msgstr "Имя владельца карты"
-
-#. module: payment_ingenico
-#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
-msgid "Expires (MM / YY)"
-msgstr "Истекает (ММ / ГГ)"
-
-#. module: payment_ingenico
-#: model:ir.model.fields,help:payment_ingenico.field_payment_acquirer__ogone_alias_usage
-msgid ""
-"If you want to use Ogone Aliases, this default Alias Usage will be presented"
-" to the customer as the reason you want to keep his payment data"
-msgstr ""
-"Если вы хотите использовать псевдонимы Ogone, это значение по умолчанию "
-"псевдоним использования будет представлен клиенту как причина, по которой вы"
-" хотите сохранить его платежные данные"
-
-#. module: payment_ingenico
-#: model:ir.model.fields.selection,name:payment_ingenico.selection__payment_acquirer__provider__ogone
-msgid "Ingenico"
-msgstr "Ingenico"
-
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
-msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
-"Ogone: недопустимый shasign, получил %s, вычисленный %s, для данных %s"
+msgid "Could not establish the connection to the API."
+msgstr "Не удалось установить соединение с API."
 
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
-msgid "Ogone: received data for reference %s"
-msgstr "Ogone: полученные данные для ссылки %s"
+msgid "No transaction found matching reference %s."
+msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
 
-#. module: payment_ingenico
-#: code:addons/payment_ingenico/models/payment.py:0
-#, python-format
-msgid ""
-"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
-"(%s)"
-msgstr ""
-"Ogone: полученные данные с отсутствующей ссылки (%s) или pay_id (%s) или "
-"shasign (%s)"
+#. module: payment_ogone
+#: model:account.payment.method,name:payment_ogone.payment_method_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+msgid "Ogone"
+msgstr "Ogone"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_pspid
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "PSPID"
 msgstr "PSPID"
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_acquirer
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Платежная система"
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_token
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Методы Оплаты"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
 msgid "Payment Token"
 msgstr "Токен оплаты"
 
-#. module: payment_ingenico
-#: model:ir.model,name:payment_ingenico.model_payment_transaction
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Операция Оплаты"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__provider
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Провайдер"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_in
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Получены данные с неверным статусом платежа: %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/controllers/main.py:0
+#, python-format
+msgid ""
+"Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
+"%(data)s"
+msgstr ""
+"Получены данные с недействительной подписью. ожидалось:%(exp)s ; получено:%(rec)s ; данные: \n"
+"%(data)s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Received feedback data with unknown type: %s"
+msgstr "Получены данные обратной связи неизвестного типа: %s"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr "SHA Ключ IN"
 
-#. module: payment_ingenico
-#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_out
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr "SHA Ключ OUT"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been archived."
+msgstr ""
+"Сохраненные способы оплаты не могут быть восстановлены после того, как они "
+"были заархивированы. "
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr ""
+"Сохранение ваших платежных реквизитов необходимо для использования в "
+"будущем."
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+msgid "The ID solely used to identify the API user with Ogone"
+msgstr ""
+"Идентификатор, используемый исключительно для идентификации пользователя API"
+" с помощью Ogone. "
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+msgid "The ID solely used to identify the account with Ogone"
+msgstr ""
+"Идентификатор, используемый исключительно для идентификации учетной записи в"
+" Ogone."
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+"Поставщик платежных услуг для использования с этой платежной системой "
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "Связь с API не удалась."
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Транзакция не привязана к токену. "

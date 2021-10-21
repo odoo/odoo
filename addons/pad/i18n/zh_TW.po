@@ -3,17 +3,15 @@
 # 	* pad
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,58 +25,21 @@ msgid "API Key"
 msgstr "API 金鑰"
 
 #. module: pad
-#: model:ir.model,name:pad.model_res_company
-msgid "Companies"
-msgstr "公司"
-
-#. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common__display_name
-msgid "Display Name"
-msgstr "顯示名稱"
-
-#. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_key
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
-msgid "Etherpad lite api key."
-msgstr "Etherpad lite 的 api key。"
-
-#. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_server
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr "Etherpad lite伺服器。例如 beta.primarypad.com"
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common__id
-msgid "ID"
-msgstr "ID"
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common____last_update
-msgid "Last Modified on"
-msgstr "最後修改於"
-
-#. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:149
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Loading"
 msgstr "正在上載"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
-msgid "Pad Api Key"
-msgstr "Pad Api 密鑰"
-
-#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
-msgid "Pad Api Key *"
-msgstr "Pad Api 密鑰 *"
+msgid "Pad API Key"
+msgstr ""
 
 #. module: pad
 #: model:ir.model,name:pad.model_pad_common
@@ -86,17 +47,12 @@ msgid "Pad Common"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server"
 msgstr "Pad 伺服器"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
-msgid "Pad Server *"
-msgstr "Pad 伺服器 *"
-
-#. module: pad
-#: code:addons/pad/models/pad.py:58
+#: code:addons/pad/models/pad.py:0
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -105,12 +61,10 @@ msgstr "Pad的創建失敗了，估您的Pad 網址有問題或者您的連接�
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
-msgid ""
-"Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings'."
-msgstr "請通過選單「設定 > 常規設定」輸入 Etherpad 憑據。"
+msgid "Please, enter your Etherpad credentials through the Settings."
+msgstr ""
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
@@ -119,21 +73,22 @@ msgstr "伺服器"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:14
+#: code:addons/pad/static/src/xml/pad.xml:0
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
 msgid "Switch pad"
 msgstr "pad切換"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:168
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr "此Pad將在第一個編輯時初始化"
+msgstr "此Pad將在第一次編輯時初始化"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:162
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Unable to load pad"
 msgstr "不能上載至Pad"

@@ -557,7 +557,7 @@ QUnit.module('Views', {
         assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), 'btn btn-secondary');
         assert.containsOnce(cpButtons[0], '.o_list_selection_box');
         assert.strictEqual(
-            cpButtons[0].querySelector('button[name="x"]').previousElementSibling,
+            cpButtons[0].querySelector('button[name="x"]').nextElementSibling,
             cpButtons[0].querySelector('.o_list_selection_box')
         );
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -2230,6 +2230,38 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
         assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
         assert.strictEqual(list.$('.o_list_selection_box').text().trim(), 'All 4 selected');
+
+        list.destroy();
+    });
+
+    QUnit.test('selection box is displayed after header buttons', async function (assert) {
+        assert.expect(5);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <header>
+                         <button name="x" type="object" class="plaf" string="plaf"/>
+                         <button name="y" type="object" class="plouf" string="plouf"/>
+                    </header>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+        });
+
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // select a record
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        const lastElement = list.$('.o_cp_buttons .o_list_buttons').children(":last")[0];
+        assert.strictEqual(lastElement, list.$('.o_cp_buttons .o_list_selection_box')[0],
+            "last element should selection box");
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
 
         list.destroy();
     });

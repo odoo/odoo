@@ -156,6 +156,21 @@ var BasicActivity = AbstractField.extend({
     // Private
     //------------------------------------------------------------
 
+    _getActivityFormAction(id) {
+        return {
+            type: 'ir.actions.act_window',
+            name: _t("Schedule Activity"),
+            res_model: 'mail.activity',
+            view_mode: 'form',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: this.res_id,
+                default_res_model: this.model,
+            },
+            res_id: id || false,
+        };
+    },
     /**
      * Send a feedback and reload page in order to mark activity as done
      *
@@ -216,19 +231,7 @@ var BasicActivity = AbstractField.extend({
      * @return {Promise}
      */
     _openActivityForm: function (id, callback) {
-        var action = {
-            type: 'ir.actions.act_window',
-            name: _t("Schedule Activity"),
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_res_model: this.model,
-            },
-            res_id: id || false,
-        };
+        var action = this._getActivityFormAction(id);
         return this.do_action(action, { on_close: callback });
     },
     /**

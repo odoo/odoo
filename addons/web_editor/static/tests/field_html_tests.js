@@ -11,6 +11,9 @@ var Wysiwyg = require('web_editor.wysiwyg');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
+const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+
 var _t = core._t;
 
 QUnit.module('web_editor', {}, function () {
@@ -198,7 +201,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('check if required field is set', async function (assert) {
-            assert.expect(1);
+            assert.expect(3);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -212,12 +215,9 @@ QUnit.module('web_editor', {}, function () {
 
             testUtils.mock.intercept(form, 'call_service', function (ev) {
                 if (ev.data.service === 'notification') {
-                    assert.deepEqual(ev.data.args[0], {
-                        "message": "<ul><li>Header</li></ul>",
-                        "messageIsHtml": true,
-                        "title": "Invalid fields:",
-                        "type": "danger"
-                    });
+                    assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
+                    assert.strictEqual(ev.data.args[0].message.toString(), '<ul><li>Header</li></ul>');
+                    assert.strictEqual(ev.data.args[0].type, 'danger');
                 }
             }, true);
 
@@ -263,7 +263,7 @@ QUnit.module('web_editor', {}, function () {
                 return openingProm;
             }
 
-
+            await new Promise((resolve)=>setTimeout(resolve, 50));
             await openColorpicker('#toolbar .note-back-color-preview');
             assert.ok($('.note-back-color-preview').hasClass('show'),
                 "should display the color picker");
@@ -664,9 +664,34 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('Quick Edition: click on link inside html field', async function (assert) {
-            assert.expect(3);
+            assert.expect(6);
 
             this.data['note.note'].records[0]['body'] = '<p><a href="#">hello</a> world</p>';
+
+            const MULTI_CLICK_DELAY = 6498651354; // arbitrary large number to identify setTimeout calls
+            let quickEditCB;
+            let quickEditTimeoutId;
+            let nextId = 1;
+            const originalSetTimeout = window.setTimeout;
+            const originalClearTimeout = window.clearTimeout;
+            patchWithCleanup(window, {
+                setTimeout(fn, delay) {
+                    if (delay === MULTI_CLICK_DELAY) {
+                        quickEditCB = fn;
+                        quickEditTimeoutId = `quick_edit_${nextId++}`;
+                        return quickEditTimeoutId;
+                    } else {
+                        return originalSetTimeout(...arguments);
+                    }
+                },
+                clearTimeout(id) {
+                    if (id === quickEditTimeoutId) {
+                        quickEditCB = undefined;
+                    } else {
+                        return originalClearTimeout(...arguments);
+                    }
+                },
+            });
 
             const form = await testUtils.createView({
                 View: FormView,
@@ -675,6 +700,7 @@ QUnit.module('web_editor', {}, function () {
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
                     '</form>',
+                formMultiClickTime: MULTI_CLICK_DELAY,
                 res_id: 1,
             });
 
@@ -682,10 +708,16 @@ QUnit.module('web_editor', {}, function () {
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] a'));
             await testUtils.nextTick();
+            assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
             assert.containsOnce(form, '.o_form_view.o_form_readonly');
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] p'));
             await testUtils.nextTick();
+            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+            assert.ok(quickEditCB, "quickEdit callback should have been set");
+            quickEditCB();
+            await testUtils.nextTick();
+            await legacyExtraNextTick();
             assert.containsOnce(form, '.o_form_view.o_form_editable');
 
             form.destroy();

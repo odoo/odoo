@@ -2,7 +2,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from dateutil.relativedelta import relativedelta
-from lxml import etree
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -293,3 +292,26 @@ class AccountMove(models.Model):
         if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == 'AR':
             return 'l10n_ar.report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_ar_get_invoice_totals_for_report(self):
+        self.ensure_one()
+        tax_ids_filter = tax_line_id_filter = None
+        include_vat = self._l10n_ar_include_vat()
+
+        if include_vat:
+            tax_ids_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
+            tax_line_id_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
+
+        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
+            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
+
+        if include_vat:
+            amount_untaxed = self.currency_id.round(
+                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
+        else:
+            amount_untaxed = self.amount_untaxed
+        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+
+    def _l10n_ar_include_vat(self):
+        self.ensure_one()
+        return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']
