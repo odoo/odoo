@@ -102,7 +102,9 @@ class TestEventCommon(common.TransactionCase):
     @classmethod
     def _create_registrations(cls, event, reg_count):
         # create some registrations
+        create_date = fields.Datetime.now()
         registrations = cls.env['event.registration'].create([{
+            'create_date': create_date,
             'event_id': event.id,
             'name': 'Test Registration %s' % x,
             'email': '_test_reg_%s@example.com' % x,

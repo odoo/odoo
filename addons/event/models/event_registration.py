@@ -37,7 +37,6 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
     mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
     # organization
-    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
