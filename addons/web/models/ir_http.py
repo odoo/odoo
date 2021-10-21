@@ -34,7 +34,7 @@ class Http(models.AbstractModel):
         ))
         mods = odoo.conf.server_wide_modules or []
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang)
+        translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang) if request.session.uid else None
         session_info = {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
