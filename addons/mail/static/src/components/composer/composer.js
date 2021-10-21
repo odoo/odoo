@@ -146,7 +146,16 @@ export class Composer extends Component {
             this.composerView.updateMessage();
             return;
         }
-        this.composerView.postMessage();
+        const message = this.messaging.models['mail.message'].insert({
+            id: this.messaging.models['mail.message'].getNextTemporaryId(),
+            isPending: true,
+            attachment_ids: this.composerView.composer.attachments.map(attachment => attachment.id),
+            body: this.composerView.messageSender.convertMessageToHtml(this.composerView.composer.textInputContent),
+            rawBody: this.composerView.composer.textInputContent,
+            message_type: 'comment',
+            partner_ids: this.composerView.composer.recipients.map(partner => partner.id),
+        });
+        this.composerView.messageSender.sendMessage(message);
     }
 
     //--------------------------------------------------------------------------

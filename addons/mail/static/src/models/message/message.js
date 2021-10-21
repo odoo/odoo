@@ -671,6 +671,12 @@ function factory(dependencies) {
         isTransient: attr({
             default: false,
         }),
+        /**
+         * States whether the message is pending to be sent to the server.
+         */
+        isPendingSent: attr({
+            default: false,
+        }),
         is_discussion: attr({
             default: false,
         }),
@@ -772,9 +778,20 @@ function factory(dependencies) {
         tracking_value_ids: attr({
             default: [],
         }),
+        rawBody: attr({
+            default: "",
+        }),
     };
     Message.identifyingFields = ['id'];
     Message.modelName = 'mail.message';
+
+    Message.getNextTemporaryId = function() {
+        let tmpId = 0;
+        return () => {
+            tmpId -= 1;
+            return tmpId;
+        };
+    }();
 
     return Message;
 }

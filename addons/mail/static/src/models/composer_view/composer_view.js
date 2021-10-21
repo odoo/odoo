@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { emojis } from '@mail/js/emojis';
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
@@ -91,7 +90,7 @@ function factory(dependencies) {
             }
             if (
                 this.suggestionModelName === 'mail.channel_command' ||
-                this._getCommandFromText(this.composer.textInputContent)
+                this.messageSender._getCommandFromText(this.composer.textInputContent)
             ) {
                 return;
             }
@@ -184,7 +183,6 @@ function factory(dependencies) {
             this.discard();
         }
 
-
         /**
          * Handles click on the save link.
          *
@@ -205,7 +203,7 @@ function factory(dependencies) {
                 this.updateMessage();
                 return;
             }
-            this.postMessage();
+            this.messageSender.postMessage();
         }
 
         /**
@@ -255,110 +253,6 @@ function factory(dependencies) {
                 },
             };
             await this.env.bus.trigger('do-action', { action, options });
-        }
-
-        /**
-         * Post a message in provided composer's thread based on current composer fields values.
-         */
-        async postMessage() {
-            const composer = this.composer;
-            if (composer.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(composer.textInputContent);
-                if (command) {
-                    await command.execute({ channel: composer.thread, body: composer.textInputContent });
-                    if (composer.exists()) {
-                        composer._reset();
-                    }
-                    return;
-                }
-            }
-            if (this.messaging.currentPartner) {
-                composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            const postData = {
-                attachment_ids: composer.attachments.map(attachment => attachment.id),
-                body,
-                message_type: 'comment',
-                partner_ids: composer.recipients.map(partner => partner.id),
-            };
-            const params = {
-                'post_data': postData,
-                'thread_id': composer.thread.id,
-                'thread_model': composer.thread.model,
-            };
-            try {
-                composer.update({ isPostingMessage: true });
-                if (composer.thread.model === 'mail.channel') {
-                    Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
-                    });
-                } else {
-                    Object.assign(postData, {
-                        subtype_xmlid: composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                    });
-                    if (!composer.isLog) {
-                        params.context = { mail_post_autofollow: true };
-                    }
-                }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
-                    postData.parent_id = this.threadView.replyingToMessageView.message.id;
-                }
-                const { threadView = {} } = this;
-                const { thread: chatterThread } = this.chatter || {};
-                const { thread: threadViewThread } = threadView;
-                const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
-                if (!this.messaging) {
-                    return;
-                }
-                const message = this.messaging.models['mail.message'].insert(
-                    this.messaging.models['mail.message'].convertData(messageData)
-                );
-                for (const threadView of message.originThread.threadViews) {
-                    // Reset auto scroll to be able to see the newly posted message.
-                    threadView.update({ hasAutoScrollOnMessageReceived: true });
-                }
-                if (chatterThread) {
-                    if (this.exists()) {
-                        this.delete();
-                    }
-                    if (chatterThread.exists()) {
-                        chatterThread.refreshFollowers();
-                        chatterThread.fetchAndUpdateSuggestedRecipients();
-                    }
-                }
-                if (threadViewThread) {
-                    if (threadViewThread === this.messaging.inbox) {
-                        if (this.exists()) {
-                            this.delete();
-                        }
-                        this.env.services['notification'].notify({
-                            message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
-                            type: 'info',
-                        });
-                    }
-                    if (threadView && threadView.exists()) {
-                        threadView.update({ replyingToMessageView: clear() });
-                    }
-                }
-                if (composer.exists()) {
-                    composer._reset();
-                }
-            } finally {
-                if (composer.exists()) {
-                    composer.update({ isPostingMessage: false });
-                }
-            }
         }
 
         /**
@@ -428,9 +322,9 @@ function factory(dependencies) {
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this._generateMentionsLinks(body);
+            body = this.messageSender._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
+            body = this.messageSender._generateEmojisOnHtml(body);
             let data = {
                 body: body,
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
@@ -619,98 +513,6 @@ function factory(dependencies) {
                     this._executeOrQueueFunction(this._nextMentionRpcFunction);
                 }
             }
-        }
-
-
-        /**
-         * @private
-         * @param {string} htmlString
-         * @returns {string}
-         */
-        _generateEmojisOnHtml(htmlString) {
-            for (const emoji of emojis) {
-                for (const source of emoji.sources) {
-                    const escapedSource = String(source).replace(
-                        /([.*+?=^!:${}()|[\]/\\])/g,
-                        '\\$1');
-                    const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
-                        'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
-                }
-            }
-            return htmlString;
-        }
-
-        /**
-         *
-         * Generates the html link related to the mentioned partner
-         *
-         * @private
-         * @param {string} body
-         * @returns {string}
-         */
-        _generateMentionsLinks(body) {
-            // List of mention data to insert in the body.
-            // Useful to do the final replace after parsing to avoid using the
-            // same tag twice if two different mentions have the same name.
-            const mentions = [];
-            for (const partner of this.composer.mentionedPartners) {
-                const placeholder = `@-mention-partner-${partner.id}`;
-                const text = `@${owl.utils.escape(partner.name)}`;
-                mentions.push({
-                    class: 'o_mail_redirect',
-                    id: partner.id,
-                    model: 'res.partner',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            for (const channel of this.composer.mentionedChannels) {
-                const placeholder = `#-mention-channel-${channel.id}`;
-                const text = `#${owl.utils.escape(channel.name)}`;
-                mentions.push({
-                    class: 'o_channel_redirect',
-                    id: channel.id,
-                    model: 'mail.channel',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            const baseHREF = this.env.session.url('/web');
-            for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-                const attClass = `class='${mention.class}'`;
-                const dataOeId = `data-oe-id='${mention.id}'`;
-                const dataOeModel = `data-oe-model='${mention.model}'`;
-                const target = `target='_blank'`;
-                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-                body = body.replace(mention.placeholder, link);
-            }
-            return body;
-        }
-
-        /**
-         * @private
-         * @param {string} content html content
-         * @returns {mail.channel_command|undefined} command, if any in the content
-         */
-        _getCommandFromText(content) {
-            if (content.startsWith('/')) {
-                const firstWord = content.substring(1).split(/\s/)[0];
-                return this.messaging.commands.find(command => {
-                    if (command.name !== firstWord) {
-                        return false;
-                    }
-                    if (command.channel_types) {
-                        return command.channel_types.includes(this.composer.thread.channel_type);
-                    }
-                    return true;
-                });
-            }
-            return undefined;
         }
 
         /**
@@ -967,6 +769,11 @@ function factory(dependencies) {
         threadView: one2one('mail.thread_view', {
             inverse: 'composerView',
             readonly: true,
+        }),
+        messageSender: one2one('mail.composer_message_sender', {
+            default: insertAndReplace(),
+            inverse: 'composerView',
+            isCausal: true,
         }),
     };
     ComposerView.identifyingFields = [['threadView', 'messageViewInEditing', 'chatter']];
