@@ -1,3 +1,4 @@
+import json
 import time
 from xmlrpc.client import Fault
 
@@ -84,3 +85,31 @@ class TestTOTP(HttpCase):
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
+
+    def test_totp_authenticate(self):
+        """
+        Ensure that JSON-RPC authentication works and don't return the user id
+        without TOTP check
+        """
+
+        self.start_tour('/web', 'totp_tour_setup', login='demo')
+        self.url_open('/web/session/logout')
+
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "id": 0,
+            "params": {
+                "db": get_db_name(),
+                "login": "demo",
+                "password": "demo",
+                "context": {},
+            },
+        }
+        response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
+        data = response.json()
+        self.assertEqual(data['result']['uid'], None)
