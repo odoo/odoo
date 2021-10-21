@@ -24,12 +24,7 @@ class UoMCategory(models.Model):
         else:
             reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids)
             if reference_count == 0 and self._origin.id:
-                return {
-                    'warning': {
-                        'title': _('Warning!'),
-                        'message': _("UoM category %s should have a reference unit of measure.") % self.name
-                    }
-                }
+                raise UserError(_('UoM category %s must have at least one reference unit of measure.', self.name))
             if self.reference_uom_id:
                 new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.id != self.reference_uom_id.id)
             else:
