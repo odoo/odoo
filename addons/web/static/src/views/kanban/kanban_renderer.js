@@ -134,6 +134,9 @@ export class KanbanRenderer extends Component {
 
     getGroupClasses(group) {
         const classes = [];
+        if (!group.count) {
+            classes.push("o_kanban_no_records");
+        }
         if (!group.isLoaded) {
             classes.push("o_column_folded");
         } else if (group.progress) {
@@ -156,24 +159,27 @@ export class KanbanRenderer extends Component {
     }
 
     getProgressSumField(group) {
-        const info = {};
+        let string = "";
+        let value = 0;
         const { sumField } = this.progress;
         if (sumField) {
             const field = group.fields[sumField];
             if (field) {
-                info.string = field.string;
-                info.name = field.name;
+                string = field.string;
                 if (group.activeProgressValue) {
-                    info.value = 0;
+                    value = 0;
                     for (const record of group.data) {
-                        info.value += record.data[sumField];
+                        value += record.data[sumField];
                     }
                 } else {
-                    info.value = group.aggregates[sumField];
+                    value = group.aggregates[sumField];
                 }
             }
+        } else {
+            string = this.env._t("Count");
+            value = group.count;
         }
-        return info;
+        return { string, value };
     }
 
     getColumnTitle(group) {

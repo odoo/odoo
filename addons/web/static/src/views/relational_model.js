@@ -6,6 +6,8 @@ import { Model } from "./helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
 import { _t } from "@web/core/l10n/translation";
 
+const LOADED_GROUP_LIMIT = 10;
+
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -425,6 +427,7 @@ class DataList extends DataPoint {
         this.count = length;
 
         const groupBy = this.groupBy.slice(1);
+        let loadedGroups = 0;
         return Promise.all(
             groups.map(async (groupData) => {
                 const [groupByFieldName] = this.groupBy;
@@ -439,7 +442,7 @@ class DataList extends DataPoint {
                         case groupByFieldName: {
                             let groupDisplay = value;
                             let groupValue = value;
-                            if (this.fields[groupByFieldName].type === "many2one") {
+                            if (Array.isArray(value)) {
                                 groupDisplay = groupDisplay ? groupDisplay[1] : _t("Undefined");
                                 groupValue = groupValue ? groupValue[0] : false;
                             }
@@ -470,7 +473,12 @@ class DataList extends DataPoint {
                 if (!group || !group.isLoaded) {
                     group = this.createList(this.resModel, groupParams);
                 }
-                if (!shouldFold && (this.openGroupsByDefault || group.isLoaded)) {
+                if (
+                    !shouldFold &&
+                    loadedGroups < LOADED_GROUP_LIMIT &&
+                    (this.openGroupsByDefault || group.isLoaded)
+                ) {
+                    loadedGroups++;
                     await group.load({ groupBy, orderByColumn: this.orderByColumn });
                 }
                 return group;
