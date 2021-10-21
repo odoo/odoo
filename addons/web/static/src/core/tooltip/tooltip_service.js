@@ -19,6 +19,9 @@ const { whenReady } = owl;
  * "data-tooltip-position":
  *   <button data-tooltip="This is a tooltip" data-tooltip-position="left">Do something</button>
  *
+ * The opening delay can be modified with the "data-tooltip-delay" attribute (default: 400):
+ *   <button data-tooltip="This is a tooltip" data-tooltip-delay="0">Do something</button>
+ *
  * For advanced tooltips containing dynamic and/or html content, the
  * "data-tooltip-template" and "data-tooltip-info" attributes can be used.
  * For example, let's suppose the following qweb template:
@@ -42,7 +45,6 @@ export const tooltipService = {
         let openTooltipTimeout;
         let closeTooltip;
         let target = null;
-
         let positionX;
         let positionY;
 
@@ -54,6 +56,29 @@ export const tooltipService = {
             if (closeTooltip) {
                 closeTooltip();
             }
+        }
+
+        /**
+         * Checks that the target is in the DOM and we're hovering the target.
+         * @returns {boolean}
+         */
+        function shouldCleanup() {
+            if (!target) {
+                return;
+            }
+            if (!document.body.contains(target)) {
+                return cleanup(); // target is no longer in the DOM
+            }
+            const targetRect = target.getBoundingClientRect();
+            if (
+                positionX < targetRect.left ||
+                positionX > targetRect.right ||
+                positionY < targetRect.top ||
+                positionY > targetRect.bottom
+            ) {
+                return true; // mouse is no longer hovering the target
+            }
+            return false;
         }
 
         /**
@@ -77,34 +102,26 @@ export const tooltipService = {
             }
             cleanup();
             openTooltipTimeout = browser.setTimeout(() => {
-                const position = dataset.tooltipPosition;
-                closeTooltip = popover.add(
-                    target,
-                    Tooltip,
-                    { tooltip, template, info },
-                    { position }
-                );
-            }, OPEN_DELAY);
+                if (shouldCleanup()) {
+                    cleanup();
+                } else {
+                    const position = dataset.tooltipPosition;
+                    closeTooltip = popover.add(
+                        target,
+                        Tooltip,
+                        { tooltip, template, info },
+                        { position }
+                    );
+                }
+            }, dataset.tooltipDelay || OPEN_DELAY);
         }
 
         whenReady(() => {
             // Regularly check that the target is still in the DOM and we're still
             // hovering it, because if not, we have to close the tooltipd
             browser.setInterval(() => {
-                if (!target) {
-                    return;
-                }
-                if (!document.body.contains(target)) {
-                    return cleanup(); // target is no longer in the DOM
-                }
-                const targetRect = target.getBoundingClientRect();
-                if (
-                    positionX < targetRect.left ||
-                    positionX > targetRect.right ||
-                    positionY < targetRect.top ||
-                    positionY > targetRect.bottom
-                ) {
-                    return cleanup(); // mouse is no longer hovering the target
+                if (shouldCleanup()) {
+                    cleanup();
                 }
             }, CLOSE_DELAY);
 

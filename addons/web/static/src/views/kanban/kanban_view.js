@@ -60,7 +60,7 @@ const applyDefaultAttributes = (kanbanBox) => {
 const extractAttributes = (node, attributes) => {
     const attrs = Object.create(null);
     for (const rawAttr of attributes) {
-        const attr = rawAttr.replace(/-[a-z]/gi, (_, c) => c.toUpperCase());
+        const attr = rawAttr.replace(/-([a-z])/gi, (_, c) => c.toUpperCase());
         attrs[attr] = node.getAttribute(rawAttr) || "";
         node.removeAttribute(rawAttr);
     }
@@ -134,19 +134,20 @@ export class KanbanArchParser extends XMLParser {
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];
+        let progressBarInfo = false;
         let dropdownInserted = false;
         dropdown.setAttribute("t-component", "Dropdown");
 
         // Progressbar
-        for (const el of kanbanBox.getElementsByTagName("progressbar")) {
-            const { field: fieldName, colors, sum_field: sumField, help } = extractAttributes(el, [
-                "field",
-                "colors",
-                "sum_field",
-                "help",
-            ]);
-            // TODO
-            console.log({ fieldName, colors, sumField, help });
+        for (const el of xmlDoc.getElementsByTagName("progressbar")) {
+            const attrs = extractAttributes(el, ["field", "colors", "sum_field", "help"]);
+            progressBarInfo = {
+                fieldName: attrs.field,
+                colors: JSON.parse(attrs.colors),
+                sumField: attrs.sum_field || false,
+                help: attrs.help,
+            };
+            kanbanBox.setAttribute("t-att-class", "getRecordProgressColor(groupOrRecord)");
         }
 
         // Dropdown element
@@ -237,6 +238,7 @@ export class KanbanArchParser extends XMLParser {
             defaultGroupBy,
             colorField,
             quickCreate,
+            progress: progressBarInfo,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: fieldParser.getFields(),
             tooltips,
@@ -254,6 +256,7 @@ class KanbanView extends owl.Component {
         const { fields: activeFields, relations, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
+            progress: this.archInfo.progress,
             fields,
             relations,
             resModel,

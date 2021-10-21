@@ -419,9 +419,7 @@ class DataList extends DataPoint {
             this.domain,
             this.activeFields,
             this.groupBy,
-            {
-                limit: 40,
-            }
+            { limit: 40 }
         );
         this.count = length;
 

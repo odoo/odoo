@@ -6,7 +6,7 @@
             <t t-foreach="props.list.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
                 <t t-if="props.list.isGrouped">
                     <t t-set="group" t-value="groupOrRecord" />
-                    <div class="o_kanban_group">
+                    <div class="o_kanban_group" t-att-class="getGroupClasses(group)">
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title">
@@ -15,6 +15,29 @@
                                 <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
                                     <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                 </span>
+                            </div>
+                            <div t-if="group.progress" class="o_kanban_counter">
+                                <div class="o_kanban_counter_progress progress">
+                                    <t t-foreach="group.progress" t-as="progressData" t-key="progressData.color">
+                                        <div t-if="progressData.count"
+                                            role="progressbar"
+                                            class="progress-bar o_bar_has_records"
+                                            t-att-class="{ 'progress-bar-animated progress-bar-striped': group.activeProgressValue === progressData.value }"
+                                            t-attf-class="bg-{{ progressData.color }}"
+                                            t-attf-style="width: {{ progressData.count / progressData.total * 100 }}%;"
+                                            aria-valuemin="0"
+                                            t-att-aria-valuemax="progressData.total"
+                                            t-att-aria-valuenow="progressData.count"
+                                            t-attf-data-tooltip="{{ progressData.count }} {{ progressData.string }}"
+                                            data-tooltip-delay="0"
+                                            t-on-click="props.list.model.filterProgressValue(group, progressData.value)"
+                                        />
+                                    </t>
+                                </div>
+                                <t t-set="sumField" t-value="getProgressSumField()" />
+                                <div class="o_kanban_counter_side" t-att-title="sumField.string">
+                                    <b t-esc="sumField.value" />
+                                </div>
                             </div>
                         </div>
                         <t t-if="state.quickCreate[group.id]">
