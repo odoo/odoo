@@ -103,6 +103,8 @@
                 <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <filter string="Trigger Manual" name="filter_creation_trigger" domain="[('trigger', '=', 'manual')]"/>
+                <separator/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
                 <separator/>
                 <filter string="Not Snoozed" name="filter_not_snoozed" domain="['|', ('snoozed_until', '=', False), ('snoozed_until', '&lt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/>
@@ -228,9 +230,9 @@
         <field name="state">code</field>
         <field name="code">
             action = model.with_context(
-                search_default_trigger='manual',
                 search_default_filter_to_reorder=True,
                 search_default_filter_not_snoozed=True,
+                search_default_filter_creation_trigger=True,
                 default_trigger='manual'
             ).action_open_orderpoints()
         </field>
