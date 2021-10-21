@@ -503,7 +503,6 @@
                       expand="1" default_order="create_date desc"
                       class="o_event_registration_view_tree">
                     <field name="create_date" optional="show" string="Registration Date"/>
-                    <field name="date_open" optional="hide"/>
                     <field name="name"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="email" optional="show"/>
@@ -554,7 +553,7 @@
                                     ]"
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>
-                                <field name="date_open" groups="base.group_no_one"/>
+                                <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
                             <group string="Marketing" name="utm_link" groups="base.group_no_one">
@@ -692,7 +691,7 @@
                     <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'open')]"/>
                     <filter string="Attended" name="attended" domain="[('state', '=', 'done')]"/>
                     <separator/>
-                    <filter string="Registration Date" name="filter_date_open" date="date_open"/>
+                    <filter string="Registration Date" name="filter_create_date" date="create_date"/>
                     <filter string="Event Start Date" name="filter_event_begin_date" date="event_begin_date"/>
                     <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
                     <field name="event_id"/>

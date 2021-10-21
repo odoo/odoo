@@ -89,12 +89,14 @@ class TestMailSchedule(TestEventCommon, MockEmail):
 
         # create some registrations
         with freeze_time(now), self.mock_mail_gateway():
-            reg1 = self.env['event.registration'].with_user(self.user_eventuser).create({
+            reg1 = self.env['event.registration'].create({
+                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg1',
                 'email': 'reg1@example.com',
             })
-            reg2 = self.env['event.registration'].with_user(self.user_eventuser).create({
+            reg2 = self.env['event.registration'].create({
+                'create_date': now,
                 'event_id': test_event.id,
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
@@ -105,7 +107,7 @@ class TestMailSchedule(TestEventCommon, MockEmail):
 
         # check registration state
         self.assertTrue(all(reg.state == 'open' for reg in reg1 + reg2), 'Registrations: should be auto-confirmed')
-        self.assertTrue(all(reg.date_open == now for reg in reg1 + reg2), 'Registrations: should have open date set to confirm date')
+        self.assertTrue(all(reg.create_date == now for reg in reg1 + reg2), 'Registrations: should have open date set to confirm date')
 
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
@@ -204,7 +206,8 @@ class TestMailSchedule(TestEventCommon, MockEmail):
 
         test_event.write({'auto_confirm': False})
         with freeze_time(now_start), self.mock_mail_gateway():
-            reg3 = self.env['event.registration'].with_user(self.user_eventuser).create({
+            reg3 = self.env['event.registration'].create({
+                'create_date': now_start,
                 'event_id': test_event.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
@@ -220,7 +223,7 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertTrue(after_sub_scheduler_2.mail_done, 'event: scheduler on registration not updated next to draft registration')
 
         # confirm registration -> should trigger registration schedulers
-        # NOTE: currently all schedulers are based on date_open which equals create_date
+        # NOTE: currently all schedulers are based on create_date
         # meaning several communications may be sent in the time time
         with freeze_time(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
             reg3.action_confirm()
