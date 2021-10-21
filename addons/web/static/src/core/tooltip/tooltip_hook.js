@@ -18,6 +18,9 @@ import { Tooltip } from "./tooltip";
  * "data-tooltip-position":
  *   <button data-tooltip="This is a tooltip" data-tooltip-position="left">Do something</button>
  *
+ * The opening delay can be modified with the "data-tooltip-delay" attribute (default: 400):
+ *   <button data-tooltip="This is a tooltip" data-tooltip-delay="0">Do something</button>
+ *
  * For advanced tooltips containing dynamic and/or html content, the
  * "data-tooltip-template" and "data-tooltip-info" attributes can be used.
  * For example, let's suppose the following qweb template:
@@ -74,7 +77,7 @@ export function useTooltip() {
                     { tooltip, template, info },
                     { position }
                 );
-            }, OPEN_DELAY);
+            }, dataset.tooltipDelay || OPEN_DELAY);
         }
     }
 

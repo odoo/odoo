@@ -29,16 +29,20 @@ export class KanbanRenderer extends Component {
             quickCreate: [],
         });
         this.action = useService("action");
+        this.orm = useService("orm");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
         useSubEnv({ model: this.props.list.model });
     }
 
+    get progress() {
+        return this.props.list.model.progress;
+    }
+
     quickCreate(group) {
         const [groupByField] = this.props.list.model.root.groupBy;
-        const value = group.groupData[groupByField];
         this.state.quickCreate[group.id] = {
-            [groupByField]: Array.isArray(value) ? value[0] : value,
+            [groupByField]: Array.isArray(group.value) ? group.value[0] : group.value,
         };
     }
 
@@ -100,6 +104,43 @@ export class KanbanRenderer extends Component {
                 });
             }
         }
+    }
+
+    getGroupClasses(group) {
+        const classes = [];
+        if (group.progress) {
+            classes.push("o_kanban_has_progressbar");
+            const { activeProgressValue, progress } = group;
+            if (activeProgressValue) {
+                const progressValue = progress.find((d) => d.value === activeProgressValue);
+                classes.push("o_kanban_group_show", `o_kanban_group_show_${progressValue.color}`);
+            }
+        }
+        return classes.join(" ");
+    }
+
+    getRecordProgressColor(groupOrRecord) {
+        if (!groupOrRecord.activeProgressValue) {
+            return "";
+        }
+        const colorClass = this.progress.colors[groupOrRecord.activeProgressValue];
+        return `oe_kanban_card_${colorClass || "muted"}`;
+    }
+
+    getProgressSumField() {
+        const info = {};
+        const { sumField } = this.progress;
+        if (sumField) {
+            const field = this.props.list.fields[sumField];
+            if (field) {
+                info.string = field.string;
+            }
+        }
+        return info;
+    }
+
+    getColumnTitle(group) {
+        return Array.isArray(group.value) ? group.value[1] : group.value;
     }
 
     onCardClicked(record, ev) {
