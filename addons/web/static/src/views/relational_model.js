@@ -315,7 +315,6 @@ class DataList extends DataPoint {
         this.displayName = params.groupDisplay;
         this.value = params.groupValue;
         this.aggregates = params.groupAggregates;
-        this.shouldFold = params.groupFold;
 
         for (const type in params.views || {}) {
             const [mode] = getX2MViewModes(type);
@@ -433,6 +432,7 @@ class DataList extends DataPoint {
                     groupAggregates: Object.create(null),
                     groupBy,
                 };
+                let shouldFold = false;
                 for (const key in groupData) {
                     const value = groupData[key];
                     switch (key) {
@@ -455,7 +455,7 @@ class DataList extends DataPoint {
                             break;
                         }
                         case "__fold": {
-                            groupParams.groupFold = value || false;
+                            shouldFold = value || false;
                             break;
                         }
                         default: {
@@ -470,7 +470,7 @@ class DataList extends DataPoint {
                 if (!group || !group.isLoaded) {
                     group = this.createList(this.resModel, groupParams);
                 }
-                if (this.openGroupsByDefault || group.isLoaded) {
+                if (!shouldFold && (this.openGroupsByDefault || group.isLoaded)) {
                     await group.load({ groupBy, orderByColumn: this.orderByColumn });
                 }
                 return group;
