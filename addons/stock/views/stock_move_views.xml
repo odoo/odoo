@@ -226,7 +226,7 @@
                             'default_product_id': parent.product_id,
                         }"
                     />
-                    <field name="lot_name" widget="text" groups="stock.group_production_lot"
+                    <field name="lot_name" string="Lot/Serial Number" widget="text" groups="stock.group_production_lot"
                         placeholder="Write your SN/LN one by one or copy paste a list."
                         attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"
                         invisible="not context.get('show_lots_text')"/>
