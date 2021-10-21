@@ -3,13 +3,9 @@
 
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'quote' or sale_order and sale_order.state in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
-                <a t-if="sale_order" t-attf-href="/my/quotes?{{ keep_query() }}">Quotations</a>
-                <t t-else="">Quotations</t>
-            </li>
-            <li t-if="page_name == 'order' or sale_order and sale_order.state not in ('sent', 'cancel')" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
-                <a t-if="sale_order" t-attf-href="/my/orders?{{ keep_query() }}">Sales Orders</a>
-                <t t-else="">Sales Orders</t>
+            <li t-if="page_name == 'order'" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
+                <a t-if="sale_order" t-attf-href="/my/orders?{{ keep_query() }}">My Orders</a>
+                <t t-else="">My Orders</t>
             </li>
             <li t-if="sale_order" class="breadcrumb-item active">
                 <span t-field="sale_order.type_name"/>
@@ -18,7 +14,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+    <template id="portal_my_home_sale" name="Show Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Quotations</t>
@@ -26,12 +22,14 @@
                 <t t-set="description_data" t-value="sale_quotation_counters"/>
             </t>
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Sales Orders</t>
+                <t t-set="title">My Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
                 <t t-set="description_data" t-value="sale_order_counters"/>
             </t>
         </xpath>
     </template>
+
+    <!-- to delete -> merge My Orders -->
 
     <template id="portal_my_quotations" name="My Quotations">
         <t t-call="portal.portal_layout">
@@ -76,7 +74,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">Sales Orders</t>
+                <t t-set="title">Orders</t>
             </t>
             <t t-if="not orders">
                 <p>There are currently no orders for your account.</p>
@@ -85,12 +83,12 @@
                 <thead>
                     <tr class="active">
                         <th>
-                            <span class='d-none d-md-inline'>Sales Order #</span>
+                            <span class='d-none d-md-inline'>My Order #</span>
                             <span class='d-block d-md-none'>Ref.</span>
                         </th>
                         <th class="text-right">Order Date</th>
-                        <th class="text-center"/>
                         <th class="text-right">Total</th>
+                        <th class="text-right">Status</th>
                     </tr>
                 </thead>
                 <t t-foreach="orders" t-as="order">
@@ -100,12 +98,10 @@
                             <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                             <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
-                        <td class="text-center">
-                            <span t-if="order.state == 'done'"  class="badge badge-pill badge-success">
-                                <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done
-                            </span>
-                        </td>
                         <td class="text-right"><span t-field="order.amount_total"/></td>
+                        <td class="text-right">
+                            <span t-esc="dict(order._fields['flow_status'].selection).get(order.flow_status)" class="badge badge-info badge-pill"/>
+                        </td>
                     </tr>
                 </t>
             </t>
@@ -146,6 +142,12 @@
                                         <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                     </div>
                                 </div>
+                            </li>
+
+                            <li class="list-group-item">
+                                <t t-foreach="sale_order.invoice_ids" t-as="invoice_line">
+                                    <a t-attf-href="/my/invoices/{{ invoice_line.id }}" t-att-title="invoice_line.name">View Invoice</a>
+                                </t>
                             </li>
 
                             <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true" role="complementary">
@@ -326,6 +328,16 @@
                                 <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                             </a>
                         </div>
+                        <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
+                        <t t-if="payment_tx_id.provider == 'transfer'">
+                            <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
+                                <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_url(sale_order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                                <div class="card-body" t-if="qr_code">
+                                    <h3>Scan me with your banking app.</h3>
+                                    <img class="border border-dark rounded" t-att-src="qr_code"/>
+                                </div>
+                            </div>
+                        </t>
                     </div>
 
                     <!-- chatter -->
@@ -390,6 +402,12 @@
                             <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                         </div>
                     </t>
+                </div>
+                <div class="row">
+                    <div class="col-6" t-if="sale_order.expected_date">
+                        <strong>Expected Delivery Date:</strong>
+                        <span t-field="sale_order.expected_date" t-options='{"widget": "date"}'/>
+                    </div>
                 </div>
 
                 <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>

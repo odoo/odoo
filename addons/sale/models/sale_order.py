@@ -279,6 +279,13 @@ class SaleOrder(models.Model):
                                                 " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
 
+    flow_status = fields.Selection([
+        ('to_sign', 'To sign'),
+        ('to_pay', 'To pay'),
+        ('paid', 'Paid'),
+        ('cancelled', 'Cancelled')
+    ], string='Flow status', compute='_compute_flow_status')
+
     _sql_constraints = [
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
     ]
@@ -553,6 +560,21 @@ class SaleOrder(models.Model):
             return
 
         upselling_orders._create_upsell_activity()
+
+    @api.depends('state', 'invoice_ids')
+    def _compute_flow_status(self):
+        for order in self:
+            if order.has_to_be_signed():
+                order.flow_status = 'to_sign'
+                continue
+            if order.has_to_be_paid():
+                order.flow_status = 'to_pay'
+                continue
+            if order.is_paid():
+                order.flow_status = 'paid'
+                continue
+            else:
+                order.flow_status = 'cancelled'
 
     def copy_data(self, default=None):
         if default is None:
@@ -1020,6 +1042,13 @@ class SaleOrder(models.Model):
     def has_to_be_paid(self, include_draft=False):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
+
+    def is_paid(self, include_draft=False):
+        for invoice in self.invoice_ids:
+            last_tx = invoice.get_portal_last_transaction()
+            if not (invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'):
+                return False
+        return True
 
     def _notify_get_groups(self, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated

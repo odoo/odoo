@@ -135,7 +135,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         domain = [
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
+            ('state', '!=', 'draft')
         ]
 
         searchbar_sortings = {
