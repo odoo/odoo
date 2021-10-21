@@ -195,7 +195,7 @@ const ReplenishReport = clientAction.extend({
                 active_id: this.productId,
                 active_model: this.resModel,
             }, this.context, additionnalContext);
-            return this.do_action(action, {replace_last_action: true});
+            return this.do_action(action, { stackPosition: 'replaceCurrentAction' });
         });
     },
 
