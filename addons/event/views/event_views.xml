@@ -543,7 +543,6 @@
                         <div class="oe_button_box" name="button_box"/>
                         <group>
                             <group string="Attendee" name="attendee">
-                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field class="o_text_overflow" name="name"/>
                                 <field name="email"/>
                                 <field name="phone" class="o_force_ltr"/>
@@ -558,6 +557,7 @@
                                     ]"
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>
+                                <field name="partner_id"/>
                                 <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
