@@ -510,12 +510,17 @@
                     <field name="mobile" optional="hide"/>
                     <field name="event_id" invisible="context.get('default_event_id')"/>
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
-                    <field name="state" readonly="0"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="state" decoration-info="state in ('draft', 'open')"
+                           decoration-success="state == 'done'"
+                           decoration-muted="state == 'cancel'" widget="badge"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="message_needaction" invisible="1"/>
                     <button name="action_confirm" string="Confirm" states="draft" type="object" icon="fa-check"/>
                     <button name="action_set_done" string="Mark as Attending" states="open" type="object" icon="fa-level-down"/>
-                    <button name="action_cancel" string="Cancel" states="draft,open" type="object" icon="fa-times"/>
+                    <button name="action_cancel" string="Cancel"
+                            states="draft,open" type="object"
+                            class="o_btn_cancel_registration" icon="fa-times"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>

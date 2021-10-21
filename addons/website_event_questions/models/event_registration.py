@@ -28,3 +28,12 @@ class EventRegistrationAnswer(models.Model):
     _sql_constraints = [
         ('value_check', "CHECK(value_answer_id IS NOT NULL OR COALESCE(value_text_box, '') <> '')", "There must be a suggested value or a text value.")
     ]
+
+    # for displaying selected answers by attendees in attendees list view
+    def name_get(self):
+        return [
+            (reg.id,
+             reg.value_answer_id.name if reg.question_type == "simple_choice" else reg.value_text_box
+             )
+            for reg in self
+        ]
