@@ -191,6 +191,14 @@ class PosSession(models.Model):
                 raise UserError(_("Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
                                   "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
 
+    def _check_invoices_are_posted(self):
+        unposted_invoices = self.order_ids.account_move.filtered(lambda x: x.state != 'posted')
+        if unposted_invoices:
+            raise UserError(_('You cannot close the POS when invoices are not posted.\n'
+                              'Invoices: %s') % str.join('\n',
+                                                         ['%s - %s' % (invoice.name, invoice.state) for invoice in
+                                                          unposted_invoices]))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
@@ -321,6 +329,7 @@ class PosSession(models.Model):
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             self._check_if_no_draft_orders()
+            self._check_invoices_are_posted()
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
                 self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
