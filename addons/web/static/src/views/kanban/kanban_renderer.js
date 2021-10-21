@@ -46,6 +46,12 @@ export class KanbanRenderer extends Component {
         };
     }
 
+    foldGroup() {}
+
+    editGroup() {}
+
+    deleteGroup() {}
+
     openRecord(record) {
         const resIds = this.props.list.data.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });

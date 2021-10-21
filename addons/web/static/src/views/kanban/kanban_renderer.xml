@@ -6,12 +6,44 @@
             <t t-foreach="props.list.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
                 <t t-if="props.list.isGrouped">
                     <t t-set="group" t-value="groupOrRecord" />
-                    <div class="o_kanban_group" t-att-class="getGroupClasses(group)">
+                    <div class="o_kanban_group"
+                        t-att-class="getGroupClasses(group)"
+                        t-on-mouseenter="() => state.hoveredColumn = group.id"
+                        t-on-mouseleave="() => state.hoveredColumn = null"
+                    >
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title">
                                     <t t-esc="group.displayName" />
                                 </span>
+                                <span t-if="false" class="o_column_unfold">
+                                    <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
+                                </span>
+                                <Dropdown t-if="state.hoveredColumn === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
+                                    <t t-set-slot="toggler">
+                                        <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
+                                    </t>
+                                    <ul class="list-unstyled m-0">
+                                        <button role="menuitem"
+                                            class="dropdown-item o_kanban_toggle_fold"
+                                            t-on-click="foldGroup(group)"
+                                        >
+                                            Fold
+                                        </button>
+                                        <button role="menuitem"
+                                            class="dropdown-item o_column_edit"
+                                            t-on-click="editGroup(group)"
+                                        >
+                                            Edit Stage
+                                        </button>
+                                        <button role="menuitem"
+                                            class="dropdown-item o_column_delete"
+                                            t-on-click="deleteGroup(group)"
+                                        >
+                                            Delete
+                                        </button>
+                                    </ul>
+                                </Dropdown>
                                 <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
                                     <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                 </span>
@@ -41,7 +73,7 @@
                             </div>
                         </div>
                         <t t-if="state.quickCreate[group.id]">
-                            <View resModel="props.list.resModel" type="'form'" views="[]" mode="'edit'" display="{ controlPanel: false }" />
+                            <View resModel="props.list.resModel" type="'form'" display="{ controlPanel: false }" />
                         </t>
                         <t t-foreach="group.data" t-as="record" t-key="record.id">
                             <t t-call="{{ cardTemplate }}" />
