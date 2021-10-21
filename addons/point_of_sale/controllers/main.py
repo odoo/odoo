@@ -22,8 +22,6 @@ class PosController(http.Controller):
         /pos/ui and /pos/web both can be used to acces the POS. On the SaaS,
         /pos/ui uses HTTPS while /pos/web uses HTTP.
 
-        :param debug: The debug mode to load the session in.
-        :type debug: str.
         :param config_id: id of the config that has to be loaded.
         :type config_id: str.
         :returns: object -- The rendered pos session.
@@ -35,7 +33,7 @@ class PosController(http.Controller):
                 ]
         if config_id:
             domain = AND([domain,[('config_id', '=', int(config_id))]])
-        pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+        pos_session = request.env['pos.session'].search(domain, limit=1)
 
         # The same POS session can be opened by a different user => search without restricting to
         # current user. Note: the config must be explicitly given to avoid fallbacking on a random
@@ -46,7 +44,7 @@ class PosController(http.Controller):
                 ('rescue', '=', False),
                 ('config_id', '=', int(config_id)),
             ]
-            pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+            pos_session = request.env['pos.session'].search(domain, limit=1)
 
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
