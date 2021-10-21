@@ -920,7 +920,7 @@ class StockQuant(models.Model):
                     message =  _('The Serial Number (%s) is already used in these location(s): %s.\n\n'
                                  'Is this expected? For example this can occur if a delivery operation is validated '
                                  'before its corresponding receipt operation is validated. In this case the issue will be solved '
-                                 'automatically once all steps are completed. Otherwise, the serial numbershould be corrected to '
+                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
                                  'prevent inconsistent data.',
                                  lot_id.name, ', '.join(sn_locations.mapped('display_name')))
 
@@ -938,11 +938,13 @@ class StockQuant(models.Model):
                                 recommended_location = location
                                 break
                     if recommended_location:
-                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Source location for this move will be changed to %s',
-                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
+                                    'Source location for this move will be changed to %s',
+                                    lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
                     else:
-                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Please correct this to prevent inconsistent data.',
-                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
+                                    'Please correct this to prevent inconsistent data.',
+                                    lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
         return message, recommended_location
 
 
