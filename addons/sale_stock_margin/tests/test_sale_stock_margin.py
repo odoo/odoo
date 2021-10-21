@@ -61,7 +61,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 35)
         self.assertEqual(sale_order.margin, 15)
 
-        sale_order.picking_ids.move_lines.quantity_done = 1
+        sale_order.picking_ids.move_ids.quantity_done = 1
         sale_order.picking_ids.button_validate()
 
         self.assertEqual(order_line.purchase_price, 35)
@@ -82,7 +82,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 32)
         self.assertAlmostEqual(sale_order.margin, 36)
 
-        sale_order.picking_ids.move_lines.quantity_done = 2
+        sale_order.picking_ids.move_ids.quantity_done = 2
         sale_order.picking_ids.button_validate()
 
         self.assertAlmostEqual(order_line.purchase_price, 24.5)
@@ -102,7 +102,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 10)
         self.assertAlmostEqual(sale_order.margin, 20)
 
-        sale_order.picking_ids.move_lines.quantity_done = 1
+        sale_order.picking_ids.move_ids.quantity_done = 1
         sale_order.picking_ids.button_validate()
 
         self.assertAlmostEqual(order_line.purchase_price, 10)
@@ -123,7 +123,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 10)
         self.assertAlmostEqual(sale_order.margin, 20)
 
-        sale_order.picking_ids.move_lines.quantity_done = 1
+        sale_order.picking_ids.move_ids.quantity_done = 1
         res = sale_order.picking_ids.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
@@ -154,8 +154,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertAlmostEqual(order_line_2.margin, 3 * 4)
         self.assertAlmostEqual(sale_order.margin, 62)
 
-        sale_order.picking_ids.move_lines[0].quantity_done = 2
-        sale_order.picking_ids.move_lines[1].quantity_done = 3
+        sale_order.picking_ids.move_ids[0].quantity_done = 2
+        sale_order.picking_ids.move_ids[1].quantity_done = 3
 
         res = sale_order.picking_ids.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()

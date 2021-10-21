@@ -83,7 +83,7 @@ class StockPicking(models.Model):
     def _action_done(self):
         res = super()._action_done()
         sale_order_lines_vals = []
-        for move in self.move_lines:
+        for move in self.move_ids:
             sale_order = move.picking_id.sale_id
             # Creates new SO line only when pickings linked to a sale order and
             # for moves with qty. done and not already linked to a SO line.

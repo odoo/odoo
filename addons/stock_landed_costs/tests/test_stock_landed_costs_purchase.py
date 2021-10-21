@@ -322,11 +322,11 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # Receive the goods
         receipt = order.picking_ids[0]
-        receipt.move_lines.quantity_done = 1
+        receipt.move_ids.quantity_done = 1
         receipt.button_validate()
 
         # Check SVL and AML
-        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)])
+        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)])
         self.assertAlmostEqual(svl.value, 455)
         aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)])
         self.assertAlmostEqual(aml.debit, 455)
@@ -349,7 +349,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # Check LC, SVL and AML
         self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
-        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)], order='id desc', limit=1)
+        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)], order='id desc', limit=1)
         self.assertAlmostEqual(svl.value, 99)
         aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)], order='id desc', limit=1)
         self.assertAlmostEqual(aml.debit, 99)

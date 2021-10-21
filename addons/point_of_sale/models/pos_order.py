@@ -220,7 +220,7 @@ class PosOrder(models.Model):
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_ids.move_lines')\
+            .mapped('picking_ids.move_ids')\
             ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
         price_unit = product._compute_average_price(0, quantity, moves)
@@ -339,7 +339,7 @@ class PosOrder(models.Model):
             if not order._should_create_picking_real_time():
                 storable_fifo_avco_lines = lines.filtered(lambda l: l._is_product_storable_fifo_avco())
                 lines -= storable_fifo_avco_lines
-            stock_moves = order.picking_ids.move_lines
+            stock_moves = order.picking_ids.move_ids
             lines._compute_total_cost(stock_moves)
 
     def _compute_total_cost_at_session_closing(self, stock_moves):

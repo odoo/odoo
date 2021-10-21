@@ -122,7 +122,7 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(purchase.dropship_picking_count, 1)
 
         # Send the 200 pieces
-        purchase.picking_ids.move_lines.quantity_done = purchase.picking_ids.move_lines.product_qty
+        purchase.picking_ids.move_ids.quantity_done = purchase.picking_ids.move_ids.product_qty
         purchase.picking_ids.button_validate()
 
         # Check one move line was created in Customers location with 200 pieces

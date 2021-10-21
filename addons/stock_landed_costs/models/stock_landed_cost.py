@@ -271,7 +271,7 @@ class StockLandedCost(models.Model):
         return dict(action, domain=domain)
 
     def _get_targeted_move_ids(self):
-        return self.picking_ids.move_lines
+        return self.picking_ids.move_ids
 
     def _check_can_validate(self):
         if any(cost.state != 'draft' for cost in self):

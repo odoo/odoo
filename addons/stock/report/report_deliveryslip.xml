@@ -4,7 +4,7 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
-                <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                <t t-set="partner" t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
 
                 <div class="page">
                     <div class="row">
@@ -64,7 +64,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id"/>
@@ -171,7 +171,7 @@
                             </thead>
                             <tbody>
                                 <t t-foreach="backorders" t-as="backorder">
-                                    <t t-set="bo_lines" t-value="backorder.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                                    <t t-set="bo_lines" t-value="backorder.move_ids.filtered(lambda x: x.product_uom_qty)"/>
                                     <tr t-foreach="bo_lines" t-as="bo_line">
                                         <td class="w-auto">
                                             <span t-field="bo_line.product_id"/>

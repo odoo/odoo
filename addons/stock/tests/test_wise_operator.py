@@ -40,7 +40,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_in'),
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -51,7 +51,7 @@ class TestWiseOperator(TransactionCase):
         }
         pick1_wise = self.env['stock.picking'].create(vals)
         pick1_wise._onchange_picking_type()
-        pick1_wise.move_lines._onchange_product_id()
+        pick1_wise.move_ids._onchange_product_id()
 
         # Confirm and assign picking and prepare partial
         pick1_wise.action_confirm()
@@ -87,7 +87,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -98,7 +98,7 @@ class TestWiseOperator(TransactionCase):
         }
         delivery_order_wise1 = self.env['stock.picking'].create(vals)
         delivery_order_wise1._onchange_picking_type()
-        delivery_order_wise1.move_lines._onchange_product_id()
+        delivery_order_wise1.move_ids._onchange_product_id()
 
         # Assign and confirm
         delivery_order_wise1.action_confirm()
@@ -112,7 +112,7 @@ class TestWiseOperator(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_wise.id,
                 'product_uom': product_wise.uom_id.id,
@@ -123,7 +123,7 @@ class TestWiseOperator(TransactionCase):
         }
         delivery_order_wise2 = self.env['stock.picking'].create(vals)
         delivery_order_wise2._onchange_picking_type()
-        delivery_order_wise2.move_lines._onchange_product_id()
+        delivery_order_wise2.move_ids._onchange_product_id()
 
         # Assign and confirm
         delivery_order_wise2.action_confirm()
@@ -132,8 +132,8 @@ class TestWiseOperator(TransactionCase):
 
         # The operator is a wise guy and decides to do the opposite of what Odoo proposes.
         # He uses the products reserved on picking 1 on picking 2 and vice versa
-        move1 = delivery_order_wise1.move_lines[0]
-        move2 = delivery_order_wise2.move_lines[0]
+        move1 = delivery_order_wise1.move_ids[0]
+        move2 = delivery_order_wise2.move_ids[0]
         pack_ids1 = delivery_order_wise1.move_line_ids
         pack_ids2 = delivery_order_wise2.move_line_ids
 

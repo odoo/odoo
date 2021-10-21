@@ -16,14 +16,14 @@ class StockPicking(models.Model):
         [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
         compute='_compute_display_action_record_components')
 
-    @api.depends('state', 'move_lines')
+    @api.depends('state', 'move_ids')
     def _compute_display_action_record_components(self):
         self.display_action_record_components = 'hide'
         for picking in self:
             # Hide if not encoding state or it is not a subcontracting picking
             if picking.state in ('draft', 'cancel', 'done') or not picking._is_subcontract():
                 continue
-            subconctracted_moves = picking.move_lines.filtered(lambda m: m.is_subcontract)
+            subconctracted_moves = picking.move_ids.filtered(lambda m: m.is_subcontract)
             if subconctracted_moves._subcontrating_should_be_record():
                 picking.display_action_record_components = 'mandatory'
                 continue
@@ -36,7 +36,7 @@ class StockPicking(models.Model):
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
 
-        for move in self.move_lines.filtered(lambda move: move.is_subcontract):
+        for move in self.move_ids.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
             production = move._get_subcontract_production().filtered(lambda p: not p._has_been_recorded())
@@ -81,7 +81,7 @@ class StockPicking(models.Model):
 
     def action_record_components(self):
         self.ensure_one()
-        move_subcontracted = self.move_lines.filtered(lambda m: m.is_subcontract)
+        move_subcontracted = self.move_ids.filtered(lambda m: m.is_subcontract)
         for move in move_subcontracted:
             production = move._subcontrating_should_be_record()
             if production:
@@ -97,10 +97,10 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _is_subcontract(self):
         self.ensure_one()
-        return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
+        return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_ids)
 
     def _get_subcontract_production(self):
-        return self.move_lines._get_subcontract_production()
+        return self.move_ids._get_subcontract_production()
 
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id or subcontract_move.move_dest_ids.picking_type_id.warehouse_id

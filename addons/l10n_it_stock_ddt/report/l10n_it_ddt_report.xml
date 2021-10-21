@@ -106,7 +106,7 @@
                             </thead>
                             <tbody>
                                 <t t-set="total_value" t-value="0"/>
-                                <t t-foreach="o.move_lines" t-as="move">
+                                <t t-foreach="o.move_ids" t-as="move">
                                     <t t-if="move.quantity_done">
                                         <tr>
                                             <td>

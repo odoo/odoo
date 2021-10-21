@@ -312,8 +312,8 @@ class TestKitPicking(common.TestMrpCommon):
         picking.button_validate()
 
         # We check that the picking has the correct quantities after its move were splitted.
-        self.assertEqual(len(picking.move_lines), 7)
-        for move_line in picking.move_lines:
+        self.assertEqual(len(picking.move_ids), 7)
+        for move_line in picking.move_ids:
             self.assertEqual(move_line.quantity_done, self.expected_quantities[move_line.product_id])
 
     def test_kit_planned_transfer(self):
@@ -340,6 +340,6 @@ class TestKitPicking(common.TestMrpCommon):
         picking.action_confirm()
 
         # We check that the picking has the correct quantities after its move were splitted.
-        self.assertEqual(len(picking.move_lines), 7)
-        for move_line in picking.move_lines:
+        self.assertEqual(len(picking.move_ids), 7)
+        for move_line in picking.move_ids:
             self.assertEqual(move_line.product_qty, self.expected_quantities[move_line.product_id])

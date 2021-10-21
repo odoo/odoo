@@ -54,7 +54,7 @@ class StockImmediateTransfer(models.TransientModel):
                     picking.action_assign()
                     if picking.state != 'assigned':
                         raise UserError(_("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
-            picking.move_lines._set_quantities_to_reservation()
+            picking.move_ids._set_quantities_to_reservation()
 
         pickings_to_validate = self.env.context.get('button_validate_picking_ids')
         if pickings_to_validate:

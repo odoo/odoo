@@ -92,7 +92,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(self.sale_prepaid.picking_ids), 1, 'pickings not generated')
 
         # Check the stock moves
-        moves = self.sale_prepaid.picking_ids.move_lines
+        moves = self.sale_prepaid.picking_ids.move_ids
         self.assertEqual(moves[0].product_qty, 2, 'wrong product_qty')
         self.assertEqual(moves[0].weight, 2.0, 'wrong move weight')
 

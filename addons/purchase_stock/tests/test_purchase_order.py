@@ -212,7 +212,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(po1.order_line.qty_received, 5)
-        self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
+        self.assertEqual(po1.picking_ids[-1].move_ids.product_qty, 10)
 
     def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
@@ -389,19 +389,19 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         _purchase_order.button_confirm()
 
         first_picking = _purchase_order.picking_ids[0]
-        first_picking.move_lines.quantity_done = 5
+        first_picking.move_ids.quantity_done = 5
         backorder_wizard_dict = first_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
 
         second_picking = _purchase_order.picking_ids[1]
-        second_picking.move_lines.quantity_done = 5
+        second_picking.move_ids.quantity_done = 5
         backorder_wizard_dict = second_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
 
         third_picking = _purchase_order.picking_ids[2]
-        third_picking.move_lines.quantity_done = 5
+        third_picking.move_ids.quantity_done = 5
         backorder_wizard_dict = third_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()

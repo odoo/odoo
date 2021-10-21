@@ -88,7 +88,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
@@ -113,7 +113,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
@@ -173,7 +173,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
@@ -195,7 +195,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
@@ -232,7 +232,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
@@ -244,7 +244,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
 
         # Process the delivery of the first outgoing shipment
         outgoing_shipment_neg.action_confirm()
-        outgoing_shipment_neg.move_lines[0].quantity_done = 100.0
+        outgoing_shipment_neg.move_ids[0].quantity_done = 100.0
         outgoing_shipment_neg._action_done()
 
         # Check qty available = -100
@@ -258,7 +258,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
@@ -270,7 +270,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
 
         # Process the delivery of the outgoing shipments
         outgoing_shipment_neg2.action_confirm()
-        outgoing_shipment_neg2.move_lines[0].quantity_done = 400.0
+        outgoing_shipment_neg2.move_ids[0].quantity_done = 400.0
         outgoing_shipment_neg2._action_done()
 
         # Check qty available = -500
@@ -316,7 +316,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         res = picking.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
-        original_out_move = outgoing_shipment_neg.move_lines[0]
+        original_out_move = outgoing_shipment_neg.move_ids[0]
         self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
         self.assertEqual(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
 
@@ -363,4 +363,4 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
 
         self.assertEqual(super_product.standard_price, 0.035)
         self.assertEqual(super_product.value_svl, 35.0)
-        self.assertEqual(picking.move_lines.price_unit, 0.035)
+        self.assertEqual(picking.move_ids.price_unit, 0.035)

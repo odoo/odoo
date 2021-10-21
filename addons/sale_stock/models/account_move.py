@@ -32,7 +32,7 @@ class AccountMove(models.Model):
             return res
 
         sale_orders = self.mapped('invoice_line_ids.sale_line_ids.order_id')
-        stock_move_lines = sale_orders.mapped('picking_ids.move_lines.move_line_ids')
+        stock_move_lines = sale_orders.mapped('picking_ids.move_ids.move_line_ids')
 
         # Get the other customer invoices and refunds.
         ordered_invoice_ids = sale_orders.mapped('invoice_ids')\

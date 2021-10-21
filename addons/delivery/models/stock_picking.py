@@ -118,10 +118,10 @@ class StockPicking(models.Model):
         except (ValueError, TypeError):
             return False
 
-    @api.depends('move_lines')
+    @api.depends('move_ids')
     def _cal_weight(self):
         for picking in self:
-            picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
+            picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
     def _send_confirmation_email(self):
         for pick in self:
@@ -246,7 +246,7 @@ class StockPicking(models.Model):
     def _get_estimated_weight(self):
         self.ensure_one()
         weight = 0.0
-        for move in self.move_lines:
+        for move in self.move_ids:
             weight += move.product_qty * move.product_id.weight
         return weight
 

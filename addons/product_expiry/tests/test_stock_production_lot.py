@@ -62,9 +62,9 @@ class TestStockProductionLot(TestStockCommon):
             'location_dest_id': self.stock_location
         })
         
-        self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
-        self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
@@ -156,9 +156,9 @@ class TestStockProductionLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
         
-        self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
-        self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
@@ -203,9 +203,9 @@ class TestStockProductionLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
         
-        self.assertEqual(picking_in.move_lines.state, 'draft', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
-        self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
+        self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
@@ -402,8 +402,8 @@ class TestStockProductionLot(TestStockCommon):
         # ... then create a move line with the non-expired lot and valids the picking.
         delivery_1.move_line_ids_without_package = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
-            'location_id': delivery_1.move_lines.location_id.id,
-            'location_dest_id': delivery_1.move_lines.location_dest_id.id,
+            'location_id': delivery_1.move_ids.location_id.id,
+            'location_dest_id': delivery_1.move_ids.location_dest_id.id,
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
@@ -427,16 +427,16 @@ class TestStockProductionLot(TestStockCommon):
         # lot and valids the picking.
         delivery_2.move_line_ids_without_package = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
-            'location_id': delivery_2.move_lines.location_id.id,
-            'location_dest_id': delivery_2.move_lines.location_dest_id.id,
+            'location_id': delivery_2.move_ids.location_id.id,
+            'location_dest_id': delivery_2.move_ids.location_dest_id.id,
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
             'qty_done': 4,
         }), (0, 0, {
             'company_id': self.env.company.id,
-            'location_id': delivery_2.move_lines.location_id.id,
-            'location_dest_id': delivery_2.move_lines.location_dest_id.id,
+            'location_id': delivery_2.move_ids.location_id.id,
+            'location_dest_id': delivery_2.move_ids.location_dest_id.id,
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
@@ -460,8 +460,8 @@ class TestStockProductionLot(TestStockCommon):
         # ... then create two move lines with expired lot and valids the picking.
         delivery_3.move_line_ids_without_package = [(5, 0), (0, 0, {
             'company_id': self.env.company.id,
-            'location_id': delivery_3.move_lines.location_id.id,
-            'location_dest_id': delivery_3.move_lines.location_dest_id.id,
+            'location_id': delivery_3.move_ids.location_id.id,
+            'location_dest_id': delivery_3.move_ids.location_dest_id.id,
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
