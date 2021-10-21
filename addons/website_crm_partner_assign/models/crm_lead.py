@@ -262,17 +262,32 @@ class CrmLead(models.Model):
                 'errors': _('All fields are required !')
             }
         tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
-        values = {
+        vals = {
             'contact_name': values['contact_name'],
             'name': values['title'],
             'description': values['description'],
-            'priority': '2',
+            'priority': values.get('priority', '2'),
             'partner_assigned_id': user.commercial_partner_id.id,
         }
         if tag_own:
             values['tag_ids'] = [(4, tag_own.id, False)]
 
-        lead = self.create(values)
+        # TODO: add company_name
+        # TODO: add next_activity
+
+        if 'email' in values:
+            vals['email_from'] = values['email']
+        if 'phone' in values:
+            vals['phone'] = values['phone']
+        if 'country' in values:
+            vals['country_id'] = values['country']
+        if 'expected_revenue' in values:
+            vals['expected_revenue'] = values['expected_revenue']
+        if 'date_closed' in values:
+            vals['date_closed'] = values['date_closed']
+
+        lead = self.create(vals)
+
         lead.assign_salesman_of_assigned_partner()
         lead.convert_opportunity(lead.partner_id.id)
         return {

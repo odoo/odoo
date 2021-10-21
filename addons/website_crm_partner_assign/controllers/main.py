@@ -146,11 +146,10 @@ class WebsiteAccount(CustomerPortal):
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
-            'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
             'revenue': {'label': _('Expected Revenue'), 'order': 'expected_revenue desc'},
             'probability': {'label': _('Probability'), 'order': 'probability desc'},
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
+            'activity': {'label': _('Next Activity'), 'order': 'activity_date_deadline'}
         }
 
         searchbar_inputs = self._opportunities_get_searchbar_inputs()
@@ -197,6 +196,8 @@ class WebsiteAccount(CustomerPortal):
             'search': search,
             'search_in': search_in,
             'filterby': filterby,
+            'activity_types': request.env['mail.activity.type'].sudo().search([]),
+            'countries': request.env['res.country'].sudo().search([])
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 

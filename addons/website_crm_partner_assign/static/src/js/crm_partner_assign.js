@@ -117,13 +117,22 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _createOpportunity: function () {
+        const $form = $('.new_opp_form');
         return this._rpc({
             model: 'crm.lead',
             method: 'create_opp_portal',
             args: [{
-                contact_name: $('.new_opp_form .contact_name').val(),
-                title: $('.new_opp_form .title').val(),
-                description: $('.new_opp_form .description').val(),
+                contact_name: $form.find('[name="contact_name"]').val(),
+                title: $form.find('[name="title"]').val(),
+                description: $form.find('[name="description"]').val(),
+                company_name: $form.find('[name="company_name"]').val(),
+                email: $form.find('[name="email"]').val(),
+                phone: $form.find('[name="phone"]').val(),
+                country: parseInt($form.find('[name="country"]').val()),
+                expected_revenue: parseInt($form.find('[name="expected_revenue"]').val()),
+                priority: $form.find('[name="priority"]:checked').val(),
+                date_closed: $form.find('[for="date_closed"] + input').val(), // TODO: For some reasons, the 'name' attribute is not set.
+                next_activity: parseInt($form.find('[name="next_activity"]').val())
             }],
         }).then(function (response) {
             if (response.errors) {

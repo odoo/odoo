@@ -251,13 +251,13 @@
 
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Opportunities</t>
-
-                <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
-                    <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
-                        Create Opportunity
-                    </button>
-                </div>
             </t>
+
+            <div class="form-inline mb-2" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
+                <button class="btn btn-primary" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
+                    <i class="fa fa-plus"/> Create Opportunity
+                </button>
+            </div>
 
             <div class="modal fade modal_new_opp" role="form">
                 <div class="modal-dialog">
@@ -269,8 +269,8 @@
                         </header>
                         <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
-                                <label class="col-form-label hdd4" for="contact_name">Contact name</label>
-                                <input type='text' name="contact_name" class="form-control contact_name"/>
+                                <label class="col-form-label hdd4" for="contact_name">Contact Name</label>
+                                <input type='text' name="contact_name" class="form-control"/>
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label h4dd" for="title">Opportunity</label>
@@ -278,12 +278,75 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label hdd4" for="description">Description</label>
-                                <textarea rows="3" name="description" class="form-control description"></textarea>
+                                <textarea rows="3" name="description" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="company_name">Company name</label>
+                                <input type="text" name="company_name" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="email">Email</label>
+                                <input type="email" name="email" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="phone">Phone</label>
+                                <input text="tel" name="phone" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="country">Country</label>
+                                <select name="country" class="form-control">
+                                    <t t-foreach="countries or []" t-as="country">
+                                        <option t-att-value="country.id">
+                                            <t t-esc="country.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="expected_revenue">Expected Revenue</label>
+                                <input type="text" name="expected_revenue" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="priority" value="0" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
+                                        <i class="ml-1 fa fa-star-o"></i>
+                                    </label>
+                                    <label class="radio-inline ml-2">
+                                        <input type="radio" name="priority" value="1" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                    </label>
+                                    <label class="radio-inline ml-2">
+                                        <input type="radio" name="priority" value="2" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                    </label>
+                                    <label class="radio-inline ml-2">
+                                        <input type="radio" name="priority" value="3" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                        <i class="ml-1 fa text-warning fa-star"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="date_closed">Expected Closing</label>
+                                <input type="date" min="1900-01-01" name="date_closed" t-att-value="date_formatted" class="form-control" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label hdd4" for="next_activity">Next Activity</label>
+                                <select name="next_activity" class="form-control">
+                                    <t t-foreach="activity_types or []" t-as="activity_type">
+                                        <option t-att-value="activity_type.id">
+                                            <t t-esc="activity_type.name"/>
+                                        </option>
+                                    </t>
+                                </select>
                             </div>
                         </main>
-                        <footer class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button>
+                        <footer class="modal-footer justify-content-start">
+                            <button t-attf-class="btn btn-primary new_opp_confirm">Create Opportunity</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
                         </footer>
                     </form>
                 </div>
@@ -329,16 +392,17 @@
         <t t-call="portal.portal_layout">
             <div class="card">
                 <div class="card-header">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <span class="float-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
+                    <div class="d-sm-flex">
+                        <h4 class="flex-grow-1 mb-sm-0">
+                            Lead - <span t-field="lead.name"/>
+                        </h4>
+                        <div class="text-nowrap">
+                            <span class="mr-3"><t t-esc="lead.probability"/> %</span>
+                            <span title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
                                 </t>
                             </span>
-                            <h4>
-                                Lead - <span t-field="lead.name"/>
-                            </h4>
                         </div>
                     </div>
                 </div>
@@ -346,7 +410,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                                <label class="col-4">Customer</label>
+                                <label class="col-4">Contact</label>
                                 <address class="col-8">
                                     <div>
                                         <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
@@ -402,6 +466,10 @@
                                 <label class="col-4">Assigned Partner</label>
                                 <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
                             </div>
+                            <div class="row mt16" t-if="lead.date_open">
+                                <label class="col-4">Assignation Date</label>
+                                <span class="col-8" t-field="lead.date_open" />
+                            </div>
                             <div class="row mt16" t-if="lead.campaign_id">
                                 <label class="col-4">Campaign</label>
                                 <span class="col-8" t-field="lead.campaign_id" />
@@ -415,8 +483,8 @@
                 </div>
             </div>
             <div class='mt8'>
-                <a role="button" href="#" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
-                <a role="button" href="#" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
+                <a role="button" href="#" class="btn btn-primary" data-toggle="modal" data-target=".modal_partner_assign_interested">Interested</a>
+                <a role="button" href="#" class="btn btn-secondary" data-toggle="modal" data-target=".modal_partner_assign_desinterested">Not interested</a>
                 <div class="modal fade modal_partner_assign_interested" role="form">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
@@ -439,9 +507,9 @@
                                     <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
                             </main>
-                            <footer class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
+                            <footer class="modal-footer justify-content-start">
+                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Convert to Opportunity</button>
+                                <button type="button" class="btn btn-secondary btn-link" data-dismiss="modal">Cancel</button>
                             </footer>
                         </form>
                     </div>
@@ -472,9 +540,9 @@
                                     <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
                             </main>
-                            <footer class="modal-footer">
+                            <footer class="modal-footer justify-content-start">
+                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Lost</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                             </footer>
                         </form>
                     </div>
@@ -713,9 +781,9 @@
                                                 <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
                                         </main>
-                                        <footer class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
+                                        <footer class="modal-footer justify-content-start">
+                                            <button t-attf-class="btn btn-primary edit_opp_confirm">SAVE</button>
+                                            <button type="button" class="btn btn-link" data-dismiss="modal">CANCEL</button>
                                         </footer>
                                     </form>
                                 </div>
@@ -793,9 +861,9 @@
                                                 </select>
                                             </div>
                                         </main>
-                                        <footer class="modal-footer">
+                                        <footer class="modal-footer justify-content-start">
+                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Save</button>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
                                         </footer>
                                     </form>
                                 </div>
