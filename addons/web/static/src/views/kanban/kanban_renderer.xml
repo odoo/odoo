@@ -10,45 +10,46 @@
                         t-att-class="getGroupClasses(group)"
                         t-on-mouseenter="() => state.hoveredColumn = group.id"
                         t-on-mouseleave="() => state.hoveredColumn = null"
+                        t-on-click="onGroupClick(group)"
                     >
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
-                                <span class="o_column_title">
-                                    <t t-esc="group.displayName" />
-                                </span>
-                                <span t-if="false" class="o_column_unfold">
+                                <span class="o_column_title" t-esc="getGroupName(group)" />
+                                <t t-if="group.isLoaded">
+                                    <Dropdown t-if="state.hoveredColumn === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
+                                        <t t-set-slot="toggler">
+                                            <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
+                                        </t>
+                                        <ul class="list-unstyled m-0">
+                                            <button role="menuitem"
+                                                class="dropdown-item o_kanban_toggle_fold"
+                                                t-on-click="toggleGroup(group)"
+                                            >
+                                                Fold
+                                            </button>
+                                            <button role="menuitem"
+                                                class="dropdown-item o_column_edit"
+                                                t-on-click="editGroup(group)"
+                                            >
+                                                Edit Stage
+                                            </button>
+                                            <button role="menuitem"
+                                                class="dropdown-item o_column_delete"
+                                                t-on-click="deleteGroup(group)"
+                                            >
+                                                Delete
+                                            </button>
+                                        </ul>
+                                    </Dropdown>
+                                    <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                        <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
+                                    </span>
+                                </t>
+                                <span t-else="" class="o_column_unfold">
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
-                                <Dropdown t-if="state.hoveredColumn === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
-                                    <t t-set-slot="toggler">
-                                        <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
-                                    </t>
-                                    <ul class="list-unstyled m-0">
-                                        <button role="menuitem"
-                                            class="dropdown-item o_kanban_toggle_fold"
-                                            t-on-click="foldGroup(group)"
-                                        >
-                                            Fold
-                                        </button>
-                                        <button role="menuitem"
-                                            class="dropdown-item o_column_edit"
-                                            t-on-click="editGroup(group)"
-                                        >
-                                            Edit Stage
-                                        </button>
-                                        <button role="menuitem"
-                                            class="dropdown-item o_column_delete"
-                                            t-on-click="deleteGroup(group)"
-                                        >
-                                            Delete
-                                        </button>
-                                    </ul>
-                                </Dropdown>
-                                <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
-                                    <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
-                                </span>
                             </div>
-                            <div t-if="group.progress" class="o_kanban_counter">
+                            <div t-if="group.isLoaded and group.progress" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
                                     <t t-foreach="group.progress" t-as="progressData" t-key="progressData.color">
                                         <div t-if="progressData.count"
@@ -72,11 +73,13 @@
                                 </div>
                             </div>
                         </div>
-                        <t t-if="state.quickCreate[group.id]">
-                            <View resModel="props.list.resModel" type="'form'" display="{ controlPanel: false }" />
-                        </t>
-                        <t t-foreach="group.data" t-as="record" t-key="record.id">
-                            <t t-call="{{ cardTemplate }}" />
+                        <t t-if="group.isLoaded">
+                            <t t-if="state.quickCreate[group.id]">
+                                <View resModel="props.list.resModel" type="'form'" display="{ controlPanel: false }" />
+                            </t>
+                            <t t-foreach="group.data" t-as="record" t-key="record.id">
+                                <t t-call="{{ cardTemplate }}" />
+                            </t>
                         </t>
                     </div>
                 </t>
@@ -86,7 +89,36 @@
                     </t>
                 </t>
             </t>
-            <t t-if="!props.list.isGrouped">
+            <t t-if="props.list.isGrouped">
+                <div class="o_column_quick_create">
+                    <div t-if="state.quickCreateGroup" class="o_quick_create_unfolded">
+                        <div class="o_kanban_header">
+                            <div class="input-group">
+                                <input type="text"
+                                    class="form-control o_input"
+                                    placeholder="Column title"
+                                    t-on-focus="() => state.quickCreateGroupInputFocus = true"
+                                    t-on-blur="() => state.quickCreateGroupInputFocus = false"
+                                />
+                                <span class="input-group-append">
+                                    <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+                                </span>
+                            </div>
+                            <span t-if="state.quickCreateGroupInputFocus" class="o_discard_msg text-muted float-right">
+                                Esc to discard
+                            </span>
+                        </div>
+                        <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record" />
+                    </div>
+                    <div t-else="" class="o_quick_create_folded" t-on-click="state.quickCreateGroup = true">
+                        <span class="o_kanban_add_column">
+                            <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column" />
+                        </span>
+                        <span class="o_kanban_title">Add a Column</span>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
                 <!-- kanban ghost cards are used to properly space last elements. -->
                 <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost" />
             </t>

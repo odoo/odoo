@@ -12,7 +12,7 @@ import { View } from "@web/views/view";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, hooks } = owl;
-const { useState, useSubEnv } = hooks;
+const { useExternalListener, useState, useSubEnv } = hooks;
 
 const { RECORD_COLORS } = FieldColorPicker;
 
@@ -33,6 +33,8 @@ export class KanbanRenderer extends Component {
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
         useSubEnv({ model: this.props.list.model });
+        useExternalListener(window, "keydown", this.onWindowKeydown);
+        useExternalListener(window, "click", this.onWindowClick);
     }
 
     get progress() {
@@ -46,15 +48,29 @@ export class KanbanRenderer extends Component {
         };
     }
 
-    foldGroup() {}
+    toggleGroup(group) {
+        group.toggle();
+    }
 
-    editGroup() {}
+    editGroup(group) {
+        // TODO
+        console.warn("TODO: Open group", group.id);
+    }
 
-    deleteGroup() {}
+    deleteGroup(group) {
+        // TODO
+        console.warn("TODO: Delete group", group.id);
+    }
 
     openRecord(record) {
         const resIds = this.props.list.data.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });
+    }
+
+    onGroupClick(group, ev) {
+        if (!ev.target.closest(".dropdown") && !group.isLoaded) {
+            group.toggle();
+        }
     }
 
     selectColor(record, colorIndex) {
@@ -112,9 +128,15 @@ export class KanbanRenderer extends Component {
         }
     }
 
+    getGroupName(group) {
+        return group.isLoaded ? group.displayName : `${group.displayName} (${group.count})`;
+    }
+
     getGroupClasses(group) {
         const classes = [];
-        if (group.progress) {
+        if (!group.isLoaded) {
+            classes.push("o_column_folded");
+        } else if (group.progress) {
             classes.push("o_kanban_has_progressbar");
             const { activeProgressValue, progress } = group;
             if (activeProgressValue) {
@@ -163,6 +185,18 @@ export class KanbanRenderer extends Component {
             return;
         }
         this.openRecord(record);
+    }
+
+    onWindowKeydown(ev) {
+        if (this.state.quickCreateGroup && ev.key === "Escape") {
+            this.state.quickCreateGroup = false;
+        }
+    }
+
+    onWindowClick(ev) {
+        if (this.state.quickCreateGroup && !ev.target.closest(".o_column_quick_create")) {
+            this.state.quickCreateGroup = false;
+        }
     }
 
     //-------------------------------------------------------------------------
