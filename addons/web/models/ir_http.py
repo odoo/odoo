@@ -103,7 +103,7 @@ class Http(models.AbstractModel):
             'profile_session': request.session.profile_session,
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
-            'show_effect': request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect'),
+            'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
         }
         if request.session.uid:
             version_info = odoo.service.common.exp_version()
