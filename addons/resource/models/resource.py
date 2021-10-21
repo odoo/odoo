@@ -404,17 +404,17 @@ class ResourceCalendar(models.Model):
         for attendance in self.env['resource.calendar.attendance'].search(domain):
             for resource in resources_list:
                 # express all dates and times in specified tz or in the resource's timezone
-                tz = tz if tz else timezone((resource or self).tz)
-                if (tz, start_dt) in cache_dates:
-                    start = cache_dates[(tz, start_dt)]
+                resource_tz = tz if tz else timezone((resource or self).tz)
+                if (resource_tz, start_dt) in cache_dates:
+                    start = cache_dates[(resource_tz, start_dt)]
                 else:
-                    start = start_dt.astimezone(tz)
-                    cache_dates[(tz, start_dt)] = start
-                if (tz, end_dt) in cache_dates:
-                    end = cache_dates[(tz, end_dt)]
+                    start = start_dt.astimezone(resource_tz)
+                    cache_dates[(resource_tz, start_dt)] = start
+                if (resource_tz, end_dt) in cache_dates:
+                    end = cache_dates[(resource_tz, end_dt)]
                 else:
-                    end = end_dt.astimezone(tz)
-                    cache_dates[(tz, end_dt)] = end
+                    end = end_dt.astimezone(resource_tz)
+                    cache_dates[(resource_tz, end_dt)] = end
 
                 start = start.date()
                 if attendance.date_from:
@@ -438,19 +438,19 @@ class ResourceCalendar(models.Model):
                 for day in days:
                     # attendance hours are interpreted in the resource's timezone
                     hour_from = attendance.hour_from
-                    if (tz, day, hour_from) in cache_deltas:
-                        dt0 = cache_deltas[(tz, day, hour_from)]
+                    if (resource_tz, day, hour_from) in cache_deltas:
+                        dt0 = cache_deltas[(resource_tz, day, hour_from)]
                     else:
-                        dt0 = tz.localize(combine(day, float_to_time(hour_from)))
-                        cache_deltas[(tz, day, hour_from)] = dt0
+                        dt0 = resource_tz.localize(combine(day, float_to_time(hour_from)))
+                        cache_deltas[(resource_tz, day, hour_from)] = dt0
 
                     hour_to = attendance.hour_to
-                    if (tz, day, hour_to) in cache_deltas:
-                        dt1 = cache_deltas[(tz, day, hour_to)]
+                    if (resource_tz, day, hour_to) in cache_deltas:
+                        dt1 = cache_deltas[(resource_tz, day, hour_to)]
                     else:
-                        dt1 = tz.localize(combine(day, float_to_time(hour_to)))
-                        cache_deltas[(tz, day, hour_to)] = dt1
-                    result[resource.id].append((max(cache_dates[(tz, start_dt)], dt0), min(cache_dates[(tz, end_dt)], dt1), attendance))
+                        dt1 = resource_tz.localize(combine(day, float_to_time(hour_to)))
+                        cache_deltas[(resource_tz, day, hour_to)] = dt1
+                    result[resource.id].append((max(cache_dates[(resource_tz, start_dt)], dt0), min(cache_dates[(resource_tz, end_dt)], dt1), attendance))
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
