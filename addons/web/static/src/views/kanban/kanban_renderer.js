@@ -128,21 +128,21 @@ export class KanbanRenderer extends Component {
         }
     }
 
-    getGroupName(group) {
-        return group.isLoaded ? group.displayName : `${group.displayName} (${group.count})`;
+    getGroupName({ count, displayName, isLoaded }) {
+        return isLoaded ? displayName : `${displayName} (${count})`;
     }
 
-    getGroupClasses(group) {
+    getGroupClasses({ activeProgressValue, count, isLoaded, progress }) {
         const classes = [];
-        if (!group.count) {
+        if (!count) {
             classes.push("o_kanban_no_records");
         }
-        if (!group.isLoaded) {
+        if (!isLoaded) {
             classes.push("o_column_folded");
-        } else if (group.progress) {
+        }
+        if (progress) {
             classes.push("o_kanban_has_progressbar");
-            const { activeProgressValue, progress } = group;
-            if (activeProgressValue) {
+            if (isLoaded && activeProgressValue) {
                 const progressValue = progress.find((d) => d.value === activeProgressValue);
                 classes.push("o_kanban_group_show", `o_kanban_group_show_${progressValue.color}`);
             }
@@ -150,11 +150,11 @@ export class KanbanRenderer extends Component {
         return classes.join(" ");
     }
 
-    getRecordProgressColor(groupOrRecord) {
-        if (!groupOrRecord.activeProgressValue) {
+    getRecordProgressColor({ activeProgressValue }) {
+        if (!activeProgressValue) {
             return "";
         }
-        const colorClass = this.progress.colors[groupOrRecord.activeProgressValue];
+        const colorClass = this.progress.colors[activeProgressValue];
         return `oe_kanban_card_${colorClass || "muted"}`;
     }
 
