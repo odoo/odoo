@@ -28,8 +28,7 @@ class WebsiteBackend(http.Controller):
         multi_website = request.env.user.has_group('website.group_multi_website')
         websites = multi_website and request.env['website'].search([]) or current_website
         dashboard_data['websites'] = websites.read(['id', 'name'])
-        for rec, website in zip(websites, dashboard_data['websites']):
-            website['domain'] = rec._get_http_domain()
+        for website in dashboard_data['websites']:
             if website['id'] == current_website.id:
                 website['selected'] = True
 

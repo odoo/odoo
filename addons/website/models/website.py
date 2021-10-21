@@ -976,7 +976,7 @@ class Website(models.Model):
             is host:port in the version of `url_parse` we use."""
             # Here we add http:// to the domain if it's not set because
             # `url_parse` expects it to be set to correctly return the `netloc`.
-            website_domain = urls.url_parse(website._get_http_domain()).netloc
+            website_domain = urls.url_parse(website.domain or '').netloc
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
@@ -1285,18 +1285,6 @@ class Website(models.Model):
             'url': path,
             'target': 'self',
         }
-
-    def _get_http_domain(self):
-        """Get the domain of the current website, prefixed by http if no
-        scheme is specified.
-
-        Empty string if no domain is specified on the website.
-        """
-        self.ensure_one()
-        if not self.domain:
-            return ''
-        res = urls.url_parse(self.domain)
-        return 'http://' + self.domain if not res.scheme else self.domain
 
     def _get_canonical_url_localized(self, lang, canonical_params):
         """Returns the canonical URL for the current request with translatable

@@ -108,10 +108,10 @@ class Website(Home):
 
         if not isredir and website.domain:
             domain_from = request.httprequest.environ.get('HTTP_HOST', '')
-            domain_to = werkzeug.urls.url_parse(website._get_http_domain()).netloc
+            domain_to = werkzeug.urls.url_parse(website.domain).netloc
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
-                url_to = werkzeug.urls.url_join(website._get_http_domain(), '/website/force/%s?isredir=1&path=%s' % (website.id, path))
+                url_to = werkzeug.urls.url_join(website.domain, '/website/force/%s?isredir=1&path=%s' % (website.id, path))
                 return request.redirect(url_to)
         website._force()
         return request.redirect(path)

@@ -447,9 +447,9 @@ class View(models.Model):
 
             cur = Website.get_current_website()
             if self.env.user.has_group('website.group_website_publisher') and self.env.user.has_group('website.group_multi_website'):
-                qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur._get_http_domain()}
+                qcontext['multi_website_websites_current'] = cur.name
                 qcontext['multi_website_websites'] = [
-                    {'website_id': website.id, 'name': website.name, 'domain': website._get_http_domain()}
+                    {'website_id': website.id, 'name': website.name, 'domain': website.domain}
                     for website in Website.search([]) if website != cur
                 ]
 
