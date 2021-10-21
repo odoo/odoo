@@ -47,7 +47,7 @@ class TestProcRule(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
@@ -58,7 +58,7 @@ class TestProcRule(TransactionCase):
             })],
         }
         pick_output = self.env['stock.picking'].create(vals)
-        pick_output.move_lines._onchange_product_id()
+        pick_output.move_ids._onchange_product_id()
 
         # Confirm delivery order.
         pick_output.action_confirm()
@@ -76,7 +76,7 @@ class TestProcRule(TransactionCase):
             ('product_id', '=', self.product.id),
             ('location_id', '=', self.ref('stock.stock_location_stock')),
             ('location_dest_id', '=', self.ref('stock.stock_location_output')),
-            ('move_dest_ids', 'in', [pick_output.move_lines[0].id])
+            ('move_dest_ids', 'in', [pick_output.move_ids[0].id])
         ])
         self.assertEqual(len(moves.ids), 1, "It should have created a picking from Stock to Output with the original picking as destination")
 
@@ -219,7 +219,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
-        delivery_picking.write({'move_lines': [(0, 0, {
+        delivery_picking.write({'move_ids': [(0, 0, {
             'name': 'Extra Move',
             'product_id': self.productB.id,
             'product_uom': self.uom_unit.id,
@@ -298,8 +298,8 @@ class TestProcRule(TransactionCase):
         # 2 pickings should be created: 1 for pick, 1 for ship
         picking_pick = self.env['stock.picking'].search([('group_id', '=', wave_pg.id)])
         picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
-        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 2.0)
-        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 2.0)
+        self.assertAlmostEqual(picking_pick.move_ids.product_uom_qty, 2.0)
+        self.assertAlmostEqual(picking_ship.move_ids.product_uom_qty, 2.0)
 
         # Create a procurement for 3 units
         pg = self.env['procurement.group'].create({'name': 'Wave 2'})
@@ -321,8 +321,8 @@ class TestProcRule(TransactionCase):
 
         # The picking for the pick operation should be reused and the lines merged.
         picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
-        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 5.0)
-        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 3.0)
+        self.assertAlmostEqual(picking_pick.move_ids.product_uom_qty, 5.0)
+        self.assertAlmostEqual(picking_ship.move_ids.product_uom_qty, 3.0)
 
 
 class TestProcRuleLoad(TransactionCase):

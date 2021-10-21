@@ -79,10 +79,10 @@ class StockPickingBatch(models.Model):
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
 
-    @api.depends('picking_ids', 'picking_ids.move_line_ids', 'picking_ids.move_lines', 'picking_ids.move_lines.state')
+    @api.depends('picking_ids', 'picking_ids.move_line_ids', 'picking_ids.move_ids', 'picking_ids.move_ids.state')
     def _compute_move_ids(self):
         for batch in self:
-            batch.move_ids = batch.picking_ids.move_lines
+            batch.move_ids = batch.picking_ids.move_ids
             batch.move_line_ids = batch.picking_ids.move_line_ids
             batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
 

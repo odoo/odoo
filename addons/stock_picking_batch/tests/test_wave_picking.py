@@ -199,7 +199,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(res['context']['active_wave_id'], wave.id)
 
     def test_wave_split_picking(self):
-        lines = self.picking_client_1.move_lines.filtered(lambda m: m.product_id == self.productB).move_line_ids
+        lines = self.picking_client_1.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids
         move = lines.move_id
         self.assertEqual(len(move), 1)
         all_db_pickings = self.env['stock.picking'].search([])
@@ -218,14 +218,14 @@ class TestBatchPicking(TransactionCase):
         # Original picking lost a stock move
         self.assertTrue(move.picking_id)
         self.assertFalse(move.picking_id == self.picking_client_1)
-        self.assertTrue(self.picking_client_1.move_lines)
+        self.assertTrue(self.picking_client_1.move_ids)
         self.assertTrue(move.picking_id.batch_id == wave)
         self.assertTrue(lines.batch_id == wave)
         new_all_db_picking = self.env['stock.picking'].search([])
         self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
 
     def test_wave_split_move(self):
-        lines = self.picking_client_1.move_lines.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
+        lines = self.picking_client_1.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
         move = lines.move_id
         all_db_pickings = self.env['stock.picking'].search([])
         res_dict = lines.action_open_add_to_wave()

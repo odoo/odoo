@@ -168,5 +168,4 @@ class TestSaleMrpProcurement(TransactionCase):
         self.assertEqual(len(pickings), 1)
 
         # ...with two products
-        move_lines = pickings[0].move_lines
-        self.assertEqual(len(move_lines), 2)
+        self.assertEqual(len(pickings[0].move_ids), 2)

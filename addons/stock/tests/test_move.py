@@ -2589,7 +2589,7 @@ class StockMove(TransactionCase):
 
         # move a dozen on the backorder to see how we handle the extra move
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
-        backorder.move_lines.write({'move_line_ids': [(0, 0, {
+        backorder.move_ids.write({'move_line_ids': [(0, 0, {
             'product_id': self.product.id,
             'product_uom_id': self.uom_dozen.id,
             'qty_done': 1,
@@ -2602,7 +2602,7 @@ class StockMove(TransactionCase):
             'picking_id': backorder.id,
         })]})
         backorder.button_validate()
-        backorder_move = backorder.move_lines
+        backorder_move = backorder.move_ids
         self.assertEqual(backorder_move.state, 'done')
         self.assertEqual(backorder_move.quantity_done, 12.0)
         self.assertEqual(backorder_move.product_uom_qty, 12.0)
@@ -2732,18 +2732,18 @@ class StockMove(TransactionCase):
         (move_stock_pack + move_pack_cust)._action_confirm()
 
         picking_stock_pack.action_assign()
-        for ml in picking_stock_pack.move_lines.move_line_ids:
+        for ml in picking_stock_pack.move_ids.move_line_ids:
             ml.qty_done = 1
         picking_stock_pack.button_validate()
         self.assertEqual(picking_pack_cust.state, 'assigned')
-        for ml in picking_pack_cust.move_lines.move_line_ids:
+        for ml in picking_pack_cust.move_ids.move_line_ids:
             if ml.lot_id.name != 'lot3':
                 ml.qty_done = 1
         res_dict_for_back_order = picking_pack_cust.button_validate()
         backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         backorder_wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
-        backordered_move = backorder.move_lines
+        backordered_move = backorder.move_ids
 
         # due to the rounding, the backordered quantity is 0.999 ; we shoudln't be able to reserve
         # 0.999 on a tracked by serial number quant
@@ -4095,15 +4095,15 @@ class StockMove(TransactionCase):
         backorder_wizard.process()
 
         # Only 5 products should be processed on the initial move.
-        self.assertEqual(picking.move_lines.state, 'done')
-        self.assertEqual(picking.move_lines.quantity_done, 5.0)
+        self.assertEqual(picking.move_ids.state, 'done')
+        self.assertEqual(picking.move_ids.quantity_done, 5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
 
         # The backoder should contain a move for the other 5 produts.
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorder), 1.0)
-        self.assertEqual(backorder.move_lines.product_uom_qty, 5.0)
+        self.assertEqual(backorder.move_ids.product_uom_qty, 5.0)
 
     def test_immediate_validate_3(self):
         """ In a picking with two moves, one partially available and one unavailable, clicking
@@ -4163,7 +4163,7 @@ class StockMove(TransactionCase):
         self.assertEqual(len(backorder), 1.0)
 
         # The backorder should contain 99 product1 and 100 product5.
-        for backorder_move in backorder.move_lines:
+        for backorder_move in backorder.move_ids:
             if backorder_move.product_id.id == self.product.id:
                 self.assertEqual(backorder_move.product_qty, 99)
             elif backorder_move.product_id.id == product5.id:
@@ -4204,11 +4204,11 @@ class StockMove(TransactionCase):
         immediate_trans_wiz = Form(self.env[immediate_trans_wiz_dict['res_model']].with_context(immediate_trans_wiz_dict['context'])).save()
         immediate_trans_wiz.process()
 
-        self.assertEqual(picking.move_lines.quantity_done, 5.0)
+        self.assertEqual(picking.move_ids.quantity_done, 5.0)
         # Check move_lines data
-        self.assertEqual(len(picking.move_lines.move_line_ids), 1)
-        self.assertEqual(picking.move_lines.move_line_ids.lot_id, lot1)
-        self.assertEqual(picking.move_lines.move_line_ids.qty_done, 5.0)
+        self.assertEqual(len(picking.move_ids.move_line_ids), 1)
+        self.assertEqual(picking.move_ids.move_line_ids.lot_id, lot1)
+        self.assertEqual(picking.move_ids.move_line_ids.qty_done, 5.0)
         # Check quants data
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 0.0)
@@ -4550,8 +4550,8 @@ class StockMove(TransactionCase):
         })
 
         scrap.action_validate()
-        self.assertEqual(len(picking.move_lines), 2)
-        scrapped_move = picking.move_lines.filtered(lambda m: m.state == 'done')
+        self.assertEqual(len(picking.move_ids), 2)
+        scrapped_move = picking.move_ids.filtered(lambda m: m.state == 'done')
         self.assertTrue(scrapped_move, 'No scrapped move created.')
         self.assertEqual(scrapped_move.scrap_ids.ids, [scrap.id], 'Wrong scrap linked to the move.')
         self.assertEqual(scrap.scrap_qty, 5, 'Scrap quantity has been modified and is not correct anymore.')
@@ -5089,7 +5089,7 @@ class StockMove(TransactionCase):
         move1.quantity_done = 10
         picking._action_done()
 
-        self.assertEqual(len(picking.move_lines), 1, 'One move should exist for the picking.')
+        self.assertEqual(len(picking.move_ids), 1, 'One move should exist for the picking.')
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
 
         ml = self.env['stock.move.line'].create({
@@ -5101,11 +5101,11 @@ class StockMove(TransactionCase):
             'picking_id': picking.id,
         })
 
-        self.assertEqual(len(picking.move_lines), 2, 'The new move associated to the move line does not exist.')
+        self.assertEqual(len(picking.move_ids), 2, 'The new move associated to the move line does not exist.')
         self.assertEqual(len(picking.move_line_ids), 2, 'It should be 2 move lines for the picking.')
-        self.assertTrue(ml.move_id in picking.move_lines, 'Links are not correct between picking, moves and move lines.')
+        self.assertTrue(ml.move_id in picking.move_ids, 'Links are not correct between picking, moves and move lines.')
         self.assertEqual(picking.state, 'done', 'Picking should still done after adding a new move line.')
-        self.assertTrue(all(move.state == 'done' for move in picking.move_lines), 'Wrong state for move.')
+        self.assertTrue(all(move.state == 'done' for move in picking.move_ids), 'Wrong state for move.')
 
     def test_put_in_pack_1(self):
         """ Check that reserving a move and adding its move lines to
@@ -5378,7 +5378,7 @@ class StockMove(TransactionCase):
         aggregate_values = second_backorder.move_line_ids._get_aggregated_product_quantities()
         self.assertEqual(len(aggregate_values), 2)
         sml1 = second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
-        sm2 = second_backorder.move_lines.filtered(lambda ml: ml.product_id == product2)
+        sm2 = second_backorder.move_ids.filtered(lambda ml: ml.product_id == product2)
         aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.product_uom_id.id}']
         aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.product_uom.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 3)

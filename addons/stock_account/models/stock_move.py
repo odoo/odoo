@@ -492,11 +492,11 @@ class StockMove(models.Model):
     def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
         self.ensure_one()
 
-        move_lines = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
+        move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
         date = self._context.get('force_period_date', fields.Date.context_today(self))
         return {
             'journal_id': journal_id,
-            'line_ids': move_lines,
+            'line_ids': move_ids,
             'date': date,
             'ref': description,
             'stock_move_id': self.id,

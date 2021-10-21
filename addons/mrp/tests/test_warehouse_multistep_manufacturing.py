@@ -207,7 +207,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             ('location_dest_id', '=', self.warehouse.wh_pack_stock_loc_id.id),
             ('picking_type_id', '=', self.warehouse.pick_type_id.id)
         ]).picking_id
-        self.assertEqual(picking_stock_pick.move_lines.move_orig_ids.picking_id, picking_stock_postprod)
+        self.assertEqual(picking_stock_pick.move_ids.move_orig_ids.picking_id, picking_stock_postprod)
 
     def test_cancel_propagation(self):
         """ Test cancelling moves in a 'picking before

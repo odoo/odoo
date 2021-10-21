@@ -87,7 +87,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': 'outgoing_shipment_avg_move',
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,

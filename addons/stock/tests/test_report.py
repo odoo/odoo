@@ -971,16 +971,16 @@ class TestReports(TestReportsCommon):
             move_line.product_id = self.product
             move_line.product_uom_qty = 200
         receipt = receipt_form.save()
-        receipt.move_lines[0].write({
-            'move_dest_ids': [(4, delivery2.move_lines[0].id)],
+        receipt.move_ids[0].write({
+            'move_dest_ids': [(4, delivery2.move_ids[0].id)],
         })
         receipt.action_confirm()
 
         # Test compute _compute_forecast_information
-        self.assertEqual(delivery.move_lines.forecast_availability, 0.0)
-        self.assertEqual(delivery2.move_lines.forecast_availability, 200)
-        self.assertFalse(delivery.move_lines.forecast_expected_date)
-        self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
+        self.assertEqual(delivery.move_ids.forecast_availability, 0.0)
+        self.assertEqual(delivery2.move_ids.forecast_availability, 200)
+        self.assertFalse(delivery.move_ids.forecast_expected_date)
+        self.assertEqual(delivery2.move_ids.forecast_expected_date, receipt.move_ids.date)
 
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
@@ -1031,16 +1031,16 @@ class TestReports(TestReportsCommon):
             move_line.product_id = self.product
             move_line.product_uom_qty = 300
         receipt = receipt_form.save()
-        receipt.move_lines[0].write({
-            'move_dest_ids': [(4, delivery2.move_lines[0].id)],
+        receipt.move_ids[0].write({
+            'move_dest_ids': [(4, delivery2.move_ids[0].id)],
         })
         receipt.action_confirm()
 
         # Test compute _compute_forecast_information
-        self.assertEqual(delivery.move_lines.forecast_availability, 100)
-        self.assertEqual(delivery2.move_lines.forecast_availability, 200)
-        self.assertEqual(delivery.move_lines.forecast_expected_date, receipt.move_lines.date)
-        self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
+        self.assertEqual(delivery.move_ids.forecast_availability, 100)
+        self.assertEqual(delivery2.move_ids.forecast_availability, 200)
+        self.assertEqual(delivery.move_ids.forecast_expected_date, receipt.move_ids.date)
+        self.assertEqual(delivery2.move_ids.forecast_expected_date, receipt.move_ids.date)
 
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
@@ -1078,9 +1078,9 @@ class TestReports(TestReportsCommon):
             move.product_uom_qty = 150
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
-        self.assertEqual(receipt1.move_lines.forecast_availability, -50.0)
-        self.assertEqual(delivery1.move_lines.forecast_availability, 150)
-        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date1)
+        self.assertEqual(receipt1.move_ids.forecast_availability, -50.0)
+        self.assertEqual(delivery1.move_ids.forecast_availability, 150)
+        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date1)
 
         # Creation of an identical receipt which should lead to a positive forecast availability
         scheduled_date2 = datetime.now() + timedelta(days=3)
@@ -1093,32 +1093,32 @@ class TestReports(TestReportsCommon):
             move.product_uom_qty = 150
         receipt2 = receipt_form.save()
         receipt2.action_confirm()
-        for move in receipt2.move_lines:
+        for move in receipt2.move_ids:
             move.quantity_done = 150
 
         # Check forecast_information of delivery1
-        delivery1.move_lines._compute_forecast_information()  # Because depends not "complete"
-        self.assertEqual(delivery1.move_lines.forecast_availability, 200)
-        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date2)
+        delivery1.move_ids._compute_forecast_information()  # Because depends not "complete"
+        self.assertEqual(delivery1.move_ids.forecast_availability, 200)
+        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date2)
 
         receipt2.button_validate()
-        self.assertEqual(receipt1.move_lines.forecast_availability, 100.0)
+        self.assertEqual(receipt1.move_ids.forecast_availability, 100.0)
 
         # Check forecast_information of delivery1, because the receipt2 as been validate the forecast_expected_date == receipt1.scheduled_date
-        delivery1.move_lines._compute_forecast_information()
-        self.assertEqual(delivery1.move_lines.forecast_availability, 200)
-        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date1)
+        delivery1.move_ids._compute_forecast_information()
+        self.assertEqual(delivery1.move_ids.forecast_availability, 200)
+        self.assertEqual(delivery1.move_ids.forecast_expected_date, scheduled_date1)
 
         delivery2 = delivery1.copy()
         delivery2_form = Form(delivery2)
         delivery2_form.scheduled_date = datetime.now() + timedelta(days=1)
         delivery2 = delivery2_form.save()
         delivery2.action_confirm()
-        self.assertEqual(delivery2.move_lines.forecast_availability, 100)
+        self.assertEqual(delivery2.move_ids.forecast_availability, 100)
 
         # Check for both deliveries and receipts if the highlight (is_matched) corresponds to the correct picking
         for picking in [delivery1, delivery2, receipt1, receipt2]:
-            context = picking.move_lines[0].action_product_forecast_report()['context']
+            context = picking.move_ids[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
                 if picking in [line['document_in'], line['document_out']]:
@@ -1209,7 +1209,7 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[3]['document_out'].id, delivery_manual.id)
 
         all_delivery = delivery_by_date | delivery_at_confirm | delivery_by_date_priority | delivery_manual
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [0, 0, 0, 0])
+        self.assertEqual(all_delivery.move_ids.mapped("forecast_availability"), [0, 0, 0, 0])
 
         # Creation of one receipt to fulfill the 2 first deliveries delivery_by_date and delivery_at_confirm
         receipt_form = Form(self.env['stock.picking'])
@@ -1222,7 +1222,7 @@ class TestReports(TestReportsCommon):
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
 
-        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, 0, 0])
+        self.assertEqual(all_delivery.move_ids.mapped("forecast_availability"), [3, 3, 0, 0])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
@@ -1310,7 +1310,7 @@ class TestReports(TestReportsCommon):
 
         # check that report correctly realizes outgoing moves can be linked when receipt is done
         receipt.action_confirm()
-        for move in receipt.move_lines:
+        for move in receipt.move_ids:
             move.quantity_done = move.product_uom_qty
         receipt.button_validate()
         report_values = report._get_report_values(docids=[receipt.id])
@@ -1338,10 +1338,10 @@ class TestReports(TestReportsCommon):
 
         # check that report assign button works correctly
         report.action_assign(move_ids, qtys, in_ids)
-        self.assertEqual(len(receipt.move_lines[0].move_dest_ids.ids), 2, "Demand qty of first and last moves should now be linked to incoming.")
-        self.assertEqual(len(receipt.move_lines[1].move_dest_ids.ids), 1, "Demand qty of second move should now be linked to incoming.")
-        self.assertEqual(len(receipt.move_lines[2].move_dest_ids.ids), 0, "product3 should have no moves linked to it.")
-        self.assertEqual(len(delivery1.move_lines.filtered(lambda m: m.product_id == product2)), 2, "product2 outgoing move should be split between linked and non-linked quantities.")
+        self.assertEqual(len(receipt.move_ids[0].move_dest_ids.ids), 2, "Demand qty of first and last moves should now be linked to incoming.")
+        self.assertEqual(len(receipt.move_ids[1].move_dest_ids.ids), 1, "Demand qty of second move should now be linked to incoming.")
+        self.assertEqual(len(receipt.move_ids[2].move_dest_ids.ids), 0, "product3 should have no moves linked to it.")
+        self.assertEqual(len(delivery1.move_ids.filtered(lambda m: m.product_id == product2)), 2, "product2 outgoing move should be split between linked and non-linked quantities.")
 
     def test_report_reception_2_two_receipts(self):
         """ Create 1 delivery and 2 receipts where the products being received
@@ -1394,7 +1394,7 @@ class TestReports(TestReportsCommon):
 
         # check that report splits assignable and non-assignable quantities when 1 receipt is draft and other is confirmed
         receipt1.action_confirm()
-        for move in receipt1.move_lines:
+        for move in receipt1.move_ids:
             move.quantity_done = move.product_uom_qty
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
 

@@ -824,7 +824,7 @@ class StockMove(models.Model):
 
     def _update_candidate_moves_list(self, candidate_moves_list):
         for picking in self.mapped('picking_id'):
-            candidate_moves_list.append(picking.move_lines)
+            candidate_moves_list.append(picking.move_ids)
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -1666,7 +1666,7 @@ class StockMove(models.Model):
 
         if picking and not cancel_backorder:
             backorder = picking._create_backorder()
-            if any([m.state == 'assigned' for m in backorder.move_lines]):
+            if any([m.state == 'assigned' for m in backorder.move_ids]):
                backorder._check_entire_pack()
         return moves_todo
 
