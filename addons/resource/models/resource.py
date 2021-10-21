@@ -397,24 +397,33 @@ class ResourceCalendar(models.Model):
             ('display_type', '=', False),
         ]])
 
-        # for each attendance spec, generate the intervals in the date range
+        # Since we only have one calendar to take in account
+        # Group resources per tz they will all have the same result
+        resources_per_tz = defaultdict(list)
+        for resource in resources_list:
+            resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+        attendances = self.env['resource.calendar.attendance'].search(domain)
         cache_dates = defaultdict(dict)
         cache_deltas = defaultdict(dict)
         result = defaultdict(list)
-        for attendance in self.env['resource.calendar.attendance'].search(domain):
-            for resource in resources_list:
+
+        def date_from_cache(tz, dt):
+            _key = (tz, dt)
+            return cache_dates[_key] if _key in cache_dates\
+                else cache_dates.setdefault(_key, dt.astimezone(tz))
+
+        def dt_from_cache(tz, day, hour_from):
+            _key = (tz, day, hour_from)
+            return cache_deltas[_key] if _key in cache_deltas\
+                else cache_deltas.setdefault(_key, tz.localize(combine(day, float_to_time(hour_from))))
+
+        for attendance in attendances:
+            attendance_timezones = [tz or timezone(attendance.resource_id.tz)]\
+                if attendance.resource_id else resources_per_tz.keys()
+            for resource_tz in attendance_timezones:
                 # express all dates and times in specified tz or in the resource's timezone
-                resource_tz = tz if tz else timezone((resource or self).tz)
-                if (resource_tz, start_dt) in cache_dates:
-                    start = cache_dates[(resource_tz, start_dt)]
-                else:
-                    start = start_dt.astimezone(resource_tz)
-                    cache_dates[(resource_tz, start_dt)] = start
-                if (resource_tz, end_dt) in cache_dates:
-                    end = cache_dates[(resource_tz, end_dt)]
-                else:
-                    end = end_dt.astimezone(resource_tz)
-                    cache_dates[(resource_tz, end_dt)] = end
+                start = date_from_cache(resource_tz, start_dt)
+                end = date_from_cache(resource_tz, end_dt)
 
                 start = start.date()
                 if attendance.date_from:
@@ -435,22 +444,21 @@ class ResourceCalendar(models.Model):
                 else:
                     days = rrule(DAILY, start, until=until, byweekday=weekday)
 
-                for day in days:
-                    # attendance hours are interpreted in the resource's timezone
-                    hour_from = attendance.hour_from
-                    if (resource_tz, day, hour_from) in cache_deltas:
-                        dt0 = cache_deltas[(resource_tz, day, hour_from)]
-                    else:
-                        dt0 = resource_tz.localize(combine(day, float_to_time(hour_from)))
-                        cache_deltas[(resource_tz, day, hour_from)] = dt0
-
-                    hour_to = attendance.hour_to
-                    if (resource_tz, day, hour_to) in cache_deltas:
-                        dt1 = cache_deltas[(resource_tz, day, hour_to)]
-                    else:
-                        dt1 = resource_tz.localize(combine(day, float_to_time(hour_to)))
-                        cache_deltas[(resource_tz, day, hour_to)] = dt1
-                    result[resource.id].append((max(cache_dates[(resource_tz, start_dt)], dt0), min(cache_dates[(resource_tz, end_dt)], dt1), attendance))
+                hour_from = attendance.hour_from
+                hour_to = attendance.hour_to
+                local_result = [
+                    (
+                        max(cache_dates[(resource_tz, start_dt)], dt_from_cache(resource_tz, day, hour_from)),
+                        min(cache_dates[(resource_tz, end_dt)], dt_from_cache(resource_tz, day, hour_to)),
+                        attendance
+                    )
+                    for day in days
+                ]
+                if attendance.resource_id:
+                    result[attendance.resource_id.id].extend(local_result)
+                else:
+                    for resource in resources_per_tz[resource_tz]:
+                        result[resource.id].extend(local_result)
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
