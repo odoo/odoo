@@ -613,7 +613,7 @@
                             </group>
                             <group string="Pricelist">
                                 <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
-                                <field name="product_id" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_create_edit': True}"/>
+                                <field name="product_id" groups="product.group_product_variant" options="{'no_create': True}"/>
                                 <label for="min_qty"/>
                                 <div class="o_row">
                                     <field name="min_qty"/>
