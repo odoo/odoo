@@ -334,7 +334,7 @@ class PosSession(models.Model):
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
-                self.move_id.unlink()
+                self.move_id.sudo().unlink()
         else:
             statement = self.cash_register_id
             if not self.config_id.cash_control:
