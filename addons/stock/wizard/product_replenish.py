@@ -28,6 +28,10 @@ class ProductReplenish(models.TransientModel):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company')
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.quantity = abs(self.product_id.virtual_available) if self.product_id.virtual_available < 0 else 1
+
     @api.model
     def default_get(self, fields):
         res = super(ProductReplenish, self).default_get(fields)
