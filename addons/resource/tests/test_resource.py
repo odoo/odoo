@@ -493,7 +493,7 @@ class TestResMixin(TestResourceCommon):
         )
         self.assertEqual(result[self.john], (
             datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
-            None,
+            datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
         ))
 
         result = self.john._adjust_to_calendar(
@@ -501,9 +501,27 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
         )
         self.assertEqual(result[self.john], (
-            None,
+            datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
         ))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 3, 31, 0, 0, 0, tzinfo=self.john.tz),  # search between Tuesday and Thursday
+            datetime_tz(2020, 4, 2, 23, 59, 59, tzinfo=self.john.tz),
+        )
+        self.assertEqual(result[self.john], (
+            datetime_tz(2020, 3, 31, 8, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 3, 31, 16, 0, tzinfo=self.john.tz),
+        ))
+
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 3, 31, 0, 0, 0, tzinfo=self.john.tz),  # search between Tuesday and Friday
+            datetime_tz(2020, 4, 3, 23, 59, 59, tzinfo=self.john.tz),
+        )
+        result = self.john._adjust_to_calendar(
+            datetime_tz(2020, 3, 31, 8, 0, 0, tzinfo=self.john.tz),
+            datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
+        )
 
     def test_adjust_calendar_timezone_after(self):
         # Calendar:
