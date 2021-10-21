@@ -3418,6 +3418,26 @@ X[]
                 });
             });
         });
+        describe('revertCurrentStep', () => {
+            it('should not lose initially nested style', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a[b<span style="color: tomato;">c</span>d]e</p>',
+                    stepFunction: async editor => {
+                        // simulate preview
+                        editor.historyPauseSteps();
+                        try {
+                            applyInlineStyle(editor, (el) => el.style.color = 'lime');
+                            // a[bcd]e with bcd in lime
+                        } finally {
+                            editor.historyUnpauseSteps();
+                        }
+                        // simulate preview's reset
+                        editor.historyRevertCurrentStep(); // back to initial state
+                    },
+                    contentAfter: '<p>a[b<span style="color: tomato;">c</span>d]e</p>',
+                });
+            });
+        });
     });
 
     describe('applyColor', () => {
