@@ -152,6 +152,7 @@ class PortalAccount(CustomerPortal):
         values = {
             'all': {'input': 'all', 'label': _('Search in All'), 'order': 1},
             'name': {'input': 'name', 'label': _('Search in #'), 'order': 2},
+            'reference': {'input': 'ref', 'label': _('Search in reference'), 'order': 3},
         }
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 

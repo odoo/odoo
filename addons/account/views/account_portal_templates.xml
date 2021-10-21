@@ -5,6 +5,14 @@
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
                 <t t-else="">Invoices &amp; Bills</t>
             </li>
+            <t t-if="page_name == 'invoice_from_purchase'">
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/purchase?{{ keep_query() }}"><t t-esc="company.name"/> Orders</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a t-attf-href="/my/purchase/#{order_id.id}?{{ keep_query() }}"><t t-esc="order_id.name"/></a>
+                </li>
+            </t>
             <li t-if="invoice" class="breadcrumb-item active">
                 <t t-esc="invoice.name" t-if="invoice.name != '/'"/>
                 <t t-else=""><em>Draft Invoice</em></t>
@@ -52,6 +60,7 @@
                                 <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
+                        <td><span t-field="invoice.ref"/></td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
                         <td class="tx_status">
@@ -100,7 +109,7 @@
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                    <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
                                         <a class="btn btn-secondary btn-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
                                     </div>
                                     <div class="btn-group flex-grow-1 mb-1">
