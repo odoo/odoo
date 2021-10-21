@@ -609,7 +609,6 @@ class StockMove(models.Model):
             ('product_id', populate.randomize(product_ids)),
             ('product_uom', populate.compute(get_product_uom)),
             ('product_uom_qty', populate.randint(1, 10)),
-            ('sequence', populate.randint(1, 1000)),
             ('_attach_to_record', _attach_to_record),
             ('_compute_picking_values', _compute_picking_values),
         ]

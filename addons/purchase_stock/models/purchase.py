@@ -240,10 +240,6 @@ class PurchaseOrder(models.Model):
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date):
-                    seq += 5
-                    move.sequence = seq
                 moves._action_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
@@ -569,7 +565,7 @@ class PurchaseOrderLine(models.Model):
                 values.append(val)
             line.move_dest_ids.created_purchase_line_id = False
 
-        return self.env['stock.move'].create(values)
+        return self.env['stock.move'].create(sorted(values, key=lambda move: move.get('date', fields.Datetime.now())))
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         """ Return the record in self where the procument with values passed as

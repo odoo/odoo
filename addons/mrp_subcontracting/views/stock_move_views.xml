@@ -94,7 +94,6 @@
                     <field name="product_uom_category_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
                     <field name="location_id" invisible="1"/>
                     <field name="picking_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
@@ -152,7 +151,6 @@
         <field name="arch" type="xml">
             <tree delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
                 <field name="company_id" invisible="1"/>
-                <field name="sequence" invisible="1"/>
                 <field name="product_uom_category_id" invisible="1"/>
                 <field name="name" invisible="1"/>
                 <field name="unit_factor" invisible="1"/>

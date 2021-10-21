@@ -136,7 +136,6 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form string="Move Detail">
-                    <field name="sequence" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="location_id" invisible="1"/>
@@ -444,11 +443,10 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" default_order='date, picking_id, sequence' string="Moves" create="0">
+                <tree decoration-muted="state == 'cancel'" default_order='date, picking_id, id' string="Moves" create="0">
                     <field name="date" invisible="1"/>
                     <field name="date_deadline" optional="hide"/>
                     <field name="picking_id" string="Reference" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
                     <field name="origin" optional="show"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>

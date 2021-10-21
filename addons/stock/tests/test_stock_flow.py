@@ -2094,7 +2094,7 @@ class TestStockFlow(TestStockCommon):
         """ Suppose two out picking waiting for an available quantity. When receiving such
          a quantity, the latter should be assign to the picking with the highest priority
          and the earliest scheduled date. """
-        def create_picking(picking_type, from_loc, to_loc, sequence=10, delay=0):
+        def create_picking(picking_type, from_loc, to_loc, delay=0):
             picking = self.PickingObj.create({
                 'picking_type_id': picking_type,
                 'location_id': from_loc,
@@ -2102,7 +2102,6 @@ class TestStockFlow(TestStockCommon):
             })
             self.MoveObj.create({
                 'name': self.productA.name,
-                'sequence': sequence,
                 'date': fields.Datetime.add(fields.Datetime.now(), second=delay),
                 'reservation_date': fields.Date.today(),
                 'product_id': self.productA.id,
@@ -2121,7 +2120,7 @@ class TestStockFlow(TestStockCommon):
             wizard.process()
 
         out01 = create_picking(self.picking_type_out, self.stock_location, self.customer_location)
-        out02 = create_picking(self.picking_type_out, self.stock_location, self.customer_location, sequence=2, delay=1)
+        out02 = create_picking(self.picking_type_out, self.stock_location, self.customer_location, delay=1)
         in01 = create_picking(self.picking_type_in, self.supplier_location, self.stock_location, delay=2)
 
         validate_picking(in01)

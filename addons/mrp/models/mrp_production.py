@@ -1001,7 +1001,6 @@ class MrpProduction(models.Model):
             - Existing moves during backorder creation """
         source_location = self.location_src_id
         data = {
-            'sequence': bom_line.sequence if bom_line else 10,
             'name': _('New'),
             'date': self.date_planned_start,
             'date_deadline': self.date_planned_start,

@@ -18,7 +18,7 @@ PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 class StockMove(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'sequence, id'
+    _order = 'id'
 
     def _default_group_id(self):
         if self.env.context.get('default_picking_id'):
@@ -26,7 +26,6 @@ class StockMove(models.Model):
         return False
 
     name = fields.Char('Description', required=True)
-    sequence = fields.Integer('Sequence', default=10)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, 'Priority', default='0',
         compute="_compute_priority", store=True)
