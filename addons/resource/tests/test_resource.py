@@ -491,6 +491,17 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
         ))
 
+        # It should find the start and end within the search range
+        result = self.paul._adjust_to_calendar(
+            datetime_tz(2020, 4, 2, 2, 0, 0, tzinfo='UTC'),
+            datetime_tz(2020, 4, 3, 1, 59, 59, tzinfo='UTC'),
+        )
+
+        self.assertEqual(result[self.paul], (
+            datetime_tz(2020, 4, 2, 4, 0, tzinfo='UTC'),
+            datetime_tz(2020, 4, 2, 18, 0, tzinfo='UTC')
+        ), "It should have found the start and end of the shift on the same day on April 2nd, 2020")
+
     def test_adjust_calendar_timezone_after(self):
         # Calendar:
         # Tuesdays 8-16
