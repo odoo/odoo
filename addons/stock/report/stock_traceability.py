@@ -71,7 +71,7 @@ class MrpStockReport(models.TransientModel):
         elif rec_id and model in ('stock.picking', 'mrp.production'):
             record = self.env[model].browse(rec_id)
             if model == 'stock.picking':
-                lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_ids.move_line_ids.filtered(lambda m: m.lot_id and m.state == 'done')
             else:
                 lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
         move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)

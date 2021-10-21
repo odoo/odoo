@@ -123,9 +123,9 @@ class TestStockValuationCommon(TransactionCase):
         stock_return_picking.product_return_moves.quantity = quantity_to_return
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_lines[0].move_line_ids[0].qty_done = quantity_to_return
+        return_pick.move_ids[0].move_line_ids[0].qty_done = quantity_to_return
         return_pick._action_done()
-        return return_pick.move_lines
+        return return_pick.move_ids
 
 
 class TestStockValuationStandard(TestStockValuationCommon):

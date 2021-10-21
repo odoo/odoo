@@ -100,7 +100,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_lines.quantity_done = 1
+        return_pick.move_ids.quantity_done = 1
         return_pick._action_done()
         self._change_pickings_date(return_pick, '2018-01-13')
 

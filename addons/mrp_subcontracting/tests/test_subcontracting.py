@@ -41,7 +41,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
 
         # Nothing should be tracked
-        self.assertTrue(all(m.product_uom_qty == m.reserved_availability for m in picking_receipt.move_lines))
+        self.assertTrue(all(m.product_uom_qty == m.reserved_availability for m in picking_receipt.move_ids))
         self.assertEqual(picking_receipt.state, 'assigned')
         self.assertEqual(picking_receipt.display_action_record_components, 'hide')
 
@@ -69,7 +69,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
         self.assertEqual(len(picking), 1)
         self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
-        picking_receipt.move_lines.quantity_done = 1
+        picking_receipt.move_ids.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
 
@@ -87,7 +87,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         return_picking_id, pick_type_id = return_wizard._create_returns()
         return_picking = self.env['stock.picking'].browse(return_picking_id)
         self.assertEqual(len(return_picking), 1)
-        self.assertEqual(return_picking.move_lines.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
+        self.assertEqual(return_picking.move_ids.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
 
     def test_flow_2(self):
         """ Tick "Resupply Subcontractor on Order" on the components and trigger the creation of
@@ -134,7 +134,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo.picking_ids), 1)
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(len(mo.picking_ids.move_lines), 2)
+        self.assertEqual(len(mo.picking_ids.move_ids), 2)
 
         picking = mo.picking_ids
         wh = picking.picking_type_id.warehouse_id
@@ -151,7 +151,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         comp2mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
         self.assertEqual(len(comp2mo), 0)
 
-        picking_receipt.move_lines.quantity_done = 1
+        picking_receipt.move_ids.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
 
@@ -204,7 +204,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_delivery = mo.picking_ids
         self.assertEqual(len(picking_delivery), 1)
-        self.assertEqual(len(picking_delivery.move_lines), 2)
+        self.assertEqual(len(picking_delivery.move_ids), 2)
         self.assertEqual(picking_delivery.origin, picking_receipt.name)
         self.assertEqual(picking_delivery.partner_id, picking_receipt.partner_id)
 
@@ -218,7 +218,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # As well as a manufacturing order for `self.comp2`
         comp2mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
         self.assertEqual(len(comp2mo), 1)
-        picking_receipt.move_lines.quantity_done = 1
+        picking_receipt.move_ids.quantity_done = 1
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
 
@@ -339,8 +339,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt2 = picking_form.save()
         picking_receipt2.action_confirm()
 
-        mo_pick1 = picking_receipt1.move_lines.mapped('move_orig_ids.production_id')
-        mo_pick2 = picking_receipt2.move_lines.mapped('move_orig_ids.production_id')
+        mo_pick1 = picking_receipt1.move_ids.mapped('move_orig_ids.production_id')
+        mo_pick2 = picking_receipt2.move_ids.mapped('move_orig_ids.production_id')
         self.assertEqual(len(mo_pick1), 1)
         self.assertEqual(len(mo_pick2), 1)
         self.assertEqual(mo_pick1.bom_id, self.bom)
@@ -390,7 +390,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
 
-        picking_receipt.move_lines.quantity_done = 3.0
+        picking_receipt.move_ids.quantity_done = 3.0
         picking_receipt._action_done()
         mo = picking_receipt._get_subcontract_production()
         move_comp1 = mo.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
@@ -417,25 +417,25 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
 
-        picking_receipt.move_lines.quantity_done = 3
+        picking_receipt.move_ids.quantity_done = 3
         backorder_wiz = picking_receipt.button_validate()
         backorder_wiz = Form(self.env[backorder_wiz['res_model']].with_context(backorder_wiz['context'])).save()
         backorder_wiz.process()
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_receipt.id)])
         self.assertTrue(backorder)
-        self.assertEqual(backorder.move_lines.product_uom_qty, 2)
-        mo_done = backorder.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state == 'done')
-        backorder_mo = backorder.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state != 'done')
+        self.assertEqual(backorder.move_ids.product_uom_qty, 2)
+        mo_done = backorder.move_ids.move_orig_ids.production_id.filtered(lambda p: p.state == 'done')
+        backorder_mo = backorder.move_ids.move_orig_ids.production_id.filtered(lambda p: p.state != 'done')
         self.assertTrue(mo_done)
         self.assertEqual(mo_done.qty_produced, 3)
         self.assertEqual(mo_done.product_uom_qty, 3)
         self.assertTrue(backorder_mo)
         self.assertEqual(backorder_mo.product_uom_qty, 2)
         self.assertEqual(backorder_mo.qty_produced, 0)
-        backorder.move_lines.quantity_done = 2
+        backorder.move_ids.quantity_done = 2
         backorder._action_done()
-        self.assertTrue(picking_receipt.move_lines.move_orig_ids.production_id.state == 'done')
+        self.assertTrue(picking_receipt.move_ids.move_orig_ids.production_id.state == 'done')
 
     def test_flow_9(self):
         """Ensure that cancel the subcontract moves will also delete the
@@ -466,7 +466,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(self.comp2.virtual_available, -5)
         # action_cancel is not call on the picking in order
         # to test behavior from other source than picking (e.g. puchase).
-        picking_receipt.move_lines._action_cancel()
+        picking_receipt.move_ids._action_cancel()
         self.assertEqual(picking_delivery.state, 'cancel')
         self.assertEqual(self.comp1.virtual_available, 0.0)
         self.assertEqual(self.comp1.virtual_available, 0.0)
@@ -735,7 +735,7 @@ class TestSubcontractingTracking(TransactionCase):
         wh = picking_receipt.picking_type_id.warehouse_id
         lot_names_finished = [f"subtracked_{i}" for i in range(nb_finished_product)]
 
-        move_details = Form(picking_receipt.move_lines, view='stock.view_stock_move_nosuggest_operations')
+        move_details = Form(picking_receipt.move_ids, view='stock.view_stock_move_nosuggest_operations')
         for lot_name in lot_names_finished:
             with move_details.move_line_nosuggest_ids.new() as ml:
                 ml.qty_done = 1
@@ -745,7 +745,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.button_validate()
         # Check the created manufacturing order
         # Should have one mo by serial number
-        mos = picking_receipt.move_lines.move_orig_ids.production_id
+        mos = picking_receipt.move_ids.move_orig_ids.production_id
         self.assertEqual(len(mos), nb_finished_product)
         self.assertEqual(mos.mapped("state"), ["done"] * nb_finished_product)
         self.assertEqual(mos.picking_type_id, wh.subcontracting_type_id)

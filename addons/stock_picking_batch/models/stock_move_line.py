@@ -53,7 +53,7 @@ class StockMoveLine(models.Model):
 
             # Split the picking in two part to extract only line that are taken on the wave
             picking_to_wave_vals = picking.copy_data({
-                'move_lines': [],
+                'move_ids': [],
                 'move_line_ids': [],
                 'batch_id': wave.id,
             })[0]
@@ -64,13 +64,13 @@ class StockMoveLine(models.Model):
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
                 # if all the line of a stock move are taken we change the picking on the stock move
                 if move_lines == move.move_line_ids:
-                    picking_to_wave_vals['move_lines'] += [Command.link(move.id)]
+                    picking_to_wave_vals['move_ids'] += [Command.link(move.id)]
                     continue
                 # Split the move
                 qty = sum(lines.mapped('product_qty'))
                 new_move = move._split(qty)
                 new_move[0]['move_line_ids'] = [Command.set(move_lines.ids)]
-                picking_to_wave_vals['move_lines'] += [Command.create(new_move[0])]
+                picking_to_wave_vals['move_ids'] += [Command.create(new_move[0])]
 
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 

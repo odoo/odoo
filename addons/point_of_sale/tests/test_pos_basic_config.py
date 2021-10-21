@@ -94,10 +94,10 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'done',
                     'Picking should be in done state.'
                 )
-                move_lines = order.picking_ids[0].move_lines
+                move_ids = order.picking_ids[0].move_ids
                 self.assertEqual(
-                    move_lines.mapped('state'),
-                    ['done'] * len(move_lines),
+                    move_ids.mapped('state'),
+                    ['done'] * len(move_ids),
                     'Move Lines should be in done state.'
                 )
 
@@ -208,10 +208,10 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'done',
                     'Picking should be in done state.'
                 )
-                move_lines = order.picking_ids[0].move_lines
+                move_ids = order.picking_ids[0].move_ids
                 self.assertEqual(
-                    move_lines.mapped('state'),
-                    ['done'] * len(move_lines),
+                    move_ids.mapped('state'),
+                    ['done'] * len(move_ids),
                     'Move Lines should be in done state.'
                 )
 
@@ -405,10 +405,10 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'done',
                     'Picking should be in done state.'
                 )
-                move_lines = order.picking_ids[0].move_lines
+                move_ids = order.picking_ids[0].move_ids
                 self.assertEqual(
-                    move_lines.mapped('state'),
-                    ['done'] * len(move_lines),
+                    move_ids.mapped('state'),
+                    ['done'] * len(move_ids),
                     'Move Lines should be in done state.'
                 )
 

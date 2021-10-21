@@ -973,12 +973,12 @@ class TestStockValuation(TransactionCase):
         stock_return_picking.product_return_moves.quantity = 1.0 # Return only 2
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick.move_ids[0].move_line_ids[0].qty_done = 1.0
         return_pick.with_user(self.inventory_user)._action_done()
 
         self.assertEqual(self.product1.standard_price, 16)
 
-        self.assertAlmostEqual(return_pick.move_lines.stock_valuation_layer_ids.unit_cost, 11.2)
+        self.assertAlmostEqual(return_pick.move_ids.stock_valuation_layer_ids.unit_cost, 11.2)
 
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard

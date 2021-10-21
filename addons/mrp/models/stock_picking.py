@@ -55,10 +55,10 @@ class StockPicking(models.Model):
 
     has_kits = fields.Boolean(compute='_compute_has_kits')
 
-    @api.depends('move_lines')
+    @api.depends('move_ids')
     def _compute_has_kits(self):
         for picking in self:
-            picking.has_kits = any(picking.move_lines.mapped('bom_line_id'))
+            picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
 
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)

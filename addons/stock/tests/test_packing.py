@@ -116,16 +116,16 @@ class TestPacking(TestPackingCommon):
                           'The package_level should be in draft as it has no moves, move lines and is not confirmed')
         picking.action_confirm()
         self.assertEqual(len(picking.move_ids_without_package), 0)
-        self.assertEqual(len(picking.move_lines), 1,
+        self.assertEqual(len(picking.move_ids), 1,
                          'One move should be created when the package_level has been confirmed')
         self.assertEqual(len(package_level.move_ids), 1,
                           'The move should be in the package level')
         self.assertEqual(package_level.state, 'confirmed',
                           'The package level must be state confirmed when picking is confirmed')
         picking.action_assign()
-        self.assertEqual(len(picking.move_lines), 1,
+        self.assertEqual(len(picking.move_ids), 1,
                          'You still have only one move when the picking is assigned')
-        self.assertEqual(len(picking.move_lines.move_line_ids), 1,
+        self.assertEqual(len(picking.move_ids.move_line_ids), 1,
                          'The move  should have one move line which is the reservation')
         self.assertEqual(picking.move_line_ids.package_level_id.id, package_level.id,
                           'The move line created should be linked to the package level')
@@ -140,9 +140,9 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(package_level.move_line_ids[0].qty_done, 20.0,
                           'All quantity in package must be procesed in move line')
         picking.button_validate()
-        self.assertEqual(len(picking.move_lines), 1,
+        self.assertEqual(len(picking.move_ids), 1,
                          'You still have only one move when the picking is assigned')
-        self.assertEqual(len(picking.move_lines.move_line_ids), 1,
+        self.assertEqual(len(picking.move_ids.move_line_ids), 1,
                          'The move  should have one move line which is the reservation')
         self.assertEqual(package_level.state, 'done', 'The package level must be in state done')
         self.assertEqual(pack.location_id.id, picking.location_dest_id.id,
@@ -309,7 +309,7 @@ class TestPacking(TestPackingCommon):
             **location_dict,
             **{
                 'picking_type_id': self.warehouse.in_type_id.id,
-                'move_lines': [(6, 0, [move.id])],
+                'move_ids': [(6, 0, [move.id])],
         }})
 
         picking.action_confirm()
@@ -707,7 +707,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(picking.state, "assigned")
         self.assertEqual(picking.package_level_ids.package_id, package)
 
-        move = picking.move_lines
+        move = picking.move_ids
         line = move.move_line_ids
 
         # change the result package and set a qty_done
@@ -754,8 +754,8 @@ class TestPacking(TestPackingCommon):
         with Form(picking) as picking_form:
             with picking_form.package_level_ids_details.new() as package_level:
                 package_level.package_id = package
-        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
-        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        self.assertEqual(len(picking.move_ids), 1, 'Should have only 1 stock move')
+        self.assertEqual(len(picking.move_ids), 1, 'Should have only 1 stock move')
         with Form(picking) as picking_form:
             with picking_form.package_level_ids_details.edit(0) as package_level:
                 package_level.is_done = True
@@ -799,7 +799,7 @@ class TestPacking(TestPackingCommon):
                 package_level.package_id = package
         with Form(picking) as picking_form:
             picking_form.package_level_ids.remove(0)
-        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        self.assertEqual(len(picking.move_ids), 1, 'Should have only 1 stock move')
 
     def test_picking_state_with_null_qty(self):
         receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=False))

@@ -82,7 +82,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         interim_account_id = self.company_data['default_account_stock_in'].id if operation == 'purchase' else self.company_data['default_account_stock_out'].id
         invoice_line = invoice.line_ids.filtered(lambda line: line.account_id.id == interim_account_id)
 
-        stock_moves = picking.move_lines
+        stock_moves = picking.move_ids
 
         valuation_line = stock_moves.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
 
@@ -113,7 +113,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         self._change_pickings_date(pickings, date)
 
     def _change_pickings_date(self, pickings, date):
-        pickings.mapped('move_lines').write({'date': date})
-        pickings.mapped('move_lines.account_move_ids').write({'name': '/', 'state': 'draft'})
-        pickings.mapped('move_lines.account_move_ids').write({'date': date})
-        pickings.move_lines.account_move_ids.action_post()
+        pickings.move_ids.write({'date': date})
+        pickings.move_ids.account_move_ids.write({'name': '/', 'state': 'draft'})
+        pickings.move_ids.account_move_ids.write({'date': date})
+        pickings.move_ids.account_move_ids.action_post()

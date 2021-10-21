@@ -253,7 +253,7 @@ class StockMoveLine(models.Model):
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
-                moves = move_line.picking_id.move_lines.filtered(lambda x: x.product_id == move_line.product_id)
+                moves = move_line.picking_id.move_ids.filtered(lambda x: x.product_id == move_line.product_id)
                 moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
                 if moves:
                     move_line.move_id = moves[0].id
@@ -768,7 +768,7 @@ class StockMoveLine(models.Model):
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
         pickings = (self.picking_id | backorders)
-        for empty_move in pickings.move_lines.filtered(
+        for empty_move in pickings.move_ids.filtered(
             lambda m: m.state == "cancel" and m.product_uom_qty
             and float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding)
         ):

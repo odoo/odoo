@@ -66,7 +66,7 @@ class TestDDT(TestSaleCommon):
 
         # deliver partially
         pick = self.so.picking_ids
-        pick.move_lines.write({'quantity_done': 1})
+        pick.move_ids.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
@@ -78,14 +78,14 @@ class TestDDT(TestSaleCommon):
 
         # deliver partially
         pickx1 = self.so.picking_ids.filtered(lambda p: p.state != 'done')
-        pickx1.move_lines.write({'quantity_done': 1})
+        pickx1.move_ids.write({'quantity_done': 1})
         wiz_act = pickx1.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # and again
         pickx2 = self.so.picking_ids.filtered(lambda p: p.state != 'done')
-        pickx2.move_lines.write({'quantity_done': 2})
+        pickx2.move_ids.write({'quantity_done': 2})
         wiz_act = pickx2.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()

@@ -51,10 +51,10 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
-        picking_receipt.move_lines.price_unit = 30.0
+        picking_receipt.move_ids.price_unit = 30.0
 
         picking_receipt.action_confirm()
-        picking_receipt.move_lines.quantity_done = 1.0
+        picking_receipt.move_ids.quantity_done = 1.0
         picking_receipt._action_done()
 
         mo = picking_receipt._get_subcontract_production()
@@ -65,8 +65,8 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         # Additionnal cost = 30 (from the purchase order line or directly set on the stock move here)
         # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
         self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 60)
-        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 0)
-        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
+        self.assertEqual(picking_receipt.move_ids.stock_valuation_layer_ids.value, 0)
+        self.assertEqual(picking_receipt.move_ids.product_id.value_svl, 60)
 
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product
@@ -89,7 +89,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             move.product_uom_qty = todo_nb
         picking_receipt = picking_form.save()
         # Mimic the extra cost on the po line
-        picking_receipt.move_lines.price_unit = 50
+        picking_receipt.move_ids.price_unit = 50
         picking_receipt.action_confirm()
 
         # We should be able to call the 'record_components' button

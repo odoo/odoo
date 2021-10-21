@@ -66,14 +66,14 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order_lifo1.state, 'purchase')
 
         # Process the receipt of purchase order 1
-        purchase_order_lifo1.picking_ids[0].move_lines.quantity_done = purchase_order_lifo1.picking_ids[0].move_lines.product_qty
+        purchase_order_lifo1.picking_ids[0].move_ids.quantity_done = purchase_order_lifo1.picking_ids[0].move_ids.product_qty
         purchase_order_lifo1.picking_ids[0].button_validate()
 
         # I confirm the second purchase order
         purchase_order_lifo2.button_confirm()
 
         # Process the receipt of purchase order 2
-        purchase_order_lifo2.picking_ids[0].move_lines.quantity_done = purchase_order_lifo2.picking_ids[0].move_lines.product_qty
+        purchase_order_lifo2.picking_ids[0].move_ids.quantity_done = purchase_order_lifo2.picking_ids[0].move_ids.product_qty
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
@@ -94,4 +94,4 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         outgoing_lifo_shipment.button_validate()
 
         # Check if the move value correctly reflects the fifo costing method
-        self.assertEqual(outgoing_lifo_shipment.move_lines.stock_valuation_layer_ids.value, -1400.0, 'Stock move value should have been 1400 euro')
+        self.assertEqual(outgoing_lifo_shipment.move_ids.stock_valuation_layer_ids.value, -1400.0, 'Stock move value should have been 1400 euro')

@@ -447,7 +447,7 @@ class TestProcurement(TestMrpCommon):
             'picking_type_id': self.ref('stock.picking_type_out'),
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
-            'move_lines': [(0, 0, {
+            'move_ids': [(0, 0, {
                 'name': '/',
                 'product_id': product_1.id,
                 'product_uom': product_1.uom_id.id,

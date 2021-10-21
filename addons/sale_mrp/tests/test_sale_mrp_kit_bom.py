@@ -151,7 +151,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 })],
         })
         so.action_confirm()
-        so.picking_ids.move_lines.quantity_done = 1
+        so.picking_ids.move_ids.quantity_done = 1
         so.picking_ids.button_validate()
 
         invoice = so.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
@@ -339,7 +339,7 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertEqual(so.order_line.qty_delivered, 0)
 
         picking = so.picking_ids
-        picking.move_lines.quantity_done = 0.86000
+        picking.move_ids.quantity_done = 0.86000
         picking.button_validate()
 
         # Checks the delivery amount (must be 10).

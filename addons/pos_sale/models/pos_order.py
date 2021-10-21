@@ -83,7 +83,7 @@ class PosOrder(models.Model):
 
             # cancel the waiting pickings if each product_uom_qty of move is zero
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
-                if all(is_product_uom_qty_zero(move) for move in picking.move_lines):
+                if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
 
         return order_ids

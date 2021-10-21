@@ -5,7 +5,7 @@
             <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
             <t t-foreach="docs" t-as="picking">
 
-                <t t-foreach="picking.move_lines" t-as="move">
+                <t t-foreach="picking.move_ids" t-as="move">
                     <t t-foreach="move.move_line_ids" t-as="move_line">
                         <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
                             <t t-set="qty" t-value="int(move_line.qty_done)"/>
@@ -42,7 +42,7 @@
                 <div class="page">
                     <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
                     <t t-foreach="docs" t-as="picking">
-                        <t t-foreach="picking.move_lines" t-as="move">
+                        <t t-foreach="picking.move_ids" t-as="move">
                             <t t-foreach="move.move_line_ids" t-as="move_line">
                                 <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
                                     <t t-set="qty" t-value="int(move_line.qty_done)"/>
@@ -53,7 +53,7 @@
                                 <t t-foreach="range(qty)" t-as="item">
                                     <t t-translation="off">
                                         <div style="display: inline-table; height: 10rem; width: 32%;">
-                                            <table class="table table-bordered" style="border: 2px solid black;" t-if="picking.move_lines">
+                                            <table class="table table-bordered" style="border: 2px solid black;" t-if="picking.move_ids">
                                                 <tr>
                                                     <th class="table-active text-left" style="height:4rem;">
                                                         <span t-esc="move.product_id.display_name"/>

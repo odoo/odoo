@@ -492,7 +492,7 @@ class StockMove(models.Model):
                 package_for_picking = None
                 if random.random() < 0.20:  # 20 % of chance to use package
                     package_for_picking = {'name': picking.name}
-                for move in picking.move_lines:
+                for move in picking.move_ids:
                     # For assigned moves
                     for move_line in move._get_move_lines():
                         move_line.qty_done = move_line.product_uom_qty

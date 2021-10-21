@@ -53,7 +53,7 @@ class ReturnPicking(models.TransientModel):
         # default values for creation.
         line_fields = [f for f in self.env['stock.return.picking.line']._fields.keys()]
         product_return_moves_data_tmpl = self.env['stock.return.picking.line'].default_get(line_fields)
-        for move in self.picking_id.move_lines:
+        for move in self.picking_id.move_ids:
             if move.state == 'cancel':
                 continue
             if move.scrapped:
@@ -112,7 +112,7 @@ class ReturnPicking(models.TransientModel):
 
     def _prepare_picking_default_values(self):
         return {
-            'move_lines': [],
+            'move_ids': [],
             'picking_type_id': self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id,
             'state': 'draft',
             'origin': _("Return of %s") % self.picking_id.name,
