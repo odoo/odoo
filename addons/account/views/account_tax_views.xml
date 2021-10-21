@@ -165,7 +165,8 @@
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="is_base_affected"
-                                           attrs="{'invisible': ['|', ('amount_type','=', 'group'), ('price_include', '=', True)]}"/>
+                                           attrs="{'invisible': ['|', ('amount_type','=', 'group'), ('price_include', '=', True)]}"
+                                           groups="base.group_no_one"/>
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_readonly"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_readonly"/>
