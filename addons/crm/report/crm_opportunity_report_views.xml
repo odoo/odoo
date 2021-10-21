@@ -67,6 +67,10 @@
                     <filter name="filter_opportunity" string="Opportunities" domain="[('type','=','opportunity')]" help="Show only opportunities" groups="crm.group_use_lead"/>
                     <filter name="filter_lead" string="Leads" domain="[('type','=', 'lead')]" help="Show only leads" groups="crm.group_use_lead"/>
                     <separator/>
+                    <filter string="Active" name="filter_active"
+                            domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="filter_inactive"
+                            domain="[('active', '=', False)]"/>
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
                     <filter string="Lost" name="lost"
@@ -111,6 +115,23 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_tree_reporting" model="ir.ui.view">
+            <field name="name">crm.lead.tree.lead.reporting</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="mode">primary</field>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <xpath expr="field[@name='city']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="field[@name='probability']" position="before">
+                    <field name="type" groups="crm.group_use_lead" optional="show"/>
+                    <field name="stage_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="crm_opportunity_report_action" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.lead</field>
@@ -137,8 +158,8 @@
             <field name="view_mode">graph,pivot,tree</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{
-                'default_type': 'lead',
-                'search_default_filter_lead': True,
+                'search_default_filter_active': 1,
+                'search_default_filter_inactive': 1,
                 'search_default_filter_create_date': 1,
             }</field>
             <field name="view_ids"
@@ -146,7 +167,7 @@
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('crm_lead_view_form')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_reporting')}),
                          ]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
