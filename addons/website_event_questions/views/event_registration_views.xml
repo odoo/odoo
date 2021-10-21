@@ -24,4 +24,15 @@
             </sheet>
         </field>
     </record>
+
+    <record id="event_registration_view_tree" model="ir.ui.view">
+        <field name="name">event.registration.view.tree.inherit.website.event.questions</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide"/>
+            </field>
+        </field>
+    </record>
 </odoo>
