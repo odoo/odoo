@@ -98,7 +98,6 @@
                                 <field name="group_propagation_option"/>
                                 <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
                                 <field name="propagate_cancel"/>
-                                <field name="propagate_carrier" groups="base.group_no_one"/>
                                 <field name="propagate_warehouse_id"/>
                             </group>
                             <group string="Options" attrs="{'invisible': [('action', 'not in', ['pull', 'push', 'pull_push'])]}">

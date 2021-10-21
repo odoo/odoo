@@ -29,6 +29,8 @@ invoices from picking, the system is able to add and compute the shipping line.
         'wizard/choose_delivery_package_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
         'views/stock_package_type_views.xml',
+        'views/stock_picking_type_views.xml',
+        'views/stock_rule_views.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
