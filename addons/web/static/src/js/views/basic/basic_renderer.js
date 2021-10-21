@@ -153,14 +153,16 @@ var BasicRenderer = AbstractRenderer.extend({
         // should be attached if not given, the tooltip is attached on the
         // widget's $el
         $node = $node.length ? $node : widget.$el;
-        $node.tooltip({
-            title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
-                    widget: widget,
-                });
-            }
-        });
+        if ($node && 'tooltip' in $node) {
+            $node.tooltip({
+                title: function () {
+                    return qweb.render('WidgetLabel.tooltip', {
+                        debug: config.debug,
+                        widget: widget,
+                    });
+                }
+            });
+        }
     },
     /**
      * Activates the widget at the given index for the given record if possible
