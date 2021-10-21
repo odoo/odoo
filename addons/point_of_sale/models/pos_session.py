@@ -1825,8 +1825,9 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_product_product(self, params):
+        self = self.with_context(**params['context'])
         if not self.config_id.limited_products_loading:
-            products = self.env['product.product'].with_context(**params['context']).search_read(params['domain'], params["fields"], order=params['order'])
+            products = self.env['product.product'].search_read(params['domain'], params["fields"], order=params['order'])
         else:
             products = self.config_id.get_limited_products_loading(params['fields'])
         return products
