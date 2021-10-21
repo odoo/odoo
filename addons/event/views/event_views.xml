@@ -123,7 +123,7 @@
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
             <field name="res_model">event.registration</field>
             <field name="name">Attendees</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,graph</field>
             <field name="domain">[('event_id', '=', active_id)]</field>
             <field name="context">{'default_event_id': active_id}</field>
             <field name="help" type="html">
@@ -181,7 +181,8 @@
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
                                     type="action"
-                                    context="{'search_default_expected': True}"
+                                    context="{'search_default_expected': True,
+                                     'search_default_group_by_create_date_week': True}"
                                     class="oe_stat_button"
                                     icon="fa-users"
                                     help="Total Registrations for this Event">
@@ -364,7 +365,10 @@
                                             <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
-                                            <a name="%(act_event_registration_from_event)d" type="action" context="{'search_default_expected': True}">
+                                            <a name="%(act_event_registration_from_event)d"
+                                               type="action"
+                                               context="{'search_default_expected': True,
+                                                'search_default_group_by_create_date_week': True}">
                                                 <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                             </a>
                                             <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
@@ -495,7 +499,9 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" multi_edit="1" sample="1">
+                <tree string="Registration" multi_edit="1" sample="1"
+                      expand="1" default_order="create_date desc"
+                      class="o_event_registration_view_tree">
                     <field name="create_date" optional="show" string="Registration Date"/>
                     <field name="date_open" optional="hide"/>
                     <field name="name"/>
@@ -704,7 +710,8 @@
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Ticket Type" name ="group_event_ticket_id" domain="[]" context="{'group_by': 'event_ticket_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Registration Date" name="group_by_create_date_week" domain="[]" context="{'group_by': 'create_date:week'}"/>
+                        <filter string="Creation Date" name="group_by_create_date_day" domain="[]" context="{'group_by': 'create_date:day'}" invisible="1"/>
                    </group>
                 </search>
             </field>
@@ -714,8 +721,14 @@
             <field name="name">Attendees</field>
             <field name="res_model">event.registration</field>
             <field name="domain"></field>
-            <field name="view_mode">pivot,graph,kanban,tree,form</field>
-            <field name="context">{}</field>
+            <field name="view_mode">graph,pivot,kanban,tree,form</field>
+            <field name="context">{
+                    'search_default_filter_last_month': 1,
+                    'search_default_status': 1,
+                    'search_default_group_by_create_day': 1,
+                    'search_default_group_event': 1,
+                }
+            </field>
             <field name="search_view_id" ref="view_registration_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
