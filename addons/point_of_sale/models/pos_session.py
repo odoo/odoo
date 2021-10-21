@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 from collections import defaultdict
 from datetime import timedelta
 
@@ -9,8 +8,6 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 from odoo.osv.expression import AND, OR
-
-logger = logging.getLogger(__name__)
 
 class PosSession(models.Model):
     _name = 'pos.session'
