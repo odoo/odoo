@@ -449,6 +449,7 @@ class StockMove(models.Model):
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
+                'name': '/',
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
