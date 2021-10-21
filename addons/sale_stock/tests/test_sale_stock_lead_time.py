@@ -197,3 +197,12 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(pack.date_deadline, new_deadline)
         new_deadline -= timedelta(days=pick.move_ids[0].rule_id.delay)
         self.assertEqual(pick.date_deadline, new_deadline)
+
+        # Removes the SO deadline and checks the delivery deadline is updated accordingly.
+        order.commitment_date = False
+        new_deadline = order.expected_date
+        self.assertEqual(out.date_deadline, new_deadline)
+        new_deadline -= timedelta(days=pack.move_ids.rule_id.delay)
+        self.assertEqual(pack.date_deadline, new_deadline)
+        new_deadline -= timedelta(days=pick.move_ids.rule_id.delay)
+        self.assertEqual(pick.date_deadline, new_deadline)
