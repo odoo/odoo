@@ -44,11 +44,11 @@
                     <span class="o_rightpanel_right_col font-weight-bold float-right"><t t-esc="formatFloat(sold_items.total_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                 </div>
                 <div class="o_rightpanel_data">
-                    <div class="o_rightpanel_data_row">
+                    <div class="o_rightpanel_data_row" data-toggle="tooltip" title="Time spent on this project and its tasks, based on timesheet entries.">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text">Effective</span>
                         <span class="o_rightpanel_right_col"><t t-esc="formatFloat(sold_items.effective_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                     </div>
-                    <div class="o_rightpanel_data_row" t-if="sold_items.planned_sold > 0 and sold_items.allow_forecast">
+                    <div class="o_rightpanel_data_row"  data-toggle="tooltip" title="Planned hours for this project and its tasks based on recorded shifts." t-if="sold_items.planned_sold > 0 and sold_items.allow_forecast">
                         <span class="o_rightpanel_left_col o_rightpanel_left_text">Planned</span>
                         <span class="o_rightpanel_right_col"><t t-esc="formatFloat(sold_items.planned_sold)"/> <t t-esc="sold_items.company_unit_name"/></span>
                     </div>
@@ -67,13 +67,18 @@
             <div name="profitability" class="o_rightpanel_section">
                 <div class="o_rightpanel_header">
                     <div class="o_rightpanel_title">
-                        Profitability
+                        Profitability Forecast
                     </div>
                 </div>
 
                 <div class="o_rightpanel_data">
                     <div t-foreach="profitability_items.data" t-as="profitability" t-key="profitability.name" class="o_rightpanel_data_row">
-                        <span class="o_rightpanel_left_col o_rightpanel_left_text"><t t-esc="profitability.name"/></span>
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text" data-toggle="tooltip" title="In the margin forecast, costs and revenues related to the analytical account are taken into account, along with future income based on hours that have been sold but not invoiced yet." t-if="profitability.name == 'Margin'">
+                            <t t-esc="profitability.name"/>
+                        </span>
+                        <span class="o_rightpanel_left_col o_rightpanel_left_text" t-else="">
+                            <t t-esc="profitability.name"/>
+                        </span>
                         <t t-if="profitability.color">
                             <span t-attf-class="o_rightpanel_right_col o_color_{{profitability.color}}"><b><t t-esc="profitability.value"/></b></span>
                         </t>
