@@ -15,6 +15,7 @@
                     </div>
                     <div role="form">
                         <fieldset disabled="disabled">
+                            <t t-set="question" t-value="False" />
                             <t t-foreach='survey.question_and_page_ids' t-as='question'>
                                 <t t-if="question.is_page and
                                             (any(q in questions_to_display for q in question.question_ids)
