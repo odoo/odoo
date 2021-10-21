@@ -155,6 +155,7 @@ class CustomerPortal(Controller):
         return {
             'sales_user': sales_user,
             'page_name': 'home',
+            'company': request.env.company,
         }
 
     def _prepare_portal_counters_values(self, counters):

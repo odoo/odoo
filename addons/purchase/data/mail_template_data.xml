@@ -20,6 +20,8 @@
         </t>
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
         <br/><br/>
+        You can also access it from the <a href="/my/purchase/${str(object.id)}">portal</a>.
+        <br/><br/>
         If you have any questions, please do not hesitate to contact us.
         <br/><br/>
         Best regards,
@@ -50,6 +52,8 @@
         </t>
         amounting in <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
+        <br/><br/>
+        You can also access it from the <a href="/my/purchase/${str(object.id)}">portal</a>.
         <br/><br/>
         <t t-if="object.date_planned">
             The receipt is expected for <strong t-out="format_date(object.date_planned) or ''">05/05/2021</strong>.

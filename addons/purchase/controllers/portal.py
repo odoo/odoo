@@ -107,6 +107,7 @@ class CustomerPortal(portal.CustomerPortal):
             'search_in': search_in,
             'filterby': filterby,
             'default_url': url,
+            'company': request.env.company
         })
         return request.render(template, values)
 
@@ -121,6 +122,7 @@ class CustomerPortal(portal.CustomerPortal):
             'order': order,
             'resize_to_48': resize_to_48,
             'report_type': 'html',
+            'company': request.env.company
         }
         if order.state in ('sent'):
             history = 'my_rfqs_history'
@@ -227,6 +229,25 @@ class CustomerPortal(portal.CustomerPortal):
         if update_date == 'True':
             return request.render("purchase.portal_my_purchase_order_update_date", values)
         return request.render("purchase.portal_my_purchase_order", values)
+
+    @http.route(['/my/purchase/<int:order_id>/invoices/<int:invoice_id>'], type='http', auth='user', website=True)
+    def portal_my_purchase_order_vendor_bill(self, order_id=None, invoice_id=None, access_token=None, **kwargs):
+        try:
+            invoice_sudo = self._document_check_access('account.move', invoice_id, access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+        try:
+            order_sudo = self._document_check_access('purchase.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kwargs)
+        values.update({
+            'page_name': 'invoice_from_purchase',
+            'company': request.env.company,
+            'order_id': order_sudo
+        })
+        return request.render("account.portal_invoice_page", values)
 
     @http.route(['/my/purchase/<int:order_id>/update'], type='http', methods=['POST'], auth="public", website=True)
     def portal_my_purchase_order_update_dates(self, order_id=None, access_token=None, **kw):

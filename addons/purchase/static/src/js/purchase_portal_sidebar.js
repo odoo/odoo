@@ -6,6 +6,9 @@ var PortalSidebar = require('portal.PortalSidebar');
 
 publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_purchase_sidebar',
+    events: {
+        'click .o_portal_purchase_attachment_btn': '_onAttachmentButtonClick',
+    },
 
     /**
      * @constructor
@@ -107,6 +110,9 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
             }
         });
         return rawText.join(' ');
+    },
+    _onAttachmentButtonClick: function(ev) {
+        $(".o_portal_chatter_attachment_btn").click();
     },
 });
 });

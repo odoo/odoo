@@ -237,6 +237,7 @@ class CustomerPortal(portal.CustomerPortal):
             'partner_id': order_sudo.partner_id.id,
             'report_type': 'html',
             'action': order_sudo._get_portal_return_action(),
+            'page_name': 'order',
         }
         if order_sudo.company_id:
             values['res_company'] = order_sudo.company_id

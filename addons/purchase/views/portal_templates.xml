@@ -8,8 +8,8 @@
         <t t-else="">Requests for Quotation</t>
       </li>
       <li t-if="page_name == 'purchase' or order and order.state != 'sent'" t-attf-class="breadcrumb-item #{'active ' if not order else ''}">
-        <a t-if="order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
-        <t t-else="">Purchase Orders</t>
+        <a t-if="order" t-attf-href="/my/purchase?{{ keep_query() }}"><t t-esc="company.name"/> Orders</a>
+        <t t-else=""><t t-esc="company.name"/> Orders</t>
       </li>
       <li t-if="order" class="breadcrumb-item active">
         <t t-esc="order.name"/>
@@ -25,7 +25,7 @@
             <t t-set="description_data" t-value="purchase_rfq_counters"/>
         </t>
         <t t-call="portal.portal_docs_entry">
-            <t t-set="title">Purchase Orders</t>
+            <t t-set="title"><t t-esc="company.name"/> Orders</t>
             <t t-set="url" t-value="'/my/purchase'"/>
             <t t-set="description_data" t-value="purchase_counters"/>
         </t>
@@ -137,6 +137,13 @@
                   </t>
                   <t t-set="entries">
                       <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                          <li t-if="order.state not in {'purchase', 'done', 'cancel'}" class="list-group-item flex_grow-1">
+                            <div class="o_upload_pdf btn-toolbar flex-sm-nowrap">
+                                <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                    <a class="btn btn-secondary btn-block o_portal_purchase_attachment_btn" href="#discussion" title="Send a Quote"><i class="fa fa-upload"/> Send a Quote</a>
+                                </div>
+                            </div>
+                          </li>
                           <li class="list-group-item flex-grow-1">
                               <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                   <div class="btn-group flex-grow-1 mr-1 mb-1">
@@ -146,6 +153,11 @@
                                       <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                   </div>
                               </div>
+                          </li>
+                          <li t-if="order.invoice_ids" class="list-group-item flex_grow-1">
+                            <div t-foreach="order.invoice_ids" t-as="invoice_id" t-if="invoice_id.state == 'posted'" class="row pl-2">
+                                <a t-attf-href="/my/purchase/#{order.id}/invoices/#{invoice_id.id}"><t t-esc="invoice_id.name"/></a>
+                            </div>
                           </li>
 
                           <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true" role="complementary">
