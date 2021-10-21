@@ -557,8 +557,9 @@ class StockQuant(models.Model):
         if self.location_id:
             return
         if self.product_id.tracking in ['lot', 'serial']:
-            previous_quants = self.env['stock.quant'].search(
-                [('product_id', '=', self.product_id.id)], limit=1, order='create_date desc')
+            previous_quants = self.env['stock.quant'].search([
+                ('product_id', '=', self.product_id.id),
+                ('location_id.usage', 'in', ['internal', 'transit'])], limit=1, order='create_date desc')
             if previous_quants:
                 self.location_id = previous_quants.location_id
         if not self.location_id:
