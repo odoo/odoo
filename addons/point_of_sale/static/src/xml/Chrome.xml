@@ -54,10 +54,10 @@
                     <!-- spinner from https://loading.io/css/ -->
                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                     <t t-if="loading.skipButtonIsShown">
-                    <h1 class="message">Connecting to devices</h1>
-                    <div class="button skip" t-on-click="trigger('loading-skip-callback')">
-                        Skip
-                    </div>
+                        <h1 class="message">Connecting to devices</h1>
+                        <div class="button skip" t-on-click="trigger('loading-skip-callback')">
+                            Skip
+                        </div>
                     </t>
                 </div>
             </div>

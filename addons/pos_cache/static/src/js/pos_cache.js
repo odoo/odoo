@@ -13,13 +13,6 @@ function roundUpDiv(y, x) {
 
 var posmodel_super = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
-    /**
-     * This method will make sense if you are aware that the behavior of
-     * `_meta_product_product` method in the backend is modified by pos_cache module.
-     * Basically, before `after_load_server_data`, initial number of products is loaded
-     * This method is extended, to basically perform background tasks to load the remaining
-     * products from the backend.
-     */
     async after_load_server_data() {
         await posmodel_super.after_load_server_data.call(this, ...arguments);
         this._loadProductInBackground();

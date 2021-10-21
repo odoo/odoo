@@ -244,9 +244,7 @@ exports.PosModel = Backbone.Model.extend({
 
     },{
         model:  'res.company',
-        loaded: function(self,companies){
-            self.company = companies[0];
-        },
+        loaded: function(self,companies){ self.company = companies[0]; },
     },{
         model:  'decimal.precision',
         loaded: function(self,dps){
