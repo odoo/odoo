@@ -203,6 +203,14 @@ exports.PosModel = Backbone.Model.extend({
         domain: [['customer','=',true]],
         loaded: function(self,partners){
             self.partners = partners;
+            rpc.query({
+                model: 'res.partner',
+                method: 'get_allowed_partner_ids',
+                args: [0],
+            }).then(function (result){
+                self.partner_ids_allowed = result;
+                self.partner_security_domain = ['id', 'in', result];
+            });
             self.db.add_partners(partners);
         },
     },{

@@ -32,3 +32,8 @@ class ResPartner(models.Model):
             partner['lang'] = self.env.user.lang
             partner_id = self.create(partner).id
         return partner_id
+
+    def get_allowed_partner_ids(self):
+        """Adiciona método no core para evitar erro no POS."""
+        # Adicionado pela Multidados
+        pass
