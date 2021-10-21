@@ -206,6 +206,7 @@ class HolidaysRequest(models.Model):
         inverse='_inverse_supported_attachment_ids')
     supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
     # UX fields
+    all_employee_ids = fields.Many2many('hr.employee', compute='_compute_all_employees')
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
@@ -290,6 +291,11 @@ class HolidaysRequest(models.Model):
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
                            self._table, ['date_to', 'date_from'])
         return res
+
+    @api.depends('employee_id', 'employee_ids')
+    def _compute_all_employees(self):
+        for leave in self:
+            leave.all_employee_ids = leave.employee_id | leave.employee_ids
 
     @api.depends_context('uid')
     def _compute_description(self):
