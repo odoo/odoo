@@ -3,7 +3,8 @@
 
 from lxml import etree, html
 
-from odoo import models, api
+from odoo import _, api, models
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import encode, xml_translate, html_translate
 
 
@@ -73,3 +74,30 @@ class IrTranslation(models.Model):
             # serialize div as HTML and discard surrounding tags
             value = etree.tostring(root[0][0], encoding='utf-8', method='html')[5:-6]
         return self.write({'value': value})
+
+    def write(self, vals):
+        if 'value' in vals:
+            mname, fname = self.name.split(',')
+            field = self.env[mname]._fields[fname]
+            if field.translate == xml_translate or field.translate == html_translate:
+                expressions_src = set()
+
+                expressions_attributes = ['t-out', 't-esc', 't-raw', 't-if', 't-elif', 't-as', 't-']
+
+                src = vals.get('src', self.src)
+
+                root_before = etree.fromstring(src, etree.HTMLParser(encoding='utf-8'))
+                root_after = etree.fromstring(vals.get('value', ''), etree.HTMLParser(encoding='utf-8'))
+
+                for el in root_before.getiterator():
+                    for attribute in expressions_attributes:
+                        if attribute in el.attrib:
+                            expressions_src.add(el.attrib[attribute])
+
+                for el in root_after.getiterator():
+                    for attribute in expressions_attributes:
+                        if attribute in el.attrib:
+                            if el.attrib[attribute] not in expressions_src:
+                                raise ValidationError(_("Translation cannot try to modify python expressions."))
+
+        return super(IrTranslation, self).write(vals)
