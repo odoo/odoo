@@ -49,6 +49,7 @@ class IrTranslationImport(object):
                         noupdate BOOLEAN
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)
+        cr.precommit.add(self._finish)
 
     def push(self, trans_dict):
         """ Feed a translation, as a dictionary, into the cursor """
@@ -59,9 +60,17 @@ class IrTranslationImport(object):
                            params['module'], params['imd_name'], params['value'],
                            params['state'], params['comments']))
 
-    def finish(self):
+    def _finish(self):
         """ Transfer the data from the temp table to ir.translation """
         cr = self._cr
+        self._rows = list({
+            (
+                (type, lang, src) if type == 'code'
+                else (type, lang, name, res_id, imd_model, module, imd_name) if type == 'model'
+                else (type, name, lang, res_id, imd_model, module, imd_name, src)
+            ): (name, lang, res_id, src, type, imd_model, module, imd_name, *args)
+            for name, lang, res_id, src, type, imd_model, module, imd_name, *args in self._rows
+        }.values())
 
         # Step 0: insert rows in batch
         query = """ INSERT INTO %s (name, lang, res_id, src, type, imd_model,
@@ -782,7 +791,10 @@ class IrTranslation(models.Model):
 
     def _get_import_cursor(self, overwrite):
         """ Return a cursor-like object for fast inserting translations """
-        return IrTranslationImport(self._cr, overwrite)
+        irt_cursor = self._cr.precommit.data.get('irt_cursor')
+        if not irt_cursor:
+            self._cr.precommit.data['irt_cursor'] = irt_cursor = IrTranslationImport(self._cr, overwrite)
+        return irt_cursor
 
     def _load_module_terms(self, modules, langs, overwrite=False):
         """ Load PO files of the given modules for the given languages. """

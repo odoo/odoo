@@ -1114,7 +1114,7 @@ class TranslationModuleReader:
 
     def _export_translatable_resources(self):
         """ Export translations for static terms
-        
+
         This will include:
         - the python strings marked with _() or _lt()
         - the javascript strings marked with _t() or _lt() inside static/src/js/
@@ -1218,11 +1218,6 @@ def trans_load_data(cr, fileobj, fileformat, lang,
         # the entries from the POT file).
         for row in reader:
             process_row(row)
-
-        irt_cursor.finish()
-        Translation.clear_caches()
-        if verbose:
-            _logger.info("translation file loaded successfully")
 
     except IOError:
         iso_lang = get_iso_codes(lang)

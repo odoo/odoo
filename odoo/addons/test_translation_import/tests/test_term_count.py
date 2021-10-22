@@ -21,6 +21,7 @@ class TestTermCount(common.TransactionCase):
         """
         self.env['res.lang']._activate_lang('fr_FR')
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env.cr.precommit.run()
         translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', '1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB'),
@@ -44,6 +45,7 @@ class TestTermCount(common.TransactionCase):
         """
         self.env['res.lang']._activate_lang('fr_FR')
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env.cr.precommit.run()
         translations = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', 'Ijkl'),
@@ -64,6 +66,7 @@ class TestTermCount(common.TransactionCase):
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         # reload with overwrite
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False, overwrite=True)
+        self.env.cr.precommit.run()
 
         # trans_load invalidates ormcache but not record cache
         menu.env.cache.invalidate()
@@ -74,6 +77,7 @@ class TestTermCount(common.TransactionCase):
         self.env['res.lang']._activate_lang('fr_BE')
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_BE', verbose=False)
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr_BE.po', 'fr_BE', verbose=False, overwrite=True)
+        self.env.cr.precommit.run()
 
         # language override base language
         translations = self.env['ir.translation'].search([
@@ -102,6 +106,7 @@ class TestTermCount(common.TransactionCase):
         """
         self.env['res.lang']._activate_lang('fr_FR')
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False)
+        self.env.cr.precommit.run()
         ids = self.env['ir.translation'].search([
             ('lang', '=', 'fr_FR'),
             ('src', '=', 'Test translation with two code lines'),
@@ -133,6 +138,7 @@ class TestTermCount(common.TransactionCase):
                                            verbose=False,
                                            create_empty_translation=create_empty_translation,
                                            overwrite=True)
+                self.env.cr.precommit.run()
 
         # Check that the not translated key is not created
         update_translations()
@@ -170,6 +176,7 @@ class TestTermCount(common.TransactionCase):
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
+        self.env.cr.precommit.run()
 
         tlh_lang = self.env['res.lang']._lang_get('tlh')
         self.assertTrue(tlh_lang, "The imported language was not creates")
@@ -193,6 +200,7 @@ class TestTermCount(common.TransactionCase):
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
+        self.env.cr.precommit.run()
 
         context = {'lang': "tlh"}
         self.assertEqual(_("Klingon"), "tlhIngan", "The direct code translation was not applied")
@@ -223,6 +231,7 @@ class TestTermCount(common.TransactionCase):
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
+        self.env.cr.precommit.run()
 
         dot_lang = self.env['res.lang']._lang_get('dot')
         self.assertTrue(dot_lang, "The imported language was not creates")
@@ -247,6 +256,7 @@ class TestTermCount(common.TransactionCase):
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
+        self.env.cr.precommit.run()
 
         # create a translation that has the same src as an existing field but no module
         # information and a different res_id that the real field
@@ -368,6 +378,7 @@ class TestTranslationFlow(common.TransactionCase):
             'modules': [Command.set([module.id])]
         })
         export.act_getfile()
+        self.env.cr.precommit.run()
         po_file = export.data
         self.assertIsNotNone(po_file)
 
@@ -382,6 +393,7 @@ class TestTranslationFlow(common.TransactionCase):
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_fr.import_lang()
+        self.env.cr.precommit.run()
 
         import_translation = self.env["ir.translation"].search([
             ('lang', '=', 'fr_FR'),
