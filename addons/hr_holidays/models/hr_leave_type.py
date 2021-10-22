@@ -116,6 +116,7 @@ class HolidaysType(models.Model):
         """
         date_to = self._context.get('default_date_from') or fields.Date.today().strftime('%Y-1-1')
         date_from = self._context.get('default_date_to') or fields.Date.today().strftime('%Y-12-31')
+        employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
 
         if not isinstance(value, bool):
             raise ValueError('Invalid value: %s' % (value))
@@ -129,11 +130,15 @@ class HolidaysType(models.Model):
         FROM
             hr_leave_allocation alloc
         WHERE
+            alloc.id is not null or (
+            alloc.employee_id = %s AND
+            alloc.active = True AND alloc.state = 'validate' AND
             alloc.date_to >= %s OR alloc.date_to IS NULL AND
             alloc.date_from <= %s 
+            )
         '''
 
-        self._cr.execute(query, (date_to, date_from))
+        self._cr.execute(query, (employee_id or None, date_to, date_from))
 
         return [('id', new_operator, [x['holiday_status_id'] for x in self._cr.dictfetchall()])]
 
@@ -142,10 +147,12 @@ class HolidaysType(models.Model):
     def _compute_valid(self):
         date_to = self._context.get('default_date_to', fields.Datetime.today())
         date_from = self._context.get('default_date_from', fields.Datetime.today())
+        employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id))
         for holiday_type in self:
             if holiday_type.requires_allocation:
                 allocation = self.env['hr.leave.allocation'].search([
                     ('holiday_status_id', '=', holiday_type.id),
+                    ('employee_id', '=', employee_id),
                     '|',
                     ('date_to', '>=', date_to),
                     '&',
