@@ -191,10 +191,10 @@ function matchCondition(record, condition) {
     switch (operator) {
         case "=":
         case "==":
-            return fieldValue === value;
+            return JSON.stringify(fieldValue) === JSON.stringify(value);
         case "!=":
         case "<>":
-            return fieldValue !== value;
+            return JSON.stringify(fieldValue) !== JSON.stringify(value);
         case "<":
             return fieldValue < value;
         case "<=":
