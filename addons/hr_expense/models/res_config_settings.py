@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
             # create data again
             alias = self.env['mail.alias'].sudo().create({
                 'alias_contact': 'employees',
+                'alias_domain_id': self.env.company.alias_domain_id.id,
                 'alias_model_id': self.env['ir.model']._get_id('hr.expense'),
                 'alias_name': self.hr_expense_alias_prefix,
             })
