@@ -19,7 +19,10 @@ export class ListArchParser extends XMLParser {
     parse(arch, fields) {
         const fieldParser = new FieldParser(fields, "list");
         const xmlDoc = this.parseXML(arch);
-        const activeActions = this.getActiveActions(xmlDoc);
+        const activeActions = {
+            ...this.getActiveActions(xmlDoc),
+            exportXlsx: this.isAttr(xmlDoc, "export_xlsx").truthy(true),
+        };
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
                 if (

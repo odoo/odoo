@@ -75,6 +75,7 @@ export class KanbanArchParser extends XMLParser {
         const limit = xmlDoc.getAttribute("limit");
         const activeActions = {
             ...this.getActiveActions(xmlDoc),
+            groupArchive: this.isAttr(xmlDoc, "archivable").truthy(true),
             groupCreate: this.isAttr(xmlDoc, "group_create").truthy(true),
             groupDelete: this.isAttr(xmlDoc, "group_delete").truthy(true),
             groupEdit: this.isAttr(xmlDoc, "group_edit").truthy(true),

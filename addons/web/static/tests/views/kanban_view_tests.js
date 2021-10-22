@@ -280,14 +280,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
     });
 
-    QUnit.skip(
+    QUnit.debug(
         "basic grouped rendering with active field (archivable by default)",
         async function (assert) {
             // const done = assert.async();
             assert.expect(9);
 
             // add active field on partner model and make all records active
-            this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "char",
+                default: true,
+            };
 
             const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
             const kanban = await makeView({
@@ -305,18 +309,18 @@ QUnit.module("Views", (hooks) => {
                 mockRPC: function (route, args) {
                     if (route === "/web/dataset/call_kw/partner/action_archive") {
                         const partnerIDS = args.args[0];
-                        const records = this.data.partner.records;
+                        const records = serverData.models.partner.records;
                         _.each(partnerIDS, function (partnerID) {
                             _.find(records, function (record) {
                                 return record.id === partnerID;
                             }).active = false;
                         });
-                        this.data.partner.records[0].active;
-                        return Promise.resolve();
+                        serverData.models.partner.records[0].active;
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
+
+            await toggleColumnOptions(kanban);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
@@ -366,7 +370,11 @@ QUnit.module("Views", (hooks) => {
             assert.expect(7);
 
             // add active field on partner model and make all records active
-            this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "char",
+                default: true,
+            };
 
             const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
             const kanban = await makeView({
@@ -384,13 +392,13 @@ QUnit.module("Views", (hooks) => {
                 mockRPC: function (route, args) {
                     if (route === "/web/dataset/call_kw/partner/action_archive") {
                         const partnerIDS = args.args[0];
-                        const records = this.data.partner.records;
+                        const records = serverData.models.partner.records;
                         _.each(partnerIDS, function (partnerID) {
                             _.find(records, function (record) {
                                 return record.id === partnerID;
                             }).active = false;
                         });
-                        this.data.partner.records[0].active;
+                        serverData.models.partner.records[0].active;
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
@@ -451,7 +459,11 @@ QUnit.module("Views", (hooks) => {
             assert.expect(2);
 
             // add active field on partner model and make all records active
-            this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "char",
+                default: true,
+            };
 
             const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
             const kanban = await makeView({
@@ -492,12 +504,16 @@ QUnit.module("Views", (hooks) => {
             assert.expect(7);
 
             // add active field on partner model and make all records active
-            this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "char",
+                default: true,
+            };
 
             // more many2many data
-            this.data.partner.records[0].category_ids = [6, 7];
-            this.data.partner.records[3].foo = "blork";
-            this.data.partner.records[3].category_ids = [];
+            serverData.models.partner.records[0].category_ids = [6, 7];
+            serverData.models.partner.records[3].foo = "blork";
+            serverData.models.partner.records[3].category_ids = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -826,8 +842,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("prevent deletion when grouped by many2many field", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].category_ids = [6, 7];
-        this.data.partner.records[3].category_ids = [7];
+        serverData.models.partner.records[0].category_ids = [6, 7];
+        serverData.models.partner.records[3].category_ids = [7];
 
         const kanban = await makeView({
             type: "kanban",
@@ -1217,8 +1233,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record with default values and onchanges", async function (assert) {
         assert.expect(10);
 
-        this.data.partner.fields.int_field.default = 4;
-        this.data.partner.onchanges = {
+        serverData.models.partner.fields.int_field.default = 4;
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 if (obj.foo) {
                     obj.int_field = 8;
@@ -1344,7 +1360,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record and change state in grouped mode", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.kanban_state = {
+        serverData.models.partner.fields.kanban_state = {
             string: "Kanban State",
             type: "selection",
             selection: [
@@ -1521,12 +1537,12 @@ QUnit.module("Views", (hooks) => {
 
             await nextTick();
             assert.strictEqual(
-                this.data.partner.records.length,
+                serverData.models.partner.records.length,
                 5,
                 "should have created a partner"
             );
             assert.strictEqual(
-                _.last(this.data.partner.records).name,
+                _.last(serverData.models.partner.records).name,
                 "new partner",
                 "should have correct name"
             );
@@ -1756,7 +1772,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(13);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
@@ -1872,7 +1888,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(13);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 foo: function (obj) {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
@@ -2363,9 +2379,13 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.editInput($quickCreate.find("input"), "new partner");
         await testUtils.dom.click($quickCreate.find("button.o_kanban_edit"));
 
-        assert.strictEqual(this.data.partner.records.length, 5, "should have created a partner");
         assert.strictEqual(
-            _.last(this.data.partner.records).name,
+            serverData.models.partner.records.length,
+            5,
+            "should have created a partner"
+        );
+        assert.strictEqual(
+            _.last(serverData.models.partner.records).name,
             "new partner",
             "should have correct name"
         );
@@ -2934,14 +2954,14 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[0].date = "2017-01-08";
-            this.data.partner.records[1].date = "2017-01-09";
-            this.data.partner.records[2].date = "2017-01-08";
-            this.data.partner.records[3].date = "2017-01-10";
-            this.data.partner.records[0].datetime = "2017-01-08 10:55:05";
-            this.data.partner.records[1].datetime = "2017-01-09 11:31:10";
-            this.data.partner.records[2].datetime = "2017-01-08 09:20:25";
-            this.data.partner.records[3].datetime = "2017-01-10 08:05:51";
+            serverData.models.partner.records[0].date = "2017-01-08";
+            serverData.models.partner.records[1].date = "2017-01-09";
+            serverData.models.partner.records[2].date = "2017-01-08";
+            serverData.models.partner.records[3].date = "2017-01-10";
+            serverData.models.partner.records[0].datetime = "2017-01-08 10:55:05";
+            serverData.models.partner.records[1].datetime = "2017-01-09 11:31:10";
+            serverData.models.partner.records[2].datetime = "2017-01-08 09:20:25";
+            serverData.models.partner.records[3].datetime = "2017-01-10 08:05:51";
 
             const kanban = await makeView({
                 type: "kanban",
@@ -3594,9 +3614,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("many2many_tags in kanban views", async function (assert) {
         assert.expect(12);
 
-        this.data.partner.records[0].category_ids = [6, 7];
-        this.data.partner.records[1].category_ids = [7, 8];
-        this.data.category.records.push({
+        serverData.models.partner.records[0].category_ids = [6, 7];
+        serverData.models.partner.records[1].category_ids = [7, 8];
+        serverData.models.category.records.push({
             id: 8,
             name: "hello",
             color: 0,
@@ -3688,7 +3708,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Do not open record when clicking on `a` with `href`", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records = [{ id: 1, foo: "yop" }];
+        serverData.models.partner.records = [{ id: 1, foo: "yop" }];
 
         const kanban = await makeView({
             type: "kanban",
@@ -3751,7 +3771,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("o2m loaded in only one batch", async function (assert) {
         assert.expect(9);
 
-        this.data.subtask = {
+        serverData.models.subtask = {
             fields: {
                 name: { string: "Name", type: "char" },
             },
@@ -3760,13 +3780,13 @@ QUnit.module("Views", (hooks) => {
                 { id: 2, name: "subtask #2" },
             ],
         };
-        this.data.partner.fields.subtask_ids = {
+        serverData.models.partner.fields.subtask_ids = {
             string: "Subtasks",
             type: "one2many",
             relation: "subtask",
         };
-        this.data.partner.records[0].subtask_ids = [1];
-        this.data.partner.records[1].subtask_ids = [2];
+        serverData.models.partner.records[0].subtask_ids = [1];
+        serverData.models.partner.records[1].subtask_ids = [2];
 
         const kanban = await makeView({
             type: "kanban",
@@ -3840,9 +3860,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("fetch reference in only one batch", async function (assert) {
         assert.expect(9);
 
-        this.data.partner.records[0].ref_product = "product,3";
-        this.data.partner.records[1].ref_product = "product,5";
-        this.data.partner.fields.ref_product = {
+        serverData.models.partner.records[0].ref_product = "product,3";
+        serverData.models.partner.records[1].ref_product = "product,5";
+        serverData.models.partner.fields.ref_product = {
             string: "Reference Field",
             type: "reference",
         };
@@ -3946,7 +3966,7 @@ QUnit.module("Views", (hooks) => {
         const resequenceDef = testUtils.makeTestPromise();
 
         const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
-        this.data.partner.fields.sequence = { type: "number", string: "Sequence" };
+        serverData.models.partner.fields.sequence = { type: "number", string: "Sequence" };
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4035,7 +4055,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("prevent drag and drop of record if grouped by readonly", async function (assert) {
         assert.expect(12);
 
-        this.data.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.foo.readonly = true;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4115,14 +4135,14 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("prevent drag and drop if grouped by date/datetime field", async function (assert) {
         assert.expect(10);
 
-        this.data.partner.records[0].date = "2017-01-08";
-        this.data.partner.records[1].date = "2017-01-09";
-        this.data.partner.records[2].date = "2017-02-08";
-        this.data.partner.records[3].date = "2017-02-10";
-        this.data.partner.records[0].datetime = "2017-01-08 10:55:05";
-        this.data.partner.records[1].datetime = "2017-01-09 11:31:10";
-        this.data.partner.records[2].datetime = "2017-02-08 09:20:25";
-        this.data.partner.records[3].datetime = "2017-02-10 08:05:51";
+        serverData.models.partner.records[0].date = "2017-01-08";
+        serverData.models.partner.records[1].date = "2017-01-09";
+        serverData.models.partner.records[2].date = "2017-02-08";
+        serverData.models.partner.records[3].date = "2017-02-10";
+        serverData.models.partner.records[0].datetime = "2017-01-08 10:55:05";
+        serverData.models.partner.records[1].datetime = "2017-01-09 11:31:10";
+        serverData.models.partner.records[2].datetime = "2017-02-08 09:20:25";
+        serverData.models.partner.records[3].datetime = "2017-02-10 08:05:51";
 
         const kanban = await makeView({
             type: "kanban",
@@ -4212,8 +4232,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("prevent drag and drop if grouped by many2many field", async function (assert) {
         assert.expect(13);
 
-        this.data.partner.records[0].category_ids = [6, 7];
-        this.data.partner.records[3].category_ids = [7];
+        serverData.models.partner.records[0].category_ids = [6, 7];
+        serverData.models.partner.records[3].category_ids = [7];
 
         const kanban = await makeView({
             type: "kanban",
@@ -4320,14 +4340,14 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(14);
 
-            this.data.partner.records[0].date = "2017-01-08";
-            this.data.partner.records[1].date = "2017-01-09";
-            this.data.partner.records[2].date = "2017-02-08";
-            this.data.partner.records[3].date = "2017-02-10";
-            this.data.partner.records[0].datetime = "2017-01-08 10:55:05";
-            this.data.partner.records[1].datetime = "2017-01-09 11:31:10";
-            this.data.partner.records[2].datetime = "2017-02-08 09:20:25";
-            this.data.partner.records[3].datetime = "2017-02-10 08:05:51";
+            serverData.models.partner.records[0].date = "2017-01-08";
+            serverData.models.partner.records[1].date = "2017-01-09";
+            serverData.models.partner.records[2].date = "2017-02-08";
+            serverData.models.partner.records[3].date = "2017-02-10";
+            serverData.models.partner.records[0].datetime = "2017-01-08 10:55:05";
+            serverData.models.partner.records[1].datetime = "2017-01-09 11:31:10";
+            serverData.models.partner.records[2].datetime = "2017-02-08 09:20:25";
+            serverData.models.partner.records[3].datetime = "2017-02-10 08:05:51";
 
             const kanban = await makeView({
                 type: "kanban",
@@ -4480,7 +4500,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("prevent drag and drop of record if onchange fails", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             product_id: function (obj) {},
         };
 
@@ -4538,8 +4558,8 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("kanban view with default_group_by", async function (assert) {
         assert.expect(7);
-        this.data.partner.records.product_id = 1;
-        this.data.product.records.push({ id: 1, display_name: "third product" });
+        serverData.models.partner.records.product_id = 1;
+        serverData.models.product.records.push({ id: 1, display_name: "third product" });
 
         const readGroupCount = 0;
         const kanban = await makeView({
@@ -4816,7 +4836,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("auto fold group when reach the limit", async function (assert) {
         assert.expect(9);
 
-        const data = this.data;
+        const data = serverData.models;
         for (const i = 0; i < 12; i++) {
             data.product.records.push({
                 id: 8 + i,
@@ -5593,7 +5613,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             kanbanExamplesRegistry.add("test", {
                 ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
@@ -5651,7 +5671,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -5790,9 +5810,13 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             // add active field on partner model to have archive option
-            this.data.partner.fields.active = { string: "Active", type: "boolean", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "boolean",
+                default: true,
+            };
             // remove last records to have only one column
-            this.data.partner.records = this.data.partner.records.slice(0, 3);
+            serverData.models.partner.records = serverData.models.partner.records.slice(0, 3);
 
             const kanban = await makeView({
                 type: "kanban",
@@ -5816,7 +5840,7 @@ QUnit.module("Views", (hooks) => {
                 mockRPC: function (route, args) {
                     if (route === "/web/dataset/call_kw/partner/action_archive") {
                         const partnerIDS = args.args[0];
-                        const records = this.data.partner.records;
+                        const records = serverData.models.partner.records;
                         _.each(partnerIDS, function (partnerID) {
                             _.find(records, function (record) {
                                 return record.id === partnerID;
@@ -5846,9 +5870,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("no content helper when no data", async function (assert) {
         assert.expect(3);
 
-        const records = this.data.partner.records;
+        const records = serverData.models.partner.records;
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -5876,7 +5900,7 @@ QUnit.module("Views", (hooks) => {
             "should have rendered no content helper from action"
         );
 
-        this.data.partner.records = records;
+        serverData.models.partner.records = records;
         await kanban.reload();
 
         assert.containsNone(
@@ -5929,7 +5953,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("no nocontent helper for grouped kanban with no records", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -5968,7 +5992,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -6023,7 +6047,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -6074,7 +6098,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("remove nocontent helper after adding a record", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -6132,7 +6156,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("remove nocontent helper when adding a record", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -6189,7 +6213,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -6243,7 +6267,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.records = [];
+            serverData.models.partner.records = [];
 
             const kanban = await makeView({
                 type: "kanban",
@@ -6281,7 +6305,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty grouped kanban with sample data and no columns", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             arch: `
@@ -6496,7 +6520,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty kanban with sample data", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -6684,7 +6708,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method }) {
                 const result = await this._super(...arguments);
                 if (method === "web_read_group") {
-                    result.groups = this.data.product.records.map((r) => {
+                    result.groups = serverData.models.product.records.map((r) => {
                         return {
                             product_id: [r.id, r.display_name],
                             product_id_count: 0,
@@ -6834,7 +6858,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty grouped kanban with sample data: delete a column", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         let groups = [
             {
@@ -6909,7 +6933,7 @@ QUnit.module("Views", (hooks) => {
                 async mockRPC(route, { method }) {
                     const result = await this._super(...arguments);
                     if (method === "web_read_group") {
-                        result.groups = this.data.product.records.map((r) => {
+                        result.groups = serverData.models.product.records.map((r) => {
                             return {
                                 product_id: [r.id, r.display_name],
                                 product_id_count: 0,
@@ -6997,7 +7021,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("buttons with modifiers", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[1].bar = false; // so that test is more complete
+        serverData.models.partner.records[1].bar = false; // so that test is more complete
 
         const kanban = await makeView({
             type: "kanban",
@@ -7067,9 +7091,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("button executes action and check domain", async function (assert) {
         assert.expect(2);
 
-        const data = this.data;
+        const data = serverData.models;
         data.partner.fields.active = { string: "Active", type: "boolean", default: true };
-        for (const k in this.data.partner.records) {
+        for (const k in serverData.models.partner.records) {
             data.partner.records[k].active = true;
         }
 
@@ -7147,8 +7171,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("rendering date and datetime", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].date = "2017-01-25";
-        this.data.partner.records[1].datetime = "2016-12-12 10:55:05";
+        serverData.models.partner.records[0].date = "2017-01-25";
+        serverData.models.partner.records[1].datetime = "2016-12-12 10:55:05";
 
         const kanban = await makeView({
             type: "kanban",
@@ -7183,7 +7207,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("evaluate conditions on relational fields", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].product_id = false;
+        serverData.models.partner.records[0].product_id = false;
 
         const kanban = await makeView({
             type: "kanban",
@@ -7221,7 +7245,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("resequence columns in grouped by m2o", async function (assert) {
         assert.expect(6);
-        this.data.product.fields.sequence = { string: "Sequence", type: "integer" };
+        serverData.models.product.fields.sequence = { string: "Sequence", type: "integer" };
 
         const envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         const kanban = await makeView({
@@ -7302,7 +7326,7 @@ QUnit.module("Views", (hooks) => {
 
         let writeOnColor;
 
-        this.data.category.records[0].color = 12;
+        serverData.models.category.records[0].color = 12;
 
         const kanban = await makeView({
             type: "kanban",
@@ -7430,10 +7454,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("load more records in column with x2many", async function (assert) {
         assert.expect(10);
 
-        this.data.partner.records[0].category_ids = [7];
-        this.data.partner.records[1].category_ids = [];
-        this.data.partner.records[2].category_ids = [6];
-        this.data.partner.records[3].category_ids = [];
+        serverData.models.partner.records[0].category_ids = [7];
+        serverData.models.partner.records[1].category_ids = [];
+        serverData.models.partner.records[2].category_ids = [6];
+        serverData.models.partner.records[3].category_ids = [];
 
         // record [2] will be loaded after
 
@@ -7499,7 +7523,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("update buttons after column creation", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -7531,7 +7555,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("group_by_tooltip option when grouping on a many2one", async function (assert) {
         assert.expect(12);
-        delete this.data.partner.records[3].product_id;
+        delete serverData.models.partner.records[3].product_id;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -7610,7 +7634,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("move a record then put it again in the same column", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const kanban = await makeView({
             type: "kanban",
@@ -7694,7 +7718,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("resequence a record twice", async function (assert) {
         assert.expect(10);
 
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
 
         const nbResequence = 0;
         const kanban = await makeView({
@@ -7802,10 +7826,10 @@ QUnit.module("Views", (hooks) => {
 
         const MyWidget = Widget.extend({
             init: function (parent, dataPoint) {
-                this.data = dataPoint.data;
+                serverData.models = dataPoint.data;
             },
             start: function () {
-                this.el.querySelectorel.text(JSON.stringify(this.data));
+                this.el.querySelectorel.text(JSON.stringify(serverData.models));
             },
         });
         widgetRegistry.add("test", MyWidget);
@@ -7951,7 +7975,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             kanban,
             ".o_kanban_counter",
-            this.data.product.records.length,
+            serverData.models.product.records.length,
             "kanban counters should have been created"
         );
 
@@ -7965,7 +7989,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip('column progressbars: "false" bar is clickable', async function (assert) {
         assert.expect(8);
 
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 5,
             bar: true,
             foo: false,
@@ -8033,7 +8057,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip('column progressbars: "false" bar with sum_field', async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 5,
             bar: true,
             foo: false,
@@ -8243,7 +8267,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records.push(
+            serverData.models.partner.records.push(
                 { id: 5, bar: true, foo: "blork" },
                 { id: 6, bar: true, foo: "blork" },
                 { id: 7, bar: true, foo: "blork" }
@@ -8298,7 +8322,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(4);
 
         // add active field on partner model and make all records active
-        this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+        serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
         const kanban = await makeView({
             type: "kanban",
@@ -8320,13 +8344,13 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner/action_archive") {
                     const partnerIDS = args.args[0];
-                    const records = this.data.partner.records;
+                    const records = serverData.models.partner.records;
                     _.each(partnerIDS, function (partnerID) {
                         _.find(records, function (record) {
                             return record.id === partnerID;
                         }).active = false;
                     });
-                    this.data.partner.records[0].active;
+                    serverData.models.partner.records[0].active;
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -8375,7 +8399,11 @@ QUnit.module("Views", (hooks) => {
             assert.expect(2);
 
             // add active field on partner model and make all records active
-            this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+            serverData.models.partner.fields.active = {
+                string: "Active",
+                type: "char",
+                default: true,
+            };
 
             const kanban = await makeView({
                 type: "kanban",
@@ -8397,13 +8425,13 @@ QUnit.module("Views", (hooks) => {
                 mockRPC: function (route, args) {
                     if (route === "/web/dataset/call_kw/partner/action_archive") {
                         const partnerIDS = args.args[0];
-                        const records = this.data.partner.records;
+                        const records = serverData.models.partner.records;
                         _.each(partnerIDS, function (partnerID) {
                             _.find(records, function (record) {
                                 return record.id === partnerID;
                             }).active = false;
                         });
-                        this.data.partner.records[0].active;
+                        serverData.models.partner.records[0].active;
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
@@ -8521,7 +8549,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("drag & drop records grouped by m2o with progressbar", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].product_id = false;
+        serverData.models.partner.records[0].product_id = false;
 
         const kanban = await makeView({
             type: "kanban",
@@ -8685,10 +8713,10 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             // Add a sequence number and initialize
-            this.data.partner.fields = Object.assign(this.data.partner.fields, {
+            serverData.models.partner.fields = Object.assign(serverData.models.partner.fields, {
                 sequence: { type: "integer" },
             });
-            this.data.partner.records.forEach((el, i) => {
+            serverData.models.partner.records.forEach((el, i) => {
                 el.sequence = i;
             });
 
@@ -9024,7 +9052,7 @@ QUnit.module("Views", (hooks) => {
         const images = kanban.el.querySelectorAll("img");
         const placeholders = [];
         for (const [index, img] of images.entries()) {
-            if (img.dataset.src.indexOf(this.data.partner.records[index].image) === -1) {
+            if (img.dataset.src.indexOf(serverData.models.partner.records[index].image) === -1) {
                 // Then we display a placeholder
                 placeholders.push(img);
             }
@@ -9032,7 +9060,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             placeholders.length,
-            this.data.partner.records.length - 1,
+            serverData.models.partner.records.length - 1,
             "partner with no image should display the placeholder"
         );
     });
@@ -9069,14 +9097,14 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             imageOnRecord.length,
-            this.data.partner.records.length - 1,
+            serverData.models.partner.records.length - 1,
             "display image by url when requested for another record"
         );
     });
 
     QUnit.skip("test displaying image from m2o field (m2o field not set)", async function (assert) {
         assert.expect(2);
-        this.data.foo_partner = {
+        serverData.models.foo_partner = {
             fields: {
                 name: { string: "Foo Name", type: "char" },
                 partner_id: { string: "Partner", type: "many2one", relation: "partner" },
@@ -9230,7 +9258,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("quick_create on grouped kanban without column", async function (assert) {
         assert.expect(1);
-        this.data.partner.records = [];
+        serverData.models.partner.records = [];
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -9360,7 +9388,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const data = this.data;
+            const data = serverData.models;
             data.partner.records[1].state = "abc";
 
             const kanban = await makeView({
@@ -9996,7 +10024,7 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
                 session: {
-                    currencies: _.indexBy(this.data.currency.records, "id"),
+                    currencies: _.indexBy(serverData.models.currency.records, "id"),
                 },
             });
 
@@ -10052,8 +10080,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("kanban with isHtmlEmpty method", async function (assert) {
         assert.expect(3);
 
-        this.data.product.fields.description = { string: "Description", type: "html" };
-        this.data.product.records.push(
+        serverData.models.product.fields.description = { string: "Description", type: "html" };
+        serverData.models.product.records.push(
             {
                 id: 11,
                 display_name: "product 11",
