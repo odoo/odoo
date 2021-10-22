@@ -97,6 +97,9 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         })
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+            website_so = self.website.sale_get_order()
+            self.assertEqual(website_so.order_line.product_id.virtual_available, 10, "This quantity should be based on SO's warehouse")
+
             values = so._cart_update(product_id=self.product_A.id, line_id=so.order_line.id, set_qty=20)
             self.assertTrue(values.get('warning', False))
             self.assertEqual(values.get('quantity'), 10)
