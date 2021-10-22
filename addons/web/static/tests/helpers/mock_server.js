@@ -79,7 +79,7 @@ export class MockServer {
     async performRPC(route, args) {
         args = JSON.parse(JSON.stringify(args));
         if (this.debug) {
-            console.log("%c[rpc] request " + route, "color: blue; font-weight: bold;", args);
+            console.log("%c[rpc] request " + route, "color: #66e; font-weight: bold;", args);
             args = JSON.parse(JSON.stringify(args));
         }
         let result;
@@ -100,7 +100,7 @@ export class MockServer {
         if (this.debug) {
             console.log(
                 "%c[rpc] response" + route,
-                "color: blue; font-weight: bold;",
+                "color: #66e; font-weight: bold;",
                 JSON.parse(resultString)
             );
         }
