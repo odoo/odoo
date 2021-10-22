@@ -11,7 +11,7 @@
                                 <span class="input-type">
                                     Card Number:
                                 </span>
-                                <div class="input-type">
+                                <div class="input-field">
                                      <input style="text-align:center" type="text" name="x_card_number" t-model="state.x_card_number"/>
                                 </div>
                             </div>
@@ -21,6 +21,14 @@
                                 </span>
                                 <div class="input-field">
                                      <input style="text-align:center" type="text" name="x_card_name" t-model="state.x_card_name"/>
+                                </div>
+                            </div>
+                            <div class="cardholder_name">
+                                <span class="input-type">
+                                    Cardholder Name:
+                                </span>
+                                <div class="input-field">
+                                     <input style="text-align:center" type="text" name="cardholder_name" t-model="state.cardholder_name"/>
                                 </div>
                             </div>
                             <span t-if="state.inputHasError" class="error-message">

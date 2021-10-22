@@ -11,11 +11,12 @@ odoo.define('fg_custom.FgCardDetailsPopup', function (require) {
             this.state = owl.hooks.useState({
                 x_card_number: '',
                 x_card_name: '',
+                cardholder_name:'',
                 inputHasError: false,
             });
         }
         confirm() {
-            if (this.state.x_card_number == '' || this.state.x_card_name == '') {
+            if (this.state.x_card_number == '' || this.state.x_card_name == '' || this.state.cardholder_name == '') {
                 this.errorMessage = this.env._t('All fields are required.');
                 this.state.inputHasError = true;
                 return;
@@ -27,6 +28,7 @@ odoo.define('fg_custom.FgCardDetailsPopup', function (require) {
             return {
                 x_card_number: this.state.x_card_number,
                 x_card_name: this.state.x_card_name,
+                cardholder_name: this.state.cardholder_name,
                 inputHasError: this.state.inputHasError,
             };
         }

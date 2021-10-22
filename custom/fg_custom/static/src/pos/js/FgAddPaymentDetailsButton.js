@@ -82,21 +82,22 @@ odoo.define('fg_custom.FgAddPaymentDetailsButton', function (require) {
                 var popupTitle = "Card Details"
                 var currentOrder = this.env.pos.get_order();this.env.pos.get_order();
                 if(currentOrder.selected_paymentline){
-                    if(currentOrder.selected_paymentline.name == 'Debit Card'){
+                    if(currentOrder.selected_paymentline.name == 'Debit Card' || currentOrder.selected_paymentline.name == 'Credit Card'){
                         const { confirmed, payload } = await this.showPopup('FgCardDetailsPopup');
                         if (!confirmed) {
                             this.trigger('delete-payment-line', { cid: currentOrder.selected_paymentline.cid })
                             return;
                         };
-                        const { x_card_number, x_card_name } = payload;
+                        const { x_card_number, x_card_name, cardholder_name } = payload;
                         currentOrder.selected_paymentline.x_card_number = x_card_number;
                         currentOrder.selected_paymentline.x_card_name = x_card_name;
+                        currentOrder.selected_paymentline.cardholder_name = cardholder_name;
                         currentOrder.trigger('change', currentOrder); // needed so that export_to_JSON gets triggered
                         this.render();
                     }else{
                         Gui.showPopup("ErrorPopup", {
                            title: this.env._t(popupTitle),
-                           body: this.env._t('Selected payment should be Debit Card'),
+                           body: this.env._t('Selected payment should be Debit/Credit Card'),
                        });
                     }
                 }else{
