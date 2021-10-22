@@ -168,17 +168,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             module_log_level = logging.INFO
         _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
 
+        new_install = package.state == 'to install'
         if needs_update:
-            if package.name != 'base':
-                registry.setup_models(cr)
-            migrations.migrate_module(package, 'pre')
+            if not new_install:
+                if package.name != 'base':
+                    registry.setup_models(cr)
+                migrations.migrate_module(package, 'pre')
             if package.name != 'base':
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 env['base'].flush()
 
         load_openerp_module(package.name)
 
-        new_install = package.state == 'to install'
         if new_install:
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
