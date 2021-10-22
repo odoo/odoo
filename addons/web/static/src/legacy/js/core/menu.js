@@ -34,6 +34,15 @@ export async function initAutoMoreMenu(el, options) {
     var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
     var extraItemsToggle = null;
     let debounce;
+    const afterFontsloading = new Promise((resolve) => {
+        if (document.fonts) {
+            document.fonts.ready.then(resolve);
+        } else {
+            // IE: don't wait more than max .15s.
+            setTimeout(resolve, 150);
+        }
+    });
+    afterFontsloading.then(_adapt);
 
     if (options.images.length) {
         await _afterImagesLoading(options.images);
@@ -45,7 +54,6 @@ export async function initAutoMoreMenu(el, options) {
         debounce = setTimeout(_adapt, 250);
     };
     window.addEventListener('resize', debouncedAdapt);
-    _adapt();
 
     el.addEventListener('dom:autoMoreMenu:adapt', _adapt);
     el.addEventListener('dom:autoMoreMenu:destroy', destroy, {once: true});
