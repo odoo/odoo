@@ -41,6 +41,10 @@ export class KanbanRenderer extends Component {
         useExternalListener(window, "click", this.onWindowClick);
     }
 
+    get context() {
+        return this.props.context;
+    }
+
     get progress() {
         return this.props.list.model.progress;
     }
