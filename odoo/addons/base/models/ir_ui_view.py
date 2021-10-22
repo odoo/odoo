@@ -1974,13 +1974,13 @@ actual arch.
     def _render_template(self, template, values=None, engine='ir.qweb'):
         return self.browse(self.get_view_id(template))._render(values, engine)
 
-    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
         assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
-        return self.env[engine]._render(self.id, qcontext)
+        return self.env[engine]._render(self.id, qcontext, **(options or {}))
 
     @api.model
     def _prepare_qcontext(self):
