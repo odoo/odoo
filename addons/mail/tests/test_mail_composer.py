@@ -20,7 +20,7 @@ class TestMailComposer(MailCommon):
         <!--[if mso]>
             <i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i>
         <![endif]-->
-        A link for you!
+        A link for you! <!-- my favorite example -->
         <!--[if mso]>
             <i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i>
         <![endif]-->
