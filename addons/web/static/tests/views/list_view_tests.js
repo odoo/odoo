@@ -1267,7 +1267,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("basic grouped list rendering 2 cols without selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 2 cols without selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -1286,7 +1286,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("basic grouped list rendering 3 cols without selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 3 cols without selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -1298,19 +1298,14 @@ QUnit.module("Views", (hooks) => {
             hasSelectors: false,
         });
 
+        assert.containsN(list.el.querySelector(".o_group_header"), "th", 2);
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            2,
-            "group header should have exactly 2 columns"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "2",
-            "the first header should  span two columns"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "2"
         );
     });
 
-    QUnit.skip("basic grouped list rendering 2 col with selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 2 col with selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -1322,19 +1317,14 @@ QUnit.module("Views", (hooks) => {
             hasSelectors: true,
         });
 
+        assert.containsN(list.el.querySelector(".o_group_header"), "th", 2);
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            2,
-            "group header should have exactly 2 columns"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "2",
-            "the header should not span the whole table"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "2"
         );
     });
 
-    QUnit.skip("basic grouped list rendering 3 cols with selector", async function (assert) {
+    QUnit.test("basic grouped list rendering 3 cols with selector", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -1346,19 +1336,14 @@ QUnit.module("Views", (hooks) => {
             hasSelectors: true,
         });
 
+        assert.containsN(list.el.querySelector(".o_group_header"), "th", 2);
         assert.strictEqual(
-            $(list.el).find(".o_group_header:first").children().length,
-            2,
-            "group header should have exactly 2 columns"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_group_header:first th").attr("colspan"),
-            "3",
-            "the header should not span the whole table"
+            list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+            "3"
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "basic grouped list rendering 7 cols with aggregates and selector",
         async function (assert) {
             assert.expect(4);
@@ -1380,24 +1365,19 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
+            assert.containsN(list.el.querySelector(".o_group_header"), "th,td", 5);
             assert.strictEqual(
-                $(list.el).find(".o_group_header:first").children().length,
-                5,
-                "group header should have exactly 5 columns (one before first aggregate, one after last aggregate, and all in between"
-            );
-            assert.strictEqual(
-                $(list.el).find(".o_group_header:first th").attr("colspan"),
-                "3",
-                "header name should span on the two first fields + selector (colspan 3)"
+                list.el.querySelector(".o_group_header th").getAttribute("colspan"),
+                "3"
             );
             assert.containsN(
-                list,
-                ".o_group_header:first td",
+                list.el.querySelector(".o_group_header"),
+                "td",
                 3,
                 "there should be 3 tds (aggregates + fields in between)"
             );
             assert.strictEqual(
-                $(list.el).find(".o_group_header:first th:last").attr("colspan"),
+                list.el.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
                 "2",
                 "header last cell should span on the two last fields (to give space for the pager) (colspan 2)"
             );

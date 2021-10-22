@@ -1,11 +1,14 @@
 /* @odoo-module */
 
 import { Domain } from "@web/core/domain";
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
+
+const formatterRegistry = registry.category("formatters");
 
 const LOADED_GROUP_LIMIT = 10;
 const DEFAULT_LIMIT = 40;
@@ -475,11 +478,12 @@ class DataList extends DataPoint {
                     const value = groupData[key];
                     switch (key) {
                         case this.groupByField.name: {
-                            let [groupValue, groupDisplay] = Array.isArray(value)
-                                ? value
-                                : [value, value];
-                            if (isRelational(this.fields[this.groupByField.name])) {
-                                groupValue = groupValue || false;
+                            let formatter = formatterRegistry.get(this.groupByField.type, false);
+                            let groupDisplay = formatter ? formatter(value) : value;
+                            let groupValue = value;
+                            if (isRelational(this.groupByField)) {
+                                // many2many or many2one -> in both cases the group's value is a many2one value
+                                groupValue = groupValue ? groupValue[0] : false;
                                 groupDisplay = groupDisplay || _t("Undefined");
                             }
                             Object.assign(groupParams, { groupValue, groupDisplay });
@@ -499,7 +503,9 @@ class DataList extends DataPoint {
                         }
                         default: {
                             if (key in this.fields) {
-                                groupParams.groupAggregates[key] = value;
+                                let formatter = formatterRegistry.get(this.fields[key].type, false);
+                                const formattedValue = formatter ? formatter(value) : value;
+                                groupParams.groupAggregates[key] = formattedValue;
                             }
                         }
                     }
