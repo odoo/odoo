@@ -58,14 +58,13 @@ def resolve_mro(model, name, predicate):
         classes are ignored.
     """
     result = []
-    for cls in type(model).mro():
-        if not is_registry_class(cls):
-            value = cls.__dict__.get(name, Default)
-            if value is Default:
-                continue
-            if not predicate(value):
-                break
-            result.append(value)
+    for cls in model._model_classes:
+        value = cls.__dict__.get(name, Default)
+        if value is Default:
+            continue
+        if not predicate(value):
+            break
+        result.append(value)
     return result
 
 
@@ -4100,6 +4099,6 @@ def apply_required(model, field_name):
 # pylint: disable=wrong-import-position
 from .exceptions import AccessError, MissingError, UserError
 from .models import (
-    check_pg_name, expand_ids, is_definition_class, is_registry_class,
+    check_pg_name, expand_ids, is_definition_class,
     BaseModel, IdType, NewId, PREFETCH_MAX,
 )
