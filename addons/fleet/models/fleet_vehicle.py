@@ -264,6 +264,9 @@ class FleetVehicle(models.Model):
             for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
                 vehicle.create_driver_history(vals)
                 if vehicle.driver_id:
+                    # unsubscribe old driver in case it was subscribed
+                    partners_to_unsubscribe = vehicle.driver_id.ids
+                    vehicle.message_unsubscribe(partner_ids=partners_to_unsubscribe)
                     vehicle.activity_schedule(
                         'mail.mail_activity_data_todo',
                         user_id=vehicle.manager_id.id or self.env.user.id,
