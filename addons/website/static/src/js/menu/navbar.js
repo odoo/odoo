@@ -40,13 +40,13 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      */
     start: function () {
         var self = this;
-        initAutoMoreMenu(this.el.querySelector('ul.o_menu_sections'), {
+        initAutoMoreMenu(this.el.querySelector('.o_menu_sections'), {
             maxWidth: function () {
                 // The navbar contains different elements in community and
                 // enterprise, so we check for both of them here only
                 return self.$el.width()
                     - (self.$('.o_menu_systray').outerWidth(true) || 0)
-                    - (self.$('ul#oe_applications').outerWidth(true) || 0)
+                    - (self.$('#oe_applications').outerWidth(true) || 0)
                     - (self.$('.o_menu_toggle').outerWidth(true) || 0)
                     - (self.$('.o_menu_brand').outerWidth(true) || 0);
             },
