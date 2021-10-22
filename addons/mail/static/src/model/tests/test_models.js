@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
-function factoryAddress(dependencies) {
-    class Address extends dependencies['mail.model'] {
-    }
-
-    Address.fields = {
+registerModel({
+    name: 'test.address',
+    identifyingFields: ['id'],
+    fields: {
         id: attr({
             readonly: true,
             required: true,
@@ -17,17 +16,13 @@ function factoryAddress(dependencies) {
         contact: one2one('test.contact', {
             inverse: 'address',
         }),
-    };
-    Address.identifyingFields = ['id'];
-    Address.modelName = 'test.address';
+    },
+});
 
-    return Address;
-}
-
-function factoryContact(dependencies) {
-    class Contact extends dependencies['mail.model'] {}
-
-    Contact.fields = {
+registerModel({
+    name: 'test.contact',
+    identifyingFields: ['id'],
+    fields: {
         id: attr({
             readonly: true,
             required: true,
@@ -47,33 +42,24 @@ function factoryContact(dependencies) {
         tasks: one2many('test.task', {
             inverse: 'responsible'
         }),
-    };
-    Contact.identifyingFields = ['id'];
-    Contact.modelName = 'test.contact';
+    },
+});
 
-    return Contact;
-}
-
-function factoryHobby(dependencies) {
-    class Hobby extends dependencies['mail.model'] {}
-
-    Hobby.fields = {
+registerModel({
+    name: 'test.hobby',
+    identifyingFields: ['description'],
+    fields: {
         description: attr({
             readonly: true,
             required: true,
         }),
-    };
-    Hobby.identifyingFields = ['description'];
-    Hobby.modelName = 'test.hobby';
+    },
+});
 
-    return Hobby;
-}
-
-function factoryTask(dependencies) {
-    class Task extends dependencies['mail.model'] {
-    }
-
-    Task.fields = {
+registerModel({
+    name: 'test.task',
+    identifyingFields: ['id'],
+    fields: {
         id: attr({
             readonly: true,
             required: true,
@@ -85,15 +71,5 @@ function factoryTask(dependencies) {
         responsible: many2one('test.contact', {
             inverse: 'tasks'
         }),
-    };
-    Task.identifyingFields = ['id'];
-    Task.modelName = 'test.task';
-
-    return Task;
-}
-
-registerNewModel('test.address', factoryAddress);
-registerNewModel('test.contact', factoryContact);
-registerNewModel('test.hobby', factoryHobby);
-registerNewModel('test.task', factoryTask);
-
+    },
+});

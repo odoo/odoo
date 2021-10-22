@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-function factory(dependencies) {
-
-    class ChannelCommand extends dependencies['mail.model'] {
-
+registerModel({
+    name: 'mail.channel_command',
+    identifyingFields: ['name'],
+    modelMethods: {
         /**
          * Fetches channel commands matching the given search term to extend the
          * JS knowledge and to update the suggestion list accordingly.
@@ -15,26 +15,23 @@ function factory(dependencies) {
          * In practice all channel commands are already fetched at init so this
          * method does nothing.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
-        static fetchSuggestions(searchTerm, { thread } = {}) {}
-
+        fetchSuggestions(searchTerm, { thread } = {}) {},
         /**
          * Returns a sort function to determine the order of display of channel
          * commands in the suggestion list.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
-        static getSuggestionSortFunction(searchTerm, { thread } = {}) {
+        getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
                 const isATypeSpecific = a.channel_types;
@@ -61,19 +58,17 @@ function factory(dependencies) {
                 }
                 return a.id - b.id;
             };
-        }
-
+        },
         /**
          * Returns channel commands that match the given search term.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.channel_command[], mail.channel_command[]]}
          */
-        static searchSuggestions(searchTerm, { thread } = {}) {
+        searchSuggestions(searchTerm, { thread } = {}) {
             if (thread.model !== 'mail.channel') {
                 // channel commands are channel specific
                 return [[]];
@@ -88,12 +83,12 @@ function factory(dependencies) {
                 }
                 return true;
             })];
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Executes this command on the given `mail.channel`.
          *
-         * @static
          * @param {Object} param0
          * @param {mail.thread} param0.channel
          * @param {Object} [param0.body='']
@@ -105,8 +100,7 @@ function factory(dependencies) {
                 args: [[channel.id]],
                 kwargs: { body },
             });
-        }
-
+        },
         /**
          * Returns the text that identifies this channel command in a mention.
          *
@@ -114,11 +108,9 @@ function factory(dependencies) {
          */
         getMentionText() {
             return this.name;
-        }
-
-    }
-
-    ChannelCommand.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines on which channel types `this` is available.
          * Type of the channel (e.g. 'chat', 'channel' or 'groups')
@@ -146,11 +138,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    ChannelCommand.identifyingFields = ['name'];
-    ChannelCommand.modelName = 'mail.channel_command';
-
-    return ChannelCommand;
-}
-
-registerNewModel('mail.channel_command', factory);
+    },
+});

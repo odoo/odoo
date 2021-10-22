@@ -1,22 +1,17 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class FollowerSubtype extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.follower_subtype',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @returns {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('default' in data) {
                 data2.isDefault = data.default;
@@ -40,11 +35,9 @@ function factory(dependencies) {
                 data2.sequence = data.sequence;
             }
             return data2;
-        }
-
-    }
-
-    FollowerSubtype.fields = {
+        },
+    },
+    fields: {
         id: attr({
             readonly: true,
             required: true,
@@ -61,11 +54,5 @@ function factory(dependencies) {
         // AKU FIXME: use relation instead
         resModel: attr(),
         sequence: attr(),
-    };
-    FollowerSubtype.identifyingFields = ['id'];
-    FollowerSubtype.modelName = 'mail.follower_subtype';
-
-    return FollowerSubtype;
-}
-
-registerNewModel('mail.follower_subtype', factory);
+    },
+});

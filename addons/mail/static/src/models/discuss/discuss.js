@@ -1,47 +1,37 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Discuss extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.discuss',
+    identifyingFields: ['messaging'],
+    lifecycleHooks: {
         _created() {
-            super._created();
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickStartAMeetingButton = this.onClickStartAMeetingButton.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         clearIsAddingItem() {
             this.update({
                 addingChannelValue: "",
                 isAddingChannel: false,
                 isAddingChat: false,
             });
-        }
-
+        },
         /**
          * Close the discuss app. Should reset its internal state.
          */
         close() {
             this.update({ isOpen: false });
-        }
-
+        },
         focus() {
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
             }
-        }
-
+        },
         /**
          * @param {Event} ev
          * @param {Object} ui
@@ -70,8 +60,7 @@ function factory(dependencies) {
                 channel.update({ isServerPinned: true });
                 channel.open();
             }
-        }
-
+        },
         /**
          * @param {Object} req
          * @param {string} req.term
@@ -107,8 +96,7 @@ function factory(dependencies) {
                 special: 'private'
             });
             res(items);
-        }
-
+        },
         /**
          * @param {Event} ev
          * @param {Object} ui
@@ -118,8 +106,7 @@ function factory(dependencies) {
         handleAddChatAutocompleteSelect(ev, ui) {
             this.messaging.openChat({ partnerId: ui.item.id });
             this.clearIsAddingItem();
-        }
-
+        },
         /**
          * @param {Object} req
          * @param {string} req.term
@@ -141,8 +128,7 @@ function factory(dependencies) {
                 keyword: value,
                 limit: 10,
             });
-        }
-
+        },
         /**
          * Handles click on the mobile "new chat" button.
          *
@@ -150,8 +136,7 @@ function factory(dependencies) {
          */
         onClickMobileNewChatButton(ev) {
             this.update({ isAddingChat: true });
-        }
-
+        },
         /**
          * Handles click on the mobile "new channel" button.
          *
@@ -159,8 +144,7 @@ function factory(dependencies) {
          */
         onClickMobileNewChannelButton(ev) {
             this.update({ isAddingChannel: true });
-        }
-
+        },
         /**
          * Handles click on the "Start a meeting" button.
          *
@@ -177,8 +161,7 @@ function factory(dependencies) {
                 return;
             }
             this.threadView.topbar.openInvitePopoverView();
-        }
-
+        },
         /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
@@ -199,9 +182,7 @@ function factory(dependencies) {
             if (this.messaging.device.isMobile && thread.channel_type) {
                 this.update({ activeMobileNavbarTabId: thread.channel_type });
             }
-        }
-
-
+        },
         /**
          * Opens the given thread in Discuss, and opens Discuss if necessary.
          *
@@ -226,16 +207,14 @@ function factory(dependencies) {
                     },
                 });
             }
-        }
-
+        },
         /**
          * @param {mail.thread} thread
          * @returns {string}
          */
         threadToActiveId(thread) {
             return `${thread.model}_${thread.id}`;
-        }
-
+        },
         /**
          * @param {string} value
          */
@@ -246,12 +225,7 @@ function factory(dependencies) {
                 this.categoryChannel.open();
             }
             this.update({ sidebarQuickSearchValue: value });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {string|undefined}
@@ -261,8 +235,7 @@ function factory(dependencies) {
                 return clear();
             }
             return this.threadToActiveId(this.thread);
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -272,8 +245,7 @@ function factory(dependencies) {
                 return "";
             }
             return this.addingChannelValue;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -292,8 +264,7 @@ function factory(dependencies) {
                 return false;
             }
             return true;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -303,8 +274,7 @@ function factory(dependencies) {
                 return false;
             }
             return this.isAddingChannel;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -314,8 +284,7 @@ function factory(dependencies) {
                 return false;
             }
             return this.isAddingChat;
-        }
-
+        },
         /**
          * Only pinned threads are allowed in discuss.
          *
@@ -326,8 +295,7 @@ function factory(dependencies) {
             if (!this.thread || !this.thread.isPinned) {
                 return unlink();
             }
-        }
-
+        },
         /**
          * @private
          * @returns {mail.thread_viewer}
@@ -339,10 +307,9 @@ function factory(dependencies) {
                 hasTopbar: true,
                 thread: this.thread ? link(this.thread) : unlink(),
             });
-        }
-    }
-
-    Discuss.fields = {
+        },
+    },
+    fields: {
         activeId: attr({
             compute: '_computeActiveId',
         }),
@@ -454,11 +421,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    Discuss.identifyingFields = ['messaging'];
-    Discuss.modelName = 'mail.discuss';
-
-    return Discuss;
-}
-
-registerNewModel('mail.discuss', factory);
+    },
+});

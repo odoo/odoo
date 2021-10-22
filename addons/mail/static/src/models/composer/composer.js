@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, replace, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Composer extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.composer',
+    identifyingFields: [['thread', 'messageViewInEditing']],
+    recordMethods: {
         /**
          * @private
          * @returns {mail.thread}
@@ -24,8 +20,7 @@ function factory(dependencies) {
                 return replace(this.thread);
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -35,16 +30,14 @@ function factory(dependencies) {
                 return false;
             }
             return !this.hasUploadingAttachment && !this.isPostingMessage;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasUploadingAttachment() {
             return this.attachments.some(attachment => attachment.isUploading);
-        }
-
+        },
         /**
          * Detects if mentioned partners are still in the composer text input content
          * and removes them if not.
@@ -69,8 +62,7 @@ function factory(dependencies) {
                 }
             }
             return unlink(unmentionedPartners);
-        }
-
+        },
         /**
          * Detects if mentioned channels are still in the composer text input content
          * and removes them if not.
@@ -95,8 +87,7 @@ function factory(dependencies) {
                 }
             }
             return unlink(unmentionedChannels);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
@@ -111,8 +102,7 @@ function factory(dependencies) {
                 }
             }
             return replace(recipients);
-        }
-
+        },
         /**
          * @private
          */
@@ -127,11 +117,9 @@ function factory(dependencies) {
                 textInputCursorStart: clear(),
                 textInputSelectionDirection: clear(),
             });
-        }
-
-    }
-
-    Composer.fields = {
+        },
+    },
+    fields: {
         activeThread: many2one('mail.thread', {
             compute: '_computeActiveThread',
             readonly: true,
@@ -215,11 +203,5 @@ function factory(dependencies) {
             inverse: 'composer',
             readonly: true,
         }),
-    };
-    Composer.identifyingFields = [['thread', 'messageViewInEditing']];
-    Composer.modelName = 'mail.composer';
-
-    return Composer;
-}
-
-registerNewModel('mail.composer', factory);
+    },
+});

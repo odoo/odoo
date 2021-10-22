@@ -1,34 +1,21 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class Device extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.device',
+    identifyingFields: ['messaging'],
+    lifecycleHooks: {
         _created() {
-            const res = super._created(...arguments);
             this._refresh();
             this._onResize = _.debounce(() => this._refresh(), 100);
-            return res;
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             window.removeEventListener('resize', this._onResize);
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Called when messaging is started.
          */
@@ -36,12 +23,7 @@ function factory(dependencies) {
             // TODO FIXME Not using this.env.browser because it's proxified, and
             // addEventListener does not work on proxified window. task-2234596
             window.addEventListener('resize', this._onResize);
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          */
@@ -53,10 +35,9 @@ function factory(dependencies) {
                 isMobileDevice: this.messaging.device.isMobileDevice,
                 sizeClass: this.env.device.size_class,
             });
-        }
-    }
-
-    Device.fields = {
+        },
+    },
+    fields: {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
         /**
@@ -76,11 +57,5 @@ function factory(dependencies) {
          * attribute.
          */
         sizeClass: attr(),
-    };
-    Device.identifyingFields = ['messaging'];
-    Device.modelName = 'mail.device';
-
-    return Device;
-}
-
-registerNewModel('mail.device', factory);
+    },
+});

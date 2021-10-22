@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class SuggestedRecipientInfo extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // private
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.suggested_recipient_info',
+    identifyingFields: ['id'],
+    recordMethods: {
         /**
          * Prevents selecting a recipient that does not have a partner.
          *
@@ -19,19 +15,16 @@ function factory(dependencies) {
          */
         _computeIsSelected() {
             return this.partner ? this.isSelected : false;
-        }
-
+        },
         /**
          * @private
          * @returns {string}
          */
         _computeName() {
             return this.partner && this.partner.nameOrDisplayName || this.name;
-        }
-
-    }
-
-    SuggestedRecipientInfo.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the email of `this`. It serves as visual clue when
          * displaying `this`, and also serves as default partner email when
@@ -80,11 +73,5 @@ function factory(dependencies) {
             inverse: 'suggestedRecipientInfoList',
             required: true,
         }),
-    };
-    SuggestedRecipientInfo.identifyingFields = ['id'];
-    SuggestedRecipientInfo.modelName = 'mail.suggested_recipient_info';
-
-    return SuggestedRecipientInfo;
-}
-
-registerNewModel('mail.suggested_recipient_info', factory);
+    },
+});

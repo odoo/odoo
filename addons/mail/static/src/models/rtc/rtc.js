@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2many, one2one } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
 
@@ -14,23 +14,19 @@ import { monitorAudio } from '@mail/utils/media_monitoring/media_monitoring';
  */
 const TRANSCEIVER_ORDER = ['audio', 'video'];
 
-function factory(dependencies) {
+const getRTCPeerNotificationNextTemporaryId = (function () {
+    let tmpId = 0;
+    return () => {
+        tmpId += 1;
+        return tmpId;
+    };
+})();
 
-    const getRTCPeerNotificationNextTemporaryId = (function () {
-        let tmpId = 0;
-        return () => {
-            tmpId += 1;
-            return tmpId;
-        };
-    })();
-
-    class Rtc extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.rtc',
+    identifyingFields: ['messaging'],
+    lifecycleHooks: {
         _created() {
-            super._created();
             // technical fields that are not exposed
             // Especially important for _peerConnections, as garbage collection of peerConnections is important for
             // peerConnection.close().
@@ -93,23 +89,15 @@ function factory(dependencies) {
                 }
                 this._callSessions();
             }, 30000); // 30 seconds
-        }
-
-        /**
-         * @override
-         */
+        },
         async _willDelete() {
             browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
             browser.clearInterval(this._intervalId);
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
@@ -127,8 +115,7 @@ function factory(dependencies) {
                 // if the current RTC session is not in the channel sessions, this call is no longer valid.
                 this.channel.endCall();
             }
-        }
-
+        },
         /**
          * @param {array} [allowedTokens] tokens of the peerConnections for which
          * the incoming video traffic is allowed. If undefined, all traffic is
@@ -149,8 +136,7 @@ function factory(dependencies) {
                     transceiver.direction = limitedDirection;
                 }
             }
-        }
-
+        },
         /**
          * @param {number|String} sender id of the session that sent the notification
          * @param {String} content JSON
@@ -188,8 +174,7 @@ function factory(dependencies) {
                     this._handleTrackChange(rtcSession, payload);
                     break;
             }
-        }
-
+        },
         /**
          * @param {Object} param0
          * @param {string} param0.currentSessionId the Id of the 'mail.rtc_session'
@@ -212,8 +197,7 @@ function factory(dependencies) {
             if (startWithVideo) {
                 await this._toggleVideoBroadcast({ type: videoType });
             }
-        }
-
+        },
         /**
          * Resets the state of the model and cleanly ends all connections and
          * streams.
@@ -246,8 +230,7 @@ function factory(dependencies) {
                 videoTrack: clear(),
                 audioTrack: clear(),
             });
-        }
-
+        },
         /**
          * Mutes and unmutes the microphone, will not unmute if deaf.
          *
@@ -263,22 +246,19 @@ function factory(dependencies) {
                 await this.updateLocalAudioTrack(true);
             }
             await this.async(() => this._updateLocalAudioTrackEnabledState());
-        }
-
+        },
         /**
          * toggles screen broadcasting to peers.
          */
         async toggleScreenShare() {
             this._toggleVideoBroadcast({ type: 'display' });
-        }
-
+        },
         /**
          * Toggles user video (eg: webcam) broadcasting to peers.
          */
         async toggleUserVideo() {
             this._toggleVideoBroadcast({ type: 'user-video' });
-        }
-
+        },
         /**
          * @param {Boolean} audio
          */
@@ -328,8 +308,7 @@ function factory(dependencies) {
                     await this._updateRemoteTrack(peerConnection, 'audio', { token });
                 }
             }
-        }
-
+        },
         /**
          * @param {MediaTrackConstraints Object} constraints
          */
@@ -337,8 +316,7 @@ function factory(dependencies) {
             const videoConfig = Object.assign(this.videoConfig, constraints);
             this.update({ videoConfig });
             this.videoTrack && this.videoTrack.applyConstraints(this.videoConfig);
-        }
-
+        },
         /**
          * Updates the way broadcast of the local audio track is handled,
          * attaches an audio monitor for voice activation if necessary.
@@ -368,12 +346,7 @@ function factory(dependencies) {
                 });
                 this.currentRtcSession.update({ isTalking: true });
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @param {String} token
@@ -406,8 +379,7 @@ function factory(dependencies) {
             if (state) {
                 this.logs[token].state = state;
             }
-        }
-
+        },
         /**
          * @private
          * @param {String} token
@@ -418,8 +390,7 @@ function factory(dependencies) {
                 await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, token });
             }
             this._outGoingCallTokens.add(token);
-        }
-
+        },
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
          *
@@ -442,16 +413,14 @@ function factory(dependencies) {
                 this._addLogEntry(session.peerToken, 'init call', { step: 'init call' });
                 this._callPeer(session.peerToken);
             }
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsClientRtcCompatible() {
             return window.RTCPeerConnection && window.MediaStream;
-        }
-
+        },
         /**
          * Creates and setup a RTCPeerConnection.
          *
@@ -527,8 +496,7 @@ function factory(dependencies) {
             this._peerConnections[token] = peerConnection;
             this._dataChannels[token] = dataChannel;
             return peerConnection;
-        }
-
+        },
         /**
          * @private
          * @param {RTCPeerConnection} peerConnection
@@ -538,8 +506,7 @@ function factory(dependencies) {
         _getTransceiver(peerConnection, trackKind) {
             const transceivers = peerConnection.getTransceivers();
             return transceivers[TRANSCEIVER_ORDER.indexOf(trackKind)];
-        }
-
+        },
         /**
          * @private
          * @param {String} fromToken
@@ -562,8 +529,7 @@ function factory(dependencies) {
                 this._addLogEntry(fromToken, 'answer handling: Failed at setting remoteDescription', { error: e });
                 // ignored the transaction may have been resolved by another concurrent offer.
             }
-        }
-
+        },
         /**
          * @private
          * @param {String} fromToken
@@ -582,8 +548,7 @@ function factory(dependencies) {
                 this._addLogEntry(fromToken, 'ICE candidate handling: failed at adding the candidate to the connection', { error });
                 this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
             }
-        }
-
+        },
         /**
          * @private
          * @param {String} fromToken
@@ -630,8 +595,7 @@ function factory(dependencies) {
                 payload: { sdp: peerConnection.localDescription },
             });
             this._recoverConnection(fromToken, { delay: this.recoveryTimeout, reason: 'standard answer timeout' });
-        }
-
+        },
         /**
          * @private
          * @param {mail.rtc_session} rtcSession
@@ -661,8 +625,7 @@ function factory(dependencies) {
                  */
                 rtcSession.update({ videoStream: clear() });
             }
-        }
-
+        },
         /**
          * @private
          * @param {String[]} targetToken
@@ -689,7 +652,6 @@ function factory(dependencies) {
                 });
                 await this._sendPeerNotifications();
             }
-
             if (type === 'peerToPeer') {
                 for (const token of targetTokens) {
                     const dataChannel = this._dataChannels[token];
@@ -703,8 +665,7 @@ function factory(dependencies) {
                     }));
                 }
             }
-        }
-
+        },
         /**
          * Pings the server to ensure this session is kept alive.
          */
@@ -721,8 +682,7 @@ function factory(dependencies) {
             if (channel.exists()) {
                 channel.updateRtcSessions(rtcSessions);
             }
-        }
-
+        },
         /**
          * Attempts a connection recovery by closing and restarting the call
          * from the receiving end.
@@ -756,8 +716,7 @@ function factory(dependencies) {
                 this._removePeer(token);
                 this._callPeer(token);
             }, delay);
-        }
-
+        },
         /**
          * Cleans up a peer by closing all its associated content and the connection.
          *
@@ -782,11 +741,9 @@ function factory(dependencies) {
             delete this._peerConnections[token];
             browser.clearTimeout(this._fallBackTimeouts[token]);
             delete this._fallBackTimeouts[token];
-
             this._outGoingCallTokens.delete(token);
             this._addLogEntry(token, 'peer removed', { step: 'peer removed' });
-        }
-
+        },
         /**
          * Terminates the Transceivers of the peer connection.
          *
@@ -809,8 +766,7 @@ function factory(dependencies) {
                     // transceiver may already be stopped by the remote.
                 }
             }
-        }
-
+        },
         /**
          * Sends this peer notifications to send as soon as the last pending
          * sending finishes.
@@ -853,8 +809,7 @@ function factory(dependencies) {
                     }
                 }
             }
-        }
-
+        },
         /**
          * Returns a string representation of a data channel for logging and
          * debugging purposes.
@@ -878,8 +833,7 @@ function factory(dependencies) {
                 "readyState",
             ];
             return JSON.stringify(Object.fromEntries(toLog.map(p => [p, dataChannel[p]])));
-        }
-
+        },
         /**
          * Updates the "isTalking" state of the current user and sets the
          * enabled state of its audio track accordingly.
@@ -898,8 +852,7 @@ function factory(dependencies) {
             if (!this.currentRtcSession.isMuted) {
                 await this._updateLocalAudioTrackEnabledState();
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} trackOptions
@@ -919,8 +872,7 @@ function factory(dependencies) {
                 isScreenSharingOn: !!this.sendDisplay,
                 isCameraOn: !!this.sendUserVideo,
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -944,8 +896,7 @@ function factory(dependencies) {
             } else {
                 this._updateExternalSessionTrack(this.videoTrack, this.currentRtcSession.peerToken);
             }
-        }
-
+        },
         /**
          * Updates the mail.rtc_session associated to the token with a new track.
          *
@@ -973,8 +924,7 @@ function factory(dependencies) {
                     videoStream: stream,
                 });
             }
-        }
-
+        },
         /**
          * Sets the enabled property of the local audio track based on the
          * current session state. And notifies peers of the new audio state.
@@ -998,8 +948,7 @@ function factory(dependencies) {
                     },
                 },
             });
-        }
-
+        },
         /**
          * @private
          * @param {String} type 'user-video' or 'display'
@@ -1053,8 +1002,7 @@ function factory(dependencies) {
                 sendUserVideo: type === 'user-video' && !!videoTrack,
                 sendDisplay: type === 'display' && !!videoTrack,
             });
-        }
-
+        },
         /**
          * Updates the track that is broadcasted to the RTCPeerConnection.
          * This will start new transaction by triggering a negotiationneeded event
@@ -1110,12 +1058,7 @@ function factory(dependencies) {
                     },
                 });
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Handlers
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @param {Event} ev
@@ -1124,8 +1067,7 @@ function factory(dependencies) {
             if (this.channel) {
                 await this.channel.performRpcLeaveCall();
             }
-        }
-
+        },
         /**
          * @private
          * @param {String} state the new state of the connection
@@ -1142,8 +1084,7 @@ function factory(dependencies) {
                     await this._recoverConnection(token, { delay: this.recoveryDelay, reason: `connection ${state}` });
                     break;
             }
-        }
-
+        },
         /**
          * @private
          * @param {String} connectionState the new state of the connection
@@ -1167,8 +1108,7 @@ function factory(dependencies) {
                     await this._recoverConnection(token, { delay: this.recoveryDelay, reason: `ice connection ${connectionState}` });
                     break;
             }
-        }
-
+        },
         /**
          * @private
          * @param {keyboardEvent} ev
@@ -1190,8 +1130,7 @@ function factory(dependencies) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
             }
             this._setSoundBroadcast(true);
-        }
-
+        },
         /**
          * @private
          * @param {keyboardEvent} ev
@@ -1215,10 +1154,9 @@ function factory(dependencies) {
                 },
                 this.messaging.userSetting.voiceActiveDuration || 0,
             );
-        }
-
-    }
-    Rtc.fields = {
+        },
+    },
+    fields: {
         /**
          * audio MediaStreamTrack of the current user
          */
@@ -1329,11 +1267,5 @@ function factory(dependencies) {
          * video MediaStreamTrack of the current user
          */
         videoTrack: attr(),
-    };
-    Rtc.identifyingFields = ['messaging'];
-    Rtc.modelName = 'mail.rtc';
-
-    return Rtc;
-}
-
-registerNewModel('mail.rtc', factory);
+    },
+});

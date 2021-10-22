@@ -1,18 +1,14 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
-function factory(dependencies) {
-
-    class ThreadCache extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.thread_cache',
+    identifyingFields: ['thread'],
+    recordMethods: {
         async loadMoreMessages() {
             if (this.isAllHistoryLoaded || this.isLoading) {
                 return;
@@ -44,8 +40,7 @@ function factory(dependencies) {
                 }
             }
             this.update({ isLoadingMore: false });
-        }
-
+        },
         /**
          * @returns {mail.message[]|undefined}
          */
@@ -66,12 +61,7 @@ function factory(dependencies) {
                 threadView.addComponentHint('new-messages-loaded', { fetchedMessages });
             }
             return fetchedMessages;
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
@@ -87,8 +77,7 @@ function factory(dependencies) {
                 }
             }
             return unlink(toUnlinkMessages);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -102,8 +91,7 @@ function factory(dependencies) {
                 return unlink();
             }
             return link(lastFetchedMessage);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -117,8 +105,7 @@ function factory(dependencies) {
                 return unlink();
             }
             return link(lastMessage);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
@@ -136,24 +123,21 @@ function factory(dependencies) {
                 );
             }
             return replace(this.fetchedMessages.concat(newerMessages));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
          */
         _computeOrderedFetchedMessages() {
             return replace(this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
-        }
-
+        },
         /**
          *
          * @private
@@ -161,8 +145,7 @@ function factory(dependencies) {
          */
         _computeOrderedNonEmptyMessages() {
             return replace(this.orderedMessages.filter(message => !message.isEmpty));
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -205,8 +188,7 @@ function factory(dependencies) {
             }
             res.hasToLoadMessages = true;
             return res;
-        }
-
+        },
         /**
          * @private
          * @param {Object} [param0={}]
@@ -252,8 +234,7 @@ function factory(dependencies) {
                 threadCache: this,
             });
             return messages;
-        }
-
+        },
         /**
          * Split method for `_computeHasToLoadMessages` because it has to write
          * on 2 fields at once which is not supported by standard compute.
@@ -262,8 +243,7 @@ function factory(dependencies) {
          */
         _onChangeForHasToLoadMessages() {
             this.update(this._computeHasToLoadMessages());
-        }
-
+        },
         /**
          * Calls "mark all as read" when this thread becomes displayed in a
          * view (which is notified by `isMarkAllAsReadRequested` being `true`),
@@ -300,8 +280,7 @@ function factory(dependencies) {
                 ['model', '=', this.thread.model],
                 ['res_id', '=', this.thread.id],
             ]);
-        }
-
+        },
         /**
          * Loads this thread cache, by fetching the most recent messages in this
          * conversation.
@@ -316,11 +295,9 @@ function factory(dependencies) {
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }
-        }
-
-    }
-
-    ThreadCache.fields = {
+        },
+    },
+    fields: {
         /**
          * List of messages that have been fetched by this cache.
          *
@@ -435,9 +412,8 @@ function factory(dependencies) {
         threadViews: one2many('mail.thread_view', {
             inverse: 'threadCache',
         }),
-    };
-    ThreadCache.identifyingFields = ['thread'];
-    ThreadCache.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
             methodName: '_onChangeForHasToLoadMessages',
@@ -450,10 +426,5 @@ function factory(dependencies) {
             dependencies: ['hasToLoadMessages'],
             methodName: '_onHasToLoadMessagesChanged',
         }),
-    ];
-    ThreadCache.modelName = 'mail.thread_cache';
-
-    return ThreadCache;
-}
-
-registerNewModel('mail.thread_cache', factory);
+    ],
+});

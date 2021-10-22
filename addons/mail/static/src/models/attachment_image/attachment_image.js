@@ -1,27 +1,21 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class AttachmentImage extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.attachment_image',
+    identifyingFields: ['attachmentList', 'attachment'],
+    lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickUnlink = this.onClickUnlink.bind(this);
             this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
             this.onClickImage = this.onClickImage.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
          *
@@ -39,8 +33,7 @@ function factory(dependencies) {
                     }),
                 }),
             });
-        }
-
+        },
         /**
          * Handles the click on delete attachment and open the confirm dialog.
          *
@@ -57,8 +50,7 @@ function factory(dependencies) {
             } else {
                 this.update({ hasDeleteConfirmDialog: true });
             }
-        }
-
+        },
         /**
          * Synchronize the `hasDeleteConfirmDialog` when the dialog is closed.
          */
@@ -67,12 +59,7 @@ function factory(dependencies) {
                 return;
             }
             this.update({ hasDeleteConfirmDialog: false });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {number}
@@ -90,8 +77,7 @@ function factory(dependencies) {
             if (this.attachmentList.message) {
                 return 300;
             }
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -105,8 +91,7 @@ function factory(dependencies) {
             }
             const accessToken = this.attachment.accessToken ? `?access_token=${this.attachment.accessToken}` : '';
             return `/web/image/${this.attachment.id}/${this.width}x${this.height}${accessToken}`;
-        }
-
+        },
         /**
          * Returns an arbitrary high value, this is effectively a max-width and
          * the height should be more constrained.
@@ -116,10 +101,9 @@ function factory(dependencies) {
          */
         _computeWidth() {
             return 1920;
-        }
-    }
-
-    AttachmentImage.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the attachment of this attachment image..
          */
@@ -163,11 +147,5 @@ function factory(dependencies) {
             compute: '_computeWidth',
             required: true,
         }),
-    };
-    AttachmentImage.identifyingFields = ['attachmentList', 'attachment'];
-    AttachmentImage.modelName = 'mail.attachment_image';
-
-    return AttachmentImage;
-}
-
-registerNewModel('mail.attachment_image', factory);
+    },
+});

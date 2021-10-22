@@ -1,31 +1,25 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class MessagingMenu extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.messaging_menu',
+    identifyingFields: ['messaging'],
+    recordMethods: {
         /**
          * Close the messaging menu. Should reset its internal state.
          */
         close() {
             this.update({ isOpen: false });
-        }
-
+        },
         /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */
         toggleMobileNewMessage() {
             this.update({ isMobileNewMessageToggled: !this.isMobileNewMessageToggled });
-        }
-
+        },
         /**
          * Toggle whether the messaging menu is open or not.
          */
@@ -36,12 +30,7 @@ function factory(dependencies) {
                 // populate some needaction messages on threads.
                 this.messaging.inbox.cache.update({ isCacheRefreshRequested: true });
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -62,11 +51,9 @@ function factory(dependencies) {
             );
             const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
             return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
-        }
-
-    }
-
-    MessagingMenu.fields = {
+        },
+    },
+    fields: {
         /**
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
@@ -94,11 +81,5 @@ function factory(dependencies) {
         isOpen: attr({
             default: false,
         }),
-    };
-    MessagingMenu.identifyingFields = ['messaging'];
-    MessagingMenu.modelName = 'mail.messaging_menu';
-
-    return MessagingMenu;
-}
-
-registerNewModel('mail.messaging_menu', factory);
+    },
+});

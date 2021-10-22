@@ -1,17 +1,14 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
-function factory(dependencies) {
-
-    class MessageActionList extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.message_action_list',
+    identifyingFields: ['messageView'],
+    lifecycleHooks: {
         _created() {
             // bind handlers so they can be used in templates
             this.onClick = this.onClick.bind(this);
@@ -25,16 +22,16 @@ function factory(dependencies) {
             this.onClickToggleStar = this.onClickToggleStar.bind(this);
             this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
             this.onEmojiSelection = this.onEmojiSelection.bind(this);
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @param {MouseEvent} ev
          */
         onClick(ev) {
             markEventHandled(ev, 'MessageActionList.Click');
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
@@ -44,48 +41,42 @@ function factory(dependencies) {
                 body: '',
                 attachment_ids: [],
             });
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
          */
         onClickDelete(ev) {
             this.update({ showDeleteConfirm: true });
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
          */
          onClickEdit(ev) {
             this.messageView.startEditing();
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
             this.message.markAsRead();
-        }
-
+        },
         /**
          * @private
          * @param {Event} ev
          */
         onReactionPopoverClosed(ev) {
             this.update({ isReactionPopoverOpened: false });
-        }
-
+        },
         /**
          * @private
          * @param {Event} ev
          */
         onReactionPopoverOpened(ev) {
             this.update({ isReactionPopoverOpened: true });
-        }
-
+        },
         /**
          * Opens the reply composer for this message (or closes it if it was
          * already opened).
@@ -96,24 +87,21 @@ function factory(dependencies) {
         onClickReplyTo(ev) {
             markEventHandled(ev, 'MessageActionList.replyTo');
             this.messageView.replyTo();
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
          */
         onClickToggleStar(ev) {
             this.message.toggleStar();
-        }
-
+        },
         /**
          * @private
          * @param {CustomEvent} ev
          */
         onDeleteConfirmDialogClosed(ev) {
             this.update({ showDeleteConfirm: false });
-        }
-
+        },
         /**
          * Handles `o-emoji-selection` event from the emoji popover.
          *
@@ -124,12 +112,7 @@ function factory(dependencies) {
          */
         onEmojiSelection(ev) {
             this.message.addReaction(ev.detail.unicode);
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -140,8 +123,7 @@ function factory(dependencies) {
                 this.messageView && this.messageView.threadView && this.messageView.threadView.thread &&
                 this.messageView.threadView.thread === this.messaging.inbox
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -154,16 +136,14 @@ function factory(dependencies) {
                     this.messageView.threadView.thread.model === 'mail.channel'
                 )
             );
-        }
-
+        },
         _computeIsReactionPopoverOpened() {
             return Boolean(
                 this.reactionPopoverRef &&
                 this.reactionPopoverRef.comp &&
                 this.reactionPopoverRef.comp.state.displayed
             );
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message_view}
@@ -172,11 +152,9 @@ function factory(dependencies) {
             return this.message
                 ? insertAndReplace({ message: replace(this.message) })
                 : clear();
-        }
-
-    }
-
-    MessageActionList.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines whether this message action list has mark as read icon.
          */
@@ -228,11 +206,5 @@ function factory(dependencies) {
         showDeleteConfirm: attr({
             default: false,
         }),
-    };
-    MessageActionList.identifyingFields = ['messageView'];
-    MessageActionList.modelName = 'mail.message_action_list';
-
-    return MessageActionList;
-}
-
-registerNewModel('mail.message_action_list', factory);
+    },
+});

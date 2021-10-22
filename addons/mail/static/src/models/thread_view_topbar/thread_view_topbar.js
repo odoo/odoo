@@ -1,16 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class ThreadViewTopbar extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.thread_view_topbar',
+    identifyingFields: ['threadView'],
+    lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
@@ -35,31 +32,21 @@ function factory(dependencies) {
             this.onMouseEnterTopbarThreadDescription = this.onMouseEnterTopbarThreadDescription.bind(this);
             this.onMouseLeaveTopbarThreadDescription = this.onMouseLeaveTopbarThreadDescription.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
-            return super._created();
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
-            return super._willDelete();
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-       /**
+        },
+    },
+    recordMethods: {
+        /**
          * Handles click on the "hide member list" button.
          *
          * @param {Event} ev
          */
-        onClickHideMemberList(ev) {
+         onClickHideMemberList(ev) {
             this.threadView.update({ isMemberListOpened: false });
             this.threadView.addComponentHint('member-list-hidden');
-        }
-
+        },
         /**
          * Handles click on the "mark all as read" button of Inbox.
          *
@@ -67,8 +54,7 @@ function factory(dependencies) {
          */
         onClickInboxMarkAllAsRead(ev) {
             this.messaging.models['mail.message'].markAllAsRead();
-        }
-
+        },
         /**
          * Handles click on the "invite" button.
          *
@@ -80,8 +66,7 @@ function factory(dependencies) {
             } else {
                 this.openInvitePopoverView();
             }
-        }
-
+        },
         /**
          * Handles click on the "show member list" button.
          *
@@ -89,8 +74,7 @@ function factory(dependencies) {
          */
         onClickShowMemberList(ev) {
             this.threadView.update({ isMemberListOpened: true });
-        }
-
+        },
         /**
          * Handles click on the "thread name" of this top bar.
          *
@@ -114,8 +98,7 @@ function factory(dependencies) {
                 isMouseOverThreadName: false,
                 pendingThreadName: this.thread.displayName,
             });
-        }
-
+        },
         /**
          * Handles click on the "thread description" of this top bar.
          *
@@ -139,8 +122,7 @@ function factory(dependencies) {
                 isMouseOverThreadDescription: false,
                 pendingThreadDescription: this.thread.description || "",
             });
-        }
-
+        },
         /**
          * Handles click on the "unstar all" button of Starred box.
          *
@@ -148,8 +130,7 @@ function factory(dependencies) {
          */
         onClickUnstarAll(ev) {
             this.messaging.models['mail.message'].unstarAll();
-        }
-
+        },
         /**
          * Handles click on the guest name.
          *
@@ -169,8 +150,7 @@ function factory(dependencies) {
                 isMouseOverUserName: false,
                 pendingGuestName: this.messaging.currentGuest.name,
             });
-        }
-
+        },
         /**
          * Handles OWL update on this top bar component.
          */
@@ -235,15 +215,13 @@ function factory(dependencies) {
                     doSetSelectionStartOnThreadDescriptionInput: clear(),
                 });
             }
-        }
-
+        },
         /**
          * @param {KeyboardEvent} ev
          */
         onInputGuestNameInput(ev) {
             this.update({ pendingGuestName: this.guestNameInputRef.el.value });
-        }
-
+        },
         /**
          * Handles input on the "thread name" input of this top bar.
          *
@@ -251,8 +229,7 @@ function factory(dependencies) {
          */
         onInputThreadNameInput(ev) {
             this.update({ pendingThreadName: ev.target.value });
-        }
-
+        },
         /**
          * Handles input on the "thread description" input of this top bar.
          *
@@ -260,8 +237,7 @@ function factory(dependencies) {
          */
         onInputThreadDescriptionInput(ev) {
             this.update({ pendingThreadDescription: ev.target.value });
-        }
-
+        },
         /**
          * Handles keydown on the "guest name" input of this top bar.
          *
@@ -278,8 +254,7 @@ function factory(dependencies) {
                     this._resetGuestNameInput();
                     break;
             }
-        }
-
+        },
         /**
          * Handles keydown on the "thread name" input of this top bar.
          *
@@ -294,8 +269,7 @@ function factory(dependencies) {
                     this._discardThreadRename();
                     break;
             }
-        }
-
+        },
         /**
          * Handles keydown on the "thread description" input of this top bar.
          *
@@ -310,8 +284,7 @@ function factory(dependencies) {
                     this._discardThreadChangeDescription();
                     break;
             }
-        }
-
+        },
         /**
          * Handles mouseenter on the "thread name" of this top bar.
          *
@@ -322,8 +295,7 @@ function factory(dependencies) {
                 return;
             }
             this.update({ isMouseOverThreadName: true });
-        }
-
+        },
         /**
          * Handles mouseenter on the "thread description" of this top bar.
          *
@@ -334,8 +306,7 @@ function factory(dependencies) {
                 return;
             }
             this.update({ isMouseOverThreadDescription: true });
-        }
-
+        },
         /**
          * Handles mouseenter on the "user name" of this top bar.
          *
@@ -343,8 +314,7 @@ function factory(dependencies) {
          */
         onMouseEnterUserName(ev) {
             this.update({ isMouseOverUserName: true });
-        }
-
+        },
         /**
          * Handles mouseleave on the "thread name" of this top bar.
          *
@@ -352,8 +322,7 @@ function factory(dependencies) {
          */
         onMouseLeaveTopbarThreadName(ev) {
             this.update({ isMouseOverThreadName: false });
-        }
-
+        },
         /**
          * Handles mouseleave on the "thread description" of this top bar.
          *
@@ -361,8 +330,7 @@ function factory(dependencies) {
          */
         onMouseLeaveTopbarThreadDescription(ev) {
             this.update({ isMouseOverThreadDescription: false });
-        }
-
+        },
         /**
          * Handles mouseleave on the "user name" of this top bar.
          *
@@ -370,8 +338,7 @@ function factory(dependencies) {
          */
         onMouseLeaveUserName(ev) {
             this.update({ isMouseOverUserName: false });
-        }
-
+        },
         /**
          * Open the invite popover view in this thread view topbar.
          */
@@ -387,12 +354,7 @@ function factory(dependencies) {
             }
             this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
             this.threadView.channelInvitationForm.searchPartnersToInvite();
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          */
@@ -404,8 +366,7 @@ function factory(dependencies) {
                 });
             }
             this._resetGuestNameInput();
-        }
-
+        },
         /**
          * @private
          */
@@ -424,8 +385,7 @@ function factory(dependencies) {
             if (this.thread.channel_type === 'group' && newName !== this.thread.name) {
                 this.thread.rename(newName);
             }
-        }
-
+        },
         /**
          * @private
          */
@@ -438,8 +398,7 @@ function factory(dependencies) {
             if (newDescription !== this.thread.description) {
                 this.thread.changeDescription(newDescription);
             }
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -452,8 +411,7 @@ function factory(dependencies) {
                 return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
             }
             return this.messaging.currentPartner.avatarUrl;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -463,8 +421,7 @@ function factory(dependencies) {
                 this.messaging.currentGuest &&
                 this.pendingGuestName !== this.messaging.currentGuest.name
             );
-        }
-
+        },
         /**
          * @private
          */
@@ -473,8 +430,7 @@ function factory(dependencies) {
                 isEditingThreadName: false,
                 pendingThreadName: clear(),
             });
-        }
-
+        },
         /**
          * @private
          */
@@ -483,8 +439,7 @@ function factory(dependencies) {
                 isEditingThreadDescription: false,
                 pendingThreadDescription: clear(),
             });
-        }
-
+        },
         /**
          * @private
          * @param {MouseEvent} ev
@@ -503,8 +458,7 @@ function factory(dependencies) {
             if (this.isEditingThreadDescription && this.threadDescriptionInputRef.el && !this.threadDescriptionInputRef.el.contains(ev.target)) {
                 this._applyThreadChangeDescription();
             }
-        }
-
+        },
         /**
          * @private
          */
@@ -513,11 +467,9 @@ function factory(dependencies) {
                 isEditingGuestName: false,
                 pendingGuestName: clear(),
             });
-        }
-
-    }
-
-    ThreadViewTopbar.fields = {
+        },
+    },
+    fields: {
         /**
          * States the URL of the profile picture of the current user.
          */
@@ -559,7 +511,7 @@ function factory(dependencies) {
          * an instruction to set a new selection. Must be set together with
          * `doSetSelectionEndOnThreadDescriptionInput` and `doSetSelectionStartOnThreadDescriptionInput`
          * to have an effect.
-         */ 
+         */
         doSetSelectionDirectionOnThreadDescriptionInput: attr(),
         /**
          * Determines the ending position where to place the selection on this
@@ -727,11 +679,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    ThreadViewTopbar.identifyingFields = ['threadView'];
-    ThreadViewTopbar.modelName = 'mail.thread_view_topbar';
-
-    return ThreadViewTopbar;
-}
-
-registerNewModel('mail.thread_view_topbar', factory);
+    },
+});

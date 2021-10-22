@@ -1,40 +1,18 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Activity extends dependencies['mail.model'] {
-
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.activity',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * Delete the record from database and locally.
-         */
-        async deleteServerRecord() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'unlink',
-                args: [[this.id]],
-            }));
-            this.delete();
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('activity_category' in data) {
                 data2.category = data.activity_category;
@@ -119,8 +97,20 @@ function factory(dependencies) {
             }
 
             return data2;
-        }
-
+        },
+    },
+    recordMethods: {
+        /**
+         * Delete the record from database and locally.
+         */
+        async deleteServerRecord() {
+            await this.async(() => this.env.services.rpc({
+                model: 'mail.activity',
+                method: 'unlink',
+                args: [[this.id]],
+            }));
+            this.delete();
+        },
         /**
          * Opens (legacy) form view dialog to edit current activity and updates
          * the activity when dialog is closed.
@@ -143,8 +133,7 @@ function factory(dependencies) {
                 action,
                 options: { on_close: () => this.fetchAndUpdate() },
             });
-        }
-
+        },
         async fetchAndUpdate() {
             const [data] = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
@@ -162,8 +151,7 @@ function factory(dependencies) {
             if (shouldDelete) {
                 this.delete();
             }
-        }
-
+        },
         /**
          * @param {Object} param0
          * @param {mail.attachment[]} [param0.attachments=[]]
@@ -182,8 +170,7 @@ function factory(dependencies) {
             }));
             this.thread.refresh();
             this.delete();
-        }
-
+        },
         /**
          * @param {Object} param0
          * @param {string} param0.feedback
@@ -211,12 +198,7 @@ function factory(dependencies) {
                     },
                 },
             });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -226,8 +208,7 @@ function factory(dependencies) {
                 return false;
             }
             return this.assignee.partner === this.messaging.currentPartner;
-        }
-
+        },
         /**
          * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
          * This compute replaces this almost empty value by an actual empty
@@ -241,10 +222,9 @@ function factory(dependencies) {
                 return clear();
             }
             return this.note;
-        }
-    }
-
-    Activity.fields = {
+        },
+    },
+    fields: {
         assignee: many2one('mail.user'),
         attachments: many2many('mail.attachment', {
             inverse: 'activities',
@@ -306,11 +286,5 @@ function factory(dependencies) {
         type: many2one('mail.activity_type', {
             inverse: 'activities',
         }),
-    };
-    Activity.identifyingFields = ['id'];
-    Activity.modelName = 'mail.activity';
-
-    return Activity;
-}
-
-registerNewModel('mail.activity', factory);
+    },
+});

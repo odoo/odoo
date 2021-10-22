@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
@@ -11,23 +11,19 @@ import * as mailUtils from '@mail/js/utils';
 
 import { str_to_datetime } from 'web.time';
 
-function factory(dependencies) {
+const getSuggestedRecipientInfoNextTemporaryId = (function () {
+    let tmpId = 0;
+    return () => {
+        tmpId += 1;
+        return tmpId;
+    };
+})();
 
-    const getSuggestedRecipientInfoNextTemporaryId = (function () {
-        let tmpId = 0;
-        return () => {
-            tmpId += 1;
-            return tmpId;
-        };
-    })();
-
-    class Thread extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.thread',
+    identifyingFields: ['model', 'id'],
+    lifecycleHooks: {
         _willCreate() {
-            const res = super._willCreate(...arguments);
             /**
              * Timer of current partner that was currently typing something, but
              * there is no change on the input for 5 seconds. This is used
@@ -110,21 +106,11 @@ function factory(dependencies) {
                 ({ isTyping }) => this.async(() => this._notifyCurrentPartnerTypingStatus({ isTyping })),
                 2.5 * 1000
             );
-            return res;
-        }
-
-        /**
-         * @override
-         */
+        },
         _created() {
-            super._created();
             this.onClick = this.onClick.bind(this);
             this.onClickLoadMoreMembers = this.onClickLoadMoreMembers.bind(this);
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
@@ -137,48 +123,25 @@ function factory(dependencies) {
                     message.delete();
                 }
             }
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    modelMethods: {
         /**
-         * Changes description of the thread to the given new description.
-         * Only makes sense for channels.
-         *
-         * @param {string} description
-         */
-        async changeDescription(description) {
-            this.update({ description });
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_change_description',
-                args: [[this.id]],
-                kwargs: { description },
-            });
-        }
-
-        /**
-         * @static
          * @param {mail.thread} [thread] the concerned thread
          */
-        static computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
+        computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
             const threads = thread ? [thread] : this.messaging.models['mail.thread'].all();
             threads.map(localThread => {
                 localThread.update({
                     lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
                 });
             });
-        }
-
+        },
         /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('avatarCacheKey' in data) {
                 data2.avatarCacheKey = data.avatarCacheKey;
@@ -314,8 +277,7 @@ function factory(dependencies) {
             }
 
             return data2;
-        }
-
+        },
         /**
          * Creates a new group chat with the provided partners.
          *
@@ -325,7 +287,7 @@ function factory(dependencies) {
          * @param {boolean|string} param0.default_display_mode
          * @returns {mail.thread} The newly created group chat.
          */
-        static async createGroupChat({ default_display_mode, partners_to }) {
+        async createGroupChat({ default_display_mode, partners_to }) {
             const channelData = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'create_group',
@@ -337,34 +299,18 @@ function factory(dependencies) {
             return this.messaging.models['mail.thread'].insert(
                 this.messaging.models['mail.thread'].convertData(channelData)
             );
-        }
-
-        /**
-         * Client-side ending of the call.
-         */
-        endCall() {
-            if (this.rtc) {
-                this.rtc.reset();
-                this.messaging.soundEffects.channelLeave.play();
-            }
-            this.update({
-                rtc: unlink(),
-                rtcInvitingSession: unlink(),
-            });
-        }
-
+        },
         /**
          * Fetches threads matching the given composer search state to extend
          * the JS knowledge and to update the suggestion list accordingly.
          * More specifically only thread of model 'mail.channel' are fetched.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
-        static async fetchSuggestions(searchTerm, { thread } = {}) {
+        async fetchSuggestions(searchTerm, { thread } = {}) {
             const channelsData = await this.env.services.rpc(
                 {
                     model: 'mail.channel',
@@ -379,20 +325,18 @@ function factory(dependencies) {
                     this.messaging.models['mail.thread'].convertData(channelData),
                 )
             ));
-        }
-
+        },
         /**
          * Returns a sort function to determine the order of display of threads
          * in the suggestion list.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
-        static getSuggestionSortFunction(searchTerm, { thread } = {}) {
+        getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
                 const isAPublic = a.model === 'mail.channel' && a.public === 'public';
@@ -427,16 +371,14 @@ function factory(dependencies) {
                 }
                 return a.id - b.id;
             };
-        }
-
+        },
         /**
          * Load the previews of the specified threads. Basically, it fetches the
          * last messages, since they are used to display inline content of them.
          *
-         * @static
          * @param {mail.thread[]} threads
          */
-        static async loadPreviews(threads) {
+        async loadPreviews(threads) {
             const channelIds = threads.reduce((list, thread) => {
                 if (thread.model === 'mail.channel') {
                     return list.concat(thread.id);
@@ -454,16 +396,14 @@ function factory(dependencies) {
             this.messaging.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
                 channelPreview => this.messaging.models['mail.message'].convertData(channelPreview.last_message)
             ));
-        }
-
+        },
         /**
          * Performs the `channel_fold` RPC on `mail.channel`.
          *
-         * @static
          * @param {string} uuid
          * @param {string} state
          */
-        static async performRpcChannelFold(uuid, state) {
+        async performRpcChannelFold(uuid, state) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fold',
@@ -472,17 +412,15 @@ function factory(dependencies) {
                     uuid,
                 }
             }, { shadow: true });
-        }
-
+        },
         /**
          * Performs the `channel_info` RPC on `mail.channel`.
          *
-         * @static
          * @param {Object} param0
          * @param {integer[]} param0.ids list of id of channels
          * @returns {mail.thread[]}
          */
-        static async performRpcChannelInfo({ ids }) {
+        async performRpcChannelInfo({ ids }) {
             const channelInfos = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_info',
@@ -492,17 +430,15 @@ function factory(dependencies) {
                 channelInfos.map(channelInfo => this.messaging.models['mail.thread'].convertData(channelInfo))
             );
             return channels;
-        }
-
+        },
         /**
          * Performs the `/mail/channel/set_last_seen_message` RPC.
          *
-         * @static
          * @param {Object} param0
          * @param {integer} param0.id id of channel
          * @param {integer[]} param0.lastMessageId
          */
-        static async performRpcChannelSeen({ id, lastMessageId }) {
+        async performRpcChannelSeen({ id, lastMessageId }) {
             return this.env.services.rpc({
                 route: `/mail/channel/set_last_seen_message`,
                 params: {
@@ -510,17 +446,15 @@ function factory(dependencies) {
                     last_message_id: lastMessageId,
                 },
             }, { shadow: true });
-        }
-
+        },
         /**
          * Performs the `channel_pin` RPC on `mail.channel`.
          *
-         * @static
          * @param {Object} param0
          * @param {boolean} [param0.pinned=false]
          * @param {string} param0.uuid
          */
-        static async performRpcChannelPin({ pinned = false, uuid }) {
+        async performRpcChannelPin({ pinned = false, uuid }) {
             return this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_pin',
@@ -529,18 +463,16 @@ function factory(dependencies) {
                     pinned,
                 },
             }, { shadow: true });
-        }
-
+        },
         /**
          * Performs the `channel_create` RPC on `mail.channel`.
          *
-         * @static
          * @param {Object} param0
          * @param {string} param0.name
          * @param {string} [param0.privacy]
          * @returns {mail.thread} the created channel
          */
-        static async performRpcCreateChannel({ name, privacy }) {
+        async performRpcCreateChannel({ name, privacy }) {
             const device = this.messaging.device;
             const data = await this.env.services.rpc({
                 model: 'mail.channel',
@@ -557,21 +489,19 @@ function factory(dependencies) {
             return this.messaging.models['mail.thread'].insert(
                 this.messaging.models['mail.thread'].convertData(data)
             );
-        }
-
+        },
         /**
          * Performs the `channel_get` RPC on `mail.channel`.
          *
          * `openChat` is preferable in business code because it will avoid the
          * RPC if the chat already exists.
          *
-         * @static
          * @param {Object} param0
          * @param {integer[]} param0.partnerIds
          * @param {boolean} [param0.pinForCurrentPartner]
          * @returns {mail.thread|undefined} the created or existing chat
          */
-        static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
+        async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             const device = this.messaging.device;
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.env.services.rpc({
@@ -593,27 +523,15 @@ function factory(dependencies) {
             return this.messaging.models['mail.thread'].insert(
                 this.messaging.models['mail.thread'].convertData(data)
             );
-        }
-
-        /**
-         * Performs the rpc to leave the rtc call of the channel.
-         */
-        async performRpcLeaveCall() {
-            await this.async(() => this.env.services.rpc({
-                route: '/mail/rtc/channel/leave_call',
-                params: { channel_id: this.id },
-            }, { shadow: true }));
-        }
-
+        },
         /**
          * Performs RPC on the route `/mail/get_suggested_recipients`.
          *
-         * @static
          * @param {Object} param0
          * @param {string} param0.model
          * @param {integer[]} param0.res_id
          */
-        static async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
+        async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
             const data = await this.env.services.rpc({
                 route: '/mail/get_suggested_recipients',
                 params: {
@@ -639,17 +557,15 @@ function factory(dependencies) {
                     suggestedRecipientInfoList: insertAndReplace(recipientInfoList),
                 });
             }
-        }
-
+        },
         /**
          * Search for thread matching `searchTerm`.
          *
-         * @static
          * @param {Object} param0
          * @param {integer} param0.limit
          * @param {string} param0.searchTerm
          */
-        static async searchChannelsToOpen({ limit, searchTerm }) {
+        async searchChannelsToOpen({ limit, searchTerm }) {
             const domain = [
                 ['channel_type', '=', 'channel'],
                 ['name', 'ilike', searchTerm],
@@ -667,22 +583,20 @@ function factory(dependencies) {
             return this.insert(channelsData.map(
                 channelData => this.convertData(channelData)
             ));
-        }
-
-        /*
+        },
+        /**
          * Returns threads that match the given search term. More specially only
          * threads of model 'mail.channel' are suggested, and if the context
          * thread is a private channel, only itself is returned if it matches
          * the search term.
          *
-         * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.threads[], mail.threads[]]}
          */
-        static searchSuggestions(searchTerm, { thread } = {}) {
+        searchSuggestions(searchTerm, { thread } = {}) {
             let threads;
             if (thread && thread.model === 'mail.channel' && thread.public !== 'public') {
                 // Only return the current channel when in the context of a
@@ -702,8 +616,49 @@ function factory(dependencies) {
                 thread.displayName &&
                 cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
             )];
-        }
-
+        },
+    },
+    recordMethods: {
+        /**
+         * Changes description of the thread to the given new description.
+         * Only makes sense for channels.
+         *
+         * @param {string} description
+         */
+        async changeDescription(description) {
+            this.update({ description });
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_change_description',
+                args: [[this.id]],
+                kwargs: { description },
+            });
+        },
+        /**
+         * Client-side ending of the call.
+         */
+        endCall() {
+            if (this.rtc) {
+                this.rtc.reset();
+                this.messaging.soundEffects.channelLeave.play();
+            }
+            this.update({
+                rtc: unlink(),
+                rtcInvitingSession: unlink(),
+            });
+        },
+        /**
+         * Fetches suggested recipients.
+         */
+        async fetchAndUpdateSuggestedRecipients() {
+            if (this.isTemporary) {
+                return;
+            }
+            return this.messaging.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+                model: this.model,
+                res_ids: [this.id],
+            });
+        },
         /**
          * Fetch attachments linked to a record. Useful for populating the store
          * with these attachments, which are used by attachment box in the chatter.
@@ -723,21 +678,7 @@ function factory(dependencies) {
                 originThreadAttachments: insertAndReplace(attachmentsData),
             });
             this.update({ areAttachmentsLoaded: true });
-        }
-
-        /**
-         * Fetches suggested recipients.
-         */
-        async fetchAndUpdateSuggestedRecipients() {
-            if (this.isTemporary) {
-                return;
-            }
-            return this.messaging.models['mail.thread'].performRpcMailGetSuggestedRecipients({
-                model: this.model,
-                res_ids: [this.id],
-            });
-        }
-
+        },
         /**
          * Add current user to provided thread's followers.
          */
@@ -752,8 +693,16 @@ function factory(dependencies) {
             }));
             this.refreshFollowers();
             this.fetchAndUpdateSuggestedRecipients();
-        }
-
+        },
+        /**
+         * Performs the rpc to leave the rtc call of the channel.
+         */
+        async performRpcLeaveCall() {
+            await this.async(() => this.env.services.rpc({
+                route: '/mail/rtc/channel/leave_call',
+                params: { channel_id: this.id },
+            }, { shadow: true }));
+        },
         /**
          * Leaves the current call if there is one, joins the call if the user was
          * not yet in it.
@@ -772,8 +721,7 @@ function factory(dependencies) {
             }
             await this._joinCall(options);
             this.update({ hasPendingRtcRequest: false });
-        }
-
+        },
         /**
          * @param {Object} [param0]
          * @param {boolean} [param0.startWithVideo] whether or not to start the call with the video
@@ -815,16 +763,14 @@ function factory(dependencies) {
                 videoType,
             }));
             this.messaging.soundEffects.channelJoin.play();
-        }
-
+        },
         /**
          * Notifies the server and does the cleanup of the current call.
          */
         async leaveCall() {
             await this.performRpcLeaveCall();
             this.endCall();
-        }
-
+        },
         /**
          * @param {Array<Object>} rtcSessions server representation of the current rtc sessions of the channel
          */
@@ -844,8 +790,7 @@ function factory(dependencies) {
             if (this.rtc && !this.rtc.currentRtcSession) {
                 this.endCall();
             }
-        }
-
+        },
         /**
          * Returns the text that identifies this thread in a mention.
          *
@@ -853,8 +798,7 @@ function factory(dependencies) {
          */
         getMentionText() {
             return this.name;
-        }
-
+        },
         /**
          * Joins this thread. Only makes sense on channels of type channel.
          */
@@ -865,8 +809,7 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: { partner_ids: [this.messaging.currentPartner.id] }
             });
-        }
-
+        },
         /**
          * Leaves this thread. Only makes sense on channels of type channel.
          */
@@ -876,15 +819,13 @@ function factory(dependencies) {
                 method: 'action_unfollow',
                 args: [[this.id]],
             });
-        }
-
+        },
         /**
          * Load new messages on the main cache of this thread.
          */
         loadNewMessages() {
             this.cache.loadNewMessages();
-        }
-
+        },
         /**
          * Mark the specified conversation as fetched.
          */
@@ -894,8 +835,7 @@ function factory(dependencies) {
                 method: 'channel_fetched',
                 args: [[this.id]],
             }, { shadow: true }));
-        }
-
+        },
         /**
          * Mark the specified conversation as read/seen.
          *
@@ -922,8 +862,7 @@ function factory(dependencies) {
                 id: this.id,
                 lastMessageId: message.id,
             });
-        }
-
+        },
         /**
          * Marks as read all needaction messages with this thread as origin.
          */
@@ -931,8 +870,7 @@ function factory(dependencies) {
             await this.async(() =>
                 this.messaging.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
             );
-        }
-
+        },
         /**
          * Notifies the server of new fold state. Useful for initial,
          * cross-tab, and cross-device chat window state synchronization.
@@ -948,8 +886,7 @@ function factory(dependencies) {
                 return;
             }
             return this.messaging.models['mail.thread'].performRpcChannelFold(this.uuid, state);
-        }
-
+        },
         /**
          * Notify server to leave the current channel. Useful for cross-tab
          * and cross-device chat window state synchronization.
@@ -965,8 +902,7 @@ function factory(dependencies) {
                 pinned: this.isPendingPinned,
                 uuid: this.uuid,
             });
-        }
-
+        },
         /**
          * Handles click on the avatar of the given member in the member list of
          * this channel.
@@ -975,8 +911,7 @@ function factory(dependencies) {
          */
         onClickMemberAvatar(member) {
             member.openChat();
-        }
-
+        },
         /**
          * Handles click on the name of the given member in the member list of
          * this channel.
@@ -985,8 +920,7 @@ function factory(dependencies) {
          */
         onClickMemberName(member) {
             member.openProfile();
-        }
-
+        },
         /**
          * Opens this thread either as form view, in discuss app, or as a chat
          * window. The thread will be opened in an "active" matter, which will
@@ -1026,8 +960,7 @@ function factory(dependencies) {
             return this.messaging.chatWindowManager.openThread(this, {
                 makeActive: true,
             });
-        }
-
+        },
         /**
          * Opens the most appropriate view that is a profile for this thread.
          */
@@ -1036,8 +969,7 @@ function factory(dependencies) {
                 id: this.id,
                 model: this.model,
             });
-        }
-
+        },
         /**
          * Pin this thread and notify server of the change.
          */
@@ -1047,15 +979,13 @@ function factory(dependencies) {
                 return;
             }
             await this.notifyPinStateToServer();
-        }
-
+        },
         /**
          * Open a dialog to add partners as followers.
          */
         promptAddPartnerFollower() {
             this._promptAddFollower();
-        }
-
+        },
         async refresh() {
             if (this.isTemporary) {
                 return;
@@ -1064,8 +994,7 @@ function factory(dependencies) {
             this.update({ isLoadingAttachments: true });
             await this.async(() => this.fetchAttachments());
             this.update({ isLoadingAttachments: false });
-        }
-
+        },
         async refreshActivities() {
             if (!this.hasActivities) {
                 return;
@@ -1088,8 +1017,7 @@ function factory(dependencies) {
                 activityData => this.messaging.models['mail.activity'].convertData(activityData)
             ));
             this.update({ activities: replace(activities) });
-        }
-
+        },
         /**
          * Refresh followers information from server.
          */
@@ -1117,15 +1045,13 @@ function factory(dependencies) {
                     followers: unlinkAll(),
                 });
             }
-        }
-
+        },
         /**
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
             this._currentPartnerInactiveTypingTimer.reset();
-        }
-
+        },
         /**
          * Called to refresh a registered other member partner that is typing
          * something.
@@ -1134,8 +1060,7 @@ function factory(dependencies) {
          */
         refreshOtherMemberTypingMember(partner) {
             this._otherMembersLongTypingTimers.get(partner).reset();
-        }
-
+        },
         /**
          * Called when current partner is inserting some input in composer.
          * Useful to notify current partner is currently typing something in the
@@ -1156,8 +1081,7 @@ function factory(dependencies) {
             });
             // Notify typing status to other members.
             await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
-        }
-
+        },
         /**
          * Called to register a new other member partner that is typing
          * something.
@@ -1179,8 +1103,7 @@ function factory(dependencies) {
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
                 typingMembers: link(partner),
             });
-        }
-
+        },
         /**
          * Renames this thread to the given new name.
          * Only makes sense for channels.
@@ -1195,8 +1118,7 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: { name },
             });
-        }
-
+        },
         /**
          * Sets the custom name of this thread for the current user to the given
          * new name.
@@ -1211,8 +1133,7 @@ function factory(dependencies) {
                 args: [this.id],
                 kwargs: { name: newName },
             });
-        }
-
+        },
         /**
          * Unfollow current partner from this thread.
          */
@@ -1221,8 +1142,7 @@ function factory(dependencies) {
                 follower => follower.partner === this.messaging.currentPartner
             );
             await this.async(() => currentPartnerFollower.remove());
-        }
-
+        },
         /**
          * Unpin this thread and notify server of the change.
          */
@@ -1232,8 +1152,7 @@ function factory(dependencies) {
                 return;
             }
             await this.notifyPinStateToServer();
-        }
-
+        },
         /**
          * Called when current partner has explicitly stopped inserting some
          * input in composer. Useful to notify current partner has currently
@@ -1264,8 +1183,7 @@ function factory(dependencies) {
             await this.async(
                 () => this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: false })
             );
-        }
-
+        },
         /**
          * Called to unregister an other member partner that is no longer typing
          * something.
@@ -1281,8 +1199,7 @@ function factory(dependencies) {
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
                 typingMembers: unlink(partner),
             });
-        }
-
+        },
         /**
          * Unsubscribe current user from provided channel.
          */
@@ -1290,12 +1207,7 @@ function factory(dependencies) {
             this.leaveCall();
             this.messaging.chatWindowManager.closeThread(this);
             this.unpin();
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {mail.attachment[]}
@@ -1314,8 +1226,7 @@ function factory(dependencies) {
                     return Math.abs(a2.id) - Math.abs(a1.id);
                 });
             return replace(allAttachments);
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -1325,8 +1236,7 @@ function factory(dependencies) {
                 return clear();
             }
             return insertAndReplace();
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner}
@@ -1347,8 +1257,7 @@ function factory(dependencies) {
                 return link(this.members[0]);
             }
             return unlink();
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -1361,8 +1270,7 @@ function factory(dependencies) {
                 return this.name || this.members.map(partner => partner.nameOrDisplayName).join(', ');
             }
             return this.name;
-        }
-
+        },
         /**
          * @private
          * @returns {Object}
@@ -1378,8 +1286,7 @@ function factory(dependencies) {
                 'thread_id': this.id,
                 'thread_model': this.model,
             };
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -1397,24 +1304,21 @@ function factory(dependencies) {
                 return `/mail/channel/messages`;
             }
             return `/mail/thread/messages`;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.activity[]}
          */
         _computeFutureActivities() {
             return replace(this.activities.filter(activity => activity.state === 'planned'));
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasInviteFeature() {
             return this.model === 'mail.channel';
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -1424,16 +1328,14 @@ function factory(dependencies) {
                 return false;
             }
             return ['chat', 'livechat'].includes(this.channel_type);
-        }
-
+        },
         /**
         * @private
         * @returns {boolean}
         */
         _computeIsChannelDescriptionChangeable() {
             return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -1443,16 +1345,14 @@ function factory(dependencies) {
                 this.model === 'mail.channel' &&
                 ['chat', 'channel', 'group'].includes(this.channel_type)
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasMemberListFeature() {
             return this.model === 'mail.channel' && ['channel', 'group'].includes(this.channel_type);
-        }
-
+        },
         /**
          * @returns {string}
          */
@@ -1461,16 +1361,14 @@ function factory(dependencies) {
                 return clear();
             }
             return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsChatChannel() {
             return this.channel_type === 'chat' || this.channel_type === 'group';
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -1479,16 +1377,14 @@ function factory(dependencies) {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.messaging.currentPartner
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsPinned() {
             return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message}
@@ -1523,8 +1419,7 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return link(currentPartnerOrderedSeenMessages.slice().pop());
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -1538,8 +1433,7 @@ function factory(dependencies) {
                 return link(lastMessage);
             }
             return unlink();
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -1553,8 +1447,7 @@ function factory(dependencies) {
                 return link(lastMessage);
             }
             return unlink();
-        }
-
+        },
         /**
          * Adjusts the last seen message received from the server to consider
          * the following messages also as read if they are either transient
@@ -1589,8 +1482,7 @@ function factory(dependencies) {
                 return lastSeenByCurrentPartnerMessageId;
             }
             return lastSeenByCurrentPartnerMessageId;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -1607,8 +1499,7 @@ function factory(dependencies) {
                 return link(lastNeedactionMessageAsOriginThread);
             }
             return unlink();
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -1643,16 +1534,14 @@ function factory(dependencies) {
                 }
                 return total + 1;
             }, baseCounter);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
             return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message|undefined}
@@ -1675,40 +1564,35 @@ function factory(dependencies) {
                 return unlink();
             }
             return link(message);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
          */
         _computeOrderedOfflineMembers() {
             return replace(this._sortMembers(this.members.filter(member => !member.isOnline)));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
          */
         _computeOrderedOnlineMembers() {
             return replace(this._sortMembers(this.members.filter(member => member.isOnline)));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message[]}
          */
         _computeOrderedNonTransientMessages() {
             return replace(this.orderedMessages.filter(m => !m.isTransient));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
@@ -1717,8 +1601,7 @@ function factory(dependencies) {
             return replace(this.orderedTypingMembers.filter(
                 member => member !== this.messaging.currentPartner
             ));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
@@ -1730,24 +1613,21 @@ function factory(dependencies) {
                     .map(localId => this.messaging.models['mail.partner'].get(localId))
                     .filter(member => !!member),
             ]];
-        }
-
+        },
         /**
          * @private
          * @returns {mail.activity[]}
          */
         _computeOverdueActivities() {
             return replace(this.activities.filter(activity => activity.state === 'overdue'));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.activity[]}
          */
         _computeTodayActivities() {
             return replace(this.activities.filter(activity => activity.state === 'today'));
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -1774,16 +1654,14 @@ function factory(dependencies) {
                 this.orderedOtherTypingMembers[0].nameOrDisplayName,
                 this.orderedOtherTypingMembers[1].nameOrDisplayName
             );
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
          */
         _computeUnknownMemberCount() {
             return this.memberCount - this.members.length;
-        }
-
+        },
         /**
          * Compute an url string that can be used inside a href attribute
          *
@@ -1796,16 +1674,14 @@ function factory(dependencies) {
                 return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
             }
             return `${baseHref}#model=${this.model}&id=${this.id}`;
-        }
-
+        },
         /**
          * @private
          * @returns {number}
          */
         _computeVideoCount() {
             return this.rtcSessions.filter(session => session.videoStream).length;
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -1830,8 +1706,7 @@ function factory(dependencies) {
             }
             this._forceNotifyNextCurrentPartnerTypingStatus = false;
             this._currentPartnerLastNotifiedIsTyping = isTyping;
-        }
-
+        },
         /**
          * @private
          */
@@ -1839,8 +1714,7 @@ function factory(dependencies) {
             this.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
             });
-        }
-
+        },
         /**
          * Handles change of pinned state coming from the server. Useful to
          * clear pending state once server acknowledged the change.
@@ -1852,8 +1726,7 @@ function factory(dependencies) {
             if (this.isServerPinned === this.isPendingPinned) {
                 this.update({ isPendingPinned: clear() });
             }
-        }
-
+        },
         /**
          * Handles change of fold state coming from the server. Useful to
          * synchronize corresponding chat window.
@@ -1878,8 +1751,7 @@ function factory(dependencies) {
                     notifyServer: false,
                 });
             }
-        }
-
+        },
         /**
          * @private
          */
@@ -1905,8 +1777,7 @@ function factory(dependencies) {
                     },
                 },
             });
-        }
-
+        },
         /**
          * @private
          * @param {mail.partner[]} members
@@ -1924,19 +1795,13 @@ function factory(dependencies) {
                 }
                 return a.id - b.id;
             });
-        }
-
-        //----------------------------------------------------------------------
-        // Handlers
-        //----------------------------------------------------------------------
-
+        },
         /**
          * Event handler for clicking thread in discuss app.
          */
         async onClick() {
             await this.open();
-        }
-
+        },
         /**
          * Handles click on the "load more members" button.
          */
@@ -1950,15 +1815,13 @@ function factory(dependencies) {
                 },
             });
             this.update({ members });
-        }
-
+        },
         /**
          * @private
          */
         async _onCurrentPartnerInactiveTypingTimeout() {
             await this.async(() => this.unregisterCurrentPartnerIsTyping());
-        }
-
+        },
         /**
          * Called when current partner has been typing for a very long time.
          * Immediately notify other members that he/she is still typing.
@@ -1971,8 +1834,7 @@ function factory(dependencies) {
             await this.async(
                 () => this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true })
             );
-        }
-
+        },
         /**
          * @private
          * @param {mail.partner} partner
@@ -1983,11 +1845,9 @@ function factory(dependencies) {
                 return;
             }
             this.unregisterOtherMemberTypingMember(partner);
-        }
-
-    }
-
-    Thread.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the `mail.activity` that belong to `this`, assuming `this`
          * has activities (@see hasActivities).
@@ -2515,9 +2375,8 @@ function factory(dependencies) {
             compute: '_computeVideoCount',
             default: 0,
         }),
-    };
-    Thread.identifyingFields = ['model', 'id'];
-    Thread.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['lastSeenByCurrentPartnerMessageId'],
             methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
@@ -2530,10 +2389,5 @@ function factory(dependencies) {
             dependencies: ['serverFoldState'],
             methodName: '_onServerFoldStateChanged',
         }),
-    ];
-    Thread.modelName = 'mail.thread';
-
-    return Thread;
-}
-
-registerNewModel('mail.thread', factory);
+    ],
+});

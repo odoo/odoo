@@ -1,18 +1,12 @@
 /** @odoo-module **/
 
-import {
-    registerClassPatchModel,
-    registerFieldPatchModel,
-} from '@mail/model/model_core';
+import { addFields, patchModelMethods } from '@mail/model/model_core';
 import { many2one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/thread/thread';
 
-registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
-
-    //----------------------------------------------------------------------
-    // Public
-    //----------------------------------------------------------------------
-
+patchModelMethods('mail.thread', {
     /**
      * @override
      */
@@ -27,10 +21,9 @@ registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/threa
         }
         return data2;
     },
-
 });
 
-registerFieldPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
+addFields('mail.thread', {
     /**
      * Visitor connected to the livechat.
      */

@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import {
-    registerInstancePatchModel,
-    registerFieldPatchModel,
-} from '@mail/model/model_core';
+import { addFields, addRecordMethods } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/messaging/messaging';
 
-registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
+addRecordMethods('mail.messaging', {
     async fetchSnailmailCreditsUrl() {
         const snailmail_credits_url = await this.async(() => this.env.services.rpc({
             model: 'iap.account',
@@ -29,7 +28,7 @@ registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messag
     },
 });
 
-registerFieldPatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
+addFields('mail.messaging', {
     snailmail_credits_url: attr(),
     snailmail_credits_url_trial: attr(),
 });
