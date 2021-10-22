@@ -123,31 +123,6 @@ exports.PosModel = Backbone.Model.extend({
         }
         this.get('orders').on('add remove change', update_client, this);
         this.on('change:selectedOrder', update_client, this);
-
-        // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
-        // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
-        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
-        this.ready = this.rpc({
-                model: 'pos.session',
-                method: 'load_pos_data',
-                args: [[odoo.pos_session_id]],
-            }).then(async (loadedModels) => {
-                const tmp = {};
-                for (const model of self.models) {
-                    if (model.condition ? !model.condition(self) : false) continue;
-                    await model.loaded(self, loadedModels[model.model] || [], tmp);
-                }
-                return self.after_load_server_data();
-            }).then(() => {
-                // Remaining products and partners should be loaded in the background after
-                // `after_load_server_data`.
-                if (this.config.limited_products_loading && this.config.product_load_background) {
-                    this.loadProductsBackground();
-                }
-                if (this.config.limited_partners_loading && this.config.partner_load_background) {
-                    this.loadPartnersBackground();
-                }
-            });
     },
     getDefaultSearchDetails: function() {
         return {
@@ -586,7 +561,19 @@ exports.PosModel = Backbone.Model.extend({
         },
     },
     ],
-
+    load_server_data: async function(){
+        const loadedModels = await this.rpc({
+            model: 'pos.session',
+            method: 'load_pos_data',
+            args: [[odoo.pos_session_id]],
+        })
+        const tmp = {};
+        for (const model of this.models) {
+            if (model.condition ? !model.condition(this) : false) continue;
+            await model.loaded(this, loadedModels[model.model] || [], tmp);
+        }
+        return this.after_load_server_data();
+    },
     prepare_new_partners_domain: function(){
         return [['write_date','>', this.db.get_partner_write_date()]];
     },

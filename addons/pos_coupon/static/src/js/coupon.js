@@ -211,13 +211,11 @@ odoo.define('pos_coupon.pos', function (require) {
 
     var _posmodel_super = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
-        initialize: function () {
-            _posmodel_super.initialize.apply(this, arguments);
-            this.ready.then(() => {
-                if (this.get('selectedOrder')) {
-                    this.get('selectedOrder').trigger('update-rewards');
-                }
-            });
+        load_server_data: async function() {
+            await _posmodel_super.load_server_data.apply(this, arguments);
+            if (this.get('selectedOrder')) {
+                this.get('selectedOrder').trigger('update-rewards');
+            }
         },
     });
 

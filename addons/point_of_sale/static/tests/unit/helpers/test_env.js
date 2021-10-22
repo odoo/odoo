@@ -28,7 +28,7 @@ odoo.define('point_of_sale.test_env', async function (require) {
         setLoadingProgress: () => {},
         showLoadingSkip: () => {},
     });
-    await pos.ready;
+    await pos.load_server_data();
 
     /**
      * @param {Object} env default env

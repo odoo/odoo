@@ -136,7 +136,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     setLoadingProgress: this.setLoadingProgress.bind(this),
                 };
                 this.env.pos = new models.PosModel(posModelDefaultAttributes);
-                await this.env.pos.ready;
+                await this.env.pos.load_server_data();
                 // Load the saved `env.pos.toRefundLines` from localStorage when
                 // the PosModel is ready.
                 Object.assign(this.env.pos.toRefundLines, this.env.pos.db.load('TO_REFUND_LINES') || {});
@@ -160,6 +160,12 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     // Allow using the app even if not all the images are loaded.
                     // Basically, preload the images in the background.
                     this._preloadImages();
+                    if (this.env.pos.config.limited_partners_loading && this.env.pos.config.partner_load_background) {
+                        this.env.pos.loadPartnersBackground();
+                    }
+                    if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
+                        this.env.pos.loadProductsBackground().then(() => this.render());
+                    }
                 });
             } catch (error) {
                 let title = 'Unknown Error',
