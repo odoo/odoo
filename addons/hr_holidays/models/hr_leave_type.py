@@ -272,6 +272,7 @@ class HolidaysType(models.Model):
             employee_id = self.env.user.employee_id.id
         return employee_id
 
+    @api.depends_context('employee_id', 'default_employee_id')
     def _compute_leaves(self):
         data_days = {}
         employee_id = self._get_contextual_employee_id()
