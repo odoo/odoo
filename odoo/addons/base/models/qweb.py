@@ -939,7 +939,10 @@ class QWeb(object):
         body = []
         if el.getchildren():
             for item in el:
-                if not isinstance(item, etree._Comment):
+                if isinstance(item, etree._Comment):
+                    if self.env.context.get('preserve_comments'):
+                        self._appendText("<!--%s-->" % item.text, options)
+                else:
                     body.extend(self._compile_node(item, options, indent))
                 # comments can also contains tail text
                 if item.tail is not None:
