@@ -10,6 +10,7 @@ import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { View } from "@web/views/view";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { getIds, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
 
 const { Component, hooks } = owl;
 const { useExternalListener, useState, useSubEnv } = hooks;
@@ -128,8 +129,36 @@ export class KanbanRenderer extends Component {
         }
     }
 
+    /**
+     * When the kanban records are grouped, the 'false' or 'undefined' column
+     * must appear first.
+     * @returns {any[]}
+     */
+    getGroupsOrRecords() {
+        const { data, isGrouped } = this.props.list;
+        return isGrouped ? data.sort((a) => (a.value ? 1 : -1)) : data;
+    }
+
     getGroupName({ count, displayName, isLoaded }) {
         return isLoaded ? displayName : `${displayName} (${count})`;
+    }
+
+    canCreateGroup() {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        return activeActions.groupCreate && groupByField.type === "many2one";
+    }
+
+    canDeleteGroup(group) {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        return activeActions.groupDelete && isRelational(groupByField) && group.value;
+    }
+
+    canEditGroup(group) {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        return activeActions.groupEdit && isRelational(groupByField) && group.value;
     }
 
     getGroupClasses({ activeProgressValue, count, isLoaded, progress }) {

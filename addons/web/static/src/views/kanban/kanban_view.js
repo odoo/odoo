@@ -73,7 +73,12 @@ export class KanbanArchParser extends XMLParser {
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
-        const activeActions = this.getActiveActions(xmlDoc);
+        const activeActions = {
+            ...this.getActiveActions(xmlDoc),
+            groupCreate: this.isAttr(xmlDoc, "group_create").truthy(true),
+            groupDelete: this.isAttr(xmlDoc, "group_delete").truthy(true),
+            groupEdit: this.isAttr(xmlDoc, "group_edit").truthy(true),
+        };
         const quickCreate =
             activeActions.create &&
             this.isAttr(xmlDoc, "quick_create").truthy(true) &&

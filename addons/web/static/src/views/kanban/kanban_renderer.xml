@@ -3,7 +3,7 @@
 
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
-            <t t-foreach="props.list.data" t-as="groupOrRecord" t-key="groupOrRecord.id">
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.id">
                 <t t-if="props.list.isGrouped">
                     <t t-set="group" t-value="groupOrRecord" />
                     <div class="o_kanban_group"
@@ -27,13 +27,15 @@
                                             >
                                                 Fold
                                             </button>
-                                            <button role="menuitem"
+                                            <button t-if="canEditGroup(group)"
+                                                role="menuitem"
                                                 class="dropdown-item o_column_edit"
                                                 t-on-click="editGroup(group)"
                                             >
                                                 Edit Stage
                                             </button>
-                                            <button role="menuitem"
+                                            <button t-if="canDeleteGroup(group)"
+                                                role="menuitem"
                                                 class="dropdown-item o_column_delete"
                                                 t-on-click="deleteGroup(group)"
                                             >
@@ -96,7 +98,7 @@
                 </t>
             </t>
             <t t-if="props.list.isGrouped">
-                <div class="o_column_quick_create">
+                <div t-if="canCreateGroup()" class="o_column_quick_create">
                     <div t-if="state.quickCreateGroup" class="o_quick_create_unfolded">
                         <div class="o_kanban_header">
                             <div class="input-group">

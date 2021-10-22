@@ -3344,7 +3344,7 @@ QUnit.module('Views', {
                         assert.deepEqual(args.args[1], {date: '2017-02-28'});
                     } else if ("datetime" in args.args[1]) {
                         assert.deepEqual(args.args[1], {datetime: '2017-02-28 23:59:59'});
-                    } 
+                    }
                 }
                 return this._super(route, args);
             },
@@ -3365,7 +3365,7 @@ QUnit.module('Views', {
                         "Should now have 3 records");
 
         await kanban.reload({groupBy: ['datetime:month']});
-        
+
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
                         "1st column should contain 2 records of January month");
