@@ -153,8 +153,9 @@ class RecurrenceRule(models.Model):
                 on = _("on %s") % ", ".join([day_name for day_name in day_strings])
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
-                    weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    on = _("on the %(position)s %(weekday)s", position=recurrence.byday, weekday=weekday_label)
+                    position_label = dict(BYDAY_SELECTION)[recurrence.byday]
+                    weekday_label = dict(WEEKDAY_SELECTION)[recurrence.weekday]
+                    on = _("on the %(position)s %(weekday)s", position=position_label, weekday=weekday_label)
                 else:
                     on = _("day %s", recurrence.day)
             else:
