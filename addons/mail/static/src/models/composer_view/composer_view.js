@@ -1,21 +1,17 @@
 /** @odoo-module **/
 
 import { emojis } from '@mail/js/emojis';
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 
-function factory(dependencies) {
-
-    class ComposerView extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.composer_view',
+    identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
+    lifecycleHooks: {
         _willCreate() {
-            const res = super._willCreate(...arguments);
             /**
              * Determines whether there is a mention RPC currently in progress.
              * Useful to queue a new call if there is already one pending.
@@ -26,39 +22,25 @@ function factory(dependencies) {
              * RPC is done, if any.
              */
             this._nextMentionRpcFunction = undefined;
-            return res;
-        }
-
-        /**
-         * @override
-         */
-         _created() {
+        },
+        _created() {
             this.onClickCancelLink = this.onClickCancelLink.bind(this);
             this.onClickSaveLink = this.onClickSaveLink.bind(this);
             this.onClickStopReplying = this.onClickStopReplying.bind(this);
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             // Clears the mention queue on deleting the record to prevent
             // unnecessary RPC.
             this._nextMentionRpcFunction = undefined;
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Closes the suggestion list.
          */
         closeSuggestions() {
             this.update({ suggestionDelimiterPosition: clear() });
-        }
-
+        },
         /**
          * Hides the composer, which only makes sense if the composer is
          * currently used as a Discuss Inbox reply composer or as message
@@ -75,8 +57,7 @@ function factory(dependencies) {
                 }
                 threadView.update({ replyingToMessageView: clear() });
             }
-        }
-
+        },
         /**
          * Called when current partner is inserting some input in composer.
          * Useful to notify current partner is currently typing something in the
@@ -100,8 +81,7 @@ function factory(dependencies) {
             } else {
                 this.composer.thread.registerCurrentPartnerIsTyping();
             }
-        }
-
+        },
         /**
          * Inserts text content in text input based on selection.
          *
@@ -127,8 +107,7 @@ function factory(dependencies) {
                 textInputCursorStart: this.composer.textInputCursorStart + content.length,
             });
             this.update({ suggestionDelimiterPosition });
-        }
-
+        },
         /**
          * Inserts the active suggestion at the current cursor position.
          */
@@ -162,7 +141,7 @@ function factory(dependencies) {
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            switch (this.activeSuggestedRecord.constructor.modelName) {
+            switch (this.activeSuggestedRecord.constructor.name) {
                 case 'mail.thread':
                     Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
                     break;
@@ -171,9 +150,7 @@ function factory(dependencies) {
                     break;
             }
             this.composer.update(updateData);
-        }
-
-
+        },
         /**
          * Handles click on the cancel link.
          *
@@ -182,9 +159,7 @@ function factory(dependencies) {
         onClickCancelLink(ev) {
             ev.preventDefault();
             this.discard();
-        }
-
-
+        },
         /**
          * Handles click on the save link.
          *
@@ -206,8 +181,7 @@ function factory(dependencies) {
                 return;
             }
             this.postMessage();
-        }
-
+        },
         /**
          * Handles click on the "stop replying" button.
          *
@@ -217,8 +191,7 @@ function factory(dependencies) {
             this.threadView.update({
                 replyingToMessageView: clear(),
             });
-        }
-
+        },
         /**
          * Open the full composer modal.
          */
@@ -255,8 +228,7 @@ function factory(dependencies) {
                 },
             };
             await this.env.bus.trigger('do-action', { action, options });
-        }
-
+        },
         /**
          * Post a message in provided composer's thread based on current composer fields values.
          */
@@ -359,8 +331,7 @@ function factory(dependencies) {
                     composer.update({ isPostingMessage: false });
                 }
             }
-        }
-
+        },
         /**
          * Sets the first suggestion as active. Main and extra records are
          * considered together.
@@ -369,8 +340,7 @@ function factory(dependencies) {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
             this.update({ activeSuggestedRecord: link(firstRecord) });
-        }
-
+        },
         /**
          * Sets the last suggestion as active. Main and extra records are
          * considered together.
@@ -379,8 +349,7 @@ function factory(dependencies) {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const { length, [length - 1]: lastRecord } = suggestedRecords;
             this.update({ activeSuggestedRecord: link(lastRecord) });
-        }
-
+        },
         /**
          * Sets the next suggestion as active. Main and extra records are
          * considered together.
@@ -397,8 +366,7 @@ function factory(dependencies) {
             }
             const nextRecord = suggestedRecords[activeElementIndex + 1];
             this.update({ activeSuggestedRecord: link(nextRecord) });
-        }
-
+        },
         /**
          * Sets the previous suggestion as active. Main and extra records are
          * considered together.
@@ -415,8 +383,7 @@ function factory(dependencies) {
             }
             const previousRecord = suggestedRecords[activeElementIndex - 1];
             this.update({ activeSuggestedRecord: link(previousRecord) });
-        }
-
+        },
         /**
          * Update a posted message when the message is ready.
          */
@@ -447,12 +414,7 @@ function factory(dependencies) {
                     composer.update({ isPostingMessage: false });
                 }
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * Clears the active suggested record on closing mentions or adapt it if
          * the active current record is no longer part of the suggestions.
@@ -476,8 +438,7 @@ function factory(dependencies) {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
             return link(firstRecord);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -486,8 +447,7 @@ function factory(dependencies) {
             return (this.composer && this.composer.attachments.length > 0)
                 ? insertAndReplace()
                 : clear();
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -509,8 +469,7 @@ function factory(dependencies) {
                 return replace(this.chatter.thread.composer);
             }
             return clear();
-        }
-
+        },
         /**
          * Clears the extra suggested record on closing mentions, and ensures
          * the extra list does not contain any element already present in the
@@ -524,16 +483,14 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return unlink(this.mainSuggestedRecords);
-        }
-
+        },
         /**
          * @private
          * @return {boolean}
          */
         _computeHasSuggestions() {
             return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
-        }
-
+        },
         /**
          * Clears the main suggested record on closing mentions.
          *
@@ -544,8 +501,7 @@ function factory(dependencies) {
             if (this.suggestionDelimiterPosition === undefined) {
                 return unlinkAll();
             }
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -560,8 +516,7 @@ function factory(dependencies) {
                 return this.env._t("Log");
             }
             return this.env._t("Send");
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -575,8 +530,7 @@ function factory(dependencies) {
                 return clear();
             }
             return this.composer.textInputContent[this.suggestionDelimiterPosition];
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -594,8 +548,7 @@ function factory(dependencies) {
                 default:
                     return clear();
             }
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -609,8 +562,7 @@ function factory(dependencies) {
                 return clear();
             }
             return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
-        }
-
+        },
         /**
          * Executes the given async function, only when the last function
          * executed by this method terminates. If there is already a pending
@@ -635,9 +587,7 @@ function factory(dependencies) {
                     this._executeOrQueueFunction(this._nextMentionRpcFunction);
                 }
             }
-        }
-
-
+        },
         /**
          * @private
          * @param {string} htmlString
@@ -656,8 +606,7 @@ function factory(dependencies) {
                 }
             }
             return htmlString;
-        }
-
+        },
         /**
          *
          * Generates the html link related to the mentioned partner
@@ -706,8 +655,7 @@ function factory(dependencies) {
                 body = body.replace(mention.placeholder, link);
             }
             return body;
-        }
-
+        },
         /**
          * @private
          * @param {string} content html content
@@ -727,16 +675,14 @@ function factory(dependencies) {
                 });
             }
             return undefined;
-        }
-
+        },
         /**
          * Handles change of this composer. Useful to reset the state of the
          * composer text input.
          */
         _onChangeComposer() {
             this.composer.update({ isLastStateChangeProgrammatic: true });
-        }
-
+        },
         /**
          * @private
          */
@@ -784,8 +730,7 @@ function factory(dependencies) {
                 return;
             }
             return this.update({ suggestionDelimiterPosition: clear() });
-        }
-
+        },
         /**
          * Updates the suggestion state based on the currently saved composer
          * state (in particular content and cursor position).
@@ -825,8 +770,7 @@ function factory(dependencies) {
                     this.closeSuggestions();
                 }
             });
-        }
-
+        },
         /**
          * Updates the current suggestion list. This method should be called
          * whenever the UI has to be refreshed following change in state.
@@ -863,11 +807,9 @@ function factory(dependencies) {
                 hasToScrollToActiveSuggestion: true,
                 mainSuggestedRecords: replace(mainSuggestedRecords),
             });
-        }
-
-    }
-
-    ComposerView.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the suggested record that is currently active. This record
          * is highlighted in the UI and it will be the selected record if the
@@ -990,9 +932,8 @@ function factory(dependencies) {
             inverse: 'composerView',
             readonly: true,
         }),
-    };
-    ComposerView.identifyingFields = [['threadView', 'messageViewInEditing', 'chatter']];
-    ComposerView.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['composer'],
             methodName: '_onChangeComposer',
@@ -1005,10 +946,5 @@ function factory(dependencies) {
             dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
             methodName: '_onChangeUpdateSuggestionList',
         }),
-    ];
-    ComposerView.modelName = 'mail.composer_view';
-
-    return ComposerView;
-}
-
-registerNewModel('mail.composer_view', factory);
+    ],
+});

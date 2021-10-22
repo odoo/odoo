@@ -2,44 +2,30 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2one, one2many } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class UserSetting extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.user_setting',
+    identifyingFields: ['id'],
+    lifecycleHooks: {
         _created() {
-            const res = super._created(...arguments);
             this._timeoutIds = {};
             this._loadLocalSettings();
-            return res;
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             for (const timeoutId of Object.values(this._timeoutIds)) {
                 browser.clearTimeout(timeoutId);
             }
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @returns {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('use_push_to_talk' in data) {
                 data2.usePushToTalk = data.use_push_to_talk;
@@ -54,8 +40,9 @@ function factory(dependencies) {
                 data2.id = data.id;
             }
             return data2;
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * @returns {Object} MediaTrackConstraints
          */
@@ -68,8 +55,7 @@ function factory(dependencies) {
                 constraints.deviceId = this.audioInputDeviceId;
             }
             return constraints;
-        }
-
+        },
         /**
          * @param {event} ev
          * @param {Object} param1
@@ -89,8 +75,7 @@ function factory(dependencies) {
                 ev.ctrlKey === ctrlKey &&
                 ev.altKey === altKey
             );
-        }
-
+        },
         pushToTalkKeyFormat() {
             if (!this.pushToTalkKey) {
                 return;
@@ -102,14 +87,12 @@ function factory(dependencies) {
                 altKey: !!altKey,
                 key: key || false,
             };
-        }
-
+        },
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
             const f = (k, name) => k ? name : '';
             return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
-        }
-
+        },
         /**
          * @param {String} audioInputDeviceId
          */
@@ -119,8 +102,7 @@ function factory(dependencies) {
             });
             this.env.services.local_storage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
             await this.messaging.rtc.updateLocalAudioTrack(true);
-        }
-
+        },
         /**
          * @param {String} value
          */
@@ -130,8 +112,7 @@ function factory(dependencies) {
             if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
-        }
-
+        },
         /**
          * @param {event} ev
          */
@@ -141,8 +122,7 @@ function factory(dependencies) {
             if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
-        }
-
+        },
         /**
          * @param {Object} param0
          * @param {number} [param0.guestId]
@@ -167,8 +147,7 @@ function factory(dependencies) {
                     { shadow: true },
                 ));
             }, 5000, `sound_${partnerId}`);
-        }
-
+        },
         /**
          * @param {float} voiceActivationThreshold
          */
@@ -176,31 +155,23 @@ function factory(dependencies) {
             this.update({ voiceActivationThreshold });
             this.env.services.local_storage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold);
             await this.messaging.rtc.updateVoiceActivation();
-        }
-
+        },
         async togglePushToTalk() {
             this.update({ usePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
             if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
             }
-        }
-
+        },
         toggleLayoutSettingsWindow() {
             this.update({ isRtcLayoutSettingDialogOpen: !this.isRtcLayoutSettingDialogOpen });
-        }
-
+        },
         /**
          * toggles the display of the option window
          */
         toggleWindow() {
             this.update({ isOpen: !this.isOpen });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @param {function} f
@@ -215,8 +186,7 @@ function factory(dependencies) {
                 }
                 f();
             }, delay);
-        }
-
+        },
         /**
          * @private
          */
@@ -234,8 +204,7 @@ function factory(dependencies) {
                     audioInputDeviceId,
                 });
             }
-        }
-
+        },
         /**
          * @private
          */
@@ -254,11 +223,9 @@ function factory(dependencies) {
                     { shadow: true },
                 ));
             }, 2000, 'globalSettings');
-        }
-
-    }
-
-    UserSetting.fields = {
+        },
+    },
+    fields: {
         /**
          * DeviceId of the audio input selected by the user
          */
@@ -322,11 +289,5 @@ function factory(dependencies) {
             inverse: 'userSetting',
             isCausal: true,
         }),
-    };
-    UserSetting.identifyingFields = ['id'];
-    UserSetting.modelName = 'mail.user_setting';
-
-    return UserSetting;
-}
-
-registerNewModel('mail.user_setting', factory);
+    },
+});

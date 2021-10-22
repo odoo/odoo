@@ -1,34 +1,23 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, update } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
-function factory(dependencies) {
-
-    class ThreadView extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.thread_view',
+    identifyingFields: ['threadViewer'],
+    lifecycleHooks: {
         _created() {
             this._loaderTimeout = undefined;
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             this.env.browser.clearTimeout(this._loaderTimeout);
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * This function register a hint for the component related to this
          * record. Hints are information on changes around this viewer that
@@ -46,8 +35,7 @@ function factory(dependencies) {
             this.update({
                 componentHintList: this.componentHintList.concat([hint]),
             });
-        }
-
+        },
         /**
          * @param {mail.message} message
          */
@@ -55,8 +43,7 @@ function factory(dependencies) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
                 this.update({ lastVisibleMessage: link(message) });
             }
-        }
-
+        },
         /**
          * @param {Object} hint
          */
@@ -68,8 +55,7 @@ function factory(dependencies) {
                 hint,
                 threadViewer: this.threadViewer,
             });
-        }
-
+        },
         /**
          * Starts editing the last message of this thread from the current user.
          */
@@ -80,12 +66,7 @@ function factory(dependencies) {
             if (messageView) {
                 messageView.startEditing();
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          */
@@ -93,11 +74,7 @@ function factory(dependencies) {
             return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
                 ? insertAndReplace()
                 : clear();
-        }
-
-        /**
-         * @private
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -110,16 +87,14 @@ function factory(dependencies) {
                 return clear();
             }
             return insertAndReplace();
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasSquashCloseMessages() {
             return Boolean(this.threadViewer && !this.threadViewer.chatter && this.thread && this.thread.model !== 'mail.box');
-        }
-
+        },
         /**
          * @private
          * @returns {mail.message_view[]}
@@ -142,8 +117,7 @@ function factory(dependencies) {
                 prevMessage = message;
             }
             return insertAndReplace(messageViewsData);
-        }
-
+        },
         /**
          * @private
          * @returns {string[]}
@@ -166,8 +140,7 @@ function factory(dependencies) {
                 return ['ctrl-enter', 'meta-enter'];
             }
             return ['enter'];
-        }
-
+        },
         /**
          * @private
          * @returns {integer|undefined}
@@ -181,8 +154,7 @@ function factory(dependencies) {
                 return threadCacheInitialScrollHeight;
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {integer|undefined}
@@ -196,8 +168,7 @@ function factory(dependencies) {
                 return threadCacheInitialScrollPosition;
             }
             return clear();
-        }
-
+        },
         /**
          * Not a real field, used to trigger `thread.markAsSeen` when one of
          * the dependencies changes.
@@ -232,15 +203,13 @@ function factory(dependencies) {
                     throw e;
                 }
             });
-        }
-
+        },
         /**
          * @private
          */
         _computeTopbar() {
             return this.hasTopbar ? insertAndReplace() : clear();
-        }
-
+        },
         /**
          * @private
          */
@@ -255,8 +224,7 @@ function factory(dependencies) {
                 });
             }
             this.update({ lastVisibleMessage: unlink() });
-        }
-
+        },
         /**
          * @private
          */
@@ -279,8 +247,7 @@ function factory(dependencies) {
             }
             this.env.browser.clearTimeout(this._loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
-        }
-
+        },
         /**
          * @param {mail.message} prevMessage
          * @param {mail.message} message
@@ -336,11 +303,9 @@ function factory(dependencies) {
                 return false;
             }
             return true;
-        }
-
-    }
-
-    ThreadView.fields = {
+        },
+    },
+    fields: {
         compact: attr({
             related: 'threadViewer.compact',
         }),
@@ -550,9 +515,8 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-    };
-    ThreadView.identifyingFields = ['threadViewer'];
-    ThreadView.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['threadCache'],
             methodName: '_onThreadCacheChanged',
@@ -565,10 +529,5 @@ function factory(dependencies) {
             dependencies: ['hasComposerFocus', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
             methodName: '_computeThreadShouldBeSetAsSeen',
         }),
-    ];
-    ThreadView.modelName = 'mail.thread_view';
-
-    return ThreadView;
-}
-
-registerNewModel('mail.thread_view', factory);
+    ],
+});

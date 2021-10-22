@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
-import { registerFieldPatchModel, registerInstancePatchModel } from '@mail/model/model_core';
+import { addFields, patchRecordMethods } from '@mail/model/model_core';
 import { one2one } from '@mail/model/model_field';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/discuss/discuss';
 
-registerInstancePatchModel('mail.discuss', 'im_livechat/static/src/models/discuss/discuss.js', {
-
+patchRecordMethods('mail.discuss', {
     /**
      * @override
      */
@@ -16,7 +17,7 @@ registerInstancePatchModel('mail.discuss', 'im_livechat/static/src/models/discus
     },
 });
 
-registerFieldPatchModel('mail.discuss', 'im_livechat/static/src/models/discuss/discuss.js', {
+addFields('mail.discuss', {
     /**
      * Discuss sidebar category for `livechat` channel threads.
      */

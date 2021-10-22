@@ -1,13 +1,10 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+import { patchRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/discuss_sidebar_category_item/discuss_sidebar_category_item';
 
-registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/static/src/models/discuss_sidebar_category_item/discuss_sidebar_category_item.js', {
-
-    //----------------------------------------------------------------------
-    // Private
-    //----------------------------------------------------------------------
-
+patchRecordMethods('mail.discuss_sidebar_category_item', {
     /**
      * @override
      */
@@ -20,7 +17,6 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
         }
         return this._super();
     },
-
     /**
      * @override
      */
@@ -30,7 +26,6 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
         }
         return this._super();
     },
-
     /**
      * @override
      */
@@ -40,7 +35,6 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
         }
         return this._super();
     },
-
     /**
      * @override
      */
@@ -50,5 +44,4 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
         }
         return this._super();
     },
-
 });

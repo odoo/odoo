@@ -1,23 +1,18 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Notification extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.notification',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('failure_type' in data) {
                 data2.failure_type = data.failure_type;
@@ -42,16 +37,16 @@ function factory(dependencies) {
                 }
             }
             return data2;
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsFailure() {
             return ['exception', 'bounce'].includes(this.notification_status);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean|FieldCommand}
@@ -61,8 +56,7 @@ function factory(dependencies) {
                 return clear();
             }
             return this.messaging.currentPartner === this.message.author;
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -82,11 +76,9 @@ function factory(dependencies) {
                 res_model: thread.model,
                 res_model_name: thread.model_name,
             });
-        }
-
-    }
-
-    Notification.fields = {
+        },
+    },
+    fields: {
         failure_type: attr(),
         id: attr({
             readonly: true,
@@ -108,11 +100,5 @@ function factory(dependencies) {
         notification_status: attr(),
         notification_type: attr(),
         partner: many2one('mail.partner'),
-    };
-    Notification.identifyingFields = ['id'];
-    Notification.modelName = 'mail.notification';
-
-    return Notification;
-}
-
-registerNewModel('mail.notification', factory);
+    },
+});

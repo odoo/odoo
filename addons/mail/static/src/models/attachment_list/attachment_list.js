@@ -1,17 +1,27 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class AttachmentList extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.attachment_list',
+    identifyingFields: [['composerView', 'messageView', 'chatter']],
+    recordMethods: {
+        _computeAttachmentImages() {
+            return insertAndReplace(this.imageAttachments.map(attachment => {
+                return {
+                    attachment: replace(attachment),
+                };
+            }));
+        },
+        _computeAttachmentCards() {
+            return insertAndReplace(this.nonImageAttachments.map(attachment => {
+                return {
+                    attachment: replace(attachment),
+                };
+            }));
+        },
         /**
          * @returns {mail.attachment[]}
          */
@@ -26,48 +36,27 @@ function factory(dependencies) {
                 return replace(this.composerView.composer.attachments);
             }
             return clear();
-        }
-
-        _computeAttachmentImages() {
-            return insertAndReplace(this.imageAttachments.map(attachment => {
-                return {
-                    attachment: replace(attachment),
-                };
-            }));
-        }
-
-        _computeAttachmentCards() {
-            return insertAndReplace(this.nonImageAttachments.map(attachment => {
-                return {
-                    attachment: replace(attachment),
-                };
-            }));
-        }
-
+        },
         /**
          * @returns {mail.attachment[]}
          */
         _computeImageAttachments() {
             return replace(this.attachments.filter(attachment => attachment.isImage));
-        }
-
+        },
         /**
          * @returns {mail.attachment[]}
          */
         _computeNonImageAttachments() {
             return replace(this.attachments.filter(attachment => !attachment.isImage));
-        }
-
+        },
         /**
          * @returns {mail.attachment[]}
          */
         _computeViewableAttachments() {
             return replace(this.attachments.filter(attachment => attachment.isViewable));
-        }
-
-    }
-
-    AttachmentList.fields = {
+        },
+    },
+    fields: {
         /**
          * States the attachments to be displayed by this attachment list.
          */
@@ -140,11 +129,5 @@ function factory(dependencies) {
         viewableAttachments: many2many('mail.attachment', {
             compute: '_computeViewableAttachments',
         }),
-    };
-    AttachmentList.identifyingFields = [['composerView', 'messageView', 'chatter']];
-    AttachmentList.modelName = 'mail.attachment_list';
-
-    return AttachmentList;
-}
-
-registerNewModel('mail.attachment_list', factory);
+    },
+});

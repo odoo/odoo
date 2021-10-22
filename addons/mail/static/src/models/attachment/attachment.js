@@ -1,32 +1,25 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Attachment extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.attachment',
+    identifyingFields: ['id'],
+    lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickDownload = this.onClickDownload.bind(this);
-        }
-
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    modelMethods: {
         /**
          * @static
          * @param {Object} data
          * @return {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('filename' in data) {
                 data2.filename = data.filename;
@@ -51,15 +44,15 @@ function factory(dependencies) {
                 data2.originThread = data.originThread;
             }
             return data2;
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Send the attachment for the browser to download.
          */
         download() {
             this.env.services.navigate(`/web/content/ir.attachment/${this.id}/datas`, { download: true });
-        }
-
+        },
         /**
          * Handles click on download icon.
          *
@@ -68,8 +61,7 @@ function factory(dependencies) {
         onClickDownload(ev) {
             ev.stopPropagation();
             this.download();
-        }
-
+        },
         /**
          * Remove this attachment globally.
          */
@@ -94,12 +86,7 @@ function factory(dependencies) {
                 this.uploadingAbortController.abort();
             }
             this.delete();
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {string|undefined}
@@ -124,8 +111,7 @@ function factory(dependencies) {
                 return `https://www.youtube.com/embed/${token}`;
             }
             return `/web/content/${this.id}`;
-        }
-
+        },
         /**
          * @private
          * @returns {string|undefined}
@@ -136,8 +122,7 @@ function factory(dependencies) {
                 return displayName;
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -148,8 +133,7 @@ function factory(dependencies) {
             }
             const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
             return `/web/content/ir.attachment/${this.id}/datas${accessToken}`;
-        }
-
+        },
         /**
          * @private
          * @returns {string|undefined}
@@ -160,8 +144,7 @@ function factory(dependencies) {
                 return extension;
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -177,16 +160,14 @@ function factory(dependencies) {
                     (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
                 ))
                 : true;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsPdf() {
             return this.mimetype === 'application/pdf';
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -202,8 +183,7 @@ function factory(dependencies) {
                 'image/x-icon',
             ];
             return imageMimetypes.includes(this.mimetype);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -217,8 +197,7 @@ function factory(dependencies) {
                 'text/plain',
             ];
             return textMimeType.includes(this.mimetype);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -231,32 +210,28 @@ function factory(dependencies) {
                 'video/webm',
             ];
             return videoMimeTypes.includes(this.mimetype);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsUrl() {
             return this.type === 'url' && this.url;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsViewable() {
             return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsUrlYoutube() {
             return !!this.url && this.url.includes('youtu');
-        }
-
+        },
         /**
          * @deprecated
          * @private
@@ -264,8 +239,7 @@ function factory(dependencies) {
          */
         _computeMediaType() {
             return this.mimetype && this.mimetype.split('/').shift();
-        }
-
+        },
         /**
          * @private
          * @returns {AbortController|undefined}
@@ -284,10 +258,9 @@ function factory(dependencies) {
                 return this.uploadingAbortController;
             }
             return;
-        }
-    }
-
-    Attachment.fields = {
+        },
+    },
+    fields: {
         accessToken: attr(),
         activities: many2many('mail.activity', {
             inverse: 'attachments',
@@ -427,11 +400,5 @@ function factory(dependencies) {
             compute: '_computeUploadingAbortController',
         }),
         url: attr(),
-    };
-    Attachment.identifyingFields = ['id'];
-    Attachment.modelName = 'mail.attachment';
-
-    return Attachment;
-}
-
-registerNewModel('mail.attachment', factory);
+    },
+});

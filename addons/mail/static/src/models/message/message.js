@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
@@ -10,20 +10,15 @@ import { session } from '@web/session';
 
 import { str_to_datetime } from 'web.time';
 
-function factory(dependencies) {
-
-    class Message extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.message',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('attachment_ids' in data) {
                 if (!data.attachment_ids) {
@@ -131,22 +126,19 @@ function factory(dependencies) {
             }
 
             return data2;
-        }
-
+        },
         /**
          * Mark all messages of current user with given domain as read.
          *
-         * @static
          * @param {Array[]} domain
          */
-        static async markAllAsRead(domain) {
+        async markAllAsRead(domain) {
             await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'mark_all_as_read',
                 kwargs: { domain },
             });
-        }
-
+        },
         /**
          * Mark provided messages as read. Messages that have been marked as
          * read are acknowledged by server with response as longpolling
@@ -156,26 +148,23 @@ function factory(dependencies) {
          *
          * @see mail.messaging_notification_handler:_handleNotificationPartnerMarkAsRead()
          *
-         * @static
          * @param {mail.message[]} messages
          */
-        static async markAsRead(messages) {
+        async markAsRead(messages) {
             await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'set_message_done',
                 args: [messages.map(message => message.id)]
             });
-        }
-
+        },
         /**
          * Performs the given `route` RPC to fetch messages.
          *
-         * @static
          * @param {string} route
          * @param {Object} params
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(route, params) {
+        async performRpcMessageFetch(route, params) {
             const messagesData = await this.env.services.rpc({ route, params }, { shadow: true });
             if (!this.messaging) {
                 return;
@@ -198,18 +187,18 @@ function factory(dependencies) {
                 }
             }
             return messages;
-        }
-
+        },
         /**
          * Unstar all starred messages of current user.
          */
-        static async unstarAll() {
+        async unstarAll() {
             await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'unstar_all',
             });
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Adds the given reaction on this message.
          *
@@ -224,8 +213,7 @@ function factory(dependencies) {
                 return;
             }
             this.update(messageData);
-        }
-
+        },
         /**
          * Mark this message as read, so that it no longer appears in current
          * partner Inbox.
@@ -236,8 +224,7 @@ function factory(dependencies) {
                 method: 'set_message_done',
                 args: [[this.id]]
             }));
-        }
-
+        },
         /**
          * Opens the view that allows to resend the message in case of failure.
          */
@@ -250,15 +237,13 @@ function factory(dependencies) {
                     },
                 },
             });
-        }
-
+        },
         /**
          * Refreshes the value of `dateFromNow` field to the "current now".
          */
         refreshDateFromNow() {
             this.update({ dateFromNow: this._computeDateFromNow() });
-        }
-
+        },
         /**
          * Removes the given reaction from this message.
          *
@@ -273,8 +258,7 @@ function factory(dependencies) {
                 return;
             }
             this.update(messageData);
-        }
-
+        },
         /**
          * Toggle the starred status of the provided message.
          */
@@ -284,8 +268,7 @@ function factory(dependencies) {
                 method: 'toggle_message_starred',
                 args: [[this.id]]
             }));
-        }
-
+        },
         /**
          * Updates the message's content.
          *
@@ -305,12 +288,7 @@ function factory(dependencies) {
                 return;
             }
             this.messaging.models['mail.message'].insert(messageData);
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @returns {string|FieldCommand}
          */
@@ -325,8 +303,7 @@ function factory(dependencies) {
                 return this.email_from;
             }
             return this.env._t("Anonymous");
-        }
-
+        },
         /**
          * @returns {boolean}
          */
@@ -344,15 +321,13 @@ function factory(dependencies) {
                 return this.message_type === 'comment';
             }
             return this.is_note;
-        }
-
+        },
         /**
          * @returns {boolean}
          */
         _computeCanStarBeToggled() {
             return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
-        }
-
+        },
         /**
          * @returns {string}
          */
@@ -373,8 +348,7 @@ function factory(dependencies) {
                 return this.env._t("Yesterday");
             }
             return this.date.format('LL');
-        }
-
+        },
         /**
          * @returns {string}
          */
@@ -383,15 +357,13 @@ function factory(dependencies) {
                 return clear();
             }
             return timeFromNow(this.date);
-        }
-
+        },
         /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
             return replace(this.notifications.filter(notifications => notifications.isFailure));
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -406,8 +378,7 @@ function factory(dependencies) {
                 this.messaging.currentGuest &&
                 this.messaging.currentGuest === this.guestAuthor
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -418,8 +389,7 @@ function factory(dependencies) {
             }
             const inlineBody = htmlToTextContentInline(this.body);
             return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
-        }
-
+        },
         /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
@@ -453,8 +423,7 @@ function factory(dependencies) {
                 this.tracking_value_ids.length === 0 &&
                 !this.subtype_description
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -465,8 +434,7 @@ function factory(dependencies) {
                 this.originThread &&
                 this.originThread.model === 'mail.channel'
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -497,8 +465,7 @@ function factory(dependencies) {
                 }
             }
             return false;
-        }
-
+        },
         /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
@@ -536,8 +503,7 @@ function factory(dependencies) {
             }
             // add anchor tags to urls
             return parseAndTransform(prettyBody, addLink);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.thread[]}
@@ -557,11 +523,9 @@ function factory(dependencies) {
                 threads.push(this.originThread);
             }
             return replace(threads);
-        }
-
-    }
-
-    Message.fields = {
+        },
+    },
+    fields: {
         authorName: attr({
             compute: '_computeAuthorName',
         }),
@@ -773,11 +737,5 @@ function factory(dependencies) {
         tracking_value_ids: attr({
             default: [],
         }),
-    };
-    Message.identifyingFields = ['id'];
-    Message.modelName = 'mail.message';
-
-    return Message;
-}
-
-registerNewModel('mail.message', factory);
+    },
+});

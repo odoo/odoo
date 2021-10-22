@@ -1,60 +1,44 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { many2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
- * This function generates a class that represent a model. Instances of such
- * model (or inherited models) represent logical objects used in whole
- * application. They could represent server record (e.g. Thread, Message) or
- * UI elements (e.g. MessagingMenu, ChatWindow). These instances are called
- * "records", while the classes are called "models".
+ * The object below defines a model. Instances of such model (or inherited
+ * models) represent logical objects used in whole application. They could
+ * represent server record (e.g. Thread, Message) or UI elements (e.g.
+ * MessagingMenu, ChatWindow). These instances are called "records".
  */
-function factory() {
-
-    class Model {
-
-        /**
-         * @param {Object} [param0={}]
-         * @param {string} param0.localId
-         * @param {boolean} [param0.valid=false] if set, this constructor is
-         *   called by static method `create()`. This should always be the case.
-         * @throws {Error} in case constructor is called in an invalid way, i.e.
-         *   by instantiating the record manually with `new` instead of from
-         *   static method `create()`.
-         */
-        constructor({ localId, valid = false } = {}) {
-            if (!valid) {
-                throw new Error("Record must always be instantiated from static method 'create()'");
-            }
-            Object.assign(this, {
-                // The unique record identifier.
-                localId,
-                // Listeners that are bound to this record, to be notified of
-                // change in dependencies of compute, related and "on change".
-                __listeners: [],
-                // Field values of record.
-                __values: {},
-            });
-        }
-
+registerModel({
+    /**
+     * Name of the model. Important to refer to appropriate model like in
+     * relational fields. Name of models must be unique.
+     */
+    name: 'mail.model',
+     /**
+     * Determines which fields are identifying fields for this model. Must be
+     * overwritten in actual models. This should be a list of either field name
+     * or sub-list of field name. Each top level element will be parsed as "and"
+     * and each element of the same sub-list will be parsed as "or". If there
+     * is no identifying fields, this model generates a singleton.
+     */
+    identifyingFields: ['messaging'],
+    lifecycleHooks: {
         /**
          * This function is called during the create cycle, when the record has
          * already been created, but its values have not yet been assigned.
          *
-         * It is usually preferable to override @see `_created`.
+         * It is usually preferable to use @see `_created`.
          *
          * The main use case is to prepare the record for the assignation of its
          * values, for example if a computed field relies on the record to have
          * some purely technical property correctly set.
          *
-         * @abstract
          * @private
          */
-        _willCreate() {}
-
+        _willCreate() {},
         /**
          * This function is called after the record has been created, more
          * precisely at the end of the update cycle (which means all implicit
@@ -62,11 +46,9 @@ function factory() {
          *
          * The main use case is to register listeners on the record.
          *
-         * @abstract
          * @private
          */
-        _created() {}
-
+        _created() {},
         /**
          * This function is called when the record is about to be deleted. The
          * record still has all of its fields values accessible, but for all
@@ -75,65 +57,45 @@ function factory() {
          *
          * The main use case is to unregister listeners on the record.
          *
-         * @abstract
          * @private
          */
-        _willDelete() {}
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        _willDelete() {},
+    },
+    modelMethods: {
         /**
          * Returns all records of this model that match provided criteria.
          *
-         * @static
          * @param {function} [filterFunc]
          * @returns {mail.model[]}
          */
-        static all(filterFunc) {
+        all(filterFunc) {
             return this.modelManager.all(this, filterFunc);
-        }
-
+        },
         /**
          * @deprecated use insert instead
          */
-        static create(data) {
+        create(data) {
             return this.modelManager.create(this, data);
-        }
-
-        /**
-         * Returns the current env.
-         *
-         * @returns {Object}
-         */
-        static get env() {
-            return this.modelManager.env;
-        }
-
+        },
         /**
          * Get the record that has provided criteria, if it exists.
          *
-         * @static
          * @param {function} findFunc
          * @returns {mail.model|undefined}
          */
-        static find(findFunc) {
+        find(findFunc) {
             return this.modelManager.find(this, findFunc);
-        }
-
+        },
         /**
          * Gets the unique record that matches the given identifying data, if it
          * exists.
          *
-         * @static
          * @param {Object} data
          * @returns {mail.model|undefined}
          */
-        static findFromIdentifyingData(data) {
+        findFromIdentifyingData(data) {
             return this.modelManager.findFromIdentifyingData(this, data);
-        }
-
+        },
         /**
          * This method returns the record of this model that matches provided
          * local id. Useful to convert a local id to a record. Note that even
@@ -141,58 +103,63 @@ function factory() {
          * resulting record is not an instance of this model, this getter
          * assumes the record does not exist.
          *
-         * @static
          * @param {string} localId
          * @param {Object} param1
          * @param {boolean} [param1.isCheckingInheritance]
          * @returns {mail.model|undefined}
          */
-        static get(localId, { isCheckingInheritance } = {}) {
+        get(localId, { isCheckingInheritance } = {}) {
             return this.modelManager.get(this, localId, { isCheckingInheritance });
-        }
-
+        },
         /**
          * This method creates a record or updates one, depending on provided
          * data. This is the only way to create a record: instantiation must
          * never been done with keyword `new` outside of this function,
          * otherwise the record will not be registered correctly.
          *
-         * @static
          * @param {Object|Object[]} [data={}]
          *  If data is an iterable, multiple records will be created/updated.
          * @returns {mail.model|mail.model[]} created or updated record(s).
          */
-        static insert(data = {}) {
+        insert(data = {}) {
             return this.modelManager.insert(this, data);
-        }
-
-        /**
-         * Returns the messaging singleton.
-         *
-         * @returns {mail.messaging}
-         */
-        static get messaging() {
-            return this.modelManager.messaging;
-        }
-
-        /**
-         * Returns all existing models.
-         *
-         * @returns {Object} keys are model name, values are model class.
-         */
-        static get models() {
-            return this.modelManager.models;
-        }
-
+        },
         /**
          * Returns a string representation of this model.
          *
          * @returns {string}
          */
-        static toString() {
-            return `model(${this.modelName})`;
-        }
-
+        toString() {
+            return `model(${this.name})`;
+        },
+    },
+    modelGetters: {
+        /**
+         * Returns the current env.
+         *
+         * @returns {Object}
+         */
+        env() {
+            return this.modelManager.env;
+        },
+        /**
+         * Returns the messaging singleton.
+         *
+         * @returns {mail.messaging}
+         */
+        messaging() {
+            return this.modelManager.messaging;
+        },
+        /**
+         * Returns all existing models.
+         *
+         * @returns {Object} keys are model name, values are model class.
+         */
+        models() {
+            return this.modelManager.models;
+        },
+    },
+    recordMethods: {
         /**
          * Perform an async function and wait until it is done. If the record
          * is deleted, it raises a RecordDeletedError.
@@ -221,24 +188,13 @@ function factory() {
                     }
                 });
             });
-        }
-
+        },
         /**
          * This method deletes this record.
          */
         delete() {
             this.modelManager.delete(this);
-        }
-
-        /**
-         * Returns the current env.
-         *
-         * @returns {Object}
-         */
-        get env() {
-            return this.modelManager.env;
-        }
-
+        },
         /**
          * Returns whether the current record exists.
          *
@@ -246,33 +202,13 @@ function factory() {
          */
         exists() {
             return this.modelManager.exists(this.constructor, this);
-        }
-
-        /**
-         * Returns the model manager.
-         *
-         * @returns {ModelManager}
-         */
-        get modelManager() {
-            return this.constructor.modelManager;
-        }
-
-        /**
-         * Returns all existing models.
-         *
-         * @returns {Object} keys are model name, values are model class.
-         */
-        get models() {
-            return this.modelManager.models;
-        }
-
+        },
         /**
          * Returns a string representation of this record.
          */
         toString() {
             return `record(${this.localId})`;
-        }
-
+        },
         /**
          * Update this record with provided data.
          *
@@ -280,10 +216,34 @@ function factory() {
          */
         update(data = {}) {
             this.modelManager.update(this, data);
-        }
-
-    }
-
+        },
+    },
+    recordGetters: {
+        /**
+         * Returns the current env.
+         *
+         * @returns {Object}
+         */
+        env() {
+            return this.modelManager.env;
+        },
+        /**
+         * Returns the model manager.
+         *
+         * @returns {ModelManager}
+         */
+        modelManager() {
+            return this.constructor.modelManager;
+        },
+        /**
+         * Returns all existing models.
+         *
+         * @returns {Object} keys are model name, values are model class.
+         */
+        models() {
+            return this.modelManager.models;
+        },
+    },
     /**
      * Models should define fields in static prop or getter `fields`.
      * It contains an object with name of field as key and value are objects
@@ -293,7 +253,7 @@ function factory() {
      * Note: fields of super-class are automatically inherited, therefore a
      * sub-class should (re-)define fields without copying ancestors' fields.
      */
-    Model.fields = {
+    fields: {
         /**
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
@@ -304,24 +264,5 @@ function factory() {
             readonly: true,
             required: true,
         }),
-    };
-
-    /**
-     * Determines which fields are identifying fields for this model. Must be
-     * overwritten in actual models. This should be a list of either field name
-     * or sub-list of field name. Each top level element will be parsed as "and"
-     * and each element of the same sub-list will be parsed as "or". If there
-     * is no identifying fields, this model generates a singleton.
-     */
-    Model.identifyingFields = ['messaging'];
-
-    /**
-     * Name of the model. Important to refer to appropriate model class
-     * like in relational fields. Name of model classes must be unique.
-     */
-    Model.modelName = 'mail.model';
-
-    return Model;
-}
-
-registerNewModel('mail.model', factory);
+    },
+});

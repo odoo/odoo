@@ -1,29 +1,24 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { clear, link } from '@mail/model/model_field_command';
 import { isEventHandled } from '@mail/utils/utils';
 
 import Dialog from 'web.Dialog';
 
-function factory(dependencies) {
-    class DiscussSidebarCategoryItem extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.discuss_sidebar_category_item',
+    identifyingFields: ['category', 'channel'],
+    lifecycleHooks: {
         _created() {
             this.onClick = this.onClick.bind(this);
             this.onClickCommandLeave = this.onClickCommandLeave.bind(this);
             this.onClickCommandSettings = this.onClickCommandSettings.bind(this);
             this.onClickCommandUnpin = this.onClickCommandUnpin.bind(this);
-        }
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @returns {string}
@@ -36,8 +31,7 @@ function factory(dependencies) {
                 case 'chat':
                     return this.channel.correspondent.avatarUrl;
             }
-        }
-
+        },
         /**
          * @private
          * @returns {mail.thread}
@@ -47,8 +41,7 @@ function factory(dependencies) {
                 id: this.channel.id,
                 model: 'mail.channel',
             }));
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -61,8 +54,7 @@ function factory(dependencies) {
                 case 'group':
                     return this.channel.localMessageUnreadCounter;
             }
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -73,32 +65,28 @@ function factory(dependencies) {
                 !this.channel.message_needaction_counter &&
                 !this.channel.group_based_subscription
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasSettingsCommand() {
             return this.channelType === 'channel';
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasUnpinCommand() {
             return this.channelType === 'chat' && !this.channel.localMessageUnreadCounter;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsActive() {
             return this.messaging.discuss && this.channel === this.messaging.discuss.thread;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -108,8 +96,7 @@ function factory(dependencies) {
                 return clear();
             }
             return this.channel.localMessageUnreadCounter > 0;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -123,19 +110,13 @@ function factory(dependencies) {
                 case 'group':
                     return false;
             }
-        }
-
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         onClick(ev) {
             this.channel.open();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -148,8 +129,7 @@ function factory(dependencies) {
                 await this._askLeaveGroupConfirmation();
             }
             this.channel.leave();
-        }
-
+        },
         /**
          * Redirects to channel form page when `settings` command is clicked.
          *
@@ -166,16 +146,14 @@ function factory(dependencies) {
                     target: 'current',
                 },
             });
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         onClickCommandUnpin(ev) {
             ev.stopPropagation();
             this.channel.unsubscribe();
-        }
-
+        },
         /**
          * @private
          * @returns {Promise}
@@ -200,8 +178,7 @@ function factory(dependencies) {
                     }
                 );
             });
-        }
-
+        },
         /**
          * @private
          * @returns {Promise}
@@ -226,11 +203,9 @@ function factory(dependencies) {
                     }
                 );
             });
-        }
-
-    }
-
-    DiscussSidebarCategoryItem.fields = {
+        },
+    },
+    fields: {
         /**
          * Image URL for the related channel thread.
          */
@@ -301,12 +276,5 @@ function factory(dependencies) {
         channelType: attr({
             related: 'channel.channel_type',
         }),
-
-    };
-    DiscussSidebarCategoryItem.identifyingFields = ['category', 'channel'];
-    DiscussSidebarCategoryItem.modelName = 'mail.discuss_sidebar_category_item';
-
-    return DiscussSidebarCategoryItem;
-}
-
-registerNewModel('mail.discuss_sidebar_category_item', factory);
+    },
+});

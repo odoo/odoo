@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
-import {
-    registerClassPatchModel,
-    registerInstancePatchModel,
-    registerFieldPatchModel
-} from'@mail/model/model_core';
+import { addFields, patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/activity/activity';
 
-registerFieldPatchModel('mail.activity', 'calendar/static/src/models/activity/activity.js', {
+addFields('mail.activity', {
     calendar_event_id: attr({ default: false }),
 });
 
-registerClassPatchModel('mail.activity', 'calendar/static/src/models/activity/activity.js', {
+patchModelMethods('mail.activity', {
     /**
      * @override
      */
@@ -24,7 +22,7 @@ registerClassPatchModel('mail.activity', 'calendar/static/src/models/activity/ac
     },
 });
 
-registerInstancePatchModel('mail.activity', 'calendar/static/src/models/activity/activity.js', {
+patchRecordMethods('mail.activity', {
     /**
      * @override
      */
@@ -40,7 +38,6 @@ registerInstancePatchModel('mail.activity', 'calendar/static/src/models/activity
             this.delete();
         }
     },
-
     /**
      * In case the activity is linked to a meeting, we want to open the calendar view instead.
      *
@@ -59,5 +56,5 @@ registerInstancePatchModel('mail.activity', 'calendar/static/src/models/activity
                 action
             });
         }
-    }
+    },
 });

@@ -1,20 +1,14 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2many } from '@mail/model/model_field';
 import { insert, link, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Visitor extends dependencies['mail.model'] {
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @override
-         */
-        static convertData(data) {
+registerModel({
+    name: 'website_livechat.visitor',
+    identifyingFields: ['id'],
+    modelMethods: {
+        convertData(data) {
             const data2 = {};
             if ('country_id' in data) {
                 if (data.country_id) {
@@ -52,12 +46,9 @@ function factory(dependencies) {
                 data2.website_name = data.website_name;
             }
             return data2;
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @returns {string}
@@ -67,8 +58,7 @@ function factory(dependencies) {
                 return '/mail/static/src/img/smiley/avatar.jpg';
             }
             return this.partner.avatarUrl;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.country}
@@ -81,8 +71,7 @@ function factory(dependencies) {
                 return link(this.country);
             }
             return unlink();
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -92,10 +81,9 @@ function factory(dependencies) {
                 return this.partner.nameOrDisplayName;
             }
             return this.display_name;
-        }
-    }
-
-    Visitor.fields = {
+        },
+    },
+    fields: {
         /**
          * Url to the avatar of the visitor.
          */
@@ -148,11 +136,5 @@ function factory(dependencies) {
          * Name of the website on which the visitor is connected. (Ex: "Website 1")
          */
         website_name: attr(),
-    };
-    Visitor.identifyingFields = ['id'];
-    Visitor.modelName = 'website_livechat.visitor';
-
-    return Visitor;
-}
-
-registerNewModel('website_livechat.visitor', factory);
+    },
+});

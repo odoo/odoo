@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class MessageView extends dependencies['mail.model'] {
-
+registerModel({
+    name: 'mail.message_view',
+    identifyingFields: [['threadView', 'messageActionListWithDelete'], 'message'],
+    recordMethods: {
         /**
          * Briefly highlights the message.
          */
@@ -19,8 +19,7 @@ function factory(dependencies) {
                     this.update({ isHighlighted: false });
                 }, 2000),
             });
-        }
-
+        },
         /**
          * Action to initiate reply to current messageView.
          */
@@ -41,8 +40,7 @@ function factory(dependencies) {
                     doFocus: true,
                 }),
             });
-        }
-
+        },
         /**
          * Starts editing this message.
          */
@@ -62,8 +60,7 @@ function factory(dependencies) {
                     doFocus: true,
                 }),
             });
-        }
-
+        },
         /**
          * Stops editing this message.
          */
@@ -75,12 +72,7 @@ function factory(dependencies) {
                 composerForEditing: clear(),
                 composerViewInEditing: clear(),
             });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -89,8 +81,7 @@ function factory(dependencies) {
             return (this.message && this.message.attachments.length > 0)
                 ? insertAndReplace()
                 : clear();
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -99,8 +90,7 @@ function factory(dependencies) {
             return (!this.messageActionListWithDelete)
                 ? insertAndReplace()
                 : clear();
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -112,11 +102,9 @@ function factory(dependencies) {
                 this.message.originThread.model === 'mail.channel' &&
                 this.message.parentMessage
             ) ? insertAndReplace() : clear();
-        }
-
-    }
-
-    MessageView.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the attachment list displaying the attachments of this
          * message (if any).
@@ -200,11 +188,5 @@ function factory(dependencies) {
             inverse: 'messageViews',
             readonly: true,
         }),
-    };
-    MessageView.identifyingFields = [['threadView', 'messageActionListWithDelete'], 'message'];
-    MessageView.modelName = 'mail.message_view';
-
-    return MessageView;
-}
-
-registerNewModel('mail.message_view', factory);
+    },
+});

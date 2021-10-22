@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class AttachmentViewer extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.attachment_viewer',
+    identifyingFields: ['attachmentList'],
+    recordMethods: {
         /**
          * Close the attachment viewer by closing its linked dialog.
          */
@@ -19,12 +15,7 @@ function factory(dependencies) {
             if (dialog) {
                 dialog.delete();
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {string}
@@ -38,10 +29,9 @@ function factory(dependencies) {
             }
             const accessToken = this.attachment.accessToken ? `?access_token=${this.attachment.accessToken}` : '';
             return `/web/image/${this.attachment.id}${accessToken}`;
-        }
-    }
-
-    AttachmentViewer.fields = {
+        },
+    },
+    fields: {
         /**
          * Angle of the image. Changes when the user rotates it.
          */
@@ -86,11 +76,5 @@ function factory(dependencies) {
         scale: attr({
             default: 1,
         }),
-    };
-    AttachmentViewer.identifyingFields = ['attachmentList'];
-    AttachmentViewer.modelName = 'mail.attachment_viewer';
-
-    return AttachmentViewer;
-}
-
-registerNewModel('mail.attachment_viewer', factory);
+    },
+});

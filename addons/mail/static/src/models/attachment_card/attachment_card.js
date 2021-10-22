@@ -1,27 +1,21 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class AttachmentCard extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.attachment_card',
+    identifyingFields: ['attachmentList', 'attachment'],
+    lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickUnlink = this.onClickUnlink.bind(this);
             this.onClickImage = this.onClickImage.bind(this);
             this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
          *
@@ -39,8 +33,7 @@ function factory(dependencies) {
                     }),
                 }),
             });
-        }
-
+        },
         /**
          * Handles the click on delete attachment and open the confirm dialog.
          *
@@ -57,8 +50,7 @@ function factory(dependencies) {
             } else {
                 this.update({ hasDeleteConfirmDialog: true });
             }
-        }
-
+        },
         /**
          * Synchronizes the `hasDeleteConfirmDialog` when the dialog is closed.
          */
@@ -67,11 +59,9 @@ function factory(dependencies) {
                 return;
             }
             this.update({ hasDeleteConfirmDialog: false });
-        }
-
-    }
-
-    AttachmentCard.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the attachment of this card.
          */
@@ -98,11 +88,5 @@ function factory(dependencies) {
         hasDeleteConfirmDialog: attr({
             default: false,
         }),
-    };
-    AttachmentCard.identifyingFields = ['attachmentList', 'attachment'];
-    AttachmentCard.modelName = 'mail.attachment_card';
-
-    return AttachmentCard;
-}
-
-registerNewModel('mail.attachment_card', factory);
+    },
+});

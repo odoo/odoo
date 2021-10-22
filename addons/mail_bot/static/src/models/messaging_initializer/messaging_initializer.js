@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+import { addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/messaging_initializer/messaging_initializer';
 
-registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js', {
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
+addRecordMethods('mail.messaging_initializer', {
     /**
      * @private
      */
@@ -20,7 +18,9 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
         }
         this.env.session.odoobot_initialized = true;
     },
+});
 
+patchRecordMethods('mail.messaging_initializer', {
     /**
      * @override
      */

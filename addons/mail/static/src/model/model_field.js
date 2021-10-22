@@ -332,7 +332,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${record.constructor.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
             } else if (this.fieldType === 'relation') {
                 switch (commandName) {
@@ -377,7 +377,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${record.constructor.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
             }
         }

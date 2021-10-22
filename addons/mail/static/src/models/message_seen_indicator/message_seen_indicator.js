@@ -1,22 +1,17 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 import { replace, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class MessageSeenIndicator extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.message_seen_indicator',
+    identifyingFields: ['thread', 'message'],
+    modelMethods: {
         /**
-         * @static
          * @param {mail.thread} [channel] the concerned thread
          */
-        static recomputeFetchedValues(channel = undefined) {
+        recomputeFetchedValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
             const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
@@ -26,13 +21,11 @@ function factory(dependencies) {
                     partnersThatHaveFetched: indicator._computePartnersThatHaveFetched(),
                 });
             }
-        }
-
+        },
         /**
-         * @static
          * @param {mail.thread} [channel] the concerned thread
          */
-        static recomputeSeenValues(channel = undefined) {
+        recomputeSeenValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
             const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
@@ -46,12 +39,9 @@ function factory(dependencies) {
                     partnersThatHaveSeen: indicator._computePartnersThatHaveSeen(),
                 });
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Manually called as not always called when necessary
          *
@@ -73,8 +63,7 @@ function factory(dependencies) {
                     )
             );
             return otherPartnerSeenInfosDidNotFetch.length === 0;
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -95,8 +84,7 @@ function factory(dependencies) {
                     )
             );
             return otherPartnerSeenInfosDidNotSee.length === 0;
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -116,8 +104,7 @@ function factory(dependencies) {
                     partnerSeenInfo.lastFetchedMessage.id >= this.message.id
             );
             return otherPartnerSeenInfosFetched.length > 0;
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -136,8 +123,7 @@ function factory(dependencies) {
                     partnerSeenInfo.lastSeenMessage.id >= this.message.id
             );
             return otherPartnerSeenInfosSeen.length > 0;
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -154,8 +140,7 @@ function factory(dependencies) {
                 return false;
             }
             return this.message.id < this.thread.lastCurrentPartnerMessageSeenByEveryone.id;
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -185,8 +170,7 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return replace(otherPartnersThatHaveFetched);
-        }
-
+        },
         /**
          * Manually called as not always called when necessary
          *
@@ -214,12 +198,9 @@ function factory(dependencies) {
                 return unlinkAll();
             }
             return replace(otherPartnersThatHaveSeen);
-        }
-    }
-
-    MessageSeenIndicator.modelName = 'mail.message_seen_indicator';
-
-    MessageSeenIndicator.fields = {
+        },
+    },
+    fields: {
         hasEveryoneFetched: attr({
             compute: '_computeHasEveryoneFetched',
             default: false,
@@ -263,9 +244,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    MessageSeenIndicator.identifyingFields = ['thread', 'message'];
-    return MessageSeenIndicator;
-}
-
-registerNewModel('mail.message_seen_indicator', factory);
+    },
+});

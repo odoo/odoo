@@ -1,23 +1,18 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Follower extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.follower',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @returns {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('id' in data) {
                 data2.id = data.id;
@@ -42,22 +37,21 @@ function factory(dependencies) {
                 }
             }
             return data2;
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          *  Close subtypes dialog
          */
         closeSubtypes() {
             this.update({ subtypeList: clear() });
-        }
-
+        },
         /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
             return this.partner.openProfile();
-        }
-
+        },
         /**
          * Remove this follower from its related thread.
          */
@@ -72,8 +66,7 @@ function factory(dependencies) {
             const followedThread = this.followedThread;
             this.delete();
             followedThread.fetchAndUpdateSuggestedRecipients();
-        }
-
+        },
         /**
          * @param {mail.follower_subtype} subtype
          */
@@ -81,8 +74,7 @@ function factory(dependencies) {
             if (!this.selectedSubtypes.includes(subtype)) {
                 this.update({ selectedSubtypes: link(subtype) });
             }
-        }
-
+        },
         /**
          * Show (editable) list of subtypes of this follower.
          */
@@ -110,8 +102,7 @@ function factory(dependencies) {
                     }),
                 }),
             });
-        }
-
+        },
         /**
          * @param {mail.follower_subtype} subtype
          */
@@ -119,8 +110,7 @@ function factory(dependencies) {
             if (this.selectedSubtypes.includes(subtype)) {
                 this.update({ selectedSubtypes: unlink(subtype) });
             }
-        }
-
+        },
         /**
          * Update server-side subscription of subtypes of this follower.
          */
@@ -146,11 +136,9 @@ function factory(dependencies) {
                 });
             }
             this.closeSubtypes();
-        }
-
-    }
-
-    Follower.fields = {
+        },
+    },
+    fields: {
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
@@ -173,11 +161,5 @@ function factory(dependencies) {
             isCausal: true,
         }),
         subtypes: many2many('mail.follower_subtype'),
-    };
-    Follower.identifyingFields = ['id'];
-    Follower.modelName = 'mail.follower';
-
-    return Follower;
-}
-
-registerNewModel('mail.follower', factory);
+    },
+});

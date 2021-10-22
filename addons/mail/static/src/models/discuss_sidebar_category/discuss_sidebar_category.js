@@ -1,16 +1,14 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2many, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
-function factory(dependencies) {
-    class DiscussSidebarCategory extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.discuss_sidebar_category',
+    identifyingFields: [['discussAsChannel', 'discussAsChat']],
+    lifecycleHooks: {
         _created() {
             this.onClick = this.onClick.bind(this);
             this.onHideAddingItem = this.onHideAddingItem.bind(this);
@@ -18,22 +16,17 @@ function factory(dependencies) {
             this.onAddItemAutocompleteSource = this.onAddItemAutocompleteSource.bind(this);
             this.onClickCommandAdd = this.onClickCommandAdd.bind(this);
             this.onClickCommandView = this.onClickCommandView.bind(this);
-            return super._created();
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    modelMethods: {
         /**
          * Performs the `set_res_users_settings` RPC on `res.users.settings`.
          *
-         * @static
          * @param {Object} resUsersSettings
          * @param {boolean} [resUsersSettings.is_category_channel_open]
          * @param {boolean} [resUsersSettings.is_category_chat_open]
          */
-        static async performRpcSetResUsersSettings(resUsersSettings) {
+        async performRpcSetResUsersSettings(resUsersSettings) {
             return this.env.services.rpc(
                 {
                     model: 'res.users.settings',
@@ -45,8 +38,9 @@ function factory(dependencies) {
                 },
                 { shadow: true },
             );
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Closes the category and notity server to change the state
          */
@@ -55,8 +49,7 @@ function factory(dependencies) {
             await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: false,
             });
-        }
-
+        },
         /**
          * Opens the category and notity server to change the state
          */
@@ -65,12 +58,7 @@ function factory(dependencies) {
             await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: true,
             });
-        }
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {mail.discuss_sidebar_category_item | undefined}
@@ -84,8 +72,7 @@ function factory(dependencies) {
                 });
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {mail.discuss_sidebar_category_item[]}
@@ -101,8 +88,7 @@ function factory(dependencies) {
                 });
             }
             return insertAndReplace(channels.map(c => ({ channel: replace(c) })));
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -114,16 +100,14 @@ function factory(dependencies) {
                 case 'unread':
                     return this.selectedChannels.filter(thread => thread.localMessageUnreadCounter > 0).length;
             }
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsOpen() {
             return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.thread[]}
@@ -134,8 +118,7 @@ function factory(dependencies) {
                 thread.isPinned &&
                 this.supportedChannelTypes.includes(thread.channel_type))
             );
-        }
-
+        },
         /**
          *
          * @private
@@ -148,8 +131,7 @@ function factory(dependencies) {
                 case 'last_action':
                     return replace(this._sortByLastInterestDateTime());
             }
-        }
-
+        },
         /**
          * Sorts `selectedChannels` by `displayName` in
          * case-insensitive alphabetical order.
@@ -169,8 +151,7 @@ function factory(dependencies) {
                     return t1.id - t2.id;
                 }
             });
-        }
-
+        },
         /**
          * Sorts `selectedChannels` by `lastInterestDateTime`.
          * The most recent one will come first.
@@ -190,12 +171,7 @@ function factory(dependencies) {
                     return t2.id - t1.id;
                 }
             });
-        }
-
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-
+        },
         /**
          * Changes the category open states when clicked.
          */
@@ -205,16 +181,14 @@ function factory(dependencies) {
             } else {
                 await this.open();
             }
-        }
-
+        },
         /**
          * @param {CustomEvent} ev
          */
         onHideAddingItem(ev) {
             ev.stopPropagation();
             this.update({ isAddingItem: false });
-        }
-
+        },
         /**
          * @param {Event} ev
          * @param {Object} ui
@@ -230,8 +204,7 @@ function factory(dependencies) {
                     this.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
                     break;
             }
-        }
-
+        },
         /**
          * @param {Object} req
          * @param {string} req.term
@@ -246,16 +219,14 @@ function factory(dependencies) {
                     this.messaging.discuss.handleAddChatAutocompleteSource(req, res);
                     break;
             }
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         onClickCommandAdd(ev) {
             ev.stopPropagation();
             this.update({ isAddingItem: true });
-        }
-
+        },
         /**
          * Redirects to the public channels window when view command is clicked.
          *
@@ -272,8 +243,7 @@ function factory(dependencies) {
                     domain: [['public', '!=', 'private']],
                 },
             });
-        }
-
+        },
         /**
          * Handles change of open state coming from the server. Useful to
          * clear pending state once server acknowledged the change.
@@ -284,10 +254,9 @@ function factory(dependencies) {
             if (this.isServerOpen === this.isPendingOpen) {
                 this.update({ isPendingOpen: clear() });
             }
-        }
-    }
-
-    DiscussSidebarCategory.fields = {
+        },
+    },
+    fields: {
         /**
          * The category item which is active and belongs
          * to the category.
@@ -412,17 +381,11 @@ function factory(dependencies) {
             required: true,
             readonly: true,
         }),
-    };
-    DiscussSidebarCategory.identifyingFields = [['discussAsChannel', 'discussAsChat']];
-    DiscussSidebarCategory.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['isServerOpen'],
             methodName: ['_onIsServerOpenChanged'],
         }),
-    ];
-    DiscussSidebarCategory.modelName = 'mail.discuss_sidebar_category';
-
-    return DiscussSidebarCategory;
-}
-
-registerNewModel('mail.discuss_sidebar_category', factory);
+    ],
+});

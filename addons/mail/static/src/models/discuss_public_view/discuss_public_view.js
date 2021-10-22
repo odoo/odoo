@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
 import { attr, one2one } from '@mail/model/model_field';
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class DiscussPublicView extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.discuss_public_view',
+    identifyingFields: ['messaging'],
+    recordMethods: {
         /**
          * Creates and displays the thread view and clears the welcome view.
          */
@@ -34,8 +30,7 @@ function factory(dependencies) {
                 await this.channel.toggleCall({ startWithVideo: true });
                 await this.threadView.rtcCallViewer.activateFullScreen();
             }
-        }
-
+        },
         /**
          * Creates and displays the welcome view and clears the thread viewer.
          */
@@ -53,11 +48,9 @@ function factory(dependencies) {
                 this.welcomeView.mediaPreview.enableMicrophone();
                 this.welcomeView.mediaPreview.enableVideo();
             }
-        }
-
-    }
-
-    DiscussPublicView.fields = {
+        },
+    },
+    fields: {
         /**
          * States the channel linked to this discuss public view.
          */
@@ -97,11 +90,5 @@ function factory(dependencies) {
             inverse: 'discussPublicView',
             isCausal: true,
         }),
-    };
-    DiscussPublicView.identifyingFields = ['messaging'];
-    DiscussPublicView.modelName = 'mail.discuss_public_view';
-
-    return DiscussPublicView;
-}
-
-registerNewModel('mail.discuss_public_view', factory);
+    },
+});
