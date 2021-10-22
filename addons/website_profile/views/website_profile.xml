@@ -22,11 +22,11 @@
                         <form t-attf-action="/profile/users" role="search" method="get">
                             <div class="input-group o_wprofile_course_nav_search ml-1 position-relative">
                                 <span class="input-group-prepend">
-                                    <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"></i>
+                                    <button class="btn btn-link text-white border-1 rounded-0 pr-1 mr-2" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search border-1"></i>
                                     </button>
                                 </span>
-                                <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search users"/>
+                                <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white ml-auto" name="search" placeholder="Search users"/>
                             </div>
                         </form>
                     </div>
@@ -486,10 +486,17 @@
     -->
     <template id="users_page_main" name="Users Page">
         <t t-set="body_classname" t-value="'o_wprofile_body'"/>
-         <t t-call="website.layout">
-            <div id="wrap" class="o_wprofile_wrap mt-0 pb-5">
-                <t t-call="website_profile.users_page_header"/>
-                <t t-call="website_profile.users_page_content"/>
+        <t t-call="website.layout">
+            <div class="h-100 d-flex flex-column">
+                <div id="wrap" class="o_wprofile_wrap mt-0 pb-5 ">
+                    <t t-call="website_profile.users_page_header"/>
+                    <t t-if="users">
+                        <t t-call="website_profile.users_page_content"/>
+                    </t>
+                </div>
+                <t t-if="not users">
+                    <h2 class="text-black m-auto">No Leaderboard Yet :(</h2>
+                </t>
             </div>
         </t>
     </template>

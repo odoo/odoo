@@ -8,7 +8,7 @@
                 <sheet>
                     <label for="question" string="Question Name"/>
                     <h1>
-                        <field name="question" default_focus="1"/>
+                        <field name="question" default_focus="1" placeholder="e.g. What powers a computer ?"/>
                     </h1>
                     <field name="answer_ids">
                         <tree editable="bottom" create="true" delete="true">
@@ -65,14 +65,14 @@
         <field name="name">Quizzes</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">slide.question</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,graph,pivot,form</field>
         <field name="view_id" ref="slide_question_view_tree_report"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                There are no quizzes
+                No Quiz data yet!
             </p>
             <p>
-                Add quizzes at the end of your lessons to evaluate what your students understood.
+                Come back later to oversee how well your Attendees are doing.
             </p>
         </field>
     </record>

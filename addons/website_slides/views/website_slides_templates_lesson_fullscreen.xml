@@ -135,18 +135,20 @@
                                 <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
                             </div>
                         </span>
-                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
-                            <li t-if="slide.link_ids" t-foreach="slide.link_ids" t-as="link" class="pl-0 mb-1">
+                        <ul class="list-unstyled w-100 pt-2 small" t-if="slide.slide_resource_ids or (slide.question_ids and not slide.slide_type =='quiz')" >
+                            <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
+                            <li t-if="links" t-foreach="links" t-as="link" class="pl-0 mb-1">
                                 <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-href="link.link" target="_blank">
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
                                 <span t-else="" class="o_wslides_fs_slide_link text-600">
-                                    <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
+                                    <i class="fa fa-link mr-2"/><span t-esc="resource.name"/>
                                 </span>
                             </li>
-                            <div class="o_wslides_js_course_join pl-0" t-if="slide.slide_resource_ids">
+                            <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
+                            <div class="o_wslides_js_course_join pl-0" t-if="resources">
                                 <t t-if="is_member or slide.channel_id.can_publish">
-                                    <li t-foreach="slide.slide_resource_ids" t-as="resource" class="mb-1">
+                                    <li t-foreach="resources" t-as="resource" class="mb-1">
                                         <a class="o_wslides_fs_slide_link" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true">
                                             <i class="fa fa-download mr-2"/><span t-esc="resource.name"/>
                                         </a>

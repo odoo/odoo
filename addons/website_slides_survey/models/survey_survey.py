@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
 
 
 class Survey(models.Model):
@@ -21,6 +23,14 @@ class Survey(models.Model):
         for survey in self:
             survey.slide_channel_ids = survey.slide_ids.mapped('channel_id')
             survey.slide_channel_count = len(survey.slide_channel_ids)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_to_course(self):
+        slides = self.slide_ids.filtered(lambda slide: slide.slide_type == "certification").exists()
+        if slides:
+            raise ValidationError(_("The Certification '%(certification_name)s' cannot be deleted because it is still being used by the Course(s) '%(courses_names)s'",
+                                    certification_name=self.title,
+                                    courses_names=', '.join(slides.mapped('channel_id.name'))))
 
     # ---------------------------------------------------------
     # Actions

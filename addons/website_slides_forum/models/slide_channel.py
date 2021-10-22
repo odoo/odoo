@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Channel(models.Model):
     _inherit = 'slide.channel'
 
-    forum_id = fields.Many2one('forum.forum', 'Course Forum')
+    forum_id = fields.Many2one('forum.forum', 'Course Forum', copy=False)
     forum_total_posts = fields.Integer('Number of active forum posts', related="forum_id.total_posts")
 
     _sql_constraints = [
