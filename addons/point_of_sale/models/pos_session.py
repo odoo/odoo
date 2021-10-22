@@ -1893,7 +1893,7 @@ class PosSession(models.Model):
     def _loader_info_pos_payment_method(self):
         return {
             "domain": [("id", "in", self.config_id.payment_method_ids.ids)],
-            "fields": ["name", "is_cash_count", "use_payment_terminal", "split_transactions"],
+            "fields": ["name", "is_cash_count", "use_payment_terminal", "split_transactions", "type"],
         }
 
     def _get_pos_ui_pos_payment_method(self, params):
