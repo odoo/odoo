@@ -580,6 +580,14 @@ $truncate-limits: 2, 3, 10;
     height: 20vh;
 }
 
+.o_wslides_body .form-control::-webkit-input-placeholder {
+    color: $gray-500;
+}
+
+.o_wslides_body .form-control:focus::-webkit-input-placeholder {
+    opacity: 0;
+}
+
 // Embed PDFViewer
 // **************************************************
 #PDFViewer.o_wslides_fs_pdf_viewer {
