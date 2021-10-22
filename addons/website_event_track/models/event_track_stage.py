@@ -25,5 +25,4 @@ class TrackStage(models.Model):
         string='Done Stage',
         help='Done tracks are automatically published so that they are available in frontend.')
     is_cancel = fields.Boolean(string='Canceled Stage')
-    is_done = fields.Boolean()
     color = fields.Integer(string='Color')
