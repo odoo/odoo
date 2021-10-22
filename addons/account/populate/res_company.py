@@ -27,7 +27,6 @@ class ResCompany(models.Model):
         _logger.info('Loading Chart Template')
         default_chart_templates = self.env['account.chart.template'].search([], limit=1)
         if not default_chart_templates:
-            # TODO install l10n_generic_coa ?
             raise UserError(_(
                 "At least one localization is needed to be installed in order to populate the "
                 "database with accounting"

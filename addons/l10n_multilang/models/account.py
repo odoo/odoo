@@ -11,19 +11,9 @@ class AccountAccountTag(models.Model):
 
     name = fields.Char(translate=True)
 
-class AccountAccountTemplate(models.Model):
-    _inherit = 'account.account.template'
-
-    name = fields.Char(translate=True)
-
 
 class AccountAccount(models.Model):
     _inherit = 'account.account'
-
-    name = fields.Char(translate=True)
-
-class AccountGroupTemplate(models.Model):
-    _inherit = 'account.group.template'
 
     name = fields.Char(translate=True)
 
@@ -39,33 +29,11 @@ class AccountTax(models.Model):
     description = fields.Char(translate=True)
 
 
-class AccountTaxTemplate(models.Model):
-    _inherit = 'account.tax.template'
-
-    name = fields.Char(translate=True)
-    description = fields.Char(translate=True)
-
-
-class AccountChartTemplate(models.Model):
-    _inherit = 'account.chart.template'
-    _order = 'name'
-
-    name = fields.Char(translate=True)
-    spoken_languages = fields.Char(string='Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'")
-
-
 class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
     name = fields.Char(translate=True)
     note = fields.Html(translate=True)
-
-
-class AccountFiscalPositionTemplate(models.Model):
-    _inherit = 'account.fiscal.position.template'
-
-    name = fields.Char(translate=True)
-    note = fields.Text(translate=True)
 
 
 class AccountJournal(models.Model):

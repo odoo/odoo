@@ -36,11 +36,8 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
-                                            <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
-                                        </div>
-                                        <div class="mt8">
-                                            <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" discard="0" class="btn-link"/>
+                                            <label for="chart_template" string="Package" class="col-2 o_light_label"/>
+                                            <field name="chart_template"/>
                                         </div>
                                     </div>
                                 </div>
@@ -480,7 +477,7 @@
                             </div>
                         </div>
 
-                        <t groups="account.group_account_user" attrs="{'invisible': [('chart_template_id','=',False)]}">
+                        <t groups="account.group_account_user" attrs="{'invisible': [('chart_template', '=', False)]}">
                             <h2>Default Accounts</h2>
                             <div class="row mt16 o_settings_container" id="default_accounts">
                                 <div class="col-12 col-lg-6 o_setting_box"

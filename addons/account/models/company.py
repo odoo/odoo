@@ -2,6 +2,7 @@
 
 from datetime import timedelta, datetime, date
 import calendar
+import logging
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
@@ -10,6 +11,18 @@ from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tests.common import Form
+
+_logger = logging.getLogger(__name__)
+
+CHART_TEMPLATES = [
+    ('generic_coa', 'Generic Chart Template', None, []),
+    ('be', 'BE Belgian PCMN', 'base.be', ['l10n_be']),
+    ('fr', 'FR', 'base.fr', ['l10n_fr']),
+    ('ch', 'CH', 'base.ch', ['l10n_ch']),
+    ('de', 'DE', 'base.de', ['l10n_de']),
+]
+CHART_TEMPLATES_MODULES = {ct: modules for ct, string, country, modules in CHART_TEMPLATES}
+CHART_TEMPLATES_COUNTRY = {country: ct for ct, string, country, modules in CHART_TEMPLATES}
 
 
 MONTH_SELECTION = [
@@ -39,6 +52,13 @@ class ResCompany(models.Model):
     _name = "res.company"
     _inherit = ["res.company", "mail.thread"]
 
+    def _chart_template_selection(self):
+        result = [(ct, string) for ct, string, country, modules in CHART_TEMPLATES]
+        if self:
+            proposed = self._guess_chart_of_account()
+            result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
+        return result
+
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)
@@ -59,7 +79,7 @@ class ResCompany(models.Model):
     transfer_account_id = fields.Many2one('account.account',
         domain=lambda self: [('reconcile', '=', True), ('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
-    chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
+    chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
@@ -563,6 +583,80 @@ class ResCompany(models.Model):
                 "Please go to Account Configuration and select or install a fiscal localization.")
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
+
+    def _guess_chart_of_account(self):
+        return CHART_TEMPLATES_COUNTRY.get(self.country_id.get_metadata()[0]['xmlid'], 'generic_coa')
+
+    def existing_accounting(self):
+        """ Returns True iff some accounting entries have already been made for
+        the provided company (meaning hence that its chart of accounts cannot
+        be changed anymore).
+        """
+        self.ensure_one()
+        # self.env['account.bank.statement'].sudo().search([]).button_reopen()
+        # self.env['account.move'].sudo().search([]).state = 'draft'
+        # prop_values = ['account.account,%s' % (account_id,) for account_id in self.env['account.account'].search([]).ids]
+        # existing_journals = self.env['account.journal'].search([])
+        # if existing_journals:
+        #     prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
+        # self.env['ir.property'].sudo().search(
+        #     [('value_reference', 'in', prop_values)]
+        # ).unlink()
+        # for model in [
+        #     'account.move',
+        #     'account.bank.statement',
+        #     'account.payment',
+        #     'account.reconcile.model',
+        #     'account.fiscal.position',
+        #     'account.journal',
+        #     'account.account',
+        #     'account.tax',
+        #     'account.group',
+        # ]:
+        #     self.env[model].sudo().search([]).with_context(force_delete=True).unlink()
+        return bool(self.env['account.move.line'].sudo().search([('company_id', '=', self.id)], limit=1))
+
+    def try_loading_coa(self, template, install_demo=True):
+        """ Installs this chart of accounts for the current company if not chart
+        of accounts had been created for it yet.
+
+        :param company (Model<res.company>): the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :param install_demo (bool): whether or not we should load demo data right after loading the
+            chart template.
+        """
+        module_ids = self.env['ir.module.module'].search([
+            ('name', 'in', CHART_TEMPLATES_MODULES.get(template)),
+            ('state', '=', 'uninstalled'),
+        ])
+        if module_ids:
+            module_ids.sudo().button_immediate_install()
+            self.env.reset()     # clear the set of environments
+
+        self.chart_template = template
+        with_company = self.env['account.chart.template'].with_context(
+            default_company_id=self.id,
+            allowed_company_ids=[self.id],
+        )
+        # If we don't have any chart of account on this company, install this chart of account
+        if not self.existing_accounting():
+            xml_id = self.get_metadata()[0]['xmlid']
+            if not xml_id:
+                xml_id = f"base.company_{self.id}"
+                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': self}])
+            with_company._load_data(with_company._get_chart_template_data())
+            with_company._post_load_data()
+            self.flush()
+            with_company.env.cache.invalidate()
+            # Install the demo data when the first localization is instanciated on the company
+            if install_demo and with_company.env.ref('base.module_account').demo:
+                try:
+                    with with_company.env.cr.savepoint():
+                        with_company._load_data(with_company._get_demo_data())
+                        with_company._post_load_demo_data()
+                except Exception:
+                    # Do not rollback installation of CoA if demo data failed
+                    _logger.exception('Error while loading accounting demo data')
 
     @api.model
     def _action_check_hash_integrity(self):

@@ -1189,6 +1189,47 @@ class AccountTaxRepartitionLine(models.Model):
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry", default=True)
 
+    def _sanitize_vals(self, vals):
+        def command_to_ids(command_list):
+            if all(isinstance(e, int) for e in command_list):
+                return command_list
+            elif 'tag_ids' in vals:
+                ids = []
+                for command, id, values in command_list:
+                    if command == Command.SET:
+                        ids.extend(values)
+                    if command == Command.LINK:
+                        ids.append(id)
+                return ids
+
+        tag_ids = set(command_to_ids(vals.get('tag_ids', [])))
+        if 'plus_report_line_ids' in vals:
+            tag_ids.update(
+                self.env['account.tax.report.line'].browse(
+                    command_to_ids(vals['plus_report_line_ids'])
+                ).tag_ids.filtered(lambda x: not x.tax_negate).ids
+            )
+            del vals['plus_report_line_ids']
+        if 'minus_report_line_ids' in vals:
+            tag_ids.update(
+                self.env['account.tax.report.line'].browse(
+                    command_to_ids(vals['minus_report_line_ids'])
+                ).tag_ids.filtered(lambda x: x.tax_negate).ids
+            )
+            del vals['minus_report_line_ids']
+        if tag_ids:
+            vals['tag_ids'] = list(tag_ids)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_vals(vals)
+        super().create(vals_list)
+
+    def write(self, vals):
+        self._sanitize_vals(vals)
+        super().write(vals)
+
     @api.onchange('account_id', 'repartition_type')
     def _on_change_account_id(self):
         if not self.account_id or self.repartition_type == 'base':

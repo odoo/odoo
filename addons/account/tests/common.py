@@ -32,10 +32,7 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
-        if chart_template_ref:
-            chart_template = cls.env.ref(chart_template_ref)
-        else:
-            chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
+        chart_template = chart_template_ref or 'generic_coa'
         if not chart_template:
             cls.tearDownClass()
             # skipTest raises exception
@@ -194,26 +191,15 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
-        def search_account(company, chart_template, field_name, domain):
-            template_code = chart_template[field_name].code
-            domain = [('company_id', '=', company.id)] + domain
 
-            account = None
-            if template_code:
-                account = cls.env['account.account'].search(domain + [('code', '=like', template_code + '%')], limit=1)
-
-            if not account:
-                account = cls.env['account.account'].search(domain, limit=1)
-            return account
-
-        chart_template = chart_template or cls.env.company.chart_template_id
+        chart_template = chart_template or cls.env.company.chart_template
         company = cls.env['res.company'].create({
             'name': company_name,
             **kwargs,
         })
         cls.env.user.company_ids |= company
 
-        chart_template.try_loading(company=company, install_demo=False)
+        cls.env['account.chart.template'].try_loading(chart_template, company=company, install_demo=False)
 
         # The currency could be different after the installation of the chart template.
         if kwargs.get('currency_id'):
@@ -230,9 +216,9 @@ class AccountTestInvoicingCommon(TransactionCase):
                     ('company_id', '=', company.id),
                     ('user_type_id', '=', cls.env.ref('account.data_account_type_expenses').id)
                 ], limit=1),
-            'default_account_receivable': search_account(company, chart_template, 'property_account_receivable_id', [
-                ('user_type_id.type', '=', 'receivable')
-            ]),
+            'default_account_receivable': cls.env['ir.property'].with_company(company)._get(
+                'property_account_receivable_id', 'res.partner'
+            ),
             'default_account_payable': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('user_type_id.type', '=', 'payable')
