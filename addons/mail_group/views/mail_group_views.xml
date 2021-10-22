@@ -109,15 +109,16 @@
                             <field name="active" invisible="1"/>
                             <label for="alias_name" string="Email Alias"/>
                             <div class="oe_inline" name="alias_def">
-                                <field name="alias_id" class="oe_read_only oe_inline"
-                                    string="Email Alias"
-                                    required="0"
-                                    invisible="not alias_domain"/>
-                                <div class="oe_inline" name="edit_alias" style="display: inline;" >
-                                    <div class="oe_edit_only" invisible="not alias_domain">
-                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                                <div class="oe_inline" name="edit_alias" style="display: inline;">
+                                    <div class="oe_edit_only">
+                                        <field name="alias_name" class="oe_inline"/>@
+                                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                               options="{'no_create': True, 'no_open': True}"/>
                                     </div>
-                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" invisible="alias_domain"/>
+                                    <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d"
+                                            string="Choose or configure a custom domain" class="p-0 btn-link"
+                                            invisible="alias_domain_id"/>
                                 </div>
                             </div>
                             <field name="description"/>
@@ -163,7 +164,7 @@
         <field name="arch" type="xml">
             <search string="Search Mail group">
                 <field name="name"/>
-                <field name="alias_name"/>
+                <field name="alias_email"/>
                 <separator/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <filter string="Moderated" name="moderation" domain="[('moderation', '=', True)]"/>
