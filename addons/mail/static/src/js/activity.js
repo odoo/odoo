@@ -446,18 +446,24 @@ var BasicActivity = AbstractField.extend({
      * @returns {$.Promise}
      */
     _onUnlinkActivity: function (ev, options) {
+        // Editado pela Multidados para não excluir uma atividade cancelada.
         ev.preventDefault();
         var activityID = $(ev.currentTarget).data('activity-id');
         options = _.defaults(options || {}, {
             model: 'mail.activity',
             args: [[activityID]],
         });
+        // Atualizando contexto
+        var context = this.record.getContext();
+        context.cancelling_activity = true;
+
         return this._rpc({
-                model: options.model,
-                method: 'unlink',
-                args: options.args,
-            })
-            .then(this._reload.bind(this, {activity: true}));
+            model: options.model,
+            method: 'unlink',
+            args: options.args,
+            context: context,
+        })
+        .then(this._reload.bind(this, {activity: true}));
     },
 });
 
