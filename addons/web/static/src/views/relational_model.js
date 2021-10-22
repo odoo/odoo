@@ -1,12 +1,14 @@
 /* @odoo-module */
 
+import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "./helpers/model";
 import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
-import { _t } from "@web/core/l10n/translation";
 
 const LOADED_GROUP_LIMIT = 10;
+const DEFAULT_LIMIT = 40;
 
 class RequestBatcherORM extends ORM {
     constructor() {
@@ -304,19 +306,16 @@ class DataList extends DataPoint {
 
         this.resIds = params.resIds || null;
 
-        this.domain = [];
+        this.domains = {};
         this.groupBy = params.groupBy || [];
+        this.limit = params.limit;
+        this.groupLimit = params.groupLimit;
         this.data = [];
         this.views = {};
         this.orderByColumn = {};
 
-        if (params.groupDomain) {
-            this.domain = params.groupDomain;
-        }
-        this.count = params.groupCount;
-        this.displayName = params.groupDisplay;
-        this.value = params.groupValue;
-        this.aggregates = params.groupAggregates;
+        // Group parameters
+        this.updateGroupParams(params);
 
         for (const type in params.views || {}) {
             const [mode] = getX2MViewModes(type);
@@ -327,6 +326,17 @@ class DataList extends DataPoint {
             this.fields = this.views[this.viewMode].fields;
             this.activeFields = Object.keys(this.fields);
         }
+    }
+
+    /**
+     * @override
+     */
+    get dataPointContext() {
+        return {
+            limit: this.limit,
+            groupLimit: this.groupLimit,
+            ...super.dataPointContext,
+        };
     }
 
     /**
@@ -344,12 +354,14 @@ class DataList extends DataPoint {
     }
 
     /**
-     * @param {{ domain?: any[], groupBy?: string[], defer?: boolean, orderByColumn?: { name: string, asc: boolean } }} [params={}]
+     * @param {{ domains?: any[], groupBy?: string[], defer?: boolean, orderByColumn?: { name: string, asc: boolean } }} [params={}]
      * @returns {Promise<void> | () => Promise<void>}
      */
     async load(params = {}) {
+        this.offset = 0;
+
         if (params.domain && !this.groupData) {
-            this.domain = params.domain; // FIXME: do not modify internal state directly
+            this.domains.main = params.domain; // FIXME: do not modify internal state directly
         }
         if (params.groupBy) {
             this.groupBy = params.groupBy;
@@ -365,12 +377,14 @@ class DataList extends DataPoint {
         } else {
             this.data = await this.searchRecords();
         }
+
+        this.offset = this.data.length;
         this.isLoaded = true;
     }
 
     /**
      * @private
-     * @returns {Promise<() => Promise<DataRecord>>}
+     * @returns {Promise<DataRecord>}
      */
     async searchRecords() {
         const order = this.orderByColumn.name
@@ -378,11 +392,12 @@ class DataList extends DataPoint {
             : "";
         const recordsData = await this.model.orm.searchRead(
             this.resModel,
-            this.domain,
+            this.getDomain(),
             this.activeFields,
             {
-                limit: 40,
+                limit: this.limit,
                 order,
+                offset: this.offset,
             }
         );
 
@@ -397,7 +412,7 @@ class DataList extends DataPoint {
 
     /**
      * @private
-     * @returns {Promise<() => Promise<DataRecord>>}
+     * @returns {Promise<DataRecord>}
      */
     async loadRecords() {
         if (!this.resIds.length) {
@@ -412,17 +427,24 @@ class DataList extends DataPoint {
         );
     }
 
+    async loadMore() {
+        const nextRecords = await this.searchRecords();
+        this.data.push(...nextRecords);
+        this.offset = this.data.length;
+        this.model.notify();
+    }
+
     /**
      * @private
-     * @returns {Promise<() => Promise<DataRecord>>}
+     * @returns {Promise<DataRecord>}
      */
     async loadGroups() {
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
-            this.domain,
+            this.getDomain(),
             this.activeFields,
             this.groupBy,
-            { limit: 40 }
+            { limit: this.groupLimit }
         );
         this.count = length;
 
@@ -470,7 +492,9 @@ class DataList extends DataPoint {
                 }
                 // FIXME: only retrieve the former group if groupby same field
                 let group = this.data.find((g) => g.value === groupParams.groupValue);
-                if (!group || !group.isLoaded) {
+                if (group && group.isLoaded) {
+                    group.updateGroupParams(groupParams);
+                } else {
                     group = this.createList(this.resModel, groupParams);
                 }
                 if (
@@ -479,7 +503,11 @@ class DataList extends DataPoint {
                     (this.openGroupsByDefault || group.isLoaded)
                 ) {
                     loadedGroups++;
-                    await group.load({ groupBy, orderByColumn: this.orderByColumn });
+                    const loadParams = { groupBy, orderByColumn: this.orderByColumn };
+                    if (groupParams.groupDomain) {
+                        loadParams.domain = groupParams.groupDomain;
+                    }
+                    await group.load(loadParams);
                 }
                 return group;
             })
@@ -494,6 +522,20 @@ class DataList extends DataPoint {
             await this.load();
         }
         this.model.notify();
+    }
+
+    getDomain() {
+        return Domain.and(Object.values(this.domains)).toList();
+    }
+
+    updateGroupParams(params) {
+        if (params.groupDomain) {
+            this.domains.main = params.groupDomain;
+        }
+        this.count = params.groupCount;
+        this.displayName = params.groupDisplay;
+        this.value = params.groupValue;
+        this.aggregates = params.groupAggregates;
     }
 }
 
@@ -523,11 +565,17 @@ export class RelationalModel extends Model {
             this.root = new DataRecord(this, this.resModel, this.resId, dataPointParams);
         } else {
             dataPointParams.openGroupsByDefault = params.openGroupsByDefault || false;
+            dataPointParams.limit = params.limit || DEFAULT_LIMIT;
+            dataPointParams.groupLimit = params.groupLimit || DEFAULT_LIMIT;
             this.root = new DataList(this, this.resModel, dataPointParams);
         }
 
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
+
+        console.group("Current model");
+        console.log(this);
+        console.groupEnd();
     }
 
     /**
@@ -540,8 +588,6 @@ export class RelationalModel extends Model {
         }
         await this.keepLast.add(this.root.load(params));
         this.notify();
-
-        console.log(this);
     }
 
     /**

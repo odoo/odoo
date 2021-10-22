@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { RelationalModel } from "@web/views/relational_model";
-import { Domain } from "@web/core/domain";
 
 const FALSE_SYMBOL = Symbol.for("false");
 
@@ -9,7 +8,7 @@ export class KanbanModel extends RelationalModel {
     setup(params = {}) {
         super.setup(...arguments);
 
-        this.progress = Object.assign({}, params.progress, { data: {} });
+        this.progress = params.progress;
         this.defaultGroupBy = params.defaultGroupBy || false;
     }
 
@@ -23,35 +22,33 @@ export class KanbanModel extends RelationalModel {
             groupBy.push(this.defaultGroupBy);
         }
         const actualParams = { ...params, groupBy: groupBy.slice(0, 1) };
-        const loadProgress = this.progress && actualParams.groupBy.length;
         const promises = [super.load(actualParams)];
-        if (loadProgress) {
+        if (this.progress && actualParams.groupBy.length) {
             promises.push(this.fetchProgressData(actualParams));
         }
 
-        await Promise.all(promises);
+        const [, progressData] = await Promise.all(promises);
 
-        if (loadProgress) {
-            this.populateProgressData();
+        if (progressData) {
+            this.populateProgressData(progressData);
         }
     }
 
-    async fetchProgressData({ domain, groupBy, context }) {
-        const progress_bar = {
-            colors: this.progress.colors,
-            field: this.progress.fieldName,
-            help: this.progress.help,
-            sum_field: this.progress.sumField,
-        };
-        this.progress.data = await this.orm.call(this.resModel, "read_progress_bar", [], {
+    async fetchProgressData({ context, domain, groupBy }) {
+        return this.orm.call(this.resModel, "read_progress_bar", [], {
             domain,
             group_by: groupBy[0],
-            progress_bar,
+            progress_bar: {
+                colors: this.progress.colors,
+                field: this.progress.fieldName,
+                help: this.progress.help,
+                sum_field: this.progress.sumField,
+            },
             context,
         });
     }
 
-    populateProgressData() {
+    populateProgressData(progressData) {
         const progressField = this.root.fields[this.progress.fieldName];
         const colorEntries = Object.entries(this.progress.colors);
         const selection = Object.fromEntries(progressField.selection || []);
@@ -62,11 +59,10 @@ export class KanbanModel extends RelationalModel {
         }
 
         for (const group of this.root.data) {
-            const values = this.progress.data[group.displayName || group.value] || {};
+            const values = progressData[group.displayName || group.value] || {};
             const total = group.count;
             const count = Object.values(values).reduce((acc, x) => acc + x, 0);
 
-            group.activeProgressValue = null;
             group.progress = [];
 
             for (const [key, color] of colorEntries) {
@@ -83,18 +79,15 @@ export class KanbanModel extends RelationalModel {
 
     async filterProgressValue(group, value) {
         const { fieldName } = this.progress;
-        const domains = [group.domain];
         group.activeProgressValue = group.activeProgressValue === value ? null : value;
         if (group.activeProgressValue) {
             const val = group.activeProgressValue;
-            domains.push([[fieldName, "=", val === FALSE_SYMBOL ? false : val]]);
+            group.domains.progress = [[fieldName, "=", val === FALSE_SYMBOL ? false : val]];
+        } else {
+            delete group.domains.progress;
         }
 
-        group.domain = Domain.and(domains).toList();
-
         await group.load();
-
-        group.domain = domains[0];
         this.notify();
     }
 }

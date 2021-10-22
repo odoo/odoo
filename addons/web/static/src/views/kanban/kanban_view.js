@@ -72,6 +72,7 @@ export class KanbanArchParser extends XMLParser {
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
+        const limit = xmlDoc.getAttribute("limit");
         const activeActions = this.getActiveActions(xmlDoc);
         const quickCreate =
             activeActions.create &&
@@ -238,6 +239,7 @@ export class KanbanArchParser extends XMLParser {
             defaultGroupBy,
             colorField,
             quickCreate,
+            limit: limit ? parseInt(limit) : 40,
             progress: progressBarInfo,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: fieldParser.getFields(),
@@ -253,13 +255,14 @@ class KanbanView extends owl.Component {
     setup() {
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, relations, defaultGroupBy } = this.archInfo;
+        const { fields: activeFields, limit, relations, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progress: this.archInfo.progress,
             fields,
             relations,
             resModel,
+            limit,
             defaultGroupBy,
             viewMode: "kanban",
             openGroupsByDefault: true,

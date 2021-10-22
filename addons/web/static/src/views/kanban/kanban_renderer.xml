@@ -80,6 +80,12 @@
                             <t t-foreach="group.data" t-as="record" t-key="record.id">
                                 <t t-call="{{ cardTemplate }}" />
                             </t>
+                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <div t-if="unloadedCount" class="o_kanban_load_more">
+                                <a href="#" t-on-click="loadMore(group)">
+                                    Load more... (<t t-esc="unloadedCount" /> remaining)
+                                </a>
+                            </div>
                         </t>
                     </div>
                 </t>
