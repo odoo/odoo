@@ -233,15 +233,8 @@ export function formatInteger(value, options = {}) {
 export function formatMany2one(value, options) {
     if (!value) {
         value = "";
-    } else if (Array.isArray(value)) {
-        // value is a pair [id, nameget]
-        value = value[1];
     } else {
-        // value is a datapoint, so we read its display_name field, which
-        // may in turn be a datapoint (if the name field is a many2one)
-        while (value.data) {
-            value = value.data.display_name || "";
-        }
+        value = value[1];
     }
     if (options && options.escape) {
         value = encodeURIComponent(value);
