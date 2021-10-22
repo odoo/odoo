@@ -308,7 +308,9 @@ class MailActivityMixin(models.AbstractModel):
             where_clause=where_clause or '1=1',
             group_by=', '.join(groupby_terms),
         )
-        self.env.cr.execute(select_query, [tz] * 3 + where_params)
+        num_from_params = from_clause.count('%s')
+        where_params[num_from_params:num_from_params] = [tz] * 3 # timezone after from parameters
+        self.env.cr.execute(select_query, where_params)
         fetched_data = self.env.cr.dictfetchall()
         self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
         data = [
