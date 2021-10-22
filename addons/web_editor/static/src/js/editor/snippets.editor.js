@@ -214,7 +214,9 @@ var SnippetEditor = Widget.extend({
                     },
                 },
             });
-            const $scrollable = (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
+            const modalAncestorEl = this.$target[0].closest('.modal');
+            const $scrollable = modalAncestorEl && $(modalAncestorEl)
+                || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
                 || (this.$scrollingElement.length && this.$scrollingElement)
                 || $().getScrollingElement(this.ownerDocument);
             this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $scrollable, smoothScrollOptions);
@@ -904,12 +906,6 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
-
-        // If a modal is open, the scroll target must be that modal
-        const $openModal = self.$editable.find('.modal:visible');
-        if ($openModal.length) {
-            self.draggableComponent.$scrollTarget = $openModal;
-        }
 
         // Trigger a scroll on the draggable element so that jQuery updates
         // the position of the drop zones.
