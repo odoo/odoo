@@ -898,7 +898,7 @@ class StockMove(models.Model):
             'partially_available': 2,
             'confirmed': 1,
         }
-        if all(move.product_uom_qty == 0 and not move.state == 'assigned' for move in self):
+        if all(move.product_uom_qty == 0 for move in self):
             return 'confirmed'
         moves_todo = self\
             .filtered(lambda move: move.state not in ['cancel', 'done'] and not (move.state == 'assigned' and not move.product_uom_qty))\

@@ -276,7 +276,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         production.action_assign()
         self.assertFalse(production.move_raw_ids.move_orig_ids)
         self.assertEqual(production.state, 'confirmed')
-        self.assertEqual(production.reservation_state, 'assigned')
+        self.assertEqual(production.reservation_state, 'confirmed')
 
     def test_manufacturing_3_steps_flexible(self):
         """ Test MO/picking before manufacturing/picking after manufacturing
