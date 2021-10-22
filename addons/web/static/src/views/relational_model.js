@@ -373,12 +373,19 @@ class DataList extends DataPoint {
             this.orderByColumn = params.orderByColumn; // FIXME: incorrect param name (could come from a favorite)
         }
 
+        const previousData = this.data;
+
         if (this.resIds) {
             this.data = await this.loadRecords();
         } else if (this.isGrouped) {
             this.data = await this.loadGroups();
         } else {
             this.data = await this.searchRecords();
+        }
+
+        if (params.keepArchivedLists) {
+            const archivedLists = previousData.filter((l) => l.archived);
+            this.data.push(...archivedLists);
         }
 
         this.offset = this.data.length;
@@ -531,6 +538,18 @@ class DataList extends DataPoint {
         this.model.notify();
     }
 
+    async archive() {
+        const resIds = this.data.map((r) => r.resId);
+        await this.model.orm.call(this.resModel, "action_archive", [resIds]);
+        await this.model.load();
+    }
+
+    async unarchive() {
+        const resIds = this.data.map((r) => r.resId);
+        await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
+        await this.model.load();
+    }
+
     getDomain() {
         return Domain.and(Object.values(this.domains)).toList();
     }
@@ -573,7 +592,7 @@ export class RelationalModel extends Model {
         } else {
             dataPointParams.openGroupsByDefault = params.openGroupsByDefault || false;
             dataPointParams.limit = params.limit || DEFAULT_LIMIT;
-            dataPointParams.groupLimit = params.groupLimit || DEFAULT_LIMIT;
+            dataPointParams.groupLimit = params.groupLimit;
             this.root = new DataList(this, this.resModel, dataPointParams);
         }
 

@@ -17,13 +17,16 @@ export class KanbanModel extends RelationalModel {
      * @override
      */
     async load(params = {}) {
-        const groupBy = params.groupBy.slice();
-        if (this.defaultGroupBy && !this.env.inDialog) {
-            groupBy.push(this.defaultGroupBy);
+        const actualParams = { ...params };
+        if (params.groupBy) {
+            const groupBy = (params.groupBy || []).slice();
+            if (this.defaultGroupBy && !this.env.inDialog) {
+                groupBy.push(this.defaultGroupBy);
+            }
+            actualParams.groupBy = groupBy.slice(0, 1);
         }
-        const actualParams = { ...params, groupBy: groupBy.slice(0, 1) };
         const promises = [super.load(actualParams)];
-        if (this.progress && actualParams.groupBy.length) {
+        if (this.progress && actualParams.groupBy && actualParams.groupBy.length) {
             promises.push(this.fetchProgressData(actualParams));
         }
 
