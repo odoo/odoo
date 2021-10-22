@@ -230,7 +230,7 @@ export function formatInteger(value, options = {}) {
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */
-export function formatMany2one(value, options) {
+export function formatMany2x(value, options) {
     if (!value) {
         value = "";
     } else {
@@ -322,6 +322,7 @@ registry
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
     .add("integer", formatInteger)
-    .add("many2one", formatMany2one)
+    .add("many2one", formatMany2x)
+    .add("many2many", formatMany2x)
     .add("monetary", formatMonetary)
     .add("percentage", formatPercentage);

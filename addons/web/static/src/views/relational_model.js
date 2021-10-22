@@ -478,7 +478,7 @@ class DataList extends DataPoint {
                     const value = groupData[key];
                     switch (key) {
                         case this.groupByField.name: {
-                            let formatter = formatterRegistry.get(this.groupByField.type, false);
+                            const formatter = formatterRegistry.get(this.groupByField.type, false);
                             let groupDisplay = formatter ? formatter(value) : value;
                             let groupValue = value;
                             if (isRelational(this.groupByField)) {
@@ -503,7 +503,10 @@ class DataList extends DataPoint {
                         }
                         default: {
                             if (key in this.fields) {
-                                let formatter = formatterRegistry.get(this.fields[key].type, false);
+                                const formatter = formatterRegistry.get(
+                                    this.fields[key].type,
+                                    false
+                                );
                                 const formattedValue = formatter ? formatter(value) : value;
                                 groupParams.groupAggregates[key] = formattedValue;
                             }
