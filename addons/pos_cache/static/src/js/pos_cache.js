@@ -13,16 +13,16 @@ function roundUpDiv(y, x) {
 
 var posmodel_super = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
-    async after_load_server_data() {
-        await posmodel_super.after_load_server_data.call(this, ...arguments);
-        this._loadProductInBackground();
-    },
-    async _loadProductInBackground() {
+    async loadProductsBackground() {
+        if (this.config.limited_products_loading) {
+            // Just do the native way of loading products when limited_product_loading is active.
+            return posmodel_super.loadProductsBackground.apply(this, arguments);
+        }
         const nInitiallyLoaded = Object.keys(this.db.product_by_id).length;
         const totalProductsCount = await this._getTotalProductsCount();
         const nRemaining = totalProductsCount - nInitiallyLoaded;
         if (!(nRemaining > 0)) return;
-        const multiple = this.config.limited_products_loading ? this.config.limited_products_amount : 100000;
+        const multiple = 100000;
         const nLoops = roundUpDiv(nRemaining, multiple);
         for (let i = 0; i < nLoops; i++) {
             await this._loadCachedProducts(i * multiple + nInitiallyLoaded, (i + 1) * multiple + nInitiallyLoaded);
