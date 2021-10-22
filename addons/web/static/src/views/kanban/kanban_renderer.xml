@@ -119,6 +119,7 @@
                                 <input type="text"
                                     class="form-control o_input"
                                     placeholder="Column title"
+                                    autofocus=""
                                     t-on-focus="() => state.quickCreateGroupInputFocus = true"
                                     t-on-blur="() => state.quickCreateGroupInputFocus = false"
                                 />
@@ -132,7 +133,7 @@
                         </div>
                         <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record" />
                     </div>
-                    <div t-else="" class="o_quick_create_folded" t-on-click="state.quickCreateGroup = true">
+                    <div t-else="" class="o_quick_create_folded" t-on-click="() => state.quickCreateGroup = true">
                         <span class="o_kanban_add_column">
                             <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column" />
                         </span>

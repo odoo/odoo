@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain } from "@web/core/domain";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
@@ -30,10 +31,12 @@ export class KanbanRenderer extends Component {
             quickCreate: [],
         });
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
         useSubEnv({ model: this.props.list.model });
+        useAutofocus();
         useExternalListener(window, "keydown", this.onWindowKeydown);
         useExternalListener(window, "click", this.onWindowClick);
     }
@@ -59,13 +62,17 @@ export class KanbanRenderer extends Component {
     }
 
     archiveGroup(group) {
-        // TODO
-        console.warn("TODO: Archive group", group.id);
+        this.dialog.add(ConfirmationDialog, {
+            body: this.env._t(
+                "Are you sure that you want to archive all the records from this column?"
+            ),
+            confirm: () => group.archive(),
+            cancel: () => {},
+        });
     }
 
     unarchiveGroup(group) {
-        // TODO
-        console.warn("TODO: Unarchive group", group.id);
+        group.unarchive();
     }
 
     deleteGroup(group) {
