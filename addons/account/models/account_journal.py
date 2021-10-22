@@ -736,6 +736,7 @@ class AccountJournal(models.Model):
             ('move_id.state', '!=', 'cancel'),
             ('reconciled', '=', False),
             ('journal_id', '=', self.id),
+            ('statement_id', '=', False),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
