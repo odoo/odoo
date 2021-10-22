@@ -20,6 +20,7 @@
     </record>
         <!--RESOURCE-->
         <record id="slide_slide_demo_0_0_resource_0" model="slide.slide.resource">
+            <field name="resource_type">file</field>
             <field name="name">Document</field>
             <field name="data" type="base64" file="website_slides/static/src/img/document.png"/>
             <field name="slide_id" ref="slide_slide_demo_0_0"/>
@@ -186,18 +187,21 @@
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorful')), (4, ref('website_slides.slide_tag_demo_theory'))]"/>
         <field name="description">Just some basics Energy Efficiency Facts.</field>
     </record>
-        <record id="slide_slide_demo_1_2_link_0" model="slide.slide.link">
+        <record id="slide_slide_demo_1_2_link_0" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Energy Efficient Link 1</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_1_2"/>
         </record>
-        <record id="slide_slide_demo_1_2_link_1" model="slide.slide.link">
+        <record id="slide_slide_demo_1_2_link_1" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Energy Efficient Link 2</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_1_2"/>
         </record>
         <!--RESOURCE-->
         <record id="slide_slide_demo_1_2_resource_0" model="slide.slide.resource">
+            <field name="resource_type">file</field>
             <field name="name">Presentation</field>
             <field name="data" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
             <field name="slide_id" ref="slide_slide_demo_1_2"/>
@@ -263,12 +267,14 @@
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorful'))]"/>
         <field name="description">We had a little chat with Harry Potted, sure he had interesting things to say !</field>
     </record>
-        <record id="slide_slide_demo_1_4_link_0" model="slide.slide.link">
+        <record id="slide_slide_demo_1_4_link_0" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Know More Link 1</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_1_4"/>
         </record>
-        <record id="slide_slide_demo_1_4_link_1" model="slide.slide.link">
+        <record id="slide_slide_demo_1_4_link_1" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Know More Link 2</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_1_4"/>
@@ -389,18 +395,21 @@
         <field name="description">A summary of know-how: what are the main trees categories and how to differentiate them.</field>
     </record>
         <!-- LINKS -->
-        <record id="slide_slide_demo_2_0_link_0" model="slide.slide.link">
+        <record id="slide_slide_demo_2_0_link_0" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Trees Classification Link</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
         </record>
-        <record id="slide_slide_demo_2_0_link_1" model="slide.slide.link">
+        <record id="slide_slide_demo_2_0_link_1" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Main types of trees Link</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
         </record>
         <!--RESOURCE-->
         <record id="slide_slide_demo_2_0_resource_0" model="slide.slide.resource">
+            <field name="resource_type">file</field>
             <field name="name">Tree image</field>
             <field name="data" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_2.jpg"/>
             <field name="slide_id" ref="slide_slide_demo_2_0"/>
@@ -742,12 +751,14 @@
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_tools'))]"/>
         <field name="description">Tools you will need to complete this course.</field>
     </record>
-        <record id="slide_slide_demo_5_0_link_0" model="slide.slide.link">
+        <record id="slide_slide_demo_5_0_link_0" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Example Link 1</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_5_0"/>
         </record>
-        <record id="slide_slide_demo_5_0_link_1" model="slide.slide.link">
+        <record id="slide_slide_demo_5_0_link_1" model="slide.slide.resource">
+            <field name="resource_type">url</field>
             <field name="name">Example Link 2</field>
             <field name="link">http://www.example.com</field>
             <field name="slide_id" ref="slide_slide_demo_5_0"/>

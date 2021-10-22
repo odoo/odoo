@@ -139,7 +139,7 @@
                                     <field name="slide_resource_ids" widget="one2many" nolabel="1">
                                         <tree editable="top">
                                             <field name="resource_type"/>
-                                            <field name="name"/>
+                                            <field name="name" required="1"/>
                                             <field name="file_name" invisible="1"/>
                                             <field name="data" attrs="{'readonly': [('resource_type', '=', 'url')]}" filename="file_name"/>
                                             <field name="link" string="Link"
