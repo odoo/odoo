@@ -36,7 +36,7 @@ function factory(dependencies) {
             if (notifyServer === undefined) {
                 notifyServer = !this.messaging.device.isMobile;
             }
-            if (this.env.device.isMobile && !this.messaging.discuss.isOpen) {
+            if (this.messaging.device.isMobile && !this.messaging.discuss.isOpen) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always
@@ -105,14 +105,14 @@ function factory(dependencies) {
 
         /**
          * Makes this chat window active, which consists of making it visible,
-         * unfolding it, and focusing it.
+         * unfolding it, and focusing it if the user isn't on a mobile device.
          *
          * @param {Object} [options]
          */
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
-            if ((options && options.focus !== undefined) ? options.focus : true) {
+            if ((options && options.focus !== undefined) ? options.focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
         }

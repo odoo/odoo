@@ -160,7 +160,7 @@ export class Composer extends Component {
      */
     _onClickAddAttachment() {
         this._fileUploaderRef.comp.openBrowserFileUploader();
-        if (!this.env.device.isMobile) {
+        if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
     }
@@ -248,7 +248,7 @@ export class Composer extends Component {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
         this.composerView.insertIntoTextInput(ev.detail.unicode);
-        if (!this.env.device.isMobile) {
+        if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
     }
