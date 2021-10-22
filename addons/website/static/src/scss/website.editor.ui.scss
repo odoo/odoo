@@ -6,8 +6,8 @@
 }
 
 // INPUTS
-$o-we-switch-size: 2ex !default;
-$o-we-switch-inactive-color: #F7F7F7 !default;
+$o-we-switch-size: 1.2em !default;
+$o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
 .o_switch {
     display: flex;
     align-items: center;
@@ -18,44 +18,42 @@ $o-we-switch-inactive-color: #F7F7F7 !default;
         display: none;
 
         + span {
-            background-color: $o-we-switch-inactive-color;
-            box-shadow: inset 0 0 0px 1px darken($o-we-switch-inactive-color, 10%);
-            border-radius: 100rem;
-            height: $o-we-switch-size;
-            width: $o-we-switch-size * 1.8;
             margin-right: 0.5em;
-            display: inline-block;
-            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            border-radius: $o-we-switch-size;
+            width: $o-we-switch-size * 1.7;
+            padding-left: 3px;
+            padding-right: 3px;
+            background-color: $o-we-switch-inactive-color;
+            font-size: $o-we-switch-size * 1.09;
+            line-height: $o-we-switch-size;
+            color: $o-we-switch-inactive-color;
+            transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
             &:after {
-                content: "";
-                background: white;
-                display: block;
-                width: $o-we-switch-size - 0.2;
-                height: $o-we-switch-size - 0.2;
-                margin-top: 0.1ex;
-                margin-left: 0.1ex;
-                border-radius: 100rem;
-                transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-                box-shadow: 0 1px 1px darken($o-we-switch-inactive-color, 35%), inset 0 0 0 1px lighten($o-we-switch-inactive-color, 10%);
+                content: "\f057"; // fa-times-circle
+                font-family: 'FontAwesome';
+                color: white;
+                transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
             }
         }
 
-        &:checked+span {
-            box-shadow: none;
-            background: $o-we-color-success;
+        &:checked + span {
+            background: $o-brand-primary;
 
             &:after {
-                margin-left: ($o-we-switch-size*1.8 - $o-we-switch-size) + 0.1;
+                content: "\f058"; // fa-check-circle
+                margin-left: ($o-we-switch-size * 1.7) - $o-we-switch-size;
             }
         }
     }
 
-    &.o_switch_danger {
-        >input {
-            &:not(:checked)+span {
-                box-shadow: none;
+    &.o_switch_danger_success {
+        > input {
+            &:not(:checked) + span {
                 background: $o-we-color-danger;
+            }
+            &:checked + span {
+                background: $o-we-color-success;
             }
         }
     }
