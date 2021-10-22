@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-Pablo Luaces <pablo.luaces@gmail.com> https://github.com/pablo-lp
+Pablo Luaces <pablo@jimsports.com> https://github.com/pablo-lp
 
 List of contributors:
 
-Pablo Luaces <pablo.luaces@gmail.com> https://github.com/pablo-lp
+Pablo Luaces <pablo@jimsports.com> https://github.com/pablo-lp
