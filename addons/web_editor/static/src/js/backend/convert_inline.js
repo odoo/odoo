@@ -1,23 +1,10 @@
-odoo.define('web_editor.convertInline', function (require) {
+/** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-var FieldHtml = require('web_editor.field.html');
+import FieldHtml from 'web_editor.field.html';
+import { rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
-
-// Note: duplicated from odoo-editor utils.
-// DOES NOT SUPPORT RGBA (Outlook doesn't support transparency)
-function rgbToHex(rgb = '') {
-    return (
-        '#' +
-        (rgb.match(/\d{1,3}/g) || [])
-            .map(x => {
-                x = parseInt(x).toString(16);
-                return x.length === 1 ? '0' + x : x;
-            })
-            .join('')
-    );
-}
 
 /**
  * Returns the css rules which applies on an element, tweaked so that they are
@@ -839,7 +826,7 @@ FieldHtml.include({
     },
 });
 
-return {
+export default {
     fontToImg: fontToImg,
     bootstrapToTable: bootstrapToTable,
     cardToTable: cardToTable,
@@ -851,4 +838,3 @@ return {
     normalizeRem: normalizeRem,
     attachmentThumbnailToLinkImg: attachmentThumbnailToLinkImg,
 };
-});

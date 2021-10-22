@@ -41,7 +41,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/utils/constants.js',
             'web_editor/static/lib/odoo-editor/src/utils/sanitize.js',
             'web_editor/static/lib/odoo-editor/src/utils/serialize.js',
-            'web_editor/static/lib/odoo-editor/src/utils/utils.js',
             'web_editor/static/lib/odoo-editor/src/utils/DOMPurify.js',
             'web_editor/static/lib/odoo-editor/src/tablepicker/TablePicker.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/patienceDiff.js',
@@ -88,6 +87,7 @@ Odoo Web Editor widget.
         'web.assets_common': [
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
+            'web_editor/static/lib/odoo-editor/src/utils/utils.js',
         ],
         'web.assets_backend': [
             'web_editor/static/src/scss/web_editor.common.scss',
