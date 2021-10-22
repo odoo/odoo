@@ -24,7 +24,6 @@ import {
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
-import { registerCleanup } from '@web/../tests/helpers/cleanup';
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 import LegacyRegistry from "web.Registry";
@@ -318,6 +317,9 @@ function afterEach(self) {
     if (self.widget) {
         self.widget.destroy();
         self.widget = undefined;
+    }
+    if (self.messaging) {
+        self.messaging.delete();
     }
     self.env = undefined;
     self.unpatch();
@@ -775,14 +777,6 @@ async function start(param0 = {}) {
     }
     returnCallbacks.forEach(callback => callback(result));
     await waitUntilEventPromise;
-    registerCleanup(() => {
-        if (modelManager.messaging) {
-            modelManager.messaging.delete();
-        }
-        if (widget) {
-            widget.destroy();
-        }
-    });
     return {
         ...result,
         createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
