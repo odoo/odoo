@@ -1820,7 +1820,7 @@ class Task(models.Model):
 
             Use the project partner_id if any, or else the parent task partner_id.
         """
-        for task in self.filtered(lambda task: not task.partner_id):
+        for task in self:
             # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
             project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
             task.partner_id = self._get_default_partner_id(project, task.parent_id)
