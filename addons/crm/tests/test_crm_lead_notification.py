@@ -14,6 +14,8 @@ class NewLeadNotification(TestCrmCommon):
     def setUpClass(cls):
         """ Activate some langs to test lang propagation in various mail flows """
         super(NewLeadNotification, cls).setUpClass()
+        cls._activate_multi_company()
+
         cls.test_email = '"Test Email" <test.email@example.com>'
         model_lang = cls.env['res.lang'].sudo().with_context(active_test=False)
 
@@ -221,14 +223,14 @@ class NewLeadNotification(TestCrmCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_new_lead_from_email_multicompany(self):
         company0 = self.env.company
-        company1 = self.env['res.company'].create({'name': 'new_company'})
+        company1 = self.company_2
 
         self.env.user.write({
             'company_ids': [(4, company0.id, False), (4, company1.id, False)],
         })
 
-        crm_team_model = self.env['ir.model'].search([('model', '=', 'crm.team')])
-        crm_lead_model = self.env['ir.model'].search([('model', '=', 'crm.lead')])
+        crm_team_model_id = self.env['ir.model']._get_id('crm.team')
+        crm_lead_model_id = self.env['ir.model']._get_id('crm.lead')
 
         crm_team0 = self.env['crm.team'].create({
             'name': 'crm team 0',
@@ -240,16 +242,18 @@ class NewLeadNotification(TestCrmCommon):
         })
 
         mail_alias0 = self.env['mail.alias'].create({
+            'alias_domain_id': company0.alias_domain_id.id,
             'alias_name': 'sale_team_0',
-            'alias_model_id': crm_lead_model.id,
-            'alias_parent_model_id': crm_team_model.id,
+            'alias_model_id': crm_lead_model_id,
+            'alias_parent_model_id': crm_team_model_id,
             'alias_parent_thread_id': crm_team0.id,
             'alias_defaults': "{'type': 'opportunity', 'team_id': %s}" % crm_team0.id,
         })
         mail_alias1 = self.env['mail.alias'].create({
+            'alias_domain_id': company1.alias_domain_id.id,
             'alias_name': 'sale_team_1',
-            'alias_model_id': crm_lead_model.id,
-            'alias_parent_model_id': crm_team_model.id,
+            'alias_model_id': crm_lead_model_id,
+            'alias_parent_model_id': crm_team_model_id,
             'alias_parent_thread_id': crm_team1.id,
             'alias_defaults': "{'type': 'opportunity', 'team_id': %s}" % crm_team1.id,
         })
@@ -257,12 +261,12 @@ class NewLeadNotification(TestCrmCommon):
         crm_team0.write({'alias_id': mail_alias0.id})
         crm_team1.write({'alias_id': mail_alias1.id})
 
-        new_message0 = """MIME-Version: 1.0
+        new_message0 = f"""MIME-Version: 1.0
 Date: Thu, 27 Dec 2018 16:27:45 +0100
 Message-ID: <blablabla0>
 Subject: sale team 0 in company 0
 From:  A client <client_a@someprovider.com>
-To: sale_team_0@test.mycompany.com
+To: {mail_alias0.display_name}
 Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
 
 --000000000000a47519057e029630
@@ -278,12 +282,12 @@ Content-Transfer-Encoding: quoted-printable
 --000000000000a47519057e029630--
 """
 
-        new_message1 = """MIME-Version: 1.0
+        new_message1 = f"""MIME-Version: 1.0
 Date: Thu, 27 Dec 2018 16:27:45 +0100
 Message-ID: <blablabla1>
 Subject: sale team 1 in company 1
 From:  B client <client_b@someprovider.com>
-To: sale_team_1@test.mycompany.com
+To: {mail_alias1.display_name}
 Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
 
 --000000000000a47519057e029630
