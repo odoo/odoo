@@ -327,18 +327,6 @@ class IrHttp(models.AbstractModel):
         """
         return ['web']
 
-    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
-
-    @classmethod
-    def is_a_bot(cls):
-        # We don't use regexp and ustr voluntarily
-        # timeit has been done to check the optimum method
-        user_agent = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
-        try:
-            return any(bot in user_agent for bot in cls.bots)
-        except UnicodeDecodeError:
-            return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
-
     @classmethod
     def _get_frontend_langs(cls):
         return [code for code, _ in request.env['res.lang'].get_installed()]
@@ -385,7 +373,7 @@ class IrHttp(models.AbstractModel):
         if request.routing_iteration == 1:
             context = dict(request.context)
             path = request.httprequest.path.split('/')
-            is_a_bot = cls.is_a_bot()
+            is_a_bot = request.env['ir.http'].is_a_bot()
 
             lang_codes = [code for code, *_ in Lang.get_available()]
             nearest_lang = not func and cls.get_nearest_lang(Lang._lang_get_code(path[1]))
@@ -462,7 +450,7 @@ class IrHttp(models.AbstractModel):
             path = request.httprequest.path.split('/')
             default_lg_id = cls._get_default_lang()
             if request.routing_iteration == 1:
-                is_a_bot = cls.is_a_bot()
+                is_a_bot = request.env['ir.http'].is_a_bot()
                 nearest_lang = not func and cls.get_nearest_lang(request.env['res.lang']._lang_get_code(path[1]))
                 url_lg = nearest_lang and path[1]
 

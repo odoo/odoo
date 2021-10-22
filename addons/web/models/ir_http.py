@@ -16,6 +16,15 @@ from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
+    bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
+
+    @classmethod
+    def is_a_bot(cls):
+        user_agent = request.httprequest.user_agent.string.lower()
+        # We don't use regexp and ustr voluntarily
+        # timeit has been done to check the optimum method
+        return any(bot in user_agent for bot in cls.bots)
+
     def webclient_rendering_context(self):
         return {
             'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
