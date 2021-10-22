@@ -110,7 +110,7 @@ class ReportBomStructure(models.AbstractModel):
             # Use the product template instead of the variant
             price = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)])
-        operations = self._get_operation_line(bom, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
+        operations = self._get_operation_line(bom, float_round(bom_quantity, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
             'bom_qty': bom_quantity,
