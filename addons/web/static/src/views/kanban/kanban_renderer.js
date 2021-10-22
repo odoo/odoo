@@ -7,10 +7,10 @@ import { url } from "@web/core/utils/urls";
 import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
 import { Field } from "@web/fields/field";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
+import { isRelational } from "@web/views/helpers/view_utils";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { View } from "@web/views/view";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { getIds, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
 
 const { Component, hooks } = owl;
 const { useExternalListener, useState, useSubEnv } = hooks;
@@ -56,6 +56,16 @@ export class KanbanRenderer extends Component {
     editGroup(group) {
         // TODO
         console.warn("TODO: Open group", group.id);
+    }
+
+    archiveGroup(group) {
+        // TODO
+        console.warn("TODO: Archive group", group.id);
+    }
+
+    unarchiveGroup(group) {
+        // TODO
+        console.warn("TODO: Unarchive group", group.id);
     }
 
     deleteGroup(group) {
@@ -141,6 +151,13 @@ export class KanbanRenderer extends Component {
 
     getGroupName({ count, displayName, isLoaded }) {
         return isLoaded ? displayName : `${displayName} (${count})`;
+    }
+
+    canArchiveGroup(group) {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        const hasActiveField = "active" in group.fields;
+        return activeActions.groupArchive && hasActiveField && groupByField.type !== "many2many";
     }
 
     canCreateGroup() {

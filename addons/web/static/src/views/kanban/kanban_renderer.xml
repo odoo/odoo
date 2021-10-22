@@ -41,6 +41,20 @@
                                             >
                                                 Delete
                                             </button>
+                                            <t t-if="canArchiveGroup(group)">
+                                                <button role="menuitem"
+                                                    class="dropdown-item o_column_archive_records"
+                                                    t-on-click="archiveGroup(group)"
+                                                >
+                                                    Archive All
+                                                </button>
+                                                <button role="menuitem"
+                                                    class="dropdown-item o_column_unarchive_records"
+                                                    t-on-click="unarchiveGroup(group)"
+                                                >
+                                                    Unarchive All
+                                                </button>
+                                            </t>
                                         </ul>
                                     </Dropdown>
                                     <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
