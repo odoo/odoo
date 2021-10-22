@@ -150,6 +150,15 @@ export class KanbanRenderer extends Component {
         return classes.join(" ");
     }
 
+    getGroupUnloadedCount({ activeProgressValue, count, data, progress }) {
+        if (activeProgressValue) {
+            const progressValue = progress.find((d) => d.value === activeProgressValue);
+            return progressValue.count - data.length;
+        } else {
+            return count - data.length;
+        }
+    }
+
     getRecordProgressColor({ activeProgressValue }) {
         if (!activeProgressValue) {
             return "";
@@ -184,6 +193,10 @@ export class KanbanRenderer extends Component {
 
     getColumnTitle(group) {
         return Array.isArray(group.value) ? group.value[1] : group.value;
+    }
+
+    loadMore(group) {
+        group.loadMore();
     }
 
     onCardClicked(record, ev) {
