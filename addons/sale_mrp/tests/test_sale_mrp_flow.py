@@ -295,6 +295,9 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         order = order_form.save()
         order.action_confirm()
 
+        # Verify buttons are working as expected
+        self.assertEqual(order.mrp_production_count, 2, "User should see the correct number of manufacture orders in smart button")
+
         # ===============================================================================
         #  Sales order of 10 Dozen product A should create production order
         #  like ..

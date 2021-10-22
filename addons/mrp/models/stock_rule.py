@@ -41,6 +41,17 @@ class StockRule(models.Model):
         productions_values_by_company = defaultdict(list)
         errors = []
         for procurement, rule in procurements:
+            warehouse_id = rule.warehouse_id
+            if not warehouse_id:
+                warehouse_id = rule.location_id.get_warehouse()
+            manu_type_id = warehouse_id.manu_type_id
+            group = procurement.values.get('group_id')
+            if group and warehouse_id.manufacture_steps != 'pbm_sam':
+                if manu_type_id:
+                    name = manu_type_id.sequence_id.next_by_id()
+                else:
+                    name = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+                procurement.values['group_id'] = group.copy({'name': name})
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
             if not bom:
                 msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
@@ -131,7 +142,7 @@ class StockRule(models.Model):
         }
         # Use the procurement group created in _run_pull mrp override
         # Preserve the origin from the original stock move, if available
-        if location_id.get_warehouse().manufacture_steps == 'pbm_sam' and values.get('move_dest_ids') and values.get('group_id') and values['move_dest_ids'][0].origin != values['group_id'].name:
+        if values.get('move_dest_ids') and values.get('group_id') and values['move_dest_ids'][0].origin != values['group_id'].name:
             origin = values['move_dest_ids'][0].origin
             mo_values.update({
                 'name': values['group_id'].name,
