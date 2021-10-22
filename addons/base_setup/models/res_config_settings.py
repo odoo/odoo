@@ -32,7 +32,6 @@ class ResConfigSettings(models.TransientModel):
     # TODO: remove in master
     module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
     module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
-    module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
