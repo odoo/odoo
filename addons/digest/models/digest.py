@@ -144,7 +144,8 @@ class Digest(models.Model):
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
             },
-            post_process=True
+            post_process=True,
+            options={'preserve_comments': True}
         )[self.id]
         full_mail = self.env['mail.render.mixin']._render_encapsulate(
             'digest.digest_mail_layout',
