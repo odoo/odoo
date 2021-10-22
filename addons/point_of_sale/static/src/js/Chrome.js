@@ -34,7 +34,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('show-temp-screen', this.__showTempScreen);
             useListener('close-temp-screen', this.__closeTempScreen);
             useListener('close-pos', this._closePos);
-            useListener('loading-skip-callback', () => this._loadingSkipCallback());
+            useListener('loading-skip-callback', () => this.env.pos.proxy.stop_searching());
             useListener('play-sound', this._onPlaySound);
             useListener('set-sync-status', this._onSetSyncStatus);
             useListener('show-notification', this._onShowNotification);
@@ -52,12 +52,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     isShown: false,
                     message: '',
                     duration: 2000,
-                }
-            });
-
-            this.loading = useState({
-                message: 'Loading',
-                skipButtonIsShown: false,
+                },
+                loadingSkipButtonIsShown: false,
             });
 
             this.mainScreen = useState({ name: null, component: null });
@@ -131,9 +127,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     rpc: this.rpc.bind(this),
                     session: this.env.session,
                     do_action: this.props.webClient.do_action.bind(this.props.webClient),
-                    setLoadingMessage: this.setLoadingMessage.bind(this),
-                    showLoadingSkip: this.showLoadingSkip.bind(this),
-                    setLoadingProgress: this.setLoadingProgress.bind(this),
+                    showLoadingSkip: () => {
+                        this.state.loadingSkipButtonIsShown = true;
+                    }
                 };
                 this.env.pos = new models.PosModel(posModelDefaultAttributes);
                 await this.env.pos.load_server_data();
@@ -294,8 +290,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     });
                     if (confirmed) {
                         this.state.uiState = 'CLOSING';
-                        this.loading.skipButtonIsShown = false;
-                        this.setLoadingMessage(this.env._t('Closing ...'));
+                        this.state.loadingSkipButtonIsShown = false;
                         window.location = '/web#action=point_of_sale.action_client_pos_menu';
                     }
                 }
@@ -331,32 +326,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
          */
         _onBeforeUnload() {
             this.env.pos.db.save('TO_REFUND_LINES', this.env.pos.toRefundLines);
-        }
-
-        // TO PASS AS PARAMETERS //
-
-        setLoadingProgress(fac) {
-            if (this.progressbar.el) {
-                this.progressbar.el.style.width = `${Math.floor(fac * 100)}%`;
-            }
-        }
-        setLoadingMessage(msg, progress) {
-            this.loading.message = msg;
-            if (typeof progress !== 'undefined') {
-                this.setLoadingProgress(progress);
-            }
-        }
-        /**
-         * Show Skip button in the loading screen and allow to assign callback
-         * when the button is pressed.
-         *
-         * @param {Function} callback function to call when Skip button is pressed.
-         */
-        showLoadingSkip(callback) {
-            if (callback) {
-                this.loading.skipButtonIsShown = true;
-                this._loadingSkipCallback = callback;
-            }
         }
 
         get isTicketScreenShown() {

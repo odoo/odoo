@@ -43,8 +43,6 @@ exports.PosModel = Backbone.Model.extend({
         this.rpc = this.get('rpc');
         this.session = this.get('session');
         this.do_action = this.get('do_action');
-        this.setLoadingMessage = this.get('setLoadingMessage');
-        this.setLoadingProgress = this.get('setLoadingProgress');
         this.showLoadingSkip = this.get('showLoadingSkip');
 
         this.proxy = new devices.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
@@ -165,15 +163,10 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         return new Promise(function (resolve, reject) {
             self.barcode_reader.disconnect_from_proxy();
-            self.setLoadingMessage(_t('Connecting to the IoT Box'), 0);
-            self.showLoadingSkip(function () {
-                self.proxy.stop_searching();
-            });
+            self.showLoadingSkip();
             self.proxy.autoconnect({
                 force_ip: self.config.proxy_ip || undefined,
-                progress: function(prog){
-                    self.setLoadingProgress(prog);
-                },
+                progress: function(prog){},
             }).then(
                 function () {
                     if (self.config.iface_scan_via_proxy) {
