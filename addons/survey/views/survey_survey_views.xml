@@ -49,8 +49,11 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="background_image" widget="image" class="oe_avatar"/>
                     <div class="oe_title" style="width: 100%;">
-                        <label for="title"/>
-                        <h1><field name="title" placeholder="e.g. Satisfaction Survey"/></h1>
+                        <label for="title" class="oe_edit_only" string="Survey Title" attrs="{'invisible': [('certification', '=', True)]}"/>
+                        <label for="title" class="oe_edit_only" string="Certification Title" attrs="{'invisible': [('certification', '=', False)]}"/>
+                        <h1>
+                            <field name="title" placeholder="e.g. Satisfaction Survey"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
@@ -294,6 +297,26 @@
           </p><p>
             Design easily your survey, send invitations and analyze answers.
           </p>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_graph" model="ir.ui.view">
+        <field name="name">survey.survey.view.graph</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field type="measure" name="color" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_pivot" model="ir.ui.view">
+        <field name="name">survey.survey.view.pivot</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field type="measure" name="color" invisible="1"/>
+            </pivot>
         </field>
     </record>
 

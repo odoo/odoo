@@ -253,7 +253,7 @@
                         <t t-else="">Join Course</t>
                     </span>
                 </a>
-                
+
                 <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
                     <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
                          t-att-data-channel-id="channel.id">
@@ -484,7 +484,7 @@
 <template id="course_slides_list_slide" name="Slide template for a training channel">
     <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category_id" t-attf-class="o_wslides_slides_list_slide o_wslides_js_list_item bg-white-50 border-top-0 d-flex align-items-center pl-2 #{'py-1 pr-2' if not channel.can_upload else ''}">
         <div t-if="channel.can_publish" class=" o_wslides_slides_list_drag border-right p-2">
-            <i class="fa fa-bars mr-2"></i>
+            <i class="fa fa-sort mr-2"></i>
         </div>
         <t t-call="website_slides.slide_icon">
             <t t-set="icon_class" t-value="'py-2 mx-2'"/>

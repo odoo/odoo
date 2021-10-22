@@ -23,6 +23,7 @@
         'views/website_profile.xml',
         'data/mail_template_data.xml',
         'data/gamification_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/survey_demo.xml',

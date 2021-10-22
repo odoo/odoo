@@ -3,6 +3,7 @@
 
 from . import common
 from . import test_karma
+from . import test_resources
 from . import test_security
 from . import test_slide_utils
 from . import test_statistics
