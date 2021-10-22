@@ -146,6 +146,7 @@ class RecurrenceRule(models.Model):
                 weekdays = recurrence._get_week_days()
                 # Convert Weekday object
                 weekdays = [str(w) for w in weekdays]
+<<<<<<< HEAD
                 # We need to get the day full name from its three first letters.
                 week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
                 weekday_short = [week_map[w] for w in weekdays]
@@ -155,11 +156,24 @@ class RecurrenceRule(models.Model):
                 if recurrence.month_by == 'day':
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
                     on = _("on the %(position)s %(weekday)s", position=recurrence.byday, weekday=weekday_label)
+=======
+                day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekdays]
+                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
+            elif recurrence.rrule_type == 'monthly':
+                if recurrence.month_by == 'day':
+                    position_label = dict(BYDAY_SELECTION)[recurrence.byday]
+                    weekday_label = dict(WEEKDAY_SELECTION)[recurrence.weekday]
+                    on = _("on the %(position)s %(weekday)s", position=position_label, weekday=weekday_label)
+>>>>>>> fecf2b636d6... temp
                 else:
                     on = _("day %s", recurrence.day)
             else:
                 on = ''
+<<<<<<< HEAD
             recurrence.name = ' '.join(filter(lambda s: s, [every, on, end]))
+=======
+            recurrence.name = ', '.join(filter(lambda s: s, [every, on, end]))
+>>>>>>> fecf2b636d6... temp
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):
