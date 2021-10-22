@@ -4,8 +4,8 @@ import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
-import { Model } from "./helpers/model";
-import { getIds, getX2MViewModes, isRelational } from "./helpers/view_utils";
+import { Model } from "@web/views/helpers/model";
+import { getIds, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
 
 const LOADED_GROUP_LIMIT = 10;
 const DEFAULT_LIMIT = 40;
@@ -184,7 +184,8 @@ class DataRecord extends DataPoint {
                 const result = await this.model.orm.read(
                     this.resModel,
                     [this.resId],
-                    this.activeFields
+                    this.activeFields,
+                    { bin_size: true }
                 );
                 data = this._sanitizeValues(result[0]);
             } else {
@@ -308,6 +309,7 @@ class DataList extends DataPoint {
 
         this.domains = {};
         this.groupBy = params.groupBy || [];
+        this.groupByField = this.fields[this.groupBy[0]];
         this.limit = params.limit;
         this.groupLimit = params.groupLimit;
         this.data = [];
@@ -365,6 +367,7 @@ class DataList extends DataPoint {
         }
         if (params.groupBy) {
             this.groupBy = params.groupBy;
+            this.groupByField = this.fields[this.groupBy[0]];
         }
         if ("orderByColumn" in params) {
             this.orderByColumn = params.orderByColumn; // FIXME: incorrect param name (could come from a favorite)
@@ -398,7 +401,8 @@ class DataList extends DataPoint {
                 limit: this.limit,
                 order,
                 offset: this.offset,
-            }
+            },
+            { bin_size: true }
         );
 
         return Promise.all(
@@ -444,7 +448,10 @@ class DataList extends DataPoint {
             this.getDomain(),
             this.activeFields,
             this.groupBy,
-            { limit: this.groupLimit }
+            {
+                limit: this.groupLimit,
+                lazy: true,
+            }
         );
         this.count = length;
 
@@ -452,7 +459,6 @@ class DataList extends DataPoint {
         let loadedGroups = 0;
         return Promise.all(
             groups.map(async (groupData) => {
-                const [groupByFieldName] = this.groupBy;
                 const groupParams = {
                     groupAggregates: Object.create(null),
                     groupBy,
@@ -461,17 +467,18 @@ class DataList extends DataPoint {
                 for (const key in groupData) {
                     const value = groupData[key];
                     switch (key) {
-                        case groupByFieldName: {
-                            let groupDisplay = value;
-                            let groupValue = value;
-                            if (Array.isArray(value)) {
-                                groupDisplay = groupDisplay ? groupDisplay[1] : _t("Undefined");
-                                groupValue = groupValue ? groupValue[0] : false;
+                        case this.groupByField.name: {
+                            let [groupValue, groupDisplay] = Array.isArray(value)
+                                ? value
+                                : [value, value];
+                            if (isRelational(this.fields[this.groupByField.name])) {
+                                groupValue = groupValue || false;
+                                groupDisplay = groupDisplay || _t("Undefined");
                             }
-                            Object.assign(groupParams, { groupDisplay, groupValue });
+                            Object.assign(groupParams, { groupValue, groupDisplay });
                             break;
                         }
-                        case `${groupByFieldName}_count`: {
+                        case `${this.groupByField.name}_count`: {
                             groupParams.groupCount = value;
                             break;
                         }
