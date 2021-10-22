@@ -12,6 +12,7 @@ odoo.define('fg_custom.FgPosAddPaymentDetails', function (require) {
             this.x_check_date = json.x_check_date;
             this.x_card_number = json.x_card_number;
             this.x_card_name = json.x_card_name;
+            this.cardholder_name = json.cardholder_name;
             this.x_gift_card_number = json.x_gift_card_number;
 
         },
@@ -21,6 +22,7 @@ odoo.define('fg_custom.FgPosAddPaymentDetails', function (require) {
                                                                                     x_check_date: this.x_check_date,
                                                                                     x_card_number:this.x_card_number,
                                                                                     x_card_name:this.x_card_name,
+                                                                                    cardholder_name:this.cardholder_name,
                                                                                     x_gift_card_number:this.x_gift_card_number
                                                                                     });
         }

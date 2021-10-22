@@ -12,6 +12,9 @@
                <field name="x_check_number"/>
                <field name="x_issuing_bank"/>
                <field name="x_check_date"/>
+               <field name="cardholder_name"/>
+               <field name="x_card_name"/>
+               <field name="x_card_number"/>
             </xpath>
 
             <field name="amount_paid" position="after">
@@ -29,7 +32,6 @@
 
         </field>
     </record>
-
 
     <record id="pos_order_line_form_custom" model="ir.ui.view">
         <field name="name">pos.order.line.form.custom</field>
