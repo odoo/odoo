@@ -36,7 +36,8 @@ class AliasMixin(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Create a record with each ``vals`` or ``vals_list`` and create a corresponding alias. """
+        """ Create a record with each ``vals`` in ``vals_list`` and create a
+        corresponding alias if not given. """
         # prepare all alias values
         alias_vals_list, record_vals_list = [], []
         for vals in vals_list:
@@ -66,17 +67,31 @@ class AliasMixin(models.AbstractModel):
 
         records = super(AliasMixin, self).create(valid_vals_list)
 
+        # update alias values with values coming from record, post-create to have
+        # access to all its values (notably its ID)
+        alias_domain_values = records._alias_get_alias_domain_id()
         for record in records:
-            record.alias_id.sudo().write(record._alias_get_creation_values())
+            alias_values = record._alias_get_creation_values()
+            if alias_domain_values.get(record):
+                alias_values['alias_domain_id'] = alias_domain_values[record].id
+            record.alias_id.sudo().write(alias_values)
 
         return records
 
     def write(self, vals):
         """ Split writable fields of mail.alias and other fields alias fields will
-        write with sudo and the other normally """
+        write with sudo and the other normally. Also handle alias_domain_id
+        update. """
         alias_vals, record_vals = self._alias_filter_fields(vals, filters=self.ALIAS_WRITEABLE_FIELDS)
         if record_vals:
             super(AliasMixin, self).write(record_vals)
+
+        # synchronize alias domain if company environment changed
+        if any(fname in vals for fname in self._alias_get_alias_domain_id_fields()):
+            alias_domain_values = self._alias_get_alias_domain_id()
+            for record, alias_domain_id in alias_domain_values.items():
+                record.sudo().alias_domain_id = alias_domain_id
+
         if alias_vals and (record_vals or self.check_access_rights('write', raise_exception=False)):
             self.mapped('alias_id').sudo().write(alias_vals)
 
@@ -123,6 +138,29 @@ class AliasMixin(models.AbstractModel):
     # --------------------------------------------------
     # MIXIN TOOL OVERRIDE METHODS
     # --------------------------------------------------
+
+    @api.model
+    def _alias_get_alias_domain_id_fields(self):
+        company_fname = self._mail_get_company_field()
+        return [company_fname] if company_fname else ['alias_name']
+
+    def _alias_get_alias_domain_id(self):
+        """ Return alias domain value to synchronize with owner's company.
+        Implementing it with a compute is complicated, as it 'alias_domain_id'
+        is a field on 'mail.alias' model, coming from 'alias_id' field and due
+        to current implementation of the mixin, notably the create/write
+        overrides, compute is not called in all cases, hence a tool method to
+        call in the mixin. """
+        alias_domain_values = {}
+        record_companies = self._mail_get_companies(default=self.env['res.company'])
+        for record in self:
+            record_company = record_companies[record.id]
+            if not record_company and not record.alias_domain_id:
+                alias_domain_values[record] = self.env.company.alias_domain_id
+            if (record_company and (not record.alias_domain_id or (record.alias_domain_id and
+                record.alias_domain_id not in record_company.alias_domain_ids))):
+                alias_domain_values[record] = record_company.alias_domain_id
+        return alias_domain_values
 
     def _alias_get_creation_values(self):
         """ Return values to create an alias, or to write on the alias after its

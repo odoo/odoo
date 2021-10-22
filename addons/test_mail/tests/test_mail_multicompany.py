@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import psycopg2
 import socket
 
 from itertools import product
@@ -76,15 +77,24 @@ class TestAliasMultiCompany(TestMailMCCommon):
     def test_alias_domain_setup(self):
         """ Test synchronization of alias domain with companies when adding /
         updating / removing alias domains """
-        self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
-        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+        mail_alias = self.mail_alias.with_env(self.env)
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
+        mail_alias_domain_c2 = self.mail_alias_domain_c2.with_env(self.env)
+
+        self.assertEqual(self.company_admin.alias_domain_id, mail_alias_domain)
+        self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
+
+        # cannot unlink alias domain as there are aliases linked to it
+        with self.assertRaises(psycopg2.errors.ForeignKeyViolation), self.cr.savepoint(), mute_logger('odoo.sql_db'):
+            mail_alias_domain.unlink()
 
         # remove alias domain of first company, should not impact second company
-        self.mail_alias_domain.unlink()
+        mail_alias.sudo().unlink()  # remove aliases linked to alias domain, currently only system can do it
+        mail_alias_domain.unlink()
         self.assertFalse(self.company_admin.alias_domain_id)
         self.assertFalse(self.company_admin.alias_domain_ids)
-        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
-        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2)
+        self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
+        self.assertEqual(self.company_2.alias_domain_ids, mail_alias_domain_c2)
 
         # create a new alias domain for both companies
         alias_domain_new = self.env['mail.alias.domain'].create({
@@ -97,14 +107,14 @@ class TestAliasMultiCompany(TestMailMCCommon):
                          'MC Alias: from no domain to new domain')
         self.assertEqual(self.company_admin.alias_domain_ids, alias_domain_new)
         self.assertEqual(self.company_admin.catchall_email, 'catchall.new@test.global.bitnurk.com')
-        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2,
+        self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2,
                          'MC Alias: should take alias domain with lower sequence')
-        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2 + alias_domain_new)
+        self.assertEqual(self.company_2.alias_domain_ids, mail_alias_domain_c2 + alias_domain_new)
 
         # manual update
         self.company_2.alias_domain_id = alias_domain_new.id
         self.assertEqual(self.company_2.alias_domain_id, alias_domain_new)
-        self.assertEqual(self.company_2.alias_domain_ids, self.mail_alias_domain_c2 + alias_domain_new)
+        self.assertEqual(self.company_2.alias_domain_ids, mail_alias_domain_c2 + alias_domain_new)
         self.assertEqual(self.company_2.catchall_email, 'catchall.new@test.global.bitnurk.com')
 
     def test_assert_initial_values(self):
