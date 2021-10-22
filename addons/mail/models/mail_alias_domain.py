@@ -80,9 +80,15 @@ class AliasDomain(models.Model):
                       catchall=tocheck.catchall_email)
                 )
 
-        existing = self.env['mail.alias'].search(
-            [('alias_name', 'in', list(set(names)))],
-            limit=1,
+        # search on left-part only to speedup, then filter on right part
+        potential_aliases = self.env['mail.alias'].search([
+            ('alias_name', 'in', list(set(names))),
+            ('alias_domain_id', '!=', False)
+        ])
+        existing = next(
+            (alias for alias in potential_aliases
+             if alias.display_name in (self.mapped('bounce_email') + self.mapped('catchall_email'))),
+            self.env['mail.alias']
         )
         if existing:
             document_name = False
@@ -126,9 +132,12 @@ class AliasDomain(models.Model):
 
         alias_domains = super().create(vals_list)
 
-        # alias domain init: populate companies at first creation
+        # alias domain init: populate companies and aliases at first creation
         if alias_domains and self.search_count([]) == len(alias_domains):
             self.env['res.company'].search(
+                [('alias_domain_id', '=', False)]
+            ).alias_domain_id = alias_domains[0].id
+            self.env['mail.alias'].sudo().search(
                 [('alias_domain_id', '=', False)]
             ).alias_domain_id = alias_domains[0].id
 

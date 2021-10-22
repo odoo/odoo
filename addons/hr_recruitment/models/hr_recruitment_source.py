@@ -30,6 +30,7 @@ class RecruitmentSource(models.Model):
                     'medium_id': medium.id,
                     'source_id': source.source_id.id,
                 },
+                'alias_domain_id': source.job_id.company_id.alias_domain_id.id or self.env.company.alias_domain_id.id,
                 'alias_model_id': self.env['ir.model']._get_id('hr.applicant'),
                 'alias_name': f"{source.job_id.alias_name or source.job_id.name}+{source.name}",
                 'alias_parent_thread_id': source.job_id.id,

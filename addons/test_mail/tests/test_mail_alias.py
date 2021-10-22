@@ -19,6 +19,7 @@ class TestMailAliasCommon(MailCommon):
         super().setUpClass()
 
         cls.test_alias_mc = cls.env['mail.alias'].create({
+            'alias_domain_id': cls.mail_alias_domain.id,
             'alias_model_id': cls.env['ir.model']._get('mail.test.container.mc').id,
             'alias_name': 'test.alias',
         })
@@ -92,10 +93,11 @@ class TestMailAlias(TestMailAliasCommon):
     @users('admin')
     def test_alias_name_unique(self):
         """ Check uniqueness constraint on alias names, at create and update.
-        Also check conflict management with bounce / catchall aliases. """
+        Also check conflict management with bounce / catchall defined on
+        alias domains. """
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
+        mail_alias_domain_c2 = self.mail_alias_domain_c2.with_env(self.env)
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
-        catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
 
         new_mail_alias = self.env['mail.alias'].create({
             'alias_model_id': alias_model_id,
@@ -105,18 +107,40 @@ class TestMailAlias(TestMailAliasCommon):
             'alias_model_id': alias_model_id,
             'alias_name': 'other.test.alias',
         })
+        self.assertEqual((new_mail_alias + other_alias).alias_domain_id, mail_alias_domain)
 
-        # test you cannot create or update aliases matching bounce / catchall
+        # test you cannot create  or update aliases matching bounce / catchall of same alias domain
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            self.env['mail.alias'].create({
+                'alias_model_id': alias_model_id,
+                'alias_name': mail_alias_domain.catchall_alias,
+            })
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            self.env['mail.alias'].create({
+                'alias_model_id': alias_model_id,
+                'alias_name': mail_alias_domain.bounce_alias,
+            })
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': catchall_alias})
+            new_mail_alias.write({'alias_name': mail_alias_domain.catchall_alias})
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': bounce_alias})
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            new_mail_alias.write({'alias_name': catchall_alias})
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            new_mail_alias.write({'alias_name': bounce_alias})
+            new_mail_alias.write({'alias_name': mail_alias_domain.bounce_alias})
 
-        # test that alias names should be unique
+        # other domains bounce / catchall do not prevent
+        new_aliases = self.env['mail.alias'].create([
+            {'alias_model_id': alias_model_id, 'alias_name': self.alias_catchall_c2},
+            {'alias_model_id': alias_model_id, 'alias_name': self.alias_bounce_c2},
+        ])
+        self.assertEqual(new_aliases.alias_domain_id, mail_alias_domain)
+        new_aliases.unlink()
+        # bounce/catchall of another domain is ok
+        new_mail_alias.write({'alias_name': mail_alias_domain_c2.bounce_alias})
+        other_alias.write({'alias_name': mail_alias_domain_c2.catchall_alias})
+        # changing domain would clash with existing catchall
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({'alias_domain_id': mail_alias_domain_c2.id,})
+
+        new_mail_alias.write({'alias_name': 'unused.test.alias'})
+        # test that alias {name, alias_domain_id} should be unique
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             self.env['mail.alias'].create({
                 'alias_model_id': alias_model_id,
@@ -133,9 +157,48 @@ class TestMailAlias(TestMailAliasCommon):
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             other_alias.write({'alias_name': 'unused.test.alias'})
 
+        # also valid for void domain
+        nodom_alias = self.env['mail.alias'].create({
+            'alias_domain_id': False,
+            'alias_model_id': alias_model_id,
+            'alias_name': 'no.domain',
+        })
+        self.assertFalse(nodom_alias.alias_domain_id)
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['mail.alias'].create({
+                'alias_domain_id': False,
+                'alias_model_id': alias_model_id,
+                'alias_name': 'no.domain',
+            })
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['mail.alias'].create([
+                {
+                    'alias_domain_id': False,
+                    'alias_model_id': alias_model_id,
+                    'alias_name': 'dupes.wo.domain',
+                } for _x in range(2)
+            ])
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            other_alias.write({
+                'alias_domain_id': False,
+                'alias_name': 'no.domain',
+            })
+
+        # test that alias name can be duplicated in case of different alias domains
+        other_domain_alias = self.env['mail.alias'].create({
+            'alias_domain_id': mail_alias_domain_c2.id,
+            'alias_model_id': alias_model_id,
+            'alias_name': 'unused.test.alias'
+        })
+        self.assertEqual(other_domain_alias.alias_domain_id, mail_alias_domain_c2)
+        # changing domain would violate uniqueness
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            other_domain_alias.write({'alias_domain_id': mail_alias_domain.id})
+
     @users('admin')
     def test_alias_name_unique_copy(self):
         """ Check uniqueness constraint check when copying aliases """
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
         new_mail_alias = self.env['mail.alias'].create({
             'alias_model_id': alias_model_id,
@@ -148,9 +211,11 @@ class TestMailAlias(TestMailAliasCommon):
         # test that duplicating an alias should have blank name
         copy_1 = new_mail_alias.copy()
         self.assertFalse(copy_1.alias_name)
+        self.assertEqual(copy_1.alias_domain_id, mail_alias_domain)
         # test sanitize of copy with new name
         copy_2 = new_mail_alias.copy({'alias_name': 'test.alias.2.éè#'})
         self.assertEqual(copy_2.alias_name, 'test.alias.2.ee#')
+        self.assertEqual(copy_2.alias_domain_id, mail_alias_domain)
 
         # cannot batch update, would create duplicates
         with self.assertRaises(exceptions.UserError):
@@ -249,13 +314,23 @@ class TestAliasCompany(TestMailAliasCommon):
     def test_alias_domain_setup(self):
         """ Test synchronization of alias domain with companies when adding /
         updating / removing alias domains """
-        self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
-        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+        mail_alias_domain = self.mail_alias_domain.with_env(self.env)
+        mail_alias_domain_c2 = self.mail_alias_domain_c2.with_env(self.env)
 
-        # remove alias domain of first company, should not impact second company
-        self.mail_alias_domain.unlink()
+        self.assertEqual(self.company_admin.alias_domain_id, mail_alias_domain)
+        self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
+
+        # cannot unlink alias domain as there are aliases linked to it
+        with self.assertRaises(psycopg2.errors.ForeignKeyViolation), self.cr.savepoint(), mute_logger('odoo.sql_db'):
+            mail_alias_domain.unlink()
+
+        # eject linked aliases then remove alias domain of first company; should
+        # not impact second company
+        self.env['mail.alias'].sudo().search([]).write({'alias_domain_id': False})
+        mail_alias_domain.unlink()
         self.assertFalse(self.company_admin.alias_domain_id)
-        self.assertEqual(self.company_2.alias_domain_id, self.mail_alias_domain_c2)
+        self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
+        self.assertFalse(self.test_alias_mc.alias_domain_id)
 
         # remove all alias domains
         self.env['mail.alias.domain'].search([]).unlink()
@@ -274,11 +349,13 @@ class TestAliasCompany(TestMailAliasCommon):
             'name': 'test.global.bitnurk.com',
         })
         self.assertEqual(self.company_admin.alias_domain_id, alias_domain_new,
-                         'MC Alias: from no domain to new domain')
+                         'MC Alias: first domain should populate void companies')
         self.assertEqual(self.company_2.alias_domain_id, alias_domain_new,
                          'MC Alias: should take alias domain with lower sequence')
         self.assertEqual(self.company_3.alias_domain_id, alias_domain_new,
                          'MC Alias: should take alias domain with lower sequence')
+        self.assertEqual(self.test_alias_mc.alias_domain_id, alias_domain_new,
+                         'MC Alias: first domain should populate void aliases')
 
         # manual update
         self.company_2.alias_domain_id = alias_domain_new.id
@@ -289,7 +366,7 @@ class TestAliasCompany(TestMailAliasCommon):
     def test_assert_initial_values(self):
         """ Test initial setup values: currently all companies share the same
         alias configuration as it is unique. """
-        self.assertEqual(self.test_alias_mc.alias_domain, self.mail_alias_domain.name)
+        self.assertEqual(self.test_alias_mc.alias_domain_id, self.mail_alias_domain)
 
         self.assertEqual(self.company_admin.alias_domain_id, self.mail_alias_domain)
         self.assertEqual(self.company_admin.bounce_email, f'{self.alias_bounce}@{self.alias_domain}')
@@ -365,8 +442,13 @@ class TestMailAliasDomain(TestMailAliasCommon):
                 with self.assertRaises(exceptions.ValidationError):
                     self.env['mail.alias.domain'].create({
                         domain_config: self.test_alias_mc.alias_name,
-                        'name': 'another.domain.name.com',
+                        'name': self.test_alias_mc.alias_domain_id.name,
                     })
+        # left-part should not clech
+        self.env['mail.alias.domain'].create({
+            domain_config: self.test_alias_mc.alias_name,
+            'name': 'another.domain.name.com',
+        })
 
         # should not clash with existing aliases, to avoid valid aliases be
         # considered as bounce / catchall
@@ -435,7 +517,7 @@ class TestMailAliasDomain(TestMailAliasCommon):
         ]:
             with self.subTest(failing_name=failing_name):
                 with self.assertRaises(exceptions.ValidationError):
-                    new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
+                    _new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
 
                 with self.assertRaises(exceptions.ValidationError):
                     alias_domain.write({'name': failing_name})
@@ -493,20 +575,23 @@ class TestMailAliasDomain(TestMailAliasCommon):
             self.assertEqual(alias_domain.catchall_alias, 'catchall+double.test')
 
 
-@tagged('mail_gateway', 'mail_alias', 'multi_company')
+@tagged('mail_gateway', 'mail_alias', 'mail_alias_mixin', 'multi_company')
 class TestMailAliasMixin(TestMailAliasCommon):
-    """ Test alias mixin implementation, synchornization of alias records
+    """ Test alias mixin implementation, synchronization of alias records
     based on owner records. """
 
     @users('employee')
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_alias_mixin(self):
         """ Various base checks on alias mixin behavior """
+        self.assertEqual(self.env.company.alias_domain_id, self.mail_alias_domain)
+
         record = self.env['mail.test.container'].create({
             'name': 'Test Record',
             'alias_name': 'alias.test',
             'alias_contact': 'followers',
         })
+        self.assertEqual(record.alias_id.alias_domain_id, self.mail_alias_domain)
         self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test.container'))
         self.assertEqual(record.alias_id.alias_force_thread_id, record.id)
         self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test.container'))
@@ -520,6 +605,11 @@ class TestMailAliasMixin(TestMailAliasCommon):
         })
         self.assertEqual(record.alias_id.alias_name, 'better.alias.test')
         self.assertEqual(record.alias_id.alias_defaults, "{'default_name': 'defaults'}")
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_domain_id': self.mail_alias_domain_c2.id,
+            })
 
         with self.assertRaises(exceptions.AccessError):
             record.write({
@@ -619,20 +709,55 @@ class TestMailAliasMixin(TestMailAliasCommon):
 
     @users('erp_manager')
     def test_multi_company_setup(self):
-        """ Test company change does not impact anything at alias domain level """
-        record = self.env['mail.test.container.mc'].create({
-            'name': 'Test Record',
-            'alias_name': 'alias.test',
-            'alias_contact': 'followers',
-            'company_id': self.env.user.company_id.id,
-        })
-        self.assertEqual(record.alias_domain, self.alias_domain)
-        self.assertEqual(record.company_id, self.company_2)
+        """ Test company impact on alias domains when creating or updating
+        records in a MC environment. """
+        counter = 0
+        for create_cid, exp_company, exp_alias_domain in [
+            (None, self.company_2, self.mail_alias_domain_c2),
+            (False, self.env['res.company'], self.mail_alias_domain_c2),
+            (self.env.user.company_id.id, self.company_2, self.mail_alias_domain_c2),
+            (self.company_admin.id, self.company_admin, self.mail_alias_domain),
+        ]:
+            with self.subTest(create_cid=create_cid, exp_company=exp_company, exp_alias_domain=exp_alias_domain):
+                counter += 1
+                base_values = {
+                    'name': f'Test Record {counter}',
+                    'alias_name': f'alias.test.{counter}',
+                    'alias_contact': 'followers',
+                }
+                if create_cid is not None:
+                    base_values['company_id'] = create_cid
+                record = self.env['mail.test.container.mc'].create(base_values)
+                self.assertEqual(record.alias_domain_id, exp_alias_domain)
+                self.assertEqual(record.company_id, exp_company)
 
-        record.write({'company_id': self.company_admin.id})
-        self.assertEqual(record.alias_domain, self.alias_domain)
-        self.assertEqual(record.company_id, self.company_admin)
+                # copy: keep company
+                record_copy = record.copy(
+                    default={
+                        'alias_name': f'alias.copy.{counter}',
+                        'name': f'Copy of {record.name}',
+                    }
+                )
+                self.assertEqual(record_copy.alias_domain_id, exp_alias_domain)
+                self.assertEqual(record_copy.company_id, record.company_id)
 
-        record.write({'company_id': False})
-        self.assertEqual(record.alias_domain, self.alias_domain)
-        self.assertFalse(record.company_id)
+                # copy: force company
+                record_copy_2 = record.copy(
+                    default={
+                        'alias_name': f'alias.copy.{counter}.2',
+                        'company_id': self.company_admin.id,
+                        'name': f'Copy 2 of {record.name}',
+                    }
+                )
+                self.assertEqual(record_copy_2.alias_domain_id, self.mail_alias_domain)
+                self.assertEqual(record_copy_2.company_id, self.company_admin)
+
+                # updating company: force same alias domain
+                record.write({'company_id': self.company_admin.id})
+                self.assertEqual(record.alias_domain_id, self.mail_alias_domain)
+                self.assertEqual(record.company_id, self.company_admin)
+
+                # reset company: should not impact alias_domain if set
+                record.write({'company_id': False})
+                self.assertEqual(record.alias_domain_id, self.mail_alias_domain)
+                self.assertFalse(record.company_id)

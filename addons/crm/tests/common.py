@@ -265,6 +265,18 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'email': 'company.2@test.example.com',
             'name': 'New Test Company',
         })
+        cls.alias_bounce_c2 = 'bounce.c2'
+        cls.alias_catchall_c2 = 'catchall.c2'
+        cls.alias_default_from_c2 = 'notifications.c2'
+        cls.alias_domain_c2_name = 'test.mycompany2.com'
+        cls.mail_alias_domain_c2 = cls.env['mail.alias.domain'].create({
+            'bounce_alias': cls.alias_bounce_c2,
+            'catchall_alias': cls.alias_catchall_c2,
+            'company_ids': [(4, cls.company_2.id)],
+            'default_from': cls.alias_default_from_c2,
+            'name': cls.alias_domain_c2_name,
+            'sequence': 2,
+        })
 
         cls.user_sales_manager_mc = mail_new_test_user(
             cls.env,
