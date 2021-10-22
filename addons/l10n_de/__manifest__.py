@@ -16,7 +16,6 @@ German accounting chart and localization.
         'base_iban',
         'base_vat',
         'l10n_din5008',
-        'l10n_multilang',
     ],
     'data': [
         'data/account_account_tags_data.xml',

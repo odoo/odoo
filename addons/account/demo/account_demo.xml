@@ -2,8 +2,13 @@
 <odoo>
     <data>
 
-        <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
+        </function>
 
+        <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
         <record id="demo_capital_account" model="account.account.tag">
             <field name="name">Demo Capital Account</field>
         </record>

@@ -37,6 +37,5 @@
     'demo': [
         'demo/demo_company.xml',
     ],
-    'post_init_hook': 'load_translations',
     'installable': True,
 }

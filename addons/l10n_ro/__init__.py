@@ -9,7 +9,3 @@
 # Copyright (C) 2009 (<http://www.filsystem.ro>)
 
 from . import models
-
-
-def load_translations(env):
-    env.ref('l10n_ro.ro_chart_template').process_coa_translations()

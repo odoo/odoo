@@ -14,7 +14,7 @@ QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 class TestSwissQR(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_ch.l10nch_chart_template'):
+    def setUpClass(cls, chart_template_ref='ch'):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
     def setUp(self):

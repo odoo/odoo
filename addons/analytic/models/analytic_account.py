@@ -19,6 +19,7 @@ class AccountAnalyticAccount(models.Model):
         index='trigram',
         required=True,
         tracking=True,
+        translate=True,
     )
     code = fields.Char(
         string='Reference',

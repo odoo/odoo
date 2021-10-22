@@ -3,10 +3,8 @@
 
 from . import models
 
-
 def _post_init_hook(env):
     _preserve_tag_on_taxes(env)
-    env.ref('l10n_lu.lu_2011_chart_1').process_coa_translations()
 
 def _preserve_tag_on_taxes(env):
     from odoo.addons.account.models.chart_template import preserve_existing_tags_on_taxes

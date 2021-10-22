@@ -228,23 +228,13 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="country_code" invisible="True"/>
 
-                    <!--
-                        'force_account_company' context key is used so that the RedirectWarning
-                        potentially raised during tax closing doesn't allow the user choosing
-                        accounts from another company in case the multicompany selector
-                        currently grants access to multiple companies.
-                    -->
-                    <field name="property_tax_payable_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
-                    <field name="property_tax_receivable_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
-                    <field name="property_advance_tax_payment_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
+                    <field name="tax_payable_account_id" domain="[('company_id', '=', company_id)]"/>
+                    <field name="tax_receivable_account_id" domain="[('company_id', '=', company_id)]"/>
+                    <field name="advance_tax_payment_account_id" domain="[('company_id', '=', company_id)]"/>
 
                     <field name="preceding_subtotal" optional="hide"/>
                 </tree>
@@ -256,17 +246,19 @@
             <field name="model">account.tax.group</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Group">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="country_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="sequence"/>
                             </group>
                             <group>
-                                <field name="property_tax_payable_account_id"/>
-                                <field name="property_tax_receivable_account_id"/>
-                                <field name="property_advance_tax_payment_account_id"/>
+                                <field name="tax_payable_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="tax_receivable_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="advance_tax_payment_account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="preceding_subtotal"/>
                             </group>
                         </group>

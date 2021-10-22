@@ -39,7 +39,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_tax_views.xml',
         'views/account_full_reconcile_views.xml',
         'views/account_payment_term_views.xml',
-        'views/account_chart_template_views.xml',
         'views/res_partner_bank_views.xml',
         'views/report_statement.xml',
         'views/terms_template.xml',

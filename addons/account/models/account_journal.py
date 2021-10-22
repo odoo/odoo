@@ -4,6 +4,7 @@ from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
+from collections import defaultdict
 import logging
 import re
 
@@ -62,8 +63,15 @@ class AccountJournal(models.Model):
                     return model
         return 'odoo'
 
-    name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
+    name = fields.Char(string='Journal Name', required=True, translate=True)
+    code = fields.Char(
+        string='Short Code',
+        size=5,
+        compute='_compute_code', readonly=False, store=True,
+        required=True, precompute=True,
+        help="Shorter name used for display. "
+             "The journal entries of this journal will also be named using this prefix by default."
+    )
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
             ('sale', 'Sales'),
@@ -202,6 +210,18 @@ class AccountJournal(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    @api.depends('type', 'company_id')
+    def _compute_code(self):
+        cache = defaultdict(list)
+        for record in self:
+            if not record.code and record.type in ('bank', 'cash'):
+                record.code = self.get_next_bank_cash_default_code(
+                    record.type,
+                    record.company_id,
+                    cache.get(record.company_id)
+                )
+                cache[record.company_id].append(record.code)
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
     def _compute_available_payment_method_ids(self):
@@ -572,13 +592,16 @@ class AccountJournal(models.Model):
         return result
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company):
+    def get_next_bank_cash_default_code(self, journal_type, company, cache=None):
         journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
+        existing_codes = set(self.env['account.journal'].search([
+            ('code', 'like', journal_code_base + '%'),
+            ('company_id', '=', company.id),
+        ]).mapped('code') + (cache or []))
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
-            if journal_code not in journals.mapped('code'):
+            if journal_code not in existing_codes:
                 return journal_code
 
     @api.model
@@ -607,7 +630,7 @@ class AccountJournal(models.Model):
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
         vals['company_id'] = company.id
 
-        # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
+        # Don't get the digits on 'chart_template' since the chart template could be a custom one.
         random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
         digits = len(random_account.code) if random_account else 6
 
@@ -623,12 +646,6 @@ class AccountJournal(models.Model):
 
             # === Fill missing name ===
             vals['name'] = vals.get('name') or vals.get('bank_acc_number')
-
-            # === Fill missing code ===
-            if 'code' not in vals:
-                vals['code'] = self.get_next_bank_cash_default_code(journal_type, company)
-                if not vals['code']:
-                    raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:

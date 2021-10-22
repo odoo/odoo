@@ -3,12 +3,9 @@
 
 Only adding specificities of basic accounting applications.
 """
-from odoo import models, _
-from odoo.tools import populate
-from odoo.exceptions import UserError
+from odoo import models
 
 import logging
-from functools import lru_cache
 
 _logger = logging.getLogger(__name__)
 
@@ -19,22 +16,10 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _populate(self, size):
-        @lru_cache()
-        def search_coa_ids(currency_id):
-            return self.env['account.chart.template'].search([('currency_id', '=', currency_id)])
-
-        records = super()._populate(size)
         _logger.info('Loading Chart Template')
-        default_chart_templates = self.env['account.chart.template'].search([], limit=1)
-        if not default_chart_templates:
-            # TODO install l10n_generic_coa ?
-            raise UserError(_(
-                "At least one localization is needed to be installed in order to populate the "
-                "database with accounting"
-            ))
-        random = populate.Random('res.company+chart_template_selector')
+        records = super()._populate(size)
 
-        # Load the a chart of accounts matching the currency of the company for the 3 first created companies
+        # Load the a chart of accounts matching the country_id of the company for the 3 first created companies
         # We are loading an existing CoA and not populating it because:
         #   * it reflects best real use cases.
         #   * it allows checking reports by localization
@@ -50,6 +35,5 @@ class ResCompany(models.Model):
         # Note that we can still populate some new records on top of the CoA if it makes sense,
         # like account.journal for instance.
         for company in records[:3]:
-            chart_templates_cur = search_coa_ids(company.currency_id.id) or default_chart_templates
-            random.choice(chart_templates_cur).with_company(company.id).try_loading()
+            self.env['account.chart.template'].try_loading(company=company, template_code=None)
         return records

@@ -60,13 +60,20 @@ class Company(models.Model):
                     tax_amount = EU_TAX_MAP.get((company.account_fiscal_country_id.code, domestic_tax.amount, destination_country.code), False)
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
                         if not foreign_taxes.get(tax_amount, False):
-                            oss_tax_group_local_xml_id = f"oss_tax_group_{str(tax_amount).replace('.', '_')}"
-                            if not self.env.ref(f"l10n_eu_oss.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
+                            oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
+                            if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
+                                tg = self.env['account.tax.group'].search([('company_id', '=', company.id)])
                                 self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
-                                    'module': 'l10n_eu_oss',
+                                    'module': 'account',
                                     'model': 'account.tax.group',
-                                    'res_id': self.env['account.tax.group'].create({'name': f'OSS {tax_amount}%'}).id,
+                                    'res_id': self.env['account.tax.group'].create({
+                                        'name': f'OSS {tax_amount}%',
+                                        'country_id': company.account_fiscal_country_id.id,
+                                        'company_id': company.id,
+                                        'tax_payable_account_id': tg.tax_payable_account_id.id,
+                                        'tax_receivable_account_id': tg.tax_receivable_account_id.id,
+                                    }).id,
                                     'noupdate': True,
                                 })
                             foreign_taxes[tax_amount] = self.env['account.tax'].create({
@@ -76,7 +83,7 @@ class Company(models.Model):
                                 'refund_repartition_line_ids': refund_repartition_lines,
                                 'type_tax_use': 'sale',
                                 'description': f"{tax_amount}%",
-                                'tax_group_id': self.env.ref(f'l10n_eu_oss.{oss_tax_group_local_xml_id}').id,
+                                'tax_group_id': self.env.ref(f'account.{oss_tax_group_local_xml_id}').id,
                                 'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
@@ -129,8 +136,7 @@ class Company(models.Model):
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
-        [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
-        tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
+        tag_for_country = EU_TAG_MAP.get(self.chart_template, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
             'refund_base_tag': None,

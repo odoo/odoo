@@ -202,7 +202,7 @@ class AccountMove(models.Model):
             return False
 
         company_ids = self.env['res.company'].search([
-            ('chart_template_id', '!=', False),
+            ('chart_template', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
         currencies = self.env['res.currency'].search([

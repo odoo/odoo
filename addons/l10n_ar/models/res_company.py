@@ -39,6 +39,6 @@ class ResCompany(models.Model):
     def _check_accounting_info(self):
         """ Do not let to change the AFIP Responsibility of the company if there is already installed a chart of
         account and if there has accounting entries """
-        if self.env['account.chart.template'].existing_accounting(self):
+        if self._existing_accounting():
             raise ValidationError(_(
                 'Could not change the AFIP Responsibility of this company because there are already accounting entries.'))

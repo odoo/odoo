@@ -28,6 +28,5 @@ This is the base module to manage the accounting chart for Taiwan in Odoo.
         'demo/demo_company.xml',
     ],
     "icon": "/base/static/img/country_flags/tw.png",
-    "post_init_hook": "load_translations",
     "license": "LGPL-3",
 }

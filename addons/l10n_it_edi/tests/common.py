@@ -21,7 +21,7 @@ def patch_proxy_user(func):
 class TestItEdi(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_it.l10n_it_chart_template_generic', edi_format_ref="l10n_it_edi.edi_fatturaPA"):
+    def setUpClass(cls, chart_template_ref='it', edi_format_ref="l10n_it_edi.edi_fatturaPA"):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         # Company data ------

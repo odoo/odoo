@@ -9,7 +9,7 @@ class TestUBLDE(TestUBLCommon):
 
     @classmethod
     def setUpClass(cls,
-                   chart_template_ref="l10n_de_skr03.l10n_de_chart_template",
+                   chart_template_ref="de_skr03",
                    edi_format_ref="account_edi_ubl_cii.ubl_de",
                    ):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)

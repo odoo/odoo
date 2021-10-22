@@ -13,7 +13,7 @@ class TestGenISRReference(AccountTestInvoicingCommon):
     """Check condition of generation of and content of the structured ref"""
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="l10n_ch.l10nch_chart_template"):
+    def setUpClass(cls, chart_template_ref="ch"):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.bank = cls.env["res.bank"].create(

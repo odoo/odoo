@@ -8,7 +8,7 @@ class TestUBLNL(TestUBLCommon):
 
     @classmethod
     def setUpClass(cls,
-                   chart_template_ref="l10n_nl.l10nnl_chart_template",
+                   chart_template_ref="nl",
                    edi_format_ref="account_edi_ubl_cii.edi_nlcius_1",
                    ):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)

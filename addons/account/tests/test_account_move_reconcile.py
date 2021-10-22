@@ -3915,6 +3915,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'foreign_vat': 'WH1234',
         })
 
+        self.env['account.tax.group'].create({
+            'name': 'tax_group',
+            'country_id': test_country.id,
+        })
+
         foreign_caba_tax = self.env['account.tax'].create({
             'name': 'tax_1',
             'amount': 33.3333,

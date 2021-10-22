@@ -57,9 +57,7 @@ Wizards provided by this module:
         'data/menuitem_data.xml',
     ],
     'demo': [
-        'demo/l10n_be_demo.xml',
         'demo/demo_company.xml',
     ],
-    'post_init_hook': 'load_translations',
     'license': 'LGPL-3',
 }

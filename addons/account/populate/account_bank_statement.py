@@ -116,7 +116,7 @@ class AccountBankStatementLine(models.Model):
             return currency if currency != (journal.currency_id or journal.company_id.currency_id).id else False
 
         company_ids = self.env['res.company'].search([
-            ('chart_template_id', '!=', False),
+            ('chart_template', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
 

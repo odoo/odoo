@@ -14,7 +14,7 @@ from odoo import fields, Command
 class TestAccountFrFec(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_fr.l10n_fr_pcg_chart_template'):
+    def setUpClass(cls, chart_template_ref='fr'):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         company = cls.company_data['company']

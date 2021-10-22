@@ -8,7 +8,7 @@ from odoo.tests import tagged, Form
 class TestDDT(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_it.l10n_it_chart_template_generic'):
+    def setUpClass(cls, chart_template_ref='it'):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.company_data['company'].write({
                         'vat':"IT12345670017",
