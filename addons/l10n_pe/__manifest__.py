@@ -36,5 +36,4 @@
         'demo/demo_company.xml',
         'demo/demo_partner.xml',
     ],
-    'post_init_hook': 'load_translations',
 }

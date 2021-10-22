@@ -1,8 +1,8 @@
 from odoo import models, fields
 
 
-class ETAAccountTaxMixin(models.AbstractModel):
-    _name = 'l10n_eg.eta.account.tax.mixin'
+class AccountTax(models.Model):
+    _inherit = 'account.tax'
     _description = 'ETA tax codes mixin'
 
     l10n_eg_eta_code = fields.Selection(
@@ -65,20 +65,3 @@ class ETAAccountTaxMixin(models.AbstractModel):
             ('t20_of04', 'T20 - OF04 - Other fees (amount)')
         ],
         string='ETA Code (Egypt)', default=False)
-
-
-class AccountTax(models.Model):
-    _name = 'account.tax'
-    _inherit = ['account.tax', 'l10n_eg.eta.account.tax.mixin']
-
-
-class AccountTaxTemplate(models.Model):
-    _name = 'account.tax.template'
-    _inherit = ['account.tax.template', 'l10n_eg.eta.account.tax.mixin']
-
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        vals = super(AccountTaxTemplate, self)._get_tax_vals(company, tax_template_to_tax)
-        vals.update({
-            'l10n_eg_eta_code': self.l10n_eg_eta_code,
-        })
-        return vals

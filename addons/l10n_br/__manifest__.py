@@ -63,5 +63,4 @@ come with any additional paid permission for online use of 'private modules'.
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
-    'post_init_hook': 'load_translations',
 }

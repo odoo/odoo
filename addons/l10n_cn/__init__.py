@@ -4,6 +4,3 @@
 # Copyright (C) 2007-2014 Jeff Wang(<http://jeff@osbzr.com>).
 
 from . import models
-
-def load_translations(env):
-    env.ref('l10n_cn.l10n_chart_china_small_business').process_coa_translations()

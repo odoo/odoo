@@ -3,7 +3,3 @@
 
 from . import models
 from . import demo
-
-
-def load_translations(env):
-    env.ref('l10n_pe.pe_chart_template').process_coa_translations()

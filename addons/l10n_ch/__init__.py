@@ -6,10 +6,6 @@ from . import report
 from . import wizard
 
 
-def load_translations(env):
-    env.ref('l10n_ch.l10nch_chart_template').process_coa_translations()
-
-
 def init_settings(env):
     '''If the company is localized in Switzerland, activate the cash rounding by default.
     '''
@@ -24,5 +20,4 @@ def init_settings(env):
 
 
 def post_init(env):
-    load_translations(env)
     init_settings(env)

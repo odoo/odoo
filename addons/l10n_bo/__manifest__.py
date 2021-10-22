@@ -30,5 +30,4 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
-    'post_init_hook': 'load_translations',
 }

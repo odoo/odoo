@@ -22,7 +22,7 @@ class OssTemplateTestCase(AccountTestInvoicingCommon):
 class TestOSSBelgium(OssTemplateTestCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template'):
+    def setUpClass(cls, chart_template_ref='be'):
         cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.be')
         cls.company_data['company']._map_eu_taxes()
@@ -56,7 +56,7 @@ class TestOSSBelgium(OssTemplateTestCase):
 class TestOSSSpain(OssTemplateTestCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_common'):
+    def setUpClass(cls, chart_template_ref='es_full'):
         cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.es')
         cls.company_data['company']._map_eu_taxes()
@@ -108,11 +108,12 @@ class TestOSSMap(OssTemplateTestCase):
         In case of failure display the couple (chart_template_xml_id, tax_report_line_xml_id).
         The test doesn't fail for unreferenced char_template or unreferenced tax_report_line.
         """
-        chart_templates = self.env['account.chart.template'].search([])
-        for chart_template in chart_templates:
-            [chart_template_xml_id] = chart_template.get_external_id().values()
-            oss_tags = EU_TAG_MAP.get(chart_template_xml_id, {})
+        chart_templates = self.env['account.chart.template']._get_chart_template_mapping()
+        for chart_template, template_vals in chart_templates.items():
+            if self.env.ref(f"base.module_{template_vals['module']}").state != 'installed':
+                continue
+            oss_tags = EU_TAG_MAP.get(chart_template, {})
             for tax_report_line_xml_id in filter(lambda d: d, oss_tags.values()):
-                with self.subTest(chart_template_xml_id=chart_template_xml_id, tax_report_line_xml_id=tax_report_line_xml_id):
+                with self.subTest(chart_template=chart_template, tax_report_line_xml_id=tax_report_line_xml_id):
                     tag = self.env.ref(tax_report_line_xml_id, raise_if_not_found=False)
-                    self.assertIsNotNone(tag, f"The following xml_id is incorrect in EU_TAG_MAP.py:{tax_report_line_xml_id}")
+                    self.assertIsNotNone(tag, f"The following xml_id is incorrect in EU_TAG_MAP.py: {tax_report_line_xml_id}")

@@ -9,6 +9,3 @@
 #               Humberto Ochoa (Vauxoo)
 
 from . import models
-
-def load_translations(env):
-    env.ref('l10n_co.l10n_co_chart_template_generic').process_coa_translations()

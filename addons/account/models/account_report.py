@@ -31,7 +31,7 @@ class AccountReport(models.Model):
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
-    chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
+    chart_template = fields.Selection(string="Chart of Accounts", selection=lambda self: self.env['account.chart.template']._select_chart_template())
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(
         string="Only Tax Exigible Lines",

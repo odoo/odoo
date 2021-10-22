@@ -115,10 +115,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         ])
 
     def test_00_landed_costs_on_incoming_shipment_without_real_time(self):
-        chart_of_accounts = self.env.company.chart_template_id
-        generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template')
-        if chart_of_accounts != generic_coa:
-            raise unittest.SkipTest('Skip this test as it works only with %s (%s loaded)' % (generic_coa.name, chart_of_accounts.name))
+        if self.env.company.chart_template != 'generic_coa':
+            raise unittest.SkipTest('Skip this test as it works only with `generic_coa`')
         # Test landed cost on incoming shipment
         #
         # (A) Purchase product

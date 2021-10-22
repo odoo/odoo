@@ -8,7 +8,7 @@ class TestCIIFR(TestUBLCommon):
 
     @classmethod
     def setUpClass(cls,
-                   chart_template_ref="l10n_fr.l10n_fr_pcg_chart_template",
+                   chart_template_ref="fr",
                    edi_format_ref="account_edi_ubl_cii.edi_facturx_1_0_05",
                    ):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
