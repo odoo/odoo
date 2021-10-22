@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { decrement, increment, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
@@ -9,25 +9,18 @@ import { Markup } from 'web.utils';
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
-function factory(dependencies) {
-
-    class MessagingNotificationHandler extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.messaging_notification_handler',
+    identifyingFields: ['messaging'],
+    lifecycleHooks: {
         _willDelete() {
             if (this.env.services['bus_service']) {
                 this.env.services['bus_service'].off('notification');
                 this.env.services['bus_service'].stopPolling();
             }
-            return super._willDelete(...arguments);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Fetch messaging data initially to populate the store specifically for
          * the current users. This includes pinned channels for instance.
@@ -35,12 +28,7 @@ function factory(dependencies) {
         start() {
             this.env.services.bus_service.onNotification(null, notifs => this._handleNotifications(notifs));
             this.env.services.bus_service.startPolling();
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @param {Object[]} notifications
@@ -135,15 +123,13 @@ function factory(dependencies) {
                 }
             });
             await this.async(() => Promise.all(proms));
-        }
-
+        },
         /**
          * @abstract
          * @private
          * @param {Object} message
          */
-        _handleNotification(message) {}
-
+        _handleNotification(message) {},
         /**
          * @private
          * @param {Object} payload
@@ -154,8 +140,7 @@ function factory(dependencies) {
             if (attachment) {
                 attachment.delete();
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} param1
@@ -192,8 +177,7 @@ function factory(dependencies) {
             });
             // FIXME force the computing of message values (cf task-2261221)
             this.messaging.models['mail.message_seen_indicator'].recomputeFetchedValues(channel);
-        }
-
+        },
         /**
          * @private
          * @param {Object} payload
@@ -212,8 +196,7 @@ function factory(dependencies) {
                     type: 'info',
                 });
             }
-        }
-
+        },
         /**
          * @private
          * @param {object} payload
@@ -230,8 +213,7 @@ function factory(dependencies) {
                     lastInterestDateTime: str_to_datetime(last_interest_dt),
                 });
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} payload
@@ -295,8 +277,7 @@ function factory(dependencies) {
                     this.messaging.chatWindowManager.openThread(channel);
                 }
             }
-        }
-
+        },
         /**
          * Called when a channel has been seen, and the server responds with the
          * last message seen. Useful in order to track last message seen.
@@ -348,8 +329,7 @@ function factory(dependencies) {
                 // FIXME force the computing of message values (cf task-2261221)
                 this.messaging.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} param1
@@ -388,16 +368,14 @@ function factory(dependencies) {
                 }
                 channel.unregisterOtherMemberTypingMember(partner);
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} channelData
          */
         _handleNotificationChannelUpdate(channelData) {
             this.messaging.models['mail.thread'].insert({ model: 'mail.channel', ...channelData });
-        }
-
+        },
         /**
          * @private
          * @param {object} settings
@@ -424,8 +402,7 @@ function factory(dependencies) {
                 pushToTalkKey: settings.push_to_talk_key,
                 voiceActiveDuration: settings.voice_active_duration,
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -439,8 +416,7 @@ function factory(dependencies) {
             if (originThread && message.isNeedaction) {
                 originThread.update({ message_needaction_counter: increment() });
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -451,8 +427,7 @@ function factory(dependencies) {
             for (const content of notifications) {
                 this.messaging.rtc.handleNotification(sender, content);
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} param1
@@ -469,8 +444,7 @@ function factory(dependencies) {
                 title,
                 type: warning ? 'warning' : 'danger',
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -480,8 +454,7 @@ function factory(dependencies) {
             this.messaging && this.messaging.userSetting.update({
                 volumeSettings: volumeSettings,
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -496,8 +469,7 @@ function factory(dependencies) {
                     type: 'warning',
                 });
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -510,8 +482,7 @@ function factory(dependencies) {
                 return;
             }
             channel.updateRtcSessions(rtcSessions);
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -524,8 +495,7 @@ function factory(dependencies) {
                     message.delete();
                 }
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} data
@@ -541,8 +511,7 @@ function factory(dependencies) {
                     message.update({ author: link(this.messaging.currentPartner) });
                 }
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -584,8 +553,7 @@ function factory(dependencies) {
                 // messages on the server.
                 inbox.cache.update({ hasToLoadMessages: true });
             }
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -606,8 +574,7 @@ function factory(dependencies) {
                     counter: starred ? increment() : decrement(),
                 });
             }
-        }
-
+        },
         /**
          * On receiving a transient message, i.e. a message which does not come
          * from a member of the channel. Usually a log message, such as one
@@ -629,8 +596,7 @@ function factory(dependencies) {
                 isTransient: true,
             }));
             this._notifyThreadViewsMessageReceived(message);
-        }
-
+        },
         /**
          * @private
          * @param {Object} payload
@@ -652,8 +618,7 @@ function factory(dependencies) {
                 isServerPinned: false,
                 members: unlink(this.messaging.currentPartner)
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} payload
@@ -675,8 +640,7 @@ function factory(dependencies) {
                 isServerPinned: false,
                 members: unlink(this.messaging.currentPartner)
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} payload
@@ -695,8 +659,7 @@ function factory(dependencies) {
                 return;
             }
             this.messaging.chatWindowManager.openThread(chat);
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -745,8 +708,7 @@ function factory(dependencies) {
                 part: '_chat',
                 title: _.str.sprintf(titlePattern, messaging.outOfFocusUnreadMessageCounter),
             });
-        }
-
+        },
         /**
          * Notifies threadViews about the given message being just received.
          * This can allow them adjust their scroll position if applicable.
@@ -760,13 +722,6 @@ function factory(dependencies) {
                     threadView.addComponentHint('message-received', { message });
                 }
             }
-        }
-
-    }
-    MessagingNotificationHandler.identifyingFields = ['messaging'];
-    MessagingNotificationHandler.modelName = 'mail.messaging_notification_handler';
-
-    return MessagingNotificationHandler;
-}
-
-registerNewModel('mail.messaging_notification_handler', factory);
+        },
+    },
+});

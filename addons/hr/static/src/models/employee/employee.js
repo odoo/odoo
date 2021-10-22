@@ -1,23 +1,18 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class Employee extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'hr.employee',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @returns {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('id' in data) {
                 data2.id = data.id;
@@ -42,18 +37,16 @@ function factory(dependencies) {
                 }
             }
             return data2;
-        }
-
+        },
         /**
          * Performs the `read` RPC on the `hr.employee.public`.
          *
-         * @static
          * @param {Object} param0
          * @param {Object} param0.context
          * @param {string[]} param0.fields
          * @param {integer[]} param0.ids
          */
-        static async performRpcRead({ context, fields, ids }) {
+        async performRpcRead({ context, fields, ids }) {
             const employeesData = await this.env.services.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
@@ -66,18 +59,16 @@ function factory(dependencies) {
             this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
                 this.messaging.models['hr.employee'].convertData(employeeData)
             ));
-        }
-
+        },
         /**
          * Performs the `search_read` RPC on `hr.employee.public`.
          *
-         * @static
          * @param {Object} param0
          * @param {Object} param0.context
          * @param {Array[]} param0.domain
          * @param {string[]} param0.fields
          */
-        static async performRpcSearchRead({ context, domain, fields }) {
+        async performRpcSearchRead({ context, domain, fields }) {
             const employeesData = await this.env.services.rpc({
                 model: 'hr.employee.public',
                 method: 'search_read',
@@ -90,8 +81,9 @@ function factory(dependencies) {
             this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
                 this.messaging.models['hr.employee'].convertData(employeeData)
             ));
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Checks whether this employee has a related user and partner and links
          * them if applicable.
@@ -102,8 +94,7 @@ function factory(dependencies) {
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },
             });
-        }
-
+        },
         /**
          * Gets the chat between the user of this employee and the current user.
          *
@@ -124,8 +115,7 @@ function factory(dependencies) {
                 return;
             }
             return this.user.getChat();
-        }
-
+        },
         /**
          * Opens a chat between the user of this employee and the current user
          * and returns it.
@@ -142,8 +132,7 @@ function factory(dependencies) {
             }
             await this.async(() => chat.open(options));
             return chat;
-        }
-
+        },
         /**
          * Opens the most appropriate view that is a profile for this employee.
          */
@@ -152,11 +141,9 @@ function factory(dependencies) {
                 id: this.id,
                 model: 'hr.employee.public',
             });
-        }
-
-    }
-
-    Employee.fields = {
+        },
+    },
+    fields: {
         /**
          * Whether an attempt was already made to fetch the user corresponding
          * to this employee. This prevents doing the same RPC multiple times.
@@ -184,11 +171,5 @@ function factory(dependencies) {
         user: one2one('mail.user', {
             inverse: 'employee',
         }),
-    };
-    Employee.identifyingFields = ['id'];
-    Employee.modelName = 'hr.employee';
-
-    return Employee;
-}
-
-registerNewModel('hr.employee', factory);
+    },
+});

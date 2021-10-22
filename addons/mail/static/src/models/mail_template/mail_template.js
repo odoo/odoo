@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class MailTemplate extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.mail_template',
+    identifyingFields: ['id'],
+    recordMethods: {
         /**
          * @param {mail.activity} activity
          */
@@ -37,8 +33,7 @@ function factory(dependencies) {
                     },
                 },
             });
-        }
-
+        },
         /**
          * @param {mail.activity} activity
          */
@@ -49,11 +44,9 @@ function factory(dependencies) {
                 args: [[activity.thread.id], this.id],
             }));
             activity.thread.refresh();
-        }
-
-    }
-
-    MailTemplate.fields = {
+        },
+    },
+    fields: {
         activities: many2many('mail.activity', {
             inverse: 'mailTemplates',
         }),
@@ -62,11 +55,5 @@ function factory(dependencies) {
             required: true,
         }),
         name: attr(),
-    };
-    MailTemplate.identifyingFields = ['id'];
-    MailTemplate.modelName = 'mail.mail_template';
-
-    return MailTemplate;
-}
-
-registerNewModel('mail.mail_template', factory);
+    },
+});

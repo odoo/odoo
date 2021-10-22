@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class ThreadViewer extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.thread_viewer',
+    identifyingFields: [['chatter', 'chatWindow', 'discuss', 'discussPublicView']],
+    recordMethods: {
         /**
          * @param {integer} scrollHeight
          * @param {mail.thread_cache} threadCache
@@ -32,8 +28,7 @@ function factory(dependencies) {
                     [threadCache.localId]: scrollHeight,
                 }),
             });
-        }
-
+        },
         /**
          * @param {integer} scrollTop
          * @param {mail.thread_cache} threadCache
@@ -54,23 +49,16 @@ function factory(dependencies) {
                     [threadCache.localId]: scrollTop,
                 }),
             });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {mail.thread_viewer|undefined}
          */
         _computeThreadView() {
             return this.hasThreadView ? insertAndReplace() : clear();
-        }
-
-    }
-
-    ThreadViewer.fields = {
+        },
+    },
+    fields: {
         chatter: one2one('mail.chatter', {
             inverse: 'threadViewer',
             readonly: true,
@@ -161,11 +149,5 @@ function factory(dependencies) {
             inverse: 'threadViewer',
             isCausal: true,
         }),
-    };
-    ThreadViewer.identifyingFields = [['chatter', 'chatWindow', 'discuss', 'discussPublicView']];
-    ThreadViewer.modelName = 'mail.thread_viewer';
-
-    return ThreadViewer;
-}
-
-registerNewModel('mail.thread_viewer', factory);
+    },
+});

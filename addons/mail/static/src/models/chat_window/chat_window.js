@@ -1,31 +1,24 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
-function factory(dependencies) {
-
-    class ChatWindow extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.chat_window',
+    identifyingFields: ['manager', ['thread', 'managerAsNewMessage']],
+    lifecycleHooks: {
         _created() {
-            super._created();
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickHideInviteForm = this.onClickHideInviteForm.bind(this);
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
             this.onClickShowInviteForm = this.onClickShowInviteForm.bind(this);
             this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
             this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Close this chat window.
          *
@@ -52,14 +45,12 @@ function factory(dependencies) {
             if (this.exists()) {
                 this.delete();
             }
-        }
-
+        },
         expand() {
             if (this.thread) {
                 this.thread.open({ expanded: true });
             }
-        }
-
+        },
         /**
          * Programmatically auto-focus an existing chat window.
          */
@@ -70,23 +61,20 @@ function factory(dependencies) {
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
             }
-        }
-
+        },
         focusNextVisibleUnfoldedChatWindow() {
             const nextVisibleUnfoldedChatWindow = this._getNextVisibleUnfoldedChatWindow();
             if (nextVisibleUnfoldedChatWindow) {
                 nextVisibleUnfoldedChatWindow.focus();
             }
-        }
-
+        },
         focusPreviousVisibleUnfoldedChatWindow() {
             const previousVisibleUnfoldedChatWindow =
                 this._getNextVisibleUnfoldedChatWindow({ reverse: true });
             if (previousVisibleUnfoldedChatWindow) {
                 previousVisibleUnfoldedChatWindow.focus();
             }
-        }
-
+        },
         /**
          * @param {Object} [param0={}]
          * @param {boolean} [param0.notifyServer]
@@ -101,8 +89,7 @@ function factory(dependencies) {
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('folded');
             }
-        }
-
+        },
         /**
          * Makes this chat window active, which consists of making it visible,
          * unfolding it, and focusing it if the user isn't on a mobile device.
@@ -115,8 +102,7 @@ function factory(dependencies) {
             if ((options && options.focus !== undefined) ? options.focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
-        }
-
+        },
         /**
          * Makes this chat window visible by swapping it with the last visible
          * chat window, or do nothing if it is already visible.
@@ -127,8 +113,7 @@ function factory(dependencies) {
             }
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
-        }
-
+        },
         /**
          * Handles click on the "stop adding users" button.
          *
@@ -137,8 +122,7 @@ function factory(dependencies) {
         onClickHideInviteForm(ev) {
             markEventHandled(ev, 'ChatWindow.onClickCommand');
             this.update({ channelInvitationForm: clear() });
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -148,8 +132,7 @@ function factory(dependencies) {
             if (this.threadViewer.threadView) {
                 this.threadViewer.threadView.addComponentHint('member-list-hidden');
             }
-        }
-
+        },
         /**
          * Handles click on the "add users" button.
          *
@@ -166,8 +149,7 @@ function factory(dependencies) {
             if (!this.messaging.isCurrentUserGuest) {
                 this.channelInvitationForm.searchPartnersToInvite();
             }
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -177,8 +159,7 @@ function factory(dependencies) {
                 channelInvitationForm: clear(),
                 isMemberListOpened: true,
             });
-        }
-
+        },
         /**
          * @param {Event} ev
          */
@@ -186,22 +167,19 @@ function factory(dependencies) {
             if (this.exists()) {
                 this.update({ isFocused: true });
             }
-        }
-
+        },
         /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {
             this.manager.shiftPrev(this);
-        }
-
+        },
         /**
          * Swap this chat window with the next one.
          */
         shiftNext() {
             this.manager.shiftNext(this);
-        }
-
+        },
         /**
          * @param {Object} [param0={}]
          * @param {boolean} [param0.notifyServer]
@@ -216,20 +194,14 @@ function factory(dependencies) {
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('open');
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasCallButtons() {
             return Boolean(this.thread) && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -239,16 +211,14 @@ function factory(dependencies) {
                 this.thread && this.thread.hasInviteFeature &&
                 this.messaging && this.messaging.device && this.messaging.device.isMobile
             );
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasNewMessageForm() {
             return this.isVisible && !this.isFolded && !this.thread;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -263,8 +233,7 @@ function factory(dependencies) {
                 return false;
             }
             return index < allVisible.length - 1;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -278,16 +247,14 @@ function factory(dependencies) {
                 return false;
             }
             return index > 0;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
             return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -298,8 +265,7 @@ function factory(dependencies) {
                 return thread.foldState === 'folded';
             }
             return this.isFolded;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -309,8 +275,7 @@ function factory(dependencies) {
                 return false;
             }
             return this.manager.allOrderedVisible.includes(this);
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -320,8 +285,7 @@ function factory(dependencies) {
                 return this.thread.displayName;
             }
             return this.env._t("New message");
-        }
-
+        },
         /**
          * @private
          * @returns {mail.thread_viewer}
@@ -332,8 +296,7 @@ function factory(dependencies) {
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
             });
-        }
-
+        },
         /**
          * @private
          * @returns {integer|undefined}
@@ -348,8 +311,7 @@ function factory(dependencies) {
                 return clear();
             }
             return index;
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -364,8 +326,7 @@ function factory(dependencies) {
                 return 0;
             }
             return visible[index].offset;
-        }
-
+        },
         /**
          * Cycles to the next possible visible and unfolded chat window starting
          * from the `currentChatWindow`, following the natural order based on the
@@ -407,11 +368,9 @@ function factory(dependencies) {
                 nextToFocus = orderedVisible[nextIndex];
             }
             return nextToFocus;
-        }
-
-    }
-
-    ChatWindow.fields = {
+        },
+    },
+    fields: {
         /**
          * Determines the channel invitation form displayed by this chat window
          * (if any). Only makes sense if hasInviteFeature is true.
@@ -536,11 +495,5 @@ function factory(dependencies) {
         visibleOffset: attr({
             compute: '_computeVisibleOffset',
         }),
-    };
-    ChatWindow.identifyingFields = ['manager', ['thread', 'managerAsNewMessage']];
-    ChatWindow.modelName = 'mail.chat_window';
-
-    return ChatWindow;
-}
-
-registerNewModel('mail.chat_window', factory);
+    },
+});

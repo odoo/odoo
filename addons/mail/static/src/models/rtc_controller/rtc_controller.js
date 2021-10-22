@@ -1,18 +1,14 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class RtcController extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.rtc_controller',
+    identifyingFields: ['callViewer'],
+    lifecycleHooks: {
         _created() {
-            super._created();
             this.onClickCamera = this.onClickCamera.bind(this);
             this.onClickDeafen = this.onClickDeafen.bind(this);
             this.onClickMicrophone = this.onClickMicrophone.bind(this);
@@ -20,33 +16,27 @@ function factory(dependencies) {
             this.onClickScreen = this.onClickScreen.bind(this);
             this.onClickToggleAudioCall = this.onClickToggleAudioCall.bind(this);
             this.onClickToggleVideoCall = this.onClickToggleVideoCall.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         onClickCamera(ev) {
             this.messaging.rtc.toggleUserVideo();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         async onClickDeafen(ev) {
             await this.messaging.rtc.currentRtcSession.toggleDeaf();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         onClickMicrophone(ev) {
             this.messaging.rtc.toggleMicrophone();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -55,15 +45,13 @@ function factory(dependencies) {
                 return;
             }
             await this.callViewer.threadView.thread.leaveCall();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
         onClickScreen(ev) {
             this.messaging.rtc.toggleScreenShare();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -72,8 +60,7 @@ function factory(dependencies) {
                 return;
             }
             await this.callViewer.threadView.thread.toggleCall();
-        }
-
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -84,22 +71,15 @@ function factory(dependencies) {
             await this.callViewer.threadView.thread.toggleCall({
                 startWithVideo: true,
             });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          */
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
-        }
-
-    }
-
-    RtcController.fields = {
+        },
+    },
+    fields: {
         callViewer: one2one('mail.rtc_call_viewer', {
             inverse: 'rtcController',
             readonly: true,
@@ -114,11 +94,5 @@ function factory(dependencies) {
             isCausal: true,
             required: true,
         }),
-    };
-    RtcController.identifyingFields = ['callViewer'];
-    RtcController.modelName = 'mail.rtc_controller';
-
-    return RtcController;
-}
-
-registerNewModel('mail.rtc_controller', factory);
+    },
+});

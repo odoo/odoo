@@ -1,26 +1,21 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-function factory(dependencies) {
-
-    class ChannelInvitationForm extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.channel_invitation_form',
+    identifyingFields: [['chatWindow', 'threadView']],
+    lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickInvite = this.onClickInvite.bind(this);
             this.onInputSearch = this.onInputSearch.bind(this);
-        }
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * Handles click on the "invite" button.
          *
@@ -62,8 +57,7 @@ function factory(dependencies) {
                 selectedPartners: unlinkAll(),
             });
             this.delete();
-        }
-
+        },
         /**
          * @param {mail.partner} partner
          * @param {MouseEvent} ev
@@ -74,16 +68,14 @@ function factory(dependencies) {
                 return;
             }
             this.update({ selectedPartners: link(partner) });
-        }
-
+        },
         /**
          * @param {mail.partner} partner
          * @param {MouseEvent} ev
          */
         onClickSelectedPartner(partner, ev) {
             this.update({ selectedPartners: unlink(partner) });
-        }
-
+        },
         /**
          * Handles OWL update on this channel invitation form component.
          */
@@ -93,8 +85,7 @@ function factory(dependencies) {
                 this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
                 this.update({ doFocusOnSearchInput: clear() });
             }
-        }
-
+        },
         /**
          * @param {mail.partner} partner
          * @param {InputEvent} ev
@@ -105,16 +96,14 @@ function factory(dependencies) {
                 return;
             }
             this.update({ selectedPartners: link(partner) });
-        }
-
+        },
         /**
          * @param {InputEvent} ev
          */
         async onInputSearch(ev) {
             this.update({ searchTerm: ev.target.value });
             this.searchPartnersToInvite();
-        }
-
+        },
         /**
          * Searches for partners to invite based on the current search term. If
          * a search is already in progress, waits until it is done to start a
@@ -157,12 +146,7 @@ function factory(dependencies) {
                     }
                 }
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {string}
@@ -178,8 +162,7 @@ function factory(dependencies) {
                     return this.env._t("Invite to group chat");
             }
             return this.env._t("Invite to Channel");
-        }
-
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -192,11 +175,9 @@ function factory(dependencies) {
                 return replace(this.chatWindow.thread);
             }
             return clear();
-        }
-
-    }
-
-    ChannelInvitationForm.fields = {
+        },
+    },
+    fields: {
         chatWindow: one2one('mail.chat_window', {
             inverse: 'channelInvitationForm',
             readonly: true,
@@ -274,11 +255,5 @@ function factory(dependencies) {
             inverse: 'channelInvitationForm',
             readonly: true,
         }),
-    };
-    ChannelInvitationForm.identifyingFields = [['chatWindow', 'threadView']];
-    ChannelInvitationForm.modelName = 'mail.channel_invitation_form';
-
-    return ChannelInvitationForm;
-}
-
-registerNewModel('mail.channel_invitation_form', factory);
+    },
+});

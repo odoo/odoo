@@ -1,60 +1,55 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    const BASE_VISUAL = {
+const BASE_VISUAL = {
+    /**
+     * Amount of visible slots available for chat windows.
+     */
+    availableVisibleSlots: 0,
+    /**
+     * Data related to the hidden menu.
+     */
+    hidden: {
         /**
-         * Amount of visible slots available for chat windows.
+         * List of hidden docked chat windows. Useful to compute counter.
+         * Chat windows are ordered by their `chatWindows` order.
          */
-        availableVisibleSlots: 0,
+        chatWindowLocalIds: [],
         /**
-         * Data related to the hidden menu.
+         * Whether hidden menu is visible or not
          */
-        hidden: {
-            /**
-             * List of hidden docked chat windows. Useful to compute counter.
-             * Chat windows are ordered by their `chatWindows` order.
-             */
-            chatWindowLocalIds: [],
-            /**
-             * Whether hidden menu is visible or not
-             */
-            isVisible: false,
-            /**
-             * Offset of hidden menu starting point from the starting point
-             * of chat window manager. Makes only sense if it is visible.
-             */
-            offset: 0,
-        },
+        isVisible: false,
         /**
-         * Data related to visible chat windows. Index determine order of
-         * docked chat windows.
-         *
-         * Value:
-         *
-         *  {
-         *      chatWindowLocalId,
-         *      offset,
-         *  }
-         *
-         * Offset is offset of starting point of docked chat window from
-         * starting point of dock chat window manager. Docked chat windows
-         * are ordered by their `chatWindows` order
+         * Offset of hidden menu starting point from the starting point
+         * of chat window manager. Makes only sense if it is visible.
          */
-        visible: [],
-    };
+        offset: 0,
+    },
+    /**
+     * Data related to visible chat windows. Index determine order of
+     * docked chat windows.
+     *
+     * Value:
+     *
+     *  {
+     *      chatWindowLocalId,
+     *      offset,
+     *  }
+     *
+     * Offset is offset of starting point of docked chat window from
+     * starting point of dock chat window manager. Docked chat windows
+     * are ordered by their `chatWindows` order
+     */
+    visible: [],
+};
 
-
-    class ChatWindowManager extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.chat_window_manager',
+    identifyingFields: ['messaging'],
+    recordMethods: {
         /**
          * Close all chat windows.
          *
@@ -64,12 +59,10 @@ function factory(dependencies) {
             for (const chatWindow of chatWindows) {
                 chatWindow.close();
             }
-        }
-
+        },
         closeHiddenMenu() {
             this.update({ isHiddenMenuOpen: false });
-        }
-
+        },
         /**
          * Closes all chat windows related to the given thread.
          *
@@ -82,19 +75,16 @@ function factory(dependencies) {
                     chatWindow.close(options);
                 }
             }
-        }
-
+        },
         openHiddenMenu() {
             this.update({ isHiddenMenuOpen: true });
-        }
-
+        },
         openNewMessage() {
             if (!this.newMessageChatWindow) {
                 this.update({ newMessageChatWindow: insertAndReplace({ manager: replace(this) }) });
             }
             this.newMessageChatWindow.makeActive();
-        }
-
+        },
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
@@ -141,8 +131,7 @@ function factory(dependencies) {
                 const foldState = chatWindow.isFolded ? 'folded' : 'open';
                 thread.notifyFoldStateToServer(foldState);
             }
-        }
-
+        },
         /**
          * Shift provided chat window to previous visible index, which swap visible order of this
          * chat window and the preceding visible one
@@ -162,8 +151,7 @@ function factory(dependencies) {
             _newOrdered[index + 1] = chatWindow;
             this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
-        }
-
+        },
         /**
          * Shift provided chat window to next visible index, which swap visible order of this
          * chat window and the following visible one.
@@ -183,8 +171,7 @@ function factory(dependencies) {
             _newOrdered[index - 1] = chatWindow;
             this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
-        }
-
+        },
         /**
          * @param {mail.chat_window} chatWindow1
          * @param {mail.chat_window} chatWindow2
@@ -200,20 +187,14 @@ function factory(dependencies) {
             _newOrdered[index1] = chatWindow2;
             _newOrdered[index2] = chatWindow1;
             this.update({ allOrdered: replace(_newOrdered) });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {mail.chat_window[]}
          */
         _computeAllOrdered() {
             return link(this.chatWindows);
-        }
-
+        },
         /**
          * @private
          * @returns {mail.chat_window[]}
@@ -222,8 +203,7 @@ function factory(dependencies) {
             return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
                 this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
-        }
-
+        },
         /**
          * @private
          * @returns {mail.chat_window[]}
@@ -232,24 +212,21 @@ function factory(dependencies) {
             return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
                 this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasHiddenChatWindows() {
             return this.allOrderedHidden.length > 0;
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasVisibleChatWindows() {
             return this.allOrderedVisible.length > 0;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.chat_window|undefined}
@@ -260,8 +237,7 @@ function factory(dependencies) {
                 return unlink();
             }
             return link(lastVisible);
-        }
-
+        },
         /**
          * @private
          * @returns {integer}
@@ -277,8 +253,7 @@ function factory(dependencies) {
                 }
             }
             return amount;
-        }
-
+        },
         /**
          * @private
          * @returns {Object}
@@ -346,11 +321,9 @@ function factory(dependencies) {
                 visual.availableVisibleSlots = 0;
             }
             return visual;
-        }
-
-    }
-
-    ChatWindowManager.fields = {
+        },
+    },
+    fields: {
         /**
          * List of ordered chat windows.
          */
@@ -390,11 +363,5 @@ function factory(dependencies) {
             compute: '_computeVisual',
             default: BASE_VISUAL,
         }),
-    };
-    ChatWindowManager.identifyingFields = ['messaging'];
-    ChatWindowManager.modelName = 'mail.chat_window_manager';
-
-    return ChatWindowManager;
-}
-
-registerNewModel('mail.chat_window_manager', factory);
+    },
+});

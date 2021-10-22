@@ -1,13 +1,10 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+import { addRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/message/message';
 
-registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.message.js', {
-
-    //----------------------------------------------------------------------
-    // Public
-    //----------------------------------------------------------------------
-
+addRecordMethods('mail.message', {
     /**
      * Cancels the 'snailmail.letter' corresponding to this message.
      *

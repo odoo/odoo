@@ -1,30 +1,22 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class PopoverView extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.popover_view',
+    identifyingFields: ['threadViewTopbarOwner', 'channelInvitationForm'],
+    lifecycleHooks: {
         _created() {
             this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
-        }
-
+        },
         _willDelete() {
             document.removeEventListener('click', this._onClickCaptureGlobal, true);
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @returns {owl.Ref}
@@ -34,8 +26,7 @@ function factory(dependencies) {
                 return this.threadViewTopbarOwner.inviteButtonRef;
             }
             return clear();
-        }
-
+        },
         /**
          * @private
          * @returns {string}
@@ -45,8 +36,7 @@ function factory(dependencies) {
                 return 'bottom';
             }
             return clear();
-        }
-
+        },
         /**
          * Closes the popover when clicking outside, if appropriate.
          *
@@ -64,11 +54,9 @@ function factory(dependencies) {
                 return;
             }
             this.delete();
-        }
-
-    }
-
-    PopoverView.fields = {
+        },
+    },
+    fields: {
         /**
          * HTML element that is used as anchor position for this popover view.
          */
@@ -104,12 +92,5 @@ function factory(dependencies) {
             inverse: 'invitePopoverView',
             readonly: true,
         }),
-    };
-
-    PopoverView.identifyingFields = ['threadViewTopbarOwner', 'channelInvitationForm'];
-    PopoverView.modelName = 'mail.popover_view';
-
-    return PopoverView;
-}
-
-registerNewModel('mail.popover_view', factory);
+    },
+});

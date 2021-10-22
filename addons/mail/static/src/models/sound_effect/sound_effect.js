@@ -1,16 +1,12 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class SoundEffect extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.sound_effect',
+    identifyingFields: ['path', 'filename'],
+    recordMethods: {
         /**
          * @param {Object} param0
          * @param {boolean} [param0.loop] true if we want to make the audio loop, will only stop if stop() is called
@@ -31,8 +27,7 @@ function factory(dependencies) {
             this.audio.loop = loop;
             this.audio.volume = volume;
             Promise.resolve(this.audio.play()).catch(()=>{});
-        }
-
+        },
         /**
          * Resets the audio to the start of the track and pauses it.
          */
@@ -41,11 +36,9 @@ function factory(dependencies) {
                 this.audio.pause();
                 this.audio.currentTime = 0;
             }
-        }
-
-    }
-
-    SoundEffect.fields = {
+        },
+    },
+    fields: {
         /**
          * HTMLAudioElement
          * Does not require to be mounted on the DOM to operate.
@@ -69,11 +62,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    SoundEffect.identifyingFields = ['path', 'filename'];
-    SoundEffect.modelName = 'mail.sound_effect';
-
-    return SoundEffect;
-}
-
-registerNewModel('mail.sound_effect', factory);
+    },
+});

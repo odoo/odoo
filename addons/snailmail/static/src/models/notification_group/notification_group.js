@@ -1,15 +1,10 @@
 /** @odoo-module **/
 
-import {
-    registerInstancePatchModel,
-} from '@mail/model/model_core';
+import { patchRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/notification_group/notification_group';
 
-registerInstancePatchModel('mail.notification_group', 'snailmail/static/src/models/notification_group/notification_group.js', {
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
+patchRecordMethods('mail.notification_group', {
     /**
      * @override
      */
@@ -27,11 +22,6 @@ registerInstancePatchModel('mail.notification_group', 'snailmail/static/src/mode
             },
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */

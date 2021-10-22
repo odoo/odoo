@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
-import {
-    registerClassPatchModel,
-    registerInstancePatchModel,
-} from '@mail/model/model_core';
+import { patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
 import { insert, link, unlink } from '@mail/model/model_field_command';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/thread/thread';
 
-registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
-
-    //----------------------------------------------------------------------
-    // Public
-    //----------------------------------------------------------------------
-
+patchModelMethods('mail.thread', {
     /**
      * @override
      */
@@ -58,12 +52,7 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
     },
 });
 
-registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
-
-    //----------------------------------------------------------------------
-    // Private
-    //----------------------------------------------------------------------
-
+patchRecordMethods('mail.thread', {
     /**
      * @override
      */

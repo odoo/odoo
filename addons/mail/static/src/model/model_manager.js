@@ -4,7 +4,6 @@ import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
-import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 /**
@@ -138,10 +137,7 @@ export class ModelManager {
          * fully loaded translation).
          */
         await this.env.session.is_bound;
-        /**
-         * Generate the models.
-         */
-        this.models = this._generateModels();
+        this._generateModels();
         /**
          * Create the messaging singleton record.
          */
@@ -257,7 +253,7 @@ export class ModelManager {
             return;
         }
         const modelName = localId.split('(')[0];
-        if (!isCheckingInheritance && modelName !== Model.modelName) {
+        if (!isCheckingInheritance && modelName !== Model.name) {
             throw Error(`wrong format of localId ${localId} for ${Model}.`);
         }
         for (const listener of this._listeners) {
@@ -431,32 +427,56 @@ export class ModelManager {
     }
 
     /**
+     * Adds fields, methods, getters, and identifyingFields from the model
+     * definition to the Model, then registers it in `this.models`.
+     *
      * @private
-     * @param {mail.model} Model class
-     * @param {Object} patch
+     * @param {mail.model} Model
      */
-    _applyModelPatchFields(Model, patch) {
-        for (const [fieldName, field] of Object.entries(patch)) {
-            Model.fields[fieldName] = field;
+    _applyModelDefinition(Model) {
+        const definition = registry.get(Model.name);
+        Object.assign(Model, Object.fromEntries(definition.get('modelMethods')));
+        Object.assign(Model.prototype, Object.fromEntries(definition.get('recordMethods')));
+        for (const [getterName, getter] of definition.get('modelGetters')) {
+            Object.defineProperty(Model, getterName, { get: getter });
         }
+        for (const [getterName, getter] of definition.get('recordGetters')) {
+            Object.defineProperty(Model.prototype, getterName, { get: getter });
+        }
+        // Make model manager accessible from Model.
+        Model.modelManager = this;
+        Model.fields = {};
+        // Contains all records. key is local id, while value is the record.
+        Model.__records = {};
+        Model.__identifyingFields = definition.get('identifyingFields');
+        const identifyingFieldsFlattened = new Set();
+        for (const identifyingElement of Model.__identifyingFields) {
+            const identifyingFields = typeof identifyingElement === 'string'
+                ? [identifyingElement]
+                : identifyingElement;
+            for (const identifyingField of identifyingFields) {
+                identifyingFieldsFlattened.add(identifyingField);
+            }
+        }
+        Model.__identifyingFieldsFlattened = identifyingFieldsFlattened;
+        this._listenersObservingAllByModel.set(Model, new Map());
+        this.models[Model.name] = Model;
     }
 
     /**
      * @private
-     * @param {Object} Models
      * @throws {Error} in case some declared fields are not correct.
      */
-    _checkDeclaredFieldsOnModels(Models) {
-        for (const Model of Object.values(Models)) {
-            for (const fieldName in Model.fields) {
-                const field = Model.fields[fieldName];
+    _checkDeclaredFieldsOnModels() {
+        for (const Model of Object.values(this.models)) {
+            for (const [fieldName, field] of registry.get(Model.name).get('fields')) {
                 // 0. Forbidden name.
                 if (fieldName in Model.prototype) {
-                    throw new Error(`Field "${Model}/${fieldName}" has a forbidden name.`);
+                    throw new Error(`field(${fieldName}) on ${Model} has a forbidden name.`);
                 }
                 // 1. Field type is required.
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`field(${fieldName}) on ${Model} has unsupported type ${field.fieldType}.`);
                 }
                 // 2. Invalid keys based on field type.
                 if (field.fieldType === 'attribute') {
@@ -464,7 +484,6 @@ export class ModelManager {
                         ![
                             'compute',
                             'default',
-                            'dependencies',
                             'fieldType',
                             'readonly',
                             'related',
@@ -472,7 +491,7 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`field(${fieldName}) on ${Model} contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
                 }
                 if (field.fieldType === 'relation') {
@@ -480,7 +499,6 @@ export class ModelManager {
                         ![
                             'compute',
                             'default',
-                            'dependencies',
                             'fieldType',
                             'inverse',
                             'isCausal',
@@ -492,74 +510,70 @@ export class ModelManager {
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
+                        throw new Error(`field(${fieldName}) on ${Model} contains some invalid keys: "${invalidKeys.join(", ")}".`);
                     }
-                    if (!Models[field.to]) {
-                        throw new Error(`Relational field "${Model}/${fieldName}" targets to unknown model name "${field.to}".`);
+                    if (!this.models[field.to]) {
+                        throw new Error(`Relational field(${fieldName}) on ${Model} targets to unknown model name "${field.to}".`);
                     }
                     if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                        throw new Error(`Relational field(${fieldName}) on ${Model} has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
                     }
                     if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
+                        throw new Error(`Relational field(${fieldName}) on ${Model} has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
                     }
                 }
                 // 3. Computed field.
                 if (field.compute && !(typeof field.compute === 'string')) {
-                    throw new Error(`Field "${Model}/${fieldName}" property "compute" must be a string (instance method name).`);
+                    throw new Error(`Property "compute" of field(${fieldName}) on ${Model} must be a string (instance method name).`);
                 }
                 if (field.compute && !(Model.prototype[field.compute])) {
-                    throw new Error(`Field "${Model}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
+                    throw new Error(`Property "compute" of field(${fieldName}) on ${Model} does not refer to an instance method of this Model.`);
                 }
                 // 4. Related field.
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`field(${fieldName}) on ${Model} cannot be a related and compute field at the same time.`);
                 }
                 if (field.related) {
                     if (!(typeof field.related === 'string')) {
-                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Property "related" of field(${fieldName}) on ${Model} has invalid format.`);
                     }
                     const [relationName, relatedFieldName, other] = field.related.split('.');
                     if (!relationName || !relatedFieldName || other) {
-                        throw new Error(`Field "${Model}/${fieldName}" property "related" has invalid format.`);
+                        throw new Error(`Property "related" of field(${fieldName}) on ${Model} has invalid format.`);
                     }
                     // find relation on self or parents.
                     let relatedRelation;
                     let TargetModel = Model;
-                    while (Models[TargetModel.modelName] && !relatedRelation) {
-                        if (TargetModel.fields) {
-                            relatedRelation = TargetModel.fields[relationName];
-                        }
+                    while (this.models[TargetModel.name] && !relatedRelation) {
+                        relatedRelation = registry.get(TargetModel.name).get('fields').get(relationName);
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedRelation) {
-                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown relation name "${relationName}".`);
+                        throw new Error(`Related field(${fieldName}) on ${Model} relates to unknown relation name "${relationName}".`);
                     }
                     if (relatedRelation.fieldType !== 'relation') {
-                        throw new Error(`Related field "${Model}/${fieldName}" relates to non-relational field "${relationName}".`);
+                        throw new Error(`Related field(${fieldName}) on ${Model} relates to non-relational field "${relationName}".`);
                     }
                     // Assuming related relation is valid...
                     // find field name on related model or any parents.
-                    const RelatedModel = Models[relatedRelation.to];
+                    const RelatedModel = this.models[relatedRelation.to];
                     let relatedField;
                     TargetModel = RelatedModel;
-                    while (Models[TargetModel.modelName] && !relatedField) {
-                        if (TargetModel.fields) {
-                            relatedField = TargetModel.fields[relatedFieldName];
-                        }
+                    while (this.models[TargetModel.name] && !relatedField) {
+                        relatedField = registry.get(TargetModel.name).get('fields').get(relatedFieldName);
                         TargetModel = TargetModel.__proto__;
                     }
                     if (!relatedField) {
-                        throw new Error(`Related field "${Model}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
+                        throw new Error(`Related field(${fieldName}) on ${Model} relates to unknown related model field "${relatedFieldName}".`);
                     }
                     if (relatedField.fieldType !== field.fieldType) {
-                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch type with its related model field.`);
+                        throw new Error(`Related field(${fieldName}) on ${Model} has mismatched type with its related model field.`);
                     }
                     if (
                         relatedField.fieldType === 'relation' &&
                         relatedField.to !== field.to
                     ) {
-                        throw new Error(`Related field "${Model}/${fieldName}" has mismatch target model name with its related model field.`);
+                        throw new Error(`Related field(${fieldName}) on ${Model} has mismatched target model name with its related model field.`);
                     }
                 }
             }
@@ -568,101 +582,46 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {Object} Models
      * @throws {Error} in case some fields are not correct.
      */
-    _checkProcessedFieldsOnModels(Models) {
-        for (const Model of Object.values(Models)) {
+    _checkProcessedFieldsOnModels() {
+        for (const Model of Object.values(this.models)) {
             for (const field of Model.__fieldList) {
                 const fieldName = field.fieldName;
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model}/${fieldName}" has unsupported type ${field.fieldType}.`);
+                    throw new Error(`${field} on ${Model} has unsupported type ${field.fieldType}.`);
                 }
                 if (field.compute && field.related) {
-                    throw new Error(`Field "${Model}/${fieldName}" cannot be a related and compute field at the same time.`);
+                    throw new Error(`${field} on ${Model} cannot be a related and compute field at the same time.`);
                 }
                 if (field.fieldType === 'attribute') {
                     continue;
                 }
                 if (!field.relationType) {
-                    throw new Error(
-                        `Field "${Model}/${fieldName}" must define a relation type in "relationType".`
-                    );
+                    throw new Error(`${field} on ${Model} must define a relation type in "relationType".`);
                 }
                 if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
-                    throw new Error(
-                        `Field "${Model}/${fieldName}" has invalid relation type "${field.relationType}".`
-                    );
+                    throw new Error(`${field} on ${Model} has invalid relation type "${field.relationType}".`);
                 }
                 if (!field.inverse) {
-                    throw new Error(
-                        `Field "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" must define an inverse relation name in "inverse".`
-                    );
+                    throw new Error(`${field} on ${Model} must define an inverse relation name in "inverse".`);
                 }
                 if (!field.to) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelNames
-                        }/${
-                            fieldName
-                        }" must define a model name in "to" (1st positional parameter of relation field helpers).`
-                    );
+                    throw new Error(`${field} on ${Model} must define a model name in "to" (1st positional parameter of relation field helpers).`);
                 }
-                const RelatedModel = Models[field.to];
+                const RelatedModel = this.models[field.to];
                 if (!RelatedModel) {
-                    throw new Error(
-                        `Model name of relation "${Model}/${fieldName}" does not exist.`
-                    );
+                    throw new Error(`${field} on ${Model} defines a relation to model(${field.to}), but there is no model registered with this name.`);
                 }
                 const inverseField = RelatedModel.__fieldMap[field.inverse];
                 if (!inverseField) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" has no inverse field "${RelatedModel}/${field.inverse}".`
-                    );
+                    throw new Error(`${field} on ${Model} defines its inverse as field(${field.inverse}) on ${RelatedModel}, but it does not exist.`);
                 }
                 if (inverseField.inverse !== fieldName) {
-                    throw new Error(
-                        `Inverse field name of relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" does not match with field name of relation "${
-                            RelatedModel.modelName
-                        }/${
-                            inverseField.inverse
-                        }".`
-                    );
+                    throw new Error(`The name of ${field} on ${Model} does not match with the name defined in its inverse ${inverseField} on ${RelatedModel}.`)
                 }
-                const allSelfAndParentNames = [];
-                let TargetModel = Model;
-                while (TargetModel) {
-                    allSelfAndParentNames.push(TargetModel.modelName);
-                    TargetModel = TargetModel.__proto__;
-                }
-                if (!allSelfAndParentNames.includes(inverseField.to)) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" has inverse relation "${
-                            RelatedModel.modelName
-                        }/${
-                            field.inverse
-                        }" misconfigured (currently "${
-                            inverseField.to
-                        }", should instead refer to this model or parented models: ${
-                            allSelfAndParentNames.map(name => `"${name}"`).join(', ')
-                        }?)`
-                    );
+                if (![Model.name, 'mail.model'].includes(inverseField.to)) {
+                    throw new Error(`${field} on ${Model} has its inverse ${inverseField} on ${RelatedModel} referring to an invalid model (model(${inverseField.to})).`);
                 }
                 if (
                     (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
@@ -670,39 +629,25 @@ export class ModelManager {
                     (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
                     (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
                 ) {
-                    throw new Error(
-                        `Mismatch relations types "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" (${
-                            field.relationType
-                        }) and "${
-                            RelatedModel.modelName
-                        }/${
-                            field.inverse
-                        }" (${
-                            inverseField.relationType
-                        }).`
-                    );
+                    throw new Error(`Mismatched relation types: ${field} on ${Model} (${field.relationType}) and ${inverseField} on ${RelatedModel} (${inverseField.relationType}).`);
                 }
             }
             for (const identifyingField of Model.__identifyingFieldsFlattened) {
                 const field = Model.__fieldMap[identifyingField];
                 if (!field) {
-                    throw new Error(`Identifying field "${identifyingField}" is not a field on model "${Model}".`);
+                    throw new Error(`Identifying field "${identifyingField}" is not a field on ${Model}.`);
                 }
                 if (!field.readonly) {
-                    throw new Error(`Identifying field "${identifyingField}" on model "${Model}" is lacking readonly.`);
+                    throw new Error(`Identifying field "${identifyingField}" on ${Model} is lacking readonly.`);
                 }
                 if (field.to) {
                     if (!(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Identifying field "${identifyingField}" on model "${Model}" has a relation of type "${field.relationType}" but identifying field is only supported for "one2one" and "many2one".`);
+                        throw new Error(`Identifying field "${identifyingField}" on ${Model} has a relation of type "${field.relationType}" but identifying field is only supported for "one2one" and "many2one".`);
                     }
-                    const RelatedModel = Models[field.to];
+                    const RelatedModel = this.models[field.to];
                     const inverseField = RelatedModel.__fieldMap[field.inverse];
                     if (!inverseField.isCausal) {
-                        throw new Error(`Identifying field "${identifyingField}" on model "${Model}" has an inverse "${field.inverse}" not declared as "isCausal" on "${RelatedModel}".`);
+                        throw new Error(`Identifying field "${identifyingField}" on ${Model} has an inverse "${field.inverse}" not declared as "isCausal" on ${RelatedModel}.`);
                     }
                 }
             }
@@ -720,7 +665,16 @@ export class ModelManager {
          * Prepare record state. Assign various keys and values that are
          * expected to be found on every record.
          */
-        const nonProxyRecord = new Model({ localId, valid: true });
+        const nonProxyRecord = new Model();
+        Object.assign(nonProxyRecord, {
+            // The unique record identifier.
+            localId,
+            // Listeners that are bound to this record, to be notified of
+            // change in dependencies of compute, related and "on change".
+            __listeners: [],
+            // Field values of record.
+            __values: {},
+        });
         const record = !this.env.isDebug() ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function (record, prop) {
                 if (
@@ -756,7 +710,10 @@ export class ModelManager {
          * considered existing.
          */
         Model.__records[record.localId] = record;
-        record._willCreate();
+        const lifecycleHooks = registry.get(Model.name).get('lifecycleHooks');
+        if (lifecycleHooks.has('_willCreate')) {
+            lifecycleHooks.get('_willCreate').call(record);
+        }
         /**
          * Register post processing operation that are to be delayed at
          * the end of the update cycle.
@@ -764,14 +721,14 @@ export class ModelManager {
         this._createdRecordsComputes.add(record);
         this._createdRecordsCreated.add(record);
         this._createdRecordsOnChange.add(record);
-        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: `_create: allByModel - ${record}`,
                 infoList,
             });
         }
-        for (const [listener, infoList] of this._listenersObservingLocalId.get(localId).entries()) {
+        for (const [listener, infoList] of this._listenersObservingLocalId.get(localId)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: `_create: localId - ${record}`,
@@ -791,7 +748,10 @@ export class ModelManager {
         if (!record.exists()) {
             throw Error(`Cannot delete already deleted record ${record.localId}.`);
         }
-        record._willDelete();
+        const lifecycleHooks = registry.get(Model.name).get('lifecycleHooks');
+        if (lifecycleHooks.has('_willDelete')) {
+            lifecycleHooks.get('_willDelete').call(record);
+        }
         for (const listener of record.__listeners) {
             this.removeListener(listener);
         }
@@ -805,14 +765,14 @@ export class ModelManager {
         this._createdRecordsCreated.delete(record);
         this._createdRecordsOnChange.delete(record);
         this._updatedRecordsCheckRequired.delete(record);
-        for (const [listener, infoList] of this._listenersObservingLocalId.get(record.localId).entries()) {
+        for (const [listener, infoList] of this._listenersObservingLocalId.get(record.localId)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: `_delete: localId - ${record}`,
                 infoList,
             });
         }
-        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model).entries()) {
+        for (const [listener, infoList] of this._listenersObservingAllByModel.get(Model)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: `_delete: allByModel - ${record}`,
@@ -838,8 +798,6 @@ export class ModelManager {
 
     /**
      * Executes the compute methods of the created records.
-     *
-     * @returns {boolean} whether any change happened
      */
     _executeCreatedRecordsComputes() {
         const hasChanged = this._createdRecordsComputes.size > 0;
@@ -894,8 +852,6 @@ export class ModelManager {
 
     /**
      * Executes the _created method of the created records.
-     *
-     * @returns {boolean} whether any change happened
      */
     _executeCreatedRecordsCreated() {
         for (const record of this._createdRecordsCreated) {
@@ -905,14 +861,15 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call _created for already deleted ${record}.`);
             }
-            record._created();
+            const lifecycleHooks = registry.get(record.constructor.name).get('lifecycleHooks');
+            if (lifecycleHooks.has('_created')) {
+                lifecycleHooks.get('_created').call(record);
+            }
         }
     }
 
     /**
      * Executes the onChange method of the created records.
-     *
-     * @returns {boolean} whether any change happened
      */
     _executeCreatedRecordsOnChange() {
         for (const record of this._createdRecordsOnChange) {
@@ -922,7 +879,7 @@ export class ModelManager {
             if (!record.exists()) {
                 throw Error(`Cannot call onChange for already deleted ${record}.`);
             }
-            for (const onChange of record.constructor.onChanges || []) {
+            for (const onChange of registry.get(record.constructor.name).get('onChanges')) {
                 const listener = new Listener({
                     name: `${onChange} of ${record}`,
                     onChange: (info) => {
@@ -955,8 +912,6 @@ export class ModelManager {
 
     /**
      * Executes the check of the required field of updated records.
-     *
-     * @returns {boolean} whether any change happened
      */
     _executeUpdatedRecordsCheckRequired() {
         for (const record of this._updatedRecordsCheckRequired) {
@@ -975,7 +930,7 @@ export class ModelManager {
      *
      * @private
      */
-    _flushUpdateCycle(func) {
+    _flushUpdateCycle() {
         this._executeCreatedRecordsComputes();
         this._notifyListenersInUpdateCycle();
         this._executeUpdatedRecordsCheckRequired();
@@ -987,90 +942,34 @@ export class ModelManager {
     /**
      * @private
      * @returns {Object}
-     * @throws {Error} in case it cannot generate models.
      */
     _generateModels() {
-        const allNames = Object.keys(registry);
-        const Models = {};
-        const generatedNames = [];
-        let toGenerateNames = [...allNames];
-        while (toGenerateNames.length > 0) {
-            const generatable = toGenerateNames.map(name => registry[name]).find(entry => {
-                let isGenerateable = true;
-                for (const dependencyName of entry.dependencies) {
-                    if (!generatedNames.includes(dependencyName)) {
-                        isGenerateable = false;
-                    }
-                }
-                return isGenerateable;
-            });
-            if (!generatable) {
-                throw new Error(`Cannot generate following Model: ${toGenerateNames.join(', ')}`);
-            }
-            // Make model manager accessible from Model.
-            const Model = generatable.factory(Models);
-            Model.modelManager = this;
-            /**
-            * Contains all records. key is local id, while value is the record.
-            */
-            Model.__records = {};
-            if (!Model.hasOwnProperty('identifyingFields')) {
-                throw new Error(`${Model} is lacking identifying fields.`);
-            }
-            Model.__identifyingFields = Model.identifyingFields;
-            const identifyingFieldsFlattened = new Set();
-            for (const identifyingElement of Model.identifyingFields) {
-                const identifyingFields = typeof identifyingElement === 'string'
-                    ? [identifyingElement]
-                    : identifyingElement;
-                for (const identifyingField of identifyingFields) {
-                    identifyingFieldsFlattened.add(identifyingField);
-                }
-            }
-            Model.__identifyingFieldsFlattened = identifyingFieldsFlattened;
-            for (const patch of generatable.patches) {
-                switch (patch.type) {
-                    case 'class':
-                        patchClassMethods(Model, patch.name, patch.patch);
-                        break;
-                    case 'instance':
-                        patchInstanceMethods(Model, patch.name, patch.patch);
-                        break;
-                    case 'field':
-                        this._applyModelPatchFields(Model, patch.patch);
-                        break;
-                    case 'identifyingFields':
-                        patch.patch(Model.__identifyingFields);
-                        break;
-                }
-            }
-            if (!Object.prototype.hasOwnProperty.call(Model, 'modelName')) {
-                throw new Error(`Missing static property "modelName" on Model class "${Model.name}".`);
-            }
-            if (generatedNames.includes(Model.modelName)) {
-                throw new Error(`Duplicate model name "${Model}" shared on 2 distinct Model classes.`);
-            }
-            Models[Model.modelName] = Model;
-            generatedNames.push(Model.modelName);
-            toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
-            this._listenersObservingAllByModel.set(Model, new Map());
+        // Create the model through a class to give it a meaningful name to be
+        // displayed in stack traces and stuff.
+        const Model = { 'mail.model': class {} }['mail.model'];
+        this._applyModelDefinition(Model);
+        // mail.model is generated separately and before the other models since
+        // it is the dependency of all of them.
+        const allModelNamesButMailModel = [...registry.keys()].filter(name => name !== 'mail.model');
+        for (const modelName of allModelNamesButMailModel) {
+            const Model = { [modelName]: class extends this.models['mail.model'] {} }[modelName];
+            this._applyModelDefinition(Model);
         }
         /**
-         * Check that declared model fields are correct.
+         * Check that fields on the generated models are correct.
          */
-        this._checkDeclaredFieldsOnModels(Models);
+        this._checkDeclaredFieldsOnModels();
         /**
          * Process declared model fields definitions, so that these field
          * definitions are much easier to use in the system. For instance, all
          * relational field definitions have an inverse.
          */
-        this._processDeclaredFieldsOnModels(Models);
+        this._processDeclaredFieldsOnModels();
         /**
          * Check that all model fields are correct, notably one relation
          * should have matching reversed relation.
          */
-        this._checkProcessedFieldsOnModels(Models);
-        return Models;
+        this._checkProcessedFieldsOnModels();
     }
 
     /**
@@ -1081,7 +980,7 @@ export class ModelManager {
      * @returns {string}
      */
     _getRecordIndex(Model, data) {
-        return `${Model.modelName}(${Model.__identifyingFields.map(identifyingElement => {
+        return `${Model.name}(${Model.__identifyingFields.map(identifyingElement => {
             const fieldName = typeof identifyingElement === 'string'
                 ? identifyingElement
                 : identifyingElement.reduce((fieldName, currentFieldName) => {
@@ -1170,7 +1069,7 @@ export class ModelManager {
         }
         const inverseField = new ModelField(Object.assign(
             {},
-            relFunc(Model.modelName, { inverse: field.fieldName }),
+            relFunc(Model.name, { inverse: field.fieldName }),
             {
                 fieldName: `_inverse_${Model}/${field.fieldName}`,
             }
@@ -1220,7 +1119,7 @@ export class ModelManager {
      * @returns {boolean} whether any change happened
      */
     _notifyListenersAfterUpdateCycle() {
-        for (const [listener, infoList] of this._listenersToNotifyAfterUpdateCycle.entries()) {
+        for (const [listener, infoList] of this._listenersToNotifyAfterUpdateCycle) {
             this._listenersToNotifyAfterUpdateCycle.delete(listener);
             listener.onChange(infoList);
         }
@@ -1240,7 +1139,7 @@ export class ModelManager {
      */
     _notifyListenersInUpdateCycle() {
         const hasChanged = this._listenersToNotifyInUpdateCycle.size > 0;
-        for (const [listener, infoList] of this._listenersToNotifyInUpdateCycle.entries()) {
+        for (const [listener, infoList] of this._listenersToNotifyInUpdateCycle) {
             this._listenersToNotifyInUpdateCycle.delete(listener);
             listener.onChange(infoList);
         }
@@ -1258,19 +1157,14 @@ export class ModelManager {
      * this inverse relation.
      *
      * @private
-     * @param {Object} Models
      */
-    _processDeclaredFieldsOnModels(Models) {
+    _processDeclaredFieldsOnModels() {
         /**
          * 1. Prepare fields.
          */
-        for (const Model of Object.values(Models)) {
-            if (!Object.prototype.hasOwnProperty.call(Model, 'fields')) {
-                Model.fields = {};
-            }
-            Model.inverseRelations = [];
+        for (const Model of Object.values(this.models)) {
             // Make fields aware of their field name.
-            for (const [fieldName, fieldData] of Object.entries(Model.fields)) {
+            for (const [fieldName, fieldData] of registry.get(Model.name).get('fields')) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
                     fieldName,
                 }));
@@ -1279,7 +1173,7 @@ export class ModelManager {
         /**
          * 2. Auto-generate definitions of undeclared inverse relations.
          */
-        for (const Model of Object.values(Models)) {
+        for (const Model of Object.values(this.models)) {
             for (const field of Object.values(Model.fields)) {
                 if (field.fieldType !== 'relation') {
                     continue;
@@ -1287,7 +1181,7 @@ export class ModelManager {
                 if (field.inverse) {
                     continue;
                 }
-                const RelatedModel = Models[field.to];
+                const RelatedModel = this.models[field.to];
                 const inverseField = this._makeInverseRelationField(Model, field);
                 field.inverse = inverseField.fieldName;
                 RelatedModel.fields[inverseField.fieldName] = inverseField;
@@ -1297,7 +1191,7 @@ export class ModelManager {
          * 3. Extend definition of fields of a model with the definition of
          * fields of its parents.
          */
-        for (const Model of Object.values(Models)) {
+        for (const Model of Object.values(this.models)) {
             Model.__combinedFields = {};
             for (const field of Object.values(Model.fields)) {
                 Model.__combinedFields[field.fieldName] = field;
@@ -1318,7 +1212,7 @@ export class ModelManager {
          * access to field getter and to prevent field from being written
          * without calling update (which is necessary to process update cycle).
          */
-        for (const Model of Object.values(Models)) {
+        for (const Model of Object.values(this.models)) {
             // Object with fieldName/field as key/value pair, for quick access.
             Model.__fieldMap = Model.__combinedFields;
             // List of all fields, for iterating.
@@ -1408,7 +1302,7 @@ export class ModelManager {
                 throw new Error(`read-only ${field} on ${record} was updated`);
             }
             hasChanged = true;
-            for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field).entries()) {
+            for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
                 this._markListenerToNotify(listener, {
                     listener,
                     reason: `_update: ${field} of ${record}`,

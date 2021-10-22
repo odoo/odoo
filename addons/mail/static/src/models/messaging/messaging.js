@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 import { insertAndReplace, replace, link, unlink } from '@mail/model/model_field_command';
@@ -8,28 +8,20 @@ import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 const { EventBus } = owl.core;
 
-function factory(dependencies) {
-
-    class Messaging extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.messaging',
+    identifyingFields: [],
+    lifecycleHooks: {
         _created() {
-            super._created();
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
-        }
-
-        /**
-         * @override
-         */
+        },
         _willDelete() {
             if (this.env.services['bus_service']) {
                 this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
-            return super._willDelete(...arguments);
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Starts messaging and related records.
          */
@@ -39,12 +31,7 @@ function factory(dependencies) {
             this.notificationHandler.start();
             this.update({ isInitialized: true });
             this.initializedPromise.resolve();
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
         /**
          * Open the form view of the record with provided id and model.
          * Gets the chat with the provided person and returns it.
@@ -66,8 +53,7 @@ function factory(dependencies) {
                 const partner = this.messaging.models['mail.partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
-        }
-
+        },
         /**
          * Opens a chat with the provided person and returns it.
          *
@@ -84,8 +70,7 @@ function factory(dependencies) {
             }
             await this.async(() => chat.open(options));
             return chat;
-        }
-
+        },
         /**
          * Opens the form view of the record with provided id and model.
          *
@@ -107,8 +92,7 @@ function factory(dependencies) {
                 // be closed to ensure the visibility of the view
                 this.messaging.messagingMenu.close();
             }
-        }
-
+        },
         /**
          * Opens the most appropriate view that is a profile for provided id and
          * model.
@@ -143,8 +127,7 @@ function factory(dependencies) {
                 return channel.openProfile();
             }
             return this.messaging.openDocument({ id, model });
-        }
-
+        },
         /**
          * Refreshes the value of `isNotificationPermissionDefault`.
          *
@@ -153,8 +136,7 @@ function factory(dependencies) {
          */
         refreshIsNotificationPermissionDefault() {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
-        }
-
+        },
         /**
          * @param {String} sessionId
          */
@@ -172,28 +154,21 @@ function factory(dependencies) {
                 return;
             }
             this.userSetting.update({ rtcLayout: 'sidebar' });
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {Promise}
          */
         _computeInitializedPromise() {
             return makeDeferred();
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
          */
         _computeIsCurrentUserGuest() {
             return Boolean(!this.currentPartner && this.currentGuest);
-        }
-
+        },
         /**
          * @private
          * @returns {owl.EventBus}
@@ -203,8 +178,7 @@ function factory(dependencies) {
                 return; // avoid overwrite if already provided (example in tests)
             }
             return new EventBus();
-        }
-
+        },
         /**
          * @private
          * @returns {boolean}
@@ -212,8 +186,7 @@ function factory(dependencies) {
         _computeIsNotificationPermissionDefault() {
             const browserNotification = this.env.browser.Notification;
             return browserNotification ? browserNotification.permission === 'default' : false;
-        }
-
+        },
         /**
          * @private
          * @returns {mail.partner[]}
@@ -224,8 +197,7 @@ function factory(dependencies) {
             }
             const threads = this.messaging.models['mail.thread'].all().filter(thread => !!thread.rtcInvitingSession);
             return replace(threads);
-        }
-
+        },
         /**
          * @private
          */
@@ -234,8 +206,7 @@ function factory(dependencies) {
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
             });
-        }
-
+        },
         /**
          * @private
          */
@@ -245,18 +216,15 @@ function factory(dependencies) {
             } else {
                 this.soundEffects.incomingCall.stop();
             }
-        }
-
+        },
         /**
          * @private
          */
         _onChangeFocusedRtcSession() {
             this.rtc.filterIncomingVideoTraffic(this.focusedRtcSession && [this.focusedRtcSession.peerToken]);
-        }
-
-    }
-
-    Messaging.fields = {
+        },
+    },
+    fields: {
         /**
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
@@ -410,9 +378,8 @@ function factory(dependencies) {
         userSetting: one2one('mail.user_setting', {
             isCausal: true,
         }),
-    };
-    Messaging.identifyingFields = [];
-    Messaging.onChanges = [
+    },
+    onChanges: [
         new OnChange({
             dependencies: ['ringingThreads'],
             methodName: '_onChangeRingingThreads',
@@ -421,10 +388,5 @@ function factory(dependencies) {
             dependencies: ['focusedRtcSession'],
             methodName: '_onChangeFocusedRtcSession',
         }),
-    ];
-    Messaging.modelName = 'mail.messaging';
-
-    return Messaging;
-}
-
-registerNewModel('mail.messaging', factory);
+    ],
+});

@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
+import { patchRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@mail/models/chat_window/chat_window';
 
-registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/chat_window/chat_window.js', {
-
+patchRecordMethods('mail.chat_window', {
     /**
      * @override
      */
@@ -19,5 +20,5 @@ registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/ch
             this.thread.unpin();
         }
         this._super({ notifyServer });
-    }
+    },
 });

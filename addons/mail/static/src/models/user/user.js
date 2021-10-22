@@ -1,23 +1,18 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class User extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.user',
+    identifyingFields: ['id'],
+    modelMethods: {
         /**
-         * @static
          * @param {Object} data
          * @returns {Object}
          */
-        static convertData(data) {
+        convertData(data) {
             const data2 = {};
             if ('id' in data) {
                 data2.id = data.id;
@@ -35,18 +30,16 @@ function factory(dependencies) {
                 }
             }
             return data2;
-        }
-
+        },
         /**
          * Performs the `read` RPC on `res.users`.
          *
-         * @static
          * @param {Object} param0
          * @param {Object} param0.context
          * @param {string[]} param0.fields
          * @param {integer[]} param0.ids
          */
-        static async performRpcRead({ context, fields, ids }) {
+        async performRpcRead({ context, fields, ids }) {
             const usersData = await this.env.services.rpc({
                 model: 'res.users',
                 method: 'read',
@@ -59,8 +52,9 @@ function factory(dependencies) {
             return this.messaging.models['mail.user'].insert(usersData.map(userData =>
                 this.messaging.models['mail.user'].convertData(userData)
             ));
-        }
-
+        },
+    },
+    recordMethods: {
         /**
          * Fetches the partner of this user.
          */
@@ -70,8 +64,7 @@ function factory(dependencies) {
                 fields: ['partner_id'],
                 context: { active_test: false },
             });
-        }
-
+        },
         /**
          * Gets the chat between this user and the current user.
          *
@@ -118,8 +111,7 @@ function factory(dependencies) {
                 return;
             }
             return chat;
-        }
-
+        },
         /**
          * Opens a chat between this user and the current user and returns it.
          *
@@ -135,8 +127,7 @@ function factory(dependencies) {
             }
             await this.async(() => chat.open(options));
             return chat;
-        }
-
+        },
         /**
          * Opens the most appropriate view that is a profile for this user.
          * Because user is a rather technical model to allow login, it's the
@@ -160,30 +151,23 @@ function factory(dependencies) {
                 return;
             }
             return this.partner.openProfile();
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @returns {string|undefined}
          */
         _computeDisplayName() {
             return this.display_name || this.partner && this.partner.display_name;
-        }
-
+        },
         /**
          * @private
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
             return this.partner && this.partner.nameOrDisplayName || this.display_name;
-        }
-    }
-
-    User.fields = {
+        },
+    },
+    fields: {
         id: attr({
             readonly: true,
             required: true,
@@ -210,11 +194,5 @@ function factory(dependencies) {
          * Id of this user's res.users.settings record.
          */
         resUsersSettingsId: attr(),
-    };
-    User.identifyingFields = ['id'];
-    User.modelName = 'mail.user';
-
-    return User;
-}
-
-registerNewModel('mail.user', factory);
+    },
+});

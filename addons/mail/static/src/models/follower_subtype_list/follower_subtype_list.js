@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { many2one, one2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
-
-    class FollowerSubtypeList extends dependencies['mail.model'] {}
-
-    FollowerSubtypeList.fields = {
+registerModel({
+    name: 'mail.follower_subtype_list',
+    identifyingFields: ['follower'],
+    fields: {
         /**
          * States the dialog displaying this follower subtype list.
          */
@@ -21,11 +20,5 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
-    };
-    FollowerSubtypeList.identifyingFields = ['follower'];
-    FollowerSubtypeList.modelName = 'mail.follower_subtype_list';
-
-    return FollowerSubtypeList;
-}
-
-registerNewModel('mail.follower_subtype_list', factory);
+    },
+});

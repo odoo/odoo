@@ -1,26 +1,20 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { registerModel } from '@mail/model/model_core';
+import { one2one } from '@mail/model/model_field';
+import { replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
-function factory(dependencies) {
-
-    class MessageInReplyToView extends dependencies['mail.model'] {
-
-        /**
-         * @override
-         */
+registerModel({
+    name: 'mail.message_in_reply_to_view',
+    identifyingFields: ['messageView'],
+    lifecycleHooks: {
         _created() {
             // bind handlers so they can be used in templates
             this.onClickReply = this.onClickReply.bind(this);
-        }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+        },
+    },
+    recordMethods: {
         /**
          * @private
          * @param {MouseEvent} ev
@@ -40,21 +34,13 @@ function factory(dependencies) {
                 return;
             }
             threadView.addComponentHint('highlight-reply', parentMessageView);
-        }
-
-    }
-
-    MessageInReplyToView.fields = {
+        },
+    },
+    fields: {
         messageView: one2one('mail.message_view', {
             inverse: 'messageInReplyToView',
             readonly: true,
             required: true,
         }),
-    };
-    MessageInReplyToView.identifyingFields = ['messageView'];
-    MessageInReplyToView.modelName = 'mail.message_in_reply_to_view';
-
-    return MessageInReplyToView;
-}
-
-registerNewModel('mail.message_in_reply_to_view', factory);
+    },
+});

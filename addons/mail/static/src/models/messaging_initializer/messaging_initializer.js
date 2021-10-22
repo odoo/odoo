@@ -1,17 +1,13 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
+import { registerModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
 import { link, insert, insertAndReplace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
-
-    class MessagingInitializer extends dependencies['mail.model'] {
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
+registerModel({
+    name: 'mail.messaging_initializer',
+    identifyingFields: ['messaging'],
+    recordMethods: {
         /**
          * Fetch messaging data initially to populate the store specifically for
          * the current user. This includes pinned channels for instance.
@@ -50,12 +46,7 @@ function factory(dependencies) {
             if (this.messaging.autofetchPartnerImStatus) {
                 this.messaging.models['mail.partner'].startLoopFetchImStatus();
             }
-        }
-
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -125,8 +116,7 @@ function factory(dependencies) {
             discuss.update({ menu_id });
             // company related data
             this.messaging.update({ companyName });
-        }
-
+        },
         /**
          * @private
          * @param {Object[]} cannedResponsesData
@@ -135,8 +125,7 @@ function factory(dependencies) {
             this.messaging.update({
                 cannedResponses: insert(cannedResponsesData),
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object[]} channelsData
@@ -167,8 +156,7 @@ function factory(dependencies) {
                     channel.pin();
                 }
             }));
-        }
-
+        },
         /**
          * @private
          */
@@ -193,8 +181,7 @@ function factory(dependencies) {
                     }
                 ]),
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} param0
@@ -207,8 +194,7 @@ function factory(dependencies) {
         }) {
             this.messaging.inbox.update({ counter: needaction_inbox_counter });
             this.messaging.starred.update({ counter: starred_counter });
-        }
-
+        },
         /**
          * @private
          * @param {Object} mailFailuresData
@@ -224,8 +210,7 @@ function factory(dependencies) {
                     message.update({ author: link(this.messaging.currentPartner) });
                 }
             }));
-        }
-
+        },
         /**
          * @param {object} resUsersSettings
          * @param {integer} resUsersSettings.id
@@ -282,8 +267,7 @@ function factory(dependencies) {
                     supportedChannelTypes: ['chat', 'group'],
                 }),
             });
-        }
-
+        },
         /**
          * @private
          * @param {Object} currentGuest
@@ -316,13 +300,6 @@ function factory(dependencies) {
                     publicPartner => this.messaging.models['mail.partner'].convertData(publicPartner)
                 )),
             });
-        }
-
-    }
-    MessagingInitializer.identifyingFields = ['messaging'];
-    MessagingInitializer.modelName = 'mail.messaging_initializer';
-
-    return MessagingInitializer;
-}
-
-registerNewModel('mail.messaging_initializer', factory);
+        },
+    },
+});
