@@ -1567,7 +1567,6 @@ class PosSession(models.Model):
             "res.company",
             "decimal.precision",
             "uom.uom",
-            "res.partner",
             "res.country.state",
             "res.country",
             "res.lang",
@@ -1575,6 +1574,7 @@ class PosSession(models.Model):
             "pos.session",
             "pos.config",
             "pos.bill",
+            "res.partner",
             "stock.picking.type",
             "res.users",
             "product.pricelist",
@@ -1583,6 +1583,7 @@ class PosSession(models.Model):
             "product.category",
             "res.currency",
             "pos.category",
+            "product.product",
             "product.packaging",
             "product.attribute",
             "product.attribute.value",
@@ -1591,7 +1592,6 @@ class PosSession(models.Model):
             "pos.payment.method",
             "account.fiscal.position",
             "account.fiscal.position.tax",
-            "product.product",
         ]
 
     def _loader_info_res_company(self):
