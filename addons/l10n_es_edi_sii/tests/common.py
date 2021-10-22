@@ -10,7 +10,7 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 class TestEsEdiCommon(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_full', edi_format_ref='l10n_es_edi_sii.edi_es_sii'):
+    def setUpClass(cls, chart_template_ref='es_full', edi_format_ref='l10n_es_edi_sii.edi_es_sii'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         cls.frozen_today = datetime(year=2019, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
@@ -57,7 +57,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         :param trailing_xml_id: The trailing tax's xml id.
         :return:                An account.tax record
         """
-        return cls.env.ref(f'l10n_es.{cls.env.company.id}_account_tax_template_{trailing_xml_id}')
+        return cls.env.ref(f'account.{cls.env.company.id}_account_tax_template_{trailing_xml_id}')
 
     @classmethod
     def create_invoice(cls, **kwargs):

@@ -23,15 +23,13 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
-                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                        <block title="Fiscal Localization" name="fiscal_localization_setting_container">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country">
                                 <div class="content-group">
                                     <div class="row mt16">
-                                        <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
-                                        <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
-                                    </div>
-                                    <div class="mt8">
-                                        <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" discard="0" class="btn-link"/>
+                                        <label for="chart_template" string="Package" class="col-2 o_light_label"/>
+                                        <field name="chart_template" attrs="{'readonly': [('has_accounting_entries','!=', False)], 'required': [('chart_template', '!=', False)]}"/>
+                                        <button name="reload_template" type="object" string="Reload" class="btn-secondary" icon="fa-refresh" attrs="{'invisible': [('has_accounting_entries','=', False)]}"/>
                                     </div>
                                 </div>
                             </setting>

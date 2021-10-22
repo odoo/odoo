@@ -51,34 +51,3 @@ class AccountTaxPython(models.Model):
             if localdict.get('result', False):
                 taxes += tax
         return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)
-
-
-class AccountTaxTemplatePython(models.Model):
-    _inherit = 'account.tax.template'
-
-    amount_type = fields.Selection(selection_add=[
-        ('code', 'Python Code')
-    ], ondelete={'code': 'cascade'})
-
-    python_compute = fields.Text(string='Python Code', default="result = price_unit * 0.10",
-        help="Compute the amount of the tax by setting the variable 'result'.\n\n"
-            ":param base_amount: float, actual amount on which the tax is applied\n"
-            ":param price_unit: float\n"
-            ":param quantity: float\n"
-            ":param product: product.product recordset singleton or None\n"
-            ":param partner: res.partner recordset singleton or None")
-    python_applicable = fields.Text(string='Applicable Code', default="result = True",
-        help="Determine if the tax will be applied by setting the variable 'result' to True or False.\n\n"
-            ":param price_unit: float\n"
-            ":param quantity: float\n"
-            ":param product: product.product recordset singleton or None\n"
-            ":param partner: res.partner recordset singleton or None")
-
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        """ This method generates a dictionnary of all the values for the tax that will be created.
-        """
-        self.ensure_one()
-        res = super(AccountTaxTemplatePython, self)._get_tax_vals(company, tax_template_to_tax)
-        res['python_compute'] = self.python_compute
-        res['python_applicable'] = self.python_applicable
-        return res

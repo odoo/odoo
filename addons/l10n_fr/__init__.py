@@ -4,8 +4,6 @@
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
 from . import models
 
-def load_translations(env):
-    env.ref('l10n_fr.l10n_fr_pcg_chart_template').process_coa_translations()
 
 def _l10n_fr_post_init_hook(env):
     _preserve_tag_on_taxes(env)

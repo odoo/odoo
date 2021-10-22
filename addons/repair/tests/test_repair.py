@@ -289,8 +289,16 @@ class TestRepair(AccountTestInvoicingCommon):
         company01 = self.env.company
         company02 = self.env['res.company'].create({
             'name': 'SuperCompany',
+            'country_id': self.env.ref('base.us').id,
         })
 
+        self.env["account.tax.group"].create([{
+            "name": "default",
+            "company_id": company01.id
+        }, {
+            "name": "default",
+            "company_id": company02.id
+        }])
         tax01 = self.env["account.tax"].create({
             "name": "C01 Tax",
             "amount": "0.00",

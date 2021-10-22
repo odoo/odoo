@@ -31,8 +31,7 @@ class ResConfigSettings(models.TransientModel):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
                 ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
-    chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
-        domain="[('visible','=', True)]")
+    chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
     purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
     tax_calculation_rounding_method = fields.Selection(
@@ -184,10 +183,12 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)
-        if self.env.company == self.company_id \
-                and self.chart_template_id \
-                and self.chart_template_id != self.company_id.chart_template_id:
-            self.chart_template_id._load(self.env.company)
+        if self.env.company == self.company_id and self.chart_template \
+        and self.chart_template != self.company_id.chart_template:
+            self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+
+    def reload_template(self):
+        self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)
 
     @api.depends('company_id')
     def _compute_account_default_credit_limit(self):
@@ -205,8 +206,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
-        self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
+        self.has_chart_of_accounts = bool(self.company_id.chart_template)
+        self.has_accounting_entries = self.company_id._existing_accounting()
 
     @api.depends('show_line_subtotals_tax_selection')
     def _compute_group_show_line_subtotals(self):

@@ -16,196 +16,214 @@ The EU_TAG_MAP answers the question: "which tag should I apply on the OSS tax re
 
 EU_TAG_MAP = {
     # Austria
-    'l10n_at.l10n_at_chart_template': {
+    'at': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Belgium
-    'l10n_be.l10nbe_chart_template': {
+    'be': {
         'invoice_base_tag': 'l10n_be.tax_report_line_47_tag',
         'invoice_tax_tag': None,
         'refund_base_tag': 'l10n_be.tax_report_line_49_tag',
         'refund_tax_tag': None,
     },
     # Bulgaria
-    'BG': {
+    'bg': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Croatia
-    'l10n_hr.l10n_hr_chart_template_rrif': {
+    'hr': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Cyprus
-    'CY': {
+    'cy': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Czech - Done in 13.0 - CoA not available yet
-    'l10n_cz.cz_chart_template': {
+    'cz': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Denmark
-    'l10n_dk.dk_chart_template': {
+    'dk': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Estonia - Done in 13.0 - CoA not available yet
-    'EE': {
+    'ee': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Finland
-    'l10n_fi.fi_chart_template': {
+    'fi': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # France
-    'l10n_fr.l10n_fr_pcg_chart_template': {
+    'fr': {
         'invoice_base_tag': 'l10n_fr.tax_report_E3_tag',
         'invoice_tax_tag': None,
         'refund_base_tag': 'l10n_fr.tax_report_F8_tag',
         'refund_tax_tag': None,
     },
     # Germany SKR03
-    'l10n_de_skr03.l10n_de_chart_template': {
+    'de_skr03': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Germany SKR04
-    'l10n_de_skr04.l10n_chart_de_skr04': {
+    'de_skr04': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Greece
-    'l10n_gr.l10n_gr_chart_template': {
+    'gr': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Hungary
-    'l10n_hu.hungarian_chart_template': {
+    'hu': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Ireland
-    'l10n_ie.l10n_ie': {
+    'ie': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Italy
-    'l10n_it.l10n_it_chart_template_generic': {
+    'it': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Latvia
-    'LV': {
+    'lv': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Lithuania
-    'l10n_lt.account_chart_template_lithuania': {
+    'lt': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Luxembourg
-    'l10n_lu.lu_2011_chart_1': {
+    'lu': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Malta - Done in 13.0 - CoA not available yet
-    'MT': {
+    'mt': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Netherlands
-    'l10n_nl.l10nnl_chart_template': {
+    'nl': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Poland
-    'l10n_pl.pl_chart_template': {
+    'pl': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Portugal
-    'l10n_pt.pt_chart_template': {
+    'pt': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Romania
-    'l10n_ro.ro_chart_template': {
+    'ro': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Slovakia - Done in 13.0 - CoA not available yet
-    'l10n_sk.sk_chart_template': {
+    'sk': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Slovenia
-    'l10n_si.gd_chart': {
+    'si': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Spain
-    'l10n_es.account_chart_template_common': {
+    'es_assec': {
+        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_tax_tag': None,
+        'refund_base_tag': None,
+        'refund_tax_tag': None,
+    },
+    'es_common': {
+        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_tax_tag': None,
+        'refund_base_tag': None,
+        'refund_tax_tag': None,
+    },
+    'es_full': {
+        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_tax_tag': None,
+        'refund_base_tag': None,
+        'refund_tax_tag': None,
+    },
+    'es_pymes': {
         'invoice_base_tag': "l10n_es.mod_303_124",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     # Sweden
-    'l10n_se.l10nse_chart_template': {
+    'se': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,

@@ -2,15 +2,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
-class AccountTaxTemplate(models.Model):
-    _inherit = 'account.tax.template'
-
-    l10n_de_datev_code = fields.Char(size=4)
-
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        vals = super(AccountTaxTemplate, self)._get_tax_vals(company, tax_template_to_tax)
-        vals['l10n_de_datev_code'] = self.l10n_de_datev_code
-        return vals
 
 class AccountTax(models.Model):
     _inherit = "account.tax"

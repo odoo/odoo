@@ -191,7 +191,7 @@ class PosConfig(models.Model):
     @api.depends('company_id')
     def _compute_company_has_template(self):
         for config in self:
-            if config.company_id.chart_template_id:
+            if config.company_id.chart_template:
                 config.company_has_template = True
             else:
                 config.company_has_template = False
@@ -572,7 +572,7 @@ class PosConfig(models.Model):
         self = self.sudo()
         if not companies:
             companies = self.env['res.company'].search([])
-        for company in companies.filtered('chart_template_id'):
+        for company in companies.filtered('chart_template'):
             pos_configs = self.search([('company_id', '=', company.id)])
             pos_configs.setup_defaults(company)
 

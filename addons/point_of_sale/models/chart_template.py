@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models
+from odoo import models
 
 
-class AccountChartTemplate(models.Model):
+class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    def _load(self, company):
+    def _load(self, template_code=False, company=False, install_demo=True):
         """Remove the payment methods that are created for the company before installing the chart of accounts.
 
         Keeping these existing pos.payment.method records interferes with the installation of chart of accounts
@@ -13,6 +13,6 @@ class AccountChartTemplate(models.Model):
         deleted during the loading of chart of accounts.
         """
         self.env['pos.payment.method'].search([('company_id', '=', company.id)]).unlink()
-        result = super(AccountChartTemplate, self)._load(company)
+        result = super()._load(template_code, company, install_demo)
         self.env['pos.config'].post_install_pos_localisation(companies=company)
         return result

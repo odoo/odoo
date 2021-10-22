@@ -6,187 +6,208 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, Command
 from odoo.tools.misc import file_open, formatLang
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountChartTemplate(models.Model):
+class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self):
+    def _get_demo_data(self, company=False):
         """Generate the demo data related to accounting."""
         # This is a generator because data created here might be referenced by xml_id to data
         # created later but defined in this same function.
-        yield self._get_demo_data_move()
-        yield self._get_demo_data_statement()
-        yield self._get_demo_data_transactions()
-        yield self._get_demo_data_reconcile_model()
-        yield self._get_demo_data_attachment()
-        yield self._get_demo_data_mail_message()
-        yield self._get_demo_data_mail_activity()
+        return {
+            'account.move': self._get_demo_data_move(company),
+            'account.bank.statement': self._get_demo_data_statement(company),
+            'account.bank.statement.line': self._get_demo_data_transactions(company),
+            'account.reconcile.model': self._get_demo_data_reconcile_model(company),
+            'ir.attachment': self._get_demo_data_attachment(company),
+            'mail.message': self._get_demo_data_mail_message(company),
+            'mail.activity': self._get_demo_data_mail_activity(company),
+        }
+
+    def _post_load_demo_data(self, company=False):
+        invoices = (
+            self.ref('demo_invoice_1')
+            + self.ref('demo_invoice_2')
+            + self.ref('demo_invoice_3')
+            + self.ref('demo_invoice_followup')
+            + self.ref('demo_invoice_5')
+            + self.ref('demo_invoice_equipment_purchase')
+        ).with_context(check_move_validity=False)
+
+        # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
+        # any lines yet
+        for move in invoices:
+            try:
+                move.action_post()
+            except (UserError, ValidationError):
+                _logger.exception('Error while posting demo data')
 
     @api.model
-    def _get_demo_data_move(self):
-        cid = self.env.company.id
-        ref = self.env.ref
+    def _get_demo_data_move(self, company=False):
         fifteen_months_ago = fields.Date.today() + relativedelta(months=-15)
-        return ('account.move', {
-            f'{cid}_demo_invoice_1': {
+        return {
+            'demo_invoice_1': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_12').id,
-                'invoice_user_id': ref('base.user_demo').id,
-                'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
+                'partner_id': 'base.res_partner_12',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.consu_delivery_02').id, 'quantity': 5}),
-                    Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            f'{cid}_demo_invoice_2': {
+            'demo_invoice_2': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
+                'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 5}),
-                    Command.create({'product_id': ref('product.consu_delivery_01').id, 'quantity': 20}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
                 ],
             },
-            f'{cid}_demo_invoice_3': {
+            'demo_invoice_3': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
+                'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
                 'invoice_date': time.strftime('%Y-%m-08'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.consu_delivery_01').id, 'quantity': 5}),
-                    Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            f'{cid}_demo_invoice_followup': {
+            'demo_invoice_followup': {
                 'move_type': 'out_invoice',
-                'partner_id': ref('base.res_partner_2').id,
-                'invoice_user_id': ref('base.user_demo').id,
-                'invoice_payment_term_id': ref('account.account_payment_term_immediate').id,
+                'partner_id': 'base.res_partner_2',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_immediate',
                 'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.consu_delivery_02').id, 'quantity': 5}),
-                    Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            f'{cid}_demo_invoice_5': {
+            'demo_invoice_5': {
                 'move_type': 'in_invoice',
-                'partner_id': ref('base.res_partner_12').id,
-                'invoice_user_id': ref('base.user_demo').id,
-                'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
+                'partner_id': 'base.res_partner_12',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.product_delivery_01').id, 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': ref('product.product_order_01').id, 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
                 ],
             },
-            f'{cid}_demo_invoice_extract': {
+            'demo_invoice_extract': {
                 'move_type': 'in_invoice',
-                'invoice_user_id': ref('base.user_demo').id,
+                'invoice_user_id': 'base.user_demo',
             },
-            f'{cid}_demo_invoice_equipment_purchase': {
+            'demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
                 'ref': f'INV/{fifteen_months_ago.year}/0057',
-                'partner_id': ref('base.res_partner_12').id,
+                'partner_id': 'base.res_partner_12',
                 'invoice_user_id': False,
                 'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
                 'invoice_line_ids': [
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10}),
                 ],
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_statement(self):
-        cid = self.env.company.id
-        ref = self.env.ref
+    def _get_demo_data_statement(self, company=False):
+        cid = company.id or self.env.company.id
         bnk_journal = self.env['account.journal'].search(
             domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
             limit=1,
         )
-        return ('account.bank.statement', {
-            f'{cid}_demo_bank_statement_0': {
-                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
-                'balance_end_real': 6378.0,
-                'balance_start': 0.0,
+        return {
+            'demo_bank_statement_1': {
+                'journal_id': self.env['account.journal'].search([
+                    ('type', '=', 'bank'),
+                    ('company_id', '=', cid),
+                ], limit=1).id,
+                'date': time.strftime('%Y')+'-01-01',
+                'balance_end_real': 9944.87,
+                'balance_start': 5103.0,
                 'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': 'Initial balance',
                         'amount': 5103.0,
                         'date': time.strftime('%Y-01-01'),
+                        'partner_id': 'base.res_partner_12',
                     }),
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_12').id
+                        'partner_id': 'base.res_partner_12',
                     }),
                 ]
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_transactions(self):
-        cid = self.env.company.id
-        ref = self.env.ref
+    def _get_demo_data_transactions(self, company=False):
+        cid = company.id or self.env.company.id
         bnk_journal = self.env['account.journal'].search(
             domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
             limit=1,
         )
-        return ('account.bank.statement.line', {
-            f'{cid}_demo_bank_statement_line_0': {
+        return {
+            'demo_bank_statement_line_0': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': 'Bank Fees',
                 'amount': -32.58,
                 'date': time.strftime('%Y-01-01'),
             },
-            f'{cid}_demo_bank_statement_line_1': {
+            'demo_bank_statement_line_1': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': 'Prepayment',
                 'amount': 650,
                 'date': time.strftime('%Y-01-01'),
-                'partner_id': ref('base.res_partner_12').id
+                'partner_id': 'base.res_partner_12',
             },
-            f'{cid}_demo_bank_statement_line_2': {
+            'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
                 'amount': 2000,
                 'date': time.strftime('%Y-01-01'),
-                'partner_id': ref('base.res_partner_12').id
+                'partner_id': 'base.res_partner_12',
             },
-            f'{cid}_demo_bank_statement_line_3': {
+            'demo_bank_statement_line_3': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': 'Last Year Interests',
                 'amount': 102.78,
                 'date': time.strftime('%Y-01-01'),
             },
-            f'{cid}_demo_bank_statement_line_4': {
+            'demo_bank_statement_line_4': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime('INV/%Y/00002'),
                 'amount': 750,
                 'date': time.strftime('%Y-01-01'),
-                'partner_id': ref('base.res_partner_2').id
+                'partner_id': 'base.res_partner_2',
             },
-            f'{cid}_demo_bank_statement_line_5': {
+            'demo_bank_statement_line_5': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
                 'amount': 96.67,
                 'date': time.strftime('%Y-01-01'),
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_reconcile_model(self):
-        cid = self.env.company.id
-        return ('account.reconcile.model', {
-            f'{cid}_reconcile_from_label': {
+    def _get_demo_data_reconcile_model(self, company=False):
+        return {
+            'reconcile_from_label': {
                 'name': 'Line with Bank Fees',
                 'rule_type': 'writeoff_suggestion',
                 'match_label': 'contains',
@@ -214,113 +235,95 @@ class AccountChartTemplate(models.Model):
                     }),
                 ]
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_attachment(self):
-        cid = self.env.company.id
-        ref = self.env.ref
-        return ('ir.attachment', {
-            f'{cid}_ir_attachment_in_invoice_1': {
+    def _get_demo_data_attachment(self, company=False):
+        return {
+            'ir_attachment_in_invoice_1': {
                 'type': 'binary',
                 'name': 'in_invoice_yourcompany_demo.pdf',
                 'res_model': 'account.move',
-                'res_id': ref(f'account.{cid}_demo_invoice_extract').id,
+                'res_id': 'demo_invoice_extract',
                 'raw': file_open(
                     'account/static/demo/in_invoice_yourcompany_demo_1.pdf', 'rb'
                 ).read()
             },
-            f'{cid}_ir_attachment_in_invoice_2': {
+            'ir_attachment_in_invoice_2': {
                 'type': 'binary',
                 'name': 'in_invoice_yourcompany_demo.pdf',
                 'res_model': 'account.move',
-                'res_id': ref(f'account.{cid}_demo_invoice_equipment_purchase').id,
+                'res_id': 'demo_invoice_equipment_purchase',
                 'raw': file_open(
                     'account/static/demo/in_invoice_yourcompany_demo_2.pdf', 'rb'
                 ).read()
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_mail_message(self):
-        cid = self.env.company.id
-        ref = self.env.ref
-        return ('mail.message', {
-            f'{cid}_mail_message_in_invoice_1': {
+    def _get_demo_data_mail_message(self, company=False):
+        return {
+            'mail_message_in_invoice_1': {
                 'model': 'account.move',
-                'res_id': ref(f'account.{cid}_demo_invoice_extract').id,
+                'res_id': 'demo_invoice_extract',
                 'body': 'Vendor Bill attachment',
                 'message_type': 'comment',
-                'author_id': ref('base.partner_demo').id,
+                'author_id': 'base.partner_demo',
                 'attachment_ids': [Command.set([
-                    ref(f'account.{cid}_ir_attachment_in_invoice_1').id
+                    'ir_attachment_in_invoice_1',
                 ])]
             },
-            f'{cid}_mail_message_in_invoice_2': {
+            'mail_message_in_invoice_2': {
                 'model': 'account.move',
-                'res_id': ref(f'account.{cid}_demo_invoice_equipment_purchase').id,
+                'res_id': 'demo_invoice_equipment_purchase',
                 'body': 'Vendor Bill attachment',
                 'message_type': 'comment',
-                'author_id': ref('base.partner_demo').id,
+                'author_id': 'base.partner_demo',
                 'attachment_ids': [Command.set([
-                    ref(f'account.{cid}_ir_attachment_in_invoice_2').id
+                    'ir_attachment_in_invoice_2',
                 ])]
             },
-        })
+        }
 
     @api.model
-    def _get_demo_data_mail_activity(self):
-        cid = self.env.company.id
-        ref = self.env.ref
-        return ('mail.activity', {
-            f'{cid}_invoice_activity_1': {
-                'res_id': ref(f'account.{cid}_demo_invoice_3').id,
-                'res_model_id': ref('account.model_account_move').id,
-                'activity_type_id': ref('mail.mail_activity_data_todo').id,
+    def _get_demo_data_mail_activity(self, company=False):
+        return {
+            'invoice_activity_1': {
+                'res_id': 'demo_invoice_3',
+                'res_model_id': 'account.model_account_move',
+                'activity_type_id': 'mail.mail_activity_data_todo',
                 'date_deadline': (fields.Datetime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M'),
                 'summary': 'Follow-up on payment',
-                'create_uid': ref('base.user_admin').id,
-                'user_id': ref('base.user_admin').id,
+                'create_uid': 'base.user_admin',
+                'user_id': 'base.user_admin',
             },
-            f'{cid}_invoice_activity_2': {
-                'res_id': ref(f'account.{cid}_demo_invoice_2').id,
-                'res_model_id': ref('account.model_account_move').id,
-                'activity_type_id': ref('mail.mail_activity_data_call').id,
+            'invoice_activity_2': {
+                'res_id': 'demo_invoice_2',
+                'res_model_id': 'account.model_account_move',
+                'activity_type_id': 'mail.mail_activity_data_call',
                 'date_deadline': fields.Datetime.today().strftime('%Y-%m-%d %H:%M'),
-                'create_uid': ref('base.user_admin').id,
-                'user_id': ref('base.user_admin').id,
+                'create_uid': 'base.user_admin',
+                'user_id': 'base.user_admin',
             },
-            f'{cid}_invoice_activity_3': {
-                'res_id': ref(f'account.{cid}_demo_invoice_1').id,
-                'res_model_id': ref('account.model_account_move').id,
-                'activity_type_id': ref('mail.mail_activity_data_todo').id,
+            'invoice_activity_3': {
+                'res_id': 'demo_invoice_1',
+                'res_model_id': 'account.model_account_move',
+                'activity_type_id': 'mail.mail_activity_data_todo',
                 'date_deadline': (fields.Datetime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M'),
                 'summary': 'Include upsell',
-                'create_uid': ref('base.user_admin').id,
-                'user_id': ref('base.user_admin').id,
+                'create_uid': 'base.user_admin',
+                'user_id': 'base.user_admin',
             },
-            f'{cid}_invoice_activity_4': {
-                'res_id': ref(f'account.{cid}_demo_invoice_extract').id,
-                'res_model_id': ref('account.model_account_move').id,
-                'activity_type_id': ref('mail.mail_activity_data_todo').id,
+            'invoice_activity_4': {
+                'res_id': 'demo_invoice_extract',
+                'res_model_id': 'account.model_account_move',
+                'activity_type_id': 'mail.mail_activity_data_todo',
                 'date_deadline': (fields.Datetime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M'),
                 'summary': 'Update address',
-                'create_uid': ref('base.user_admin').id,
-                'user_id': ref('base.user_admin').id,
+                'create_uid': 'base.user_admin',
+                'user_id': 'base.user_admin',
             },
-        })
-
-    @api.model
-    def _post_create_demo_data(self, created):
-        cid = self.env.company.id
-        if created._name == 'account.move':
-            # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
-            # any lines yet
-            for move in created - self.env.ref(f'account.{cid}_demo_invoice_extract'):
-                try:
-                    move.action_post()
-                except Exception:
-                    _logger.exception('Error while posting demo data')
+        }
 
     @api.model
     def _get_demo_account(self, xml_id, account_type, company):

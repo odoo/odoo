@@ -11,7 +11,7 @@ class L10nLatamCheckTest(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        chart_template = cls.company_data['company'].chart_template_id
+        chart_template = cls.company_data['company'].chart_template
 
         cls.company_data_3 = cls.setup_company_data(
             'company_3_data', chart_template=chart_template, **{'country_id': cls.env.ref('base.ar').id})

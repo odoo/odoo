@@ -20,7 +20,7 @@ class AccountFiscalPosition(models.Model):
     _order = 'sequence'
 
     sequence = fields.Integer()
-    name = fields.Char(string='Fiscal Position', required=True)
+    name = fields.Char(string='Fiscal Position', required=True, translate=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one(
@@ -64,7 +64,7 @@ class AccountFiscalPosition(models.Model):
 
             if self.env['account.tax'].search([('country_id', '=', record.country_id.id)], limit=1):
                 record.foreign_vat_header_mode = None
-            elif self.env['account.tax.template'].search([('chart_template_id.country_id', '=', record.country_id.id)], limit=1):
+            elif self.env['account.chart.template']._guess_chart_template(record.country_id) != 'generic_coa':
                 record.foreign_vat_header_mode = 'templates_found'
             else:
                 record.foreign_vat_header_mode = 'no_template'

@@ -21,7 +21,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         cls.purchase_journal = cls.company_data_2['default_journal_purchase']
 
         def find_tax_by_ref(ref_name):
-            return cls.env.ref(f'l10n_it_edi_withholding.{cls.company.id}_{ref_name}')
+            return cls.env['account.chart.template'].with_company(cls.company).ref(ref_name)
 
         cls.withholding_sale_tax = find_tax_by_ref('20vwc')
         cls.withholding_sale_tax_23 = find_tax_by_ref('23vwo')

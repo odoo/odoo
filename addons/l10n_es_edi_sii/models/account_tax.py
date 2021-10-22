@@ -3,9 +3,8 @@
 from odoo import fields, models
 
 
-class SIIAccountTaxMixin(models.AbstractModel):
-    _name = 'l10n_es.sii.account.tax.mixin'
-    _description = 'SII Fields'
+class AccountTax(models.Model):
+    _inherit = 'account.tax'
 
     l10n_es_exempt_reason = fields.Selection(
         selection=[
@@ -34,22 +33,3 @@ class SIIAccountTaxMixin(models.AbstractModel):
         string="Tax Type (Spain)", default='sujeto'
     )
     l10n_es_bien_inversion = fields.Boolean('Bien de Inversion', default=False)
-
-
-class AccountTax(models.Model):
-    _inherit = ['account.tax', 'l10n_es.sii.account.tax.mixin']
-    _name = 'account.tax'
-
-
-class AccountTaxTemplate(models.Model):
-    _inherit = ['account.tax.template', 'l10n_es.sii.account.tax.mixin']
-    _name = 'account.tax.template'
-
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        # OVERRIDE
-        # Copy values from 'account.tax.template' to vals will be used to create a new 'account.tax'.
-        vals = super()._get_tax_vals(company, tax_template_to_tax)
-        vals['l10n_es_exempt_reason'] = self.l10n_es_exempt_reason
-        vals['l10n_es_type'] = self.l10n_es_type
-        vals['l10n_es_bien_inversion'] = self.l10n_es_bien_inversion
-        return vals

@@ -25,6 +25,5 @@ This provides a base chart of accounts and taxes template for use in Odoo for Ka
     'demo': [
         'demo/demo_company.xml'
     ],
-    'post_init_hook': 'load_translations',
     'license': 'LGPL-3',
 }

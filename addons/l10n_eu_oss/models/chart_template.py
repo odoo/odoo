@@ -3,13 +3,10 @@
 
 from odoo import models
 
-class AccountChartTemplate(models.Model):
+class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    def _load(self, company):
-        rslt = super()._load(company)
-
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
         if company.account_fiscal_country_id in self.env.ref('base.europe').country_ids:
             company._map_eu_taxes()
-
-        return rslt

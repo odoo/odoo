@@ -57,7 +57,7 @@ class ResCompany(models.Model):
     transfer_account_id = fields.Many2one('account.account',
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liqity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
-    chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
+    chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
@@ -91,9 +91,6 @@ class ResCompany(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
-    property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
-    property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
-    property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -274,11 +271,15 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        accounts = self.env['account.account'].search([('code', 'like', old_code), ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
-            ('company_id', '=', self.id)], order='code asc')
+        if not old_code:
+            return
+        accounts = self.env['account.account'].search([
+            ('code', '=like', old_code + '%'),
+            ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
+            ('company_id', '=', self.id)
+        ], order='code asc')
         for account in accounts:
-            if account.code.startswith(old_code):
-                account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
+            account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
     def _get_fiscalyear_lock_statement_lines_redirect_action(self, unreconciled_statement_lines):
         """ Get the action redirecting to the statement lines that are not already reconciled when setting a fiscal
@@ -580,6 +581,14 @@ class ResCompany(models.Model):
                 "Please go to Account Configuration and select or install a fiscal localization.")
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
+
+    def _existing_accounting(self) -> bool:
+        """Return True iff some accounting entries have already been made for the current company."""
+        self.ensure_one()
+        return bool(self.env['account.move.line'].search([('company_id', '=', self.id)], order="id", limit=1))
+
+    def _chart_template_selection(self):
+        return self.env['account.chart.template']._select_chart_template(self.country_id)
 
     @api.model
     def _action_check_hash_integrity(self):

@@ -8,7 +8,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
 
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="l10n_in.indian_chart_template_standard"):
+    def setUpClass(cls, chart_template_ref="in"):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.env['ir.config_parameter'].set_param('l10n_in_edi.manage_invoice_negative_lines', True)
         cls.maxDiff = None
@@ -54,8 +54,8 @@ class TestEdiJson(AccountTestInvoicingCommon):
             'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
             "l10n_in_hsn_code": "01111",
         })
-        gst_with_cess = cls.env.ref("l10n_in.%s_sgst_sale_12" % (cls.company_data["company"].id)
-            ) + cls.env.ref("l10n_in.%s_cess_5_plus_1591_sale" % (cls.company_data["company"].id))
+        gst_with_cess = cls.env.ref("account.%s_sgst_sale_12" % (cls.company_data["company"].id)
+            ) + cls.env.ref("account.%s_cess_5_plus_1591_sale" % (cls.company_data["company"].id))
         product_with_cess = cls.env["product.product"].create({
             "name": "product_with_cess",
             "uom_id": cls.env.ref("uom.product_uom_unit").id,

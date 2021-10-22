@@ -496,9 +496,6 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         Website = self.env['website']
         self.website = self.env.ref('website.default_website')
         self.website.company_id = self.company2
-        # Delete unused website, it will make PL manipulation easier, avoiding
-        # UserError being thrown when a website wouldn't have any PL left.
-        Website.search([('id', '!=', self.website.id)]).unlink()
         self.website2 = Website.create({
             'name': 'Website 2',
             'company_id': self.company1.id,

@@ -15,7 +15,7 @@ class AccountAnalyticPlan(models.Model):
     def _default_color(self):
         return randint(1, 11)
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     description = fields.Text(string='Description')
     parent_id = fields.Many2one(
         'account.analytic.plan',

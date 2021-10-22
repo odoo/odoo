@@ -53,7 +53,7 @@ class PosConfig(models.Model):
     @api.model
     def add_cash_payment_method(self):
         companies = self.env['res.company'].search([])
-        for company in companies.filtered('chart_template_id'):
+        for company in companies.filtered('chart_template'):
             pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', True)])
             journal_counter = 2
             for pos_config in pos_configs:

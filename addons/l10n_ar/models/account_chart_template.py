@@ -1,59 +1,46 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, _
-from odoo.exceptions import UserError
-from odoo.http import request
+from odoo.addons.account.models.chart_template import template
 
 
-class AccountChartTemplate(models.Model):
-
+class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    def _get_fp_vals(self, company, position):
-        res = super()._get_fp_vals(company, position)
-        if company.country_id.code == "AR":
-            res['l10n_ar_afip_responsibility_type_ids'] = [
-                (6, False, position.l10n_ar_afip_responsibility_type_ids.ids)]
-        return res
-
-    def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
+    @template('ar_base', 'account.journal')
+    def _get_ar_account_journal(self):
         """ In case of an Argentinean CoA, we modify the default values of the sales journal to be a preprinted journal"""
-        res = super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
-        if company.country_id.code == "AR":
-            for vals in res:
-                if vals['type'] == 'sale':
-                    vals.update({
-                        "name": "Ventas Preimpreso",
-                        "code": "0001",
-                        "l10n_ar_afip_pos_number": 1,
-                        "l10n_ar_afip_pos_partner_id": company.partner_id.id,
-                        "l10n_ar_afip_pos_system": 'II_IM',
-                        "refund_sequence": False
-                    })
-        return res
+        return {
+            'sale': {
+                "name": "Ventas Preimpreso",
+                "code": "0001",
+                "l10n_ar_afip_pos_number": 1,
+                "l10n_ar_afip_pos_partner_id": self.env.company.partner_id.id,
+                "l10n_ar_afip_pos_system": 'II_IM',
+                "refund_sequence": False,
+            },
+        }
 
     @api.model
-    def _get_ar_responsibility_match(self, chart_template_id):
-        """ return responsibility type that match with the given chart_template_id
+    def _get_ar_responsibility_match(self, chart_template):
+        """ return responsibility type that match with the given chart_template code
         """
         match = {
-            self.env.ref('l10n_ar.l10nar_base_chart_template').id: self.env.ref('l10n_ar.res_RM'),
-            self.env.ref('l10n_ar.l10nar_ex_chart_template').id: self.env.ref('l10n_ar.res_IVAE'),
-            self.env.ref('l10n_ar.l10nar_ri_chart_template').id: self.env.ref('l10n_ar.res_IVARI'),
+            'ar_base': self.env.ref('l10n_ar.res_RM'),
+            'ar_ex': self.env.ref('l10n_ar.res_IVAE'),
+            'ar_ri': self.env.ref('l10n_ar.res_IVARI'),
         }
-        return match.get(chart_template_id)
+        return match.get(chart_template)
 
-    def _load(self, company):
+    def _load(self, template_code, company, install_demo):
         """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
         method required in order to properly validate match AFIP invoices.
 
         Also, raise a warning if the user is trying to install a CoA that does not match with the defined AFIP
         Responsibility defined in the company
         """
-        self.ensure_one()
-        coa_responsibility = self._get_ar_responsibility_match(self.id)
+        coa_responsibility = self._get_ar_responsibility_match(template_code)
         if coa_responsibility:
-            company_responsibility = company.l10n_ar_afip_responsibility_type_id
             company.write({
                 'l10n_ar_afip_responsibility_type_id': coa_responsibility.id,
                 'country_id': self.env['res.country'].search([('code', '=', 'AR')]).id,
@@ -63,11 +50,10 @@ class AccountChartTemplate(models.Model):
             # the default VAT type.
             company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
 
-        res = super()._load(company)
+        res = super()._load(template_code, company, install_demo)
 
         # If Responsable Monotributista remove the default purchase tax
-        if self == self.env.ref('l10n_ar.l10nar_base_chart_template') or \
-           self == self.env.ref('l10n_ar.l10nar_ex_chart_template'):
+        if template_code in ('ar_base', 'ar_ex'):
             company.account_purchase_tax_id = self.env['account.tax']
 
         return res
