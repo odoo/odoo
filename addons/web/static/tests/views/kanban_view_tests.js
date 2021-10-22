@@ -353,39 +353,34 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await toggleColumnOptions(kanban, 0);
+            const clickColumnButton = await toggleColumnOptions(kanban, 1);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
                 kanban,
-                ".o_kanban_header:first .o_kanban_config .o_column_archive_records"
+                ".o_kanban_header:last .o_kanban_config .o_column_archive_records"
             );
             assert.containsOnce(
                 kanban,
-                ".o_kanban_header:first .o_kanban_config .o_column_unarchive_records"
+                ".o_kanban_header:last .o_kanban_config .o_column_unarchive_records"
             );
             assert.containsN(kanban, ".o_kanban_group", 2);
-            assert.containsN(kanban, ".o_kanban_record", 4);
-
-            // archive the records of the first column
+            assert.containsOnce(kanban, ".o_kanban_group:first .o_kanban_record");
             assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
-
-            const clickColumnButton = await toggleColumnOptions(kanban, 1);
-
             assert.verifySteps([]);
 
             await clickColumnButton("Archive All");
 
             assert.containsOnce(kanban, ".o_kanban_group");
-            assert.containsOnce(kanban, ".o_kanban_record", 1);
+            assert.containsOnce(kanban, ".o_kanban_record");
             assert.verifySteps(["open-dialog"]);
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "basic grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
-            assert.expect(7);
+            assert.expect(10);
 
             // add active field on partner model and make all records active
             serverData.models.partner.fields.active = {
@@ -393,8 +388,11 @@ QUnit.module("Views", (hooks) => {
                 type: "char",
                 default: true,
             };
+            addDialog = (cls, props) => {
+                assert.step("open-dialog");
+                props.confirm();
+            };
 
-            const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -419,51 +417,31 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            // check archive/restore all actions in kanban header's config dropdown
-            assert.ok(
-                kanban.el.querySelector(
-                    ".o_kanban_header:first .o_kanban_config .o_column_archive_records"
-                ).length,
-                "should be able to archive all the records"
-            );
-            assert.ok(
-                kanban.el.querySelector(
-                    ".o_kanban_header:first .o_kanban_config .o_column_unarchive_records"
-                ).length,
-                "should be able to restore all the records"
-            );
+            const clickColumnButton = await toggleColumnOptions(kanban, 0);
 
-            // archive the records of the first column
-            assert.containsN(
+            // check archive/restore all actions in kanban header's config dropdown
+            assert.containsOnce(
                 kanban,
-                ".o_kanban_group:last .o_kanban_record",
-                3,
-                "last column should contain 3 records"
+                ".o_kanban_header:first .o_kanban_config .o_column_archive_records"
             );
-            envIDs = [4];
-            await toggleColumnOptions(kanban, 1);
-            await click(kanban.el.querySelector(".o_kanban_group:last .o_column_archive_records"));
-            assert.ok($(".modal").length, "a confirm modal should be displayed");
-            await modalCancel(); // Click on 'Cancel'
-            assert.containsN(
+            assert.containsOnce(
                 kanban,
-                ".o_kanban_group:last .o_kanban_record",
-                3,
-                "still last column should contain 3 records"
+                ".o_kanban_header:first .o_kanban_config .o_column_unarchive_records"
             );
-            await toggleColumnOptions(kanban, 1);
-            await click(kanban.el.querySelector(".o_kanban_group:last .o_column_archive_records"));
-            assert.ok($(".modal").length, "a confirm modal should be displayed");
-            await modalOk(); // Click on 'Ok'
-            assert.containsNone(
-                kanban,
-                ".o_kanban_group:last .o_kanban_record",
-                "last column should not contain any records"
-            );
+            assert.containsN(kanban, ".o_kanban_group", 2);
+            assert.containsOnce(kanban, ".o_kanban_group:first .o_kanban_record");
+            assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
+            assert.verifySteps([]);
+
+            await clickColumnButton("Archive All");
+
+            assert.containsOnce(kanban, ".o_kanban_group");
+            assert.containsN(kanban, ".o_kanban_record", 3);
+            assert.verifySteps(["open-dialog"]);
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "basic grouped rendering with active field and hidden archive buttons (archivable false)",
         async (assert) => {
             assert.expect(2);
@@ -475,7 +453,6 @@ QUnit.module("Views", (hooks) => {
                 default: true,
             };
 
-            const envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -490,25 +467,21 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
+            await toggleColumnOptions(kanban, 0);
+
             // check archive/restore all actions in kanban header's config dropdown
-            assert.strictEqual(
-                kanban.el.querySelector(
-                    ".o_kanban_header:first .o_kanban_config .o_column_archive_records"
-                ).length,
-                0,
-                "should not be able to archive all the records"
+            assert.containsNone(
+                kanban,
+                ".o_kanban_header:first .o_kanban_config .o_column_archive_records"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(
-                    ".o_kanban_header:first .o_kanban_config .o_column_unarchive_records"
-                ).length,
-                0,
-                "should not be able to restore all the records"
+            assert.containsNone(
+                kanban,
+                ".o_kanban_header:first .o_kanban_config .o_column_unarchive_records"
             );
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "m2m grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
             assert.expect(7);
@@ -553,6 +526,8 @@ QUnit.module("Views", (hooks) => {
                 ["Undefined blork", "gold yopblip", "silver yopgnap"]
             );
 
+            await toggleColumnOptions(kanban, 0);
+
             // check archive/restore all actions in kanban header's config dropdown
             // despite the fact that the kanban view is configured to be archivable,
             // the actions should not be there as it is grouped by an m2m field.
@@ -569,7 +544,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("context can be used in kanban template", async (assert) => {
+    QUnit.test("context can be used in kanban template", async (assert) => {
         assert.expect(2);
 
         const kanban = await makeView({
@@ -598,7 +573,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("pager should be hidden in grouped mode", async (assert) => {
+    QUnit.test("pager should be hidden in grouped mode", async (assert) => {
         assert.expect(1);
 
         const kanban = await makeView({
