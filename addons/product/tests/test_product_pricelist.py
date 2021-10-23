@@ -79,6 +79,10 @@ class TestProductPricelist(TransactionCase):
             'name': 'Acoustic Bloc Screens',
             'categ_id': self.category_5_id,
         })
+        self.product_multi_price = self.env['product.product'].create({
+            'name': 'Multi Price',
+            'categ_id': self.env.ref('product.product_category_1').id,
+        })
 
         self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.list0 = self.ref('product.list0')
@@ -129,6 +133,24 @@ class TestProductPricelist(TransactionCase):
                  'date_end': '2020-04-09 12:00:00',
                  'compute_price': 'formula',
                  'price_discount': 50,
+                 'base': 'list_price'
+             }), (0, 0, {
+                 'name': 'Multi Price Customer',
+                 'applied_on': '1_product',
+                 'product_tmpl_id': self.product_multi_price.product_tmpl_id.id,
+                 'compute_price': 'fixed',
+                 'fixed_price': 99,
+                 'base': 'list_price'
+             })]
+        })
+        self.business_pricelist = self.ProductPricelist.create({
+            'name': 'Business Pricelist',
+            'item_ids': [(0, 0, {
+                 'name': 'Multi Price Business',
+                 'applied_on': '1_product',
+                 'product_tmpl_id': self.product_multi_price.product_tmpl_id.id,
+                 'compute_price': 'fixed',
+                 'fixed_price': 50,
                  'base': 'list_price'
              })]
         })
@@ -201,4 +223,11 @@ class TestProductPricelist(TransactionCase):
             float_compare(monitor.price, monitor.lst_price/2, precision_digits=2), 0,
             msg)
 
+        # Check if the price is different when we change the pricelist
+        product = self.product_multi_price.product_tmpl_id.with_context(pricelist=self.customer_pricelist.id, quantity=1)
+        msg = "Wrong price: Multi Product Price. should be 99 instead of %s" % product.price
+        self.assertEqual(float_compare(product.price, 99, precision_digits=2), 0)
 
+        product = self.product_multi_price.product_tmpl_id.with_context(pricelist=self.business_pricelist.id, quantity=1)
+        msg = "Wrong price: Multi Product Price. should be 50 instead of %s" % product.price
+        self.assertEqual(float_compare(product.price, 50, precision_digits=2), 0)
