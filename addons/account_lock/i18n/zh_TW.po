@@ -3,7 +3,7 @@
 # 	* account_lock
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
-msgstr ""
+msgstr "任何新的所有用戶鎖定日期必須晚於（或等於）前一個日期。"
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -57,13 +57,13 @@ msgstr "鎖定日期是不可刪除."
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "必須在上一個鎖定日期之後設置新的稅務鎖定日期."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "稅務鎖定日期不可修改,無法刪除."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -71,7 +71,7 @@ msgstr ""
 msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
-msgstr ""
+msgstr "您無法鎖定尚未結束的期間。因此，所有用戶鎖定日期必須早於（或等於）上個月的最後一天。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -79,7 +79,7 @@ msgstr ""
 msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
-msgstr ""
+msgstr "您無法鎖定尚未結束的期間。因此，稅收鎖定日期必須早於（或等於）上個月的最後一天。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -88,4 +88,4 @@ msgid ""
 "You cannot set stricter restrictions on advisors than on users. Therefore, "
 "the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
 "Lock Date."
-msgstr ""
+msgstr "您不能對主辦會計設置比對用戶更嚴格的限制。因此，所有用戶鎖定日期必須早於（或等於）應收憑單/賬單鎖定日期。"
