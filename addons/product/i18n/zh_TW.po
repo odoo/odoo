@@ -38,12 +38,14 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s 包含 %(discount)s %% 折扣與 %(surcharge)s 額外費用\n"
+"示例：%(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% 折扣和 %(price)s 附加費用"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -61,13 +63,13 @@ msgstr "%s (副本)"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s : end date (%s) should be greater than start date (%s)"
-msgstr ""
+msgstr "%s：結束日期 (%s) 應大於開始日期 (%s)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr "'產品條碼 - %s' % (object.name)"
+msgstr "'產品摘要 - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
@@ -104,7 +106,7 @@ msgstr "160x80cm，有粗壯桌腳。"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 含價格"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -114,17 +116,17 @@ msgstr "2 年"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
-msgstr ""
+msgstr "4 × 12"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 含價格"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 含價格"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -132,6 +134,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -148,6 +152,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        額外價格\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        額外價格\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -157,12 +167,12 @@ msgstr "<span class=\"o_stat_text\"> 產品</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">相關產品</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -177,14 +187,14 @@ msgstr "<strong>數量: </strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
-msgstr ""
+msgstr "<strong>銷售訂單明細數量（每單位價格）</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
-msgstr ""
+msgstr "<strong>保存</strong>此頁面並返回此處設置該功能。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -285,7 +295,7 @@ msgstr "活動類型圖標"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "添加數量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -350,7 +360,7 @@ msgstr "應用於"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
-msgstr "封存"
+msgstr "歸檔"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -364,7 +374,7 @@ msgstr "將優先權分配給產品供應商列表。"
 msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr ""
+msgstr "最多可以同時顯示 %d 個數量。刪除選定的數量以添加其他數量。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -416,7 +426,7 @@ msgstr "屬性"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "屬性和變體"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -516,12 +526,12 @@ msgstr "下級類別"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "選擇摘要格式"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "選擇表單格式來列印摘要"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -593,7 +603,7 @@ msgstr "條件"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "主席椅"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
@@ -633,7 +643,7 @@ msgstr "可消耗"
 msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
-msgstr ""
+msgstr "消耗品是您不管理庫存水平的實物產品：它們始終可用。"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -657,7 +667,7 @@ msgstr "包含數量"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr ""
+msgstr "包含的數量應該是正數。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -668,7 +678,7 @@ msgstr "包含數量"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "轉角辦公桌左坐"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -702,7 +712,7 @@ msgstr "國家群組"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr "創建新價目表"
+msgstr "創建新價格表"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -835,12 +845,12 @@ msgstr "定義供應商價格表。"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "定義您的體積計量單位"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "定義您的重量計量單位"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -932,7 +942,7 @@ msgstr "顯示名稱"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Display Pricelist"
-msgstr ""
+msgstr "顯示價格表"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
@@ -972,7 +982,7 @@ msgstr "時長"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1001,6 +1011,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"價格表項目驗證的結束日期時間\n"
+"顯示的值取決於您在首選項中設置的時區。"
 
 #. module: product
 #: model_terms:product.product,website_description:product.product_product_4
@@ -1020,17 +1032,17 @@ msgstr "排除"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr "價格表明細的詳細規則名稱"
+msgstr "價格表明細的詳細規則名稱."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "額外內容"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Extra Fee"
-msgstr ""
+msgstr "額外收費"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1128,18 +1140,18 @@ msgstr "產生價格表"
 #. module: product
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist Report"
-msgstr ""
+msgstr "產生價格報表"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr ""
+msgstr "使用條碼獲取產品圖片"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr "對同一產品採取不同的打包方式"
+msgstr "對同一產品採取不同的打包方式."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
@@ -1150,7 +1162,7 @@ msgstr "顯示產品列表時，給出序列號"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr ""
+msgstr "google圖片"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1290,7 +1302,7 @@ msgstr "畫素 512"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr "價目表的導入範本"
+msgstr "價格表的導入範本"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -1302,7 +1314,7 @@ msgstr "導入模板-產品"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr "為供應商價目表導入範本"
+msgstr "為供應商價格表導入範本"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -1348,7 +1360,7 @@ msgstr "內部編號"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "國際物品編碼用於產品標識"
+msgstr "國際物品編碼用於產品標識."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1471,7 +1483,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "提前時間是訂單確認到倉庫收到貨物天數,使用於採購單自動計算規劃調度"
+msgstr "提前時間是訂單確認到倉庫收到貨物天數,使用於採購單自動計算規劃調度."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1607,7 +1619,7 @@ msgstr "名稱"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never (option)"
-msgstr ""
+msgstr "從不 (option)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
@@ -1636,7 +1648,7 @@ msgstr "下一活動類型"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "未找到供應商價格表"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
@@ -1648,12 +1660,12 @@ msgstr "一般"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Note:"
-msgstr ""
+msgstr "備註："
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "編碼相關產品"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1769,14 +1781,14 @@ msgstr "百分比價格"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Pills"
 
 #. module: product
 #. openerp-web
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
-msgstr ""
+msgstr "請輸入一個正整數"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1897,7 +1909,7 @@ msgstr "價格表名稱"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "價格表報告"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1911,7 +1923,7 @@ msgstr "價格表規則"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_inherit
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "價格表規則"
 
 #. module: product
 #. openerp-web
@@ -1919,7 +1931,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 #, python-format
 msgid "Pricelist:"
-msgstr ""
+msgstr "價格表:"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2035,13 +2047,13 @@ msgstr "產品配置器"
 #: model:ir.actions.report,name:product.report_product_template_label
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
 msgid "Product Label (PDF)"
-msgstr "產品標籤 (PDF)"
+msgstr "產品摘要 (PDF)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "產品摘要單"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2110,7 +2122,7 @@ msgstr "產品模板"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "產品工具提示"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__detailed_type
@@ -2151,7 +2163,7 @@ msgstr "產品變體"
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "未定義產品型號，請聯繫您的管理員。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2196,7 +2208,7 @@ msgstr "產品價格搜尋"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "產品：%(category)s"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2218,14 +2230,14 @@ msgstr "採購說明"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "採購計量單位"
 
 #. module: product
 #. openerp-web
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
-msgstr ""
+msgstr "不允許負數"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2238,7 +2250,7 @@ msgstr "數量"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "數量已存在 (%d)。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2260,7 +2272,7 @@ msgstr "編號"
 msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
-msgstr ""
+msgstr "根據數量和期間，註冊您的供應商要求的每種產品的價格。"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2279,7 +2291,7 @@ msgstr "相關變體"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
-msgstr ""
+msgstr "刪除數量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
@@ -2306,7 +2318,7 @@ msgstr "行"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "規則提示"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2338,7 +2350,7 @@ msgstr "銷售價格"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "銷售價格"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2382,7 +2394,7 @@ msgid ""
 msgstr ""
 "設定價格，這樣它是此數值的倍數。\n"
 "捨入應用在打折後、附加費用之前。 \n"
-"要將價格設定為9.99結尾，設定捨入為10，附加費用為-0.001。"
+"要將價格設定為9.99結尾，設定捨入為10，附加費用為-0.001"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2399,7 +2411,7 @@ msgstr "給客戶顯示公開的價格和折扣"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "指定一個產品類別 ，規則只被應用在與這個類別以及它的下級類一致的產品上。其它情況留空"
+msgstr "指定一個產品類別 ，規則只被應用在與這個類別以及它的下級類一致的產品上。其它情況留空."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -2425,12 +2437,12 @@ msgstr "指定固定金額來添加或減去(如果負)，用作折扣來計算�
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr "指定根據基準價格的最大毛利"
+msgstr "指定根據基準價格的最大毛利."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr "指定根據基準價格的最大毛利"
+msgstr "指定根據基準價格的最大毛利."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
@@ -2449,6 +2461,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"價格表項目驗證的開始日期時間\n"
+"顯示的值取決於您在首選項中設置的時區。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2480,7 +2494,7 @@ msgstr "儲物盒"
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "供應商價目表"
+msgstr "供應商價格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2500,7 +2514,7 @@ msgstr "技術字段。用於在價格表搜尋，未存儲在資料庫中。"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "內部編號“%s”已存在。"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2540,7 +2554,7 @@ msgstr "產品配置器中使用的顯示類型。"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "第一個序列中是預設的"
+msgstr "第一個序列中是預設的."
 
 #. module: product
 #: model_terms:product.product,website_description:product.product_product_4
@@ -2652,7 +2666,7 @@ msgstr "本說明僅用於內部目的。"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "這價格表將會被使用,取代預設值,用之出售給目前夥伴."
+msgstr "這價格表將會被使用,取代預設值,用之出售給目前夥伴"
 
 #. module: product
 #: code:addons/product/models/uom_uom.py:0
@@ -2662,6 +2676,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"此捨入精度高於小數精度（%s 位）。\n"
+"這可能會導致計算不一致。\n"
+"請設置一個介於 %s 和 1 之間的精度。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2710,7 +2727,7 @@ msgstr "記錄的異常活動的類型。"
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "找不到 %s 格式的報告模板"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2813,7 +2830,7 @@ msgstr "計量單位"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "追加銷售和交叉銷售"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -2841,7 +2858,7 @@ msgstr "值"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "值數量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
@@ -2874,7 +2891,7 @@ msgstr "變體圖像"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "變體圖像 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
@@ -3005,7 +3022,7 @@ msgstr "體積度量單位"
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr "體積度量單位備註"
+msgstr "體積度量單位摘要"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -3046,7 +3063,7 @@ msgstr "重量單位"
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量標籤"
+msgstr "重量單位計量摘要"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3063,26 +3080,30 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"您設置的小數精度不如 UOM 精確：\n"
+"%s\n"
+"這可能會導致計算不一致。\n"
+"請增加這些度量單位的四捨五入，或此小數精度的數字。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "您可以通過設置負數折扣使用於加價。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "您可以為客戶分配價目表或在創建新的銷售報價單時選擇一個。"
+msgstr "您可以為客戶分配價格表或在創建新的銷售報價單時選擇一個。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "您不能將主價目表作為價目表項中的其他價目表分配。"
+msgstr "您不能將主價格表作為價格表項中的其他價格表分配"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3159,7 +3180,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete this product category, it is the default generic category."
-msgstr ""
+msgstr "您不能刪除此產品類別，它是預設的通用類別。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3170,6 +3191,10 @@ msgid ""
 ", they are used in other pricelist(s):\n"
 "%s"
 msgstr ""
+"您不能刪除這些價格表：\n"
+"(%s)\n"
+"，它們用於其他價格表：\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -3225,7 +3250,7 @@ msgstr ""
 #: code:addons/product/wizard/product_label_layout.py:0
 #, python-format
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "您需要設置一個正數。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3236,22 +3261,22 @@ msgstr "天數"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "例如.芝士漢堡"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr "例如燈"
+msgstr "例如.燈"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr "例如 Odoo企業訂閱"
+msgstr "例如. Odoo企業訂閱"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr "例如USD零售商"
+msgstr "例如.USD零售商"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3273,7 +3298,7 @@ msgstr "上級公司"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "產品模板"
+msgstr "產品模板."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

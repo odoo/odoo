@@ -162,7 +162,7 @@ msgstr "篩選"
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
 msgid "Get Authorization Code"
-msgstr ""
+msgstr "獲取授權碼"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -217,6 +217,8 @@ msgid ""
 "%(filter)r is not matching the model of current template (%(filter_model)r, "
 "%(drive_model)r)"
 msgstr ""
+"不連貫的 Google Drive %(drive)s：所選過濾器 %(filter)r 的模型與當前模板的模型不匹配 "
+"(%(filter_model)r, %(drive_model)r)"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
@@ -322,7 +324,7 @@ msgstr "以生成Google的授權碼的網址"
 msgid ""
 "The document filter must not include any 'dynamic' part, so it should not be"
 " based on the current time or current user, for example."
-msgstr ""
+msgstr "文檔過濾器不得包含任何“動態”部分，因此它不應基於當前時間或當前用戶，例如。"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
