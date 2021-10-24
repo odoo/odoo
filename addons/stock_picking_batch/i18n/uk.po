@@ -400,6 +400,8 @@ msgstr "Відповідальна особа за це групове пере�
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
+"Додайте 'Виконані' кількості в групове комплектування, щоб створити нову "
+"упаковку."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -452,6 +454,10 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
+"Запланована дата для виконання переміщень.\n"
+"              - Якщо встановити вручну, запланована дата для всіх групових переміщень автоматично оновиться до цієї дати.\n"
+"              - Якщо не змінювати вручну, а переміщення додавати/видаляти/оновлювати, то це буде їх найраніша запланована дата\n"
+"                але ця запланована дата не буде встановлена для всіх групових переміщень."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -585,7 +591,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "Вибрані комплектуючі повинні належати унікальній компанії."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -654,7 +660,7 @@ msgstr "Історія бесіди на сайті"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You can only delete draft batch transfers."
-msgstr ""
+msgstr "Ви можете видалити лише чернетки групових переміщень."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0

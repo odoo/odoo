@@ -239,13 +239,13 @@ msgstr "Журнал за замовчуванням"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Типовий метод розділення"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Типовий метод розділення для Додаткових витрат"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -571,7 +571,7 @@ msgstr "Будь ласка налаштуйте рахунок витрат д�
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Визначіть %s на які повинні поширюватися ці додаткові витрати."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -763,6 +763,9 @@ msgid ""
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
 msgstr ""
+"Ви можете розподілити додаткові витрати на вибрані %s. Додаткові витрати "
+"можуть бути розподілені лише на товари з автоматичною оцінкою запасів та "
+"методом оцінки FIFO або середньої вартості."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
@@ -771,3 +774,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Ви не можете змінити тип товару або вимкнути додаткові витрати, оскільки "
+"товар використовується у рядку бухгалтерської проводки."

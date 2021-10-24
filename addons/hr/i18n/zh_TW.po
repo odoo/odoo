@@ -13,7 +13,7 @@
 # Martin Trigaux, 2020
 # 李振維, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
-# Benson White <Benson.Dr@Gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
@@ -81,6 +81,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -89,6 +91,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -97,6 +101,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -105,6 +111,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -150,6 +158,9 @@ msgid ""
 "                                    Not Connected\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    未上線\n"
+"                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -164,12 +175,12 @@ msgstr "<span class=\"o_stat_text\">出勤自</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>Km</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<strong><span>Reporting</span></strong>"
-msgstr ""
+msgstr "<strong><span>報告</span></strong>"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -254,7 +265,7 @@ msgstr "活動類型圖標"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr ""
+msgstr "活動由"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -266,12 +277,12 @@ msgstr "添加新員工"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "添加新計劃"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new planning activity"
-msgstr ""
+msgstr "添加新的計劃活動"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -335,12 +346,12 @@ msgstr "允許員工更新自己的資料。"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "流程審批管理人"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr ""
+msgstr "存檔私人地址"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -379,7 +390,7 @@ msgstr "考勤"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr ""
+msgstr "出勤/POS"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -576,7 +587,7 @@ msgstr "公司"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "公司國家"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -717,7 +728,7 @@ msgstr ""
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
-msgstr ""
+msgstr "預設離職原因無法刪除."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__default
@@ -767,7 +778,7 @@ msgstr "離開"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
-msgstr ""
+msgstr "離職日期"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -785,7 +796,7 @@ msgstr "出發原因"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr ""
+msgstr "離職原因"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -918,7 +929,7 @@ msgstr "員工照片"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr ""
+msgstr "員工語言"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -939,7 +950,7 @@ msgstr "員工標籤"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_type
 msgid "Employee Type"
-msgstr ""
+msgstr "員工類型"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1070,7 +1081,7 @@ msgstr "Font awesome 圖標，例如，fa-task"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__freelance
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__freelance
 msgid "Freelancer"
-msgstr ""
+msgstr "自由職業者"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1110,7 +1121,7 @@ msgstr "部門"
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
 #: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
-msgstr ""
+msgstr "人力資源員工：檢查工作簽證的有效性"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1134,14 +1145,14 @@ msgstr "已僱用員工"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "住家-工作距離"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "小時圖標顯示"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1320,7 +1331,7 @@ msgstr "工作"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
 msgid "Lang"
-msgstr ""
+msgstr "語言"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1421,7 +1432,7 @@ msgstr "地點"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
-msgstr ""
+msgstr "位置編號"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
@@ -1551,7 +1562,7 @@ msgstr "下一活動類型"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr ""
+msgstr "活動 %s 沒有指定特定用戶。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
@@ -1639,6 +1650,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"Odoo 的部門結構用於管理所有文檔\n"
+"                    按部門與員工相關的：費用、時間表、\n"
+"                    休假、招聘等。"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1647,6 +1661,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"Odoo 的部門結構用於管理所有文檔\n"
+"                按部門與員工相關的：費用、時間表、\n"
+"                休假、招聘等"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__offboarding
@@ -1694,7 +1711,7 @@ msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
-msgstr ""
+msgstr "PIN 用於在考勤模組的 Kiosk 模式中登入/登出（如果在設定中啟用）以及在POS模組中更改收銀員/業務員。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1745,7 +1762,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Plan Name"
-msgstr ""
+msgstr "計劃名稱"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
@@ -1814,7 +1831,7 @@ msgstr "現在"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr ""
+msgstr "存在但不使用"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -1830,7 +1847,7 @@ msgstr "家庭住址"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
-msgstr ""
+msgstr "私人城市"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1840,7 +1857,7 @@ msgstr "私人聯絡方式"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
-msgstr ""
+msgstr "私人國家"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
@@ -1863,22 +1880,22 @@ msgstr "私人電話"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr ""
+msgstr "私人縣市"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr ""
+msgstr "私人街"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr ""
+msgstr "私人街2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr ""
+msgstr "私人郵編"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2013,6 +2030,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"選擇作為該員工的教練的“員工”。\n"
+"預設情況下，“教練”沒有特定的權利或責任。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
@@ -2186,7 +2205,7 @@ msgid ""
 "employees, this field has also an impact in the Contract History. Only "
 "Employee type is supposed to be under contract and will have a Contract "
 "History."
-msgstr ""
+msgstr "員工類型。儘管主要目的似乎是對員工進行分類，但該字段對合同歷史也有影響。只有 Employee 類型應該在合同中，並且會有合同歷史。"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2217,7 +2236,7 @@ msgstr "使用者可以訪問人力資源設定以及統計報告"
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
-msgstr ""
+msgstr "%(employee)s 的工作簽證將於 %(date)s 到期。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -2249,14 +2268,14 @@ msgid ""
 "To avoid multi company issues (loosing the access to your previous "
 "contracts, leaves, ...), you should create another employee in the new "
 "company instead."
-msgstr ""
+msgstr "為避免多公司問題（失去對以前合同的訪問權、離職等），您應該在新公司中創建另一名員工。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "下定義"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2310,7 +2329,7 @@ msgstr "記錄的異常活動的類型。"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "未確定"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -2471,7 +2490,7 @@ msgstr "工作地點"
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr ""
+msgstr "工作地點"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -2496,7 +2515,7 @@ msgstr "工作許可證"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr ""
+msgstr "工作簽證到期日"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -2507,7 +2526,7 @@ msgstr "工作許可編號"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr ""
+msgstr "工作簽證預定活動"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -2528,14 +2547,14 @@ msgstr "工作時間"
 msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
-msgstr ""
+msgstr "您只能更新您的個人設定。請聯繫人力資源部門更新其他資訊。"
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/models/employee/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
-msgstr ""
+msgstr "您只能與擁有專用用戶的員工聊天。"
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
@@ -2547,7 +2566,7 @@ msgstr "您無法創建遞迴部門"
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
-msgstr ""
+msgstr "您應該至少選擇一個 Advanced Presence Control 選項。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2567,7 +2586,7 @@ msgstr "例如: John Doe"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "e.g. Onboarding"
-msgstr ""
+msgstr "例如到職"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2583,4 +2602,4 @@ msgstr "計劃"
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr ""
+msgstr "僅限員工"
