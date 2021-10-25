@@ -392,7 +392,10 @@ class PaymentPortal(portal.CustomerPortal):
             elif tx_sudo.state == 'pending':
                 status = 'warning'
                 message = tx_sudo.acquirer_id.pending_msg
-            elif tx_sudo.state in ('authorized', 'done'):
+            elif tx_sudo.state == 'authorized':
+                status = 'success'
+                message = tx_sudo.acquirer_id.auth_msg
+            elif tx_sudo.state == 'done':
                 status = 'success'
                 message = tx_sudo.acquirer_id.done_msg
             elif tx_sudo.state == 'cancel':
