@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.addons.web.tests.test_js
 import odoo.tests
 
 
@@ -17,6 +16,4 @@ class WebSuite(odoo.tests.HttpCase):
         self.main_pos_config.open_session_cb(check_coa=False)
 
         # point_of_sale desktop test suite
-        self.browser_js(
-            "/pos/ui/tests?mod=web&failfast", "", "", login="admin", timeout=1800
-        )
+        self.browser_js("/pos/ui/tests?mod=web", "", "", login="admin", timeout=1800)
