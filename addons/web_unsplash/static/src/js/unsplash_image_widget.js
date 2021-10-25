@@ -184,6 +184,7 @@ widgetsMedia.ImageWidget.include({
 
         if (['all', 'unsplash'].includes(this.searchService) && this._unsplash.query && !this._unsplash.isMaxed) {
             this.$('.o_load_more').removeClass('d-none');
+            this.$('.o_we_load_more').removeClass('d-none');
             this.$('.o_load_done_msg').addClass('d-none');
         }
     },
@@ -205,7 +206,7 @@ widgetsMedia.ImageWidget.include({
     /**
      * @override
      */
-    _selectAttachement: function (attachment, save) {
+    _selectAttachment: function (attachment, save) {
         if (!this.options.multiImages) {
             this._unsplash.selectedImages = {};
         }

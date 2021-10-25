@@ -243,8 +243,8 @@ function wysiwygData(data) {
                     string: "access_token",
                     type: 'char',
                 },
-                image_src: {
-                    string: "image_src",
+                src: {
+                    string: "src",
                     type: 'char',
                 },
                 image_width: {
@@ -273,7 +273,7 @@ function wysiwygData(data) {
                 res_model: false,
                 public: true,
                 access_token: false,
-                image_src: '/web/image/123/transparent.png',
+                src: '/web/image/123/transparent.png',
                 image_width: 256,
                 image_height: 256,
             }],

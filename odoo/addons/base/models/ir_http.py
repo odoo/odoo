@@ -309,7 +309,7 @@ class IrHttp(models.AbstractModel):
 
     def _binary_record_content(
             self, record, field='raw', filename=None,
-            filename_field='name', default_mimetype='application/octet-stream'):
+            filename_field='name', default_mimetype='application/octet-stream', xaccel_header=None):
 
         model = record._name
         mimetype = 'mimetype' in record and record.mimetype or False
@@ -370,6 +370,7 @@ class IrHttp(models.AbstractModel):
 
     def _binary_set_headers(self, status, filename, mimetype, unique, filehash=None, download=False):
         headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")]
+
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
         status = status or 200
@@ -406,6 +407,7 @@ class IrHttp(models.AbstractModel):
         :param str default_mimetype: default mintype if no mintype found
         :param str access_token: optional token for unauthenticated access
                                  only available  for ir.attachment
+
         :returns: (status, headers, content)
         """
         record, status = self._get_record_and_check(xmlid=xmlid, model=model, id=id, field=field, access_token=access_token)

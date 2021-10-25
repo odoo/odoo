@@ -11,6 +11,8 @@ from odoo.tools import file_open, image_process, ustr
 from odoo.tools.misc import str2bool
 from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
+from odoo.tools.mimetypes import guess_mimetype
+
 
 _logger = logging.getLogger(__name__)
 
@@ -180,10 +182,27 @@ class Http(models.AbstractModel):
             filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token
         )
         if status != 200:
-            return self._response_by_status(status, headers, content)
-        else:
-            headers.append(('Content-Length', len(content)))
-            response = request.make_response(content, headers)
+            if filename and filename.endswith(".mp4") and not content:
+                # Show placeholder video if video should've 404'd
+                content = self._video_placeholder()
+                headers.append(('Content-Type', "video/mp4"))
+            else:
+                return self._response_by_status(status, headers, content)
+
+        headers.append(('Content-Length', len(content)))
+        content_type = guess_mimetype(content)
+        if content_type == 'video/mp4':
+            '''
+            Setting CSP required in order to play same origin videos as BG videos.
+            It presents no additional security risk when set to 'self', for more info
+            check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
+            '''
+            try:
+                previous_csp = headers.index(('Content-Security-Policy', "default-src 'none'"))
+                headers[previous_csp] = ('Content-Security-Policy', "media-src 'self'")
+            except ValueError:
+                headers.append(('Content-Security-Policy', "media-src 'self'"))
+        response = request.make_response(content, headers)
         return response
 
     @api.model
@@ -236,4 +255,13 @@ class Http(models.AbstractModel):
         if not image:
             image = 'web/static/img/placeholder.png'
         with file_open(image, 'rb', filter_ext=('.png', '.jpg')) as fd:
+            return fd.read()
+
+    @api.model
+    def _video_placeholder(self):
+        """
+        Reads from disk and returns a binary placeholder video used to replace
+        videos that have been deleted and should've 404'd.
+        """
+        with file_open('web/static/video/placeholder.mp4', 'rb', filter_ext=('.mp4')) as fd:
             return fd.read()

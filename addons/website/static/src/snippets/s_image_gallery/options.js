@@ -95,7 +95,7 @@ options.registry.gallery = options.Class.extend({
                 for (var i = 0; i < attachments.length; i++) {
                     $('<img/>', {
                         class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: attachments[i].image_src,
+                        src: attachments[i].src,
                         'data-index': ++index,
                         alt: attachments[i].description || '',
                         'data-name': _t('Image'),

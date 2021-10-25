@@ -501,7 +501,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=52, employee=69):
+        with self.assertQueryCount(__system__=54, employee=73):
             composer._action_send_mail()
 
         # notifications
