@@ -36,7 +36,7 @@
 }
 $o-form-label-margin-right: 0px;
 
-.o_legacy_form_view {
+.o_form_view {
     background-color: $o-view-background-color;
 
     // Utility classes
@@ -870,7 +870,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // One2Many Kanban views
-    .o_field_widget .o_legacy_kanban_view.o_kanban_ungrouped {
+    .o_field_widget .o_kanban_view.o_kanban_ungrouped {
         padding: 0;
         .o_kanban_record {
             box-shadow: none;
@@ -920,7 +920,7 @@ $o-form-label-margin-right: 0px;
 
 // Overridden style when form view in modal
 .modal .modal-dialog {
-    .o_legacy_form_view {
+    .o_form_view {
         .o_statusbar_buttons > .btn {
             /**
              * Override to prevent the status bar from increasing height when
@@ -963,7 +963,7 @@ $o-form-label-margin-right: 0px;
             }
         }
     }
-    &:not(.modal-lg) .o_legacy_form_view {
+    &:not(.modal-lg) .o_form_view {
         .o_group {
             width: 100%;
         }
@@ -1033,7 +1033,7 @@ $o-form-label-margin-right: 0px;
         }
     }
 }
-.o_legacy_form_view.o_xxs_form_view {
+.o_form_view.o_xxs_form_view {
     .oe_title {
         word-break: break-all;
     }
@@ -1045,7 +1045,7 @@ $o-form-label-margin-right: 0px;
 }
 
 // Settings form views
-.o_legacy_settings_container {
+.o_settings_container {
     display: flex;
     flex: 0 1 auto;
     flex-flow: row wrap;
