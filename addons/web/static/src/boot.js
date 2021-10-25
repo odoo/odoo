@@ -271,7 +271,7 @@
             unloaded: unloaded ? unloaded.map((mod) => mod.name) : [],
             cycle,
         };
-        didLogInfoResolve();
+        didLogInfoResolve(true);
     };
     odoo.processJobs = function (jobs, services) {
         var job;

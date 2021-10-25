@@ -4094,12 +4094,9 @@ QUnit.module('Views', {
         var $initCell = calendar.$('.fc-time-grid .fc-minor[data-time="06:30:00"] .fc-widget-content:last-child');
         var $endCell = calendar.$('.fc-time-grid .fc-minor[data-time="10:30:00"] .fc-widget-content:last-child');
 
-        var left = $initCell.offset().left;
-        var top = $initCell.offset().top;
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousedown");
-        top = $endCell.offset().top;
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousemove");
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mouseup");
+        await testUtils.dom.triggerMouseEvent($initCell, "mousedown");
+        await testUtils.dom.triggerMouseEvent($endCell, "mousemove");
+        await testUtils.dom.triggerMouseEvent($endCell, "mouseup");
         await testUtils.nextTick();
 
         assert.verifySteps(['do_action']);
