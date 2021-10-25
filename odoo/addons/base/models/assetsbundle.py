@@ -140,11 +140,11 @@ class AssetsBundle(object):
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
         response = []
-        is_debug_assets = debug and 'assets' in debug
+        is_debug = bool(debug)
         if css and self.stylesheets:
-            css_attachments = self.css(is_minified=not is_debug_assets) or []
+            css_attachments = self.css(is_minified=not is_debug) or []
             for attachment in css_attachments:
-                if is_debug_assets:
+                if is_debug:
                     href = self.get_debug_asset_url(extra='rtl/' if self.user_direction == 'rtl' else '',
                                                     name=css_attachments.name,
                                                     extension='')
@@ -164,8 +164,8 @@ class AssetsBundle(object):
                 response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_node())
 
         if js and self.javascripts:
-            js_attachment = self.js(is_minified=not is_debug_assets)
-            src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
+            js_attachment = self.js(is_minified=not is_debug)
+            src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug else js_attachment[0].url
             attr = dict([
                 ["async", "async" if async_load else None],
                 ["defer", "defer" if defer_load or lazy_load else None],
