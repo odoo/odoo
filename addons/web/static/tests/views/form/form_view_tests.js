@@ -1262,7 +1262,7 @@ QUnit.module("Views", (hooks) => {
             1: {
                 id: 1,
                 name: "Partner",
-                res_model: "partner",
+                resModel: "partner",
                 type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
@@ -12994,7 +12994,7 @@ QUnit.module("Views", (hooks) => {
 
         const form = await makeView({
             type: "form",
-            model: "partner",
+            resModel: "partner",
             serverData,
             arch: `
                 <form>

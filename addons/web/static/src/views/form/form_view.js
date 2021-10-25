@@ -22,7 +22,7 @@ const { onWillStart, useRef } = hooks;
 
 const viewRegistry = registry.category("views");
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 // -----------------------------------------------------------------------------
 
