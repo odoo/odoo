@@ -6,9 +6,10 @@
         }
     }
 
-    .s_mega_menu_gray_area:last-child {
+    .s_mega_menu_gray_area {
         // Allow to show the grey background used in the pseudo-element
         z-index: 1;
+        background-color: rgba(0, 0, 0, .05);
 
         &:before {
             content: '';
@@ -16,11 +17,11 @@
             width: 100vw;
             height: 100%;
             position: absolute;
-            left: 0;
+            left: 100%;
             top: 0;
             z-index: -1;
             pointer-events: none;
-            background: rgba(0, 0, 0, .05);
+            background-color: inherit;
         }
     }
 }
