@@ -692,11 +692,13 @@ class IrActionsReport(models.Model):
     def _get_unreadable_pdfs(self, streams):
         unreadable_streams = []
 
-        writer = PdfFileWriter()
         for stream in streams:
+            writer = PdfFileWriter()
+            result_stream = io.BytesIO()
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
+                writer.write(result_stream)
             except utils.PdfReadError:
                 unreadable_streams.append(stream)
 
