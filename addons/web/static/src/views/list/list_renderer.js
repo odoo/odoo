@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { browser } from "@web/core/browser/browser";
+import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { Field } from "@web/fields/field";
 
 const { Component, useState } = owl;
@@ -20,13 +21,60 @@ export class ListRenderer extends Component {
     setup() {
         this.fields = this.props.fields;
         this.columns = this.props.info.columns;
+        this.keyOptionalFields = this.createKeyOptionalFields();
+        this.getOptionalActiveFields();
         this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
         this.selection = [];
+        this.state = useState({
+            columns: this.columns.filter(
+                (col) => !col.optional || this.optionalActiveFields[col.name]
+            ),
+        });
     }
 
     willUpdateProps() {
         this.selection = [];
+    }
+
+    createKeyOptionalFields() {
+        const keyParts = {
+            fields: this.env.model.root.activeFields,
+            model: this.env.model.resModel,
+            viewMode: "list",
+            viewId: this.env.config.viewId,
+        };
+
+        const parts = [
+            "model",
+            "viewMode",
+            "viewId",
+            "relationalField",
+            "subViewType",
+            "subViewId",
+        ];
+        const viewIdentifier = ["optional_fields"];
+        parts.forEach((partName) => {
+            if (partName in keyParts) {
+                viewIdentifier.push(keyParts[partName]);
+            }
+        });
+        keyParts.fields
+            .sort((left, right) => (left < right ? -1 : 1))
+            .forEach((fieldName) => {
+                return viewIdentifier.push(fieldName);
+            });
+        return viewIdentifier.join(",");
+    }
+
+    get getOptionalFields() {
+        return this.columns
+            .filter((col) => col.optional)
+            .map((col) => ({
+                string: col.string,
+                name: col.name,
+                value: this.optionalActiveFields[col.name],
+            }));
     }
 
     getGroupLevel(group) {
@@ -113,12 +161,33 @@ export class ListRenderer extends Component {
         }
     }
 
+    getOptionalActiveFields() {
+        this.optionalActiveFields = {};
+        let optionalActiveFields = browser.localStorage[this.keyOptionalFields];
+        if (optionalActiveFields) {
+            optionalActiveFields = optionalActiveFields.split(",");
+            this.columns.forEach((col) => {
+                this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
+            });
+        } else {
+            this.columns.forEach((col) => {
+                this.optionalActiveFields[col.name] = col.optional === "show";
+            });
+        }
+    }
+
     onClickSortColumn(column) {
         this.env.model.sortByColumn(column);
     }
 
     openRecord(record) {
         this.props.openRecord(record);
+    }
+
+    saveOptionalActiveFields() {
+        browser.localStorage[this.keyOptionalFields] = Object.keys(
+            this.optionalActiveFields
+        ).filter((fieldName) => this.optionalActiveFields[fieldName]);
     }
 
     toggleGroup(group) {
@@ -142,7 +211,17 @@ export class ListRenderer extends Component {
         }
         this.render();
     }
+    toggleOptionalField(ev) {
+        const fieldName = ev.detail.payload.name;
+        this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
+        this.state.columns = this.columns.filter(
+            (col) => !col.optional || this.optionalActiveFields[col.name]
+        );
+        this.saveOptionalActiveFields(
+            this.columns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
+        );
+    }
 }
 
 ListRenderer.template = "web.ListRenderer";
-ListRenderer.components = { CheckBox, Field };
+ListRenderer.components = { CheckBoxDropdownItem, Field };
