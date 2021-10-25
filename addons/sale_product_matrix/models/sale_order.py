@@ -111,7 +111,7 @@ class SaleOrder(models.Model):
             if new_lines:
                 res = False
                 self.update(dict(order_line=new_lines))
-                product_ids = [d[2].get('product_id') for d in new_lines if d[2] is dict]
+                product_ids = [d[2].get('product_id') for d in new_lines if isinstance(d[2], dict)]
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     res = line.product_id_change() or res
                     line._onchange_discount()
