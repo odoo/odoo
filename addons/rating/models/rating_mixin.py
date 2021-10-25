@@ -61,6 +61,7 @@ class RatingMixin(models.AbstractModel):
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
+    rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_last_value(self):
