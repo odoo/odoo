@@ -5341,7 +5341,7 @@
 
       // Odoo Customisation!!!
       // Crappy hack to display traceback with sourcemaps if debug=assets
-      if (lastError && QUnit.annotateTraceback && debug && debug.includes("assets")) {
+      if (lastError && QUnit.annotateTraceback && debug) {
           const pre = assertLi.querySelector("pre");
 
           QUnit.annotateTraceback(lastError).then(traceback => {

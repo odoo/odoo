@@ -11,15 +11,6 @@ commandProviderRegistry.add("debug", {
         const result = [];
         if (env.services.user.isAdmin) {
             if (env.debug) {
-                if (!env.debug.includes("assets")){
-                    result.push({
-                        action() {
-                            browser.location.search = "?debug=assets";
-                        },
-                        category: "debug",
-                        name: env._t("Activate debug mode (with assets)"),
-                    });
-                }
                 result.push({
                     action() {
                         const route = env.services.router.current;
@@ -33,10 +24,10 @@ commandProviderRegistry.add("debug", {
                 if (options.searchValue.toLowerCase() === "debug") {
                     result.push({
                         action() {
-                            browser.location.search = "?debug=assets";
+                            browser.location.search = "?debug=1";
                         },
                         category: "debug",
-                        name: env._t("Activate debug mode (with assets)"),
+                        name: env._t("Activate debug mode"),
                     });
                 }
             }

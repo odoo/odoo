@@ -63,7 +63,7 @@ function combineErrorNames(uncaughtError, originalError) {
  */
 async function completeUncaughtError(env, uncaughtError, originalError) {
     uncaughtError.name = combineErrorNames(uncaughtError, originalError);
-    if (env.debug.includes("assets")) {
+    if (env.debug) {
         uncaughtError.traceback = await annotateTraceback(originalError);
     } else {
         uncaughtError.traceback = formatTraceback(originalError);

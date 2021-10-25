@@ -14,7 +14,6 @@ odoo.define('base_setup.ResConfigDevTool', function (require) {
         init: function () {
             this._super.apply(this, arguments);
             this.isDebug = config.isDebug();
-            this.isAssets = config.isDebug("assets");
             this.isTests = config.isDebug("tests");
         },
 

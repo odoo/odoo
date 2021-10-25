@@ -4,23 +4,12 @@ import { browser } from "@web/core/browser/browser";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { registry } from "@web/core/registry";
 
-function activateAssetsDebugging({ env }) {
+function activateTestsDebugging({ env }) {
     return {
         type: "item",
-        description: env._t("Activate Assets Debugging"),
+        description: env._t("Activate Tests Debugging"),
         callback: () => {
-            browser.location.search = "?debug=assets";
-        },
-        sequence: 410,
-    };
-}
-
-function activateTestsAssetsDebugging({ env }) {
-    return {
-        type: "item",
-        description: env._t("Activate Tests Assets Debugging"),
-        callback: () => {
-            browser.location.search = "?debug=assets,tests";
+            browser.location.search = "?debug=tests";
         },
         sequence: 420,
     };
@@ -76,8 +65,7 @@ function leaveDebugMode({ env }) {
 registry
     .category("debug")
     .category("default")
-    .add("activateAssetsDebugging", activateAssetsDebugging)
     .add("regenerateAssets", regenerateAssets)
     .add("becomeSuperuser", becomeSuperuser)
     .add("leaveDebugMode", leaveDebugMode)
-    .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging);
+    .add("activateTestsDebugging", activateTestsDebugging);
