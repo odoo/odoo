@@ -36,7 +36,7 @@
 }
 $o-form-label-margin-right: 0px;
 
-.o_legacy_form_view {
+.o_form_view {
     background-color: $o-view-background-color;
 
     // Utility classes
@@ -272,6 +272,7 @@ $o-form-label-margin-right: 0px;
                 &.disabled {
                     opacity: 1;
                     pointer-events: none;
+                    cursor: default;
 
                     &:not(.btn-primary) {
                         @include plain-hover-focus() {
@@ -594,7 +595,7 @@ $o-form-label-margin-right: 0px;
         }
 
         @include media-breakpoint-up(sm) {
-            :not(.o_row):not(.o_data_cell) > .o_field_widget > * >,
+            :not(.o_row):not(.o_data_cell) > .o_field_widget,
             .o_row > .o_field_widget:last-child { // Note: this does not take care
                                                 // of an invisible last-child but
                                                 // it does not really matter
@@ -653,17 +654,6 @@ $o-form-label-margin-right: 0px;
 
         .tab-content > .tab-pane {
             padding: $o-horizontal-padding 0;
-            >.oe_form_field {
-                >.note-editable {
-                    border-width: 0;
-                    padding: 0;
-                    min-height: 180px;
-                }
-                &.oe-bordered-editor>.note-editable {
-                    border-width: 1px;
-                    padding: 4px;
-                }
-            }
         }
     }
 
@@ -682,7 +672,7 @@ $o-form-label-margin-right: 0px;
     }
     .o_field_widget, .btn {
         .o_field_widget {
-            margin-bottom: 0;
+            margin-bottom: 0px;
         }
     }
     .o_td_label .o_form_label:not(.o_status), .o_checkbox_optional_field > .o_form_label {
@@ -696,18 +686,14 @@ $o-form-label-margin-right: 0px;
 
     // Translate icon
     span.o_field_translate {
-        padding: 0 $o-form-spacing-unit 0 0 !important;
-        vertical-align: top;
-        position: relative;
-        margin-left: -35px;
-        width: 35px !important; // important is useful for textarea
-        display: inline-block;
-        text-align: right;
-        border: none;  // usefull for textarea
-        background-color: rgba($o-view-background-color, 0.8); // useful in code view
-        &:hover {
-            background-color: $o-view-background-color
-        }
+            padding: 0 $o-form-spacing-unit 0 0 !important;
+            vertical-align: top;
+            position: relative;
+            margin-left: -35px;
+            width: 35px !important; // important is usefull for textarea
+            display: inline-block;
+            text-align: right;
+            border: none;  // usefull for textarea
     }
     input, textarea {
         &.o_field_translate {
@@ -852,8 +838,6 @@ $o-form-label-margin-right: 0px;
     // Boolean
     .o_field_boolean {
         margin-right: $o-form-spacing-unit;
-        max-width: 20px!important;
-        padding-right: 0!important;
     }
 
     // Timezone widget warning
@@ -886,7 +870,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // One2Many Kanban views
-    .o_field_widget .o_legacy_kanban_view.o_kanban_ungrouped {
+    .o_field_widget .o_kanban_view.o_kanban_ungrouped {
         padding: 0;
         .o_kanban_record {
             box-shadow: none;
@@ -936,7 +920,7 @@ $o-form-label-margin-right: 0px;
 
 // Overridden style when form view in modal
 .modal .modal-dialog {
-    .o_legacy_form_view {
+    .o_form_view {
         .o_statusbar_buttons > .btn {
             /**
              * Override to prevent the status bar from increasing height when
@@ -979,7 +963,7 @@ $o-form-label-margin-right: 0px;
             }
         }
     }
-    &:not(.modal-lg) .o_legacy_form_view {
+    &:not(.modal-lg) .o_form_view {
         .o_group {
             width: 100%;
         }
@@ -1049,7 +1033,7 @@ $o-form-label-margin-right: 0px;
         }
     }
 }
-.o_legacy_form_view.o_xxs_form_view {
+.o_form_view.o_xxs_form_view {
     .oe_title {
         word-break: break-all;
     }
@@ -1061,7 +1045,7 @@ $o-form-label-margin-right: 0px;
 }
 
 // Settings form views
-.o_legacy_settings_container {
+.o_settings_container {
     display: flex;
     flex: 0 1 auto;
     flex-flow: row wrap;
