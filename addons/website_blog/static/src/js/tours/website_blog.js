@@ -21,14 +21,14 @@ odoo.define("website_blog.tour", function (require) {
         extra_trigger: "form[id=\"editor_new_blog\"]",
         content: _t("Select the blog you want to add the post to."),
     }, {
-        trigger: "div[data-oe-expression=\"blog_post.name\"]",
+        trigger: "h1[data-oe-expression=\"blog_post.name\"]",
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Write a title, the subtitle is optional."),
         position: "top",
         run: "text",
     }, {
         trigger: "we-button[data-background]:nth(1)",
-        extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
+        extra_trigger: "#wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: Markup(_t("Set a blog post <b>cover</b>.")),
         position: "right",
     }, {
