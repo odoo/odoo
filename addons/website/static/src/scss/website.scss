@@ -1004,7 +1004,7 @@ header {
                 }
             }
 
-            .o_connected_user:not(.editor_has_snippets) header & {
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
                 top: -$o-navbar-height;
                 padding-top: $o-navbar-height;
             }
@@ -1098,7 +1098,7 @@ header {
                 }
             }
         }
-        body.o_connected_user {
+        body.o_connected_user:not(.o_fullscreen) {
             &:not(.editor_has_snippets) #wrapwrap > header {
                 top: $o-navbar-height;
             }
