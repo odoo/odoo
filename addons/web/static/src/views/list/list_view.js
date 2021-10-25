@@ -25,17 +25,16 @@ export class ListArchParser extends XMLParser {
         };
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
-                if (
-                    this.isAttr(node, "invisible").falsy(true) &&
-                    this.isAttr(node, "optional").notEqualTo("hide")
-                ) {
+                if (this.isAttr(node, "invisible").falsy(true)) {
                     fieldParser.addField(node, (fieldName) => {
+                        const optional = node.getAttribute("optional") || false;
                         const sortable = fields[fieldName].sortable;
                         const string = node.getAttribute("string") || fields[fieldName].string;
                         const widget = node.getAttribute("widget") || null;
                         return {
                             type: "field",
                             name: fieldName,
+                            optional,
                             sortable,
                             string,
                             widget,

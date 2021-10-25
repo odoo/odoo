@@ -37,6 +37,8 @@ import {
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView } from "./helpers";
 import { browser } from "@web/core/browser/browser";
+import { Domain } from "@web/core/domain";
+import { localization } from "@web/core/l10n/localization";
 
 const serviceRegistry = registry.category("services");
 
@@ -5167,10 +5169,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty list with sample data: toggle optional field", async function (assert) {
         assert.expect(9);
 
-        const RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
-
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -5181,22 +5179,19 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2o" optional="hide"/>
                 </tree>`,
             domain: Domain.FALSE_DOMAIN,
-            services: {
-                local_storage: RamStorageService,
-            },
         });
-
-        assert.hasClass($(list.el).findel, "o_view_sample_data");
-        assert.ok($(list.el).find(".o_data_row").length > 0);
-        assert.hasClass(list.el.querySelector(".o_data_row"), "o_sample_data_disabled");
+        assert.hasClass(list.el, "o_view_sample_data");
+        assert.ok(list.el.querySelectorAll(".o_data_row").length > 0);
+        assert.hasClass(list.el.querySelectorAll(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(list, "th", 2, "should have 2 th, 1 for selector and 1 for foo");
-        assert.containsOnce($(list.el).find("table"), ".o_optional_columns_dropdown_toggle");
+        assert.containsOnce(list.el, "table .o_optional_columns_dropdown");
 
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+        await click(list.el, "table .o_optional_columns_dropdown .dropdown-toggle");
 
-        assert.hasClass($(list.el).findel, "o_view_sample_data");
-        assert.ok($(list.el).find(".o_data_row").length > 0);
+        await click(list.el, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
+
+        assert.hasClass(list.el, "o_view_sample_data");
+        assert.ok(list.el.querySelectorAll(".o_data_row").length > 0);
         assert.hasClass(list.el.querySelector(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(list, "th", 3);
     });
@@ -13254,11 +13249,11 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["2"]);
     });
 
-    QUnit.skip("list view with optional fields rendering", async function (assert) {
-        assert.expect(12);
+    QUnit.test("list view with optional fields rendering", async function (assert) {
+        assert.expect(10);
 
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
+        patchWithCleanup(localization, {
+            direction: "ltr",
         });
 
         const list = await makeView({
@@ -13272,49 +13267,33 @@ QUnit.module("Views", (hooks) => {
                 '<field name="amount"/>' +
                 '<field name="reference" optional="hide"/>' +
                 "</tree>",
-            services: {
-                local_storage: RamStorageService,
-            },
-            translateParameters: {
-                direction: "ltr",
-            },
         });
 
         assert.containsN(list, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
 
         assert.containsOnce(
-            $(list.el).find("table"),
-            ".o_optional_columns_dropdown_toggle",
+            list.el,
+            "table .o_optional_columns_dropdown",
             "should have the optional columns dropdown toggle inside the table"
         );
 
         const optionalFieldsToggler = list.el.querySelector("table").lastElementChild;
         assert.ok(
-            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown_toggle"),
+            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown"),
             "The optional fields toggler is the second last element"
-        );
-        const optionalFieldsDropdown = list.el.querySelector(".o_list_view").lastElementChild;
-        assert.ok(
-            optionalFieldsDropdown.classList.contains("o_optional_columns"),
-            "The optional fields dropdown is the last element"
-        );
-
-        assert.ok(
-            $(list.el).find(".o_optional_columns .dropdown-menu").hasClass("dropdown-menu-right"),
-            "In LTR, the dropdown should be anchored to the right and expand to the left"
         );
 
         // optional fields
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+        await click(list.el, "table .o_optional_columns_dropdown .dropdown-toggle");
         assert.containsN(
             list,
-            "div.o_optional_columns div.dropdown-item",
+            "div.o_optional_columns_dropdown span.dropdown-item",
             2,
             "dropdown have 2 optional field foo with checked and bar with unchecked"
         );
 
         // enable optional field
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+        await click(list.el, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
         // 5 th (1 for checkbox, 4 for columns)
         assert.containsN(list, "th", 4, "should have 4 th");
         assert.ok(
@@ -13322,15 +13301,17 @@ QUnit.module("Views", (hooks) => {
             "should have a visible m2o field"
         ); //m2o field
 
-        // disable optional field
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
         assert.strictEqual(
-            $(list.el).find("div.o_optional_columns div.dropdown-item:first input:checked")[0],
-            $(list.el).find('div.o_optional_columns div.dropdown-item [name="m2o"]')[0],
+            list.el.querySelectorAll(
+                "div.o_optional_columns_dropdown span.dropdown-item:first-child input:checked"
+            )[0],
+            [...list.el.querySelectorAll("div.o_optional_columns_dropdown span.dropdown-item")]
+                .filter((el) => el.innerText === "M2O field")[0]
+                .querySelector("input"),
             "m2o advanced field check box should be checked in dropdown"
         );
 
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+        await click(list.el, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
         // 3 th (1 for checkbox, 2 for columns)
         assert.containsN(list, "th", 3, "should have 3 th");
         assert.notOk(
@@ -13338,9 +13319,11 @@ QUnit.module("Views", (hooks) => {
             "should not have a visible m2o field"
         ); //m2o field not displayed
 
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+        await click(list.el, "table .o_optional_columns_dropdown");
         assert.notOk(
-            $(list.el).find('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked")
+            $(list.el)
+                .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
+                .is(":checked")
         );
     });
 
@@ -13372,13 +13355,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             $(list.el).find("table"),
-            ".o_optional_columns_dropdown_toggle",
+            ".o_optional_columns_dropdown",
             "should have the optional columns dropdown toggle inside the table"
         );
 
         const optionalFieldsToggler = list.el.querySelector("table").lastElementChild;
         assert.ok(
-            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown_toggle"),
+            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown"),
             "The optional fields toggler is the last element"
         );
         const optionalFieldsDropdown = list.el.querySelector(".o_list_view").lastElementChild;
@@ -13421,13 +13404,15 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(list, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
 
             // enable optional field
-            await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+            await click($(list.el).find("table .o_optional_columns_dropdown"));
             assert.notOk(
                 $(list.el)
-                    .find('div.o_optional_columns div.dropdown-item [name="m2o"]')
+                    .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
                     .is(":checked")
             );
-            await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+            await click(
+                $(list.el).find("div.o_optional_columns_dropdown span.dropdown-item:first input")
+            );
             assert.containsN(list, "th", 4, "should have 4 th 1 for selector, 3 for columns");
             assert.ok(
                 $(list.el).find("th:contains(M2O field)").is(":visible"),
@@ -13447,10 +13432,10 @@ QUnit.module("Views", (hooks) => {
                 "should have a visible m2o field even after listview reload"
             );
 
-            await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+            await click($(list.el).find("table .o_optional_columns_dropdown"));
             assert.ok(
                 $(list.el)
-                    .find('div.o_optional_columns div.dropdown-item [name="m2o"]')
+                    .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
                     .is(":checked")
             );
         }
@@ -13485,8 +13470,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, ".o_list_record_selector input:checked");
 
         // add an optional field
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+        await click($(list.el).find("table .o_optional_columns_dropdown"));
+        await click(
+            $(list.el).find("div.o_optional_columns_dropdown span.dropdown-item:first input")
+        );
         assert.containsN(list, "th", 3);
 
         assert.containsOnce(list, ".o_list_record_selector input:checked");
@@ -13497,8 +13484,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, ".o_list_record_selector input:checked", 5);
 
         // remove an optional field
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first input"));
+        await click($(list.el).find("table .o_optional_columns_dropdown"));
+        await click(
+            $(list.el).find("div.o_optional_columns_dropdown span.dropdown-item:first input")
+        );
         assert.containsN(list, "th", 2);
 
         assert.containsN(list, ".o_list_record_selector input:checked", 5);
@@ -13543,10 +13532,12 @@ QUnit.module("Views", (hooks) => {
 
         // add an optional field (we click on the label on purpose, as it will trigger
         // a second event on the input)
-        await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+        await click($(list.el).find("table .o_optional_columns_dropdown"));
         assert.isVisible($(list.el).find(".o_optional_columns_dropdown"));
         assert.containsNone($(list.el).find(".o_optional_columns_dropdown"), "input:checked");
-        await click($(list.el).find("div.o_optional_columns div.dropdown-item:first label"));
+        await click(
+            $(list.el).find("div.o_optional_columns_dropdown span.dropdown-item:first label")
+        );
 
         assert.containsN(list, "th", 2);
         assert.isVisible($(list.el).find(".o_optional_columns_dropdown"));
@@ -13596,7 +13587,7 @@ QUnit.module("Views", (hooks) => {
 
             const listWidth = form.el.querySelector(".o_list_view").offsetWidth;
 
-            await click(form.el.querySelector(".o_optional_columns_dropdown_toggle"));
+            await click(form.el.querySelector(".o_optional_columns_dropdown"));
             assert.strictEqual(
                 form.el.querySelector(".o_optional_columns").offsetLeft,
                 listWidth,
@@ -13654,18 +13645,20 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(webClient, "th", 3, "should display 3 th (selector + 2 fields)");
 
         // enable optional field
-        await click($(webClient.el).find("table .o_optional_columns_dropdown_toggle"));
+        await click($(webClient.el).find("table .o_optional_columns_dropdown"));
         assert.notOk(
             $(webClient.el)
-                .find('div.o_optional_columns div.dropdown-item [name="m2o"]')
+                .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
                 .is(":checked")
         );
         assert.ok(
             $(webClient.el)
-                .find('div.o_optional_columns div.dropdown-item [name="o2m"]')
+                .find('div.o_optional_columns_dropdown span.dropdown-item [name="o2m"]')
                 .is(":checked")
         );
-        await click($(webClient.el).find("div.o_optional_columns div.dropdown-item:first"));
+        await click(
+            $(webClient.el).find("div.o_optional_columns_dropdown span.dropdown-item:first")
+        );
         assert.containsN(webClient, "th", 4, "should display 4 th (selector + 3 fields)");
         assert.ok(
             $(webClient.el).find("th:contains(M2O field)").is(":visible"),
@@ -13705,18 +13698,20 @@ QUnit.module("Views", (hooks) => {
         ); //m2o field
 
         // disable optional field
-        await click($(webClient.el).find("table .o_optional_columns_dropdown_toggle"));
+        await click($(webClient.el).find("table .o_optional_columns_dropdown"));
         assert.ok(
             $(webClient.el)
-                .find('div.o_optional_columns div.dropdown-item [name="m2o"]')
+                .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
                 .is(":checked")
         );
         assert.ok(
             $(webClient.el)
-                .find('div.o_optional_columns div.dropdown-item [name="o2m"]')
+                .find('div.o_optional_columns_dropdown span.dropdown-item [name="o2m"]')
                 .is(":checked")
         );
-        await click($(webClient.el).find("div.o_optional_columns div.dropdown-item:last input"));
+        await click(
+            $(webClient.el).find("div.o_optional_columns_dropdown span.dropdown-item:last input")
+        );
         assert.ok(
             $(webClient.el).find("th:contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
@@ -13803,17 +13798,19 @@ QUnit.module("Views", (hooks) => {
             );
 
             // optional fields
-            await click($(list.el).find("table .o_optional_columns_dropdown_toggle"));
+            await click($(list.el).find("table .o_optional_columns_dropdown"));
             assert.containsN(
                 list,
-                "div.o_optional_columns div.dropdown-item",
+                "div.o_optional_columns_dropdown span.dropdown-item",
                 2,
                 "dropdown have 2 optional fields"
             );
 
             forceLocalStorage = false;
             // enable optional field
-            await click($(list.el).find("div.o_optional_columns div.dropdown-item:eq(1) input"));
+            await click(
+                $(list.el).find("div.o_optional_columns_dropdown span.dropdown-item:eq(1) input")
+            );
 
             assert.verifySteps([
                 "setItem " + localStorageKey + ' to ["m2o","reference"]',

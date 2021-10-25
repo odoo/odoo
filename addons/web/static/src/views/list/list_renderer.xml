@@ -10,7 +10,7 @@
                             <th t-if="props.hasSelectors" class="o_list_record_selector">
                                 <CheckBox value="selection.length === props.list.data.length" t-on-change="toggleSelection"/>
                             </th>
-                            <t t-foreach="columns" t-as="column" t-key="column.name">
+                            <t t-foreach="state.columns" t-as="column" t-key="column.name">
                                 <th t-if="column.sortable" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
                                   <t t-esc="column.string"/>
                                 </th>
@@ -38,6 +38,21 @@
                             </t>
                         </tr>
                     </tfoot>
+                    <Dropdown class="o_optional_columns_dropdown"
+                              position="'bottom-end'"
+                              t-on-dropdown-item-selected="toggleOptionalField" >
+                        <t t-set-slot="toggler">
+                            <i class="fa fa-ellipsis-v"/>
+                        </t>
+                        <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                            <CheckBoxDropdownItem
+                            parentClosingMode="'none'"
+                            payload="field"
+                            value="field.value">
+                                <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                            </CheckBoxDropdownItem>
+                        </t>
+                    </Dropdown>
                 </table>
             </div>
         </div>
@@ -81,7 +96,7 @@
             <td t-if="props.hasSelectors" class="o_list_record_selector">
                 <CheckBox value="selection.includes(record)" t-on-change="toggleRecordSelection(record)"/>
             </td>
-            <t t-foreach="columns" t-as="column" t-key="column_index">
+            <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
                     <Field name="column.name" record="record" readonly="true" type="column.widget" />
                 </td>
