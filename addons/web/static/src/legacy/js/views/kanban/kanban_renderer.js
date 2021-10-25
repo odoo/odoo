@@ -83,7 +83,7 @@ function transformQwebTemplate(node, fields) {
 }
 
 var KanbanRenderer = BasicRenderer.extend({
-    className: 'o_kanban_view',
+    className: 'o_legacy_kanban_view',
     config: { // the KanbanRecord and KanbanColumn classes to use (may be overridden)
         KanbanColumn: KanbanColumn,
         KanbanRecord: KanbanRecord,
@@ -99,7 +99,7 @@ var KanbanRenderer = BasicRenderer.extend({
         'keydown .o_kanban_record' : '_onRecordKeyDown'
     }),
     sampleDataTargets: [
-        '.o_kanban_counter',
+        '.o_legacy_kanban_counter',
         '.o_kanban_record',
         '.o_kanban_toggle_fold',
         '.o_column_folded',

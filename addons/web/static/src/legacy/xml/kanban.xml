@@ -106,7 +106,7 @@
 </t>
 
 <t t-name="KanbanView.ColumnProgressBar">
-    <div class="o_kanban_counter">
+    <div class="o_legacy_kanban_counter">
         <div class="o_kanban_counter_progress progress">
             <t t-foreach="widget.colors" t-as="color">
                 <t t-set="count" t-value="widget.subgroupCounts and widget.subgroupCounts[color] or 0"/>
@@ -122,7 +122,7 @@
 </t>
 
 <t t-name="KanbanView.SetCoverModal">
-    <div t-if="attachmentIds.length" class="o_kanban_cover_container bg-100">
+    <div t-if="attachmentIds.length" class="o_legacy_kanban_cover_container bg-100">
         <t t-foreach="attachmentIds" t-as="attachment">
             <div t-attf-class="o_kanban_cover_image position-relative d-inline-block m-2 bg-white #{coverId === attachment.id ? ' o_selected' : ''}">
                 <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" class="m-auto mw-100" alt="Attachment"/>
@@ -141,7 +141,7 @@
 </t>
 
 <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
-<div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
+<div t-name="KanbanView.ExamplesDialog" class="o_legacy_kanban_examples_dialog">
     <div class="o_kanban_examples_dialog_nav">
         <ul class="nav nav-pills flex-column">
             <t t-foreach="examples" t-as="example">
