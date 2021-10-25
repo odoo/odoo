@@ -1844,3 +1844,53 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertNotEqual(qty_del_return_validated, 1.0, "The return was validated, therefore the delivery from client to"
                                                            " company was successful, and the client is left without his 1 product.")
         self.assertEqual(qty_del_return_validated, 0.0, "The return has processed, client doesn't have any quantity anymore")
+
+    def test_14_change_bom_type(self):
+        """ This test ensures that updating a Bom type during a flow does not lead to any error """
+        p1 = self._cls_create_product('Master', self.uom_unit)
+        p2 = self._cls_create_product('Component', self.uom_unit)
+        p3 = self.component_a
+        p1.categ_id.write({
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 1)
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': p1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': p2.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        p2_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': p2.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': p3.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Super Partner'})
+        with so_form.order_line.new() as so_line:
+            so_line.product_id = p1
+        so = so_form.save()
+        so.action_confirm()
+
+        wiz_act = so.picking_ids.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
+
+        p2_bom.type = "normal"
+
+        so._create_invoices()
+        invoice = so.invoice_ids
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
