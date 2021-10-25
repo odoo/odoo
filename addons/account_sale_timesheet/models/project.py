@@ -6,7 +6,7 @@ from odoo import fields, models, _
 class Project(models.Model):
     _inherit = 'project.project'
 
-    invoice_count = fields.Integer(related='analytic_account_id.invoice_count')
+    invoice_count = fields.Integer(related='analytic_account_id.invoice_count', groups='account.group_account_readonly')
 
     # ----------------------------
     #  Project Updates
