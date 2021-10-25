@@ -309,6 +309,10 @@
             View <t t-esc="model_description or 'document'"/>
         </a>
     </p>
+    <div t-if="activity_list_backend" style="margin-top: 8px">
+        To avoid spam as you are receiving a lot of assignation notifications, we won't send you notifications within the next hour.
+        By you can check all <a t-att-href="activity_list_backend" t-att-data-oe-model="'crm.lead'">here</a>.
+    </div>
     <div t-if="activity.note" style="margin-top: 8px;" t-field="activity.note"/>
 </div>
         </template>

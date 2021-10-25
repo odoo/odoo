@@ -7,6 +7,7 @@ from . import models
 
 # mixin
 from . import mail_activity_mixin
+from . import mail_activity_log
 from . import mail_alias_mixin
 from . import mail_render_mixin
 from . import mail_composer_mixin
