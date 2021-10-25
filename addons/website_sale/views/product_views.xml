@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="website_ids" groups="website.group_multi_website" optional="show" widget="many2many_tags"/>
                 <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
@@ -31,7 +31,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="default_code" position="after">
-                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+                <field name="website_ids" groups="website.group_multi_website" optional="hide" widget="many2many_tags"/>
             </field>
         </field>
     </record>
@@ -49,7 +49,7 @@
             <field name="priority" position="before">
                 <field name="website_sequence" widget="handle"/>
             </field>
-            <field name="website_id" position="after">
+            <field name="website_ids" position="after">
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
                 <field name="is_published" string="Is Published" optional="hide"/>
             </field>
@@ -144,7 +144,7 @@
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group string="eCommerce Shop" name="shop" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_url" invisible="1"/>
-                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                    <field name="website_ids" options="{'no_create': True}" groups="website.group_multi_website" widget="many2many_tags"/>
                     <field name="website_sequence" groups="base.group_no_one"/>
                     <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                     <field name="website_ribbon_id" groups="base.group_no_one"/>

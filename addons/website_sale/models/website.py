@@ -209,7 +209,7 @@ class Website(models.Model):
         return pl
 
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
+        return [("sale_ok", "=", True)] + self.get_current_website().websites_domain()
 
     @api.model
     def sale_get_payment_term(self, partner):

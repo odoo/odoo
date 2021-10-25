@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
+
+logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
     _inherit = [
         "product.template",
         "website.seo.metadata",
-        'website.published.multi.mixin',
+        "website.published.mixin",
         'website.searchable.mixin',
         'rating.mixin',
     ]
@@ -48,6 +52,54 @@ class ProductTemplate(models.Model):
                                    help="Define a custom unit to display in the price per unit of measure field.")
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
+    website_ids = fields.Many2many(
+        "website", string="Websites", ondelete="restrict",
+        help="Restrict publishing to these websites.")
+    website_published = fields.Boolean(
+        compute='_compute_website_published', inverse='_inverse_website_published',
+        search='_search_website_published', related=False, readonly=False)
+
+    def can_access_from_current_website(self, website_id=False):
+        can_access = True
+        current_website_id = self.env['website'].get_current_website().id
+        for record in self:
+            if not record.website_ids:
+                continue
+            wids = (website_id or record.website_ids).ids
+            if all(wid not in (False, current_website_id) for wid in wids):
+                can_access = False
+                continue
+        return can_access
+
+    @api.depends('is_published', 'website_ids')
+    @api.depends_context('website_id')
+    def _compute_website_published(self):
+        current_website_id = self._context.get('website_id')
+        for record in self:
+            if current_website_id:
+                record.website_published = record.is_published and (not record.website_ids or current_website_id in record.website_ids.ids)
+            else:
+                record.website_published = record.is_published
+
+    def _inverse_website_published(self):
+        for record in self:
+            record.is_published = record.website_published
+
+    def _search_website_published(self, operator, value):
+        if not isinstance(value, bool) or operator not in ('=', '!='):
+            logger.warning('unsupported search on website_published: %s, %s', operator, value)
+            return [()]
+
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+
+        current_website_id = self._context.get('website_id')
+        is_published = [('is_published', '=', value)]
+        if current_website_id:
+            on_current_website = self.env['website'].websites_domain(current_website_id)
+            return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
+        else:  # should be in the backend, return things that are published anywhere
+            return is_published
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
@@ -241,7 +293,7 @@ class ProductTemplate(models.Model):
         """Override: if a website is set on the product or given, fallback to
         the company of the website. Otherwise use the one from parent method."""
         res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
-        website = self.website_id or kwargs.get('website')
+        website = self.website_ids[0] if self.website_ids else kwargs.get('website')
         return website and website.company_id or res
 
     def _default_website_sequence(self):

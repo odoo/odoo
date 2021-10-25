@@ -54,6 +54,10 @@ class Website(models.Model):
     def website_domain(self, website_id=False):
         return [('website_id', 'in', (False, website_id or self.id))]
 
+    @api.model
+    def websites_domain(self, website_id=False):
+        return ['|', ('website_ids', '=', False), ('website_ids', 'in', [website_id] if website_id else self.ids)]
+
     def _active_languages(self):
         return self.env['res.lang'].search([]).ids
 

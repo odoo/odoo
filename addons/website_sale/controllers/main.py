@@ -293,7 +293,6 @@ class WebsiteSale(http.Controller):
         product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
             limit=None, order=self._get_search_order(post), options=options)
         search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
-
         filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
@@ -1121,7 +1120,7 @@ class WebsiteSale(http.Controller):
         product = request.env['product.product'].create({
             'name': name or _("New Product"),
             'public_categ_ids': category,
-            'website_id': request.website.id,
+            'website_ids': [(4, request.website.id)],
         })
         return "%s?enable_editor=1" % product.product_tmpl_id.website_url
 
