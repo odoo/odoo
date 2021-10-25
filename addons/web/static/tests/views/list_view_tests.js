@@ -2635,43 +2635,35 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
     });
 
-    QUnit.skip("aggregates are computed correctly", async function (assert) {
+    QUnit.test("aggregates are computed correctly", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom"><field name="foo"/><field name="int_field" sum="Sum"/></tree>',
+            arch: '<tree><field name="foo"/><field name="int_field" sum="Sum"/></tree>',
+            searchViewArch: `
+                <search>
+                    <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
+                </search>`,
         });
-        var $tbody_selectors = $(list.el).find("tbody .o_list_record_selector input");
-        var $thead_selector = $(list.el).find("thead .o_list_record_selector input");
+        const tbodySelectors = list.el.querySelectorAll("tbody .o_list_record_selector input");
+        const theadSelector = list.el.querySelector("thead .o_list_record_selector input");
 
-        assert.strictEqual($(list.el).find("tfoot td:nth(2)").text(), "32", "total should be 32");
+        assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "32");
 
-        click($tbody_selectors.first());
-        click($tbody_selectors.last());
-        assert.strictEqual(
-            $(list.el).find("tfoot td:nth(2)").text(),
-            "6",
-            "total should be 6 as first and last records are selected"
-        );
+        await click(tbodySelectors[0]);
+        await click(tbodySelectors[3]);
+        assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "6");
 
-        click($thead_selector);
-        assert.strictEqual(
-            $(list.el).find("tfoot td:nth(2)").text(),
-            "32",
-            "total should be 32 as all records are selected"
-        );
+        await click(theadSelector);
+        assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "32");
 
         // Let's update the view to dislay NO records
-        await list.update({ domain: ["&", ["bar", "=", false], ["int_field", ">", 0]] });
-        assert.strictEqual(
-            $(list.el).find("tfoot td:nth(2)").text(),
-            "0",
-            "total should have been recomputed to 0"
-        );
+        await toggleFilterMenu(list);
+        await toggleMenuItem(list, "My Filter");
+        assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "0");
     });
 
     QUnit.skip("aggregates are computed correctly in grouped lists", async function (assert) {

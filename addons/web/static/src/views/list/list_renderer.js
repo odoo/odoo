@@ -3,7 +3,7 @@
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Field } from "@web/fields/field";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 const FIELD_CLASSES = {
     char: "o_list_char",
@@ -22,6 +22,11 @@ export class ListRenderer extends Component {
         this.columns = this.props.info.columns;
         this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
+        this.selection = [];
+    }
+
+    willUpdateProps() {
+        this.selection = [];
     }
 
     getGroupLevel(group) {
@@ -118,6 +123,24 @@ export class ListRenderer extends Component {
 
     toggleGroup(group) {
         group.toggle();
+    }
+
+    toggleSelection() {
+        if (this.selection.length === this.props.list.data.length) {
+            this.selection = [];
+        } else {
+            this.selection = [...this.props.list.data];
+        }
+        this.render();
+    }
+    toggleRecordSelection(record) {
+        const index = this.selection.indexOf(record);
+        if (index > -1) {
+            this.selection.splice(index, 1);
+        } else {
+            this.selection.push(record);
+        }
+        this.render();
     }
 }
 
