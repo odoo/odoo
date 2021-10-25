@@ -12,7 +12,7 @@ import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 // -----------------------------------------------------------------------------
 
@@ -56,17 +56,42 @@ class FormView extends Component {
         this.canCreate = create;
         this.canEdit = edit;
 
+        this.state = useState({
+            inEditMode: !this.props.resId,
+        });
+
         useViewButtons(this.model);
         useSetupView({
             /** TODO **/
         });
     }
 
-    createRecord() {
-        this.model.load({ resId: null });
+    /**
+     * FIXME: in owl2, will use hook "onRender"
+     */
+    __render() {
+        this.env.config.displayName = this.model.root.data.display_name || this.env._t("New");
+        return super.__render(...arguments);
     }
-    async saveRecord() {
-        this.model.root.save();
+
+    edit() {
+        this.state.inEditMode = true;
+    }
+    async create() {
+        await this.model.load({ resId: null });
+        this.state.inEditMode = true;
+    }
+    async save() {
+        await this.model.root.save();
+        this.state.inEditMode = false;
+    }
+    discard() {
+        this.model.root.discard();
+        if (this.model.root.resId) {
+            this.state.inEditMode = false;
+        } else {
+            this.trigger("history-back");
+        }
     }
 }
 

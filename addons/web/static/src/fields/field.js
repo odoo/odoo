@@ -37,7 +37,7 @@ export class Field extends Component {
         this.fields = record.fields;
         this.name = name;
         // this.type = this.fields[name].type; // FIXME (why give it in props?)
-        this.type = type;
+        this.type = type || this.fields[name].type;
         this.FieldComponent = Field.getTangibleField(record, type, name);
 
         useEffect(() => {

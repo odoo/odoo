@@ -197,7 +197,7 @@ class DataRecord extends DataPoint {
         }
         this._values = data;
         this._changes = {};
-        this.data = data;
+        this.data = { ...data };
         // this.data = Object.freeze(data);
 
         // Relational data
@@ -230,7 +230,9 @@ class DataRecord extends DataPoint {
     async update(fieldName, value) {
         this.data[fieldName] = value;
         this._changes[fieldName] = value;
-        Object.assign(this._changes, await this._performOnchange(fieldName));
+        const onChangeValues = await this._performOnchange(fieldName);
+        Object.assign(this.data, onChangeValues);
+        Object.assign(this._changes, onChangeValues);
         this.model.notify();
     }
 
@@ -242,6 +244,12 @@ class DataRecord extends DataPoint {
             this.resId = await this.model.orm.create(this.resModel, changes);
         }
         await this.load();
+        this.model.notify();
+    }
+
+    discard() {
+        this.data = { ...this._values };
+        this._changes = {};
         this.model.notify();
     }
 
