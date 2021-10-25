@@ -197,6 +197,10 @@ const LinkDialog = Dialog.extend({
      */
     save: function () {
         this.linkWidget.save();
+        if (!this.linkWidget.final_data) {
+            // Invalid form content: do not proceed with save.
+            return;
+        }
         this.final_data = this.linkWidget.final_data;
         return this._super(...arguments);
     },
