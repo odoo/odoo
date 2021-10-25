@@ -1,4 +1,4 @@
-.o_legacy_list_view {
+.o_list_view {
     position: relative;
     height: 100%;
 
@@ -165,16 +165,12 @@
                 margin-top: -2px;
                 margin-bottom: -2px;
 
-                input.o_pager_value {
-                    display: inline-block;
-                }
-
                 .o_pager_previous, .o_pager_next {
                     max-height: 30px;
                     padding: 0 5px;
-                    background-color: lighten($o-brand-lightsecondary, 10%);
+                    background-color: $o-list-group-header-color;
                     &:hover {
-                        background-color: $o-brand-lightsecondary;
+                        background-color: darken($o-list-group-header-color, 10%);
                     }
                 }
             }
@@ -341,16 +337,20 @@
         }
     }
 
-    .o_optional_columns_dropdown_toggle,.o_optional_columns {
+    .o_optional_columns_dropdown,.o_optional_columns {
         @include o-position-absolute($top: 0, $right: 0);
     }
 
-    .o_optional_columns_dropdown_toggle {
-        cursor: pointer;
-        padding: 0 5px;
-        text-align: center;
-        line-height: 30px;
-        z-index: 1; // must be over the resize handle
+    .o_optional_columns_dropdown {
+        .dropdown-toggle {
+            padding: 0 5px;
+            text-align: center;
+            line-height: 30px;
+            z-index: 1; // must be over the resize handle
+            background: none;
+            color: inherit;
+            border: none;
+        }
     }
 
     .o_optional_columns {
@@ -366,13 +366,13 @@
     }
 }
 
-.o_view_controller > .o_content > .o_legacy_list_view > .table-responsive {
+.o_view_controller > .o_content > .o_list_view > .table-responsive {
     // in main list views, let .o_content scroll
     overflow: visible;
 }
 
 // Buttons in ControlPanel
-.o_legacy_list_buttons {
+.o_list_buttons {
     .o_list_button_save, .o_list_button_discard {
         display: none;
     }
