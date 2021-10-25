@@ -12,9 +12,13 @@ class ResConfigSettings(models.TransientModel):
     the alias domain. """
     _inherit = 'res.config.settings'
 
+    external_email_server_default = fields.Boolean(
+        "Use Custom Email Servers",
+        config_parameter='base_setup.default_external_email_server')
     fail_counter = fields.Integer('Fail Mail', compute="_compute_fail_counter")
-    alias_domain = fields.Char(
-        'Alias Domain', config_parameter='mail.catchall.domain',
+    alias_domain_id = fields.Many2one(
+        'mail.alias.domain', 'Alias Domain',
+        readonly=False, related='company_id.alias_domain_id',
         help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.")
     module_google_gmail = fields.Boolean('Support Gmail Authentication')
     module_microsoft_outlook = fields.Boolean('Support Outlook Authentication')
