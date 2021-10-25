@@ -1418,21 +1418,16 @@ class TestMany2one(TransactionCase):
         ''']):
             self.Partner.search([('company_id', 'like', self.company.name)])
 
-        with self.assertQueries([
-            '''
-                SELECT "res_company".id
-                FROM "res_company"
-                WHERE (("res_company"."name"::text not like %s)
-                    OR "res_company"."name" IS NULL)
-                ORDER BY "res_company"."sequence" ,"res_company"."name"
-            ''',
-            '''
+        with self.assertQueries(['''
                 SELECT "res_partner".id
                 FROM "res_partner"
-                WHERE (("res_partner"."company_id" IN (%s)) OR "res_partner"."company_id" IS NULL)
+                WHERE (("res_partner"."company_id" IN (
+                    SELECT "res_company".id
+                    FROM "res_company"
+                    WHERE (("res_company"."name"::text not like %s) OR "res_company"."name" IS NULL))
+                ) OR "res_partner"."company_id" IS NULL)
                 ORDER BY "res_partner"."display_name"
-            '''
-        ]):
+        ''']):
             self.Partner.search([('company_id', 'not like', "blablabla")])
 
 
