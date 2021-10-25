@@ -359,6 +359,68 @@ class DataList extends DataPoint {
     }
 
     /**
+     * Returns the aggregate values of each (aggregatable) column for the given
+     * records.
+     *
+     * @param {DataRecord[]} records list of records to aggregate (defaults to
+     *   all records if the list is empty)
+     * @param {Object}
+     */
+    getAggregates(records) {
+        if (this.isGrouped) {
+            console.warn("Aggregates on grouped list not supported yet");
+            return {};
+        }
+        records = records.length ? records : this.data;
+        const aggregates = {};
+        for (const fieldName of this.activeFields) {
+            const field = this.fields[fieldName];
+            const type = field.type;
+            if (type !== "integer" && type !== "float" && type !== "monetary") {
+                continue;
+            }
+            // FIXME retrieve this from arch
+            // const func =
+            //     (attrs.sum && "sum") ||
+            //     (attrs.avg && "avg") ||
+            //     (attrs.max && "max") ||
+            //     (attrs.min && "min");
+            const func = field.group_operator;
+            if (func) {
+                let count = 0;
+                let aggregateValue = 0;
+                if (func === "max") {
+                    aggregateValue = -Infinity;
+                } else if (func === "min") {
+                    aggregateValue = Infinity;
+                }
+                for (const record of records) {
+                    count += 1;
+                    // FIXME: could be groups instead of records
+                    // const value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
+                    const value = record.data[fieldName];
+                    if (func === "avg" || func === "sum") {
+                        aggregateValue += value;
+                    } else if (func === "max") {
+                        aggregateValue = Math.max(aggregateValue, value);
+                    } else if (func === "min") {
+                        aggregateValue = Math.min(aggregateValue, value);
+                    }
+                }
+                if (func === "avg") {
+                    aggregateValue = count > 0 ? aggregateValue / count : aggregateValue;
+                }
+                const formatter = formatterRegistry.get(type, false);
+                aggregates[fieldName] = {
+                    // help: attrs[func], // FIXME: from arch
+                    value: formatter ? formatter(aggregateValue) : aggregateValue,
+                };
+            }
+        }
+        return aggregates;
+    }
+
+    /**
      * @param {{ domains?: any[], groupBy?: string[], defer?: boolean, orderByColumn?: { name: string, asc: boolean } }} [params={}]
      * @returns {Promise<void> | () => Promise<void>}
      */

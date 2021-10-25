@@ -8,7 +8,7 @@
                     <thead>
                         <tr>
                             <th t-if="props.hasSelectors" class="o_list_record_selector">
-                                <CheckBox/>
+                                <CheckBox value="selection.length === props.list.data.length" t-on-change="toggleSelection"/>
                             </th>
                             <t t-foreach="columns" t-as="column" t-key="column.name">
                                 <th t-if="column.sortable" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
@@ -25,6 +25,19 @@
                             <t t-set="list" t-value="props.list"/>
                         </t>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td t-if="props.hasSelectors"/>
+                            <t t-set="aggregates" t-value="props.list.getAggregates(selection)"/>
+                            <t t-foreach="columns" t-as="column" t-key="column.name">
+                                <t t-set="aggregate" t-value="aggregates[column.name]"/>
+                                <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
+                                    <t t-esc="aggregate.value"/>
+                                </td>
+                                <td t-else=""/>
+                            </t>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -66,7 +79,7 @@
     <t t-name="web.ListRenderer.RecordRow" owl="1">
         <tr class="o_data_row">
             <td t-if="props.hasSelectors" class="o_list_record_selector">
-                <CheckBox />
+                <CheckBox value="selection.includes(record)" t-on-change="toggleRecordSelection(record)"/>
             </td>
             <t t-foreach="columns" t-as="column" t-key="column_index">
                 <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
