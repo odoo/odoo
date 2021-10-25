@@ -319,10 +319,10 @@ export class View extends Component {
         }
 
         if (ViewClass.display) {
-            if (!this.withSearchProps.display) {
-                this.withSearchProps.display = {};
-            }
-            const { display } = this.withSearchProps;
+            // FIXME: there's something inelegant here: display might come from
+            // the View's defaultProps, in which case, modifying it in place
+            // would have unwanted effects.
+            const display = { ...this.withSearchProps.display };
             for (const key in ViewClass.display) {
                 if (typeof display[key] === "object") {
                     Object.assign(display[key], ViewClass.display[key]);
@@ -330,6 +330,7 @@ export class View extends Component {
                     display[key] = ViewClass.display[key];
                 }
             }
+            this.withSearchProps.display = display;
         }
 
         for (const key in this.withSearchProps) {

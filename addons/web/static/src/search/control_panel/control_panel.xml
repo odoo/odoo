@@ -33,7 +33,7 @@
                             <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
                     </div>
 
-                    <t t-if="env.config.viewSwitcherEntries.length">
+                    <t t-if="env.config.viewSwitcherEntries.length > 1">
                         <nav class="btn-group o_cp_switch_buttons">
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-light o_switch_view "
