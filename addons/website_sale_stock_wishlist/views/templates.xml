@@ -6,9 +6,15 @@
         </xpath>
         <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
             <t t-set="notify" t-value="wish.stock_notification"/>
-            <button groups="base.group_no_one" t-att-data-notify="notify" t-if="notify or wish.product_id.product_tmpl_id._is_sold_out()" type="button" class="btn btn-link o_notify_stock no-decoration">
+            <button t-att-data-notify="notify" t-if="notify or wish.product_id.product_tmpl_id._is_sold_out()" type="button" class="btn btn-link o_notify_stock no-decoration">
                 <small><i t-attf-class="fa #{'fa-check-square-o' if notify else 'fa-square-o'}"></i> Be notified when back in stock</small>
             </button>
+            <input
+                type="text"
+                id="public_email_address"
+                t-att-value="wish.partner_id.email"
+                groups="base.group_public"
+                placeholder="john.doe@example.com"/>
         </xpath>
     </template>
 </odoo>

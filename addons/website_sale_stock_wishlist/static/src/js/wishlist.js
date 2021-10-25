@@ -37,6 +37,7 @@ publicWidget.registry.ProductWishlist.include({
             route: `/shop/wishlist/notify/${wishID}`,
             params: {
                 notify: !currentNotify,
+                public_email_address: $("input#public_email_address").val(),
             }
         }).then((notify) => {
             targetEl.dataset.notify = notify ? 'True' : 'False';
