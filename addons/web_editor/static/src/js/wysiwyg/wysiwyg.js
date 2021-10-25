@@ -116,8 +116,12 @@ const Wysiwyg = Widget.extend({
                 }
             },
             isHintBlacklisted: node => {
-                return node.hasAttribute &&
-                    (node.hasAttribute('data-target') || node.hasAttribute('data-oe-model'));
+                return (node.classList && node.classList.contains('nav-item')) || (
+                    node.hasAttribute && (
+                        node.hasAttribute('data-target') ||
+                        node.hasAttribute('data-oe-model')
+                    )
+                );
             },
             filterMutationRecords: (records) => {
                 return records.filter((record) => {
