@@ -14,18 +14,19 @@
                                      help="Create expenses from incoming emails"
                                      title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
                                 <field name="hr_expense_use_mailgateway"/>
-                                <div class="content-group" invisible="not hr_expense_use_mailgateway or alias_domain in ['localhost', '', False]">
-                                    <div class="mt16">
+                                <div class="content-group" invisible="not hr_expense_use_mailgateway or not alias_domain_id">
+                                    <div class="mt16 d-flex align-items-start">
                                         <label for="hr_expense_alias_prefix" string="Alias" class="o_light_label"/>
                                         <field name="hr_expense_alias_prefix" class="oe_inline ps-2"/>
                                         <span>@</span>
-                                        <field name="alias_domain" class="oe_inline" readonly="1" force_save="1"/>
+                                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                               options="{'no_create': True, 'no_open': True}"/>
                                     </div>
                                 </div>
-                                <div class="content-group" invisible="not hr_expense_use_mailgateway or alias_domain not in ['localhost', '', False]">
+                                <div class="content-group" invisible="not hr_expense_use_mailgateway or alias_domain_id">
                                     <div class="mt16">
                                         <button type="action" name="base_setup.action_general_configuration"
-                                                icon="oi-arrow-right" string="Setup your domain alias" class="btn-link"/>
+                                                icon="oi-arrow-right" string="Setup your alias domain" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
