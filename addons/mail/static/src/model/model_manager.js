@@ -183,6 +183,21 @@ export class ModelManager {
         return allRecords;
     }
 
+    cleanup() {
+        this._createdRecordsComputes = new Set();
+        this._createdRecordsCreated = new Set();
+        this._createdRecordsOnChange = new Set();
+        this._listeners = new Set();
+        this._listenersObservingAllByModel = new Map();
+        this._listenersObservingLocalId = new Map();
+        this._listenersObservingFieldOfLocalId = new Map();
+        this._listenersToNotifyAfterUpdateCycle = new Map();
+        this._listenersToNotifyInUpdateCycle = new Map();
+        this._localIdsObservedByListener = new Map();
+        this.models = {};
+        this._updatedRecordsCheckRequired = new Set();
+    }
+
     /**
      * @deprecated use insert instead
      */

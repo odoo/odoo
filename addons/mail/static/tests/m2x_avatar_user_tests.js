@@ -57,7 +57,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget in list view', async function (assert) {
         assert.expect(5);
 
-        const { widget: list } = await start({
+        const { env, widget: list } = await start({
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -70,6 +70,7 @@ QUnit.module('mail', {}, function () {
                 return this._super(...arguments);
             },
         });
+        this.env = env;
 
         mock.intercept(list, 'open_record', () => {
             assert.step('open record');
@@ -100,7 +101,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget in kanban view', async function (assert) {
         assert.expect(6);
 
-        const { widget: kanban } = await start({
+        const { env, widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'foo',
@@ -116,6 +117,7 @@ QUnit.module('mail', {}, function () {
                     </templates>
                 </kanban>`,
         });
+        this.env = env;
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
@@ -130,7 +132,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
         assert.expect(7);
 
-        const { widget: form } = await start({
+        const { env, widget: form } = await start({
             hasView: true,
             View: FormView,
             model: 'foo',
@@ -144,6 +146,7 @@ QUnit.module('mail', {}, function () {
             },
             res_id: 1,
         });
+        this.env = env;
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
@@ -168,7 +171,7 @@ QUnit.module('mail', {}, function () {
 
         this.data.foo.records[1].user_ids = [11];
 
-        const { widget: list } = await start({
+        const { env, widget: list } = await start({
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -176,6 +179,7 @@ QUnit.module('mail', {}, function () {
             arch: '<tree editable="top"><field name="user_ids" widget="many2many_avatar_user"/></tree>',
             res_id: 1,
         });
+        this.env = env;
 
         assert.containsN(list, '.o_data_row:eq(0) .o_field_many2manytags.avatar.o_field_widget .o_m2m_avatar', 2,
             "should have 2 records");
@@ -193,7 +197,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget in list view', async function (assert) {
         assert.expect(8);
 
-        const { widget: list } = await start({
+        const { env, widget: list } = await start({
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -206,6 +210,7 @@ QUnit.module('mail', {}, function () {
                 return this._super(...arguments);
             },
         });
+        this.env = env;
 
         mock.intercept(list, 'open_record', () => {
             assert.step('open record');
@@ -242,7 +247,7 @@ QUnit.module('mail', {}, function () {
         this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
         this.data.foo.records[2].user_ids = [11, 23, 7, 15];
 
-        const { widget: kanban } = await start({
+        const { env, widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'foo',
@@ -271,6 +276,7 @@ QUnit.module('mail', {}, function () {
                 return this._super(...arguments);
             },
         });
+        this.env = env;
 
         mock.intercept(kanban, 'open_record', () => {
             assert.step('open record');
@@ -313,7 +319,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget in list view with no_open_chat set to true', async function (assert) {
         assert.expect(3);
 
-        const { widget: list } = await start({
+        const { env, widget: list } = await start({
             hasView: true,
             View: ListView,
             model: 'foo',
@@ -326,6 +332,7 @@ QUnit.module('mail', {}, function () {
                 return this._super(...arguments);
             },
         });
+        this.env = env;
 
         mock.intercept(list, 'open_record', () => {
             assert.step('open record');
@@ -351,7 +358,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2one_avatar_user widget in kanban view', async function (assert) {
         assert.expect(3);
 
-        const { widget: kanban } = await start({
+        const { env, widget: kanban } = await start({
             hasView: true,
             View: KanbanView,
             model: 'foo',
@@ -367,6 +374,7 @@ QUnit.module('mail', {}, function () {
                     </templates>
                 </kanban>`,
         });
+        this.env = env;
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
@@ -383,7 +391,7 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
         assert.expect(5);
 
-        const { widget: form } = await start({
+        const { env, widget: form } = await start({
             hasView: true,
             View: FormView,
             model: 'foo',
@@ -397,6 +405,7 @@ QUnit.module('mail', {}, function () {
             },
             res_id: 1,
         });
+        this.env = env;
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");

@@ -91,7 +91,7 @@ QUnit.module('ActivityMenu', {
 QUnit.test('activity menu widget: menu with no records', async function (assert) {
     assert.expect(1);
 
-    const { widget } = await start({
+    const { env, widget } = await start({
         data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -100,6 +100,7 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
             return this._super(route, args);
         },
     });
+    this.env = env;
     const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
     await testUtils.nextTick();
@@ -111,7 +112,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     assert.expect(10);
     var self = this;
 
-    const { widget } = await start({
+    const { env, widget } = await start({
         data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -120,6 +121,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
             return this._super(route, args);
         },
     });
+    this.env = env;
     var activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
     await testUtils.nextTick();
@@ -173,7 +175,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     assert.expect(12);
     var self = this;
 
-    const { widget } = await start({
+    const { env, widget } = await start({
         data: this.data,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -183,6 +185,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
         },
         session: this.session,
     });
+    this.env = env;
     var activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
     await testUtils.nextTick();
@@ -234,7 +237,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
     assert.expect(2);
 
-    const { createMessagingMenuComponent, widget } = await start({
+    const { createMessagingMenuComponent, env, widget } = await start({
         data: this.data,
         async mockRPC(route, args) {
             if (args.method === 'systray_get_activities') {
@@ -243,6 +246,7 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
             return this._super(route, args);
         },
     });
+    this.env = env;
     await createMessagingMenuComponent();
     const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));

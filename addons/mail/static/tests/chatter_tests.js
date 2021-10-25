@@ -105,7 +105,7 @@ QUnit.module('Chatter', {
 QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(5);
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -117,6 +117,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         },
         session: { uid: 2 },
     });
+    this.env = env;
 
     assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
     assert.strictEqual(list.$('.o_activity_summary').text(), '');
@@ -151,7 +152,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
         activity_type_id: 2,
     });
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -162,6 +163,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
             return this._super(...arguments);
         },
     });
+    this.env = env;
 
     const $firstRow = list.$('.o_data_row:first');
     assert.containsOnce($firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
@@ -194,7 +196,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
         activity_exception_icon: 'fa-warning',
     });
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -205,6 +207,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
             return this._super(...arguments);
         },
     });
+    this.env = env;
 
     assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
@@ -252,7 +255,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         }
     );
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -282,6 +285,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             switch_view: () => assert.step('switch_view'),
         },
     });
+    this.env = env;
 
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Call with Al');
 
@@ -353,7 +357,7 @@ QUnit.test('list activity exception widget with activity', async function (asser
         }
     );
 
-    const { widget: list } = await start({
+    const { env, widget: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -363,6 +367,7 @@ QUnit.test('list activity exception widget with activity', async function (asser
                 '<field name="activity_exception_decoration" widget="activity_exception"/> ' +
             '</tree>',
     });
+    this.env = env;
 
     assert.containsN(list, '.o_data_row', 2, "should have two records");
     assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-warning',
@@ -437,7 +442,8 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         archs: {
             'partner_type,false,form': '<form string="Types"><field name="display_name"/><field name="email"/></form>',
         },
-    }).then(async function ({ widget: form }) {
+    }).then(async ({ env, widget: form }) => {
+        this.env = env;
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps(['[12,14]', '[14]', '[14]']);
         await testUtils.nextTick();
@@ -472,7 +478,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     const user11 = this.data['res.users'].records.find(user => user.id === 11);
     user11.timmy = [12];
 
-    var { widget: form } = await start({
+    var { env, widget: form } = await start({
         hasView: true,
         View: FormView,
         model: 'res.users',
@@ -498,6 +504,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
             'partner_type,false,form': '<form string="Types"><field name="display_name"/><field name="email"/></form>',
         },
     });
+    this.env = env;
 
     assert.verifySteps(['[12]']);
     assert.containsOnce(form, '.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0',
@@ -538,7 +545,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         user11.partner_ids.push(i);
     }
 
-    const { widget: form } = await start({
+    const { env, widget: form } = await start({
         hasView: true,
         View: FormView,
         model: 'res.users',
@@ -546,6 +553,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
         res_id: 11,
     });
+    this.env = env;
 
     assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);
 

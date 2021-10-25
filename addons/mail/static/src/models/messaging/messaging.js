@@ -31,6 +31,14 @@ function factory(dependencies) {
         }
 
         /**
+         * This method deletes this record.
+         */
+         delete() {
+            super.delete();
+            this.modelManager.cleanup();
+        }
+
+        /**
          * Starts messaging and related records.
          */
         async start() {
