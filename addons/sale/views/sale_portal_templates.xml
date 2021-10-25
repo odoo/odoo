@@ -431,6 +431,7 @@
                         <ul class="list-group mb-4">
                             <t t-foreach="invoices" t-as="i">
                                 <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
+                                <t t-set="authorized_tx_ids" t-value="i.transaction_ids.filtered(lambda tx: tx.state == 'authorized')"/>
                                 <div class="d-flex flex-wrap align-items-center justify-content-between">
                                     <div>
                                         <a t-att-href="report_url">
@@ -440,6 +441,9 @@
                                     </div>
                                     <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
                                         <i class="fa fa-fw fa-check"/> <b>Paid</b>
+                                    </span>
+                                    <span t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> <b>Authorized</b>
                                     </span>
                                     <span t-else="" class="small badge text-bg-info orders_label_text_align">
                                         <i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b>
