@@ -10,7 +10,7 @@ from PIL import Image
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
-from odoo.tools import image_to_base64, human_size
+from odoo.tools import image_to_base64
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
@@ -29,6 +29,17 @@ class TestIrAttachment(TransactionCase):
 
         # Blob2
         self.blob2 = b'blob2'
+
+    def assertApproximately(self, value, expectedSize, delta=1):
+        # we don't used bin_size in context, because on write, the cached value is the data and not
+        # the size, so we need on each write to invalidate cache if we really want to get the size.
+        try:
+            value = base64.b64decode(value.decode())
+        except UnicodeDecodeError:
+            pass
+        size = len(value) / 1024 # kb
+
+        self.assertAlmostEqual(size, expectedSize, delta=delta)
 
     def test_01_store_in_db(self):
         # force storing in database
@@ -155,53 +166,42 @@ class TestIrAttachment(TransactionCase):
         img_encoded = image_to_base64(img, 'JPEG')
         img_bin = img_bin.getvalue()
 
-        # we don't used bin_size in context, because on write, the cached value is the data and not
-        # the size, so we need on each write to invalidate cache if we really want to get the size.
-        def bin_size(value):
-            try:
-                value = base64.b64decode(value.decode())
-            except UnicodeDecodeError:
-                pass
-
-            return human_size(len(value))
+        fullsize = 124.99
 
         ####################################
         ### test create/write on 'datas'
         ####################################
-
-        fullsize = '124.99 Kb'
-
         attach = Attachment.with_context(image_no_postprocess=True).create({
             'name': 'image',
             'datas': img_encoded,
         })
-        self.assertEqual(bin_size(attach.datas), fullsize)  # no resize, no compression
+        self.assertApproximately(attach.datas, fullsize)  # no resize, no compression
 
         attach = attach.with_context(image_no_postprocess=False)
         attach.datas = img_encoded
-        self.assertEqual(bin_size(attach.datas), '12.06 Kb')  # default resize + default compression
+        self.assertApproximately(attach.datas, 12.06)  # default resize + default compression
 
         # resize + default quality (80)
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
         attach.datas = img_encoded
-        self.assertEqual(bin_size(attach.datas), '3.71 Kb')
+        self.assertApproximately(attach.datas, 3.71)
 
         # resize + quality 50
         self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
         attach.datas = img_encoded
-        self.assertEqual(bin_size(attach.datas), '3.57 Kb')
+        self.assertApproximately(attach.datas, 3.57)
 
         # no resize + no quality implicit
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
         attach.datas = img_encoded
-        self.assertEqual(bin_size(attach.datas), fullsize)
+        self.assertApproximately(attach.datas, fullsize)
 
         # Check that we only compress quality when we resize. We avoid to compress again during a new write.
         # no resize + quality -> should have no effect
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '10000x10000')
         self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
         attach.datas = img_encoded
-        self.assertEqual(bin_size(attach.datas), fullsize)
+        self.assertApproximately(attach.datas, fullsize)
 
         ####################################
         ### test create/write on 'raw'
@@ -214,28 +214,28 @@ class TestIrAttachment(TransactionCase):
             'name': 'image',
             'raw': img_bin,
         })
-        self.assertEqual(bin_size(attach.raw), fullsize)  # no resize, no compression
+        self.assertApproximately(attach.raw, fullsize)  # no resize, no compression
 
         attach = attach.with_context(image_no_postprocess=False)
         attach.raw = img_bin
-        self.assertEqual(bin_size(attach.raw), '12.06 Kb')  # default resize + default compression
+        self.assertApproximately(attach.raw, 12.06)  # default resize + default compression
 
         # resize + default quality (80)
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
         attach.raw = img_bin
-        self.assertEqual(bin_size(attach.raw), '3.71 Kb')
+        self.assertApproximately(attach.raw, 3.71)
 
         # resize + no quality
         self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '0')
         attach.raw = img_bin
-        self.assertIn('4.0', bin_size(attach.raw))  # '4.09 Kb' or '4.08 Kb'
+        self.assertApproximately(attach.raw, 4.09)
 
         # resize + quality 50
         self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
         attach.raw = img_bin
-        self.assertEqual(bin_size(attach.raw), '3.57 Kb')
+        self.assertApproximately(attach.raw, 3.57)
 
         # no resize + no quality implicit
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
         attach.raw = img_bin
-        self.assertEqual(bin_size(attach.raw), fullsize)
+        self.assertApproximately(attach.raw, fullsize)
