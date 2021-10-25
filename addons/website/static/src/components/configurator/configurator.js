@@ -297,7 +297,7 @@ class PaletteSelectionScreen extends Component {
                 params: {
                     name: 'logo',
                     data: data.split(',')[1],
-                    is_image: true,
+                    filetype: 'image',
                 }
             });
             if (!attachment.error) {

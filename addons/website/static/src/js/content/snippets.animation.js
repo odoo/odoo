@@ -764,6 +764,18 @@ registry.backgroundVideo = publicWidget.Widget.extend({
         this.$iframe.css(style);
 
         void this.$iframe[0].offsetWidth; // Force style addition
+        this.$iframe.on("load", () => {
+            // Force muted, autoplay, hide controls and loop on BG videos
+            const $uploadedVideo = this.$iframe.contents().find("video");
+            if ($uploadedVideo) {
+                $uploadedVideo.prop('muted', true);
+                $uploadedVideo.prop('controls', false);
+                $uploadedVideo.prop('autoplay', true);
+                $uploadedVideo.prop('loop', true);
+                // Preload metadata if this is a regular video and we don't want autoplay
+                $uploadedVideo.prop('preload', 'metadata');
+            }
+        });
         this.$iframe.addClass('show');
     },
     /**

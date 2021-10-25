@@ -23,7 +23,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
-from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
+from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES, SUPPORTED_VIDEO_EXTENSIONS, SUPPORTED_VIDEO_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
@@ -187,35 +187,57 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/video_url/data', type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
-                       hide_dm_logo=False, hide_dm_share=False):
+                       hide_dm_logo=False, hide_dm_share=False, to_save=False):
         if not request.env.user.has_group('base.group_user'):
             raise werkzeug.exceptions.Forbidden()
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,
             hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
             hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
-            hide_dm_share=hide_dm_share
+            hide_dm_share=hide_dm_share, to_save=to_save
         )
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
-        if is_image:
-            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
+    def add_data(self, name, data, filetype, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        mimetype = None
+        if filetype == "image":
             try:
                 data = tools.image_process(b64decode(data), size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
-                    return {'error': format_error_msg}
+                    return {'error': _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))}
             except UserError:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
+                return {'error': _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))}
             except ValueError as e:
                 return {'error': e.args[0]}
+        elif filetype == "video":
+            try:
+                data = b64decode(data)
+                mimetype = guess_mimetype(data)
+                max_video_size = 128  # Max video size in MB
+                if len(data) > max_video_size * (1024 ** 2):
+                    return {'error': _("Video size too big, uploaded videos must be smaller than %d Mb.", max_video_size)}
+                if mimetype not in SUPPORTED_VIDEO_MIMETYPES:
+                    return {'error': _("Uploaded video's format is not supported. Try with: %s. The uploaded video's mimetype is: %s",
+                                       ', '.join(SUPPORTED_VIDEO_EXTENSIONS), mimetype)}
+            except ValueError as e:
+                return {'error': e.args[0]}
+        elif filetype == "video_url":
+            mimetype = "video/url"
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = self._attachment_create(
+            name=name, data=data, res_id=res_id, res_model=res_model,
+            thumbnail=kwargs.get("thumbnail", None), mimetype=mimetype,
+            url=kwargs.get("url", None))
         return attachment._get_media_info()
+
+    @http.route('/web_editor/attachment/add_thumbnail', type='json', auth='user', methods=['POST'], website=True)
+    def add_video_thumbnail(self, attachment_id, thumbnail_data):
+        video = request.env['ir.attachment'].browse(attachment_id)
+        video.thumbnail = thumbnail_data
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
@@ -283,10 +305,10 @@ class Web_Editor(http.Controller):
             }
         return {
             'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, thumbnail=False, res_model='ir.ui.view', mimetype=False):
         """Create and return a new attachment."""
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
@@ -316,6 +338,11 @@ class Web_Editor(http.Controller):
             })
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
+
+        if thumbnail:
+            attachment_data["thumbnail"] = thumbnail
+        if mimetype == "video/url":
+            attachment_data['mimetype'] = mimetype
 
         attachment = request.env['ir.attachment'].create(attachment_data)
         return attachment
@@ -524,7 +551,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
         """
-        Creates a modified copy of an attachment and returns its image_src to be
+        Creates a modified copy of an attachment and returns its src to be
         inserted into the DOM.
         """
         fields = {
@@ -554,9 +581,9 @@ class Web_Editor(http.Controller):
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
         if attachment.public:
-            return attachment.image_src
+            return attachment.src
         attachment.generate_access_token()
-        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+        return '%s?access_token=%s' % (attachment.src, attachment.access_token)
 
     def _get_shape_svg(self, module, *segments):
         shape_path = get_resource_path(module, 'static', *segments)

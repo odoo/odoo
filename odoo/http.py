@@ -1698,9 +1698,10 @@ def set_safe_image_headers(headers, content):
     """
     headers = werkzeug.datastructures.Headers(headers)
     safe_types = {'image/jpeg', 'image/png', 'image/gif', 'image/x-icon'}
-    content_type = guess_mimetype(content)
-    if content_type in safe_types:
-        headers['Content-Type'] = content_type
+    if isinstance(content, bytes):
+        content_type = guess_mimetype(content)
+        if content_type in safe_types:
+            headers['Content-Type'] = content_type
     headers['X-Content-Type-Options'] = 'nosniff'
     headers['Content-Length'] = len(content)
     return list(headers)

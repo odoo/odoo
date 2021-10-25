@@ -117,7 +117,28 @@
             <div class="mt-4 text-center mx-auto o_we_load_more">
                 <button class="btn btn-primary o_load_more d-none" type="button">Load more...</button>
                 <div class="mt-4 o_load_done_msg d-none">
-                    <span><i>All images have been loaded</i></span>
+                    <span><i>All files have been loaded</i></span>
+                </div>
+            </div>
+        </form>
+    </t>
+
+    <!-- File choosing part of the Video Media Dialog -->
+    <t t-name="wysiwyg.widgets.video.file">
+        <form>
+            <div class="row justify-content-between">
+                <div class="o_we_file_submenu_wrapper col-md-12 d-flex align-items-center justify-content-center">
+                    <t t-call="wysiwyg.widgets.video.files.submenu"/>
+                </div>
+            </div>
+            <div class="form-text o_we_error_text"/>
+            <div class="o_we_existing_attachments"/>
+            <div class="mt-4 text-center mx-auto o_we_load_more">
+                <button class="btn btn-primary o_load_more d-none" type="button">Load more ...</button>
+                <div class="mt-4 o_load_done_msg d-none">
+                    <span>
+                        <i>All videos have been loaded</i>
+                    </span>
                 </div>
             </div>
         </form>
@@ -149,6 +170,21 @@
                     <t t-out="uploadText"/>
                 </button>
             </div>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.video.files.submenu">
+        <div class="form-inline align-items-center py-3 col-md-3">
+            <t t-call="wysiwyg.widgets.media.search"/>
+        </div>
+        <input type="text" class="o_invisible_placeholder"/>
+        <input type="text" class="form-control ml-1 o_collapsed_video_text" id="o_video_text" placeholder="Accepts Youtube, Vimeo, Dailymotion and Youku videos."/>
+        <button type="button" class="btn btn-primary o_show_url_button mr-1 o_visible_url_button"><nobr>Embed</nobr></button>
+        <input type="file" class="d-none o_file_input mx-1" name="upload" t-att-accept="widget.options.accept"/>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary o_upload_media_button mx-1">
+                <t t-out="uploadText"/>
+            </button>
         </div>
     </t>
 
@@ -216,7 +252,7 @@
         <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none' or ''} align-items-center justify-content-center" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div class="o_we_media_dialog_img_wrapper">
-                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.image_src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
             <span t-if="isOptimized" class="badge badge-success">Optimized</span>
         </div>
@@ -327,32 +363,70 @@
         </t>
     </t>
 
-    <!-- Video choosing part of the Media Dialog -->
-    <t t-name="wysiwyg.widgets.video">
-        <form action="#" class="row">
-            <div class="col mt-4 o_video_dialog_form">
-                <div class="form-group mb-2" id="o_video_form_group">
-                    <label class="col-form-label" for="o_video_text">
-                        Video code <small>(URL or Embed)</small>
-                    </label>
-                    <div class="text-left">
-                        <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+    <t t-name="wysiwyg.widgets.video.existing.attachments">
+        <div class="o_we_existing_attachments o_we_videos">
+            <div t-if="!widget.hasContent()" class="o_nocontent_help o_centered_help_message">
+                <p class="o_empty_folder_video">No videos found.</p>
+                <p class="o_empty_folder_subtitle">Click "Embed" to select a video from YouTube, Vimeo, Dailymotion, Instagram or Youku (recommended method).<br/><br/>You can also upload a file to Odoo, but the performance might be slower.</p>
+            </div>
+            <div t-else="" class="row mx-auto">
+                <t t-foreach="attachments" t-as="attachment">
+                    <div class="col-2 o_existing_attachment_cell o_we_attachment_highlight my-2" t-att-data-id="attachment.id">
+                        <t t-call="wysiwyg.widgets.file.existing.remove"/>
+                        <t t-if="attachment.thumbnail">
+                            <div class="o_we_media_dialog_img_wrapper d-flex align-items-center flex-column">
+                                <div class="o_we_thumbnail_ribbon">
+                                    <div class="o_we_thumbnail_text text-center text-capitalize">
+                                        <t t-out="attachment.thumbnailText"/>
+                                    </div>
+                                </div>
+                                <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.thumbnail" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image d-flex align-items-center justify-content-center"/>
+                            <small class="o_file_name" t-esc="attachment.name"/>
+                            <img t-att-src="attachment.thumbnail"/>
+                        </t>
                     </div>
-                    <textarea class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.video">
+        <form action="#">
+            <div class="row justify-content-between h-100">
+                <div class="col-md-8 o_video_dialog_form">
+                    <div class="o_video_user_upload">
+                        <t t-call="wysiwyg.widgets.video.file">
+                            <t t-set="uploadText">Upload</t>
+                            <t t-set="searchPlaceholder">Search existing</t>
+                            <t t-set="urlWarningTitle">Format of the uploaded video is not supported. File has to be .mp4</t>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="video-preview" class="p-3">
+                        <div class="o_video_dialog_preview_text small mb-2 d-none">Preview</div>
+                        <div class="media_iframe_video">
+                            <div class="media_iframe_video_size"/>
+                            <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
+                        </div>
                 </div>
                 <div class="o_video_dialog_options d-none mt-4">
-                    <div class="o_youtube_option o_vimeo_option o_dailymotion_option">
-                      <label class="o_switch">
+                    <div class="o_youtube_option o_vimeo_option o_dailymotion_option o_user_upload_option">
+                      <label class="o_switch mb0">
                         <input id="o_video_autoplay" type="checkbox"/><span/>
                         <span style="margin-right: 8px;">Autoplay</span>
                         <span class="small text-muted" style="margin-left: auto;">Videos are muted when autoplay is enabled</span>
                       </label>
                     </div>
-                    <div class="o_youtube_option o_vimeo_option">
-                        <label class="o_switch"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                    <div class="o_youtube_option o_vimeo_option o_user_upload_option">
+                        <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
                     </div>
-                    <div class="o_youtube_option o_dailymotion_option">
-                        <label class="o_switch"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                    <div class="o_youtube_option o_dailymotion_option o_user_upload_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
                     </div>
                     <div class="o_youtube_option">
                         <label class="o_switch"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
@@ -367,23 +441,7 @@
                         <label class="o_switch"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
                     </div>
                 </div>
-                <t t-if="widget._vimeoPreviewIds || widget._youtubePreviewIds">
-                    <span class="font-weight-bold">Suggestions</span>
-                    <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
-                        <t t-foreach="widget._vimeoPreviewIds" t-as="vimeoId">
-                            <div class="o_sample_video w-25 mh-100" t-att-data-vimeo="vimeoId"/>
-                        </t>
                     </div>
-                </t>
-            </div>
-            <div class="col-md-6">
-                <div id="video-preview" class="p-3">
-                    <div class="o_video_dialog_preview_text small mb-2 d-none">Preview</div>
-                    <div class="media_iframe_video">
-                        <div class="media_iframe_video_size"/>
-                        <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
-                    </div>
-                </div>
             </div>
         </form>
     </t>

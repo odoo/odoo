@@ -4,7 +4,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
+from odoo.addons.web_editor.tools import get_video_embed_code, get_video_metadata
 
 
 class ProductImage(models.Model):
@@ -34,7 +34,7 @@ class ProductImage(models.Model):
     @api.onchange('video_url')
     def _onchange_video_url(self):
         if not self.image_1920:
-            self.image_1920 = get_video_thumbnail(self.video_url) or False
+            self.image_1920 = get_video_metadata(self.video_url)["thumbnail"] or False
 
     @api.depends('video_url')
     def _compute_embed_code(self):

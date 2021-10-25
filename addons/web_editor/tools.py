@@ -4,6 +4,7 @@
 import base64
 import re
 import requests
+import urllib
 
 from markupsafe import Markup
 from werkzeug.urls import url_encode
@@ -53,7 +54,7 @@ def get_video_source_data(video_url):
     return None
 
 
-def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_yt_logo=False, hide_dm_logo=False, hide_dm_share=False):
+def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_yt_logo=False, hide_dm_logo=False, hide_dm_share=False, to_save=False):
     """ Computes the platform name and embed_url from given URL
         (or error message in case of invalid URL).
     """
@@ -65,6 +66,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     platform, video_id, platform_match = source
 
     params = {}
+    thumbnail = name = None
 
     if platform == 'youtube':
         params['rel'] = 0
@@ -107,8 +109,11 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
+    if to_save:
+        metadata = get_video_metadata(embed_url, resize=True)
+        thumbnail, name = metadata["thumbnail"], metadata["name"]
 
-    return {'platform': platform, 'embed_url': embed_url}
+    return {'platform': platform, 'embed_url': embed_url, "thumbnail": thumbnail, "name": name}
 
 
 def get_video_embed_code(video_url):
@@ -121,28 +126,41 @@ def get_video_embed_code(video_url):
     return Markup('<iframe class="embed-responsive-item" src="%s" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="true" frameborder="0"></iframe>') % data['embed_url']
 
 
-def get_video_thumbnail(video_url):
-    """ Computes the valid thumbnail image from given URL
+def get_video_metadata(video_url, resize=False):
+    """ Computes the valid thumbnail image and name from given URL
         (or None in case of invalid URL).
+        Returns a dictionary containing the thumbnail and name of video.
     """
     source = get_video_source_data(video_url)
     if source is None:
         return None
-
-    response = None
+    metadata_url = thumbnail = name = res = None
     platform, video_id = source[:2]
-    if platform == 'youtube':
-        response = requests.get(f'https://img.youtube.com/vi/{video_id}/0.jpg', timeout=10)
-    elif platform == 'vimeo':
-        res = requests.get(f'http://vimeo.com/api/oembed.json?url={video_url}', timeout=10)
-        if res.ok:
-            data = res.json()
-            response = requests.get(data['thumbnail_url'], timeout=10)
-    elif platform == 'dailymotion':
-        response = requests.get(f'https://www.dailymotion.com/thumbnail/video/{video_id}', timeout=10)
-    elif platform == 'instagram':
-        response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
 
-    if response and response.ok:
-        return image_process(response.content)
-    return None
+    if platform == 'youtube':
+        params = {'format': 'json', 'url': f"https://www.youtube.com/watch?v={video_id}"}
+        metadata_url = 'https://www.youtube.com/oembed?' + urllib.parse.urlencode(params)
+    elif platform == 'vimeo':
+        metadata_url = f'https://vimeo.com/api/oembed.json?url={video_url}'
+    elif platform == 'dailymotion':
+        metadata_url = f'https://www.dailymotion.com/services/oembed?url=https://www.dailymotion.com/video/{video_id}'
+    elif platform == 'instagram':
+        metadata_url = f'https://api.instagram.com/oembed/?url=https://www.instagram.com/p/{video_id}'
+
+    if metadata_url:
+        res = requests.get(metadata_url, timeout=10)
+    if res.ok:
+        data = res.json()
+        res_thumb = requests.get(data.get('thumbnail_url'), timeout=10)
+        if platform != 'instagram':
+            name = data.get('title')
+        else:
+            author_name = data.get('author_name')
+            name = _("%s's Video - %s", (author_name.capitalize(), platform.capitalize(), video_id))
+        if res_thumb and res_thumb.ok:
+            thumbnail = base64.b64encode(image_process(res_thumb.content, size=(210, 120) if resize else (0, 0), crop=True if resize else False))
+
+    return {
+        'name': name if name else _('%s Video - %s', (platform.capitalize(), video_id)),
+        'thumbnail': thumbnail,
+    }

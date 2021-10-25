@@ -364,10 +364,10 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         params: {src: src.split(/[?#]/)[0]},
     });
     // Check that url is local.
-    const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin;
-    if (isLocal && original.image_src) {
+    const isLocal = original && new URL(original.src, window.location.origin).origin === window.location.origin;
+    if (isLocal && original.src) {
         img.dataset.originalId = original.id;
-        img.dataset.originalSrc = original.image_src;
+        img.dataset.originalSrc = original.src;
         img.dataset.mimetype = original.mimetype;
     }
 }

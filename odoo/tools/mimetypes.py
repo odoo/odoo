@@ -133,7 +133,12 @@ _mime_mappings = (
     ]),
     # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
     _Entry('application/zip', [b'PK\x03\x04'], [_check_ooxml, _check_open_container_format]),
+    _Entry('video/mp4', [b'\x00\x00\x00 ftypisom', b'\x00\x00\x00\x18ftypmp42', b'\x00\x00\x00\x18ftypisom',
+                         b'\x00\x00\x00\x18ftyp3gp5', b'\x00\x00\x00\x1cftypMSNV', b'\x00\x00\x00 ftypmp42',
+                         b'\x00\x00\x00 ftyp3gp5', b'\x00\x00\x00\x1cftypmmp4'], [])
 )
+
+
 def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
     """ Attempts to guess the mime type of the provided binary data, similar
     to but significantly more limited than libmagic

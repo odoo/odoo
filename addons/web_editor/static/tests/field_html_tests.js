@@ -133,6 +133,31 @@ QUnit.module('web_editor', {}, function () {
                         lang_code: 'en_US'
                     }]
                 },
+                'ir.attachment': {
+                    fields: {
+                        name: {string: "Name", type: "char"},
+                        mimetype: {string: "mimetype", type: "char"},
+                        checksum: {string: "checksum", type: "char"},
+                        url: {string: "url", type: "char"},
+                        src: {string: "url", type: "char"},
+                        type: {string: "type", type: "char"},
+                        res_id: {string: "resID", type: "integer"},
+                        res_model: {string: "model", type: "char"},
+                        access_token: {string: "access_token", type: "char"},
+                    },
+                    records: [{
+                        access_token: "token",
+                        checksum: "checksum",
+                        id: 3480,
+                        mimetype: "image/png",
+                        name: "joes_garage.jpeg",
+                        res_id: 0,
+                        res_model: "ir.ui.view",
+                        type: "binary",
+                        url: "/web/static/joes_garage.png",
+                        src: "/web/static/joes_garage.png",
+                    }],
+                },
             });
 
             testUtils.mock.patch(ajax, {
@@ -319,6 +344,7 @@ QUnit.module('web_editor', {}, function () {
 
         QUnit.test('media dialog: image', async function (assert) {
             assert.expect(1);
+            const self = this;
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -330,9 +356,7 @@ QUnit.module('web_editor', {}, function () {
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (args.model === 'ir.attachment') {
-                        if (args.method === "generate_access_token") {
-                            return Promise.resolve();
-                        }
+                            return Promise.resolve(self.data["ir.attachment"].records[0]);
                     }
                     if (route.indexOf('/web/image/123/transparent.png') === 0) {
                         return Promise.resolve();
@@ -372,7 +396,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first').removeClass('d-none'));
 
             var $editable = form.$('.oe_form_field[name="body"] .note-editable');
-            assert.ok($editable.find('img')[0].dataset.src.includes('/web/image/123/transparent.png'),
+            assert.ok($editable.find('img')[0].dataset.src.includes('/web/static/joes_garage.png'),
                 "should have the image in the dom");
 
             testUtils.mock.unpatch(MediaDialog);

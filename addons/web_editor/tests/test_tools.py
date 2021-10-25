@@ -48,7 +48,7 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('B6dXGTxggTG', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[1])
 
     def test_get_video_url_data(self):
-        self.assertEqual(2, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
+        self.assertEqual(4, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
         #youtube
         self.assertEqual('youtube', tools.get_video_url_data(TestVideoUtils.urls['youtube'])['platform'])
         #vimeo
@@ -66,14 +66,24 @@ class TestVideoUtils(common.BaseCase):
 
 @tagged('-standard', 'external')
 class TestVideoUtilsExternal(common.BaseCase):
-    def test_get_video_thumbnail(self):
+    def test_get_video_metadata(self):
         #youtube
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youtube']), bytes)
+        youtube_data = tools.get_video_metadata(TestVideoUtils.urls['youtube'])
+        self.assertIsInstance(youtube_data["thumbnail"], bytes)
+        self.assertIsInstance(youtube_data["name"], str)
         #vimeo
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['vimeo']), bytes)
+        vimeo_data = tools.get_video_metadata(TestVideoUtils.urls['vimeo'])
+        self.assertIsInstance(vimeo_data["thumbnail"], bytes)
+        self.assertIsInstance(vimeo_data["name"], str)
         #dailymotion
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['dailymotion']), bytes)
+        dailymotion_data = tools.get_video_metadata(TestVideoUtils.urls['dailymotion'])
+        self.assertIsInstance(dailymotion_data["thumbnail"], bytes)
+        self.assertIsInstance(dailymotion_data["name"], str)
         #instagram
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['instagram']), bytes)
-        #default
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youku']), bytes)
+        instagram_data = tools.get_video_metadata(TestVideoUtils.urls['instagram'])
+        self.assertIsInstance(instagram_data["thumbnail"], bytes)
+        self.assertIsInstance(instagram_data["name"], str)
+        #youku
+        youku_data = tools.get_video_metadata(TestVideoUtils.urls['youku'])
+        self.assertIsInstance(youku_data["thumbnail"], bytes)
+        self.assertIsInstance(youku_data["name"], str)

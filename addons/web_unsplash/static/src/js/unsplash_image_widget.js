@@ -206,7 +206,7 @@ widgetsMedia.ImageWidget.include({
     /**
      * @override
      */
-    _selectAttachement: function (attachment, save) {
+    _selectAttachment: function (attachment, save) {
         if (!this.options.multiImages) {
             this._unsplash.selectedImages = {};
         }

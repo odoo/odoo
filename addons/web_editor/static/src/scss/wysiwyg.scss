@@ -496,9 +496,30 @@ body .modal {
                 }
             }
 
+            .o_we_media_dialog_img_wrapper {
+                position: relative;
+            }
+
+            .o_we_thumbnail_ribbon {
+                position: absolute;
+                width: 50%;
+                margin-top: 0.3rem;
+                right: 48%;
+            }
+
+            .o_we_thumbnail_text {
+                width: 100%;
+                background-color: $o-gray-100;
+                opacity: 0.8;
+                border-radius: 3px;
+                color: $o-gray-900;
+            }
+
             .o_existing_attachment_cell {
                 cursor: pointer;
-                margin: 1px;
+                flex: 0 0 25%;
+                max-width: 25%;
+                padding: 3px 15px;
 
                 .o_existing_attachment_optimize, .o_existing_attachment_remove {
                     background-color: rgba(white, 0.4);
@@ -572,11 +593,13 @@ body .modal {
                     #o_video_form_group {
                         position: relative;
                         width: 100%;
+                        padding: 10px;
 
                         > textarea {
                             width: 100%;
-                            min-height: 95px;
+                            min-height: 50px;
                             padding-bottom: 25px;
+                            padding-top: 5px;
                             overflow-y: scroll;
                         }
                     }
@@ -605,6 +628,43 @@ body .modal {
 
                 #video-suggestion > .o_sample_video {
                     cursor: pointer;
+                }
+
+                #video-suggestion > .o_sample_vimeo_text_container {
+                    position: relative;
+                }
+
+                #o_video_text, .o_save_url_button, .o_invisible_placeholder {
+                    transition: opacity 0.5s, width 0.5s;
+                }
+
+                .o_collapsed_video_text {
+                    width: 0;
+                    opacity:0;
+                }
+
+                .o_invisible_placeholder {
+                    opacity: 0;
+                    width: 100%;
+                }
+
+                .o_centered_help_message {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    max-width: 100%;
+                }
+
+                .o_sample_vimeo_text_container > .o_sample_vimeo_text {
+                    display: inline;
+                    position: absolute;
+                    z-index: 2;
+                    top: 0.5rem;
+                    left: 0.5rem;
+                    background: whitesmoke;
+                    opacity: 0.75;
+                    padding: 0.1rem;
+                    border-radius: 2px;
                 }
             }
         }
