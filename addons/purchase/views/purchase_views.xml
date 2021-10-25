@@ -197,7 +197,7 @@
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
                                     <field name="reminder_date_before_receipt" class="oe_inline"/>
-                                    day(s) before 
+                                    day(s) before
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." attrs="{'invisible': [('id', '=', False)]}"/>
                                 </div>
                             </div>
@@ -205,6 +205,7 @@
                     </group>
                     <notebook>
                         <page string="Products" name="products">
+                            <field name="tax_country_id" invisible="1"/>
                             <field name="order_line"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
@@ -249,7 +250,7 @@
                                     <field name="product_packaging_qty" attrs="{'invisible': ['|', ('product_id', '=', False), ('product_packaging_id', '=', False)]}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="price_unit" attrs="{'readonly': [('qty_invoiced', '!=', 0)]}"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                                 <form string="Purchase Order Line">
@@ -273,7 +274,7 @@
                                                 <field name="qty_invoiced" string="Billed Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                                                 <field name="product_packaging_id" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
-                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id)]" options="{'no_create': True}"/>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
@@ -533,7 +534,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Unfortunately we want the purchase kpis table to only show up in some list views,
              so we have to duplicate code to support both view versions -->
         <record id="purchase_order_kpis_tree" model="ir.ui.view">
@@ -541,8 +542,8 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']" 
-                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True" 
+                <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
+                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True"
                 class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
