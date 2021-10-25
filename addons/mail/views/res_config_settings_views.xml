@@ -51,8 +51,13 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting id="email-alias-setting" string="Alias Domain" help="Use a different domain for your mail aliases" documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
-                            <span>@<field name="alias_domain" placeholder='e.g. "mycompany.com"'/></span>
+                        <setting id="email-alias-setting" string="Alias Domain" help="Use different domains for your mail aliases" documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
+                            <field name="alias_domain_ids" widget="many2many_tags" readonly="1"/>
+                            <span>Main alias domain @</span><field name="alias_domain_id" placeholder='e.g. "mycompany.com"'/>
+                            <span class="fa fa-lg fa-building-o" role="img"
+                                title="Alias domains set here are company-specific."
+                                aria-label="Alias domains set here are company-specific."
+                                groups="base.group_multi_company"/>
                         </setting>
                         <setting help="Add your twilio credentials for ICE servers">
                             <field name="use_twilio_rtc_servers"/>

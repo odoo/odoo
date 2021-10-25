@@ -13,8 +13,10 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     fail_counter = fields.Integer('Fail Mail', compute="_compute_fail_counter")
-    alias_domain = fields.Char(
-        'Alias Domain', config_parameter='mail.catchall.domain',
+    alias_domain_ids = fields.Many2many('mail.alias.domain', related='company_id.alias_domain_ids')
+    alias_domain_id = fields.Many2one(
+        'mail.alias.domain', 'Alias Domain',
+        readonly=False, related='company_id.alias_domain_id',
         help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.")
     module_google_gmail = fields.Boolean('Support Gmail Authentication')
     module_microsoft_outlook = fields.Boolean('Support Outlook Authentication')
