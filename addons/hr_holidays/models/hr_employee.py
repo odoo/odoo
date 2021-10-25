@@ -102,7 +102,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
             ('holiday_status_id.requires_allocation', '=', 'yes'),
-            ('state', '=', 'validate'),
+            ('state', 'not in', ('cancel', 'refuse')),
             '|',
             ('holiday_allocation_id.date_to', '=', False),
             ('holiday_allocation_id.date_to', '>=', current_date),
