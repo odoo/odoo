@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
@@ -918,5 +919,25 @@ QUnit.module("Components", ({ beforeEach }) => {
         await nextTick();
         assert.containsNone(parent.el, ".dropdown-menu", "all menus are now closed");
         assert.strictEqual(hotkeyRegistrationsCount, 0, "no hotkey registration left");
+    });
+
+    QUnit.test("click on the label of a CheckBoxDropdownItem selects it once", async (assert) => {
+        assert.expect(2);
+        class Parent extends owl.Component {
+            onItemSelected() {
+                assert.step("selected");
+            }
+        }
+        Parent.components = { CheckBoxDropdownItem };
+        Parent.template = owl.tags.xml`
+            <Dropdown t-on-dropdown-item-selected="onItemSelected">
+                <CheckBoxDropdownItem/>
+            </Dropdown>
+        `;
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        await click(parent.el, "button.dropdown-toggle");
+        await click(parent.el, ".dropdown-item label");
+        assert.verifySteps(["selected"]);
     });
 });

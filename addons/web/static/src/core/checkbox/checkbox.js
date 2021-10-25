@@ -24,5 +24,15 @@ export class CheckBox extends Component {
 
 CheckBox.template = "web.CheckBox";
 CheckBox.nextId = 1;
+CheckBox.props = {
+    disabled: {
+        type: Boolean,
+        optional: true,
+    },
+    value: {
+        type: Boolean,
+        optional: true,
+    },
+};
 
 QWeb.registerComponent("CheckBox", CheckBox);
