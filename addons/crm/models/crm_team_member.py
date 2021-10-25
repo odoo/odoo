@@ -45,7 +45,7 @@ class Team(models.Model):
                 if domain:
                     self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise exceptions.ValidationEreror(_(
+                raise exceptions.ValidationError(_(
                     'Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted',
                     user=member.user_id.name, team=member.crm_team_id.name
                 ))
