@@ -690,7 +690,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        self._set_qty_producing()
+        self.with_context(check_manual_change=True)._set_qty_producing()
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):

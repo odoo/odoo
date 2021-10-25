@@ -485,7 +485,16 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.action_assign()
 
-        # change the quantity done in one line
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+
+        # check than all quantities are update correctly
+        self.assertEqual(mo_form.move_raw_ids._records[0]['product_uom_qty'], 5, "Wrong quantity to consume")
+        self.assertEqual(mo_form.move_raw_ids._records[0]['quantity_done'], 1, "Wrong quantity done")
+        self.assertEqual(mo_form.move_raw_ids._records[1]['product_uom_qty'], 20, "Wrong quantity to consume")
+        self.assertEqual(mo_form.move_raw_ids._records[1]['quantity_done'], 4, "Wrong quantity done")
+
+        # manually change the quantity done in one line
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.qty_done = 1
@@ -497,7 +506,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check than all quantities are update correctly
         self.assertEqual(mo_form.move_raw_ids._records[0]['product_uom_qty'], 5, "Wrong quantity to consume")
-        self.assertEqual(mo_form.move_raw_ids._records[0]['quantity_done'], 3, "Wrong quantity done")
+        self.assertEqual(mo_form.move_raw_ids._records[0]['quantity_done'], 1, "Wrong quantity done")
         self.assertEqual(mo_form.move_raw_ids._records[1]['product_uom_qty'], 20, "Wrong quantity to consume")
         self.assertEqual(mo_form.move_raw_ids._records[1]['quantity_done'], 12, "Wrong quantity done")
 
@@ -637,7 +646,6 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_product_produce_4(self):
         """ Possibility to produce with a given raw material in multiple locations. """
-        # FIXME sle: how is it possible to consume before producing in the interface?
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.stock_shelf_1 = self.stock_location_components
         self.stock_shelf_2 = self.stock_location_14
@@ -653,9 +661,6 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(ml_p1), 2)
         self.assertEqual(len(ml_p2), 1)
 
-        # Add some quantity already done to force an extra move line to be created
-        ml_p1[0].qty_done = 1.0
-
         # Produce baby!
         mo_form = Form(mo)
         mo_form.qty_producing = 1
@@ -664,8 +669,8 @@ class TestMrpOrder(TestMrpCommon):
         m_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1)
         ml_p1 = m_p1.mapped('move_line_ids')
         self.assertEqual(len(ml_p1), 2)
-        self.assertEqual(sorted(ml_p1.mapped('qty_done')), [2.0, 3.0], 'Quantity done should be 1.0, 2.0 or 3.0')
-        self.assertEqual(m_p1.quantity_done, 5.0, 'Total qty done should be 6.0')
+        self.assertEqual(sorted(ml_p1.mapped('qty_done')), [2.0, 3.0], 'Quantity done should be 2.0 and 3.0')
+        self.assertEqual(m_p1.quantity_done, 5.0, 'Total qty done should be 5.0')
         self.assertEqual(sum(ml_p1.mapped('product_uom_qty')), 5.0, 'Total qty reserved should be 5.0')
 
         mo.button_mark_done()

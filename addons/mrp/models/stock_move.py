@@ -379,6 +379,9 @@ class StockMove(models.Model):
             return True
         if self.has_tracking != 'none' or self.state == 'done':
             return True
+        # Don't update qty_done when already manually changed
+        if self._context.get('check_manual_change') and float_compare(self._origin.should_consume_qty, self.quantity_done, precision_rounding=self.product_uom.rounding):
+            return True
         return False
 
     def _should_bypass_reservation(self, forced_location=False):
