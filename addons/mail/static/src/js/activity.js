@@ -167,15 +167,21 @@ var BasicActivity = AbstractField.extend({
      * @param {string} params.feedback
      */
     _markActivityDoneAndScheduleNext: function (params) {
+        // Alterado pela multidados
         var activityID = params.activityID;
         var feedback = params.feedback;
         var self = this;
+
+        // Atualizando contexto
+        var context = this.record.getContext();
+        context.no_unlink = true;
+
         this._rpc({
             model: 'mail.activity',
             method: 'action_feedback_schedule_next',
             args: [[activityID]],
             kwargs: {feedback: feedback},
-            context: this.record.getContext(),
+            context: context,
         }).then(
             function (rslt_action) {
                 if (rslt_action) {
