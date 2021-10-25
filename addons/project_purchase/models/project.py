@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class Project(models.Model):
     _inherit = "project.project"
 
-    purchase_orders_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_orders_count')
+    purchase_orders_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_orders_count', groups='purchase.group_purchase_user')
 
     @api.depends('analytic_account_id')
     def _compute_purchase_orders_count(self):

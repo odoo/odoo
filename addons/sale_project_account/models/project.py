@@ -6,7 +6,7 @@ from odoo import fields, models, _
 class Project(models.Model):
     _inherit = 'project.project'
 
-    vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count')
+    vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
 
     # ----------------------------
     # Actions
