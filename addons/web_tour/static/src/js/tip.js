@@ -321,7 +321,7 @@ var Tip = Widget.extend({
                     const {top} = props;
                     let {left} = props;
                     const anchorEl = this.$anchor[0];
-                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName)) {
+                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName) && anchorEl.hasChildNodes()) {
                         const textContainerWidth = anchorEl.getBoundingClientRect().width;
                         const textNode = anchorEl.firstChild;
                         const range = document.createRange();
