@@ -20,7 +20,7 @@ from odoo.tools import pycompat, freehash
 _logger = logging.getLogger(__name__)
 
 # same list as for `--dev-mode`
-SUPPORTED_DEBUGGERS = ['pdb', 'ipbd', 'pudb', 'wdb']
+SUPPORTED_DEBUGGERS = ['pdb', 'ipdb', 'pudb', 'wdb']
 token.QWEB = token.NT_OFFSET - 1
 token.tok_name[token.QWEB] = 'QWEB'
 
