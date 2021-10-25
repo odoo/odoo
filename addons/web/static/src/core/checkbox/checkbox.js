@@ -27,3 +27,17 @@ CheckBox.nextId = 1;
 CheckBox.defaultProps = {
     onChange: () => {},
 };
+CheckBox.props = {
+    disabled: {
+        type: Boolean,
+        optional: true,
+    },
+    value: {
+        type: Boolean,
+        optional: true,
+    },
+    onChange: {
+        type: Function,
+        optional: true,
+    },
+};

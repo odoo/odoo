@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CheckBoxDropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-slot='default']" position="replace">
+            <CheckBox
+             t-on-change="itemSelected"
+             disabled="props.disabled"
+             value="props.value"
+             t-on-click.stop="">
+                <t t-slot="default"/>
+            </CheckBox>
+        </xpath>
+    </t>
+
+</templates>
