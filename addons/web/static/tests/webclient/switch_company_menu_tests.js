@@ -154,20 +154,21 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
     });
 
     QUnit.test("single company selected: toggling it off will keep it", async (assert) => {
-        assert.expect(10);
+        assert.expect(12);
 
-        const prom = makeDeferred();
-        function onPushState(url) {
-            assert.step(url.split("#")[1]);
-            prom.resolve();
-        }
-        const scMenu = await createSwitchCompanyMenu({ onPushState });
+        patchWithCleanup(browser, {
+            setTimeout(fn) {
+                return fn(); // s.t. we can directly assert changes in the hash
+            },
+        });
+        const scMenu = await createSwitchCompanyMenu();
 
         /**
          *   [x] **Company 1**
          *   [ ] Company 2
          *   [ ] Company 3
          */
+        assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 1 });
         assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         await click(scMenu.el.querySelector(".dropdown-toggle"));
@@ -181,11 +182,12 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ] Company 3
          */
         await click(scMenu.el.querySelectorAll(".toggle_company")[0]);
+        assert.deepEqual(scMenu.env.services.router.current.hash, { cids: 1 });
+        assert.deepEqual(scMenu.env.services.company.allowedCompanyIds, [1]);
+        assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsOnce(scMenu.el, ".dropdown-menu", "dropdown is still opened");
         assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 0);
         assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 3);
-        await prom;
-        assert.verifySteps(["cids=1"]);
     });
 
     QUnit.test("single company mode: companies can be logged in", async (assert) => {
