@@ -107,7 +107,6 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
@@ -116,56 +115,8 @@ class AccountMove(models.Model):
                 continue
 
             for line in move.invoice_line_ids:
+                lines_vals_list.extend(line._stock_account_prepare_anglo_saxon_out_line_vals())
 
-                # Filter out lines being not eligible for COGS.
-                if not line._eligible_for_cogs():
-                    continue
-
-                # Retrieve accounts needed to generate the COGS.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
-                debit_interim_account = accounts['stock_output']
-                credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
-                if not debit_interim_account or not credit_expense_account:
-                    continue
-
-                # Compute accounting fields.
-                sign = -1 if move.move_type == 'out_refund' else 1
-                price_unit = line._stock_account_get_anglo_saxon_price_unit()
-                amount_currency = sign * line.quantity * price_unit
-
-                if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
-                    continue
-
-                # Add interim account line.
-                lines_vals_list.append({
-                    'name': line.name[:64],
-                    'move_id': move.id,
-                    'partner_id': move.commercial_partner_id.id,
-                    'product_id': line.product_id.id,
-                    'product_uom_id': line.product_uom_id.id,
-                    'quantity': line.quantity,
-                    'price_unit': price_unit,
-                    'amount_currency': -amount_currency,
-                    'account_id': debit_interim_account.id,
-                    'display_type': 'cogs',
-                    'tax_ids': [],
-                })
-
-                # Add expense account line.
-                lines_vals_list.append({
-                    'name': line.name[:64],
-                    'move_id': move.id,
-                    'partner_id': move.commercial_partner_id.id,
-                    'product_id': line.product_id.id,
-                    'product_uom_id': line.product_uom_id.id,
-                    'quantity': line.quantity,
-                    'price_unit': -price_unit,
-                    'amount_currency': amount_currency,
-                    'account_id': credit_expense_account.id,
-                    'analytic_distribution': line.analytic_distribution,
-                    'display_type': 'cogs',
-                    'tax_ids': [],
-                })
         return lines_vals_list
 
     def _stock_account_get_last_step_stock_moves(self):
@@ -294,3 +245,59 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _stock_account_prepare_anglo_saxon_out_line_vals(self):
+        self.ensure_one()
+        # Filter out lines being not eligible for COGS.
+        if not self._eligible_for_cogs():
+            return []
+
+        # Retrieve accounts needed to generate the COGS.
+        accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)
+        debit_interim_account = accounts['stock_output']
+        credit_expense_account = accounts['expense'] or self.move_id.journal_id.default_account_id
+        if not debit_interim_account or not credit_expense_account:
+            return []
+
+        # Compute accounting fields.
+        sign = -1 if self.move_id.move_type == 'out_refund' else 1
+        price_unit = self._stock_account_get_anglo_saxon_price_unit()
+        amount_currency = sign * self.quantity * price_unit
+
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        if self.move_id.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+            return []
+
+        line_vals_list = []
+        # Add interim account line.
+        line_vals_list.append({
+            'name': self.name[:64],
+            'move_id': self.move_id.id,
+            'partner_id': self.move_id.commercial_partner_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'quantity': self.quantity,
+            'price_unit': price_unit,
+            'amount_currency': -amount_currency,
+            'account_id': debit_interim_account.id,
+            'display_type': 'cogs',
+            'tax_ids': [],
+        })
+
+        # Add expense account line.
+        line_vals_list.append({
+            'name': self.name[:64],
+            'move_id': self.move_id.id,
+            'partner_id': self.move_id.commercial_partner_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'quantity': self.quantity,
+            'price_unit': -price_unit,
+            'amount_currency': amount_currency,
+            'account_id': credit_expense_account.id,
+            'analytic_distribution': self.analytic_distribution,
+            'display_type': 'cogs',
+            'tax_ids': [],
+        })
+
+        return line_vals_list
