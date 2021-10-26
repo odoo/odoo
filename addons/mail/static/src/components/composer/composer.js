@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { link } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import {
     isEventHandled,
@@ -147,15 +148,15 @@ export class Composer extends Component {
             return;
         }
         const message = this.messaging.models['mail.message'].insert({
+            attachment_ids: this.composerView.composer.attachments.map(attachment => attachment.id),
+            rawBody: this.composerView.composer.textInputContent,
             id: this.messaging.models['mail.message'].getNextTemporaryId(),
             isPending: true,
-            attachment_ids: this.composerView.composer.attachments.map(attachment => attachment.id),
-            body: this.composerView.messageSender.convertMessageToHtml(this.composerView.composer.textInputContent),
-            rawBody: this.composerView.composer.textInputContent,
             message_type: 'comment',
+            composerView: link(this.composerView),
             partner_ids: this.composerView.composer.recipients.map(partner => partner.id),
         });
-        this.composerView.messageSender.sendMessage(message);
+        this.messaging.messageSender.sendMessage(message);
     }
 
     //--------------------------------------------------------------------------

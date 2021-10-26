@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
@@ -590,6 +590,9 @@ function factory(dependencies) {
         canStarBeToggled: attr({
             compute: '_computeCanStarBeToggled',
         }),
+        composerView: one2one('mail.composer_view', {
+            inverse: 'message',
+        }),
         /**
          * Determines the date of the message as a moment object.
          */
@@ -719,6 +722,8 @@ function factory(dependencies) {
         isStarred: attr({
             default: false,
         }),
+        mentionedChannels: many2many('mail.thread'),
+        mentionedPartners: many2many('mail.partner'),
         /**
          * Groups of reactions per content allowing to know the number of
          * reactions for each.

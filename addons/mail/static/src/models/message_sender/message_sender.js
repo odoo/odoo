@@ -8,7 +8,7 @@ import { clear, link } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
-    class ComposerMessageSender extends dependencies['mail.model'] {
+    class MessageSender extends dependencies['mail.model'] {
 
         //----------------------------------------------------------------------
         // Public
@@ -23,7 +23,7 @@ function factory(dependencies) {
             // Command are not really sent to the server like other messages.
             // They do not need the message queue to work and can be processed
             // early.
-            const composer = this.composerView.composer;
+            const composer = message.composerView.composer;
             if (composer.thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(message.body);
                 if (command) {
@@ -67,14 +67,14 @@ function factory(dependencies) {
             // Lock the message queue
             this.update({ isSendingMessages: true });
 
-            const composer = this.composerView.composer;
+            const messagePending = this.messagesPendingToBeSent[0];
+            const composer = messagePending.composerView.composer;
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const messagePending = this.messagesPendingToBeSent[0];
             const postData = {
                 attachment_ids: messagePending.attachment_ids,
-                body: messagePending.body,
+                body: this.convertMessageToHtml(messagePending.rawBody),
                 message_type: 'comment',
                 partner_ids: composer.recipients.map(partner => partner.id),
             };
@@ -98,11 +98,11 @@ function factory(dependencies) {
                         params.context = { mail_post_autofollow: true };
                     }
                 }
-                if (this.composerView.threadView && this.composerView.threadView.replyingToMessageView && this.composerView.threadView.thread !== this.messaging.inbox) {
-                    postData.parent_id = this.composerView.threadView.replyingToMessageView.message.id;
+                if (messagePending.composerView.threadView && messagePending.composerView.threadView.replyingToMessageView && messagePending.composerView.threadView.thread !== this.messaging.inbox) {
+                    postData.parent_id = messagePending.composerView.threadView.replyingToMessageView.message.id;
                 }
-                const { threadView = {} } = this.composerView;
-                const { thread: chatterThread } = this.composerView.chatter || {};
+                const { threadView = {} } = messagePending.composerView;
+                const { thread: chatterThread } = messagePending.composerView.chatter || {};
                 const { thread: threadViewThread } = threadView;
 
                 this.env.services.rpc({
@@ -125,10 +125,11 @@ function factory(dependencies) {
                         // message and the message comming from the bus. We delete
                         // the temporary message after sending it to the server and
                         // let the bus handle the update
+                        const composerView = messagePending.composerView;
                         messagePending.delete();
                         if (chatterThread) {
-                            if (this.composerView.exists()) {
-                                this.composerView.delete();
+                            if (composerView.exists()) {
+                                composerView.delete();
                             }
                             if (chatterThread.exists()) {
                                 chatterThread.refreshFollowers();
@@ -137,8 +138,8 @@ function factory(dependencies) {
                         }
                         if (threadViewThread) {
                             if (threadViewThread === this.messaging.inbox) {
-                                if (this.composerView.exists()) {
-                                    this.composerView.delete();
+                                if (composerView.exists()) {
+                                    composerView.delete();
                                 }
                                 this.env.services['notification'].notify({
                                     message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
@@ -159,7 +160,7 @@ function factory(dependencies) {
                         }
                     }, () =>  {
                         this.update({ isSendingMessages: false });
-                        this.composerView.composer.update({
+                        messagePending.composerView.composer.update({
                             textInputContent: messagePending.rawBody,
                         });
                     });
@@ -204,11 +205,14 @@ function factory(dependencies) {
          * @returns {string}
          */
         _generateMentionsLinks(body) {
+            const messagePending = this.messagesPendingToBeSent[0];
+            const composerView = messagePending.composerView;
+
             // List of mention data to insert in the body.
             // Useful to do the final replace after parsing to avoid using the
             // same tag twice if two different mentions have the same name.
             const mentions = [];
-            for (const partner of this.composerView.composer.mentionedPartners) {
+            for (const partner of composerView.composer.mentionedPartners) {
                 const placeholder = `@-mention-partner-${partner.id}`;
                 const text = `@${owl.utils.escape(partner.name)}`;
                 mentions.push({
@@ -220,7 +224,7 @@ function factory(dependencies) {
                 });
                 body = body.replace(text, placeholder);
             }
-            for (const channel of this.composerView.composer.mentionedChannels) {
+            for (const channel of composerView.composer.mentionedChannels) {
                 const placeholder = `#-mention-channel-${channel.id}`;
                 const text = `#${owl.utils.escape(channel.name)}`;
                 mentions.push({
@@ -267,7 +271,7 @@ function factory(dependencies) {
         }
     }
 
-    ComposerMessageSender.fields = {
+    MessageSender.fields = {
         /**
          * Determines whether messages are being sent to the server
          */
@@ -282,19 +286,12 @@ function factory(dependencies) {
         messagesPendingToBeSent: one2many('mail.message', {
             default: [],
         }),
-        /**
-         * States the composerView linked to this sender.
-         */
-        composerView: one2one('mail.composer_view', {
-            inverse: 'messageSender',
-            readonly: true,
-        })
     };
 
-    ComposerMessageSender.identifyingFields = ['composerView'];
-    ComposerMessageSender.modelName = 'mail.composer_message_sender';
+    MessageSender.identifyingFields = ['messaging'];
+    MessageSender.modelName = 'mail.message_sender';
 
-    return ComposerMessageSender;
+    return MessageSender;
 }
 
-registerNewModel('mail.composer_message_sender', factory);
+registerNewModel('mail.message_sender', factory);

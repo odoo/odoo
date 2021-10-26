@@ -90,7 +90,7 @@ function factory(dependencies) {
             }
             if (
                 this.suggestionModelName === 'mail.channel_command' ||
-                this.messageSender._getCommandFromText(this.composer.textInputContent)
+                this.messaging.messageSender._getCommandFromText(this.composer.textInputContent)
             ) {
                 return;
             }
@@ -203,7 +203,7 @@ function factory(dependencies) {
                 this.updateMessage();
                 return;
             }
-            this.messageSender.postMessage();
+            this.messaging.messageSender.postMessage();
         }
 
         /**
@@ -322,9 +322,9 @@ function factory(dependencies) {
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this.messageSender._generateMentionsLinks(body);
+            body = this.messaging.messageSender._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
-            body = this.messageSender._generateEmojisOnHtml(body);
+            body = this.messaging.messageSender._generateEmojisOnHtml(body);
             let data = {
                 body: body,
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
@@ -726,6 +726,9 @@ function factory(dependencies) {
         mainSuggestedRecords: many2many('mail.model', {
             compute: '_computeMainSuggestedRecords',
         }),
+        message: one2one('mail.message', {
+            inverse: 'composerView',
+        }),
         /**
          * States the message view on which this composer allows editing (if any).
          */
@@ -769,11 +772,6 @@ function factory(dependencies) {
         threadView: one2one('mail.thread_view', {
             inverse: 'composerView',
             readonly: true,
-        }),
-        messageSender: one2one('mail.composer_message_sender', {
-            default: insertAndReplace(),
-            inverse: 'composerView',
-            isCausal: true,
         }),
     };
     ComposerView.identifyingFields = [['threadView', 'messageViewInEditing', 'chatter']];

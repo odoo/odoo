@@ -417,6 +417,9 @@ function factory(dependencies) {
         userSetting: one2one('mail.user_setting', {
             isCausal: true,
         }),
+        messageSender: one2one('mail.message_sender', {
+            default: insertAndReplace(),
+        }),
     };
     Messaging.identifyingFields = [];
     Messaging.onChanges = [
