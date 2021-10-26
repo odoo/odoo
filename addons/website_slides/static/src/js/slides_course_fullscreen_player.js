@@ -548,7 +548,7 @@
         // Private
         //--------------------------------------------------------------------------
         /**
-         * Fetches content with an rpc call for slides of category "webpage"
+         * Fetches content with an rpc call for slides of category "article"
          *
          * @private
          */
@@ -574,7 +574,7 @@
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.category === 'webpage' && !slide.isQuiz) {
+            if (slide.category === 'article' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
@@ -616,8 +616,8 @@
                 // technical settings for the Fullscreen to work
                 var autoSetDone = false;
                 if (!slideData.hasQuestion) {
-                    if (_.contains(['infographic', 'document', 'webpage'], slideData.category)) {
-                        autoSetDone = true;  // images, documents (local + external) and web pages are marked as completed when opened
+                    if (_.contains(['infographic', 'document', 'article'], slideData.category)) {
+                        autoSetDone = true;  // images, documents (local + external) and articles are marked as completed when opened
                     } else if (slideData.category === 'video' && slideData.videoSourceType === 'google_drive') {
                         autoSetDone = true;  // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
                     }
@@ -646,7 +646,7 @@
         },
         /**
          * Render the current slide content using specific mecanism according to slide category:
-         * - simply append content (for webpage)
+         * - simply append content (for article)
          * - template rendering (for image, document, ....)
          * - using a sub widget (quiz and video)
          *
@@ -676,8 +676,8 @@
                 return this.videoPlayer.appendTo($content);
             } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
                 $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
-            } else if (slide.category === 'webpage'){
-                var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
+            } else if (slide.category === 'article'){
+                var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);
                 $content.append($wpContainer);
                 this.trigger_up('widgets_start_request', {

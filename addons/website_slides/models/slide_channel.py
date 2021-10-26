@@ -186,7 +186,7 @@ class Channel(models.Model):
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
-    nbr_webpage = fields.Integer("Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_article = fields.Integer("Articles", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
     total_slides = fields.Integer('Number of Contents', compute='_compute_slides_statistics', store=True)
     total_views = fields.Integer('Visits', compute='_compute_slides_statistics', store=True)
