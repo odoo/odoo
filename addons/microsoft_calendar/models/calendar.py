@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -24,12 +25,18 @@ ATTENDEE_CONVERTER_M2O = {
 }
 MAX_RECURRENT_EVENT = 720
 
+_logger = logging.getLogger(__name__)
+
 class Meeting(models.Model):
     _name = 'calendar.event'
     _inherit = ['calendar.event', 'microsoft.calendar.sync']
 
-    microsoft_id = fields.Char('Microsoft Calendar Event Id')
+    ms_organizer_event_id = fields.Char('Microsoft Organizer Event Id', copy=False)
+    ms_accross_calendars_event_id = fields.Char('Microsoft event Id among all calendars', copy=False)
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
+
+    def _get_organizer(self):
+        return self.user_id
 
     @api.model
     def _get_microsoft_synced_fields(self):
@@ -46,25 +53,48 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
+
+        # for a recurrent event, we do not create events separately but we directly
+        # create the recurrency from the corresponding calendar.recurrence.
+        # That's why, events from a recurrency have their `need_sync_m` attribute set to False.
         return super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
 
+    def _check_recurrence_overlapping(self, new_start):
+        """
+        Outlook does not allow to modify time fields of an event if this event crosses
+        or overlaps the recurrence. In this case a 400 error with the Outlook code "ErrorOccurrenceCrossingBoundary"
+        is returned. That means that the update violates the following Outlook restriction on recurrence exceptions:
+        an occurrence cannot be moved to or before the day of the previous occurrence, and cannot be moved to or after
+        the day of the following occurrence.
+        For example: E1 E2 E3 E4 cannot becomes E1 E3 E2 E4
+        """
+        before_count = len(self.recurrence_id.calendar_event_ids.filtered(
+            lambda e: e.start.date() < self.start.date() and e != self
+        ))
+        after_count = len(self.recurrence_id.calendar_event_ids.filtered(
+            lambda e: e.start.date() < parse(new_start).date() and e != self
+        ))
+        if before_count != after_count:
+            raise UserError(_(
+                "Outlook limitation: in a recurrence, an event cannot be moved to or before the day of the "
+                "previous event, and cannot be moved to or after the day of the following event."
+            ))
+
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')
-        if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
-            values = dict(values, need_sync_m=False)
-        elif recurrence_update_setting == 'self_only' and 'start' in values:
-            previous_event_before_write = self.recurrence_id.calendar_event_ids.filtered(lambda e: e.start.date() < self.start.date() and e != self)
-            new_start = parse(values['start']).date()
-            previous_event_after_write = self.recurrence_id.calendar_event_ids.filtered(lambda e: e.start.date() < new_start and e != self)
-            if previous_event_before_write != previous_event_after_write:
-                # Outlook returns a 400 error if you try to synchronize an occurrence of this type.
-                raise UserError(_("Modified occurrence is crossing or overlapping adjacent occurrence."))
+
+        # check a Outlook limitation in overlapping the actual recurrence
+        if recurrence_update_setting == 'self_only' and 'start' in values:
+            self._check_recurrence_overlapping(values['start'])
+
         notify_context = self.env.context.get('dont_notify', False)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
-        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_microsoft_synced_fields():
+
+        if recurrence_update_setting in ('all_events',) and len(self) == 1 \
+           and values.keys() & self._get_microsoft_synced_fields():
             self.recurrence_id.need_sync_m = True
         return res
 
@@ -84,7 +114,7 @@ class Meeting(models.Model):
 
 
     @api.model
-    def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values={}):
+    def _microsoft_to_odoo_values(self, microsoft_event, default_values=None, with_ids=False):
         if microsoft_event.is_cancelled():
             return {'active': False}
 
@@ -102,12 +132,12 @@ class Meeting(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
-        values = {
-            **default_values,
+        values = default_values if default_values else {}
+        values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': plaintext2html(microsoft_event.bodyPreview),
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner(self.env).id,
+            'user_id': microsoft_event.owner_id(self.env),
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
@@ -115,7 +145,7 @@ class Meeting(models.Model):
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
-        }
+        })
         if commands_partner:
             # Add partner_commands only if set from Microsoft. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -125,7 +155,10 @@ class Meeting(models.Model):
             # Propagate the follow_recurrence according to the google result
             values['follow_recurrence'] = not microsoft_event.is_recurrence_outlier()
 
-        values['microsoft_id'] = microsoft_event.id
+        if with_ids:
+            values['ms_organizer_event_id'] = microsoft_event.id
+            values['ms_accross_calendars_event_id'] = microsoft_event.iCalUId
+
         if microsoft_event.is_recurrent():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
 
@@ -136,7 +169,7 @@ class Meeting(models.Model):
         return values
 
     @api.model
-    def _microsoft_to_odoo_recurrence_values(self, microsoft_event, default_reminders=(), values={}):
+    def _microsoft_to_odoo_recurrence_values(self, microsoft_event, default_values=None):
         timeZone_start = pytz.timezone(microsoft_event.start.get('timeZone'))
         timeZone_stop = pytz.timezone(microsoft_event.end.get('timeZone'))
         start = parse(microsoft_event.start.get('dateTime')).astimezone(timeZone_start).replace(tzinfo=None)
@@ -144,10 +177,14 @@ class Meeting(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
-        values['microsoft_id'] = microsoft_event.id
-        values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
-        values['start'] = start
-        values['stop'] = stop
+        values = default_values if default_values else {}
+        values.update({
+            'ms_organizer_event_id': microsoft_event.id,
+            'ms_accross_calendars_event_id': microsoft_event.iCalUId,
+            'microsoft_recurrence_master_id': microsoft_event.seriesMasterId,
+            'start': start,
+            'stop': stop,
+        })
         return values
 
     @api.model
@@ -158,29 +195,27 @@ class Meeting(models.Model):
         microsoft_attendees = microsoft_event.attendees or []
         emails = [a.get('emailAddress').get('address') for a in microsoft_attendees]
         existing_attendees = self.env['calendar.attendee']
-        if microsoft_event.exists(self.env):
+        if microsoft_event.match_with_odoo_events(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
-                ('event_id', '=', microsoft_event.odoo_id(self.env)),
+                ('event_id', '=', microsoft_event.odoo_id),
                 ('email', 'in', emails)])
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for attendee in zip(emails, partners, microsoft_attendees):
-            email = attendee[0]
-            state = ATTENDEE_CONVERTER_M2O.get(attendee[2].get('status').get('response'))
+        for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
+            state = ATTENDEE_CONVERTER_M2O.get(attendee_info.get('status').get('response'), 'needsAction')
 
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
             elif attendee[1]:
                 # Create new attendees
-                partner = attendee[1]
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
                 commands_partner += [(4, partner.id)]
-                if attendee[2].get('emailAddress').get('name') and not partner.name:
-                    partner.name = attendee[2].get('emailAddress').get('name')
+                if attendee_info.get('emailAddress').get('name') and not partner.name:
+                    partner.name = attendee_info.get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
@@ -192,7 +227,7 @@ class Meeting(models.Model):
     def _odoo_reminders_commands_m(self, microsoft_event):
         reminders_commands = []
         if microsoft_event.isReminderOn:
-            event_id = self.browse(microsoft_event.odoo_id(self.env))
+            event_id = self.browse(microsoft_event.odoo_id)
             alarm_type_label = _("Notification")
 
             minutes = microsoft_event.reminderMinutesBeforeStart or 0
@@ -238,7 +273,7 @@ class Meeting(models.Model):
                 reminders_commands += [(3, a.id) for a in alarm_to_rm]
 
         else:
-            event_id = self.browse(microsoft_event.odoo_id(self.env))
+            event_id = self.browse(microsoft_event.odoo_id)
             alarm_to_rm = event_id.alarm_ids.filtered(lambda a: a.alarm_type == 'notification')
             if alarm_to_rm:
                 reminders_commands = [(3, a.id) for a in alarm_to_rm]
@@ -254,15 +289,7 @@ class Meeting(models.Model):
         if not fields_to_sync:
             return values
 
-        values['id'] = self.microsoft_id
         microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-        values['singleValueExtendedProperties'] = [{
-            'id': 'String {%s} Name odoo_id' % microsoft_guid,
-            'value': str(self.id),
-        }, {
-            'id': 'String {%s} Name owner_odoo_id' % microsoft_guid,
-            'value': str(self.user_id.id),
-        }]
 
         if self.microsoft_recurrence_master_id and 'type' not in values:
             values['seriesMasterId'] = self.microsoft_recurrence_master_id
@@ -402,17 +429,7 @@ class Meeting(models.Model):
                                     "\n%s", details, invalid_events))
 
     def _microsoft_values_occurence(self, initial_values={}):
-        values = dict(initial_values)
-        values['id'] = self.microsoft_id
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-        values['singleValueExtendedProperties'] = [{
-            'id': 'String {%s} Name odoo_id' % microsoft_guid,
-            'value': str(self.id),
-        }, {
-            'id': 'String {%s} Name owner_odoo_id' % microsoft_guid,
-            'value': str(self.user_id.id),
-        }]
-
+        values = initial_values
         values['type'] = 'occurrence'
 
         if self.allday:

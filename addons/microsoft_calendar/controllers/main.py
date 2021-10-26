@@ -42,6 +42,9 @@ class MicrosoftCalendarController(http.Controller):
                 }
             # If App authorized, and user access accepted, We launch the synchronization
             need_refresh = request.env.user.sudo()._sync_microsoft_calendar(MicrosoftCal)
+            if need_refresh:
+                # be sure everything has been commited before indicating that a refresh is required
+                request.env.cr.commit()
 
             # If synchronization has been stopped
             if not need_refresh and request.env.user.microsoft_synchronization_stopped:

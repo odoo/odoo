@@ -29,19 +29,21 @@ class ResetMicrosoftAccount(models.TransientModel):
 
         events = self.env['calendar.event'].search([
             ('user_id', '=', self.user_id.id),
-            ('microsoft_id', '!=', False)])
+            ('ms_accross_calendars_event_id', '!=', False)])
         if self.delete_policy in ('delete_microsoft', 'delete_both'):
             with microsoft_calendar_token(self.user_id) as token:
                 for event in events:
-                    microsoft.delete(event.microsoft_id, token=token)
+                    microsoft.delete(event.ms_accross_calendars_event_id, token=token)
 
         if self.delete_policy in ('delete_odoo', 'delete_both'):
-            events.microsoft_id = False
+            events.ms_organizer_event_id = False
+            events.ms_accross_calendars_event_id = False
             events.unlink()
 
         if self.sync_policy == 'all':
             events.write({
-                'microsoft_id': False,
+                'ms_organizer_event_id': False,
+                'ms_accross_calendars_event_id': False,
                 'need_sync_m': True,
             })
 

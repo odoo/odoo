@@ -15,9 +15,9 @@ odoo.define('microsoft_calendar.MicrosoftCalendarPopover', function(require) {
          */
         isMEventSyncedAndArchivable() {
             if (this.event.extendedProps.record.google_id === undefined) {
-                return this.isCurrentPartnerOrganizer() && this.event.extendedProps.record.microsoft_id;
+                return this.isCurrentPartnerOrganizer() && this.event.extendedProps.record.ms_organizer_event_id;
             }
-            return this.isCurrentPartnerOrganizer() && !this.event.extendedProps.record.google_id && this.event.extendedProps.record.microsoft_id
+            return this.isCurrentPartnerOrganizer() && !this.event.extendedProps.record.google_id && this.event.extendedProps.record.ms_organizer_event_id
         },
 
         isEventDeletable() {

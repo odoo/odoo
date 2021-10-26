@@ -90,15 +90,14 @@ class User(models.Model):
         full_sync = not bool(self.microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
-                events, next_sync_token, default_reminders = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
+                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
             except InvalidSyncToken:
-                events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
+                events, next_sync_token = calendar_service.get_events(token=token)
                 full_sync = True
         self.microsoft_calendar_sync_token = next_sync_token
 
         # Microsoft -> Odoo
-        recurrences = events.filter(lambda e: e.is_recurrent())
-        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events, default_reminders=default_reminders) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
+        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
 
         # Odoo -> Microsoft
         recurrences = self.env['calendar.recurrence']._get_microsoft_records_to_sync(full_sync=full_sync)

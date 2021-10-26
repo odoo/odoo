@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
         <field name="arch" type="xml">
             <field name="attendee_status" position="after">
-                <field name="microsoft_id" invisible="1"/>
+                <field name="ms_organizer_event_id" invisible="1"/>
+                <field name="ms_accross_calendars_event_id" invisible="1"/>
             </field>
         </field>
     </record>
