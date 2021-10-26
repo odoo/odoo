@@ -16,6 +16,7 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
         'input .search-query': '_onInput',
         'focusout': '_onFocusOut',
         'keydown .search-query': '_onKeydown',
+        'search .search-query': '_onSearch',
     },
     autocompleteMinWidth: 300,
 
@@ -41,6 +42,7 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
         this.displayDescription = !!this.$input.data('displayDescription');
         this.displayPrice = !!this.$input.data('displayPrice');
         this.displayImage = !!this.$input.data('displayImage');
+        this.wasEmpty = !this.$input.val();
 
         if (this.limit) {
             this.$input.attr('autocomplete', 'off');
@@ -130,6 +132,22 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                     $element.focus();
                 }
                 break;
+        }
+    },
+    /**
+    * @private
+    */
+    _onSearch: function (ev) {
+        if (this.$input[0].value) { // actual search
+            this.limit = 0; // prevent autocomplete
+        } else { // clear button clicked
+            this._render(); // remove existing suggestions
+            ev.preventDefault();
+            if (!this.wasEmpty) {
+                this.limit = 0; // prevent autocomplete
+                const form = this.$('.o_wsale_search_order_by').parents('form');
+                form.submit();
+            }
         }
     },
 });
