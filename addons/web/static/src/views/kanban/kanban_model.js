@@ -28,6 +28,7 @@ export class KanbanModel extends RelationalModel {
         }
         const promises = [super.load(actualParams)];
         if (this.progress && actualParams.groupBy && actualParams.groupBy.length) {
+            this.progressSearchParams = actualParams;
             promises.push(this.fetchProgressData(actualParams));
         }
 
@@ -38,7 +39,8 @@ export class KanbanModel extends RelationalModel {
         }
     }
 
-    async fetchProgressData({ context, domain, groupBy }) {
+    async fetchProgressData() {
+        const { context, domain, groupBy } = this.progressSearchParams;
         return this.orm.call(this.resModel, "read_progress_bar", [], {
             domain,
             group_by: groupBy[0],
@@ -108,12 +110,13 @@ export class KanbanModel extends RelationalModel {
 
         if (dataListId === newListId) {
             // Quick update: adds the record at the right position and notifies components
-            list.data.splice(refId, 0, record);
+            const index = refId ? list.data.findIndex((r) => r.id === refId) + 1 : 0;
+            list.data.splice(index, 0, record);
             this.notify();
         } else {
             // Quick update: adds the record to the new list data and notifies components
             const newList = this.db[newListId];
-            const index = newList.data.findIndex((r) => r.id === refId);
+            const index = refId ? newList.data.findIndex((r) => r.id === refId) + 1 : 0;
             newList.data.splice(index, 0, record);
             newList.count++;
             list.count--;
@@ -125,9 +128,7 @@ export class KanbanModel extends RelationalModel {
             await record.save();
             const promises = [this.load({ keepRecords: true })];
             if (this.progress) {
-                const { context = {}, groupBy } = this.root;
-                const domain = this.root.getDomain();
-                promises.push(this.fetchProgressData({ context, domain, groupBy }));
+                promises.push(this.fetchProgressData());
             }
             const [, progressData] = await Promise.all(promises);
             if (progressData) {

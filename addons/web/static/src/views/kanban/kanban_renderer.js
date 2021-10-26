@@ -80,16 +80,10 @@ const useSortable = (params) => {
         ev.preventDefault();
     };
 
-    const createGhost = (el) => {
-        const newGhost = el.cloneNode(true);
-        newGhost.style.opacity = 0;
-        cleanups.push(() => newGhost.remove());
-        return newGhost;
-    };
-
     const onItemMouseenter = (ev) => {
         const item = ev.currentTarget;
         if (containment !== "parent" || item.closest(listSelector) === currentList) {
+            console.log("ITEM ENTER");
             const pos = ghost.compareDocumentPosition(item);
             if (pos === 2 /* BEFORE */) {
                 item.before(ghost);
@@ -109,6 +103,7 @@ const useSortable = (params) => {
     const onListMouseenter = (ev) => {
         const list = ev.currentTarget;
         if (containment !== "parent") {
+            console.log("LIST ENTER");
             list.appendChild(ghost);
         }
         if (onListEnter) {
@@ -129,19 +124,15 @@ const useSortable = (params) => {
         offsetX -= x;
         offsetY -= y;
 
-        ghost = createGhost(currentItem);
+        ghost = currentItem.cloneNode(true);
+        ghost.style.opacity = 0;
+        cleanups.push(() => ghost.remove());
         addListener(currentItem, "click", cancelEvent, true, true);
 
         for (const siblingList of document.querySelectorAll(listSelector)) {
-            if (siblingList !== currentList) {
-                addListener(siblingList, "mouseenter", onListMouseenter);
-                if (onListLeave) {
-                    addListener(siblingList, "mouseleave", onListMouseleave);
-                }
-            }
-
-            if (siblingList.children.length) {
-                siblingList.appendChild(createGhost(currentItem));
+            addListener(siblingList, "mouseenter", onListMouseenter);
+            if (onListLeave) {
+                addListener(siblingList, "mouseleave", onListMouseleave);
             }
 
             for (const siblingItem of siblingList.querySelectorAll(itemSelector)) {
@@ -271,17 +262,17 @@ export class KanbanRenderer extends Component {
                     group.classList.remove("o_kanban_hover");
                 },
                 onStart(group, item) {
-                    dataListId = group.dataset.id;
-                    dataRecordId = item.dataset.id;
+                    dataListId = Number(group.dataset.id);
+                    dataRecordId = Number(item.dataset.id);
                     item.classList.add("o_currently_dragged", "ui-sortable-helper");
                 },
                 onStop(group, item) {
                     item.classList.remove("o_currently_dragged", "ui-sortable-helper");
                 },
-                onDrop: async ({ previous, parent }) => {
+                onDrop: ({ previous, parent }) => {
                     const groupEl = parent.closest(".o_kanban_group");
-                    const refId = previous ? previous.dataset.id : null;
-                    const groupId = groupEl.dataset.id;
+                    const refId = previous ? Number(previous.dataset.id) : null;
+                    const groupId = Number(groupEl.dataset.id);
                     this.env.model.moveRecord(dataRecordId, dataListId, refId, groupId);
                 },
             });
