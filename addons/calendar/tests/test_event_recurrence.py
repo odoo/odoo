@@ -556,12 +556,16 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertFalse(self.recurrence.exists())
         self.assertFalse(self.events.exists())
 
-    def test_unlink_recurrence_future(self):
-        event = self.events[1]
-        event.action_mass_deletion('future_events')
+    def test_unlink_recurrence_from_an_event_to_future(self):
+        event_to_keep = self.events[0:1]
+        self.events[1].action_mass_deletion('future_events')
         self.assertTrue(self.recurrence)
-        self.assertEqual(self.events.exists(), self.events[0])
+        self.assertEqual(self.events.exists(), event_to_keep)
 
+    def test_unlink_recurrence_from_the_first_event_to_future(self):
+        self.events[0].action_mass_deletion('future_events')
+        self.assertFalse(self.recurrence.exists())
+        self.assertFalse(self.events.exists())
 
 class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
 

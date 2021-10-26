@@ -586,7 +586,16 @@ class Meeting(models.Model):
         events = self.filtered_domain([('alarm_ids', '!=', False)])
         partner_ids = events.mapped('partner_ids').ids
 
+        # don't forget to update recurrences if there are some base events in the set to unlink,
+        # but after having removed the events ;-)
+        recurrences = self.env["calendar.recurrence"].search([
+            ('base_event_id.id', 'in', [e.id for e in self])
+        ])
+
         result = super().unlink()
+
+        if recurrences:
+            recurrences._select_new_base_event()
 
         # Notify the concerned attendees (must be done after removing the events)
         self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
@@ -694,8 +703,15 @@ class Meeting(models.Model):
             self.write({'partner_ids': [(4, partner.id)]})
 
     def action_mass_deletion(self, recurrence_update_setting):
+        """
+        Action used to delete all events (and the recurrence itself) or all events from self from a recurrence,
+        according to 'recurrence_update_setting' parameter.
+        Note that deleting all events and futures from the first one means deleting all events and the recurrence
+        itself.
+        """
         self.ensure_one()
-        if recurrence_update_setting == 'all_events':
+
+        if recurrence_update_setting == 'all_events' or self == self.recurrence_id.base_event_id:
             events = self.recurrence_id.calendar_event_ids
             self.recurrence_id.unlink()
             events.unlink()
