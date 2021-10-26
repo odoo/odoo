@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Templates -->
+    <!-- = = = = = = = = = = = = = -->
+
+    <!-- United Kingdom Domestic Fiscal Positions
+
+        These fiscal positions will contain no mappings,
+        they are just here to distinguish domestic trade
+        from trade with the "rest of the world"
+    -->
+
+    <record id="fiscal_position_template_domestic_b2c" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">UK domestic B2C</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False" />
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <record id="fiscal_position_template_domestic_b2b" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">UK domestic B2B</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True" />
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <!-- Northern Ireland to EU Fiscal Position -->
+
+    <record id="fiscal_position_template_b2b_ni_eu" model="account.fiscal.position.template">
+        <field name="sequence">2</field>
+        <field name="name">Northern Ireland and European Union member states B2B</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+    </record>
+
+    <!-- United Kingdom to "Rest of World" Fiscal Position -->
+
+    <record id="fiscal_position_template_b2b_row" model="account.fiscal.position.template">
+        <field name="sequence">4</field>
+        <field name="name">United Kingdom and the rest of the world B2B</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+    </record>
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = -->
+    <!-- Northern Ireland to EU Fiscal Position Taxes  -->
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = -->
+
+        <!--
+            MAPPINGS FOR TAXES ON GOODS
+            EU Rules on taxes only apply to the sale and purchase of goods between
+            Northern Ireland and the EU.
+        -->
+
+    <!-- Sales Taxes -->
+
+    <!-- 20% sales to Sales to customers in EU -->
+    <record id="fp_tax_template_b2b_ni_eu_ST11G_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST11G"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- 12.5% sales to Sales to customers in EU -->
+    <record id="fp_tax_template_b2b_ni_eu_ST125G_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST125G"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- 5% sales to Sales to customers in EU -->
+    <record id="fp_tax_template_b2b_ni_eu_ST5G_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST5G"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- 0% sales to Sales to customers in EU -->
+    <record id="fp_tax_template_b2b_ni_eu_ST0G_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST0G"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- Exempt sales to customers in EU -->
+    <record id="fp_tax_template_b2b_ni_eu_ST2_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST2"/>
+        <field name="tax_dest_id" ref="ST4"/>
+
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <!-- 20% purchases to 20% EU purchases -->
+    <record id="fp_tax_template_b2b_ni_eu_PT11G_PT8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT11G"/>
+        <field name="tax_dest_id" ref="PT8"/>
+    </record>
+
+    <!-- 12.5% purchases to 12.5% EU purchases -->
+    <record id="fp_tax_template_b2b_ni_eu_PT125G_PT125E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT125G"/>
+        <field name="tax_dest_id" ref="PT125E"/>
+    </record>
+
+    <!-- 5% purchases to 5% EU purchases -->
+    <record id="fp_tax_template_b2b_ni_eu_PT5G_PT5E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT5G"/>
+        <field name="tax_dest_id" ref="PT5E"/>
+    </record>
+
+    <!-- 0% purchases to 0% EU purchases -->
+    <record id="fp_tax_template_b2b_ni_eu_PT0G_PT7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT0G"/>
+        <field name="tax_dest_id" ref="PT7"/>
+    </record>
+
+    <!-- Exempt purchases to 0% EU purchases -->
+    <record id="fp_tax_template_b2b_ni_eu_PT2G_PT7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT2G"/>
+        <field name="tax_dest_id" ref="PT7"/>
+    </record>
+
+        <!--
+            MAPPINGS FOR TAXES ON SERVICES
+            Sales and purchases of services do not follow EU tax rules. Therefore the EU
+            should be treated as the rest of the world for services.
+        -->
+
+    <!-- Sales Taxes -->
+    <!-- 20% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_ni_eu_ST11_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST11"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 12.5% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_ni_eu_ST125_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST125"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 5% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_ni_eu_ST5_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST5"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 0% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_ni_eu_ST0_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST0"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Exempt sales to 0% exports -->
+    <record id="fp_tax_template_b2b_ni_eu_ST2_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="ST2"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+
+    <!-- 20% purchases to 20% reverse charge -->
+    <record id="fp_tax_template_b2b_ni_eu_PT11_PT11RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT11"/>
+        <field name="tax_dest_id" ref="PT11RCDS"/>
+    </record>
+
+    <!-- 12.5% purchases to 12.5% reverse charge -->
+    <record id="fp_tax_template_b2b_ni_eu_PT125_PT125RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT125"/>
+        <field name="tax_dest_id" ref="PT125RCDS"/>
+    </record>
+
+    <!-- 5% purchases to 5% reverse charge -->
+    <record id="fp_tax_template_b2b_ni_eu_PT5_PT5RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT5"/>
+        <field name="tax_dest_id" ref="PT5RCDS"/>
+    </record>
+
+    <!-- 0% purchases to 0% reverse charge -->
+    <record id="fp_tax_template_b2b_ni_eu_PT0_PT0RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT0"/>
+        <field name="tax_dest_id" ref="PT0RCDS"/>
+    </record>
+
+    <!-- Exempt purchases to 0% reverse charge -->
+    <record id="fp_tax_template_b2b_ni_eu_PT2_PT0RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_ni_eu"/>
+        <field name="tax_src_id" ref="PT2"/>
+        <field name="tax_dest_id" ref="PT0RCDS"/>
+    </record>
+
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+    <!-- United Kingdom to the rest of the world b2b fiscal position taxes -->
+    <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+
+        <!--
+            MAPPINGS FOR TAXES ON GOODS
+        -->
+
+    <!-- Sales Taxes -->
+    <!-- 20% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST11G_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST11G"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 12.5% sales to 0% exports-->
+    <record id="fp_tax_template_b2b_row_ST125G_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST125G"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 5% sales to 0% exports-->
+    <record id="fp_tax_template_b2b_row_ST5G_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST5G"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 0% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST0G_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST0G"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Exempt sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST2_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST2"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+    <!-- 20% purchases to 20% import postponed VAT -->
+    <record id="fp_tax_template_b2b_row_PT11G_PT11IP" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT11G"/>
+        <field name="tax_dest_id" ref="PT11IP"/>
+    </record>
+
+    <!-- 5% purchases to 5% import postponed VAT -->
+    <record id="fp_tax_template_b2b_row_PT5G_PT5IP" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT5G"/>
+        <field name="tax_dest_id" ref="PT5IP"/>
+    </record>
+
+    <!-- 12.5% purchases to 12.5% import postponed VAT -->
+    <record id="fp_tax_template_b2b_row_PT125G_PT125IP" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT125G"/>
+        <field name="tax_dest_id" ref="PT125IP"/>
+    </record>
+
+    <!-- 0% purchases to VAT 0% import -->
+    <record id="fp_tax_template_b2b_row_PT0G_PT0I" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT0G"/>
+        <field name="tax_dest_id" ref="PT0I"/>
+    </record>
+
+    <!-- Exempt purchases to VAT 0% import -->
+    <record id="fp_tax_template_b2b_row_PT2G_PT0I" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT2G"/>
+        <field name="tax_dest_id" ref="PT0I"/>
+    </record>
+
+        <!--
+            MAPPINGS FOR TAXES ON SERVICES
+        -->
+
+    <!-- Sales Taxes -->
+    <!-- 20% to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST11_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST11"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 12.5% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST125_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST125"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 5% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST5_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST5"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- 0% sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST0_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST0"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Exempt sales to 0% exports -->
+    <record id="fp_tax_template_b2b_row_ST2_ST0E" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="ST2"/>
+        <field name="tax_dest_id" ref="ST0E"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+    <!-- 20% purchases to VAT 20% reverse charge deemed supply -->
+    <record id="fp_tax_template_b2b_row_PT11_PT11RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT11"/>
+        <field name="tax_dest_id" ref="PT11RCDS"/>
+    </record>
+
+    <!-- 12.5% purchases to VAT 12.5% reverse charge deemed supply -->
+    <record id="fp_tax_template_b2b_row_PT125_PT125RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT125"/>
+        <field name="tax_dest_id" ref="PT125RCDS"/>
+    </record>
+
+    <!-- 5% purchases to VAT 5% reverse charge deemed supply -->
+    <record id="fp_tax_template_b2b_row_PT5_PT5RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT5"/>
+        <field name="tax_dest_id" ref="PT5RCDS"/>
+    </record>
+
+    <!-- 0% purchases to VAT 0% reverse charge deemed supply -->
+    <record id="fp_tax_template_b2b_row_PT0_PT0RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT0"/>
+        <field name="tax_dest_id" ref="PT0RCDS"/>
+    </record>
+
+    <!-- Exempt purchases to VAT 0% reverse charge deemed supply -->
+    <record id="fp_tax_template_b2b_row_PT2_PT0RCDS" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_row"/>
+        <field name="tax_src_id" ref="PT2"/>
+        <field name="tax_dest_id" ref="PT0RCDS"/>
+    </record>
+
+</odoo>

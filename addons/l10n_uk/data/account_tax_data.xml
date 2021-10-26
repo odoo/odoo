@@ -1,11 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="ST0" model="account.tax.template">
-        <field name="description">ST0</field>
+    <!-- = = = = = = = -->
+    <!-- Domestic VAT  -->
+    <!-- = = = = = = = -->
+
+    <!-- = = = = = = -->
+    <!-- Normal VAT  -->
+    <!-- = = = = = = -->
+
+    <!-- = = = -->
+    <!-- Sales -->
+    <!-- = = = -->
+
+    <record id="ST11" model="account.tax.template">
+        <field name="description">VAT 20%</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">sale</field>
-        <field name="name">Zero rated sales</field>
+        <field name="name">20%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+
+	<record id="ST125" model="account.tax.template">
+        <field name="description">VAT 12.5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">12.5%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+	<record id="ST5" model="account.tax.template">
+        <field name="description">VAT 5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">5%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="ST0" model="account.tax.template">
+        <field name="description">VAT 0%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">0%</field>
+        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -34,10 +157,10 @@
     </record>
 
     <record id="ST2" model="account.tax.template">
-        <field name="description">ST2</field>
+        <field name="description">VAT exempt</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">sale</field>
-        <field name="name">Exempt sales</field>
+        <field name="name">Exempt</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -65,11 +188,272 @@
         ]"/>
     </record>
 
-    <record id="PT0" model="account.tax.template">
-        <field name="description">PT0</field>
+    <record id="ST11G" model="account.tax.template">
+        <field name="description">VAT 20%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">20%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+
+	<record id="ST125G" model="account.tax.template">
+        <field name="description">VAT 12.5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">12.5%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+
+	<record id="ST5G" model="account.tax.template">
+        <field name="description">VAT 5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">5%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2200'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="ST0G" model="account.tax.template">
+        <field name="description">VAT 0%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">0%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = = = -->
+    <!-- Purchases -->
+    <!-- = = = = = -->
+
+    <record id="PT11" model="account.tax.template">
+        <field name="description">VAT 20%</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Zero rated purchases</field>
+        <field name="name">20%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT125" model="account.tax.template">
+        <field name="description">VAT 12.5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">12.5%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+
+    <record id="PT5" model="account.tax.template">
+        <field name="description">VAT 5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5%</field>
+        <field name="tax_scope">service</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT0" model="account.tax.template">
+        <field name="description">VAT 0%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">0%</field>
+        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -98,10 +482,11 @@
     </record>
 
     <record id="PT2" model="account.tax.template">
-        <field name="description">PT2</field>
+        <field name="description">VAT exempt</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Exempt purchases</field>
+        <field name="name">Exempt</field>
+        <field name="tax_scope">service</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -129,14 +514,240 @@
         ]"/>
     </record>
 
-    <record id="PT8" model="account.tax.template">
-        <field name="description">PT8</field>
+    <record id="PT11G" model="account.tax.template">
+        <field name="description">VAT 20%</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Standard rated purchases from EC</field>
+        <field name="name">20%</field>
+        <field name="tax_scope">consu</field>
         <field name="amount_type">percent</field>
         <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT125G" model="account.tax.template">
+        <field name="description">VAT 12.5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">12.5%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT5G" model="account.tax.template">
+        <field name="description">VAT 5%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT0G" model="account.tax.template">
+        <field name="description">VAT 0%</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">0%</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT2G" model="account.tax.template">
+        <field name="description">VAT exempt</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Exempt</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = = = = = = = = = = = = = = = = = = -->
+    <!-- European Union VAT for Northern Ireland -->
+    <!-- = = = = = = = = = = = = = = = = = = = = -->
+
+    <!-- With respect to the Northern Ireland protocol, Northern Ireland is formally outside of the of the EU single market -->
+    <!-- but will, in effect, still follow EU rules regarding customs and VAT in the trade of goods -->
+
+    <!-- = = = -->
+    <!-- Sales -->
+    <!-- = = = -->
+
+    <record id="ST4" model="account.tax.template">
+        <field name="description">VAT 0% EU</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">0% EU</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = = = -->
+    <!-- Purchases -->
+    <!-- = = = = = -->
+
+    <record id="PT8" model="account.tax.template">
+        <field name="description">VAT 20% EU</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">20% EU</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20"/>
 		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
@@ -177,11 +788,61 @@
         ]"/>
     </record>
 
-    <record id="PT5" model="account.tax.template">
-        <field name="description">PT5</field>
-        <field name="chart_template_id" ref="l10n_uk"/>
+    <record id="PT125E" model="account.tax.template">
+        <field name="description">VAT 12.5% EU</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Lower rate purchases (5%)</field>
+        <field name="name">12.5% EU</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT5E" model="account.tax.template">
+        <field name="description">VAT 5% EU</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% EU</field>
+        <field name="tax_scope">consu</field>
         <field name="amount_type">percent</field>
         <field name="amount">5</field>
         <field name="tax_group_id" ref="tax_group_5"/>
@@ -189,103 +850,48 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
                 'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
             }),
         ]"/>
-    </record>
-
-	<record id="ST5" model="account.tax.template">
-        <field name="description">ST5</field>
-        <field name="chart_template_id" ref="l10n_uk"/>
-        <field name="type_tax_use">sale</field>
-        <field name="name">Lower rate sales (5%)</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">5</field>
-        <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2200'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
-            }),
-        ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box9'), ref('account_tax_report_line_exd_vat_box7')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('2200'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
-            }),
-        ]"/>
-    </record>
-
-    <record id="ST4" model="account.tax.template">
-        <field name="description">ST4</field>
-        <field name="chart_template_id" ref="l10n_uk"/>
-        <field name="type_tax_use">sale</field>
-        <field name="name">Sales to customers in EC</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0</field>
-        <field name="tax_group_id" ref="tax_group_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box2')],
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': -100,
                 'repartition_type': 'tax',
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box8'), ref('account_tax_report_line_exd_vat_box6')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
             }),
         ]"/>
     </record>
 
     <record id="PT7" model="account.tax.template">
-        <field name="description">PT7</field>
-        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="description">VAT 0% EU</field>
+        <field name="chart_template_id" ref="l10n_uk_ni"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Zero rated purchases from EC</field>
+        <field name="name">0% EU</field>
+        <field name="tax_scope">consu</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -313,47 +919,20 @@
         ]"/>
     </record>
 
-    <record id="ST11" model="account.tax.template">
-        <field name="description">ST11</field>
-        <field name="chart_template_id" ref="l10n_uk"/>
-        <field name="type_tax_use">sale</field>
-        <field name="name">Standard rate sales (20%)</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">20</field>
-        <field name="tax_group_id" ref="tax_group_20"/>
-		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2200'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2200'),
-                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
-            }),
-        ]"/>
-    </record>
+    <!-- = = = = = = = = = = = = = = = = = = -->
+    <!-- 'Rest of World' IMPORT/EXPORT taxes -->
+    <!-- = = = = = = = = = = = = = = = = = = -->
 
-    <record id="PT11" model="account.tax.template">
-        <field name="description">PT11</field>
+    <!-- = = = = = = = -->
+    <!-- Import taxes  -->
+    <!-- = = = = = = = -->
+
+    <record id="PT11IP" model="account.tax.template">
+        <field name="description">20% import postponed VAT</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
-        <field name="name">Standard rate purchases (20%)</field>
+        <field name="name">20% import postponed</field>
+        <field name="tax_scope">consu</field>
         <field name="amount_type">percent</field>
         <field name="amount">20</field>
         <field name="tax_group_id" ref="tax_group_20"/>
@@ -367,7 +946,13 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
-                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -380,7 +965,534 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT125IP" model="account.tax.template">
+        <field name="description">12.5% import VAT postponed</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">12.5% import postponed</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
                 'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT5IP" model="account.tax.template">
+        <field name="description">5% import VAT postponed</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% import postponed</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT0I" model="account.tax.template">
+        <field name="description">VAT 0% import</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">0% import</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = = = = = -->
+    <!-- Export taxes  -->
+    <!-- = = = = = = = -->
+
+    <record id="ST0E" model="account.tax.template">
+        <field name="description">VAT 0% export</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">0% export</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = = = = = = = = = -->
+    <!-- Reverse charge Taxes  -->
+    <!-- = = = = = = = = = = = -->
+
+    <!--
+
+    Reverse charge taxes can apply to some domestic purchases, such as wholesale gas and mobile phones [1].
+    In this case, the seller is not required to collect any tax, and the buyer can add the tax to both
+    their inputs and outputs.
+
+    When buying services from from a supplier outside of the UK, when the place of supply is in the UK,
+    when you belong in the UK and are VAT registered, the reverse charge proceedure also applies.
+    The case of deemed supply applies to cases when receiving services from outside of the UK and some domestic
+    transactions. Deemed supply essentially suggests that you behave as though you are the
+    "both the supplier and recipient of the services" [2].
+
+    [1] https://www.gov.uk/guidance/the-vat-domestic-reverse-charge-procedure-notice-735#para3
+    [2] https://www.gov.uk/guidance/vat-place-of-supply-of-services-notice-741a#sec5
+
+    -->
+
+    <!-- = = = = = -->
+    <!-- Purchases -->
+    <!-- = = = = = -->
+
+    <record id="PT11RCDS" model="account.tax.template">
+        <field name="description">VAT 20% reverse charge deemed supply</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">20% reverse charge</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT125RCDS" model="account.tax.template">
+        <field name="description">VAT 12.5% reverse charge deemed supply</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">12.5% reverse charge</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="tax_group_id" ref="tax_group_125RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT5RCDS" model="account.tax.template">
+        <field name="description">VAT 5% reverse charge deemed supply</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">5% reverse charge</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="tax_group_5RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <!--
+    This tax has limited relevance, but it is applicable on foreign supply of services, see section 5.5 in [2].
+    -->
+    <record id="PT0RCDS" model="account.tax.template">
+        <field name="description">VAT 0% reverse charge deemed supply</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">0% reverse charge</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6'), ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <record id="PT11RCS" model="account.tax.template">
+        <field name="description">VAT 20% reverse charge (mobile phones/computer chips)</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">20% special reverse charge (mobile phones/computer chips)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">20</field>
+        <field name="tax_group_id" ref="tax_group_20RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'minus_report_line_ids': [ref('account_tax_report_line_vat_box1')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2201'),
+                'plus_report_line_ids': [ref('account_tax_report_line_vat_box4')],
+            }),
+        ]"/>
+    </record>
+
+    <!-- = = = -->
+    <!-- Sales -->
+    <!-- = = = -->
+
+    <!-- Obliged to represent to the customer -->
+
+    <record id="ST11RC" model="account.tax.template">
+        <field name="description">Reverse Charge: Customer to pay the VAT to HMRC (20%)</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">20% reverse charge (customer to pay HMRC)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_20RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+	<record id="ST125RC" model="account.tax.template">
+        <field name="description">Reverse Charge: Customer to pay the VAT to HMRC (12.5%)</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">12.5% reverse charge (customer to pay HMRC)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_125RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+	<record id="ST5RC" model="account.tax.template">
+        <field name="description">Reverse Charge: Customer to pay the VAT to HMRC (5%)</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">5% reverse charge (customer to pay HMRC)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_5RC"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box6')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
             }),
         ]"/>
     </record>
