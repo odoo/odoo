@@ -2,7 +2,7 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain } from "@web/core/domain";
-import { useAutofocus, useService, useListener } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
@@ -10,225 +10,17 @@ import { Field } from "@web/fields/field";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { isRelational } from "@web/views/helpers/view_utils";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { View } from "@web/views/view";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, hooks } = owl;
-const { onWillUnmount, useExternalListener, useState, useSubEnv } = hooks;
+const { useExternalListener, useState, useSubEnv } = hooks;
 
 const { RECORD_COLORS } = FieldColorPicker;
 
 const GLOBAL_CLICK_CANCEL_SELECTORS = [".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
-
-const useSortable = (params) => {
-    const {
-        listSelector,
-        itemSelector,
-        containment,
-        cursor,
-        onItemEnter,
-        onItemLeave,
-        onListEnter,
-        onListLeave,
-        onStart,
-        onStop,
-        onDrop,
-    } = params;
-    const fullSelector = `${listSelector} ${itemSelector}`;
-
-    let currentItem = null;
-    let currentList = null;
-    let ghost = null;
-
-    let started = false;
-    let locked = false;
-
-    let offsetX = 0;
-    let offsetY = 0;
-
-    const cleanups = [];
-
-    const addListener = (el, event, callback, options, timeout) => {
-        el.addEventListener(event, callback, options);
-        const cleanup = () => el.removeEventListener(event, callback, options);
-        cleanups.push(() => (timeout ? setTimeout(cleanup) : cleanup()));
-    };
-
-    const addStyle = (el, style) => {
-        const originalStyle = el.getAttribute("style");
-        cleanups.push(() =>
-            originalStyle ? el.setAttribute("style", originalStyle) : el.removeAttribute("style")
-        );
-        for (const key in style) {
-            el.style[key] = style[key];
-        }
-    };
-
-    const debounce = (callback) => {
-        if (locked) {
-            return;
-        }
-        locked = true;
-        callback();
-        requestAnimationFrame(() => (locked = false));
-    };
-
-    const cancelEvent = (ev) => {
-        ev.stopPropagation();
-        ev.stopImmediatePropagation();
-        ev.preventDefault();
-    };
-
-    const onItemMouseenter = (ev) => {
-        const item = ev.currentTarget;
-        if (containment !== "parent" || item.closest(listSelector) === currentList) {
-            console.log("ITEM ENTER");
-            const pos = ghost.compareDocumentPosition(item);
-            if (pos === 2 /* BEFORE */) {
-                item.before(ghost);
-            } else if (pos === 4 /* AFTER */) {
-                item.after(ghost);
-            }
-        }
-        if (onItemEnter) {
-            onItemEnter(item);
-        }
-    };
-
-    const onItemMouseleave = (ev) => {
-        onItemLeave(ev.currentTarget);
-    };
-
-    const onListMouseenter = (ev) => {
-        const list = ev.currentTarget;
-        if (containment !== "parent") {
-            console.log("LIST ENTER");
-            list.appendChild(ghost);
-        }
-        if (onListEnter) {
-            onListEnter(list);
-        }
-    };
-
-    const onListMouseleave = (ev) => {
-        onListLeave(ev.currentTarget);
-    };
-
-    const dragStart = () => {
-        if (started) {
-            return;
-        }
-        started = true;
-        const { x, y, width, height } = currentItem.getBoundingClientRect();
-        offsetX -= x;
-        offsetY -= y;
-
-        ghost = currentItem.cloneNode(true);
-        ghost.style.opacity = 0;
-        cleanups.push(() => ghost.remove());
-        addListener(currentItem, "click", cancelEvent, true, true);
-
-        for (const siblingList of document.querySelectorAll(listSelector)) {
-            addListener(siblingList, "mouseenter", onListMouseenter);
-            if (onListLeave) {
-                addListener(siblingList, "mouseleave", onListMouseleave);
-            }
-
-            for (const siblingItem of siblingList.querySelectorAll(itemSelector)) {
-                if (siblingItem !== currentItem && siblingItem !== ghost) {
-                    addListener(siblingItem, "mouseenter", onItemMouseenter);
-                    if (onItemLeave) {
-                        addListener(siblingItem, "mouseleave", onItemMouseleave);
-                    }
-                }
-            }
-        }
-
-        if (onStart) {
-            onStart(currentList, currentItem);
-        }
-
-        currentItem.after(ghost);
-
-        addStyle(currentItem, {
-            position: "fixed",
-            "pointer-events": "none",
-            width: `${width}px`,
-            height: `${height}px`,
-        });
-
-        if (cursor) {
-            addStyle(document.body, { cursor });
-        }
-    };
-
-    const drag = (x, y) => {
-        debounce(() => {
-            if (containment !== "parent") {
-                currentItem.style.left = `${x - offsetX}px`;
-            }
-            currentItem.style.top = `${y - offsetY}px`;
-        });
-    };
-
-    const dragStop = (cancelled = false) => {
-        if (!started) {
-            return;
-        }
-        if (onStop) {
-            onStop(currentList, currentItem);
-        }
-        if (
-            onDrop &&
-            !cancelled &&
-            ghost.previousElementSibling !== currentItem &&
-            ghost.nextElementSibling !== currentItem
-        ) {
-            const previous = ghost.previousElementSibling;
-            const parent = ghost.parentNode;
-            onDrop({ previous, parent });
-        }
-        for (const cleanup of cleanups) {
-            cleanup();
-        }
-        currentItem = null;
-        ghost = null;
-        started = false;
-    };
-
-    useListener("mousedown", fullSelector, (ev) => {
-        currentItem = ev.target.closest(itemSelector);
-        currentList = ev.target.closest(listSelector);
-        offsetX = ev.clientX;
-        offsetY = ev.clientY;
-    });
-    useExternalListener(window, "mousemove", (ev) => {
-        if (!currentItem) {
-            return;
-        }
-        dragStart();
-        drag(ev.clientX, ev.clientY);
-    });
-    useExternalListener(window, "mouseup", () => dragStop(), true);
-    useExternalListener(
-        window,
-        "keydown",
-        (ev) => {
-            switch (ev.key) {
-                case "Escape":
-                case "Tab": {
-                    if (started) {
-                        cancelEvent(ev);
-                    }
-                    dragStop(true);
-                }
-            }
-        },
-        true
-    );
-    onWillUnmount(() => dragStop(true));
-};
 
 export class KanbanRenderer extends Component {
     setup() {
@@ -274,6 +66,22 @@ export class KanbanRenderer extends Component {
                     const refId = previous ? Number(previous.dataset.id) : null;
                     const groupId = Number(groupEl.dataset.id);
                     this.env.model.moveRecord(dataRecordId, dataListId, refId, groupId);
+                },
+            });
+        }
+        if (this.props.list.groupByField.type === "many2one") {
+            let dataListId;
+            useSortable({
+                axis: "x",
+                itemSelector: ".o_kanban_group",
+                handle: ".o_column_title",
+                cursor: "move",
+                onStart(group, item) {
+                    dataListId = Number(item.dataset.id);
+                },
+                onDrop: ({ previous }) => {
+                    const refId = Number(previous.dataset.id);
+                    this.props.list.resequence(dataListId, refId);
                 },
             });
         }

@@ -633,12 +633,14 @@ class DataList extends DataPoint {
         await this.model.load();
     }
 
-    async resequence(record, refId) {
-        if (record) {
-            this.data.splice(refId || 0, 0, record);
+    async resequence(dataPointId, refId) {
+        if (dataPointId) {
+            this.data = this.data.filter((dp) => dp.id !== dataPointId);
+            const index = refId ? this.data.findIndex((dp) => dp.id === refId) + 1 : 0;
+            this.data.splice(index || 0, 0, this.model.db[dataPointId]);
         }
         const model = this.resModel;
-        const ids = this.data.map((r) => r.resId);
+        const ids = this.data.map((r) => r.resId || r.value);
         await this.model.rpc("/web/dataset/resequence", { model, ids });
         this.model.notify();
     }
