@@ -91,7 +91,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 });
 
 QUnit.test('base rendering when chatter has no record', async function (assert) {
-    assert.expect(8);
+    assert.expect(10);
 
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
@@ -137,6 +137,20 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         document.body,
         '.o_MessageList_loadMore',
         "should not have the 'load more' button"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Message').click()
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_MessageActionList`).length,
+        1,
+        "should action list in message"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageActionList_action',
+        "should not have any action in action list of message"
     );
 });
 
