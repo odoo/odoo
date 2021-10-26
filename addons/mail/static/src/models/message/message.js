@@ -395,6 +395,13 @@ function factory(dependencies) {
         }
 
         /**
+         * @returns {boolean}
+         */
+        _computeHasReactionIcon() {
+            return !this.isTemporary && !this.isTransient;
+        }
+
+        /**
          * @private
          * @returns {boolean}
          */
@@ -617,6 +624,12 @@ function factory(dependencies) {
         }),
         guestAuthor: many2one('mail.guest', {
             inverse: 'authoredMessages',
+        }),
+        /**
+         * Determines whether the message has a reaction icon.
+         */
+        hasReactionIcon: attr({
+            compute: '_computeHasReactionIcon',
         }),
         id: attr({
             readonly: true,
