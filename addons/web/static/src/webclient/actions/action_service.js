@@ -1312,7 +1312,7 @@ function makeActionManager(env) {
         if (action.context) {
             const activeId = action.context.active_id;
             if (activeId) {
-                newState.active_id = `${activeId}`;
+                newState.active_id = activeId;
             }
             const activeIds = action.context.active_ids;
             // we don't push active_ids if it's a single element array containing
@@ -1325,7 +1325,7 @@ function makeActionManager(env) {
             const props = controller.props;
             newState.model = props.resModel;
             newState.view_type = props.type;
-            newState.id = props.resId ? `${props.resId}` : undefined;
+            newState.id = props.resId || undefined;
         }
         env.services.router.pushState(newState, { replace: true });
     }

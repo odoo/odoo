@@ -267,3 +267,16 @@ QUnit.test("do not re-push when hash is same", async (assert) => {
     await nextTick();
     assert.verifySteps([]);
 });
+
+QUnit.test("do not re-push when hash is same (with integers as strings)", async (assert) => {
+    const onPushState = () => assert.step("pushed state");
+    const router = await createRouter({ onPushState });
+
+    router.pushState({ k1: 1, k2: "2" });
+    await nextTick();
+    assert.verifySteps(["pushed state"]);
+
+    router.pushState({ k2: 2, k1: "1" });
+    await nextTick();
+    assert.verifySteps([]);
+});
