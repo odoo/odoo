@@ -56,16 +56,16 @@ var addVideoToSection = function (sectionName, saveAsDraft) {
 	return base_steps;
 };
 
-var addWebPageToSection = function (sectionName, pageName) {
+var addArticleToSection = function (sectionName, pageName) {
 	return [
 {
 	content: 'eLearning: add content to section',
 	trigger: 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
 }, {
-	content: 'eLearning: click on webpage',
-	trigger: 'a[data-slide-category=webpage]',
+	content: 'eLearning: click on article',
+	trigger: 'a[data-slide-category=article]',
 }, {
-	content: 'eLearning: fill webpage title',
+	content: 'eLearning: fill article title',
 	trigger: 'input[name=name]',
 	run: 'text ' + pageName,
 }, {
@@ -76,7 +76,7 @@ var addWebPageToSection = function (sectionName, pageName) {
     trigger: 'div.select2-result-label:contains("Theory")',
     in_modal: false,
 }, {
-	content: 'eLearning: fill webpage completion time',
+	content: 'eLearning: fill article completion time',
 	trigger: 'input[name=duration]',
 	run: 'text 4',
 }];
@@ -132,7 +132,7 @@ var addNewCourseTag = function (courseTagName) {
 export default {
 	addSection: addSection,
 	addVideoToSection: addVideoToSection,
-	addWebPageToSection: addWebPageToSection,
+	addArticleToSection: addArticleToSection,
 	addExistingCourseTag: addExistingCourseTag,
 	addNewCourseTag: addNewCourseTag,
 };

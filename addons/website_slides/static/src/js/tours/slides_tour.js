@@ -42,7 +42,7 @@ tour.register('slides_tour', {
     width: 260,
 }, {
     trigger: 'a.btn-primary.o_wslides_js_slide_upload',
-    content: Markup(_t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create a web page or link a video.")),
+    content: Markup(_t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create an article or link a video.")),
     position: 'bottom',
 }, {
     trigger: 'a[data-slide-category="document"]',
