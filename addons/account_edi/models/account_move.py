@@ -585,16 +585,20 @@ class AccountMoveLine(models.Model):
         '''
         self.ensure_one()
 
+        if self.discount == 100.0:
+            gross_price_subtotal = self.currency_id.round(self.price_unit * self.quantity)
+        else:
+            gross_price_subtotal = self.currency_id.round(self.price_subtotal / (1 - self.discount / 100.0))
+
         res = {
             'line': self,
-            'price_unit_after_discount': self.price_unit * (1 - (self.discount / 100.0)),
-            'price_subtotal_before_discount': self.currency_id.round(self.price_unit * self.quantity),
+            'price_unit_after_discount': self.currency_id.round(self.price_unit * (1 - (self.discount / 100.0))),
+            'price_subtotal_before_discount': gross_price_subtotal,
             'price_subtotal_unit': self.currency_id.round(self.price_subtotal / self.quantity) if self.quantity else 0.0,
             'price_total_unit': self.currency_id.round(self.price_total / self.quantity) if self.quantity else 0.0,
+            'price_discount': gross_price_subtotal - self.price_subtotal,
+            'gross_price_total_unit': self.currency_id.round(gross_price_subtotal / self.quantity) if self.quantity else 0.0,
         }
-
-        res['price_discount'] = res['price_subtotal_before_discount'] - self.price_subtotal
-
         return res
 
     def reconcile(self):
