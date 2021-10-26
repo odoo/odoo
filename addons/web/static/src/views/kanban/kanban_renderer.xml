@@ -8,6 +8,7 @@
                     <t t-set="group" t-value="groupOrRecord" />
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group)"
+                        t-att-data-id="props.info.recordsDraggable and group.id"
                         t-on-mouseenter="() => state.hoveredColumn = group.id"
                         t-on-mouseleave="() => state.hoveredColumn = null"
                         t-on-click="onGroupClick(group)"
