@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
-import { getIds, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
+import { getIds, isX2Many, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
 
 const formatterRegistry = registry.category("formatters");
 
@@ -210,10 +210,11 @@ class DataRecord extends DataPoint {
      */
     async loadRelationalField(fieldName) {
         const field = this.fields[fieldName];
-        const { relation, views, viewMode } = field;
+        const { relation, views = {}, viewMode } = field;
         const activeFields = this.model.relations[relation] || [];
+        const rawValue = this.data[fieldName];
 
-        if (!isRelational(field) || !(Object.keys(views || {}).length || activeFields.length)) {
+        if (!rawValue || !isX2Many(field) || !(Object.keys(views).length || activeFields.length)) {
             return;
         }
 
@@ -451,7 +452,7 @@ class DataList extends DataPoint {
         if (this.resIds) {
             this.data = await this.loadRecords();
         } else if (this.isGrouped) {
-            this.data = await this.loadGroups();
+            this.data = await this.loadGroups(params.keepRecords);
         } else {
             this.data = await this.searchRecords();
         }
@@ -520,9 +521,10 @@ class DataList extends DataPoint {
 
     /**
      * @private
+     * @param {boolean} [keepRecords=false] Whether to keep the previous data
      * @returns {Promise<DataRecord>}
      */
-    async loadGroups() {
+    async loadGroups(keepRecords = false) {
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.getDomain(),
@@ -588,9 +590,11 @@ class DataList extends DataPoint {
                 if (group && group.isLoaded) {
                     group.updateGroupParams(groupParams);
                 } else {
+                    keepRecords = false;
                     group = this.createList(this.resModel, groupParams);
                 }
                 if (
+                    !keepRecords &&
                     !shouldFold &&
                     loadedGroups < LOADED_GROUP_LIMIT &&
                     (this.openGroupsByDefault || group.isLoaded)
@@ -627,6 +631,16 @@ class DataList extends DataPoint {
         const resIds = this.data.map((r) => r.resId);
         await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
         await this.model.load();
+    }
+
+    async resequence(record, refId) {
+        if (record) {
+            this.data.splice(refId || 0, 0, record);
+        }
+        const model = this.resModel;
+        const ids = this.data.map((r) => r.resId);
+        await this.model.rpc("/web/dataset/resequence", { model, ids });
+        this.model.notify();
     }
 
     getDomain() {
@@ -675,6 +689,7 @@ export class RelationalModel extends Model {
             this.root = new DataList(this, this.resModel, dataPointParams);
         }
 
+        this.rpc = rpc;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
 

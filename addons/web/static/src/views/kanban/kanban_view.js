@@ -50,6 +50,7 @@ const translateAttribute = (attrValue) => {
 const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("tabindex", 0);
     kanbanBox.setAttribute("role", "article");
+    kanbanBox.setAttribute("t-att-data-id", "props.info.recordsDraggable and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
         kanbanBox.setAttribute("t-on-click", "onCardClicked(record)");
     }
@@ -73,6 +74,7 @@ export class KanbanArchParser extends XMLParser {
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
+        const recordsDraggable = this.isAttr(xmlDoc, "records_draggable").truthy(true);
         const activeActions = {
             ...this.getActiveActions(xmlDoc),
             groupArchive: this.isAttr(xmlDoc, "archivable").truthy(true),
@@ -245,6 +247,7 @@ export class KanbanArchParser extends XMLParser {
             defaultGroupBy,
             colorField,
             quickCreate,
+            recordsDraggable,
             limit: limit ? parseInt(limit) : 40,
             progress: progressBarInfo,
             xmlDoc: applyDefaultAttributes(kanbanBox),
