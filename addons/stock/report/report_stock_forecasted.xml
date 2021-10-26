@@ -160,7 +160,7 @@
                             <td t-esc="docs['virtual_available']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
                         </tr>
                     </thead>
-                    <tbody t-if="docs['qty']['in']">
+                    <tbody t-if="docs['qty']['in'] or docs['qty']['out']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
                             <td colspan="2">Incoming Draft Transfer</td>
                             <td t-esc="docs['draft_picking_qty']['in']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
