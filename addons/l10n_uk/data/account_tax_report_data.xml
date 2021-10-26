@@ -22,7 +22,7 @@
     </record>
 
     <record id="account_tax_report_line_vat_box2" model="account.tax.report.line">
-        <field name="name">[BOX 2] VAT due on acquisitions from EC</field>
+        <field name="name">[BOX 2] VAT due on acquisitions of goods made in Northern Ireland from EU Member States</field>
         <field name="tag_name">2</field>
         <field name="code">UKTAX_2</field>
         <field name="report_id" ref="tax_report"/>
@@ -39,7 +39,7 @@
     </record>
 
     <record id="account_tax_report_line_vat_box4" model="account.tax.report.line">
-        <field name="name">[BOX 4] VAT reclaimed on purchases and other inputs (including acquisitions from EC)</field>
+        <field name="name">[BOX 4] VAT reclaimed on purchases and other inputs (including acquisitions in Northern Ireland from EU member states)</field>
         <field name="tag_name">4</field>
         <field name="code">UKTAX_4</field>
         <field name="report_id" ref="tax_report"/>
@@ -48,7 +48,7 @@
     </record>
 
     <record id="account_tax_report_line_vat_box5" model="account.tax.report.line">
-        <field name="name">[BOX 5] VAT to pay/reclaim</field>
+        <field name="name">[BOX 5] Net VAT to pay to HMRC or reclaim</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="5"/>
         <field name="formula">UKTAX_1 + UKTAX_2 - UKTAX_4</field>
@@ -62,29 +62,29 @@
     </record>
 
     <record id="account_tax_report_line_exd_vat_box6" model="account.tax.report.line">
-        <field name="name">[BOX 6] Total value of sales and other outputs excluding VAT (including EC supplies)</field>
+        <field name="name">[BOX 6] Total value of sales and other outputs excluding VAT</field>
         <field name="tag_name">6</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_exd_vat"/>
     </record>
 
-    <record id="account_tax_report_line_ec_exd_vat" model="account.tax.report.line">
-        <field name="name">EC Sales and Purchases excluding VAT</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-    </record>
-
     <record id="account_tax_report_line_exd_vat_box7" model="account.tax.report.line">
-        <field name="name">[BOX 7] Total value of purchases and inputs excluding VAT (including EC acquisitions)</field>
+        <field name="name">[BOX 7] Total value of purchases and other inputs excluding VAT</field>
         <field name="tag_name">7</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_exd_vat"/>
     </record>
 
+    <record id="account_tax_report_line_ec_exd_vat" model="account.tax.report.line">
+        <field name="name">Northern Ireland Sales and Purchases Excluding VAT</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
     <record id="account_tax_report_line_exd_vat_box8" model="account.tax.report.line">
-        <field name="name">[BOX 8] Total value of EC sales excluding VAT</field>
+        <field name="name">[BOX 8] Total value of dispatches of goods and related costs (excluding VAT) from Northern Ireland to EU member states</field>
         <field name="tag_name">8</field>
         <field name="code">UKTAX_8</field>
         <field name="report_id" ref="tax_report"/>
@@ -93,7 +93,7 @@
     </record>
 
     <record id="account_tax_report_line_exd_vat_box9" model="account.tax.report.line">
-        <field name="name">[BOX 9] Total value of EC purchases excluding VAT</field>
+        <field name="name">[BOX 9] Total value of acquisitions of goods and related costs (excluding VAT) made in Northern Ireland from EU member states</field>
         <field name="tag_name">9</field>
         <field name="code">UKTAX_9</field>
         <field name="report_id" ref="tax_report"/>
