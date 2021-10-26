@@ -148,34 +148,45 @@
         </record>
 <!-- achats -->
 <!-- Taux Normal -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_normale_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_normale" />
             <field name="tax_dest_id" ref="tva_intra_normale" />
         </record>
+        -->
 <!-- Taux DOM-TOM -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_specifique_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_specifique" />
             <field name="tax_dest_id" ref="tva_intra_specifique" />
         </record>
+        -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_encaissement_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_encaissement" />
             <field name="tax_dest_id" ref="tva_intra_normale" />
         </record>
+        -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_encaissement_deduc_intermediaire" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_intermediaire_encaissement" />
             <field name="tax_dest_id" ref="tva_intra_intermediaire" />
         </record>
+        -->
 <!-- Taux Intermédiaire -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_intermediaire_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_intermediaire" />
             <field name="tax_dest_id" ref="tva_intra_intermediaire" />
         </record>
+        -->
 <!-- Taux réduit -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_reduite_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_reduite" />
@@ -186,7 +197,9 @@
             <field name="tax_src_id" ref="tva_acq_encaissement_reduite" />
             <field name="tax_dest_id" ref="tva_intra_reduite" />
         </record>
+        -->
 <!-- Taux super réduit -->
+        <!--
         <record id="fp_tax_template_intraeub2b_ha_super_reduite_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_acq_super_reduite" />
@@ -197,6 +210,7 @@
             <field name="tax_src_id" ref="tva_acq_encaissement_super_reduite" />
             <field name="tax_dest_id" ref="tva_intra_super_reduite" />
         </record>
+        -->
 
 <!-- Import/Export + DOM/TOM -->
 <!-- ventes -->
@@ -297,11 +311,13 @@
         </record>
 <!-- achats -->
 <!-- Taux Normal -->
+        <!--
         <record id="fp_tax_template_impexp_ha_normale" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_acq_normale" />
             <field name="tax_dest_id" ref="tva_import_outside_eu_20" />
         </record>
+        -->
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_impexp_ha_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
