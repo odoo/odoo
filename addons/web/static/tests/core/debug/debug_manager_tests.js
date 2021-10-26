@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { useSetupView } from "@web/views/helpers/view_hook";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";
@@ -407,6 +408,66 @@ QUnit.module("DebugMenu", (hooks) => {
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        await click(webClient.el.querySelector(".o_debug_manager .dropdown-item"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".modal .o_form_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            "293"
+        );
+    });
+
+    QUnit.test("edit search view on action without search_view_id", async (assert) => {
+        // When the kanban view will be converted to Owl, this test could be simplified by
+        // removing the toy view and using the kanban view directly
+        prepareRegistriesWithCleanup();
+
+        class ToyView extends Component {
+            setup() {
+                useSetupView();
+            }
+        }
+        ToyView.template = xml`<div class="o-toy-view"/>`;
+        ToyView.type = "toy";
+        ToyView.display_name = "toy view";
+        registry.category("views").add("toy", ToyView);
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("debug").category("view").add("editSearchViewItem", editSearchView);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1] = {
+            id: 1,
+            xml_id: "action_1",
+            name: "Partners Action 1",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "toy"]],
+            search_view_id: false,
+        };
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 293 }],
+        };
+        serverData.views = {};
+        serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+        serverData.views["partner,false,toy"] = `<toy></toy>`;
+        serverData.views["partner,293,search"] = `<search></search>`;
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(webClient, ".o-toy-view");
+
         await click(webClient.el.querySelector(".o_debug_manager button"));
         await click(webClient.el.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
