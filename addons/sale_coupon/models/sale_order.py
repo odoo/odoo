@@ -393,6 +393,11 @@ class SaleOrder(models.Model):
         # delete reward line coming from an archived coupon (it will never be updated/removed when recomputing the order)
         invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in reward_product_ids)
 
+        # Remove coupons that are now expired
+        expired_coupons = order.applied_coupon_ids.filtered(
+            lambda coupon: coupon.expiration_date and coupon.expiration_date < fields.Date.today())
+        programs_to_remove |= expired_coupons.program_id
+
         if programs_to_remove:
             product_ids_to_remove = programs_to_remove.discount_line_product_id.ids
 
