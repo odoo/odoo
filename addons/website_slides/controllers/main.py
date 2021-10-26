@@ -1175,9 +1175,9 @@ class WebsiteSlides(WebsiteProfile):
         channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
-        if channel.channel_type == "training" and slide.slide_category not in ["webpage", "quiz"]:
+        if channel.channel_type == "training" and slide.slide_category not in ["article", "quiz"]:
             redirect_url = "/slides/%s" % (slug(channel))
-        if slide.slide_category == 'webpage':
+        if slide.slide_category == 'article':
             redirect_url += "?enable_editor=1"
         return {
             'url': redirect_url,

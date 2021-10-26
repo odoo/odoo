@@ -125,7 +125,7 @@ class Slide(models.Model):
     # content
     slide_category = fields.Selection([
         ('infographic', 'Image'),
-        ('webpage', 'Web Page'),
+        ('article', 'Article'),
         ('document', 'Document'),
         ('video', 'Video'),
         ('quiz', "Quiz")],
@@ -143,7 +143,7 @@ class Slide(models.Model):
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Article'.", translate=True, sanitize_attributes=False, sanitize_form=False)
     # content - images
     image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False,
         help="Used to filter file input to images only")
@@ -152,7 +152,7 @@ class Slide(models.Model):
     # content - documents
     slide_type = fields.Selection([
         ('image', 'Image'),
-        ('webpage', 'Web Page'),
+        ('article', 'Article'),
         ('quiz', 'Quiz'),
         ('pdf', 'PDF'),
         ('sheet', 'Sheet (Excel, Google Sheet, ...)'),
@@ -201,7 +201,7 @@ class Slide(models.Model):
     nbr_document = fields.Integer("Number of Documents", compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer("Number of Videos", compute='_compute_slides_statistics', store=True)
     nbr_infographic = fields.Integer("Number of Images", compute='_compute_slides_statistics', store=True)
-    nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_article = fields.Integer("Number of Articles", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
     is_published = fields.Boolean(tracking=1)
@@ -366,8 +366,8 @@ class Slide(models.Model):
                     slide.slide_type = False
             elif slide.slide_category == 'infographic':
                 slide.slide_type = 'image'
-            elif slide.slide_category == 'webpage':
-                slide.slide_type = 'webpage'
+            elif slide.slide_category == 'article':
+                slide.slide_type = 'article'
             elif slide.slide_category == 'quiz':
                 slide.slide_type = 'quiz'
             elif slide.slide_category == 'video' and slide.video_source_type == 'youtube':
@@ -1252,7 +1252,7 @@ class Slide(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         icon_per_category = {
             'infographic': 'fa-file-picture-o',
-            'webpage': 'fa-file-text',
+            'article': 'fa-file-text',
             'presentation': 'fa-file-pdf-o',
             'document': 'fa-file-pdf-o',
             'video': 'fa-play-circle',

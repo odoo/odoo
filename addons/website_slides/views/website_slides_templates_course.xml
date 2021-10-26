@@ -526,7 +526,7 @@
                 <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
-                <a t-if="slide.slide_category == 'webpage'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
+                <a t-if="slide.slide_category == 'article'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
                 <a t-else="" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form" title="Edit in backend"><span class="fa fa-pencil"/></a>
                 <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger px-2 o_wslides_js_slide_archive"><span class="fa fa-trash"/></a>
             </span>
@@ -813,7 +813,7 @@
     <i t-if="slide.slide_type == 'youtube_video'" t-att-class="'fa fa-youtube-play %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'google_drive_video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'vimeo_video'" t-att-class="'fa fa-vimeo %s' % icon_class"></i>
-    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'article'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
     <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
     <i t-if="not slide.slide_type" t-att-class="'fa fa-file-o %s' % icon_class"></i>
 </template>

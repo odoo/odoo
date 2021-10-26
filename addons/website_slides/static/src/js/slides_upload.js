@@ -134,7 +134,7 @@ var SlideUploadDialog = Dialog.extend({
      */
     _formValidateGetValues: async function (forcePublished) {
         var slideCategory = 'document';
-        // default slide_category (for webpage for instance)
+        // default slide_category (for article for instance)
         if (_.contains(this.slide_category_data), this.get('state')) {
             slideCategory = this.get('state');
         }
@@ -165,7 +165,7 @@ var SlideUploadDialog = Dialog.extend({
                 'slide_category': 'document',
                 'binary_content': this.file.data
             });
-        } else if (values['slide_category'] === 'webpage') {
+        } else if (values['slide_category'] === 'article') {
             _.extend(values, {
                 'image_1920': this.file.type === 'image/svg+xml' ? await this._svgToPng() : this.file.data,
             });
@@ -345,10 +345,10 @@ var SlideUploadDialog = Dialog.extend({
                 label: _t('Image'),
                 template: 'website.slide.upload.modal.infographic',
             },
-            webpage: {
+            article: {
                 icon: 'fa-file-text',
-                label: _t('Web Page'),
-                template: 'website.slide.upload.modal.webpage',
+                label: _t('Article'),
+                template: 'website.slide.upload.modal.article',
             },
             video: {
                 icon: 'fa-file-video-o',
