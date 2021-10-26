@@ -76,43 +76,54 @@ class MicrosoftEvent(abc.Set):
 
     def _load_odoo_ids_from_db(self, env, force_model=None):
         """
-        Map Microsoft events to existing Odoo events using:
-        1) the 'ms_accross_calendars_event_id' which is unique among all calendars,
-        2) the 'ms_organizer_event_id' if the global one is not set (useful for deleted events or recurrences),
-           and set their odoo Id attribute.
+        Map Microsoft events to existing Odoo events:
+        1) extract unmapped events only,
+        2) match Odoo events and Outlook events which have both a ICalUId set,
+        3) match remaining events,
         Returns the list of mapped events
         """
+        mapped_events = [e.id for e in self if e._odoo_id]
+
         # avoid mapping events if they are already all mapped
-        mapped_events = tuple(e for e in self if e._odoo_id)
         if len(self) == len(mapped_events):
             return self
 
+        unmapped_events = self.filter(lambda e: e.id not in mapped_events)
+
         model_env = force_model if force_model is not None else self._get_model(env)
-        odoo_events = model_env.with_context(active_test=False).search(
-            ['|', ('ms_accross_calendars_event_id', "in", self.uids), ('ms_organizer_event_id', "in", self.ids)]
-        ).with_env(env)
+        odoo_events = model_env.with_context(active_test=False).search([
+            '|',
+            ('ms_accross_calendars_event_id', "in", unmapped_events.uids),
+            ('ms_organizer_event_id', "in", unmapped_events.ids)
+        ]).with_env(env)
 
-        mapped_events = []
+        # 1. try to match unmapped events with Odoo events using their iCalUId
+        unmapped_events_with_uids = unmapped_events.filter(lambda e: e.iCalUId)
+        odoo_events_with_uids = odoo_events.filtered(lambda e: e.ms_accross_calendars_event_id)
+        mapping = {e.ms_accross_calendars_event_id: e.id for e in odoo_events_with_uids}
 
-        # map using the global event ID
-        events_with_uid = self.filter(lambda e: e.iCalUId)
-        uid_to_odoo_id_mapping = {e.ms_accross_calendars_event_id: e.id for e in odoo_events}
-
-        for ms_event in events_with_uid:
-            odoo_id = uid_to_odoo_id_mapping.get(ms_event.iCalUId)
+        for ms_event in unmapped_events_with_uids:
+            odoo_id = mapping.get(ms_event.iCalUId)
             if odoo_id:
                 ms_event._events[ms_event.id]['_odoo_id'] = odoo_id
                 mapped_events.append(ms_event.id)
 
-        # map remaining events using the organizer event ID
-        remaining_events = self - events_with_uid
-        id_to_odoo_id_mapping = {e.ms_organizer_event_id: e.id for e in odoo_events}
+        # 2. try to match unmapped events with Odoo events using their id
+        unmapped_events = self.filter(lambda e: e.id not in mapped_events)
+        mapping = {e.ms_organizer_event_id: e for e in odoo_events}
 
-        for ms_event in remaining_events:
-            odoo_id = id_to_odoo_id_mapping.get(ms_event.id)
-            if odoo_id:
-                ms_event._events[ms_event.id]['_odoo_id'] = odoo_id
+        for ms_event in unmapped_events:
+            odoo_event = mapping.get(ms_event.id)
+            if odoo_event:
+                ms_event._events[ms_event.id]['_odoo_id'] = odoo_event.id
                 mapped_events.append(ms_event.id)
+
+                # don't forget to also set the global event ID on the Odoo event to ease
+                # and improve reliability of future mappings
+                odoo_event.write({
+                    'ms_accross_calendars_event_id': ms_event.iCalUId,
+                    'need_sync_m': False,
+                })
 
         return self.filter(lambda e: e.id in mapped_events)
 
