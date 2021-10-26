@@ -193,18 +193,19 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             mode = 'init'
 
         loaded_modules.append(package.name)
-        if needs_update:
-            models_updated |= set(model_names)
-            models_to_check -= set(model_names)
-            registry.setup_models(cr)
-            registry.init_models(cr, model_names, {'module': package.name}, new_install)
-        elif package.state != 'to remove':
-            # The current module has simply been loaded. The models extended by this module
-            # and for which we updated the schema, must have their schema checked again.
-            # This is because the extension may have changed the model,
-            # e.g. adding required=True to an existing field, but the schema has not been
-            # updated by this module because it's not marked as 'to upgrade/to install'.
-            models_to_check |= set(model_names) & models_updated
+        if model_names:
+            if needs_update:
+                models_updated |= set(model_names)
+                models_to_check -= set(model_names)
+                registry.setup_models(cr)
+                registry.init_models(cr, model_names, {'module': package.name}, new_install)
+            elif package.state != 'to remove':
+                # The current module has simply been loaded. The models extended by this module
+                # and for which we updated the schema, must have their schema checked again.
+                # This is because the extension may have changed the model,
+                # e.g. adding required=True to an existing field, but the schema has not been
+                # updated by this module because it's not marked as 'to upgrade/to install'.
+                models_to_check |= set(model_names) & models_updated
 
         idref = {}
 
