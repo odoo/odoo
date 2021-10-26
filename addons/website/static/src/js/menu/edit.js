@@ -51,7 +51,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]';
-        this.oeCoverSelector = '#wrapwrap [data-res-model][data-name="Cover"]';
+        this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
         if (options.savableSelector) {
             this.savableSelector = options.savableSelector;
         } else {
