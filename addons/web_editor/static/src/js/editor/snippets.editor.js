@@ -1305,7 +1305,7 @@ var SnippetsMenu = Widget.extend({
             this.updateCurrentSnippetEditorOverlay();
         }, 50);
         this.$window.on('resize.snippets_menu', debouncedCoverUpdate);
-        this.$window.on('content_changed.snippets_menu', debouncedCoverUpdate);
+        // this.$window.on('content_changed.snippets_menu', debouncedCoverUpdate);
 
         // On keydown add a class on the active overlay to hide it and show it
         // again when the mouse moves
