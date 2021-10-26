@@ -118,10 +118,6 @@ _LOCALE2WIN32 = {
 
 }
 
-# These are not all English small words, just those that could potentially be isolated within views
-ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
-
-
 # these direct uses of CSV are ok.
 import csv # pylint: disable=deprecated-module
 class UNIX_LINE_TERMINATOR(csv.excel):
@@ -169,7 +165,6 @@ TRANSLATED_ATTRS.update(
 )
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
-node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
 
 
 def translate_xml_node(node, callback, parse, serialize):
@@ -829,42 +824,12 @@ def trans_export(lang, modules, buffer, format, cr):
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
-
-def trans_parse_rml(de):
-    res = []
-    for n in de:
-        for m in n:
-            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
-                continue
-            string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
-            for s in string_list:
-                if s:
-                    res.append(s.encode("utf8"))
-        res.extend(trans_parse_rml(n))
-    return res
-
-
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()
     # Avoid non-char tokens like ':' '...' '.00' etc.
     if len(term) > 8 or any(x.isalpha() for x in term):
         callback(term, source_line)
-
-
-# tests whether an object is in a list of modules
-def in_modules(object_name, modules):
-    if 'all' in modules:
-        return True
-
-    module_dict = {
-        'ir': 'base',
-        'res': 'base',
-    }
-    module = object_name.split('.')[0]
-    module = module_dict.get(module, module)
-    return module in modules
-
 
 def _extract_translatable_qweb_terms(element, callback):
     """ Helper method to walk an etree document representing
