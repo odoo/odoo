@@ -66,4 +66,38 @@
             </xpath>
         </field>
     </record>
+
+    <record id="crm_lead_view_graph_report_forecast" model="ir.ui.view">
+        <field name="name">crm.lead.view.graph.forecast.inherit.website.crm.iap.reveal</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_graph_forecast"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_pivot_forecast" model="ir.ui.view">
+        <field name="name">crm.lead.view.pivot.forecast.inherit.website.crm.iap.reveal</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_pivot_forecast"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_opportunity_report_view_pivot_lead" model="ir.ui.view">
+        <field name="name">crm.opportunity.report.view.pivot.lead.inherit.website.crm.iap.reveal</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="reveal_iap_credits" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
