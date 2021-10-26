@@ -35,9 +35,11 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
         return;
     }
 
-    // First, split around the character where the backspace occurs
-    const firstSplitOffset = splitTextNode(this, offset - 1);
-    const secondSplitOffset = splitTextNode(parentNode.childNodes[firstSplitOffset], 1);
+    // Get the size of the unicode character to remove.
+    const charSize = [...this.nodeValue.slice(0, offset)].pop().length;
+    // Split around the character where the backspace occurs.
+    const firstSplitOffset = splitTextNode(this, offset - charSize);
+    const secondSplitOffset = splitTextNode(parentNode.childNodes[firstSplitOffset], charSize);
     const middleNode = parentNode.childNodes[firstSplitOffset];
 
     // Do remove the character, then restore the state of the surrounding parts.
