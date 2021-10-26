@@ -424,6 +424,7 @@ export class OdooEditor extends EventTarget {
             clearTimeout(this.observerTimeout);
             this.observer.disconnect();
             this.observerFlush();
+            this.dispatchEvent(new Event('observerUnactive'));
         }
     }
     observerFlush() {
@@ -454,6 +455,7 @@ export class OdooEditor extends EventTarget {
             characterData: true,
             characterDataOldValue: true,
         });
+        this.dispatchEvent(new Event('observerActive'));
     }
 
     observerApply(records) {
@@ -552,6 +554,9 @@ export class OdooEditor extends EventTarget {
             if (record.type === 'attributes') {
                 // Skip the attributes change on the dom.
                 if (record.target === this.editable) continue;
+                if (record.attributeName === 'contenteditable') {
+                    continue;
+                }
 
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
                 if (
