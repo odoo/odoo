@@ -17,6 +17,19 @@ TIMEOUT = 20
 DEFAULT_MICROSOFT_AUTH_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
 DEFAULT_MICROSOFT_TOKEN_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 
+RESOURCE_NOT_FOUND_STATUSES = (204, 404)
+
+# Use Postman as proxy to be able to intercept and analyze exchanges with the Outlook API.
+# For that:
+# 1) configure Postman as explained at: https://learning.postman.com/docs/sending-requests/capturing-request-data/capturing-http-requests
+# 2) configure proxies as below
+# 3) add `proxies=DEBUG_PROXIES` to every requests.<METHOD_NAME> calls
+#
+# Note: in case of SSLError, it's possible to also add the argument `verify=False` to all requests calls
+# DEBUG_PROXIES = {
+#     'http': 'http://localhost:5555',
+#     'https': 'https://localhost:5555',
+# }
 
 class MicrosoftService(models.AbstractModel):
     _name = 'microsoft.service'
@@ -149,7 +162,7 @@ class MicrosoftService(models.AbstractModel):
             res.raise_for_status()
             status = res.status_code
 
-            if int(status) in (204, 404):  # Page not found, no response
+            if int(status) in RESOURCE_NOT_FOUND_STATUSES:
                 response = False
             else:
                 # Some answers return empty content
@@ -160,7 +173,7 @@ class MicrosoftService(models.AbstractModel):
             except:
                 pass
         except requests.HTTPError as error:
-            if error.response.status_code in (204, 404):
+            if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:
                 status = error.response.status_code
                 response = ""
             else:
