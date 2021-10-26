@@ -6,6 +6,16 @@ import { objectToUrlEncodedString } from "../utils/urls";
 import { browser } from "./browser";
 
 /**
+ * Casts the given string to a number if possible.
+ *
+ * @param {string} value
+ * @returns {string|number}
+ */
+function cast(value) {
+    return !value || isNaN(value) ? value : Number(value);
+}
+
+/**
  * @typedef {{ [key: string]: string }} Query
  * @typedef {{ [key: string]: any }} Route
  */
@@ -16,7 +26,7 @@ function parseString(str) {
     for (let part of parts) {
         const [key, value] = part.split("=");
         const decoded = decodeURIComponent(value || "");
-        result[key] = !decoded || isNaN(decoded) ? decoded : Number(decoded);
+        result[key] = cast(decoded);
     }
     return result;
 }
@@ -64,7 +74,11 @@ function computeNewRoute(hash, replace, currentRoute) {
 }
 
 function sanitizeHash(hash) {
-    return Object.fromEntries(Object.entries(hash).filter(([, v]) => v !== undefined));
+    return Object.fromEntries(
+        Object.entries(hash)
+            .filter(([, v]) => v !== undefined)
+            .map(([k, v]) => [k, cast(v)])
+    );
 }
 
 /**
