@@ -365,6 +365,12 @@ registerModel({
             return replace(this.notifications.filter(notifications => notifications.isFailure));
         },
         /**
+         * @returns {boolean}
+         */
+        _computeHasReactionIcon() {
+            return !this.isTemporary && !this.isTransient;
+        },
+        /**
          * @private
          * @returns {boolean}
          */
@@ -577,6 +583,12 @@ registerModel({
         }),
         guestAuthor: many2one('mail.guest', {
             inverse: 'authoredMessages',
+        }),
+        /**
+         * Determines whether the message has a reaction icon.
+         */
+        hasReactionIcon: attr({
+            compute: '_computeHasReactionIcon',
         }),
         id: attr({
             readonly: true,
