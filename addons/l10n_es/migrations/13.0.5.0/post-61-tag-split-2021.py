@@ -31,7 +31,7 @@ def migrate(cr, version):
     # To run in a server action to fix issues on dbs with custom taxes,
     # replace the content of this dict.
     taxes_mapping = {}
-    for tag_name, template_names in taxes_mapping.items():
+    for tag_name, template_names in templates_mapping.items():
         taxes_from_templates = get_taxes_from_templates(template_names)
         if taxes_from_templates:
             taxes_mapping[tag_name] = taxes_from_templates
