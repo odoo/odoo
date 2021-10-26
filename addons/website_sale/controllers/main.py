@@ -179,7 +179,7 @@ class WebsiteSale(http.Controller):
                     [('product_variant_ids.default_code', 'ilike', srch)]
                 ]
                 if search_in_description:
-                    subdomains.append([('description', 'ilike', srch)])
+                    subdomains.append([('website_description', 'ilike', srch)])
                     subdomains.append([('description_sale', 'ilike', srch)])
                 domains.append(expression.OR(subdomains))
 
