@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ReportClientAction" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[hasclass('o_report_print')]" position="replace">
+            <button t-name="replenish_report_buttons" t-on-click="openReplenishment"
+                class="btn btn-primary o_report_replenish_buy"
+                type="button" title="Replenish">
+                Replenish
+            </button>
+        </xpath>
+    </t>
+    <!-- <t t-name="stock.replenish_report" owl="1">
+        <div class="h-100">
+            <ControlPanel t-on-breadcrumb-clicked="breadcrumbClicked"
+                title="title"
+                action="props.action"
+                breadcrumbs="breadcrumbs"
+                withSearchBar="false">
+                <t t-set-slot="buttons">
+                    <button t-on-click="print" type="button" class="btn btn-primary o_report_print" title="Print">Print</button>
+                </t>
+            </ControlPanel>
+            <iframe t-ref="iframe" t-on-load="onIframeLoaded" class="o_report_iframe" t-att-src="report_url" />
+        </div>
+    </t> -->
+</templates>
