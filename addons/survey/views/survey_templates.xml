@@ -9,8 +9,11 @@
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
             <attribute name="t-att-style"
-                       add="(('background-image: url(' + background_image_url + ');')
-                             if background_image_url else '')"/>
+                       add="(('background-image: url(' + question.background_image_url + ');')
+                             if question else ('background-image: url(' + page.background_image_url + ');')
+                             if page else ('background-image: url(' + survey.background_image_url + ');')
+                             if survey.background_image_url
+                             else '')"/>
             <attribute name="t-att-class" add="'o_survey_background'"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
@@ -87,6 +90,11 @@
 
     <template id="survey_fill_form" name="Survey: main page content">
         <t t-set="survey_form_readonly" t-value="answer.state == 'done'"/>
+        <t t-set="background_image_url"
+           t-value="question.background_image_url
+                    if question else page.background_image_url
+                    if page else survey.background_image_url
+                    if survey.background_image_url else False"/>
         <form role="form" method="post" t-att-name="survey.id"
                 class="d-flex flex-grow-1 align-items-center"
                 t-att-data-answer-token="answer.access_token"

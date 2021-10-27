@@ -193,8 +193,6 @@ class Survey(http.Controller):
             values['token'] = token
         if survey.scoring_type != 'no_scoring' and survey.certification:
             values['graph_data'] = json.dumps(answer._prepare_statistics()[answer])
-        if survey.background_image:
-            values['background_image_url'] = survey.background_image_url
         return values
 
     # ------------------------------------------------------------
@@ -289,7 +287,6 @@ class Survey(http.Controller):
                 'previous_page_id': new_previous_id,
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
-                'background_image_url': page_or_question.background_image_url,
                 'reload_background_on_next': survey_sudo.has_conditional_questions or page_or_question.background_image_url != next_page_or_question.background_image_url
             })
             return data
@@ -312,7 +309,6 @@ class Survey(http.Controller):
                 page_or_question_key: next_page_or_question,
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id == next_page_or_question),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, next_page_or_question),
-                'background_image_url': next_page_or_question.background_image_url,
                 'reload_background_on_next': survey_sudo.has_conditional_questions or following_question.background_image_url != next_page_or_question.background_image_url
             })
             if survey_sudo.questions_layout != 'one_page':
@@ -325,15 +321,16 @@ class Survey(http.Controller):
         elif survey_sudo.background_image:
             # If survey start, add background if any
             data.update({
-                'background_image_url': survey_sudo.background_image_url,
-                'reload_background_on_next' : survey_sudo.has_conditional_questions or survey_sudo.background_image_url != next_page_or_question.background_image_url
+                'reload_background_on_next': survey_sudo.has_conditional_questions or survey_sudo.background_image_url != next_page_or_question.background_image_url
             })
 
         return data
 
     def _prepare_question_html(self, survey_sudo, answer_sudo, **post):
         """ Survey page navigation is done in AJAX. This function prepare the 'next page' to display in html
-        and send back this html to the survey_form widget that will inject it into the page."""
+        and send back this html to the survey_form widget that will inject it into the page.
+        Background url must be given to the caller in order to process its refresh as we don't have the next question
+        object at frontend side."""
         survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
 
         if answer_sudo.state == 'done':
