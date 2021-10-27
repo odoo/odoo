@@ -22,7 +22,7 @@ class GiftCard(models.Model):
     currency_id = fields.Many2one('res.currency', readonly=True, related='company_id.currency_id')
     initial_amount = fields.Monetary(required=True, currency_field='currency_id')
     balance = fields.Monetary(compute="_compute_balance")  # in company currency
-    expired_date = fields.Date(default=lambda self: fields.Date.add(fields.Date.today(), years=1))
+    expired_date = fields.Date(string='Expiration Date', default=lambda self: fields.Date.add(fields.Date.today(), years=1))
     state = fields.Selection(
         selection=[('valid', 'Valid'), ('expired', 'Expired')],
         default='valid',
