@@ -45,7 +45,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
     def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
         task = self.format_and_process(
-            EMAIL_TPL, to='project+pigs@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            EMAIL_TPL, to=f'project+pigs@{self.alias_domain}, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
             email_from='%s' % self.user_projectuser.email,
             subject='Frogs', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
             target_model='project.task')
@@ -72,7 +72,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
     def test_task_process_with_stages(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Cats'
         task = self.format_and_process(
-            EMAIL_TPL, to='project+goats@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            EMAIL_TPL, to=f'project+goats@{self.alias_domain}, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
             email_from='%s' % self.user_projectuser.email,
             subject='Cats', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
             target_model='project.task')
@@ -99,7 +99,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
     def test_task_from_email_alias(self):
         # Do: incoming mail from a known partner email on an alias creates a new task 'Super Frog'
         task = self.format_and_process(
-            EMAIL_TPL, to='project+goats@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            EMAIL_TPL, to=f'project+goats@{self.alias_domain}, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
             email_from='%s' % self.user_portal.email,
             subject='Super Frog', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
             target_model='project.task')
@@ -131,7 +131,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.assertFalse(new_partner)
 
         task = self.format_and_process(
-            EMAIL_TPL, to='project+pigs@mydomain.com, valid.lelitre@agrolait.com',
+            EMAIL_TPL, to=f'project+pigs@{self.alias_domain}, valid.lelitre@agrolait.com',
                 cc='valid.other@gmail.com',
                 email_from=email,
                 subject='subject',

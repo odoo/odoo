@@ -42,6 +42,7 @@
                             <field name="alias_force_thread_id"/>
                             <field name="alias_defaults"/>
                             <field name="alias_contact"/>
+                            <field name="alias_incoming_local"/>
                             <field name="alias_parent_model_id"/>
                             <field name="alias_parent_thread_id"/>
                         </group>
@@ -66,6 +67,7 @@
                     <field name="alias_parent_thread_id" optional="hide"/>
                     <field name="alias_defaults" optional="hide"/>
                     <field name="alias_contact"/>
+                    <field name="alias_incoming_local" optional="hide"/>
                     <field name="alias_status" widget="badge"
                            decoration-success="alias_status == 'valid'"
                            decoration-warning="alias_status == 'not_tested'"

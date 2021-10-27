@@ -345,22 +345,23 @@ class MailThread(models.AbstractModel):
         that adds alias information. """
         model = self._context.get('empty_list_help_model')
         res_id = self._context.get('empty_list_help_id')
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         document_name = self._context.get('empty_list_help_document_name', _('document'))
         nothing_here = is_html_empty(help_message)
         alias = None
 
-        if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
+        # specific res_id -> find its alias (i.e. section_id specified)
+        if model and res_id:
             record = self.env[model].sudo().browse(res_id)
             # check that the alias effectively creates new records
-            if record.alias_id and record.alias_id.alias_name and \
-                    record.alias_id.alias_model_id and \
-                    record.alias_id.alias_model_id.model == self._name and \
-                    record.alias_id.alias_force_thread_id == 0:
+            if ('alias_id' in record and record.alias_id and
+                record.alias_id.alias_name and record.alias_id.alias_domain and
+                record.alias_id.alias_model_id.model == self._name and
+                record.alias_id.alias_force_thread_id == 0):
                 alias = record.alias_id
-        if not alias and catchall_domain and model:  # no res_id or res_id not linked to an alias -> generic help message, take a generic alias of the model
-            Alias = self.env['mail.alias']
-            aliases = Alias.search([
+        # no res_id or res_id not linked to an alias -> generic help message, take a generic alias of the model
+        if not alias and model and self.env.company.alias_domain_id:
+            aliases = self.env['mail.alias'].search([
+                ("alias_domain_id", "=", self.env.company.alias_domain_id.id),
                 ("alias_parent_model_id.model", "=", model),
                 ("alias_name", "!=", False),
                 ('alias_force_thread_id', '=', False),
@@ -695,13 +696,19 @@ class MailThread(models.AbstractModel):
             'email_to': bounce_to,
             'auto_delete': True,
         }
-        bounce_from = tools.email_normalize(self.env['ir.mail_server']._get_default_bounce_address() or '')
-        if bounce_from:
-            bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
-        elif self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias") not in message['To']:
-            bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
-        else:
-            bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
+
+        # find an email_from for the bounce email
+        email_from = False
+        if bounce_from := self.env.company.bounce_email:
+            email_from = tools.formataddr(('MAILER-DAEMON', bounce_from))
+        if not email_from:
+            catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
+            if not any(catchall_email in message['To'] for catchall_email in catchall_aliases):
+                email_from = tools.decode_message_header(message, 'To')
+        if not email_from:
+            email_from = tools.formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
+
+        bounce_mail_values['email_from'] = email_from
         bounce_mail_values.update(mail_values)
         self.env['mail.mail'].sudo().create(bounce_mail_values).send()
 
@@ -885,13 +892,12 @@ class MailThread(models.AbstractModel):
             we also need to verify if the message come from "mailer-daemon"
         """
         # detection based on email_to
-        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
-        email_to = message_dict['to']
-        email_to_localparts = [
-            e.split('@', 1)[0].lower()
-            for e in (tools.email_split(email_to) or [''])
+        bounce_aliases = self.env['mail.alias.domain'].search([]).mapped('bounce_email')
+        email_to_list = [
+            tools.email_normalize(e) or e
+            for e in (tools.email_split(message_dict['to']) or [''])
         ]
-        if bounce_alias and bounce_alias in email_to_localparts:
+        if bounce_aliases and any(email in bounce_aliases for email in email_to_list):
             return True
 
         email_from = message_dict['email_from']
@@ -1001,16 +1007,15 @@ class MailThread(models.AbstractModel):
     @api.model
     def _detect_write_to_catchall(self, msg_dict):
         """Return True if directly contacts catchall."""
-        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
-        email_to = msg_dict['to']
-        email_to_localparts = [
-            e.split('@', 1)[0].lower()
-            for e in (tools.email_split(email_to) or [''])
+        catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
+        email_to_list = [
+            tools.email_normalize(e) or e
+            for e in (tools.email_split(msg_dict['to']) or [''])
         ]
         # check it does not directly contact catchall
         return (
-            catchall_alias and email_to_localparts and
-            all(email_localpart == catchall_alias for email_localpart in email_to_localparts)
+            catchall_aliases and email_to_list and
+            all(email_to in catchall_aliases for email_to in email_to_list)
         )
 
     @api.model
@@ -1050,10 +1055,19 @@ class MailThread(models.AbstractModel):
         """
         if not isinstance(message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
-        catchall_domain_lowered = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain", "").strip().lower()
-        catchall_domains_allowed = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain.allowed")
-        if catchall_domain_lowered and catchall_domains_allowed:
-            catchall_domains_allowed = catchall_domains_allowed.split(',') + [catchall_domain_lowered]
+        catchall_domains_allowed = list(filter(None, (self.env["ir.config_parameter"].sudo().get_param(
+            "mail.catchall.domain.allowed") or '').split(',')))
+        if catchall_domains_allowed:
+            catchall_domains_allowed += self.env['mail.alias.domain'].search([]).mapped('name')
+
+        def _filter_excluded_local_part(email):
+            left, _at, domain = email.partition('@')
+            if not domain:
+                return False
+            if catchall_domains_allowed and domain not in catchall_domains_allowed:
+                return False
+            return left
+
         fallback_model = model
 
         # handle bounce: verify whether this is a bounced email and use it to
@@ -1080,19 +1094,13 @@ class MailThread(models.AbstractModel):
 
         # author and recipients
         email_from = message_dict['email_from']
-        email_to = message_dict['to']
-        email_to_localparts = [
-            e.split('@', 1)[0].lower()
-            for e in (tools.email_split(email_to) or [''])
-        ]
+        email_to_list = [e.lower() for e in (tools.email_split(message_dict['to']) or [''])]
+        email_to_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in email_to_list)))
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos_localparts = []
-        for recipient in tools.email_split(message_dict['recipients']):
-            to_local, to_domain = recipient.split('@', maxsplit=1)
-            if not catchall_domains_allowed or to_domain.lower() in catchall_domains_allowed:
-                rcpt_tos_localparts.append(to_local.lower())
-        rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
+        rcpt_tos_list = [e.lower() for e in (tools.email_split(message_dict['recipients']) or [''])]
+        rcpt_tos_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in rcpt_tos_list)))
+        rcpt_tos_valid_list = list(rcpt_tos_list)
 
         # 1. Handle reply
         #    if destination = alias with different model -> consider it is a forward and not a reply
@@ -1100,20 +1108,32 @@ class MailThread(models.AbstractModel):
         if reply_model and reply_thread_id:
             reply_model_id = self.env['ir.model']._get_id(reply_model)
             other_model_aliases = self.env['mail.alias'].search([
-                '&', '&',
-                ('alias_name', '!=', False),
-                ('alias_name', 'in', email_to_localparts),
+                '&',
                 ('alias_model_id', '!=', reply_model_id),
+                '|',
+                ('alias_full_name', 'in', email_to_list),
+                '&', ('alias_name', 'in', email_to_localparts), ('alias_incoming_local', '=', True),
             ])
             if other_model_aliases:
                 is_a_reply, reply_model, reply_thread_id = False, False, False
-                rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
+                rcpt_tos_valid_list = [
+                    to
+                    for to in rcpt_tos_valid_list
+                    if (
+                        to in other_model_aliases.mapped('alias_full_name')
+                        or to.split('@', 1)[0] in other_model_aliases.filtered('alias_incoming_local').mapped('alias_name')
+                    )
+                ]
+        rcpt_tos_valid_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in rcpt_tos_valid_list)))
 
         if is_a_reply and reply_model:
             reply_model_id = self.env['ir.model']._get_id(reply_model)
             dest_aliases = self.env['mail.alias'].search([
-                ('alias_name', 'in', rcpt_tos_localparts),
-                ('alias_model_id', '=', reply_model_id)
+                '&',
+                ('alias_model_id', '=', reply_model_id),
+                '|',
+                ('alias_full_name', 'in', rcpt_tos_list),
+                '&', ('alias_name', 'in', rcpt_tos_localparts), ('alias_incoming_local', '=', True),
             ], limit=1)
 
             user_id = self._mail_find_user_for_gateway(email_from, alias=dest_aliases).id or self._uid
@@ -1124,27 +1144,31 @@ class MailThread(models.AbstractModel):
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                    email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
+                    email_from, message_dict['to'], message_id, reply_model, reply_thread_id, custom_values, self._uid)
                 return [route]
             if route is False:
                 return []
 
         # 2. Handle new incoming email by checking aliases and applying their settings
-        if rcpt_tos_localparts:
+        if rcpt_tos_list:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
             if self._detect_write_to_catchall(message_dict):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce',
-                             email_from, email_to, message_id)
+                             email_from, message_dict['to'], message_id)
                 body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                     'message': message,
                 })
                 self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
                 return []
 
-            dest_aliases = self.env['mail.alias'].search([('alias_name', 'in', rcpt_tos_valid_localparts)])
+            dest_aliases = self.env['mail.alias'].search([
+                '|',
+                ('alias_full_name', 'in', rcpt_tos_valid_list),
+                '&', ('alias_name', 'in', rcpt_tos_valid_localparts), ('alias_incoming_local', '=', True),
+            ])
             if dest_aliases:
                 routes = []
                 for alias in dest_aliases:
@@ -1154,7 +1178,7 @@ class MailThread(models.AbstractModel):
                     if route:
                         _logger.info(
                             'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                            email_from, email_to, message_id, route)
+                            email_from, message_dict['to'], message_id, route)
                         routes.append(route)
                 return routes
 
@@ -1170,14 +1194,14 @@ class MailThread(models.AbstractModel):
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                    email_from, email_to, message_id, fallback_model, thread_id, custom_values, user_id)
+                    email_from, message_dict['to'], message_id, fallback_model, thread_id, custom_values, user_id)
                 return [route]
 
         # ValueError if no routes found and if no bounce occurred
         raise ValueError(
             'No possible route found for incoming message from %s to %s (Message-Id %s:). '
             'Create an appropriate mail.alias or force the destination model.' %
-            (email_from, email_to, message_id)
+            (email_from, message_dict['to'], message_id)
         )
 
     @api.model
@@ -1842,12 +1866,8 @@ class MailThread(models.AbstractModel):
         if not normalized_email:
             return self.env['res.users']
 
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        if catchall_domain:
-            left_part = normalized_email.split('@')[0] if normalized_email.split('@')[1] == catchall_domain.lower() else False
-            if left_part:
-                if self.env['mail.alias'].sudo().search_count([('alias_name', '=', left_part)]):
-                    return self.env['res.users']
+        if self.env['mail.alias'].sudo().search_count([('alias_full_name', '=', email_value)]):
+            return self.env['res.users']
 
         if alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
             followers = self.env['mail.followers'].search([
@@ -1895,7 +1915,6 @@ class MailThread(models.AbstractModel):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
         # first, build a normalized email list and remove those linked to aliases
         # to avoid adding aliases as partners. In case of multi-email input, use
@@ -1904,11 +1923,9 @@ class MailThread(models.AbstractModel):
                              for email_normalized in (tools.email_normalize(contact, strict=False) for contact in emails)
                              if email_normalized
                             ]
-        if catchall_domain:
-            domain_left_parts = [email.split('@')[0] for email in normalized_emails if email and email.split('@')[1] == catchall_domain.lower()]
-            if domain_left_parts:
-                found_alias_names = self.env['mail.alias'].sudo().search([('alias_name', 'in', domain_left_parts)]).mapped('alias_name')
-                normalized_emails = [email for email in normalized_emails if email.split('@')[0] not in found_alias_names]
+        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
+        if matching_aliases:
+            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
 
         done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
