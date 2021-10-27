@@ -16,7 +16,7 @@ class ResPartner(models.Model):
         ('4', _('Foreigner')),
     ]
 
-    country_code = fields.Char(
+    l10n_cl_country_code = fields.Char(
         related='company_id.country_id.code',
         help='Technical field used to hide/show fields regarding the localization')
 

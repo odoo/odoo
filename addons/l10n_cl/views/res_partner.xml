@@ -16,8 +16,8 @@
                 <attribute name="placeholder">Región</attribute>
             </field>
             <field name="vat" position="after">
-                <field name="country_code" invisible="1"/>
-                <field name="l10n_cl_sii_taxpayer_type" attrs="{'invisible': [('country_code', '!=', 'CL')], 'readonly': [('parent_id', '!=', False)]}" placeholder="Tax Payer Type"/>
+                <field name="l10n_cl_country_code" invisible="1"/>
+                <field name="l10n_cl_sii_taxpayer_type" attrs="{'invisible': [('l10n_cl_country_code', '!=', 'CL')], 'readonly': [('parent_id', '!=', False)]}" placeholder="Tax Payer Type"/>
             </field>
         </field>
     </record>
