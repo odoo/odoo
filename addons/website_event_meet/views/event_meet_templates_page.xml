@@ -42,8 +42,11 @@
                 The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
                 <span t-if="meeting_room.event_id.start_today">
                     starts in
-                    <span t-esc="meeting_room.event_id.start_remaining"
-                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                    <span t-if="meeting_room.event_id.start_remaining &gt;= 1" t-esc="meeting_room.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
+                    <t t-else="">
+                        a few seconds
+                    </t>.
                 </span>
                 <span class="my-0" t-else="meeting_room.event_id.start_today">
                     starts on

@@ -364,14 +364,17 @@
                     <span class="text-muted text-truncate" t-field="track.partner_name" itemprop="performer"/>
                     <!-- Starts -->
                     <span class="text-muted ml-auto">
-                        <t t-if="track.is_track_upcoming &gt; 0">In
+                        <t t-if="track.track_start_remaining &gt;= 60">In
                             <span class="text-muted ml-auto" t-field="track.track_start_remaining" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                         </t>
-                        <t t-else="">
+                        <t t-elif="track.track_start_relative &gt;= 60">
                             <span class="text-muted ml-auto" t-field="track.track_start_relative" itemprop="duration"
                                 t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'second', 'round': 'minute'}"/>
                             ago
+                        </t>
+                        <t t-else="">
+                            Starting now!
                         </t>
                     </span>
                 </div>
