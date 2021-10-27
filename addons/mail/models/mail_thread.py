@@ -1007,19 +1007,16 @@ class MailThread(models.AbstractModel):
 
         # author and recipients
         email_from = message_dict['email_from']
-        email_to = message_dict['to']
-        email_to_localparts = [
-            e.split('@', 1)[0].lower()
-            for e in (tools.email_split(email_to) or [''])
-        ]
+        email_to_list = [e.lower() for e in (tools.email_split(message_dict['to']) or [''])]
+        email_to_localparts = [email_to.split('@', 1)[0] for email_to in email_to_list]
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos_localparts = []
-        for recipient in tools.email_split(message_dict['recipients']):
-            to_local, to_domain = recipient.split('@', maxsplit=1)
-            if not catchall_domains_allowed or to_domain.lower() in catchall_domains_allowed:
-                rcpt_tos_localparts.append(to_local.lower())
-        rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
+        rcpt_tos_list = [e.lower() for e in (tools.email_split(message_dict['recipients']) or [''])]
+        rcpt_tos_localparts = [
+            email_to.split('@', 1)[0] for email_to in rcpt_tos_list
+            if not catchall_domains_allowed or email_to[1] in catchall_domains_allowed
+        ]
+        rcpt_tos_valid_list = list(rcpt_tos_list)
 
         # 1. Handle reply
         #    if destination = alias with different model -> consider it is a forward and not a reply
@@ -1027,20 +1024,32 @@ class MailThread(models.AbstractModel):
         if reply_model and reply_thread_id:
             reply_model_id = self.env['ir.model']._get_id(reply_model)
             other_model_aliases = self.env['mail.alias'].search([
-                '&', '&',
-                ('alias_name', '!=', False),
-                ('alias_name', 'in', email_to_localparts),
+                '&',
                 ('alias_model_id', '!=', reply_model_id),
+                '|',
+                ('display_name', 'in', email_to_list),
+                '&', ('alias_name', 'in', email_to_localparts), ('alias_incoming_local', '=', True),
             ])
             if other_model_aliases:
                 is_a_reply, reply_model, reply_thread_id = False, False, False
-                rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
+                rcpt_tos_valid_list = [
+                    to
+                    for to in rcpt_tos_valid_list
+                    if (
+                        to in other_model_aliases.mapped('display_name')
+                        or to.split('@', 1)[0] in other_model_aliases.filtered('alias_incoming_local').mapped('alias_name')
+                    )
+                ]
+        rcpt_tos_valid_localparts = [email_to.split('@', 1)[0] for email_to in rcpt_tos_valid_list]
 
         if is_a_reply and reply_model:
             reply_model_id = self.env['ir.model']._get_id(reply_model)
             dest_aliases = self.env['mail.alias'].search([
-                ('alias_name', 'in', rcpt_tos_localparts),
-                ('alias_model_id', '=', reply_model_id)
+                '&',
+                ('alias_model_id', '=', reply_model_id),
+                '|',
+                ('display_name', 'in', rcpt_tos_list),
+                '&', ('alias_name', 'in', rcpt_tos_localparts), ('alias_incoming_local', '=', True),
             ], limit=1)
 
             user_id = self._mail_find_user_for_gateway(email_from, alias=dest_aliases).id or self._uid
@@ -1051,26 +1060,30 @@ class MailThread(models.AbstractModel):
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                    email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
+                    email_from, message_dict['to'], message_id, reply_model, reply_thread_id, custom_values, self._uid)
                 return [route]
             if route is False:
                 return []
 
         # 2. Handle new incoming email by checking aliases and applying their settings
-        if rcpt_tos_localparts:
+        if rcpt_tos_list:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
             if catchall_alias and email_to_localparts and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, message_dict['to'], message_id)
                 body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                     'message': message,
                 })
                 self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
                 return []
 
-            dest_aliases = self.env['mail.alias'].search([('alias_name', 'in', rcpt_tos_valid_localparts)])
+            dest_aliases = self.env['mail.alias'].search([
+                '|',
+                ('display_name', 'in', rcpt_tos_valid_list),
+                '&', ('alias_name', 'in', rcpt_tos_valid_localparts), ('alias_incoming_local', '=', True),
+            ])
             if dest_aliases:
                 routes = []
                 for alias in dest_aliases:
@@ -1080,7 +1093,7 @@ class MailThread(models.AbstractModel):
                     if route:
                         _logger.info(
                             'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                            email_from, email_to, message_id, route)
+                            email_from, message_dict['to'], message_id, route)
                         routes.append(route)
                 return routes
 
@@ -1096,14 +1109,14 @@ class MailThread(models.AbstractModel):
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                    email_from, email_to, message_id, fallback_model, thread_id, custom_values, user_id)
+                    email_from, message_dict['to'], message_id, fallback_model, thread_id, custom_values, user_id)
                 return [route]
 
         # ValueError if no routes found and if no bounce occurred
         raise ValueError(
             'No possible route found for incoming message from %s to %s (Message-Id %s:). '
             'Create an appropriate mail.alias or force the destination model.' %
-            (email_from, email_to, message_id)
+            (email_from, message_dict['to'], message_id)
         )
 
     @api.model
