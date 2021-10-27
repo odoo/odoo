@@ -1,11 +1,22 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
-import { FieldChar } from "./basic_fields";
 
 const { Component, tags } = owl;
 
 const fieldRegistry = registry.category("fields");
+
+class DefaultField extends Component {
+    onChange(ev) {
+        this.props.record.update(this.props.name, ev.target.value);
+    }
+}
+DefaultField.template = tags.xml`
+    <t>
+        <span t-if="props.readonly" t-esc="props.value" />
+        <input t-else="" class="o_input" t-on-change="onChange" t-att-value="props.value" />
+    </t>
+`;
 
 export class Field extends Component {
     static getTangibleField(record, type, fieldName) {
@@ -20,15 +31,25 @@ export class Field extends Component {
             type = fields[fieldName].type;
         }
         // todo: remove fallback? yep
-        return fieldRegistry.get(type, FieldChar);
+        return fieldRegistry.get(type, DefaultField);
     }
 
     get concreteFieldProps() {
+        const readonlyFromModifier =
+            this.props.readonly || this.fields[this.name].readonly || false;
         return {
-            value: this.props.record.data[this.name],
-            readonly: this.props.readonly || this.fields[this.name].readonly,
+            ...this.props,
+            meta: this.fields[this.name],
             name: this.name,
-            record: this.props.record,
+            readonly: this.props.readonlyFromView || readonlyFromModifier,
+            readonlyFromModifier,
+            readonlyFromView: "readonlyFromView" in this.props ? this.props.readonlyFromView : true,
+            required: this.fields[this.name].required || false,
+            type: this.type,
+            update: (value) => {
+                return this.props.record.update(this.name, value);
+            },
+            value: this.props.record.data[this.name] || null,
         };
     }
 

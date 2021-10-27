@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CharField" owl="1">
+        <t t-if="props.readonly">
+            <span class="o-char-field" t-esc="formattedValue" />
+        </t>
+        <t t-else="">
+            <input
+                class="o-char-field o_input"
+                t-att-type="props.password ? 'password' : 'text'"
+                t-att-value="props.value or ''"
+                t-att-autocomplete="props.autocomplete or (props.password ? 'new-password' : 'off')"
+                t-att-maxlength="props.meta.size > 0 and props.meta.size"
+                t-att-placeholder="props.placeholder"
+                t-on-change="onChange"
+            />
+        </t>
+    </t>
+
+</templates>

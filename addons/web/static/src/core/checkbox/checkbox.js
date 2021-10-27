@@ -25,6 +25,10 @@ export class CheckBox extends Component {
 CheckBox.template = "web.CheckBox";
 CheckBox.nextId = 1;
 CheckBox.props = {
+    id: {
+        type: true,
+        optional: true,
+    },
     disabled: {
         type: Boolean,
         optional: true,

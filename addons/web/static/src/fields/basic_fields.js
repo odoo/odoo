@@ -15,7 +15,7 @@ export class FieldChar extends Component {
     }
 }
 FieldChar.template = "web.FieldChar";
-fieldRegistry.add("char", FieldChar);
+// fieldRegistry.add("char", FieldChar);
 
 // -----------------------------------------------------------------------------
 // FieldText
@@ -39,7 +39,7 @@ export class FieldBoolean extends Component {
     }
 }
 FieldBoolean.template = "web.FieldBoolean";
-fieldRegistry.add("boolean", FieldBoolean);
+// fieldRegistry.add("boolean", FieldBoolean);
 
 // -----------------------------------------------------------------------------
 // FieldImage
@@ -84,7 +84,7 @@ export class FieldSelection extends Component {
     }
 }
 FieldSelection.template = "web.FieldSelection";
-fieldRegistry.add("selection", FieldSelection);
+// fieldRegistry.add("selection", FieldSelection);
 
 // -----------------------------------------------------------------------------
 // FieldColorPicker
@@ -129,4 +129,4 @@ export class FieldPriority extends FieldSelection {
     }
 }
 FieldPriority.template = "web.FieldPriority";
-fieldRegistry.add("priority", FieldPriority);
+// fieldRegistry.add("priority", FieldPriority);
