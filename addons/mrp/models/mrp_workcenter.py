@@ -253,6 +253,23 @@ class MrpWorkcenter(models.Model):
                         remaining -= interval_minutes
         return False, 'Not available slot 700 days after the planned start'
 
+    def action_archive(self):
+        res = super().action_archive()
+        filtered_workcenters = ", ".join(workcenter.name for workcenter in self.filtered('routing_line_ids'))
+        if filtered_workcenters:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
+                           "To prevent this, deletion of the work center is recommended instead.", filtered_workcenters),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res
+
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"
