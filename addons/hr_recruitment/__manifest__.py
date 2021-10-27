@@ -20,7 +20,6 @@
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'data/digest_data.xml',
-        'data/mail_alias_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
