@@ -624,7 +624,7 @@ class SaleOrder(models.Model):
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
-            'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(self.partner_invoice_id.id)).id,
+            'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,

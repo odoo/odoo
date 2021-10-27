@@ -424,7 +424,7 @@ class AccountReconcileModel(models.Model):
 
             if line.tax_ids:
                 taxes = line.tax_ids
-                detected_fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(partner_id)
+                detected_fiscal_position = self.env['account.fiscal.position']._get_fiscal_position(self.env['res.partner'].browse(partner_id))
                 if detected_fiscal_position:
                     taxes = detected_fiscal_position.map_tax(taxes)
                 writeoff_line['tax_ids'] = [Command.set(taxes.ids)]

@@ -308,7 +308,7 @@ class PurchaseOrder(models.Model):
             self.fiscal_position_id = False
             self.currency_id = self.env.company.currency_id.id
         else:
-            self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
+            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.partner_id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
         return {}
@@ -572,15 +572,15 @@ class PurchaseOrder(models.Model):
         if not journal:
             raise UserError(_('Please define an accounting purchase journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
-        partner_invoice_id = self.partner_id.address_get(['invoice'])['invoice']
+        partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
         invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
             'narration': self.notes,
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
-            'partner_id': partner_invoice_id,
-            'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(partner_invoice_id)).id,
+            'partner_id': partner_invoice,
+            'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
             'partner_bank_id': self.partner_id.bank_ids[:1].id,
             'invoice_origin': self.name,
@@ -953,7 +953,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
+            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id._get_fiscal_position(line.order_id.partner_id)
             # filter taxes by company
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
             line.taxes_id = fpos.map_tax(taxes)
