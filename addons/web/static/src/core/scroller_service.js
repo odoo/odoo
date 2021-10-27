@@ -43,7 +43,7 @@ export const scrollerService = {
                     }
                     if (matchingEl) {
                         ev.preventDefault();
-                        scrollTo(matchingEl);
+                        scrollTo(matchingEl, { isAnchor: true });
                     }
                 }
             }
