@@ -149,7 +149,7 @@
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                     </thead>
-                    <tbody t-if="docs['qty']['in']">
+                    <tbody t-if="docs['qty']['in'] or docs['qty']['out']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
                             <td colspan="2">Incoming Draft Transfer</td>
                             <td t-esc="docs['draft_picking_qty']['in']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
