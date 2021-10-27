@@ -22,14 +22,14 @@ export function scrollTo(element, scrollable = null) {
 
     // Scrollbar is present ?
     if (scrollable.scrollHeight > scrollable.clientHeight) {
-        const scrollBottom = scrollable.clientHeight + scrollable.scrollTop;
-        const elementBottom = element.offsetTop + element.offsetHeight;
+        const scrollBottom = scrollable.getBoundingClientRect().bottom;
+        const elementBottom = element.getBoundingClientRect().bottom;
         if (elementBottom > scrollBottom) {
             // Scroll down
-            scrollable.scrollTop = elementBottom - scrollable.clientHeight;
-        } else if (element.offsetTop < scrollable.scrollTop) {
+            scrollable.scrollTop = elementBottom - scrollable.getBoundingClientRect().height;
+        } else if (element.getBoundingClientRect().top < scrollable.getBoundingClientRect().top) {
             // Scroll up
-            scrollable.scrollTop = element.offsetTop;
+            scrollable.scrollTop = element.getBoundingClientRect().top;
         }
     }
 }
