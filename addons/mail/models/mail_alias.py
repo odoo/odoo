@@ -81,6 +81,7 @@ class Alias(models.Model):
              "- everyone: everyone can post\n"
              "- partners: only authenticated partners\n"
              "- followers: only followers of the related document or members of following channels\n")
+    alias_incoming_local = fields.Boolean('Local-part based incoming detection', default=False)
     alias_bounced_content = fields.Html(
         "Custom Bounced Message", translate=True,
         help="If set, this content will automatically be sent out to unauthorized users instead of the default message.")
@@ -288,18 +289,6 @@ class Alias(models.Model):
 
         return super().write(vals)
 
-    def _clean_and_check_mail_catchall_allowed_domains(self, value):
-        """ The purpose of this system parameter is to avoid the creation
-        of records from incoming emails with a domain != alias_domain
-        but that have a pattern matching an internal mail.alias . """
-        value = [domain.strip().lower() for domain in value.split(',') if domain.strip()]
-        if not value:
-            raise ValidationError(
-                _("Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-                  "It should be a comma separated list of domains e.g. example.com,example.org.")
-            )
-        return ",".join(value)
-
     def _check_unique(self, alias_names, alias_domains):
         """ Check unicity constraint won't be raised, otherwise raise a UserError
         with a complete error message. Also check unicity against alias config
@@ -358,6 +347,20 @@ class Alias(models.Model):
             )
         msg_end = _('Choose another value or change it on the other document.')
         raise UserError(f'{msg_begin} {msg_end}')
+
+    @api.model
+    def _sanitize_allowed_domains(self, allowed_domains):
+        """ When having aliases checked on email left-part only we may define
+        an allowed list for right-part filtering, allowing more fine-grain than
+        either alias domain, either everything. This method sanitized its value. """
+        value = [domain.strip().lower() for domain in allowed_domains.split(',') if domain.strip()]
+        if not value:
+            raise ValidationError(_(
+                "Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
+                "It should be a comma separated list of domains e.g. example.com,example.org.",
+                allowed_domains=allowed_domains
+            ))
+        return ",".join(value)
 
     @api.model
     def _sanitize_alias_name(self, name):

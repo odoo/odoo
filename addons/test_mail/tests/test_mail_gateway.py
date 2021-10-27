@@ -153,6 +153,7 @@ class TestMailgateway(MailCommon):
         super(TestMailgateway, cls).setUpClass()
 
         cls.mail_test_gateway_model = cls.env['ir.model']._get('mail.test.gateway')
+        cls.mail_test_gateway_company_model = cls.env['ir.model']._get('mail.test.gateway.company')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
@@ -164,10 +165,21 @@ class TestMailgateway(MailCommon):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
-        # groups@.. will cause the creation of new mail.test.gateway
+        # groups@test.mycompany.com will cause the creation of new mail.test.gateway
         cls.alias = cls.env['mail.alias'].create({
+            'alias_domain_id': cls.mail_alias_domain.id,
             'alias_contact': 'everyone',
             'alias_model_id': cls.mail_test_gateway_model.id,
+            'alias_name': 'groups',
+        })
+        # groups@test.mycompany2.com will cause the creation of new mail.test.gateway.company
+        cls.alias_c2 = cls.env['mail.alias'].create({
+            'alias_defaults': {
+                'company_id': cls.company_2.id,
+            },
+            'alias_domain_id': cls.mail_alias_domain_c2.id,
+            'alias_contact': 'everyone',
+            'alias_model_id': cls.mail_test_gateway_company_model.id,
             'alias_name': 'groups',
         })
 
@@ -380,9 +392,10 @@ class TestMailgateway(MailCommon):
         """ Do not set alias as author to avoid including aliases in discussions """
         from_1 = self.env['res.partner'].create({
             'name': 'Brice Denisse',
-            'email': f'from.test@{self.alias_domain}',
+            'email': f'from.test@{self.mail_alias_domain.name}',
         })
         self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'from.test',
             'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id
         })
@@ -520,6 +533,7 @@ class TestMailgateway(MailCommon):
         test_model_track = self.env['ir.model']._get('mail.test.track')
         container_custom = self.env['mail.test.container'].create({})
         alias_valid = self.env['mail.alias'].with_user(self.user_admin).create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'valid',
             'alias_model_id': test_model_track.id,
             'alias_contact': 'everyone',
@@ -792,12 +806,35 @@ class TestMailgateway(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_no_domain(self):
-        """ Incoming email: write to alias even if no domain set: considered as valid alias """
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', '')
+        """ Incoming email: write to alias with no domain set: not recognized as
+        a valid alias even when local-part only is checked. """
+        self.alias.alias_domain_id = False
 
-        new_record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@another.domain.com', subject='Test Subject')
-        # Test: one group created
+        for incoming_ok in [True, False]:
+            with self.subTest(incoming_ok=incoming_ok):
+                with self.assertRaises(ValueError):
+                    _new_record = self.format_and_process(
+                        MAIL_TEMPLATE, self.partner_1.email_formatted, f'groups@{self.alias_domain}',
+                        subject='Test Subject'
+                    )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_alias_alias_incoming_local(self):
+        """ Incoming email: write to alias using local part only: depends on
+        alias accepting local only flag. """
+        self.alias.alias_incoming_local = True
+        new_record = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@another.domain.com',
+            subject='Test Subject Global'
+        )
         self.assertEqual(len(new_record), 1, 'message_process: a new mail.test.simple should have been created')
+
+        self.alias.alias_incoming_local = False
+        with self.assertRaises(ValueError):
+            _new_record = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@another.domain.com',
+                subject='Test Subject Local'
+            )
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_forward_bypass_reply_first(self):
@@ -806,6 +843,7 @@ class TestMailgateway(MailCommon):
 
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -832,6 +870,7 @@ class TestMailgateway(MailCommon):
 
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -861,6 +900,7 @@ class TestMailgateway(MailCommon):
 
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -886,6 +926,7 @@ class TestMailgateway(MailCommon):
         """ Incoming email: write to two aliases creating records: both should be activated """
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -907,9 +948,11 @@ class TestMailgateway(MailCommon):
         """ Incoming email: check that if domains are set in the optional system
         parameter `mail.catchall.domain.allowed` only incoming emails from these
         domains will generate records."""
-        # test@.. will cause the creation of new mail.test
+        # test@.. will cause the creation of new mail.test.container
         new_alias_2 = self.env['mail.alias'].create({
             'alias_contact': 'everyone',
+            'alias_domain_id': self.mail_alias_domain_c2.id,
+            'alias_incoming_local': True,
             'alias_model_id': self.env['ir.model']._get_id('mail.test.container.mc'),
             'alias_name': 'test',
         })
@@ -917,6 +960,8 @@ class TestMailgateway(MailCommon):
         test_domain = 'hello.com'
         for (alias_right_part, allowed_domain), container_created in zip(
             [
+                # Test a valid alias domain, standard case
+                (self.mail_alias_domain_c2.name, ""),
                 # Test with 'mail.catchall.domain.allowed' not set in system parameters
                 # and with a domain not allowed
                 ('bonjour.com', ""),
@@ -926,7 +971,7 @@ class TestMailgateway(MailCommon):
                 # Test with 'mail.catchall.domain.allowed' set in system parameters
                 # and with a domain allowed
                 (test_domain, test_domain),
-            ], [True, False, True]):
+            ], [True, True, False, True]):
             with self.subTest(alias_right_part=alias_right_part, allowed_domain=allowed_domain):
                 self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', allowed_domain)
 
@@ -1437,6 +1482,7 @@ class TestMailgateway(MailCommon):
     def test_message_process_references_forward(self):
         """ Incoming email using references but with alias forward should not go into references destination """
         self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test.alias',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -1457,6 +1503,7 @@ class TestMailgateway(MailCommon):
     def test_message_process_references_forward_same_model(self):
         """ Incoming email using references but with alias forward on same model should be considered as a reply """
         self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test.alias',
             'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
             'alias_contact': 'everyone',
@@ -1476,6 +1523,7 @@ class TestMailgateway(MailCommon):
     def test_message_process_references_forward_cc(self):
         """ Incoming email using references but with alias forward in CC should be considered as a repy (To > Cc) """
         self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test.alias',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -1549,6 +1597,7 @@ class TestMailgateway(MailCommon):
         """New record with mail that contains base64 inline image."""
         target_model = "mail.test.field.type"
         alias = self.env["mail.alias"].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             "alias_name": "base64-lover",
             "alias_model_id": self.env["ir.model"]._get(target_model).id,
             "alias_defaults": "{}",
@@ -1572,6 +1621,7 @@ class TestMailgateway(MailCommon):
         coming from alias."""
         target_model = "mail.test.field.type"
         alias = self.env["mail.alias"].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             "alias_name": "base64-lover",
             "alias_model_id": self.env["ir.model"]._get(target_model).id,
             "alias_defaults": "{'type': 'second'}",
@@ -1698,6 +1748,7 @@ class TestMailgateway(MailCommon):
         ])
 
         alias = self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
@@ -1828,6 +1879,7 @@ class TestMailgateway(MailCommon):
         })
 
         self.env['mail.alias'].create({
+            'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'test',
             'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
         })
@@ -1852,6 +1904,7 @@ class TestMailThreadCC(MailCommon):
         cls.email_from = 'Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>'
         cls.alias = cls.env['mail.alias'].create({
             'alias_contact': 'everyone',
+            'alias_domain_id': cls.mail_alias_domain.id,
             'alias_model_id': cls.env['ir.model']._get('mail.test.cc').id,
             'alias_name': 'cc_record',
         })
