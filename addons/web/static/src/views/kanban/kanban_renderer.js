@@ -25,6 +25,7 @@ const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 export class KanbanRenderer extends Component {
     setup() {
         const { arch, cards, className, fields, xmlDoc } = this.props.info;
+        const { list } = this.props;
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
@@ -36,7 +37,7 @@ export class KanbanRenderer extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
-        useSubEnv({ model: this.props.list.model });
+        useSubEnv({ model: list.model });
         useAutofocus();
         if (this.props.info.recordsDraggable) {
             let dataRecordId;
@@ -69,7 +70,7 @@ export class KanbanRenderer extends Component {
                 },
             });
         }
-        if (this.props.list.groupByField.type === "many2one") {
+        if (list.isGrouped && list.groupByField.type === "many2one") {
             let dataListId;
             useSortable({
                 axis: "x",
