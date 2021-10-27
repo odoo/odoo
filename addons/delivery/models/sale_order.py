@@ -38,7 +38,8 @@ class SaleOrder(models.Model):
             self.recompute_delivery_price = True
 
     def _remove_delivery_line(self):
-        delivery_lines = self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)])
+        """Remove delivery products from the sales orders"""
+        delivery_lines = self.order_line.filtered("is_delivery")
         if not delivery_lines:
             return
         to_delete = delivery_lines.filtered(lambda x: x.qty_invoiced == 0)
@@ -50,10 +51,7 @@ class SaleOrder(models.Model):
         to_delete.unlink()
 
     def set_delivery_line(self, carrier, amount):
-
-        # Remove delivery products from the sales order
         self._remove_delivery_line()
-
         for order in self:
             order.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount)
