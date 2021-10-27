@@ -105,6 +105,10 @@
                             + <t t-if="!widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
                         </span>
                     </span>
+                    <div class="ml-3 d-none text-danger o_wslides_js_quiz_submit_error">
+                        <i class="fa fa-close mr-1"/>
+                        <span class="o_wslides_js_quiz_submit_error_text"></span>
+                    </div>
                 </div>
                 <div class="ml-auto mt-3 mt-md-0">
                     <button t-if="widget.quiz.quizAttemptsCount > 0 &amp;&amp; widget.slide.channelCanUpload" class="btn btn-light border o_wslides_js_lesson_quiz_reset">

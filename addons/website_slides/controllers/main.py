@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from collections import defaultdict
 
 import base64
 import json
@@ -15,7 +14,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -879,6 +878,30 @@ class WebsiteSlides(WebsiteProfile):
 
         :return: rendered question template
         """
+
+        new_question_values = {
+            'sequence': sequence,
+            'question': question,
+            'slide_id': slide_id,
+            'answer_ids': [(0, 0, {
+                'sequence': answer['sequence'],
+                'text_value': answer['text_value'],
+                'is_correct': answer['is_correct'],
+                'comment': answer['comment']
+            }) for answer in answer_ids]
+        }
+
+        try:
+            # Attempt to create the question and validate the fields.
+            # We want to return the error to have a nice display instead of the default mechanism
+            # of exception handling that shows sticky toasters.
+            # (Use a 'new' and not a create to avoid having to rollback anything if an error is
+            # raised)
+            slide_question = request.env['slide.question'].new(new_question_values)
+            slide_question._validate_fields(new_question_values.keys())
+        except ValidationError as e:
+            return {'error': e.args[0]}
+
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
             return fetch_res
@@ -894,17 +917,7 @@ class WebsiteSlides(WebsiteProfile):
             ('partner_id', '=', request.env.user.partner_id.id)
         ]).write({'completed': False})
 
-        slide_question = request.env['slide.question'].create({
-            'sequence': sequence,
-            'question': question,
-            'slide_id': slide_id,
-            'answer_ids': [(0, 0, {
-                'sequence': answer['sequence'],
-                'text_value': answer['text_value'],
-                'is_correct': answer['is_correct'],
-                'comment': answer['comment']
-            }) for answer in answer_ids]
-        })
+        slide_question = request.env['slide.question'].create(new_question_values)
         return request.env.ref('website_slides.lesson_content_quiz_question')._render({
             'slide': slide,
             'question': slide_question,
