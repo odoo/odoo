@@ -20,7 +20,10 @@ patch(Activity.prototype, 'website_slides/static/src/components/activity/activit
             args: [[this.activity.thread.id]],
             kwargs: { partner_id: this.activity.requestingPartner.id },
         });
-        this.trigger('reload');
+        if (this.activity) {
+            this.activity.delete();
+        }
+        this.trigger('reload', { keepChanges: true });
     },
     /**
      * @private
@@ -32,6 +35,9 @@ patch(Activity.prototype, 'website_slides/static/src/components/activity/activit
             args: [[this.activity.thread.id]],
             kwargs: { partner_id: this.activity.requestingPartner.id },
         });
-        this.trigger('reload');
+        if (this.activity) {
+            this.activity.delete();
+        }
+        this.trigger('reload', { keepChanges: true });
     },
 });
