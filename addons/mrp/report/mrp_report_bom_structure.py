@@ -215,6 +215,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_operation_line(self, product, bom, qty, level):
         operations = []
         total = 0.0
+        qty = bom.product_uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
         for operation in bom.operation_ids:
             if operation._skip_operation_line(product):
                 continue
