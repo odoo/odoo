@@ -74,7 +74,7 @@ class Pricelist(models.Model):
             pricelist_ids = self._search([('id', 'in', ids)], limit=limit, access_rights_uid=name_get_uid)
             if pricelist_ids:
                 return pricelist_ids
-        return super(Pricelist, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+        return super()._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _compute_price_rule_multi(self, products_qty_partner, date=False, uom_id=False):
         """ Low-level method - Multi pricelist, multi products
@@ -267,21 +267,6 @@ class Pricelist(models.Model):
         """ Multi pricelist, mono product - returns price per pricelist """
         return {key: price[0] for key, price in self.price_rule_get(prod_id, qty, partner=partner).items()}
 
-    def price_rule_get_multi(self, products_by_qty_by_partner):
-        """ Multi pricelist, multi product  - return tuple """
-        return self._compute_price_rule_multi(products_by_qty_by_partner)
-
-    def price_rule_get(self, prod_id, qty, partner=None):
-        """ Multi pricelist, mono product - return tuple """
-        product = self.env['product.product'].browse([prod_id])
-        return self._compute_price_rule_multi([(product, qty, partner)])[prod_id]
-
-    @api.model
-    def _price_get_multi(self, pricelist, products_by_qty_by_partner):
-        """ Mono pricelist, multi product - return price per product """
-        return pricelist.get_products_price(
-            list(zip(**products_by_qty_by_partner)))
-
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
         return [
             ('active', '=', True),
@@ -291,6 +276,7 @@ class Pricelist(models.Model):
     def _get_partner_pricelist_multi_filter_hook(self):
         return self.filtered('active')
 
+    @api.model
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.
 
