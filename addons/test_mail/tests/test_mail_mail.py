@@ -666,7 +666,10 @@ class TestMailMail(MailCommon):
 
         Batch are defined by the mail server and the email from field.
         """
-        self.assertEqual(self.env['ir.mail_server']._get_default_from_address(), 'notifications@test.com')
+        self.assertEqual(
+            self.env['ir.mail_server']._get_default_from_address(),
+            f'notifications@{self.alias_domain}'
+        )
 
         mail_values = {
             'body_html': '<p>Test</p>',
@@ -711,7 +714,7 @@ class TestMailMail(MailCommon):
         self.assertEqual(self.connect_mocked.call_count, 4, 'Must be called once per batch which share the same mail server and the same smtp from')
         self.connect_mocked.assert_has_calls(
             calls=[
-                call(smtp_from='notifications@test.com', mail_server_id=self.server_notification.id),
+                call(smtp_from=f'notifications@{self.alias_domain}', mail_server_id=self.server_notification.id),
                 call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain_2.id),
                 call(smtp_from='user_2@test_2.com', mail_server_id=self.server_domain_2.id),
                 call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain.id),
@@ -719,9 +722,9 @@ class TestMailMail(MailCommon):
             any_order=True,
         )
 
-        self.assert_email_sent_smtp(message_from='"test" <notifications@test.com>',
+        self.assert_email_sent_smtp(message_from=f'"test" <notifications@{self.alias_domain}>',
                                     emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assert_email_sent_smtp(message_from='"test_2" <notifications@test.com>',
+        self.assert_email_sent_smtp(message_from=f'"test_2" <notifications@{self.alias_domain}>',
                                     emails_count=5, from_filter=self.server_notification.from_filter)
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
         self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)

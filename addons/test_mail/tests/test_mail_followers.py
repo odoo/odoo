@@ -464,7 +464,7 @@ class AdvancedResponsibleNotifiedTest(MailCommon):
 
     def test_auto_subscribe_notify_email(self):
         """ Responsible is notified when assigned """
-        partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.com"})
+        partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.mycompany.com"})
         notified_user = self.env['res.users'].create({
             'login': 'demo1',
             'partner_id': partner.id,

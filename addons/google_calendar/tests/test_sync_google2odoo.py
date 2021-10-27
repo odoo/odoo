@@ -1303,10 +1303,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_alias_email_sync_recurrence(self):
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test.mycompany.com')
         alias_model = self.env['ir.model'].search([('model', '=', 'calendar.event')])
-        self.env['mail.alias'].create({'alias_name': 'sale', 'alias_model_id': alias_model.id})
-        alias_email = 'sale@%s' % catchall_domain if catchall_domain else 'sale@'
+        mail_alias = self.env['mail.alias'].create({'alias_name': 'sale', 'alias_model_id': alias_model.id})
 
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         base_event = self.env['calendar.event'].create({
@@ -1333,7 +1332,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": alias_email, "state": "accepted",
+                    "email": mail_alias.display_name,
+                    "state": "accepted",
                 },
             ],
             'updated': self.now,

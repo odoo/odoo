@@ -84,7 +84,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     @classmethod
     def _init_mail_gateway(cls):
-        cls.alias_domain = 'test.com'
+        cls.alias_domain = 'test.mycompany.com'
         cls.alias_catchall = 'catchall.test'
         cls.alias_bounce = 'bounce.test'
         cls.default_from = 'notifications'
@@ -92,13 +92,15 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
+
+        # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
 
     @classmethod
     def _init_outgoing_gateway(cls):
         cls.env['ir.mail_server'].search([]).unlink()
         cls.mail_server_domain, cls.mail_server_global = cls.env['ir.mail_server'].create([
-            {'from_filter': 'test.com',
+            {'from_filter': cls.alias_domain,
              'name': 'Domain Based Server',
              'smtp_encryption': 'none',
              'smtp_host': 'smtp_host',
@@ -1087,25 +1089,26 @@ class MailCommon(common.TransactionCase, MailCase):
     @classmethod
     def setUpClass(cls):
         super(MailCommon, cls).setUpClass()
-        # give default values for all email aliases and domain
-        cls._init_mail_gateway()
-        cls._init_outgoing_gateway()
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
-
+        cls.partner_admin = cls.env.ref('base.partner_admin')
+        cls.company_admin = cls.user_admin.company_id
+        cls.company_admin.write({'email': 'company@example.com'})
         with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
             cls.user_admin.write({
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'test.admin@test.example.com',
                 'notification_type': 'inbox',
             })
-        cls.partner_admin = cls.env.ref('base.partner_admin')
-        cls.company_admin = cls.user_admin.company_id
-        cls.company_admin.write({'email': 'company@example.com'})
         # have root available at hand, just in case
         cls.user_root = cls.env.ref('base.user_root')
         cls.partner_root = cls.user_root.partner_id
 
+        # give default values for all email aliases and domain
+        cls._init_mail_gateway()
+        cls._init_outgoing_gateway()
+
+        # by default avoid rendering restriction complexity
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
 
         # test standard employee
@@ -1164,6 +1167,7 @@ class MailCommon(common.TransactionCase, MailCase):
         """ Create another company, add it to admin and create an user that
         belongs to that new company. It allows to test flows with users from
         different companies. """
+        # new company
         cls.company_2 = cls.env['res.company'].create({
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
@@ -1171,6 +1175,7 @@ class MailCommon(common.TransactionCase, MailCase):
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
 
+        # employee specific to second company
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
             groups='base.group_user',
@@ -1189,7 +1194,7 @@ class MailCommon(common.TransactionCase, MailCase):
             company_id=cls.company_2.id,
             company_ids=[(6, 0, (cls.company_admin + cls.company_2).ids)],
             email='etchenne@example.com',
-            groups='base.group_user,base.group_erp_manager,mail.group_mail_template_editor',
+            groups='base.group_user,base.group_erp_manager,mail.group_mail_template_editor,base.group_partner_manager',
             login='erp_manager',
             name='Etchenne Tchagada',
             notification_type='inbox',

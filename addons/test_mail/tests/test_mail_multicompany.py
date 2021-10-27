@@ -12,17 +12,15 @@ from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
-from odoo.tests.common import users, HttpCase
+from odoo.tests import tagged, users, HttpCase
 from odoo.tools import formataddr, mute_logger
 
 
-@tagged('multi_company')
-class TestMultiCompanySetup(MailCommon, TestRecipients):
+class TestMailMCCommon(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMultiCompanySetup, cls).setUpClass()
+        super().setUpClass()
         cls._activate_multi_company()
 
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
@@ -45,11 +43,12 @@ class TestMultiCompanySetup(MailCommon, TestRecipients):
             'email': 'valid.lelitre@agrolait.com',
         })
         # groups@.. will cause the creation of new mail.test.gateway
-        cls.alias = cls.env['mail.alias'].create({
+        cls.mail_alias = cls.env['mail.alias'].create({
+            'alias_contact': 'everyone',
+            'alias_model_id': cls.test_model.id,
             'alias_name': 'groups',
             'alias_user_id': False,
-            'alias_model_id': cls.test_model.id,
-            'alias_contact': 'everyone'})
+        })
 
         # Set a first message on public group to test update and hierarchy
         cls.fake_email = cls.env['mail.message'].create({
@@ -63,10 +62,14 @@ class TestMultiCompanySetup(MailCommon, TestRecipients):
         })
 
     def setUp(self):
-        super(TestMultiCompanySetup, self).setUp()
+        super().setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
         self.flush_tracking()
+
+
+@tagged('multi_company')
+class TestMultiCompanySetup(TestMailMCCommon):
 
     @users('erp_manager')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -74,9 +77,6 @@ class TestMultiCompanySetup(MailCommon, TestRecipients):
         """ Test auto-populate of auto created partner with related record
         values when sending a mail with a template.
         """
-        self.user_erp_manager.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
-        })
         companies = self.company_admin + self.company_2
         test_records = self.env['mail.test.ticket.mc'].create([
             {

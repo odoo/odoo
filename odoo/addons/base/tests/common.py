@@ -373,7 +373,7 @@ class MockSmtplibCase:
     @classmethod
     def _init_mail_config(cls):
         cls.alias_bounce = 'bounce.test'
-        cls.alias_domain = 'test.com'
+        cls.alias_domain = 'test.mycompany.com'
         cls.default_from = 'notifications'
         cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
@@ -395,15 +395,15 @@ class MockSmtplibCase:
         ) = cls.env['ir.mail_server'].create([
             {
                 'name': 'Domain based server',
-                'from_filter': 'test.com',
+                'from_filter': 'test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'User specific server',
-                'from_filter': 'specific_user@test.com',
+                'from_filter': 'specific_user@test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
-                'from_filter': 'notifications@test.com',
+                'from_filter': 'notifications@test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server No From Filter',

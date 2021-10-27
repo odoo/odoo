@@ -82,7 +82,6 @@ class TestMailAlias(TestMailAliasCommon):
         })
         self.assertEqual(alias.alias_name, 'bidule.inc', 'Emails cannot start or end with a dot, there cannot be a sequence of dots.')
 
-    def test_alias_setup(self):
         alias = self.env['mail.alias'].create({
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_name': 'b4r+_#_R3wl$$',
