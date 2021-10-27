@@ -31,7 +31,6 @@ class MondialRelay(http.Controller):
         })
         if order.partner_shipping_id != partner_shipping:
             order.partner_shipping_id = partner_shipping
-            order.onchange_partner_shipping_id()
 
         return {
             'address': request.env['ir.qweb']._render('website_sale.address_on_payment', {
