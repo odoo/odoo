@@ -212,7 +212,7 @@ export class CommandPalette extends Component {
 
         const listbox = this.el.querySelector(".o_command_palette_listbox");
         const command = listbox.querySelector(`#o_command_${nextIndex}`);
-        scrollTo(command, listbox);
+        scrollTo(command, { scrollable: listbox });
     }
 
     onCommandClicked(index) {
