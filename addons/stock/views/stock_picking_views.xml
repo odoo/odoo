@@ -233,7 +233,7 @@
                     <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                     <button name="button_validate" attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate"/>
-                    <button name="action_set_quantities_to_reservation" attrs="{'invisible': ['|', ('show_validate', '=', False), ('immediate_transfer', '=', True)]}" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate"/>
+                    <button name="action_set_quantities_to_reservation" attrs="{'invisible': ['|', '|', ('show_validate', '=', False), ('immediate_transfer', '=', True), ('show_reserved', '!=', True)]}" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate"/>
                     <widget name="signature" string="Sign" highlight="1"
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'done')]}"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
