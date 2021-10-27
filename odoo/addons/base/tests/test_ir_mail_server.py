@@ -294,7 +294,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_IDNA(self):
         """ Test that the mail from / recipient envelop are encoded using IDNA """
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'ééééééé.com')
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
             self.env['ir.mail_server'].send_email(message)

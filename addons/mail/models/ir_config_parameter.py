@@ -25,6 +25,6 @@ class IrConfigParameter(models.Model):
             value = self.env['mail.alias']._sanitize_alias_name(value)
         # sanitize and normalize allowed catchall domains
         elif key == 'mail.catchall.domain.allowed' and value:
-            value = self.env['mail.alias']._clean_and_check_mail_catchall_allowed_domains(value)
+            value = self.env['mail.alias']._sanitize_allowed_domains(value)
 
         return super().set_param(key, value)

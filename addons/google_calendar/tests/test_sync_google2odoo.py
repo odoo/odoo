@@ -1345,7 +1345,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_alias_email_sync_recurrence(self):
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test.mycompany.com')
         alias_model = self.env['ir.model'].search([('model', '=', 'calendar.event')])
         mail_alias = self.env['mail.alias'].create({'alias_name': 'sale', 'alias_model_id': alias_model.id})
 

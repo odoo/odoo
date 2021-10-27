@@ -33,8 +33,7 @@ class TestMailAlias(TestMailAliasCommon):
     def test_alias_domain_allowed_validation(self):
         """ Check the validation of `mail.catchall.domain.allowed` system parameter"""
         for value in [',', ',,', ', ,']:
-            with self.assertRaises(exceptions.ValidationError,
-                 msg="The value '%s' should not be allowed" % value):
+            with self.assertRaises(exceptions.ValidationError):
                 self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
 
         for value, expected in [
