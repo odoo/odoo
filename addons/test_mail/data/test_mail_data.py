@@ -219,7 +219,7 @@ Date: Sun, 26 Mar 2023 05:23:22 +0200
 Message-ID: {msg_id}
 Subject: {subject}
 From: "Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>
-To: groups@test.com
+To: groups@test.mycompany.com
 Content-Type: multipart/mixed; boundary="000000000000b951de05f7c47a9e"
 
 --000000000000b951de05f7c47a9e
