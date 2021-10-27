@@ -37,6 +37,8 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_module_delivery', store=True, readonly=False)
     module_website_sale_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
+    group_product_pricelist = fields.Boolean(
+        compute='_compute_group_product_pricelist', store=True, readonly=False)
 
     @api.depends('website_id')
     def _compute_terms_url(self):
@@ -64,12 +66,11 @@ class ResConfigSettings(models.TransientModel):
             wizard.module_delivery = wizard.sale_delivery_settings in ['internal', 'website']
             wizard.module_website_sale_delivery = wizard.sale_delivery_settings == 'website'
 
-    @api.onchange('group_discount_per_so_line')
-    def _onchange_group_discount_per_so_line(self):
-        if self.group_discount_per_so_line:
-            self.update({
-                'group_product_pricelist': True,
-            })
+    @api.depends('group_discount_per_so_line')
+    def _compute_group_product_pricelist(self):
+        self.filtered(lambda w: w.group_discount_per_so_line).update({
+            'group_product_pricelist': True,
+        })
 
     def action_update_terms(self):
         self.ensure_one()
