@@ -247,7 +247,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
         with self.assertQueryCount(admin=1, employee=1):
             rec.write({
                 'name': 'Test2',
-                'email_from': 'test@test.com',
+                'email_from': 'test@test.mycompany.com',
             })
 
 
@@ -738,11 +738,10 @@ class TestMailAPIPerformance(BaseMailPerformance):
         for record in test_records:
             self.assertEqual(
                 reply_to[record.id],
-                formataddr(
-                    ("%s %s" % (self.env.user.company_id.name, record.name),
-                     "%s@%s" % (record.alias_name, self.alias_domain)
-                    )
-                )
+                formataddr((
+                    record.name,
+                    f"{record.alias_name}@{self.alias_domain}"
+                ))
             )
 
 

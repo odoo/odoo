@@ -8,7 +8,7 @@ from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-@tagged('mass_mailing')
+@tagged('mass_mailing', 'mail_server')
 class TestMassMailingServer(TestMassMailCommon):
 
     @classmethod
@@ -82,12 +82,12 @@ class TestMassMailingServer(TestMassMailCommon):
         mailings = self.env['mailing.mailing'].create([{
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
-            'email_from': 'specific_user@test.com',
+            'email_from': 'specific_user@test.mycompany.com',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }, {
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
-            'email_from': 'unknown_name@test.com',
+            'email_from': 'unknown_name@test.mycompany.com',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }])
         with self.mock_smtplib_connection():
@@ -95,17 +95,17 @@ class TestMassMailingServer(TestMassMailCommon):
         self.assertEqual(self.find_mail_server_mocked.call_count, 2, 'Must be called only once per mail from')
 
         self.assert_email_sent_smtp(
-            smtp_from='specific_user@test.com',
-            message_from='specific_user@test.com',
+            smtp_from='specific_user@test.mycompany.com',
+            message_from='specific_user@test.mycompany.com',
             from_filter=self.server_user.from_filter,
             emails_count=8,
         )
 
         self.assert_email_sent_smtp(
             # Must use the bounce address here because the mail server
-            # is configured for the entire domain "test.com"
+            # is configured for the entire domain "test.mycompany.com"
             smtp_from=lambda x: 'bounce' in x,
-            message_from='unknown_name@test.com',
+            message_from='unknown_name@test.mycompany.com',
             from_filter=self.server_domain.from_filter,
             emails_count=8,
         )
@@ -127,8 +127,8 @@ class TestMassMailingServer(TestMassMailCommon):
 
         self.assertEqual(self.find_mail_server_mocked.call_count, 1)
         self.assert_email_sent_smtp(
-            smtp_from='notifications@test.com',
-            message_from='"Testing" <notifications@test.com>',
+            smtp_from='notifications@test.mycompany.com',
+            message_from='"Testing" <notifications@test.mycompany.com>',
             from_filter=self.server_notification.from_filter,
             emails_count=8,
         )
@@ -156,8 +156,8 @@ class TestMassMailingServer(TestMassMailCommon):
         self.assertEqual(self.find_mail_server_mocked.call_count, 1, 'Must not be called when mail server is forced')
 
         self.assert_email_sent_smtp(
-            smtp_from='specific_user@test.com',
-            message_from='specific_user@test.com',
+            smtp_from='specific_user@test.mycompany.com',
+            message_from='specific_user@test.mycompany.com',
             from_filter=self.server_user.from_filter,
             emails_count=8,
         )

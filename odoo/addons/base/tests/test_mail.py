@@ -500,13 +500,13 @@ class EmailConfigCase(TransactionCase):
         """Email from setting is respected."""
         # ICP setting is more important
         ICP = self.env["ir.config_parameter"].sudo()
-        ICP.set_param("mail.catchall.domain", "example.org")
+        ICP.set_param("mail.catchall.domain", "test.mycompany.com")
         ICP.set_param("mail.default.from", "icp")
         message = self.env["ir.mail_server"].build_email(
             False, "recipient@example.com", "Subject",
             "The body of an email",
         )
-        self.assertEqual(message["From"], "icp@example.org")
+        self.assertEqual(message["From"], "icp@test.mycompany.com")
         # Without ICP, the config file/CLI setting is used
         ICP.set_param("mail.default.from", False)
         message = self.env["ir.mail_server"].build_email(
