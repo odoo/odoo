@@ -29,8 +29,14 @@
                     </t>
                 </div>
             </form>
-            <t t-if="widget.update" t-call="slide.quiz.update.buttons"/>
-            <t t-else="" t-call="slide.quiz.create.buttons"/>
+            <div>
+                <t t-if="widget.update" t-call="slide.quiz.update.buttons"/>
+                <t t-else="" t-call="slide.quiz.create.buttons"/>
+                <div class="ml-2 d-none text-danger o_wslides_js_quiz_validation_error">
+                    <i class="fa fa-close mr-1"/>
+                    <span class="o_wslides_js_quiz_validation_error_text"></span>
+                </div>
+            </div>
         </div>
     </t>
 
@@ -66,14 +72,12 @@
     </t>
 
     <t t-name="slide.quiz.create.buttons">
-        <div>
-            <a class="o_wslides_js_quiz_validate_question btn btn-primary text-white border" role="button">
-                <span>Save</span>
-            </a>
-            <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
-                <span>Cancel</span>
-            </a>
-        </div>
+        <a class="o_wslides_js_quiz_validate_question btn btn-primary text-white border" role="button">
+            <span>Save</span>
+        </a>
+        <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
+            <span>Cancel</span>
+        </a>
     </t>
 
     <t t-name="slide.quiz.update.buttons">
