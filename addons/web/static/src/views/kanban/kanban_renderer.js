@@ -25,7 +25,6 @@ const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 export class KanbanRenderer extends Component {
     setup() {
         const { arch, cards, className, fields, xmlDoc } = this.props.info;
-        const { list } = this.props;
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
@@ -37,57 +36,59 @@ export class KanbanRenderer extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.colors = RECORD_COLORS;
-        useSubEnv({ model: list.model });
+        useSubEnv({ model: this.props.list.model });
         useAutofocus();
-        if (this.props.info.recordsDraggable) {
-            let dataRecordId;
-            let dataListId;
-            useSortable({
-                listSelector: ".o_kanban_group",
-                itemSelector: ".o_kanban_record:not(.o_updating)",
-                // TODO recordsMovable = whether the records can be moved accross columns
-                // containment: this.props.info.recordsMovable ? false : "parent",
-                cursor: "move",
-                onListEnter(group) {
-                    group.classList.add("o_kanban_hover");
-                },
-                onListLeave(group) {
-                    group.classList.remove("o_kanban_hover");
-                },
-                onStart(group, item) {
-                    dataListId = Number(group.dataset.id);
-                    dataRecordId = Number(item.dataset.id);
-                    item.classList.add("o_currently_dragged", "ui-sortable-helper");
-                },
-                onStop(group, item) {
-                    item.classList.remove("o_currently_dragged", "ui-sortable-helper");
-                },
-                onDrop: ({ previous, parent }) => {
-                    const groupEl = parent.closest(".o_kanban_group");
-                    const refId = previous ? Number(previous.dataset.id) : null;
-                    const groupId = Number(groupEl.dataset.id);
-                    this.env.model.moveRecord(dataRecordId, dataListId, refId, groupId);
-                },
-            });
-        }
-        if (list.isGrouped && list.groupByField.type === "many2one") {
-            let dataListId;
-            useSortable({
-                axis: "x",
-                itemSelector: ".o_kanban_group",
-                handle: ".o_column_title",
-                cursor: "move",
-                onStart(group, item) {
-                    dataListId = Number(item.dataset.id);
-                },
-                onDrop: ({ previous }) => {
-                    const refId = Number(previous.dataset.id);
-                    this.props.list.resequence(dataListId, refId);
-                },
-            });
-        }
         useExternalListener(window, "keydown", this.onWindowKeydown);
         useExternalListener(window, "click", this.onWindowClick);
+        // Sortable
+        let dataRecordId;
+        let dataListId;
+        useSortable({
+            activate: () => this.recordsDraggable,
+            listSelector: ".o_kanban_group",
+            itemSelector: ".o_kanban_record:not(.o_updating)",
+            // TODO recordsMovable = whether the records can be moved accross columns
+            // containment: this.props.info.recordsMovable ? false : "parent",
+            cursor: "move",
+            onListEnter(group) {
+                group.classList.add("o_kanban_hover");
+            },
+            onListLeave(group) {
+                group.classList.remove("o_kanban_hover");
+            },
+            onStart(group, item) {
+                dataListId = Number(group.dataset.id);
+                dataRecordId = Number(item.dataset.id);
+                item.classList.add("o_currently_dragged", "ui-sortable-helper");
+            },
+            onStop(group, item) {
+                item.classList.remove("o_currently_dragged", "ui-sortable-helper");
+            },
+            onDrop: async ({ previous, parent }) => {
+                const groupEl = parent.closest(".o_kanban_group");
+                const refId = previous ? Number(previous.dataset.id) : null;
+                const groupId = Number(groupEl.dataset.id);
+                const group = this.props.list.data.find((g) => g.id === groupId);
+                await this.env.model.moveRecord(dataRecordId, dataListId, refId, groupId);
+                if (!group.isLoaded) {
+                    await group.toggle();
+                }
+            },
+        });
+        useSortable({
+            activate: () => this.columnsDraggable,
+            axis: "x",
+            itemSelector: ".o_kanban_group",
+            handle: ".o_column_title",
+            cursor: "move",
+            onStart(group, item) {
+                dataListId = Number(item.dataset.id);
+            },
+            onDrop: ({ previous }) => {
+                const refId = Number(previous.dataset.id);
+                this.props.list.resequence(dataListId, refId);
+            },
+        });
     }
 
     get context() {
@@ -96,6 +97,14 @@ export class KanbanRenderer extends Component {
 
     get progress() {
         return this.props.list.model.progress;
+    }
+
+    get recordsDraggable() {
+        return this.props.list.isGrouped && this.props.info.recordsDraggable;
+    }
+
+    get columnsDraggable() {
+        return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
     }
 
     quickCreate(group) {

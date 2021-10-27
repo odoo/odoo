@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useListener } from "@web/core/utils/hooks";
+import { useEffect } from "../../core/utils/hooks";
 
 const { hooks } = owl;
 const { onWillUnmount, useComponent, useExternalListener } = hooks;
@@ -13,6 +14,7 @@ const cancelEvent = (ev) => {
 
 export const useSortable = (params) => {
     const {
+        activate,
         listSelector,
         itemSelector,
         containment,
@@ -47,6 +49,7 @@ export const useSortable = (params) => {
     let currentList = null;
     let ghost = null;
 
+    let enabled = false;
     let started = false;
     let locked = false;
 
@@ -200,30 +203,57 @@ export const useSortable = (params) => {
         started = false;
     };
 
+    if (activate) {
+        useEffect(
+            (enable) => {
+                enabled = enable;
+                return () => {};
+            },
+            () => [activate()]
+        );
+    } else {
+        enabled = true;
+    }
     useListener("mousedown", fullSelector, (ev) => {
+        if (!enabled) {
+            return;
+        }
         currentItem = ev.target.closest(itemSelector);
         currentList = listSelector ? ev.target.closest(listSelector) : component.el;
         offsetX = ev.clientX;
         offsetY = ev.clientY;
     });
     useExternalListener(window, "mousemove", (ev) => {
-        if (!currentItem) {
+        if (!enabled || !currentItem) {
             return;
         }
         dragStart();
         drag(ev.clientX, ev.clientY);
     });
-    useExternalListener(window, "mouseup", () => dragStop(), true);
+    useExternalListener(
+        window,
+        "mouseup",
+        () => {
+            if (currentItem && !started) {
+                currentItem = null;
+                currentList = null;
+            } else {
+                dragStop();
+            }
+        },
+        true
+    );
     useExternalListener(
         window,
         "keydown",
         (ev) => {
+            if (!enabled || !started) {
+                return;
+            }
             switch (ev.key) {
                 case "Escape":
                 case "Tab": {
-                    if (started) {
-                        cancelEvent(ev);
-                    }
+                    cancelEvent(ev);
                     dragStop(true);
                 }
             }

@@ -104,24 +104,20 @@ export class KanbanModel extends RelationalModel {
     async moveRecord(dataRecordId, dataListId, refId, newListId) {
         const record = this.db[dataRecordId];
         const list = this.db[dataListId];
+        const newList = this.db[newListId];
 
-        // Removes the record from the current datalist
+        // Quick update: moves the record at the right position and notifies components
         list.data = list.data.filter((r) => r !== record);
-
-        if (dataListId === newListId) {
-            // Quick update: adds the record at the right position and notifies components
-            const index = refId ? list.data.findIndex((r) => r.id === refId) + 1 : 0;
-            list.data.splice(index, 0, record);
-            this.notify();
-        } else {
-            // Quick update: adds the record to the new list data and notifies components
-            const newList = this.db[newListId];
+        list.count--;
+        if (newList.isLoaded) {
             const index = refId ? newList.data.findIndex((r) => r.id === refId) + 1 : 0;
             newList.data.splice(index, 0, record);
-            newList.count++;
-            list.count--;
-            this.notify();
-            // Actual processing
+        }
+        newList.count++;
+        this.notify();
+
+        // Actual processing
+        if (dataListId !== newListId) {
             const { groupByField } = this.root;
             const value = isRelational(groupByField) ? [newList.value] : newList.value;
             await record.update(groupByField.name, value);
@@ -135,6 +131,6 @@ export class KanbanModel extends RelationalModel {
                 this.populateProgressData(progressData);
             }
         }
-        await list.resequence();
+        await newList.resequence();
     }
 }
