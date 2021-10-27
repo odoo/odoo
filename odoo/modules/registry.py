@@ -371,7 +371,9 @@ class Registry(Mapping):
             try:
                 func(*args, **kwargs)
             except Exception as e:
-                _schema.error(*e.args)
+                # warn only, this is not a deployment showstopper, and
+                # can sometimes be a transient error
+                _schema.warning(*e.args)
 
     def init_models(self, cr, model_names, context, install=True):
         """ Initialize a list of models (given by their name). Call methods
