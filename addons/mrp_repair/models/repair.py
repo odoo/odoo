@@ -48,7 +48,7 @@ class RepairLine(models.Model):
         tax = self.env['account.tax']
         if partner:
             partner_invoice = self.repair_id.partner_invoice_id or partner
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
+            fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
             taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
             tax = fpos.map_tax(taxes)
         return {

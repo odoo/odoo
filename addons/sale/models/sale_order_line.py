@@ -137,7 +137,7 @@ class SaleOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
+            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id._get_fiscal_position(line.order_partner_id)
             # If company_id is set, always filter taxes by the company
             taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
             line.tax_id = fpos.map_tax(taxes)

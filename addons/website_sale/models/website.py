@@ -277,7 +277,7 @@ class Website(models.Model):
             fpos_id = (
                 self.env['account.fiscal.position'].sudo()
                 .with_company(sale_order.company_id.id)
-                .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
+                ._get_fiscal_position(sale_order.partner_id, delivery=sale_order.partner_shipping_id)
             ).id
             if sale_order.fiscal_position_id.id != fpos_id:
                 sale_order = None
