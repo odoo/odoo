@@ -340,11 +340,23 @@ const ReplenishReport = clientAction.extend({
     _onClickReserve: function(ev) {
         const model = ev.target.getAttribute('model');
         const modelId = parseInt(ev.target.getAttribute('model-id'));
-        return this._rpc( {
+        return this._rpc({
             model,
             args: [[modelId]],
-            method: 'action_assign'
-        }).then(() => this._reloadReport());
+            method: 'action_assign_from_forecast_report',
+        }).then(res => {
+            if (res.should_refresh) {
+                this._reloadReport();
+            }
+            if (res.should_alert) {
+                const title = _t("Reservation is not processed");
+                const message = _.str.sprintf(
+                    _t(`The reservation can not be fully processed for the following transfer(s): %s.
+                    Please check the product stock location meets your transfers's needs.`),
+                    res.picking_names.join(', '));
+                this.displayNotification({ title, message, type: 'danger' });
+            }
+        });
     }
 
 });

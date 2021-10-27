@@ -762,6 +762,32 @@ class Picking(models.Model):
 
         return True
 
+    def action_assign_from_forecast_report(self):
+        """ Calls `action_assign` but also keeps track of reservations to know
+        if there is reservations who can't be fully done.
+
+        :returns: a dict of flags to pass to the client.
+        :rtype: dict
+        """
+        should_refresh = False
+        should_alert = False
+        picking_names = set()
+        moves_before_reservation = []
+        for move in self.move_lines:
+            if move.state in ('draft', 'cancel', 'done') or not move.product_uom_qty or \
+               float_compare(move.reserved_availability, move.product_uom_qty, precision_digits=move.product_uom.rounding) == 0.0:
+                continue
+            moves_before_reservation.append((move, move.reserved_availability))
+        self.action_assign()
+
+        for move, previous_reserved_qty in moves_before_reservation:
+            if not should_refresh and float_compare(move.reserved_availability, previous_reserved_qty, precision_digits=move.product_uom.rounding) != 0.0:
+                should_refresh = True
+            if float_compare(move.reserved_availability, move.product_uom_qty, precision_digits=move.product_uom.rounding) != 0.0:
+                should_alert = True
+                picking_names.add(move.picking_id.display_name)
+        return dict(should_refresh=should_refresh, should_alert=should_alert, picking_names=list(picking_names))
+
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
         self.write({'is_locked': True})
