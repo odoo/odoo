@@ -50,7 +50,7 @@ const translateAttribute = (attrValue) => {
 const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("tabindex", 0);
     kanbanBox.setAttribute("role", "article");
-    kanbanBox.setAttribute("t-att-data-id", "props.info.recordsDraggable and record.id");
+    kanbanBox.setAttribute("t-att-data-id", "recordsDraggable and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
         kanbanBox.setAttribute("t-on-click", "onCardClicked(record)");
     }
