@@ -4,9 +4,11 @@
  * Ensures that `element` will be visible in its `scrollable`.
  *
  * @param {HTMLElement} element
- * @param {HTMLElement} [scrollable]
+ * @param {Object} options
+ * @param {HTMLElement} options[scrollable] a scrollable area
+ * @param {Boolean} options[isAnchor] states if the scroll is to an anchor
  */
-export function scrollTo(element, scrollable = null) {
+export function scrollTo(element, options = { scrollable: null, isAnchor: false }) {
     function _getScrollParent(node) {
         if (node == null) {
             return null;
@@ -18,18 +20,27 @@ export function scrollTo(element, scrollable = null) {
             return _getScrollParent(node.parentNode);
         }
     }
-    scrollable = scrollable ? scrollable : _getScrollParent(element);
+    const scrollable = options.scrollable ? options.scrollable : _getScrollParent(element);
 
     // Scrollbar is present ?
     if (scrollable.scrollHeight > scrollable.clientHeight) {
-        const scrollBottom = scrollable.clientHeight + scrollable.scrollTop;
-        const elementBottom = element.offsetTop + element.offsetHeight;
+        const scrollBottom = scrollable.getBoundingClientRect().bottom;
+        const scrollTop = scrollable.getBoundingClientRect().top;
+        const elementBottom = element.getBoundingClientRect().bottom;
+        const elementTop = element.getBoundingClientRect().top;
         if (elementBottom > scrollBottom) {
             // Scroll down
-            scrollable.scrollTop = elementBottom - scrollable.clientHeight;
-        } else if (element.offsetTop < scrollable.scrollTop) {
+            if (options.isAnchor) {
+                // For an anchor, the scroll place the element at the top
+                scrollable.scrollTop += elementTop - scrollBottom + scrollable.clientHeight;
+            } else {
+                // The scroll make the element visible in the scrollable
+                scrollable.scrollTop +=
+                    elementTop - scrollBottom + element.getBoundingClientRect().height;
+            }
+        } else if (elementTop < scrollTop) {
             // Scroll up
-            scrollable.scrollTop = element.offsetTop;
+            scrollable.scrollTop -= scrollTop - elementTop;
         }
     }
 }
