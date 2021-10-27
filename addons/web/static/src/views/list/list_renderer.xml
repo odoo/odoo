@@ -29,7 +29,7 @@
                         <tr>
                             <td t-if="props.hasSelectors"/>
                             <t t-set="aggregates" t-value="props.list.getAggregates(selection)"/>
-                            <t t-foreach="columns" t-as="column" t-key="column.name">
+                            <t t-foreach="state.columns" t-as="column" t-key="column.name">
                                 <t t-set="aggregate" t-value="aggregates[column.name]"/>
                                 <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
                                     <t t-esc="aggregate.value"/>
