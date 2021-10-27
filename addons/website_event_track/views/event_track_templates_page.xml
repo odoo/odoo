@@ -37,8 +37,11 @@
                 Event <span t-esc="track.event_id.name" class="font-weight-bold"/>
                 <span t-if="track.event_id.start_today">
                     starts in
-                    <span t-esc="track.event_id.start_remaining"
+                    <span t-if="track.event_id.start_remaining &gt;= 1" t-esc="track.event_id.start_remaining"
                         t-options="{'widget': 'duration', 'digital': False, 'unit': 'minute', 'round': 'minute'}"/>
+                    <t t-else="">
+                        a few seconds
+                    </t>.
                 </span>
                 <span t-else="">
                     starts on
