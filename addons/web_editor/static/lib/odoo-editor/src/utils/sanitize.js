@@ -13,6 +13,7 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
+    isUnremovable
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -101,6 +102,30 @@ class Sanitize {
             moveNodes(...endPos(node.previousSibling), node);
             restoreCursor();
             node = nodeP;
+        }
+
+        // Remove zero-width spaces added by `fillEmpty` when there is content.
+        if (
+            node.nodeType === Node.TEXT_NODE &&
+            node.textContent.includes('\u200B') &&
+            (
+                node.textContent.length > 1 ||
+                // There can be multiple ajacent text nodes, in which case the
+                // zero-width space is not needed either, despite being alone
+                // (length === 1) in its own text node.
+                Array.from(node.parentNode.childNodes).find(
+                    sibling =>
+                        sibling !== node &&
+                        sibling.nodeType === Node.TEXT_NODE &&
+                        sibling.length > 0
+                )
+            ) &&
+            isUnremovable(node.parentElement) &&
+            !isBlock(node.parentElement)
+        ) {
+            const restoreCursor = preserveCursor(this.root.ownerDocument);
+            node.textContent = node.textContent.replace('\u200B', '');
+            restoreCursor();
         }
 
         // Remove empty blocks in <li>
