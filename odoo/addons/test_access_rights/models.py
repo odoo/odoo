@@ -31,6 +31,12 @@ class Parent(models.Model):
 
     obj_id = fields.Many2one('test_access_right.some_obj', required=True, ondelete='restrict')
 
+class Child(models.Model):
+    _name = 'test_access_right.child'
+    _description = 'Object for testing company ir rule'
+
+    parent_id = fields.Many2one('test_access_right.some_obj')
+
 class ObjCateg(models.Model):
     _name = 'test_access_right.obj_categ'
     _description = "Context dependent searchable model"
