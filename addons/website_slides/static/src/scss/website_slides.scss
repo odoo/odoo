@@ -139,6 +139,10 @@ $truncate-limits: 2, 3, 10;
         i.o_wslides_js_quiz_icon:hover {
             color: black !important;
         }
+
+        .o_wslides_js_quiz_validation_error, .o_wslides_js_quiz_submit_error {
+            display: inline-block;  // not using d-inline-block to avoid messing with d-none
+        }
     }
 
     .o_wslides_js_lesson_quiz_question {

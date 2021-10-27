@@ -114,21 +114,25 @@
         // Private
         //--------------------------------------------------------------------------
 
-        _alertShow: function (alertCode) {
+        _showErrorMessage: function (errorCode) {
             var message = _t('There was an error validating this quiz.');
-            if (alertCode === 'slide_quiz_incomplete') {
+            if (errorCode === 'slide_quiz_incomplete') {
                 message = _t('All questions must be answered !');
-            } else if (alertCode === 'slide_quiz_done') {
+            } else if (errorCode === 'slide_quiz_done') {
                 message = _t('This quiz is already done. Retaking it is not possible.');
-            } else if (alertCode === 'public_user') {
+            } else if (errorCode === 'public_user') {
                 message = _t('You must be logged to submit the quiz.');
             }
 
-            this.displayNotification({
-                type: 'warning',
-                message: message,
-                sticky: true
-            });
+            this.$('.o_wslides_js_quiz_submit_error')
+                .removeClass('d-none')
+                .find('.o_wslides_js_quiz_submit_error_text')
+                .text(message);
+        },
+
+        _hideErrorMessage: function () {
+            this.$('.o_wslides_js_quiz_submit_error')
+                .addClass('d-none');
         },
 
         /**
@@ -350,8 +354,10 @@
                 }
             });
             if (data.error) {
-                this._alertShow(data.error);
+                this._showErrorMessage(data.error);
                 return;
+            } else {
+                this._hideErrorMessage();
             }
             Object.assign(this.quiz, data);
             const {rankProgress, completed, channel_completion: completion} = this.quiz;
@@ -466,6 +472,8 @@
         _saveQuizAnswersToSession: function () {
             var quizAnswers = this._getQuizAnswers();
             if (quizAnswers.length === this.quiz.questions.length) {
+                this._hideErrorMessage();
+
                 return this._rpc({
                     route: '/slides/slide/quiz/save_to_session',
                     params: {
@@ -473,7 +481,7 @@
                     }
                 });
             } else {
-                this._alertShow('slide_quiz_incomplete');
+                this._showErrorMessage('slide_quiz_incomplete');
                 return Promise.reject('The quiz is incomplete');
             }
         },
