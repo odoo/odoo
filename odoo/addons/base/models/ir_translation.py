@@ -521,9 +521,13 @@ class IrTranslation(models.Model):
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
         for mname, ids in model_ids.items():
-            records = self.env[mname].browse(ids)
+            records = self.env[mname].browse(ids).exists()
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
+            if mode == 'create' and set(records._ids) != set(ids):
+                raise ValidationError(_("Creating translation on non existing records"))
+            if not records:
+                continue
             records.check_access_rule(fmode)
 
     @api.constrains('type', 'name', 'value')
