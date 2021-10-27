@@ -271,7 +271,11 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
 
 export async function triggerEvents(el, querySelector, events) {
     for (let e = 0; e < events.length; e++) {
-        await triggerEvent(el, querySelector, events[e]);
+        if (Array.isArray(events[e])) {
+            await triggerEvent(el, querySelector, events[e][0], events[e][1]);
+        } else {
+            await triggerEvent(el, querySelector, events[e]);
+        }
     }
 }
 

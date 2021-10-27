@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PriorityField" owl="1">
+        <div class="o-priority-field o_priority o_field_widget" role="radiogroup" name="priority" aria-label="Priority">
+            <t t-set="values" t-value="selection" />
+            <t t-foreach="values" t-as="value" t-key="value">
+                <a t-if="!value_first" href="#" class="o_priority_star fa" t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'" role="radio" t-att-data-tooltip="values[value]" t-att-aria-checked="value_index lte index" t-att-aria-label="values[value]" t-att-tabindex="value lte state.index ? 0 : -1" t-on-mouseenter="() => state.index = value_index" t-on-mouseleave="() => state.index = -1" t-on-click="onStarClicked(value)" />
+            </t>
+        </div>
+    </t>
+
+</templates>

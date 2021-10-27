@@ -470,9 +470,7 @@ export class ViewCompiler {
                 const defaultMode = compiled.getAttribute("mode");
                 compiled.setAttribute(
                     "readonly",
-                    `${readonlyExpr} or ${
-                        defaultMode ? `${defaultMode} === 'readonly'` : "props.readonly"
-                    }`
+                    `${readonlyExpr} or ${defaultMode} === 'readonly'`
                 );
             }
         }
@@ -544,13 +542,13 @@ export class ViewCompiler {
         const field = this.document.createElement("Field");
         const fieldName = node.getAttribute("name");
         const fieldId = `field_${fieldName}_${this.id++}`;
-        field.setAttribute("fieldId", `"${fieldId}"`);
+        field.setAttribute("id", `"${fieldId}"`);
 
         const fieldString = node.getAttribute("string");
 
         field.setAttribute("name", `"${fieldName}"`);
         field.setAttribute("record", `record`);
-        field.setAttribute("readonly", `props.readonly`);
+        field.setAttribute("readonlyFromView", `props.readonly`);
 
         if ("mode" in node.attributes) {
             const viewModes = node.getAttribute("mode").split(",");

@@ -28,6 +28,10 @@ CheckBox.defaultProps = {
     onChange: () => {},
 };
 CheckBox.props = {
+    id: {
+        type: true,
+        optional: true,
+    },
     disabled: {
         type: Boolean,
         optional: true,
