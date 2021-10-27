@@ -19,21 +19,18 @@ class TestSettings(AccountTestInvoicingCommon):
 
     def switch_tax_settings(self, config):
         config.show_line_subtotals_tax_selection = "tax_excluded"
-        config._onchange_sale_tax()
         config.flush()
         config.execute()
         self.assertEqual(self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'), True)
         self.assertEqual(self.env.user.has_group('account.group_show_line_subtotals_tax_included'), False)
 
         config.show_line_subtotals_tax_selection = "tax_included"
-        config._onchange_sale_tax()
         config.flush()
         config.execute()
         self.assertEqual(self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'), False)
         self.assertEqual(self.env.user.has_group('account.group_show_line_subtotals_tax_included'), True)
 
         config.show_line_subtotals_tax_selection = "tax_excluded"
-        config._onchange_sale_tax()
         config.flush()
         config.execute()
         self.assertEqual(self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'), True)
