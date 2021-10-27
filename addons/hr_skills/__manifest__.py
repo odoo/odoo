@@ -20,6 +20,7 @@ This module introduces skills and resumé management for employees.
         'security/hr_skills_security.xml',
         'views/hr_views.xml',
         'data/hr_resume_data.xml',
+        'report/hr_employee_skill_report_views.xml',
     ],
     'demo': [
         'data/hr_resume_demo.xml',
