@@ -118,7 +118,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
             'company_id': self.project_id.company_id.id,
         })
         sale_order.onchange_partner_id()
-        sale_order.onchange_partner_shipping_id()
         # rewrite the user as the onchange_partner_id erases it
         sale_order.write({'user_id': self.project_id.user_id.id})
         sale_order.onchange_user_id()

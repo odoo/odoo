@@ -242,6 +242,7 @@ class SaleOrder(models.Model):
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position', string='Fiscal Position',
         domain="[('company_id', '=', company_id)]", check_company=True,
+        compute='_compute_fiscal_position_id', store=True, readonly=False,
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
         "The default value comes from the customer.")
     tax_country_id = fields.Many2one(
@@ -398,13 +399,19 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
-    def onchange_partner_shipping_id(self):
+    @api.depends('partner_shipping_id', 'partner_id', 'company_id')
+    def _compute_fiscal_position_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        return {}
+        cache = {}
+        for order in self:
+            key = (order.company_id, order.partner_id, order.partner_shipping_id)
+            if key not in cache:
+                cache[key] = self.env['account.fiscal.position'].with_company(
+                    order.company_id
+                )._get_fiscal_position(order.partner_id, order.partner_shipping_id)
+            order.fiscal_position_id = cache[key]
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
