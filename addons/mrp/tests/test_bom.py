@@ -497,6 +497,52 @@ class TestBoM(TestMrpCommon):
         # total price = 15.51 + crumble_cost + operation_cost(10 + 1.67 = 11.67) = 27.18 + crumble_cost
         self.assertEqual(float_compare(report_values['lines']['total'], 27.18 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
 
+    def test_bom_report_dozens(self):
+        """ Simulate a drawer bom with dozens as bom units
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        drawer = self.env['product.product'].create({
+            'name': 'drawer',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+        screw = self.env['product.product'].create({
+            'name': 'screw',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'standard_price': 7.01
+        })
+
+        bom_form_drawer = Form(self.env['mrp.bom'])
+        bom_form_drawer.product_tmpl_id = drawer.product_tmpl_id
+        bom_form_drawer.product_qty = 11
+        bom_form_drawer.product_uom_id = uom_dozen
+        bom_drawer = bom_form_drawer.save()
+
+        workcenter = self.env['mrp.workcenter'].create({
+            'costs_hour': 10,
+            'name': 'Deserts Table'
+        })
+
+        with Form(bom_drawer) as bom:
+            with bom.bom_line_ids.new() as line:
+                line.product_id = screw
+                line.product_uom_id = uom_unit
+                line.product_qty = 5
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Screw drawer'
+                operation.time_cycle_manual = 5
+
+        # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)
+        # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
+        self.assertEqual(report_values['lines']['operations_time'], 60.0, 'Operation time should be the same for 1 unit or for the batch')
+
+
     def test_21_bom_report_variant(self):
         """ Test a sub BoM process with multiple variants.
         BOM 1:

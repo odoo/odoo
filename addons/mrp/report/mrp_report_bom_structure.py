@@ -169,6 +169,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_operation_line(self, bom, qty, level):
         operations = []
         total = 0.0
+        qty = bom.product_uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
         for operation in bom.operation_ids:
             operation_cycle = float_round(qty / operation.workcenter_id.capacity, precision_rounding=1, rounding_method='UP')
             duration_expected = operation_cycle * operation.time_cycle + operation.workcenter_id.time_stop + operation.workcenter_id.time_start
