@@ -29,53 +29,6 @@ html, body {
   outline: none;
 }
 
-// Boolean Toggle widget
-div.o_boolean_toggle.custom-control.custom-checkbox {
-  $line-height-computed: $line-height-base * $font-size-base;
-  $slider-width: $line-height-computed * 1.5;
-  $font-size: $font-size-base * 1.2;
-
-  display: inline-block;
-  padding-left: $slider-width + 0.25rem;
-
-  > label.custom-control-label {
-    > i {
-      color: white;
-      cursor: pointer;
-      font-size: $font-size;
-      position: absolute;
-      top: 2px;
-      &.fa-times-circle {
-        right: 15px;
-      }
-      &.fa-check-circle {
-        right: 7px;
-      }
-    }
-    &::before,
-    &::after {
-      content: "";
-      top: 0;
-      left: -($slider-width + 0.25rem);
-    }
-    &::before {
-      width: $slider-width;
-      height: 100%;
-      background-color: #a0a0a0 !important;
-      border-radius: 100px;
-      outline: none !important;
-    }
-  }
-  > input.custom-control-input:checked + label.custom-control-label {
-    &::before {
-      background-color: $o-brand-primary !important;
-    }
-    &::after {
-      background-image: none;
-    }
-  }
-}
-
 //== Backgound light colors variations (bootstrap extensions)
 @each $-name, $-bg-color in $theme-colors {
   $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));

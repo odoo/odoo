@@ -333,6 +333,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/fonts/fonts.scss',
+            'web/static/src/common/**/*.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/ui_extra.scss',
             'web/static/src/legacy/scss/navbar.scss',
