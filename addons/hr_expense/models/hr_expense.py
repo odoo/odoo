@@ -3,6 +3,8 @@
 
 import re
 from markupsafe import Markup
+import werkzeug
+
 from odoo import api, fields, Command, models, _
 from odoo.tools import float_round
 from odoo.exceptions import UserError, ValidationError
@@ -403,17 +405,23 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return super(HrExpense, self).get_empty_list_help(help_message or '' + self._get_empty_list_mail_alias())
+        return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
 
     @api.model
     def _get_empty_list_mail_alias(self):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
-        alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
-        if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            return Markup("""
-<p>
-Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32">%(email)s</a>.
-</p>""") % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
+        if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
+            alias_email = f'{expense_alias.alias_name}@{expense_alias.alias_domain}'
+            # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
+            params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
+            return Markup(
+                """<p>%(send_string)s <a href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></p>"""
+            ) % {
+                'alias_email': alias_email,
+                'params': params,
+                'send_string': _("Or send your receipts at"),
+            }
         return ""
 
     # ----------------------------------------
