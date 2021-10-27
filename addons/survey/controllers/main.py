@@ -245,7 +245,9 @@ class Survey(http.Controller):
                 'title': page.title,
             } for page in survey_sudo.page_ids],
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
-            'format_date': lambda date: format_date(request.env, date)
+            'format_date': lambda date: format_date(request.env, date),
+            'reload_background_on_next': False,
+            'survey_last': False,  # Is it the last question/screen of the survey ?
         }
         if survey_sudo.questions_layout != 'page_per_question':
             triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
