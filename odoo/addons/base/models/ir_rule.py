@@ -32,14 +32,6 @@ class IrRule(models.Model):
          'Rule must have at least one checked access right !'),
     ]
 
-    def _eval_context_for_combinations(self):
-        """Returns a dictionary to use as evaluation context for
-           ir.rule domains, when the goal is to obtain python lists
-           that are easier to parse and combine, but not to
-           actually execute them."""
-        return {'user': tools.unquote('user'),
-                'time': tools.unquote('time')}
-
     @api.model
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
@@ -169,27 +161,8 @@ class IrRule(models.Model):
 
     @api.model
     def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
+        warnings.warn("Deprecated IrRule.clear_cache(), use IrRule.clear_caches() instead", DeprecationWarning)
         self.clear_caches()
-
-    @api.model
-    def domain_get(self, model_name, mode='read'):
-        # this method is now unsafe, since it returns a list of tables which
-        # does not contain the joins present in the generated Query object
-        warnings.warn(
-            "Unsafe and deprecated IrRule.domain_get(), "
-            "use IrRule._compute_domain() and expression().query instead",
-            DeprecationWarning,
-        )
-        dom = self._compute_domain(model_name, mode)
-        if dom:
-            # _where_calc is called as superuser. This means that rules can
-            # involve objects on which the real uid has no acces rights.
-            # This means also there is no implicit restriction (e.g. an object
-            # references another object the user can't see).
-            query = self.env[model_name].sudo()._where_calc(dom, active_test=False)
-            return query.where_clause, query.where_clause_params, query.tables
-        return [], [], ['"%s"' % self.env[model_name]._table]
 
     def unlink(self):
         res = super(IrRule, self).unlink()
