@@ -20,14 +20,14 @@ const DEFAULT_GROUP_PAGER_COLSPAN = 1;
 export class ListRenderer extends Component {
     setup() {
         this.fields = this.props.fields;
-        this.columns = this.props.info.columns;
+        this.allColumns = this.props.info.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
         this.selection = [];
         this.state = useState({
-            columns: this.columns.filter(
+            columns: this.allColumns.filter(
                 (col) => !col.optional || this.optionalActiveFields[col.name]
             ),
         });
@@ -68,7 +68,7 @@ export class ListRenderer extends Component {
     }
 
     get getOptionalFields() {
-        return this.columns
+        return this.allColumns
             .filter((col) => col.optional)
             .map((col) => ({
                 string: col.string,
@@ -128,17 +128,17 @@ export class ListRenderer extends Component {
     // [ group name ][ aggregate cells  ][ pager]
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
     getFirstAggregateIndex(group) {
-        return this.columns.findIndex((col) => col.name in group.aggregates);
+        return this.allColumns.findIndex((col) => col.name in group.aggregates);
     }
     getLastAggregateIndex(group) {
-        const reversedColumns = [...this.columns].reverse(); // reverse is destructive
+        const reversedColumns = [...this.allColumns].reverse(); // reverse is destructive
         const index = reversedColumns.findIndex((col) => col.name in group.aggregates);
-        return index > -1 ? this.columns.length - index - 1 : -1;
+        return index > -1 ? this.allColumns.length - index - 1 : -1;
     }
     getAggregateColumns(group) {
         const firstIndex = this.getFirstAggregateIndex(group);
         const lastIndex = this.getLastAggregateIndex(group);
-        return this.columns.slice(firstIndex, lastIndex + 1);
+        return this.allColumns.slice(firstIndex, lastIndex + 1);
     }
     getGroupNameCellColSpan(group) {
         // if there are aggregates, the first th spans until the first
@@ -148,16 +148,16 @@ export class ListRenderer extends Component {
         if (firstAggregateIndex > -1) {
             colspan = firstAggregateIndex;
         } else {
-            colspan = Math.max(1, this.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
+            colspan = Math.max(1, this.allColumns.length - DEFAULT_GROUP_PAGER_COLSPAN);
         }
         return this.props.hasSelectors ? colspan + 1 : colspan;
     }
     getGroupPagerCellColspan(group) {
         const lastAggregateIndex = this.getLastAggregateIndex(group);
         if (lastAggregateIndex > -1) {
-            return this.columns.length - lastAggregateIndex - 1;
+            return this.allColumns.length - lastAggregateIndex - 1;
         } else {
-            return this.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
+            return this.allColumns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
         }
     }
 
@@ -166,11 +166,11 @@ export class ListRenderer extends Component {
         let optionalActiveFields = browser.localStorage[this.keyOptionalFields];
         if (optionalActiveFields) {
             optionalActiveFields = optionalActiveFields.split(",");
-            this.columns.forEach((col) => {
+            this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
         } else {
-            this.columns.forEach((col) => {
+            this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             });
         }
@@ -214,11 +214,11 @@ export class ListRenderer extends Component {
     toggleOptionalField(ev) {
         const fieldName = ev.detail.payload.name;
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
-        this.state.columns = this.columns.filter(
+        this.state.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]
         );
         this.saveOptionalActiveFields(
-            this.columns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
+            this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
     }
 }
