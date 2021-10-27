@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useEffect, useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
 import { Pager, usePager } from "@web/search/pager/pager";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -39,6 +40,7 @@ class FormArchParser extends XMLParser {
 
 class FormView extends Component {
     setup() {
+        this.router = useService("router");
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
@@ -58,6 +60,10 @@ class FormView extends Component {
 
         this.state = useState({
             inEditMode: !this.props.resId,
+        });
+
+        useEffect(() => {
+            this.router.pushState({ id: this.model.root.resId || undefined });
         });
 
         useViewButtons(this.model);

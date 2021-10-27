@@ -3873,90 +3873,53 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skip("pager is hidden in create mode", async function (assert) {
-        assert.expect(7);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
-            viewOptions: {
-                ids: [1, 2],
-                index: 0,
-            },
+            resIds: [1, 2],
         });
 
         assert.containsOnce(form, ".o_pager");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "1",
-            "current pager value should be 1"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(form),
-            "2",
-            "current pager limit should be 1"
-        );
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "1");
+        assert.strictEqual(form.el.querySelector(".o_pager_limit").innerText, "2");
 
-        await testUtils.form.clickCreate(form);
+        await click(form.el.querySelector(".o_form_button_create"));
 
         assert.containsNone(form, ".o_pager");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_pager");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "3",
-            "current pager value should be 3"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(form),
-            "3",
-            "current pager limit should be 3"
-        );
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "3");
+        assert.strictEqual(form.el.querySelector(".o_pager_limit").innerText, "3");
     });
 
-    QUnit.skip("switching to another record, in readonly mode", async function (assert) {
-        assert.expect(5);
-
-        var pushStateCount = 0;
-
+    QUnit.test("switching to another record, in readonly mode", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout(fn) {
+                return fn(); // update the router hash directly
+            },
+        });
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners"><field name="foo"></field></form>',
-            viewOptions: {
-                ids: [1, 2],
-                index: 0,
-            },
+            arch: '<form><field name="foo"></field></form>',
             resId: 1,
-            intercepts: {
-                push_state: function (event) {
-                    pushStateCount++;
-                },
-            },
+            resIds: [1, 2],
         });
 
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "1",
-            "pager value should be 1"
-        );
+        assert.containsOnce(form, ".o_form_readonly");
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "1");
+        assert.strictEqual(form.env.services.router.current.hash.id, 1);
 
-        await testUtils.controlPanel.pagerNext(form);
-
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "2",
-            "pager value should be 2"
-        );
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
-
-        assert.strictEqual(pushStateCount, 2, "should have triggered 2 push_state");
+        await click(form.el.querySelector(".o_pager_next"));
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "2");
+        assert.containsOnce(form, ".o_form_readonly");
+        assert.strictEqual(form.env.services.router.current.hash.id, 2);
     });
 
     QUnit.skip("modifiers are reevaluated when creating new record", async function (assert) {

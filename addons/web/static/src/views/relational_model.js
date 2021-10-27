@@ -280,7 +280,7 @@ class DataRecord extends DataPoint {
 
     _getOnchangeSpec() {
         const onChangeSpec = {};
-        for (const fieldName in this.activeFields) {
+        for (const fieldName of this.activeFields) {
             onChangeSpec[fieldName] = "1"; // FIXME: need to on_change info from arch
         }
         return onChangeSpec;
