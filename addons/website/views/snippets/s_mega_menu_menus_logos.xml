@@ -2,7 +2,8 @@
 <odoo>
 
 <template id="s_mega_menu_menus_logos" name="Menus &amp; logos" groups="base.group_user">
-    <section class="s_mega_menu_menus_logos overflow-hidden">
+    <section class="s_mega_menu_menus_logos overflow-hidden" data-vcss="001" data-oe-shape-data="{'shape':'web_editor/Origins/09_001','flip':[]}">
+        <div class="o_we_shape o_web_editor_Origins_09_001"/>
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-8">
@@ -58,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 py-4 d-flex align-items-center justify-content-center s_mega_menu_gray_area">
+                <div class="col-12 col-lg-4 py-4 d-flex align-items-center justify-content-center">
                     <a href="#" class="nav-link o_default_snippet_text text-center px-0" data-name="Menu Item">
                         <img src="/web/image/website.s_mega_menu_menus_logos_default_image" class="mb-3 rounded shadow img-fluid" alt=""/>
                         <h4 class="o_default_snippet_text">Spring collection has arrived !</h4>
@@ -85,6 +86,13 @@
     <field name="name">Menus &amp; logos 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_mega_menu_menus_logos/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_mega_menu_menus_logos_001_scss" model="ir.asset">
+    <field name="name">Menus &amp; logos 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_menus_logos/001.scss</field>
 </record>
 
 </odoo>
