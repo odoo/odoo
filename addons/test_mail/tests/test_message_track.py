@@ -208,7 +208,7 @@ class TestTracking(MailCommon):
             'alias_contact': 'everyone',
             'alias_defaults': custom_values})
         record = self.format_and_process(MAIL_TEMPLATE, '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
-                                         'groups@test.com', target_field='customer_id', subject=custom_values['customer_id'],
+                                         'groups@test.mycompany.com', target_field='customer_id', subject=custom_values['customer_id'],
                                          target_model='mail.test.ticket')
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
