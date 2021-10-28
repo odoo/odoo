@@ -253,14 +253,14 @@ const Wysiwyg = Widget.extend({
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
         this.call('bus_service', 'onNotification', this, (notifications) => {
-            for (const [channel, busData] of notifications) {
+            for (const { payload, type } of notifications) {
                 if (
-                    channel[1] === 'editor_collaboration' &&
-                    channel[2] === modelName &&
-                    channel[3] === fieldName &&
-                    channel[4] === resId
+                    type === 'editor_collaboration' &&
+                    payload.model_name === modelName &&
+                    payload.field_name === fieldName &&
+                    payload.res_id === resId
                 ) {
-                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(busData));
+                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
                 }
             }
         });
