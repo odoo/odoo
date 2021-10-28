@@ -1058,10 +1058,9 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
-            date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
-        return self._convert_to_middle_of_day(date_planned)
+            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
     @api.depends('product_id', 'date_order')
     def _compute_account_analytic_id(self):
