@@ -44,6 +44,12 @@
                                 <field name="edi_format_name"/>
                                 <field name="state"/>
                                 <field name="error" invisible="1"/>
+                                <button name="action_export_xml"
+                                        type="object"
+                                        class="oe_link oe_inline"
+                                        string="Download"
+                                        groups="base.group_no_one"
+                                        attrs="{'invisible': [('error', '=', False)]}"/>
                             </tree>
                         </field>
                     </group>
