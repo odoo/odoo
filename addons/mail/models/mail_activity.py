@@ -283,9 +283,7 @@ class MailActivity(models.Model):
 
             self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_created': True})
+                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
         return activities
 
     def read(self, fields=None, load='_classic_read'):
@@ -314,23 +312,17 @@ class MailActivity(models.Model):
             for activity in user_changes:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
-                    self.env['bus.bus'].sendone(
-                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                        {'type': 'activity_updated', 'activity_created': True})
+                    self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
             for activity in user_changes:
                 if activity.date_deadline <= fields.Date.today():
                     for partner in pre_responsibles:
-                        self.env['bus.bus'].sendone(
-                            (self._cr.dbname, 'res.partner', partner.id),
-                            {'type': 'activity_updated', 'activity_deleted': True})
+                        self.env['bus.bus']._sendone(partner, 'mail.activity/updated', {'activity_deleted': True})
         return res
 
     def unlink(self):
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_deleted': True})
+                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
     @api.model

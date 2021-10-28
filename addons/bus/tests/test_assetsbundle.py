@@ -28,13 +28,13 @@ class BusWebTests(odoo.tests.HttpCase):
         self.env.registry._clear_cache()
 
         sendones = []
-        def patched_sendone(self, channel, message):
+        def patched_sendone(self, channel, notificationType, message):
             """ Control API and number of messages posted to the bus linked to
             bundle_changed events """
-            if channel[1] == 'bundle_changed':
+            if notificationType == 'bundle_changed':
                 sendones.append((channel, message))
 
-        self.patch(type(self.env['bus.bus']), 'sendone', patched_sendone)
+        self.patch(type(self.env['bus.bus']), '_sendone', patched_sendone)
 
         self.authenticate('admin', 'admin')
         self.url_open('/web')
@@ -46,7 +46,7 @@ class BusWebTests(odoo.tests.HttpCase):
             'Received %s' % '\n'.join('%s - %s' % (tmp[0], tmp[1]) for tmp in sendones)
         )
         for (channel, message) in sendones:
-            self.assertEqual(channel, (db_name, 'bundle_changed'))
+            self.assertEqual(channel, 'broadcast')
             self.assertEqual(len(message), 2)
-            self.assertTrue(message[0] in bundle_xml_ids)
-            self.assertTrue(isinstance(message[1], str))
+            self.assertIn(message.get('name'), bundle_xml_ids)
+            self.assertTrue(isinstance(message.get('name'), str))

@@ -546,12 +546,10 @@ class Meeting(models.Model):
         if not self.env.su and private_fields:
             # display public and confidential events
             domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('Private Event Excluded'),
-                 'message': _('Grouping by %s is not allowed on private events.',
-                              ', '.join([self._fields[field_name].string for field_name in private_fields]))}
-            )
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.simple_notification', {
+                'title': _('Private Event Excluded'),
+                'message': _('Grouping by %s is not allowed on private events.', ', '.join([self._fields[field_name].string for field_name in private_fields]))
+            })
             return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 

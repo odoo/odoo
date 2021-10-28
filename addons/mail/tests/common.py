@@ -788,14 +788,12 @@ class MailCase(MockEmail):
     def assertMessageBusNotifications(self, message):
         """Asserts that the expected notification updates have been sent on the
         bus for the given message."""
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', message.author_id.id)],
-            [{
-                'type': 'message_notification_update',
+        self.assertBusNotifications([(self.cr.dbname, 'res.partner', message.author_id.id)], [{
+            'type': 'mail.message/notification_update',
+            'payload': {
                 'elements': message._message_notification_format(),
-            }],
-            check_unique=False
-        )
+            },
+        }], check_unique=False)
 
     def assertBusNotifications(self, channels, message_items=None, check_unique=True):
         """ Check bus notifications content. Mandatory and basic check is about
@@ -808,7 +806,7 @@ class MailCase(MockEmail):
         ]
         :param message_items: if given, list of expected message making a valid
           pair (channel, message) to be found in bus.bus, like [
-            {'type': 'message_notification_update',
+            {'type': 'mail.message/notification_update',
              'elements': {self.msg.id: {
                 'message_id': self.msg.id,
                 'message_type': 'sms',

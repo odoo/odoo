@@ -179,26 +179,20 @@ class ChannelPartner(models.Model):
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             if member.partner_id:
                 invited_partners |= member.partner_id
-                target = (self._cr.dbname, 'res.partner', member.partner_id.id)
+                target = member.partner_id
             else:
                 invited_guests |= member.guest_id
-                target = (self._cr.dbname, 'mail.guest', member.guest_id.id)
-            invitation_notifications.append((target, {
-                'type': 'mail.channel_update',
-                'payload': {
-                    'id': self.channel_id.id,
-                    'rtcInvitingSession': [('insert', self.rtc_session_ids._mail_rtc_session_format())],
-                },
+                target = member.guest_id
+            invitation_notifications.append((target, 'mail.channel/insert', {
+                'id': self.channel_id.id,
+                'rtcInvitingSession': [('insert', self.rtc_session_ids._mail_rtc_session_format())],
             }))
-        self.env['bus.bus'].sendmany(invitation_notifications)
+        self.env['bus.bus']._sendmany(invitation_notifications)
         if invited_guests or invited_partners:
             channel_data = {'id': self.channel_id.id}
             if invited_guests:
                 channel_data['invitedGuests'] = [('insert', [{'id': guest.id, 'name': guest.name} for guest in invited_guests])]
             if invited_partners:
                 channel_data['invitedPartners'] = [('insert', [{'id': partner.id, 'name': partner.name} for partner in invited_partners])]
-            self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.channel_id.id), {
-                'type': 'mail.channel_update',
-                'payload': channel_data,
-            })
+            self.env['bus.bus']._sendone(self.channel_id, 'mail.channel/insert', channel_data)
         return invited_partners, invited_guests

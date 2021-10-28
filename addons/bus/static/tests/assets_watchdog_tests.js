@@ -36,23 +36,24 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
     });
 
     QUnit.test("can listen on bus and displays notifications in DOM", async (assert) => {
-        assert.expect(5);
+        assert.expect(4);
 
         let pollNumber = 0;
-        const mockRPC = (route, args) => {
+        const mockRPC = async (route, args) => {
             if (route === "/longpolling/poll") {
                 if (pollNumber > 0) {
                     return new Promise(() => {}); // let it hang to avoid further calls
                 }
                 pollNumber++;
-                assert.deepEqual(args.channels, ["bundle_changed"]);
-                return Promise.resolve([
-                    {
-                        id: "prout",
-                        channel: ["db_name", "bundle_changed"],
-                        message: ["web.assets_backend", "newHash"],
+                return [{
+                    message: {
+                        type: 'bundle_changed',
+                        payload: {
+                            name: 'web.assets_backend',
+                            version: 'newHash',
+                        },
                     },
-                ]);
+                }];
             }
         };
 

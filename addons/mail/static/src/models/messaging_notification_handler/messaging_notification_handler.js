@@ -5,6 +5,7 @@ import { decrement, increment, insert, insertAndReplace, link, replace, unlink }
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { str_to_datetime } from 'web.time';
+import { Markup } from 'web.utils';
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -43,23 +44,6 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object[]} notifications
-         * @returns {Object[]}
-         */
-        _filterNotificationsOnUnsubscribe(notifications) {
-            const unsubscribedNotif = notifications.find(notif =>
-                notif[1].info === 'unsubscribe');
-            if (unsubscribedNotif) {
-                notifications = notifications.filter(notif =>
-                    notif[0][1] !== 'mail.channel' ||
-                    notif[0][2] !== unsubscribedNotif[1].id
-                );
-            }
-            return notifications;
-        }
-
-        /**
-         * @private
-         * @param {Object[]} notifications
          * @param {Array|string} notifications[i][0] meta-data of the notification.
          * @param {string} notifications[i][0][0] name of database this
          *   notification comes from.
@@ -70,64 +54,95 @@ function factory(dependencies) {
          * @param {Object} notifications[i][1] payload of the notification
          */
         async _handleNotifications(notifications) {
-            const filteredNotifications = this._filterNotificationsOnUnsubscribe(notifications);
-            const proms = filteredNotifications.map(notification => {
-                const [channel, message] = notification;
-                if (typeof channel === 'string') {
-                    // uuid notification, only for (livechat) public handler
-                    return;
-                }
+            const channelsLeft = new Set(
+                notifications
+                    .filter(notification => notification.type === 'mail.channel/leave')
+                    .map(notification => notification.payload.id)
+            );
+            const proms = notifications.map(message => {
                 if (typeof message === 'object') {
                     switch (message.type) {
-                        case 'mail.attachment_delete':
+                        case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
-                        case 'mail.channel_description_change':
-                            return this._handleNotificationChannelDescriptionChanged(message.payload);
-                        case 'mail.channel_joined':
+                        case 'mail.channel.partner/seen':
+                            return this._handleNotificationChannelPartnerSeen(message.payload);
+                        case 'mail.channel.partner/fetched':
+                            return this._handleNotificationChannelPartnerFetched(message.payload);
+                        case 'mail.channel.partner/typing_status':
+                            return this._handleNotificationChannelPartnerTypingStatus(message.payload);
+                        case 'mail.channel/new_message':
+                            if (channelsLeft.has(message.payload.id)) {
+                                /**
+                                 * `_handleNotificationChannelMessage` tries to pin the channel,
+                                 * which is not desirable if the channel was just left.
+                                 * The issue happens because the longpolling request resolves with
+                                 * notifications for the channel that was just left (the channels
+                                 * to observe are determined when the longpolling starts waiting,
+                                 * not when it resolves).
+                                 */
+                                return;
+                            }
+                            return this._handleNotificationChannelMessage(message.payload);
+                        case 'mail.message/delete':
+                            return this._handleNotificationMessageDelete(message.payload);
+                        case 'mail.message/inbox':
+                            return this._handleNotificationNeedaction(message.payload);
+                        case 'mail.message/mark_as_read':
+                            return this._handleNotificationPartnerMarkAsRead(message.payload);
+                        case 'mail.message/notification_update':
+                            return this._handleNotificationPartnerMessageNotificationUpdate(message.payload);
+                        case 'simple_notification':
+                            return this._handleNotificationSimpleNotification(message.payload);
+                        case 'mail.message/toggle_star':
+                            return this._handleNotificationPartnerToggleStar(message.payload);
+                        case 'mail.channel/transient_message':
+                            return this._handleNotificationPartnerTransientMessage(message.payload);
+                        case 'mail.channel/leave':
+                            return this._handleNotificationChannelLeave(message.payload);
+                        case 'res.users/connection':
+                            return this._handleNotificationPartnerUserConnection(message.payload);
+                        case 'mail.activity/updated':
+                            return this.env.bus.trigger('activity_updated', message.payload);
+                        case 'mail.channel/unpin':
+                            return this._handleNotificationChannelUnpin(message.payload);
+                        case 'mail.channel/joined':
                             return this._handleNotificationChannelJoined(message.payload);
-                        case 'mail.channel_last_interest_dt_changed':
+                        case 'mail.channel/last_interest_dt_changed':
                             return this._handleNotificationChannelLastInterestDateTimeChanged(message.payload);
-                        case 'mail.channel_rename':
-                            return this._handleNotificationChannelRenamed(message.payload);
-                        case 'mail.channel_update':
+                        case 'mail.channel/legacy_insert':
+                            return this.messaging.models['mail.thread'].insert(this.messaging.models['mail.thread'].convertData({ model: 'mail.channel', ...message.payload }));
+                        case 'mail.channel/insert':
                             return this._handleNotificationChannelUpdate(message.payload);
-                        case 'mail.guest_update':
+                        case 'mail.guest/insert':
                             return this.messaging.models['mail.guest'].insert(message.payload);
-                        case 'mail.message_update':
+                        case 'mail.message/insert':
                             return this.messaging.models['mail.message'].insert(message.payload);
-                        case 'mail.rtc_session_update':
+                        case 'mail.channel.rtc.session/insert':
                             return this.messaging.models['mail.rtc_session'].insert(message.payload);
-                        case 'res.users_settings_changed':
+                        case 'res.users.settings/changed':
                             return this._handleNotificationResUsersSettings(message.payload);
-                        case 'rtc_peer_notification':
+                        case 'mail.channel.rtc.session/peer_notification':
                             return this._handleNotificationRtcPeerToPeer(message.payload);
-                        case 'rtc_incoming_invitation_update':
-                            return this._handleNotificationRtcInvitation(message.payload);
-                        case 'rtc_sessions_update':
+                        case 'mail.channel/rtc_sessions_update':
                             return this._handleNotificationRtcSessionUpdate(message.payload);
-                        case 'rtc_session_ended':
+                        case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
-                        case 'res_users_settings_volumes_update':
+                        case 'res.users.settings/volumes_update':
                             return this._handleNotificationVolumeSettingUpdate(message.payload);
+                        default:
+                            return this._handleNotification(message);
                     }
-                }
-                const [, model, id] = channel;
-                switch (model) {
-                    case 'ir.needaction':
-                        return this._handleNotificationNeedaction(message);
-                    case 'mail.channel':
-                        return this._handleNotificationChannel(id, message);
-                    case 'res.partner':
-                        if (id !== this.messaging.currentPartner.id) {
-                            // ignore broadcast to other partners
-                            return;
-                        }
-                        return this._handleNotificationPartner(Object.assign({}, message));
                 }
             });
             await this.async(() => Promise.all(proms));
         }
 
+        /**
+         * @abstract
+         * @private
+         * @param {Object} message
+         */
+        _handleNotification(message) {}
 
         /**
          * @private
@@ -143,65 +158,13 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {integer} channelId
-         * @param {Object} data
-         * @param {string} [data.info]
-         * @param {boolean} [data.is_typing]
-         * @param {integer} [data.last_message_id]
-         * @param {integer} [data.partner_id]
-         */
-        async _handleNotificationChannel(channelId, data) {
-            const {
-                info,
-                is_typing,
-                last_message_id,
-                partner_id,
-                partner_name,
-            } = data;
-            switch (info) {
-                case 'channel_fetched':
-                    return this._handleNotificationChannelFetched(channelId, {
-                        last_message_id,
-                        partner_id,
-                    });
-                case 'channel_seen':
-                    return this._handleNotificationChannelSeen(channelId, {
-                        last_message_id,
-                        partner_id,
-                    });
-                case 'typing_status':
-                    return this._handleNotificationChannelTypingStatus(channelId, {
-                        is_typing,
-                        partner_id,
-                        partner_name,
-                    });
-                default:
-                    return this._handleNotificationChannelMessage(channelId, data);
-            }
-        }
-
-        /**
-         * @private
-         * @param {Object} payload
-         * @param {integer} payload.id
-         * @param {String} payload.description
-         */
-        _handleNotificationChannelDescriptionChanged({ id, description }) {
-            const channel = this.messaging.models['mail.thread'].insert({
-                id,
-                model: 'mail.channel',
-            });
-            channel.update({ description });
-        }
-
-        /**
-         * @private
-         * @param {integer} channelId
          * @param {Object} param1
+         * @param {integer} param1.channel_id
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
-        async _handleNotificationChannelFetched(channelId, {
+        async _handleNotificationChannelPartnerFetched({
+            channel_id: channelId,
             last_message_id,
             partner_id,
         }) {
@@ -244,25 +207,11 @@ function factory(dependencies) {
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
                         this.env._t("You have been invited to #%s"),
-                        channel.name
+                        channel.displayName
                     ),
                     type: 'info',
                 });
             }
-        }
-
-        /**
-         * @private
-         * @param {Object} payload
-         * @param {integer} payload.id
-         * @param {String} payload.name
-         */
-        _handleNotificationChannelRenamed({ id, name }) {
-            const channel = this.messaging.models['mail.thread'].insert({
-                id,
-                model: 'mail.channel',
-            });
-            channel.update({ name });
         }
 
         /**
@@ -285,10 +234,11 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {integer} channelId
-         * @param {Object} messageData
+         * @param {Object} payload
+         * @param {integer} payload.id
+         * @param {Object} payload.messageData
          */
-        async _handleNotificationChannelMessage(channelId, messageData) {
+        async _handleNotificationChannelMessage({ id: channelId, message: messageData }) {
             let channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: channelId,
                 model: 'mail.channel',
@@ -296,7 +246,6 @@ function factory(dependencies) {
             if (!channel && this.messaging.isCurrentUserGuest) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
-            const wasChannelExisting = !!channel;
             const convertedData = this.messaging.models['mail.message'].convertData(messageData);
 
             // Fetch missing info from channel before going further. Inserting
@@ -346,12 +295,6 @@ function factory(dependencies) {
                     this.messaging.chatWindowManager.openThread(channel);
                 }
             }
-
-            // If the channel wasn't known its correct counter was fetched at
-            // the start of the method, no need update it here.
-            if (!wasChannelExisting) {
-                return;
-            }
         }
 
         /**
@@ -359,15 +302,15 @@ function factory(dependencies) {
          * last message seen. Useful in order to track last message seen.
          *
          * @private
-         * @param {integer} channelId
          * @param {Object} param1
+         * @param {integer} param1.channel_id
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
-        async _handleNotificationChannelSeen(channelId, {
+        async _handleNotificationChannelPartnerSeen({
+            channel_id: channelId,
             last_message_id,
             partner_id,
-            guest_id,
         }) {
             const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: channelId,
@@ -409,15 +352,15 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {integer} channelId
          * @param {Object} param1
+         * @param {integer} param1.channel_id
          * @param {boolean} param1.is_typing
          * @param {integer} param1.partner_id
          * @param {string} param1.partner_name
          */
-        _handleNotificationChannelTypingStatus(channelId, { is_typing, partner_id, partner_name }) {
+        _handleNotificationChannelPartnerTypingStatus({ channel_id, is_typing, partner_id, partner_name }) {
             const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
+                id: channel_id,
                 model: 'mail.channel',
             });
             if (!channel) {
@@ -502,69 +445,6 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} data
-         * @param {string} [data.info]
-         * @param {string} [data.type]
-         */
-        async _handleNotificationPartner(data) {
-            const {
-                info,
-                type,
-            } = data;
-            if (type === 'activity_updated') {
-                this.env.bus.trigger('activity_updated', data);
-            } else if (type === 'author') {
-                return this._handleNotificationPartnerAuthor(data);
-            } else if (info === 'channel_seen') {
-                return this._handleNotificationChannelSeen(data.channel_id, data);
-            } else if (type === 'deletion') {
-                return this._handleNotificationPartnerDeletion(data);
-            } else if (type === 'message_notification_update') {
-                return this._handleNotificationPartnerMessageNotificationUpdate(data.elements);
-            } else if (type === 'mark_as_read') {
-                return this._handleNotificationPartnerMarkAsRead(data);
-            } else if (type === 'simple_notification') {
-                this.env.services['notification'].notify({
-                    message: data.message,
-                    sticky: data.sticky,
-                    messageIsHtml: data.message_is_html,
-                    type: data.warning ? 'warning' : 'danger',
-                });
-            } else if (type === 'toggle_star') {
-                return this._handleNotificationPartnerToggleStar(data);
-            } else if (info === 'transient_message') {
-                return this._handleNotificationPartnerTransientMessage(data);
-            } else if (info === 'unsubscribe') {
-                return this._handleNotificationPartnerUnsubscribe(data.id);
-            } else if (type === 'user_connection') {
-                return this._handleNotificationPartnerUserConnection(data);
-            } else if (!type) {
-                return this._handleNotificationPartnerChannel(data);
-            }
-        }
-
-        /**
-         * @private
-         * @param {Object} data
-         * @param {string} data.channelId
-         * @param {string} [data.rtcSession]
-         */
-        async _handleNotificationRtcInvitation({ channelId, rtcSession }) {
-            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
-            if (!channel) {
-                return;
-            }
-            if (channel.rtc) {
-                return;
-            }
-            if (rtcSession) {
-                return channel.update({ rtcInvitingSession: insert(this.messaging.models['mail.rtc_session'].convertData(rtcSession)) });
-            }
-            return channel.update({ rtcInvitingSession: unlink() });
-        }
-
-        /**
-         * @private
-         * @param {Object} data
          * @param {string} data.sender
          * @param {string[]} data.notifications
          */
@@ -572,6 +452,24 @@ function factory(dependencies) {
             for (const content of notifications) {
                 this.messaging.rtc.handleNotification(sender, content);
             }
+        }
+
+        /**
+         * @private
+         * @param {Object} param1
+         * @param {string} param1.message
+         * @param {boolean} param1.message_is_html
+         * @param {boolean} param1.sticky
+         * @param {string} param1.title
+         * @param {boolean} param1.warning
+         */
+        _handleNotificationSimpleNotification({ message, message_is_html, sticky, title, warning }) {
+            this.env.services['notification'].notify({
+                message: message_is_html ? Markup(message) : message,
+                sticky,
+                title,
+                type: warning ? 'warning' : 'danger',
+            });
         }
 
         /**
@@ -617,68 +515,10 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object} data
-         * @param {Object} data.message
-         */
-        _handleNotificationPartnerAuthor(data) {
-            this.messaging.models['mail.message'].insert(
-                this.messaging.models['mail.message'].convertData(data.message)
-            );
-        }
-
-        /**
-         * @private
-         * @param {Object} data
-         * @param {string} data.channel_type
-         * @param {integer} data.id
-         * @param {string} [data.info]
-         * @param {boolean} data.is_minimized
-         * @param {string} data.name
-         * @param {string} data.state
-         * @param {string} data.uuid
-         */
-        _handleNotificationPartnerChannel(data) {
-            const convertedData = this.messaging.models['mail.thread'].convertData(
-                Object.assign({ model: 'mail.channel' }, data)
-            );
-            if (!convertedData.members) {
-                // channel_info does not return all members of channel for
-                // performance reasons, but code is expecting to know at
-                // least if the current partner is member of it.
-                // (e.g. to know when to display "invited" notification)
-                // Current partner can always be assumed to be a member of
-                // channels received through this notification.
-                convertedData.members = link(this.messaging.currentPartner);
-            }
-            let channel = this.messaging.models['mail.thread'].findFromIdentifyingData(convertedData);
-            const wasCurrentPartnerMember = (
-                channel &&
-                channel.members.includes(this.messaging.currentPartner)
-            );
-
-            channel = this.messaging.models['mail.thread'].insert(convertedData);
-            if (
-                channel.channel_type === 'channel' &&
-                data.info !== 'creation' &&
-                !wasCurrentPartnerMember
-            ) {
-                this.env.services['notification'].notify({
-                    message: _.str.sprintf(
-                        this.env._t("You have been invited to: %s"),
-                        channel.name
-                    ),
-                    type: 'info',
-                });
-            }
-            // a new thread with unread messages could have been added
-        }
-
-        /**
-         * @private
          * @param {Object} param0
          * @param {integer[]} param0.messag_ids
          */
-        _handleNotificationPartnerDeletion({ message_ids }) {
+        _handleNotificationMessageDelete({ message_ids }) {
             for (const id of message_ids) {
                 const message = this.messaging.models['mail.message'].findFromIdentifyingData({ id });
                 if (message) {
@@ -693,8 +533,8 @@ function factory(dependencies) {
          * @private
          * @param {Object} data
          */
-        _handleNotificationPartnerMessageNotificationUpdate(data) {
-            for (const messageData of data) {
+        _handleNotificationPartnerMessageNotificationUpdate({ elements }) {
+            for (const messageData of elements) {
                 const message = this.messaging.models['mail.message'].insert(
                     this.messaging.models['mail.message'].convertData(messageData)
                 );
@@ -797,53 +637,64 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {integer} channelId
+         * @param {Object} payload
+         * @param {integer} payload.id
          */
-        _handleNotificationPartnerUnsubscribe(channelId) {
+        _handleNotificationChannelLeave({ id }) {
             const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: channelId,
+                id,
                 model: 'mail.channel',
             });
             if (!channel) {
                 return;
             }
-            let message;
-            if (channel.correspondent) {
-                const correspondent = channel.correspondent;
-                message = _.str.sprintf(
-                    this.env._t("You unpinned your conversation with <b>%s</b>."),
-                    correspondent.name
-                );
-            } else {
-                message = _.str.sprintf(
-                    this.env._t("You unsubscribed from <b>%s</b>."),
-                    channel.name
-                );
-            }
+            const message = _.str.sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
+            this.env.services['notification'].notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({ isServerPinned: false });
-            this.env.services['notification'].notify({
-                message,
-                type: 'info',
+            channel.update({
+                isServerPinned: false,
+                members: unlink(this.messaging.currentPartner)
             });
         }
 
         /**
          * @private
-         * @param {Object} param0
-         * @param {string} param0.message
-         * @param {integer} param0.partner_id
-         * @param {string} param0.title
+         * @param {Object} payload
+         * @param {integer} payload.id
          */
-        async _handleNotificationPartnerUserConnection({ message, partner_id, title }) {
+        _handleNotificationChannelUnpin({ id }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
+                id,
+                model: 'mail.channel',
+            });
+            if (!channel) {
+                return;
+            }
+            const message = _.str.sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
+            this.env.services['notification'].notify({ message, type: 'info' });
+            // We assume that arriving here the server has effectively
+            // unpinned the channel
+            channel.update({
+                isServerPinned: false,
+                members: unlink(this.messaging.currentPartner)
+            });
+        }
+
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {integer} payload.partnerId
+         * @param {string} payload.username
+         */
+        async _handleNotificationPartnerUserConnection({ partnerId, username }) {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
+            const message = _.str.sprintf(this.env._t('%s connected'), username);
+            const title = this.env._t("This is their first connection. Wish them luck.");
             this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
-            const chat = await this.async(() =>
-                this.messaging.getChat({ partnerId: partner_id }
-            ));
+            const chat = await this.async(() => this.messaging.getChat({ partnerId }));
             if (!chat || this.messaging.device.isMobile) {
                 return;
             }

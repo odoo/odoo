@@ -30,6 +30,14 @@ def hashable(key):
     return key
 
 
+def channel_with_db(dbname, channel):
+    if isinstance(channel, models.Model):
+        return (dbname, channel._name, channel.id)
+    if isinstance(channel, str):
+        return (dbname, channel)
+    return channel
+
+
 class ImBus(models.Model):
 
     _name = 'bus.bus'
@@ -45,15 +53,20 @@ class ImBus(models.Model):
         return self.sudo().search(domain).unlink()
 
     @api.model
-    def sendmany(self, notifications):
+    def _sendmany(self, notifications):
         channels = set()
-        for channel, message in notifications:
+        values = []
+        for target, notification_type, message in notifications:
+            channel = channel_with_db(self.env.cr.dbname, target)
             channels.add(channel)
-            values = {
-                "channel": json_dump(channel),
-                "message": json_dump(message)
-            }
-            self.sudo().create(values)
+            values.append({
+                'channel': json_dump(channel),
+                'message': json_dump({
+                    'type': notification_type,
+                    'payload': message,
+                })
+            })
+        self.sudo().create(values)
         if channels:
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, some concurrent threads will be
@@ -66,11 +79,11 @@ class ImBus(models.Model):
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
 
     @api.model
-    def sendone(self, channel, message):
-        self.sendmany([[channel, message]])
+    def _sendone(self, channel, notification_type, message):
+        self._sendmany([[channel, notification_type, message]])
 
     @api.model
-    def poll(self, channels, last=0, options=None):
+    def _poll(self, channels, last=0, options=None):
         if options is None:
             options = {}
         # first poll return the notification in the 'buffer'
@@ -79,7 +92,7 @@ class ImBus(models.Model):
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:  # else returns the unread notifications
             domain = [('id', '>', last)]
-        channels = [json_dump(c) for c in channels]
+        channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
         domain.append(('channel', 'in', channels))
         notifications = self.sudo().search_read(domain)
         # list of notification to return
@@ -87,7 +100,6 @@ class ImBus(models.Model):
         for notif in notifications:
             result.append({
                 'id': notif['id'],
-                'channel': json.loads(notif['channel']),
                 'message': json.loads(notif['message']),
             })
         return result
@@ -102,6 +114,7 @@ class ImDispatch(object):
         self.started = False
 
     def poll(self, dbname, channels, last, options=None, timeout=None):
+        channels = [channel_with_db(dbname, channel) for channel in channels]
         if timeout is None:
             timeout = TIMEOUT
         if options is None:
@@ -120,7 +133,7 @@ class ImDispatch(object):
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            notifications = env['bus.bus'].poll(channels, last, options)
+            notifications = env['bus.bus']._poll(channels, last, options)
 
         # immediatly returns in peek mode
         if options.get('peek'):
@@ -139,7 +152,7 @@ class ImDispatch(object):
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    notifications = env['bus.bus'].poll(channels, last, options)
+                    notifications = env['bus.bus']._poll(channels, last, options)
             except Exception:
                 # timeout
                 pass

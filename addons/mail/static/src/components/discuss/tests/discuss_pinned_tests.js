@@ -167,18 +167,16 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
-        const notif = [
-            ["dbName", 'res.partner', this.messaging.currentPartner.id],
-            {
+        this.env.services.bus_service.trigger('notification', [{
+            type: 'mail.channel/unpin',
+            payload: {
                 channel_type: 'channel',
                 id: 20,
-                info: 'unsubscribe',
                 name: "General",
                 public: 'public',
                 state: 'open',
-            }
-        ];
-        this.env.services.bus_service.trigger('notification', [notif]);
+            },
+        }]);
     });
     assert.containsOnce(
         document.body,

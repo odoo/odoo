@@ -123,7 +123,7 @@ MockServer.include({
     /**
      * @override
      */
-    _mockMailChannelChannelInfo(ids, extra_info) {
+    _mockMailChannelChannelInfo(ids) {
         const channelInfos = this._super(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this._getRecords('mail.channel', [['id', '=', channelInfo.id]])[0];

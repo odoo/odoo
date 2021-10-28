@@ -87,9 +87,12 @@ class CRMRevealRule(models.Model):
     def _assert_geoip(self):
         if not odoo._geoip_resolver:
             message = _('Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/.')
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('Missing Library'), 'message': message, 'sticky': True, 'warning': True})
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.simple_notification', {
+                'title': _('Missing Library'),
+                'message': message,
+                'sticky': True,
+                'warning': True,
+            })
 
     @api.model_create_multi
     def create(self, vals_list):

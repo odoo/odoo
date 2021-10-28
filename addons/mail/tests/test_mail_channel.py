@@ -464,7 +464,7 @@ class TestChannelInternals(MailCommon):
         with self.assertBus(
             [(self.cr.dbname, 'mail.channel', channel.id)],
             [{
-                "type": "mail.channel_update",
+                "type": "mail.channel/insert",
                 "payload": {
                     "id": channel.id,
                     "avatarCacheKey": avatar_cache_key,
