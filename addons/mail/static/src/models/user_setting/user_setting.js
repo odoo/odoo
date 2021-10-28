@@ -144,10 +144,12 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {mail.partner} partner
-         * @param {number} volume
+         * @param {Object} param0
+         * @param {number} [param0.guestId]
+         * @param {number} [param0.partnerId]
+         * @param {number} param0.volume
          */
-        async saveVolumeSetting(partnerId, volume) {
+        async saveVolumeSetting({ guestId, partnerId, volume }) {
             this._debounce(async () => {
                 await this.async(() => this.env.services.rpc(
                     {
@@ -158,6 +160,9 @@ function factory(dependencies) {
                             partnerId,
                             volume,
                         ],
+                        kwargs: {
+                            guest_id: guestId,
+                        },
                     },
                     { shadow: true },
                 ));

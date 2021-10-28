@@ -33,8 +33,9 @@ class ResUsersSettings(models.Model):
         self.ensure_one()
         res = self._read_format(fnames=[name for name, field in self._fields.items() if name == 'id' or not field.automatic])[0]
         res.pop('volume_settings_ids')
+        volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
         res.update({
-            'volume_settings': self.volume_settings_ids._read_format(['id', 'user_setting_id', 'partner_id', 'volume']),
+            'volume_settings': [('insert', volume_settings)] if volume_settings else [],
         })
         return res
 
@@ -47,21 +48,27 @@ class ResUsersSettings(models.Model):
         self.write(changed_settings)
         self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/changed', changed_settings)
 
-    def set_volume_setting(self, partner_id, volume):
+    def set_volume_setting(self, partner_id, volume, guest_id=None):
+        """
+        Saves the volume of a guest or a partner.
+        Either partner_id or guest_id must be specified.
+        :param float volume: the selected volume between 0 and 1
+        :param int partner_id:
+        :param int guest_id:
+        """
         self.ensure_one()
-        volume_setting = self.env['res.users.settings.volumes'].search([('user_setting_id', '=', self.id), ('partner_id', '=', partner_id)])
+        volume_setting = self.env['res.users.settings.volumes'].search([
+            ('user_setting_id', '=', self.id), ('partner_id', '=', partner_id), ('guest_id', '=', guest_id)
+        ])
         if volume_setting:
             volume_setting.volume = volume
         else:
-            volume_setting = self.env['res.users.settings.volumes'].create([{
+            volume_setting = self.env['res.users.settings.volumes'].create({
                 'user_setting_id': self.id,
-                'partner_id': partner_id,
                 'volume': volume,
-            }])
+                'partner_id': partner_id,
+                'guest_id': guest_id,
+            })
         self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/volumes_update', {
-            'volumeSettings': [('insert', {
-                'id': volume_setting.id,
-                'partner': [('insert-and-replace', {'id': partner_id})],
-                'volume': volume_setting.volume,
-            })],
+            'volumeSettings': [('insert', volume_setting._discuss_users_settings_volume_format())],
         })

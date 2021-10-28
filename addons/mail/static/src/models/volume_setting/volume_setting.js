@@ -9,37 +9,6 @@ function factory(dependencies) {
 
     class VolumeSetting extends dependencies['mail.model'] {
 
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
-        /**
-         * @static
-         * @param {Object} data
-         * @returns {Object}
-         */
-        static convertData(data) {
-            const data2 = {};
-            if ('volume' in data) {
-                data2.volume = data.volume;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-
-            // relations
-            if ('partner_id' in data) {
-                const partnerNameGet = data['partner_id'];
-                const partnerData = {
-                    display_name: partnerNameGet[1],
-                    id: partnerNameGet[0],
-                };
-                data2.partner = insert(partnerData);
-            }
-            return data2;
-        }
-
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -48,7 +17,15 @@ function factory(dependencies) {
          * @private
          */
         _onChangeVolume() {
-            for (const rtcSession of this.partner.rtcSessions) {
+            let rtcSessions;
+            if (this.partner) {
+                rtcSessions = this.partner.rtcSessions;
+            } else if (this.guest) {
+                rtcSessions = this.guest.rtcSessions;
+            } else {
+                return;
+            }
+            for (const rtcSession of rtcSessions) {
                 if (rtcSession.audioElement) {
                     rtcSession.audioElement.volume = this.volume;
                 }
@@ -57,13 +34,15 @@ function factory(dependencies) {
     }
 
     VolumeSetting.fields = {
+        guest: one2one('mail.guest', {
+            inverse: 'volumeSetting',
+        }),
         id: attr({
             readonly: true,
             required: true,
         }),
         partner: one2one('mail.partner', {
             inverse: 'volumeSetting',
-            required: true,
         }),
         userSetting: many2one('mail.user_setting', {
             inverse: 'volumeSettings',
