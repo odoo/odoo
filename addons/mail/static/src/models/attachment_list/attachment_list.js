@@ -13,7 +13,7 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @returns {mail.attachment[]}
+         * @returns {FieldCommand}
          */
         _computeAttachments() {
             if (this.message) {
@@ -23,7 +23,7 @@ function factory(dependencies) {
                 return replace(this.chatter.thread.allAttachments);
             }
             if (this.composerView && this.composerView.composer) {
-                return replace(this.composerView.composer.attachments);
+                return replace(this.composerView.composer.messageComposition.attachments);
             }
             return clear();
         }

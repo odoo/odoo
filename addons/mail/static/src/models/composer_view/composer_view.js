@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { emojis } from '@mail/js/emojis';
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
@@ -153,26 +152,25 @@ function factory(dependencies) {
                 );
             }
             const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            // Specific cases for channel and partner mentions: the message with
+            // the mention will appear in the target channel, or be notified to
+            // the target partner.
+            switch (this.activeSuggestedRecord.constructor.modelName) {
+                case 'mail.thread':
+                    this.composer.messageComposition.update({ mentionedChannels: link(this.activeSuggestedRecord) });
+                    break;
+                case 'mail.partner':
+                    this.composer.messageComposition.update({ mentionedPartners: link(this.activeSuggestedRecord) });
+                    break;
+            }
             const updateData = {
                 isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
                 textInputCursorStart: textLeft.length + recordReplacement.length + 1,
             };
-            // Specific cases for channel and partner mentions: the message with
-            // the mention will appear in the target channel, or be notified to
-            // the target partner.
-            switch (this.activeSuggestedRecord.constructor.modelName) {
-                case 'mail.thread':
-                    Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
-                    break;
-                case 'mail.partner':
-                    Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
-                    break;
-            }
             this.composer.update(updateData);
         }
-
 
         /**
          * Handles click on the cancel link.
@@ -183,7 +181,6 @@ function factory(dependencies) {
             ev.preventDefault();
             this.discard();
         }
-
 
         /**
          * Handles click on the save link.
@@ -223,13 +220,13 @@ function factory(dependencies) {
          * Open the full composer modal.
          */
         async openFullComposer() {
-            const attachmentIds = this.composer.attachments.map(attachment => attachment.id);
+            const attachmentIds = this.composer.messageComposition.attachments.map(attachment => attachment.id);
             const context = {
                 default_attachment_ids: attachmentIds,
                 default_body: escapeAndCompactTextContent(this.composer.textInputContent),
                 default_is_log: this.composer.isLog,
                 default_model: this.composer.activeThread.model,
-                default_partner_ids: this.composer.recipients.map(partner => partner.id),
+                default_partner_ids: this.composer.messageComposition.recipients.map(partner => partner.id),
                 default_res_id: this.composer.activeThread.id,
                 mail_post_autofollow: true,
             };
@@ -275,22 +272,14 @@ function factory(dependencies) {
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
+
+            composer.messageComposition.generateBody();
+
             const postData = {
-                attachment_ids: composer.attachments.map(attachment => attachment.id),
-                body,
+                attachment_ids: composer.messageComposition.attachments.map(attachment => attachment.id),
+                body: composer.messageComposition.body,
                 message_type: 'comment',
-                partner_ids: composer.recipients.map(partner => partner.id),
+                partner_ids: composer.messageComposition.recipients.map(partner => partner.id),
             };
             const params = {
                 'post_data': postData,
@@ -433,7 +422,7 @@ function factory(dependencies) {
             body = this._generateEmojisOnHtml(body);
             let data = {
                 body: body,
-                attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
+                attachment_ids: composer.messageComposition.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
             try {
                 composer.update({ isPostingMessage: true });
@@ -480,12 +469,16 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {boolean}
+         * @returns {FieldCommand}
          */
         _computeAttachmentList() {
-            return (this.composer && this.composer.attachments.length > 0)
-                ? insertAndReplace()
-                : clear();
+            if (this.composer &&
+                this.composer.messageComposition &&
+                this.composer.messageComposition.attachments.length > 0
+               ) {
+                return insertAndReplace();
+            }
+            return clear();
         }
 
         /**
@@ -637,76 +630,6 @@ function factory(dependencies) {
             }
         }
 
-
-        /**
-         * @private
-         * @param {string} htmlString
-         * @returns {string}
-         */
-        _generateEmojisOnHtml(htmlString) {
-            for (const emoji of emojis) {
-                for (const source of emoji.sources) {
-                    const escapedSource = String(source).replace(
-                        /([.*+?=^!:${}()|[\]/\\])/g,
-                        '\\$1');
-                    const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
-                        'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
-                }
-            }
-            return htmlString;
-        }
-
-        /**
-         *
-         * Generates the html link related to the mentioned partner
-         *
-         * @private
-         * @param {string} body
-         * @returns {string}
-         */
-        _generateMentionsLinks(body) {
-            // List of mention data to insert in the body.
-            // Useful to do the final replace after parsing to avoid using the
-            // same tag twice if two different mentions have the same name.
-            const mentions = [];
-            for (const partner of this.composer.mentionedPartners) {
-                const placeholder = `@-mention-partner-${partner.id}`;
-                const text = `@${owl.utils.escape(partner.name)}`;
-                mentions.push({
-                    class: 'o_mail_redirect',
-                    id: partner.id,
-                    model: 'res.partner',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            for (const channel of this.composer.mentionedChannels) {
-                const placeholder = `#-mention-channel-${channel.id}`;
-                const text = `#${owl.utils.escape(channel.name)}`;
-                mentions.push({
-                    class: 'o_channel_redirect',
-                    id: channel.id,
-                    model: 'mail.channel',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            const baseHREF = this.env.session.url('/web');
-            for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-                const attClass = `class='${mention.class}'`;
-                const dataOeId = `data-oe-id='${mention.id}'`;
-                const dataOeModel = `data-oe-model='${mention.model}'`;
-                const target = `target='_blank'`;
-                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-                body = body.replace(mention.placeholder, link);
-            }
-            return body;
-        }
 
         /**
          * @private

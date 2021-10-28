@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { replace } from '@mail/model/model_field_command';
+import { link, replace } from '@mail/model/model_field_command';
 
 import core from 'web.core';
 
@@ -97,6 +97,7 @@ export class FileUploader extends Component {
                 mimetype: file.type,
                 name: file.name,
                 originThread: (!composer && thread) ? replace(thread) : undefined,
+                messageCompositions: composer && composer.messageComposition && link(composer.messageComposition),
             }));
         }
         for (const file of files) {
@@ -151,6 +152,7 @@ export class FileUploader extends Component {
         }
         const attachment = this.messaging.models['mail.attachment'].insert({
             composer: composer && replace(composer),
+            messageCompositions: composer && composer.messageComposition && link(composer.messageComposition),
             originThread: (!composer && thread) ? replace(thread) : undefined,
             ...attachmentData,
         });
