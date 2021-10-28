@@ -131,7 +131,6 @@ class SaleOrder(models.Model):
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
-        self.order_line._compute_tax_id()
 
         # then, process the list of optional products from the template
         option_lines = [(5, 0, 0)]
@@ -258,7 +257,6 @@ class SaleOrderOption(models.Model):
 
         values = self._get_values_to_add_to_order()
         order_line = self.env['sale.order.line'].create(values)
-        order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
         if sale_order:
