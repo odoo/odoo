@@ -11,8 +11,22 @@
     import FormController from 'web.FormController';
     import FormView from 'web.FormView';
     import viewRegistry from 'web.view_registry';
+    import { bus } from 'web.core';
 
     var CrmFormController = FormController.extend({
+        init() {
+            this._super(...arguments);
+            bus.on('DOM_updated', this, () => {
+                const $editable = this.$el.find('.note-editable:visible');
+                if ($editable.length) {
+                    let offset = $editable.offset().top;
+                    offset += this.$el.find('.o_wysiwyg_resizer').outerHeight() || 0;
+                    offset += parseInt(this.$el.find('.o_form_sheet').css('margin-bottom') || 0, 10);
+                    $editable.outerHeight(Math.max(200, window.innerHeight - offset - 3));
+                }
+            });
+        },
+
         /**
          * Main method used when saving the record hitting the "Save" button.
          * We check if the stage_id field was altered and if we need to display a rainbowman

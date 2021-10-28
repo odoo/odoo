@@ -84,6 +84,7 @@
             'crm/static/src/js/systray_activity_menu.js',
             'crm/static/src/js/tours/crm.js',
             'crm/static/src/scss/crm.scss',
+            'crm/static/src/scss/crm_form.scss',
             'crm/static/src/scss/crm_team_member_views.scss',
         ],
         'web.assets_tests': [
