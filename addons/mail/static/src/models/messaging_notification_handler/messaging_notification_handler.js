@@ -824,6 +824,7 @@ function factory(dependencies) {
             channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
+                messageIsHtml: true,
                 type: 'info',
             });
         }
