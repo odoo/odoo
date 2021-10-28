@@ -73,6 +73,12 @@ class AccountEdiFormat(models.Model):
     # Export
     # -------------------------------------------------------------------------
 
+    def _get_invoice_edi_content(self, move):
+        #OVERRIDE
+        if self.code != 'fattura_pa':
+            return super()._get_invoice_edi_content(move)
+        return move._export_as_xml()
+
     def _check_move_configuration(self, move):
         # OVERRIDE
         res = super()._check_move_configuration(move)

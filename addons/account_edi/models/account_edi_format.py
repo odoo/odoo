@@ -52,6 +52,18 @@ class AccountEdiFormat(models.Model):
     # Export method to override based on EDI Format
     ####################################################
 
+    def _get_invoice_edi_content(self, move):
+        ''' Create a bytes literal of the file content representing the invoice - to be overridden by the EDI Format
+        :returns:       bytes literal of the content generated (typically XML).
+        '''
+        return b''
+
+    def _get_payment_edi_content(self, move):
+        ''' Create a bytes literal of the file content representing the payment - to be overridden by the EDI Format
+        :returns:       bytes literal of the content generated (typically XML).
+        '''
+        return b''
+
     def _is_required_for_invoice(self, invoice):
         """ Indicate if this EDI must be generated for the invoice passed as parameter.
 
