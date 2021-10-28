@@ -43,7 +43,7 @@ class MrpProduction(models.Model):
             raise UserError(_('You must enter a serial number for %s') % self.product_id.name)
         for sml in self.move_raw_ids.move_line_ids:
             if sml.tracking != 'none' and not sml.lot_id:
-                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.name)
+                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.display_name)
         self._update_finished_move()
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
