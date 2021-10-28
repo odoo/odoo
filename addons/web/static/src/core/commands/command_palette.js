@@ -71,6 +71,9 @@ export class CommandPalette extends Component {
         this.activeElement = useService("ui").activeElement;
         const onDebouncedSearchInput = debounce.apply(this, [this.onSearchInput, 200]);
         this.onDebouncedSearchInput = (...args) => {
+            const searchValue = args[0].target.value;
+            this.state.commandValue =
+                searchValue + this.state.commandValue.substring(searchValue.length);
             this.inputPromise = onDebouncedSearchInput.apply(this, args).catch(() => {
                 this.inputPromise = null;
             });
@@ -184,6 +187,7 @@ export class CommandPalette extends Component {
         this.mouseSelectionActive = false;
         this.state.emptyMessage =
             this.emptyMessageByNamespace[namespace] || DEFAULT_EMPTY_MESSAGE.toString();
+        this.getPlaceholder(namespace, options);
     }
 
     selectCommand(index) {
@@ -192,6 +196,32 @@ export class CommandPalette extends Component {
             return;
         }
         this.state.selectedCommand = this.state.commands[index];
+    }
+
+    getPlaceholder(namespace, options = {}) {
+        const toAdd = namespace !== "default" ? namespace : "";
+
+        if (options.searchValue) {
+            if (this.state.selectedCommand) {
+                if (
+                    this.state.selectedCommand.name
+                        .substring(0, options.searchValue.length)
+                        .toLowerCase() === options.searchValue
+                ) {
+                    this.state.commandValue =
+                        toAdd +
+                        options.searchValue +
+                        this.state.selectedCommand.name.substring(options.searchValue.length);
+                } else {
+                    this.state.commandValue =
+                        toAdd + options.searchValue + " - " + this.state.selectedCommand.name;
+                }
+            } else {
+                this.state.commandValue = options.searchValue + " - Not found";
+            }
+        } else {
+            this.state.commandValue = toAdd + this.state.placeholder;
+        }
     }
 
     selectCommandAndScrollTo(type) {
