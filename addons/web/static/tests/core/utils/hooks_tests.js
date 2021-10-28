@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useListener, useService } from "@web/core/utils/hooks";
+import { uiService } from "@web/core/ui/ui_service";
+import { useAutofocus, useBus, useEffect, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick } from "../../helpers/utils";
@@ -11,6 +12,73 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
     QUnit.module("Hooks", () => {
+        QUnit.module("useAutofocus");
+
+        QUnit.test("useAutofocus: simple usecase", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    useAutofocus();
+                }
+            }
+            MyComponent.template = tags.xml`
+                <span>
+                    <input type="text" autofocus="" />
+                </span>
+            `;
+
+            registry.category("services").add("ui", uiService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.render();
+            await nextTick();
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.destroy();
+        });
+
+        QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    this.forceFocus = useAutofocus();
+                    this.showInput = true;
+                }
+            }
+            MyComponent.template = tags.xml`
+                <span>
+                    <input t-if="showInput" type="text" autofocus="" />
+                </span>
+            `;
+
+            registry.category("services").add("ui", uiService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.showInput = false;
+            comp.forceFocus();
+            comp.render();
+            await nextTick();
+            assert.notStrictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.showInput = true;
+            comp.forceFocus();
+            comp.render();
+            await nextTick();
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.destroy();
+        });
+
         QUnit.module("useBus");
 
         QUnit.test("useBus hook: simple usecase", async function (assert) {
