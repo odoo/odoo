@@ -3069,15 +3069,16 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving a new needaction message
     await afterNextRender(() => {
-        const data = {
-            body: "not empty",
-            id: 100,
-            needaction_partner_ids: [3],
-            model: 'res.partner',
-            res_id: 20,
-        };
-        const notifications = [[['my-db', 'ir.needaction', 3], data]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/inbox',
+            payload: {
+                body: "not empty",
+                id: 100,
+                needaction_partner_ids: [3],
+                model: 'res.partner',
+                res_id: 20,
+            },
+        }]);
     });
     assert.ok(
         document.querySelector(`
@@ -3111,15 +3112,16 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving another new needaction message
     await afterNextRender(() => {
-        const data2 = {
-            body: "not empty",
-            id: 101,
-            needaction_partner_ids: [3],
-            model: 'res.partner',
-            res_id: 20,
-        };
-        const notifications2 = [[['my-db', 'ir.needaction', 3], data2]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications2);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/inbox',
+            payload: {
+                body: "not empty",
+                id: 101,
+                needaction_partner_ids: [3],
+                model: 'res.partner',
+                res_id: 20,
+            },
+        }]);
     });
     assert.strictEqual(
         document.querySelector(`
@@ -3654,13 +3656,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
 
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        const messageData = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 20,
-        };
-        const notifications = [[['my-db', 'mail.channel', 20], messageData]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 20,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 20,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3692,13 +3698,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
 
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        const messageData = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications = [[['my-db', 'mail.channel', 10], messageData]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3743,37 +3753,49 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
 
     // simulate receiving a new message in chat 20 with odoo focused
     await afterNextRender(() => {
-        const messageData1 = {
-            id: 126,
-            model: 'mail.channel',
-            res_id: 20,
-        };
-        const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications1);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 20,
+                message: {
+                    id: 126,
+                    model: 'mail.channel',
+                    res_id: 20,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving a new message in chat 10 with odoo focused
     await afterNextRender(() => {
-        const messageData2 = {
-            id: 127,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications2);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 127,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving another new message in chat 10 with odoo focused
     await afterNextRender(() => {
-        const messageData3 = {
-            id: 128,
-            model: 'mail.channel',
-            res_id: 10,
-        };
-        const notifications3 = [[['my-db', 'mail.channel', 10], messageData3]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications3);
+        this.widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/new_message',
+            payload: {
+                id: 10,
+                message: {
+                    id: 128,
+                    model: 'mail.channel',
+                    res_id: 10,
+                },
+            },
+        }]);
     });
     assert.verifySteps(['set_title_part']);
 });

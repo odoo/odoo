@@ -45,10 +45,7 @@ class ResUsersSettings(models.Model):
             if setting in self._fields and new_settings[setting] != self[setting]:
                 changed_settings[setting] = new_settings[setting]
         self.write(changed_settings)
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.user_id.partner_id.id), {
-            'type': 'res.users_settings_changed',
-            'payload': changed_settings,
-        })
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/changed', changed_settings)
 
     def set_volume_setting(self, partner_id, volume):
         self.ensure_one()
@@ -61,13 +58,10 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'volume': volume,
             }])
-        notification = {
-            'type': 'res_users_settings_volumes_update',
-            'payload': {
-                'volumeSettings': [('insert', {
-                    'id': volume_setting.id,
-                    'volume': volume_setting.volume,
-                })],
-            }
-        }
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.user_id.partner_id.id), notification)
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/volumes_update', {
+            'volumeSettings': [('insert', {
+                'id': volume_setting.id,
+                'partner': [('insert-and-replace', {'id': partner_id})],
+                'volume': volume_setting.volume,
+            })],
+        })

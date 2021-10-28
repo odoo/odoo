@@ -57,16 +57,13 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        message = {
-            'type': 'mail.guest_update',
-            'payload': {
-                'id': self.id,
-                'name': self.name,
-            },
+        guest_data = {
+            'id': self.id,
+            'name': self.name
         }
-        bus_notifs = [((self._cr.dbname, 'mail.channel', channel.id), message) for channel in self.channel_ids]
-        bus_notifs.append(((self._cr.dbname, 'mail.guest', self.id), message))
-        self.env['bus.bus'].sendmany(bus_notifs)
+        bus_notifs = [(channel, 'mail.guest/insert', guest_data) for channel in self.channel_ids]
+        bus_notifs.append((self, 'mail.guest/insert', guest_data))
+        self.env['bus.bus']._sendmany(bus_notifs)
 
     def _update_timezone(self, timezone):
         query = """

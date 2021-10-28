@@ -192,9 +192,6 @@ MockServer.include({
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
             return this._mockMailChannelAddMembers(ids, partner_ids);
         }
-        if (args.model === 'mail.channel' && args.method === 'channel_minimize') {
-            return;
-        }
         if (args.model === 'mail.channel' && args.method === 'channel_pin') {
             const uuid = args.args[0] || args.kwargs.uuid;
             const pinned = args.args[1] || args.kwargs.pinned;
@@ -609,11 +606,12 @@ MockServer.include({
                 members: [[3, this.currentPartnerId]],
             },
         ]);
-        const notifConfirmUnpin = [
-            ["dbName", 'res.partner', this.currentPartnerId],
-            this._mockMailChannelChannelInfo([channel.id], 'unsubscribe')[0],
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/leave',
+            payload: {
+                id: channel.id,
+            },
+        }]);
         /**
          * Leave message not posted here because it would send the new message
          * notification on a separate bus notification list from the unsubscribe
@@ -653,14 +651,13 @@ MockServer.include({
                 { body, message_type, subtype_xmlid },
             );
         }
-        const notification = [[false, 'res.partner', this.currentPartnerId], {
-            type: 'mail.channel_joined',
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/joined',
             payload: {
                 'channel': this._mockMailChannelChannelInfo([channel.id])[0],
                 'invited_by_user_id': this.currentUserId,
             },
-        }];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        }]);
     },
     /**
      * Simulates `_broadcast` on `mail.channel`.
@@ -694,7 +691,13 @@ MockServer.include({
             // of not having `channel.partner`.
             const channelInfos = this._mockMailChannelChannelInfo(ids);
             for (const channelInfo of channelInfos) {
-                notifications.push([[false, 'res.partner', partner_id], channelInfo]);
+                notifications.push({
+                    type: 'mail.channel/legacy_insert',
+                    payload: {
+                        id: channelInfo.id,
+                        state: channelInfo.is_minimized ? 'open' : 'closed',
+                    },
+                });
             }
         }
         return notifications;
@@ -726,16 +729,15 @@ MockServer.include({
                 [channel.id],
                 { fetched_message_id: lastMessage.id },
             ]);
-            const notification = [
-                ["dbName", 'mail.channel', channel.id],
-                {
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.channel.partner/fetched',
+                payload: {
+                    channel_id: channel.id,
                     id: `${channel.id}/${this.currentPartnerId}`, // simulate channel.partner id
-                    info: 'channel_fetched',
                     last_message_id: lastMessage.id,
                     partner_id: this.currentPartnerId,
                 },
-            ];
-            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+            }]);
         }
     },
     /**
@@ -781,11 +783,14 @@ MockServer.include({
                 state,
             }
         ]);
-        const notifConfirmFold = [
-            ["dbName", 'res.partner', this.currentPartnerId],
-            this._mockMailChannelChannelInfo([channel.id])[0]
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmFold]);
+        const channelInfo = this._mockMailChannelChannelInfo([channel.id])[0];
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/insert',
+            payload: {
+                id: channelInfo.id,
+                serverFoldState: channelInfo.is_minimized ? 'open' : 'closed',
+            },
+        }]);
     },
     /**
      * Simulates 'channel_get' on 'mail.channel'.
@@ -826,10 +831,9 @@ MockServer.include({
      *
      * @private
      * @param {integer[]} ids
-     * @param {string} [extra_info]
      * @returns {Object[]}
      */
-    _mockMailChannelChannelInfo(ids, extra_info) {
+    _mockMailChannelChannelInfo(ids) {
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         const all_partners = [...new Set(channels.reduce((all_partners, channel) => {
             return [...all_partners, ...channel.members];
@@ -859,7 +863,6 @@ MockServer.include({
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
             const res = Object.assign({}, channel, {
-                info: extra_info,
                 last_message_id: lastMessageId,
                 members,
                 message_needaction_counter: messageNeedactionCounter,
@@ -889,11 +892,17 @@ MockServer.include({
             [channel.id],
             { is_pinned: false },
         ]);
-        const notification = [
-            ["dbName", 'res.partner', this.currentPartnerId],
-            this._mockMailChannelChannelInfo([channel.id], pinned ? undefined : 'unsubscribe')[0],
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        if (!pinned) {
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.channel/unpin',
+                payload: { id: channel.id },
+            }]);
+        } else {
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.channel/legacy_insert',
+                payload: this._mockMailChannelChannelInfo([channel.id])[0],
+            }]);
+        }
     },
     /**
      * Simulates the `_channel_seen` method of `mail.channel`.
@@ -924,21 +933,14 @@ MockServer.include({
             return;
         }
         this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
-
-        // Send notification
-        const payload = {
-            channel_id,
-            info: 'channel_seen',
-            last_message_id,
-            partner_id: this.currentPartnerId,
-        };
-        let notification;
-        if (channel.channel_type === 'chat') {
-            notification = [[false, 'mail.channel', channel_id], payload];
-        } else {
-            notification = [[false, 'res.partner', this.currentPartnerId], payload];
-        }
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel.partner/seen',
+            payload: {
+                channel_id: channel.id,
+                last_message_id,
+                partner_id: this.currentPartnerId,
+            },
+        }]);
     },
     /**
      * Simulates `channel_rename` on `mail.channel`.
@@ -952,7 +954,13 @@ MockServer.include({
             [channel.id],
             { name },
         ]);
-        this._mockMailChannel_broadcast([channel.id], channel.members);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/insert',
+            payload: {
+                id: channel.id,
+                name,
+            },
+        }]);
     },
     /**
      * Simulates `channel_set_custom_name` on `mail.channel`.
@@ -966,7 +974,13 @@ MockServer.include({
             [channel.id],
             { custom_channel_name: name },
         ]);
-        this._mockMailChannel_broadcast([channel.id], [this.currentPartnerId]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/insert',
+            payload: {
+                id: channel.id,
+                custom_channel_name: name,
+            },
+        }]);
     },
     /**
      * Simulates the `/mail/create_group` route.
@@ -1015,16 +1029,14 @@ MockServer.include({
             if (members.length > 0) {
                 message = `Users in this channel: ${members.join(', ')} and you`;
             }
-            const notification = [
-                ["dbName", 'res.partner', this.currentPartnerId],
-                {
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.channel/transient_message',
+                payload: {
                     'body': `<span class="o_mail_notification">${message}</span>`,
-                    'info': 'transient_message',
                     'model': 'mail.channel',
                     'res_id': channel.id,
                 }
-            ];
-            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+            }]);
         }
     },
     /**
@@ -1090,17 +1102,13 @@ MockServer.include({
             },
         ]);
         const avatarCacheKey = this._getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
-        const notification = [
-            ['dbName', 'mail.channel', id],
-            {
-                type: 'mail.channel_update',
-                payload: {
-                    id: 20,
-                    avatarCacheKey: avatarCacheKey,
-                },
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.channel/insert',
+            payload: {
+                id: 20,
+                avatarCacheKey: avatarCacheKey,
             },
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        }]);
     },
     /**
      * Simulates `message_post` on `mail.channel`.
@@ -1159,16 +1167,18 @@ MockServer.include({
             partner_id = this.currentPartnerId;
         }
         const partner = this._getRecords('res.partner', [['id', '=', partner_id]]);
-        const data = {
-            'info': 'typing_status',
-            'is_typing': is_typing,
-            'partner_id': partner_id,
-            'partner_name': partner.name,
-        };
         const notifications = [];
         for (const channel of channels) {
-            notifications.push([[false, 'mail.channel', channel.id], data]);
-            notifications.push([channel.uuid, data]); // notify livechat users
+            const data = {
+                type: 'mail.channel.partner/typing_status',
+                payload: {
+                    channel_id: channel.id,
+                    is_typing: is_typing,
+                    partner_id: partner_id,
+                    partner_name: partner.name,
+                },
+            };
+            notifications.push([data]);
         }
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
@@ -1255,9 +1265,13 @@ MockServer.include({
                 },
             ]);
         }
-        const notificationData = { type: 'mark_as_read', message_ids: messageIds, needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId) };
-        const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/mark_as_read',
+            payload: {
+                message_ids: messageIds,
+                needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId),
+            },
+        }]);
         return messageIds;
     },
     /**
@@ -1427,9 +1441,13 @@ MockServer.include({
                     ),
                 },
             ]);
-            const data = { type: 'mark_as_read', message_ids: [message.id], needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId) };
-            const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
-            this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.message/mark_as_read',
+                payload: {
+                    message_ids: [message.id],
+                    needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(this.currentPartnerId),
+                },
+            }]);
         }
     },
     /**
@@ -1446,13 +1464,13 @@ MockServer.include({
                 [message.id],
                 { starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]] }
             ]);
-            const notificationData = {
-                message_ids: [message.id],
-                starred: !wasStared,
-                type: 'toggle_star',
-            };
-            const notifications = [[[false, 'res.partner', this.currentPartnerId], notificationData]];
-            this._widget.call('bus_service', 'trigger', 'notification', notifications);
+            this._widget.call('bus_service', 'trigger', 'notification', [{
+                type: 'mail.message/toggle_star',
+                payload: {
+                    message_ids: [message.id],
+                    starred: !wasStared,
+                },
+            }]);
         }
     },
     /**
@@ -1468,13 +1486,13 @@ MockServer.include({
             messages.map(message => message.id),
             { starred_partner_ids: [[3, this.currentPartnerId]] }
         ]);
-        const notificationData = {
-            message_ids: messages.map(message => message.id),
-            starred: false,
-            type: 'toggle_star',
-        };
-        const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'mail.message/toggle_star',
+            payload: {
+                message_ids: messages.map(message => message.id),
+                starred: false,
+            },
+        }]);
     },
     /**
      * Simulates `_filtered_for_web_client` on `mail.notification`.
@@ -1727,15 +1745,23 @@ MockServer.include({
         // author
         const notificationData = {
             type: 'author',
-            message: messageFormat,
+            payload: {
+                message: messageFormat,
+            },
         };
         if (message.author_id) {
-            notifications.push([[false, 'res.partner', message.author_id], notificationData]);
+            notifications.push([notificationData]);
         }
         // members
         const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
         for (const channel of channels) {
-            notifications.push([[false, 'mail.channel', channel.id], messageFormat]);
+            notifications.push({
+                type: 'mail.channel/new_message',
+                payload: {
+                    id: channel.id,
+                    message: messageFormat,
+                }
+            });
 
             // notify update of last_interest_dt
             const now = datetime_to_str(new Date());
@@ -1743,15 +1769,13 @@ MockServer.include({
                 [channel.id],
                 { last_interest_dt: now },
             );
-            for (const member of channel.members) {
-                notifications.push([[false, 'res.partner', member], {
-                    type: 'mail.channel_last_interest_dt_changed',
-                    payload: {
-                        id: channel.id,
-                        last_interest_dt: now,
-                    },
-                }]);
-            }
+            notifications.push({
+                type: 'mail.channel/last_interest_dt_changed',
+                payload: {
+                    id: channel.id,
+                    last_interest_dt: now, // channel.partner not used for simplicity
+                },
+            });
         }
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
@@ -1832,14 +1856,10 @@ MockServer.include({
             [id],
             changedSettings,
         ]);
-        const notification = [
-            ['dbName', 'res.partner', this.currentPartnerId],
-            {
-                type: 'res.users_settings_changed',
-                payload: changedSettings,
-            },
-        ];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            type: 'res.users.settings/changed',
+            payload: changedSettings,
+        }]);
     },
 
     /**

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import html_escape
 
 
 class MailChannel(models.Model):
@@ -41,7 +42,7 @@ class MailChannel(models.Model):
         for channel in self:
             # add uuid for private livechat channels to allow anonymous to listen
             if channel.channel_type == 'livechat' and channel.public == 'private':
-                notifications.append([channel.uuid, notifications[0][1]])
+                notifications.append([channel.uuid, 'mail.channel/new_message', notifications[0][2]])
         if not message.author_id:
             unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
@@ -54,11 +55,11 @@ class MailChannel(models.Model):
         channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
         return super(MailChannel, channel)._channel_fetch_message(last_id=last_id, limit=limit)
 
-    def channel_info(self, extra_info=False):
+    def channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        channel_infos = super(MailChannel, self).channel_info(extra_info)
+        channel_infos = super().channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             # add the last message date
@@ -131,17 +132,12 @@ class MailChannel(models.Model):
         return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
     def execute_command_history(self, **kwargs):
-        notification = []
-        notification_values = {
-            '_type': 'history_command',
-        }
-        notification.append([self.uuid, dict(notification_values)])
-        return self.env['bus.bus'].sendmany(notification)
+        self.env['bus.bus']._sendone(self.uuid, 'im_livechat.history_command', {'id': self.id})
 
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')
         if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (page, page) for page in page_history]
+            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
             message_body = '<ul>%s</ul>' % (''.join(html_links))
         self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
