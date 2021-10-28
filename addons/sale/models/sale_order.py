@@ -282,9 +282,11 @@ class SaleOrder(models.Model):
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False)
-    show_update_pricelist = fields.Boolean(string='Has Pricelist Changed',
-                                           help="Technical Field, True if the pricelist was changed;\n"
-                                                " this will then display a recomputation button")
+    show_update_pricelist = fields.Boolean(
+        string='Has Pricelist Changed',
+        compute='_compute_show_update_pricelist', store=True, readonly=True,
+        help="Technical Field, True if the pricelist was changed;\n"
+             " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
@@ -513,12 +515,10 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.onchange('pricelist_id', 'order_line')
-    def _onchange_pricelist_id(self):
-        if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
-            self.show_update_pricelist = True
-        else:
-            self.show_update_pricelist = False
+    @api.depends('pricelist_id', 'order_line')
+    def _compute_show_update_pricelist(self):
+        for order in self:
+            order.show_update_pricelist = order.order_line and order.pricelist_id and order._origin.pricelist_id != self.pricelist_id
 
     def update_prices(self):
         self.ensure_one()
