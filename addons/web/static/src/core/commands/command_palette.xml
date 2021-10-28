@@ -56,7 +56,10 @@
   <t t-name="web.AppIconCommand" owl="1">
     <div class="o_command_default">
         <span t-esc="props.name"/>
-        <img class="o_app_icon" t-attf-src="{{props.webIconData}}"/>
+        <img t-if="props.webIconData" class="o_app_icon" t-attf-src="{{props.webIconData}}"/>
+        <div t-else="" class="o_app_icon" t-attf-style="background-color:{{props.webIcon.backgroundColor}}" >
+          <i t-att-class="props.webIcon.iconClass" t-attf-style="color:{{props.webIcon.color}}"></i>
+        </div>
     </div>
   </t>
 
