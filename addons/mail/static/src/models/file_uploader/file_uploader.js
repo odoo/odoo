@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear, replace, link } from '@mail/model/model_field_command';
 
 import core from 'web.core';
 
@@ -105,11 +105,14 @@ registerModel({
                 });
                 return;
             }
-            return (composer || thread).messaging.models['Attachment'].insert({
-                composer: composer && replace(composer),
+            const attachment = this.messaging.models['Attachment'].insert({
                 originThread: (!composer && thread) ? replace(thread) : undefined,
                 ...attachmentData,
             });
+            if (composer) {
+                composer.messageComposition.update({ attachments: link(attachment) });
+            }
+            return attachment;
         },
         /**
          * @private
@@ -124,15 +127,18 @@ registerModel({
             const activity = this.activityView && this.activityView.activity; // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
-                uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
-                    composer: composer && replace(composer),
+                const attachment = this.messaging.models['Attachment'].insert({
                     filename: file.name,
                     id: getAttachmentNextTemporaryId(),
                     isUploading: true,
                     mimetype: file.type,
                     name: file.name,
                     originThread: (!composer && thread) ? replace(thread) : undefined,
-                }));
+                });
+                uploadingAttachments.set(file, attachment);
+                if (composer) {
+                    composer.messageComposition.update({ attachments: link(attachment) });
+                }
             }
             const attachments = [];
             for (const file of files) {
