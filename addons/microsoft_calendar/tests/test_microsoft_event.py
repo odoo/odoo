@@ -46,7 +46,9 @@ class TestMicrosoftEvent(TestCommon):
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
 
     def test_map_an_event_using_instance_id(self):
-
+        """
+        Here, the Odoo event has an uid but the Outlook event has not.
+        """
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
         events = MicrosoftEvent([{
@@ -62,6 +64,53 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
+
+    def test_map_an_event_without_uid_using_instance_id(self):
+        """
+        Here, the Odoo event has no uid but the Outlook event has one.
+        """
+
+        # arrange
+        event_id = self.simple_event.ms_organizer_event_id
+        event_uid = self.simple_event.ms_accross_calendars_event_id
+        self.simple_event.ms_accross_calendars_event_id = False
+        events = MicrosoftEvent([{
+            "type": "singleInstance",
+            "_odoo_id": False,
+            "iCalUId": event_uid,
+            "id": event_id,
+        }])
+
+        # act
+        mapped = events._load_odoo_ids_from_db(self.env)
+
+        # assert
+        self.assertEqual(len(mapped._events), 1)
+        self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
+        self.assertEqual(self.simple_event.ms_accross_calendars_event_id, event_uid)
+
+    def test_map_an_event_without_uid_using_instance_id_2(self):
+        """
+        Here, both Odoo event and Outlook event have no uid.
+        """
+
+        # arrange
+        event_id = self.simple_event.ms_organizer_event_id
+        self.simple_event.ms_accross_calendars_event_id = False
+        events = MicrosoftEvent([{
+            "type": "singleInstance",
+            "_odoo_id": False,
+            "iCalUId": False,
+            "id": event_id,
+        }])
+
+        # act
+        mapped = events._load_odoo_ids_from_db(self.env)
+
+        # assert
+        self.assertEqual(len(mapped._events), 1)
+        self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
+        self.assertEqual(self.simple_event.ms_accross_calendars_event_id, False)
 
     def test_map_a_recurrence_using_global_id(self):
 
