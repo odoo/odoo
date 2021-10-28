@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one2many } from '@mail/model/model_field';
+import { attr, one2many, one2one } from '@mail/model/model_field';
 import { registerNewModel } from '@mail/model/model_core';
 
 function factory(dependencies) {
@@ -53,6 +53,12 @@ function factory(dependencies) {
             readonly: true,
         }),
         name: attr(),
+        rtcSessions: one2many('mail.rtc_session', {
+            inverse: 'guest',
+        }),
+        volumeSetting: one2one('mail.volume_setting', {
+            inverse: 'guest',
+        }),
     };
     Guest.identifyingFields = ['id'];
     Guest.modelName = 'mail.guest';
