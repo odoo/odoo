@@ -18,16 +18,28 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 0.8rem 1em;
     font-size: 1.5rem;
-
+    &_input {
+      height: 1.8em;
+      .o_command_palette_main_input {
+        z-index: 1000;
+      }
+      .o_command_palette_placeholder_input {
+        color: #C7C7C7;
+      }
+      input {
+        position: absolute;
+        border: none;
+        padding: 0;
+        line-height: 1.8em;
+        left: 0;
+        padding: 0 0.8em;
+        background: none;
+      }
+    }
     .fa-search {
       color:#C7C7C7;
     }
 
-    input {
-      border: none;
-      padding: 0;
-      line-height: 1.8em;
-    }
   }
 
   &_listbox {

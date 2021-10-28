@@ -192,6 +192,7 @@ export class CommandPalette extends Component {
             return;
         }
         this.state.selectedCommand = this.state.commands[index];
+        this.state.commandValue = this.state.selectedCommand.name;
     }
 
     selectCommandAndScrollTo(type) {
