@@ -2169,10 +2169,8 @@ class MailThread(models.AbstractModel):
 
             message_format_values = message.message_format()[0]
             for partner_id in inbox_pids:
-                bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
-
-        if bus_notifications:
-            self.env['bus.bus'].sudo().sendmany(bus_notifications)
+                bus_notifications.append((self.env['res.partner'].browse(partner_id), 'mail.message/inbox', dict(message_format_values)))
+        self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_record_by_email(self, message, recipients_data, msg_vals=False,
                                 model_description=False, mail_auto_delete=True, check_existing=False,

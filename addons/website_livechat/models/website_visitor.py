@@ -86,11 +86,11 @@ class WebsiteVisitor(models.Model):
                 'fold_state': 'open',
                 'is_minimized': True,
             })
-            mail_channels_info = mail_channels.channel_info('send_chat_request')
+            mail_channels_info = mail_channels.channel_info()
             notifications = []
             for mail_channel_info in mail_channels_info:
-                notifications.append([(self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info])
-            self.env['bus.bus'].sendmany(notifications)
+                notifications.append([operator.partner_id, 'website_livechat.send_chat_request', mail_channel_info])
+            self.env['bus.bus']._sendmany(notifications)
 
     def _link_to_visitor(self, target, keep_unique=True):
         """ Copy sessions of the secondary visitors to the main partner visitor. """
