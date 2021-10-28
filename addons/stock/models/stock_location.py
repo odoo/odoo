@@ -11,7 +11,7 @@ class Location(models.Model):
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
-    _order = 'complete_name'
+    _order = 'complete_name, id'
     _rec_name = 'complete_name'
     _check_company_auto = True
 
