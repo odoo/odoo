@@ -35,12 +35,8 @@ class ResPartner(models.Model):
             else:
                 partners_not_geo_localized |= partner
         if partners_not_geo_localized:
-            self.env['bus.bus'].sendone(
-                (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification',
-                 'title': _("Warning"),
-                 'message': _('No address found for %(partner_names)s.',
-                              partner_names=', '.join(partners_not_geo_localized.mapped('name'))
-                              )
-                 })
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'title': _("Warning"),
+                'message': _('No address found for %(partner_names)s.', partner_names=', '.join(partners_not_geo_localized.mapped('name')))
+            })
         return True

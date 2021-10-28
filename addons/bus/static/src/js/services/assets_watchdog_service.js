@@ -21,7 +21,7 @@ export const assetsWatchdogService = {
             });
 
             legacyEnv.services.bus_service.onNotification(this, onNotification);
-            legacyEnv.services.bus_service.addChannel("bundle_changed");
+            legacyEnv.services.bus_service.startPolling();
         });
 
         /**
@@ -76,11 +76,9 @@ export const assetsWatchdogService = {
          * @param {Array} notifications: list of received notifications
          */
         function onNotification(notifications) {
-            for (const notif of notifications) {
-                if (notif[0][1] === "bundle_changed") {
-                    const bundleXmlId = notif[1][0];
-                    const bundleVersion = notif[1][1];
-                    if (bundleXmlId in assets && bundleVersion !== assets[bundleXmlId]) {
+            for (const { payload, type } of notifications) {
+                if (type === 'bundle_changed') {
+                    if (payload.name in assets && payload.version !== assets[payload.name]) {
                         displayBundleChangedNotification();
                         break;
                     }
