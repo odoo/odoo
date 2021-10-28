@@ -76,8 +76,8 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
-    def _visible_menu_ids(self, debug=False):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'country_codes', 'debug')
+    def _visible_menu_ids(self, country_codes, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
@@ -86,6 +86,8 @@ class IrUiMenu(models.Model):
         groups = self.env.user.groups_id
         if not debug:
             groups = groups - self.env.ref('base.group_no_one')
+        for country_code in country_codes:
+            groups += self.env.ref(f'base.group_country_{country_code}')
         # first discard all menus with groups the user does not have
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
@@ -121,7 +123,7 @@ class IrUiMenu(models.Model):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids(request.session.debug if request else False)
+        visible_ids = self._visible_menu_ids(frozenset(self.env.companies.country_id.mapped('code')), request.session.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
@@ -223,7 +225,7 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
+    @tools.ormcache_context('self._uid', 'frozenset(self.env.companies.country_id.ids)', 'debug', keys=('lang',))
     def load_menus(self, debug):
         """ Loads all menu items (all applications and their sub-menus).
 

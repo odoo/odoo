@@ -23,6 +23,7 @@ The kernel of Odoo, needed for all installation.
         'data/res_country_data.xml',
         'data/ir_demo_data.xml',
         'data/ir_config_parameter_data.xml',
+        'security/res.groups.csv',
         'security/base_groups.xml',
         'security/base_security.xml',
         'views/base_menus.xml',

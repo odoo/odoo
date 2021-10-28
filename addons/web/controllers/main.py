@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import base64
 import copy
 import datetime
@@ -822,14 +823,24 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
-    def web_load_menus(self, unique):
+    @http.route([
+        '/web/webclient/load_menus/<string:unique>',
+        '/web/webclient/load_menus/<string:unique>/<string:companies>',
+    ], type='http', auth='user', methods=['GET'])
+    def web_load_menus(self, unique, companies=None):
         """
         Loads the menus for the webclient
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
         :return: the menus (including the images in Base64)
         """
-        menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
+        IrMenu = request.env["ir.ui.menu"]
+        if companies:
+            IrMenu = IrMenu.with_context(allowed_company_ids=[
+                cid
+                for cid in ast.literal_eval(companies)
+                if cid in request.env.user.company_ids.ids
+            ])
+        menus = IrMenu.load_web_menus(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because

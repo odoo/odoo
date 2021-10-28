@@ -6,16 +6,14 @@ import { session } from "@web/session";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
 
-function makeFetchLoadMenus() {
+function makeFetchLoadMenus(companies) {
     const cacheHashes = session.cache_hashes;
     let loadMenusHash = cacheHashes.load_menus || new Date().getTime().toString();
     return async function fetchLoadMenus(reload) {
         if (reload) {
             loadMenusHash = new Date().getTime().toString();
-        } else if (odoo.loadMenusPromise) {
-            return odoo.loadMenusPromise;
         }
-        const res = await browser.fetch(`${loadMenusUrl}/${loadMenusHash}`);
+        const res = await browser.fetch(`${loadMenusUrl}/${loadMenusHash}/[${companies}]`);
         if (!res.ok) {
             throw new Error("Error while fetching menus");
         }
@@ -78,7 +76,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
 export const menuService = {
     dependencies: ["action", "router"],
     async start(env) {
-        const fetchLoadMenus = makeFetchLoadMenus();
+        const fetchLoadMenus = makeFetchLoadMenus(env.services.company && env.services.company.allowedCompanyIds || []);
         const menusData = await fetchLoadMenus();
         return makeMenus(env, menusData, fetchLoadMenus);
     },

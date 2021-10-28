@@ -9,7 +9,11 @@ from odoo.exceptions import ValidationError
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    aba_routing = fields.Char(string="ABA/Routing", help="American Bankers Association Routing Number")
+    aba_routing = fields.Char(
+        string="ABA/Routing",
+        groups="base.group_country_US",
+        help="American Bankers Association Routing Number",
+    )
 
     @api.constrains('aba_routing')
     def _check_aba_routing(self):

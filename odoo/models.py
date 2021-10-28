@@ -1487,6 +1487,8 @@ class BaseModel(metaclass=MetaModel):
                 # check: the group_no_one is effective in debug mode only
                 if user.has_group(group_ext_id) and request and request.session.debug:
                     return False
+            elif group_ext_id.startswith('base.group_country_'):
+                return group_ext_id[-2:] not in self.env.company.country_id.mapped('code')
             else:
                 if user.has_group(group_ext_id):
                     return False
@@ -1496,6 +1498,8 @@ class BaseModel(metaclass=MetaModel):
                 # check: the group_no_one is effective in debug mode only
                 if user.has_group(group_ext_id) and request and request.session.debug:
                     return True
+            elif group_ext_id.startswith('base.group_country_'):
+                return group_ext_id[-2:] in self.env.company.country_id.mapped('code')
             else:
                 if user.has_group(group_ext_id):
                     return True

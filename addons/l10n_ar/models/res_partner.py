@@ -13,22 +13,27 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_ar_vat = fields.Char(
+        groups='base.group_country_AR',
         compute='_compute_l10n_ar_vat', string="VAT", help='Computed field that returns VAT or nothing if this one'
         ' is not set for the partner')
     l10n_ar_formatted_vat = fields.Char(
+        groups='base.group_country_AR',
         compute='_compute_l10n_ar_formatted_vat', string="Formatted VAT", help='Computed field that will convert the'
         ' given VAT number to the format {person_category:2}-{number:10}-{validation_number:1}')
 
-    l10n_ar_gross_income_number = fields.Char('Gross Income Number')
+    l10n_ar_gross_income_number = fields.Char('Gross Income Number', groups='base.group_country_AR',)
     l10n_ar_gross_income_type = fields.Selection(
         [('multilateral', 'Multilateral'), ('local', 'Local'), ('exempt', 'Exempt')],
-        'Gross Income Type', help='Type of gross income: exempt, local, multilateral')
+        string='Gross Income Type',
+        groups='base.group_country_AR',
+        help='Type of gross income: exempt, local, multilateral')
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index=True, help='Defined by AFIP to'
+        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', groups='base.group_country_AR', index=True, help='Defined by AFIP to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
     l10n_ar_special_purchase_document_type_ids = fields.Many2many(
         'l10n_latam.document.type', 'res_partner_document_type_rel', 'partner_id', 'document_type_id',
+        groups='base.group_country_AR',
         string='Other Purchase Documents', help='Set here if this partner can issue other documents further than'
         ' invoices, credit notes and debit notes')
 
