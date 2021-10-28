@@ -50,11 +50,12 @@ class SaleOrder(models.Model):
             default['validity_date'] = fields.Date.context_today(self) + timedelta(self.sale_order_template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        super(SaleOrder, self).onchange_partner_id()
-        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
-        self.note = template.note if not is_html_empty(template.note) else self.note
+    @api.depends('partner_id')
+    def _compute_order_info_from_partner(self):
+        super(SaleOrder, self)._compute_order_info_from_partner()
+        for order in self:
+            template = order.sale_order_template_id.with_context(lang=order.partner_id.lang)
+            order.note = template.note if not is_html_empty(template.note) else order.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
