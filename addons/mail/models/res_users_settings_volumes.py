@@ -21,3 +21,17 @@ class ResUsersSettingsVolumes(models.Model):
     _sql_constraints = [
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A volume setting must have a partner or a guest."),
     ]
+
+    def _discuss_users_settings_volume_format(self):
+        return [{
+            'id': volume_setting.id,
+            'volume': volume_setting.volume,
+            'guest': [('insert-and-replace', {
+                'id': volume_setting.guest_id.id,
+                'name': volume_setting.guest_id.name,
+            })] if volume_setting.guest_id else [('clear',)],
+            'partner_id': [('insert-and-replace', {
+                'id': volume_setting.partner_id.id,
+                'name': volume_setting.partner_id.name,
+            })] if volume_setting.partner_id else [('clear',)]
+        } for volume_setting in self]
