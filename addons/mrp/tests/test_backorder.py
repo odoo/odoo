@@ -280,6 +280,35 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), nb_product_todo, f'You should have the {nb_product_todo} final product in stock')
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
+    def test_tracking_backorder_immediate_production_serial_1(self):
+        """ Create a MO to build 2 of a SN tracked product.
+        Build both the starting MO and its backorder as immediate productions
+        (i.e. Mark As Done without setting SN/filling any quantities)
+        """
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_final=2, tracking_final='serial', qty_base_1=2, qty_base_2=2)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 2.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 2.0)
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        res_dict = immediate_wizard.process()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.production.backorder')
+        backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+
+        # backorder should automatically open
+        action = backorder_wizard.save().action_backorder()
+        self.assertEqual(action.get('res_model'), 'mrp.production')
+        backorder_mo_form = Form(self.env[action['res_model']].with_context(action['context']).browse(action['res_id']))
+        backorder_mo = backorder_mo_form.save()
+        res_dict = backorder_mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        immediate_wizard.process()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, "Incorrect number of final product produced.")
+        self.assertEqual(len(self.env['stock.production.lot'].search([('product_id', '=', p_final.id)])), 2, "Serial Numbers were not correctly produced.")
+
     def test_backorder_name(self):
         def produce_one(mo):
             mo_form = Form(mo)
