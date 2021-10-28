@@ -512,7 +512,7 @@ class ResourceCalendar(models.Model):
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
 
-    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
         if not resources:
             resources = self.env['resource.resource']
@@ -521,10 +521,15 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources)
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz)
-        leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
-        return {
-            r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
-        }
+        if compute_leaves:
+            leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
+            return {
+                r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
+            }
+        else:
+            return {
+                r.id: attendance_intervals[r.id] for r in resources_list
+            }
 
     def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -598,7 +603,7 @@ class ResourceCalendar(models.Model):
                 day_total[start.date()] += (stop - start).total_seconds() / 3600
         return result
 
-    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None):
+    def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
         """Return the closest work interval boundary within the search range.
         Consider only starts of intervals unless `match_end` is True. It will then only consider
         ends of intervals.
@@ -626,7 +631,7 @@ class ResourceCalendar(models.Model):
         if not range_start <= dt <= range_end:
             return None
         work_intervals = sorted(
-            self._work_intervals_batch(range_start, range_end, resource)[resource.id],
+            self._work_intervals_batch(range_start, range_end, resource, compute_leaves=compute_leaves)[resource.id],
             key=lambda i: abs(interval_dt(i) - dt),
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
@@ -943,7 +948,7 @@ class ResourceResource(models.Model):
         # Deprecated method. Use `_adjust_to_calendar` instead
         return self._adjust_to_calendar(start, end)
 
-    def _adjust_to_calendar(self, start, end):
+    def _adjust_to_calendar(self, start, end, compute_leaves=True):
         """Adjust the given start and end datetimes to the closest effective hours encoded
         in the resource calendar. Only attendances in the same day as `start` and `end` are
         considered (respectively). If no attendance is found during that day, the closest hour
@@ -965,10 +970,12 @@ class ResourceResource(models.Model):
                 start + relativedelta(hour=0, minute=0, second=0),
                 end + relativedelta(days=1, hour=0, minute=0, second=0),
             ]
-            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource, search_range=search_range)
+            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource, search_range=search_range,
+                                                                         compute_leaves=compute_leaves)
             search_range[0] = start
             calendar_end = resource.calendar_id._get_closest_work_time(end if end > start else start, match_end=True,
-                                                                       resource=resource, search_range=search_range)
+                                                                       resource=resource, search_range=search_range,
+                                                                       compute_leaves=compute_leaves)
             result[resource] = (
                 calendar_start and revert_start_tz(calendar_start),
                 calendar_end and revert_end_tz(calendar_end),
