@@ -257,9 +257,8 @@ class PosSession(models.Model):
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
             if session.config_id.cash_control and not session.rescue:
-                last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
-                # last session includes the new one already.
-                self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real if len(last_sessions) > 1 else 0
+                last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
+                session.cash_register_id.balance_start = last_session.cash_register_id.balance_end_real if last_session else 0
                 values['state'] = 'opening_control'
             else:
                 values['state'] = 'opened'
