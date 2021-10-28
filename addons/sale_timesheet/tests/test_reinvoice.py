@@ -72,7 +72,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
         })
         sale_order_line2.product_id_change()
 
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         self.assertEqual(sale_order_line1.qty_delivered_method, 'timesheet', "Delivered quantity of 'service' SO line should be computed by timesheet amount")
@@ -174,7 +173,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
         })
         sale_order_line2.product_id_change()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # let's log some timesheets (on the project created by sale_order_line1)
@@ -259,7 +257,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'price_unit': self.company_data['product_order_no'].list_price,
             'order_id': self.sale_order.id,
         })
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it

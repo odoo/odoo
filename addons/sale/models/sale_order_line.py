@@ -134,6 +134,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
+    @api.depends('order_id.fiscal_position_id')
     def _compute_tax_id(self):
         for line in self:
             line = line.with_company(line.company_id)
@@ -242,7 +243,10 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
     price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    tax_id = fields.Many2many(
+        'account.tax', string='Taxes',
+        compute='_compute_tax_id', store=True, readonly=False,
+        domain=['|', ('active', '=', False), ('active', '=', True)])
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
@@ -625,8 +629,6 @@ class SaleOrderLine(models.Model):
         )
 
         vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
-
-        self._compute_tax_id()
 
         if self.order_id.pricelist_id and self.order_id.partner_id:
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)

@@ -120,14 +120,6 @@ class SaleOrder(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
-    @api.onchange('fiscal_position_id')
-    def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the SO.
-        """
-        for order in self:
-            order.order_line._compute_tax_id()
-
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
             self.env.cr.execute("""
