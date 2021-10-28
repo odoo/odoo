@@ -10,6 +10,7 @@
         <field name="name">GST amounts you owe the Tax Office from sales</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
+        <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_gstrpt_g1" model="account.tax.report.line">
@@ -86,7 +87,7 @@
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="10"/>
         <field name="formula">((G1-(G2+G3+G4))+G7)/11</field>
-        <field name="parent_id" ref="account_tax_report_gstrpt_sale_total"/>
+        <field name="parent_id" eval="False"/>
     </record>
 
     <!-- Purchase Report -->
@@ -94,6 +95,7 @@
         <field name="name">GST amounts the Tax Office owes you from purchases</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="101"/>
+        <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_gstrpt_g10" model="account.tax.report.line">
