@@ -504,8 +504,6 @@ class expression(object):
                 :var obj comodel: relational model of field (field.comodel)
                     (res_partner.bank_ids -> res.partner.bank)
         """
-        cr, uid, context, su = self.root_model.env.args
-
         def to_ids(value, comodel, leaf):
             """ Normalize a single id or name, or a list of those, into a list of ids
                 :param {int,long,basestring,list,tuple} value:
