@@ -58,7 +58,7 @@ class MrpStockReport(models.TransientModel):
         level = kw and kw['level'] or 1
         lines = self.env['stock.move.line']
         move_line = self.env['stock.move.line']
-        if rec_id and model == 'stock.production.lot':
+        if rec_id and model == 'stock.lot':
             lines = move_line.search([
                 ('lot_id', '=', context.get('lot_name') or rec_id),
                 ('state', '=', 'done'),
@@ -184,7 +184,7 @@ class MrpStockReport(models.TransientModel):
                 lines = self._get_move_lines(move_line, line_id=line_id)
         for line in lines:
             unfoldable = False
-            if line.consume_line_ids or ( line.lot_id and self._get_move_lines(line) and model != "stock.production.lot"):
+            if line.consume_line_ids or (line.lot_id and self._get_move_lines(line) and model != "stock.lot"):
                 unfoldable = True
             final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line, unfoldable=unfoldable)
         return final_vals

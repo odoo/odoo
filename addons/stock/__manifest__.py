@@ -69,7 +69,7 @@
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
         'views/product_views.xml',
-        'views/stock_production_lot_views.xml',
+        'views/stock_lot_views.xml',
         'views/stock_scrap_views.xml',
         'views/stock_quant_views.xml',
         'views/stock_location_views.xml',

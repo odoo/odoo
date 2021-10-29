@@ -3,8 +3,8 @@
 from collections import defaultdict
 from odoo import api, fields, models, _
 
-class ProductionLot(models.Model):
-    _inherit = 'stock.production.lot'
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
 
     repair_order_ids = fields.Many2many('repair.order', string="Repair Orders", compute="_compute_repair_order_ids")
     repair_order_count = fields.Integer('Repair order count', compute="_compute_repair_order_ids")

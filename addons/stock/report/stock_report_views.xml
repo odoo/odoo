@@ -61,12 +61,12 @@
         </record>
         <record id="action_report_lot_label" model="ir.actions.report">
             <field name="name">Lot/Serial Number (PDF)</field>
-            <field name="model">stock.production.lot</field>
+            <field name="model">stock.lot</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_lot_label</field>
             <field name="report_file">stock.report_lot_label</field>
             <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
-            <field name="binding_model_id" ref="model_stock_production_lot"/>
+            <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
         <record id="action_report_picking_type_label" model="ir.actions.report">
@@ -97,11 +97,11 @@
         </record>
         <record id="label_lot_template" model="ir.actions.report">
             <field name="name">Lot/Serial Number (ZPL)</field>
-            <field name="model">stock.production.lot</field>
+            <field name="model">stock.lot</field>
             <field name="report_type">qweb-text</field>
             <field name="report_name">stock.label_lot_template_view</field>
             <field name="report_file">stock.label_lot_template_view</field>
-            <field name="binding_model_id" ref="model_stock_production_lot"/>
+            <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
         <record id="label_package_template" model="ir.actions.report">

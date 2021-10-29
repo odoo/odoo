@@ -27,7 +27,7 @@ class TestStockFlow(TestStockCommon):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
-        LotObj = self.env['stock.production.lot']
+        LotObj = self.env['stock.lot']
         # ----------------------------------------------------------------------
         # Create incoming shipment of product A, B, C, D
         # ----------------------------------------------------------------------
@@ -1075,7 +1075,7 @@ class TestStockFlow(TestStockCommon):
         lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
         quant_obj = self.env['stock.quant'].with_context(inventory_mode=True)
         pack_obj = self.env['stock.quant.package']
-        lot_obj = self.env['stock.production.lot']
+        lot_obj = self.env['stock.lot']
         pack1 = pack_obj.create({'name': 'PACK00TEST1'})
         pack_obj.create({'name': 'PACK00TEST2'})
         lot1 = lot_obj.create({'name': 'Lot001', 'product_id': lotproduct.id, 'company_id': self.env.company.id})
@@ -1968,7 +1968,7 @@ class TestStockFlow(TestStockCommon):
 
         # Validates the two receipts and checks the move lines' lot.
         (receipt_1 | receipt_2).button_validate()
-        lots = self.env['stock.production.lot'].search([('product_id', '=', product_lot.id)], order='name asc')
+        lots = self.env['stock.lot'].search([('product_id', '=', product_lot.id)], order='name asc')
         self.assertEqual(len(lots), 5)
         lot1, lot2, lot3, lot4, lot5 = lots
         self.assertEqual(lot1.name, 'lot-001')

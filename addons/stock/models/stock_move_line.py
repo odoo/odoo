@@ -41,7 +41,7 @@ class StockMoveLine(models.Model):
         domain="[('location_id', '=', location_id)]")
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
@@ -161,7 +161,7 @@ class StockMoveLine(models.Model):
                     if counter.get(self.lot_name) and counter[self.lot_name] > 1:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                     elif not self.lot_id:
-                        lots = self.env['stock.production.lot'].search([('product_id', '=', self.product_id.id),
+                        lots = self.env['stock.lot'].search([('product_id', '=', self.product_id.id),
                                                                         ('name', '=', self.lot_name),
                                                                         ('company_id', '=', self.company_id.id)])
                         quants = lots.quant_ids.filtered(lambda q: q.quantity != 0 and q.location_id.usage in ['customer', 'internal', 'transit'])
@@ -312,7 +312,7 @@ class StockMoveLine(models.Model):
         triggers = [
             ('location_id', 'stock.location'),
             ('location_dest_id', 'stock.location'),
-            ('lot_id', 'stock.production.lot'),
+            ('lot_id', 'stock.lot'),
             ('package_id', 'stock.quant.package'),
             ('result_package_id', 'stock.quant.package'),
             ('owner_id', 'res.partner'),
@@ -520,7 +520,7 @@ class StockMoveLine(models.Model):
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
-                                lot = self.env['stock.production.lot'].search([
+                                lot = self.env['stock.lot'].search([
                                     ('company_id', '=', ml.company_id.id),
                                     ('product_id', '=', ml.product_id.id),
                                     ('name', '=', ml.lot_name),
@@ -625,7 +625,7 @@ class StockMoveLine(models.Model):
                 key_to_index[key] = len(lot_vals)
                 lot_vals.append(ml._prepare_new_lot_vals())
 
-        lots = self.env['stock.production.lot'].create(lot_vals)
+        lots = self.env['stock.lot'].create(lot_vals)
         for key, mls in key_to_mls.items():
             mls._assign_production_lot(lots[key_to_index[key]].with_prefetch(lots._ids))  # With prefetch to reconstruct the ones broke by accessing by index
 
@@ -645,7 +645,7 @@ class StockMoveLine(models.Model):
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
         if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
-            data['lot_name'] = self.env['stock.production.lot'].browse(vals.get('lot_id')).name
+            data['lot_name'] = self.env['stock.lot'].browse(vals.get('lot_id')).name
         if 'location_id' in vals:
             data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
         if 'location_dest_id' in vals:
