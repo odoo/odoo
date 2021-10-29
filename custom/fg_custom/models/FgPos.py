@@ -28,6 +28,7 @@ class PosOrder(models.Model):
     x_balance = fields.Float(string='Balance', readonly=True, compute='c_compute_disc')
     x_date_to = fields.Date(string='Date Until', readonly=True, compute='c_compute_disc')
     x_date_from = fields.Date(string='Date From', readonly=True, compute='c_compute_disc')
+    x_date_from1 = fields.Date(string='Date From', readonly=True, compute='c_compute_disc')  # to be removed
 
     @api.depends('lines.price_subtotal', 'lines.full_product_name')
     def c_amount_all(self):
@@ -40,9 +41,17 @@ class PosOrder(models.Model):
 
     @api.depends('lines.full_product_name')
     def c_compute_disc(self):
-        self.x_balance = 0
-        self.x_date_to = datetime.datetime.now() - relativedelta(weeks=0, weekday=6)
-        self.x_date_from = datetime.datetime.now() - relativedelta(weeks=1, weekday=6)
+        x_balance = 0
+        day_now = datetime.datetime.now().strftime("%A")
+        if day_now == "Monday":
+            x_date_to = datetime.datetime.now() - relativedelta(weeks=0, weekday=6)
+            x_date_from = datetime.datetime.now() - relativedelta(weeks=0, weekday=0)
+        elif day_now == "Sunday":
+            x_date_to = datetime.datetime.now() - relativedelta(weeks=0, weekday=6)
+            x_date_from = datetime.datetime.now() - relativedelta(weeks=1, weekday=0)
+        else:
+            x_date_to = datetime.datetime.now() - relativedelta(weeks=0, weekday=6)
+            x_date_from = datetime.datetime.now() - relativedelta(weeks=1, weekday=0)
 
         c_data = self.env['pos.order'].read_group([('partner_id', 'in', self.partner_id.ids), (
         'date_order', '>', datetime.datetime.now() - relativedelta(weeks=1, weekday=6)), ('date_order', '<=',
@@ -53,9 +62,10 @@ class PosOrder(models.Model):
         for orderr in self:
             orderr.x_balance = sum(pwd['x_total_so_pwd'] for pwd in c_data)
 
-        orderr.x_date_from = datetime.datetime.now() - relativedelta(weeks=0, weekday=0)
-        orderr.x_date_to = datetime.datetime.now() - relativedelta(weeks=0, weekday=6)
-        orderr.x_balance = 1300 - ((orderr.x_balance) * -1)
+        orderr.x_date_from = x_date_from  # week=0-current;week 1 -backward; -1 forward
+        orderr.x_date_to = x_date_to  # weekday 6 sunday ; 0 monday(start)
+        orderr.x_balance = 65 - ((orderr.x_balance) * -1)
+        orderr.x_date_from1 = datetime.datetime.now() - relativedelta(weeks=1, weekday=6)  # to be removed
 
     @api.model
     def _payment_fields(self, order, ui_paymentline):

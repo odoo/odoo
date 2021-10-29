@@ -33,6 +33,29 @@
         </field>
     </record>
 
+    <record id="pos_order_form_custom" model="ir.ui.view">
+        <field name="name">pos.order.form.custom</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <field name="amount_paid" position="after">
+                <field name="x_total_so_pwd" string="PWD Discount"/>
+            </field>
+            <field name="x_total_so_pwd" position="after">
+                <field name="x_balance" string="PWD Running Balance"/>
+            </field>
+            <field name="x_balance" position="after">
+                <field name="x_date_from" string="Date From"/>
+            </field>
+            <field name="x_date_from" position="after">
+                <field name="x_date_to" string="Date Until"/>
+            </field>
+            <field name="x_date_to" position="after">
+                <field name="x_date_from1" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
     <record id="pos_order_line_form_custom" model="ir.ui.view">
         <field name="name">pos.order.line.form.custom</field>
         <field name="model">pos.order.line</field>
