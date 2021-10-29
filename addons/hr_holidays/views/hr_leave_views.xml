@@ -210,6 +210,7 @@
             <field name="can_approve" invisible="1"/>
             <field name="can_cancel" invisible="1"/>
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
+            <field name="has_stress_day" invisible="1"/>
             <header>
                 <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('active', '=', False)]}"/>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
@@ -315,8 +316,10 @@
                                         'required': [('request_unit_hours', '=', True)],
                                         'invisible': [('request_unit_hours', '=', False)]}"/>
                             </div>
+                            <div class="o_row mb-2 alert alert-warning text-justify" role="alert" attrs="{'invisible': [('has_stress_day', '=', False)]}">
+                                Your time off request covers one (or more) stress days. Taking time off during stress days is not authorized.
+                            </div>
                         </div>
-
                         <!-- When the user is leave manager, he should always see `number_of_days` to allow
                         him to edit the value. `number_of_hours_display` is only an informative field -->
                         <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>

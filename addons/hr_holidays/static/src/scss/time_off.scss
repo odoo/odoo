@@ -44,4 +44,23 @@
             font-size: 0.85rem;
         }
     }
+
+    @for $size from 1 through length($o-colors) {
+        .hr_stress_day_#{$size - 1} {
+            background-color: lighten(nth($o-colors, $size), 25%) !important;
+        }
+    }
+}
+
+.o_timeoff_dashboard_popover {
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0px;
+    }
 }

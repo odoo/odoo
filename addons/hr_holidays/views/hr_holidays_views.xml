@@ -105,13 +105,21 @@
         groups="hr_holidays.group_hr_holidays_manager"
         sequence="2"/>
 
-    <menuitem   
+    <menuitem
         id="hr_holidays_public_time_off_menu_configuration"
         action="open_view_public_holiday"
         name="Public Holidays"
         parent="menu_hr_holidays_configuration"
         groups="hr_holidays.group_hr_holidays_manager"
         sequence="3"/>
+
+    <menuitem
+        id="hr_holidays_stress_day_menu_configuration"
+        action="hr_leave_stress_day_action"
+        name="Stress Days"
+        parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_manager"
+        sequence="4"/>
 
     <menuitem id="hr_holidays_menu_config_activity_type"
         action="mail_activity_type_action_config_hr_holidays"
