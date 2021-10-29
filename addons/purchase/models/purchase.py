@@ -579,7 +579,7 @@ class PurchaseOrder(models.Model):
             'narration': self.notes,
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
-            'partner_id': partner_invoice,
+            'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
             'partner_bank_id': self.partner_id.bank_ids[:1].id,

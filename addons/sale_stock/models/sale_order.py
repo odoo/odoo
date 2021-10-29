@@ -17,12 +17,6 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.model
-    def _default_warehouse_id(self):
-        # !!! Any change to the default value may have to be repercuted
-        # on _init_column() below.
-        return self.env.user._get_default_warehouse_id()
-
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
@@ -34,9 +28,10 @@ class SaleOrder(models.Model):
         ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_default_warehouse_id, check_company=True)
+        'stock.warehouse', string='Warehouse', required=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, pre_compute=True,
+        states={'sale': [('readonly', True)], 'done': [('readonly', False)], 'cancel': [('readonly', False)]},
+        check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
@@ -155,17 +150,19 @@ class SaleOrder(models.Model):
         for order in self:
             order.delivery_count = len(order.picking_ids)
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            warehouse_id = self.env['ir.default'].get_model_defaults('sale.order').get('warehouse_id')
-            self.warehouse_id = warehouse_id or self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
-
-    @api.onchange('user_id')
-    def onchange_user_id(self):
-        super().onchange_user_id()
-        if self.state in ['draft', 'sent']:
-            self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        default_warehouse_id = self.env['ir.default'].get_model_defaults('sale.order').get('warehouse_id')
+        for order in self:
+            if order.company_id and order.company_id != order._origin.company_id:
+                warehouse = default_warehouse_id
+            else:
+                warehouse = self.env['stock.warehouse']
+            if order.state in ['draft', 'sent']:
+                order.warehouse_id = warehouse or order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
+            # In case we create a record in another state (eg: demo data, or business code)
+            if not order.warehouse_id:
+                order.warehouse_id = self.env.user._get_default_warehouse_id()
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
