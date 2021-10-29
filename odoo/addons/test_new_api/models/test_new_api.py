@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
+import logging
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
@@ -1088,8 +1088,8 @@ class ModelChildM2o(models.Model):
     @api.depends('parent_id.name')
     def _compute_sizes(self):
         for record in self:
-            record.size1 = len(self.parent_id.name)
-            record.size2 = len(self.parent_id.name)
+            record.size1 = len(record.parent_id.name)
+            record.size2 = len(record.parent_id.name)
 
     @api.depends('name')
     def _compute_cost(self):
@@ -1390,3 +1390,124 @@ class TriggerRight(models.Model):
     def _compute_left_size(self):
         for record in self:
             record.left_size = len(record.left_ids)
+
+
+class Precompute(models.Model):
+    _name = 'test_new_api.precompute'
+    _description = 'model with precomputed fields'
+
+    name = fields.Char(required=True)
+
+    # both fields are precomputed
+    lower = fields.Char(compute='_compute_names', store=True, precompute=True)
+    upper = fields.Char(compute='_compute_names', store=True, precompute=True)
+
+    # precomputed that depends on precomputed fields
+    lowup = fields.Char(compute='_compute_lowup', store=True, precompute=True)
+
+    # kind of precomputed related field traversing a many2one
+    partner_id = fields.Many2one('res.partner')
+    commercial_id = fields.Many2one('res.partner', compute='_compute_commercial_id',
+                                    store=True, precompute=True)
+
+    # precomputed depending on one2many fields
+    line_ids = fields.One2many('test_new_api.precompute.line', 'parent_id')
+    size = fields.Integer(compute='_compute_size', store=True, precompute=True)
+
+    @api.depends('name')
+    def _compute_names(self):
+        for record in self:
+            record.lower = (record.name or "").lower()
+            record.upper = (record.name or "").upper()
+
+    @api.depends('lower', 'upper')
+    def _compute_lowup(self):
+        for record in self:
+            record.lowup = record.lower + record.upper
+
+    @api.depends('partner_id.commercial_partner_id')
+    def _compute_commercial_id(self):
+        for record in self:
+            record.commercial_id = record.partner_id.commercial_partner_id
+
+    @api.depends('line_ids.size')
+    def _compute_size(self):
+        for record in self:
+            record.size = sum(record.line_ids.mapped('size'))
+
+
+class PrecomputeLine(models.Model):
+    _name = 'test_new_api.precompute.line'
+    _description = 'secondary model with precomputed fields'
+
+    parent_id = fields.Many2one('test_new_api.precompute')
+    name = fields.Char(required=True)
+    size = fields.Integer(compute='_compute_size', store=True, precompute=True)
+
+    @api.depends('name')
+    def _compute_size(self):
+        for line in self:
+            line.size = len(line.name or "")
+
+
+class PrecomputeCombo(models.Model):
+    _name = 'test_new_api.precompute.combo'
+    _description = 'yet another model with precomputed fields'
+
+    _logger = logging.getLogger('precompute_setter')
+
+    name = fields.Char()
+    reader = fields.Char(compute='_compute_reader', precompute=True, store=True)
+    editer = fields.Char(compute='_compute_editer', precompute=True, store=True, readonly=False)
+    setter = fields.Char(compute='_compute_setter', precompute=True, inverse='_inverse_setter', store=True)
+
+    @api.depends('name')
+    def _compute_reader(self):
+        for record in self:
+            record.reader = record.name
+
+    @api.depends('name')
+    def _compute_editer(self):
+        for record in self:
+            record.editer = record.name
+
+    @api.depends('name')
+    def _compute_setter(self):
+        for record in self:
+            record.setter = record.name
+
+    def _inverse_setter(self):
+        self._logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
+
+
+class PrecomputeEditable(models.Model):
+    _name = 'test_new_api.precompute.editable'
+    _description = 'yet another model with precomputed editable fields'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', precompute=True, store=True, readonly=False)
+    baz = fields.Char(compute='_compute_baz', precompute=True, store=True, readonly=False)
+    baz2 = fields.Char(compute='_compute_baz2', precompute=True, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        self.bar = "COMPUTED"
+
+    @api.depends('bar')
+    def _compute_baz(self):
+        self.baz = "COMPUTED"
+
+    @api.depends('baz')
+    def _compute_baz2(self):
+        # this field is a trick to get the value of baz if it ever is recomputed
+        # during the precomputation of bar
+        for record in self:
+            record.baz2 = record.baz
+
+
+class PrecomputeRequired(models.Model):
+    _name = 'test_new_api.precompute.required'
+    _description = 'a model with precomputed required fields'
+
+    partner_id = fields.Many2one('res.partner', required=True)
+    name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)

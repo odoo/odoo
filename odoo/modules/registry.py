@@ -321,6 +321,9 @@ class Registry(Mapping):
                 if len({field.compute_sudo for field in fields}) > 1:
                     _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
                                     model_name, ", ".join(field.name for field in fields))
+                if len({field.precompute for field in fields}) > 1:
+                    _logger.warning("%s: inconsistent 'precompute' for computed fields: %s",
+                                    model_name, ", ".join(field.name for field in fields))
         return computed
 
     @lazy_property

@@ -2840,17 +2840,17 @@ class BaseModel(metaclass=MetaModel):
                     continue            # don't update custom fields
                 new = field.update_db(self, columns)
                 if new and field.compute:
-                    fields_to_compute.append(field.name)
+                    fields_to_compute.append(field)
 
             if fields_to_compute:
-                @self.pool.post_init
-                def mark_fields_to_compute():
-                    recs = self.with_context(active_test=False).search([], order='id')
-                    if not recs:
-                        return
-                    for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s.%s", recs._name, field)
-                        self.env.add_to_compute(recs._fields[field], recs)
+                # mark existing records for computation now, so that computed
+                # required fields are flushed before the NOT NULL constraint is
+                # added to the database
+                cr.execute('SELECT id FROM "{}"'.format(self._table))
+                records = self.browse(row[0] for row in cr.fetchall())
+                for field in fields_to_compute:
+                    _logger.info("Prepare computation of %s", field)
+                    self.env.add_to_compute(field, records)
 
         if self._auto:
             self._add_sql_constraints()
@@ -4000,28 +4000,14 @@ Fields:
         self = self.browse()
         self.check_access_rights('create')
 
-        bad_names = {'id', 'parent_path'}
-        if self._log_access:
-            # the superuser can set log_access fields while loading registry
-            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
-                bad_names.update(LOG_ACCESS_COLUMNS)
+        vals_list = self._prepare_create_values(vals_list)
 
         # classify fields for each record
         data_list = []
         inversed_fields = set()
 
         for vals in vals_list:
-            # add missing defaults
-            vals = self._add_missing_default_values(vals)
-
-            # set magic fields
-            for name in bad_names:
-                vals.pop(name, None)
-            if self._log_access:
-                vals.setdefault('create_uid', self.env.uid)
-                vals.setdefault('create_date', self.env.cr.now())
-                vals.setdefault('write_uid', self.env.uid)
-                vals.setdefault('write_date', self.env.cr.now())
+            precomputed = vals.pop('__precomputed__', ())
 
             # distribute fields into sets for various purposes
             data = {}
@@ -4047,11 +4033,12 @@ Fields:
                     stored[key] = val
                 if field.inherited:
                     inherited[field.related_field.model_name][key] = val
-                elif field.inverse:
+                elif field.inverse and field not in precomputed:
                     inversed[key] = val
                     inversed_fields.add(field)
-                # protect non-readonly computed fields against (re)computation
-                if field.compute and not field.readonly:
+                # protect editable computed fields and precomputed fields
+                # against (re)computation
+                if field.compute and (not field.readonly or field.precompute):
                     protected.update(self.pool.field_computed.get(field, [field]))
 
             data_list.append(data)
@@ -4117,6 +4104,88 @@ Fields:
         if self._check_company_auto:
             records._check_company()
         return records
+
+    def _prepare_create_values(self, vals_list):
+        """ Clean up and complete the given create values, and return a list of
+        new vals containing:
+
+        * default values,
+        * discarded forbidden values (magic fields),
+        * precomputed fields.
+
+        :param list vals_list: List of create values
+        :returns: new list of completed create values
+        :rtype: dict
+        """
+        bad_names = ['id', 'parent_path']
+        if self._log_access:
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.extend(LOG_ACCESS_COLUMNS)
+
+        # also discard precomputed readonly fields (to force their computation)
+        bad_names.extend(
+            fname
+            for fname, field in self._fields.items()
+            if field.precompute and field.readonly
+        )
+
+        result_vals_list = []
+        for vals in vals_list:
+            # add default values
+            vals = self._add_missing_default_values(vals)
+
+            # add magic fields
+            for fname in bad_names:
+                vals.pop(fname, None)
+            if self._log_access:
+                vals.setdefault('create_uid', self.env.uid)
+                vals.setdefault('create_date', self.env.cr.now())
+                vals.setdefault('write_uid', self.env.uid)
+                vals.setdefault('write_date', self.env.cr.now())
+
+            result_vals_list.append(vals)
+
+        # add precomputed fields
+        self._add_precomputed_values(result_vals_list)
+
+        return result_vals_list
+
+    def _add_precomputed_values(self, vals_list):
+        """ Add missing precomputed fields to ``vals_list`` values.
+        Only applies for precompute=True fields.
+
+        :param dict vals_list: list(dict) of create values
+        """
+        precomputable = {
+            fname: field
+            for fname, field in self._fields.items()
+            if field.precompute
+        }
+        if not precomputable:
+            return
+
+        # determine which vals must be completed
+        vals_list_todo = [
+            vals
+            for vals in vals_list
+            if any(fname not in vals for fname in precomputable)
+        ]
+        if not vals_list_todo:
+            return
+
+        # create new records for the vals that must be completed
+        records = self.browse().concat(*(self.new(vals) for vals in vals_list_todo))
+
+        for record, vals in zip(records, vals_list_todo):
+            vals['__precomputed__'] = precomputed = set()
+            for fname, field in precomputable.items():
+                if fname not in vals:
+                    # computed stored fields with a column
+                    # have to be computed before create
+                    # s.t. required and constraints can be applied on those fields.
+                    vals[fname] = field.convert_to_write(record[fname], self)
+                    precomputed.add(field)
 
     @api.model
     def _create(self, data_list):

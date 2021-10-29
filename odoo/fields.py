@@ -187,6 +187,18 @@ class Field(MetaField('DummyField', (object,), {})):
 
         .. seealso:: :ref:`Advanced Fields/Compute fields <reference/fields/compute>`
 
+    :param bool precompute: whether the field should be computed before record insertion
+        in database.  Should be used to specify manually some fields as precompute=True
+        when the field can be computed before record insertion.
+        (e.g. avoid statistics fields based on search/read_group), many2one
+        linking to the previous record, ... (default: `False`)
+
+        .. warning::
+
+            Precompute only happens if no explicit value and no default value is
+            provided to create(). This means that a default value disables the
+            precomputation, even if the field is specified as precompute=True.
+
     :param bool compute_sudo: whether the field should be recomputed as superuser
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
@@ -236,6 +248,7 @@ class Field(MetaField('DummyField', (object,), {})):
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
+    precompute = False                  # whether field has to be computed before creation
     inverse = None                      # inverse(recs) inverses field on recs
     search = None                       # search(recs, operator, value) searches on self
     related = None                      # sequence of field names, for related fields
@@ -244,7 +257,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False             # whether the field is invisible
+    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -384,6 +397,13 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
+        if attrs.get('precompute'):
+            if not attrs.get('compute') and not attrs.get('related'):
+                warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}")
+                attrs['precompute'] = False
+            elif not attrs.get('store'):
+                warnings.warn(f"precompute attribute has no impact on non stored field {self}")
+                attrs['precompute'] = False
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored, not computed
             # in superuser mode and not copied
@@ -701,6 +721,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for dotnames in registry.field_depends[self]:
             field_seq = []
             model_name = self.model_name
+            check_precompute = self.precompute
 
             for index, fname in enumerate(dotnames.split('.')):
                 Model = registry[model_name]
@@ -720,6 +741,12 @@ class Field(MetaField('DummyField', (object,), {})):
                     self.recursive = True
                     warnings.warn(f"Field {self} should be declared with recursive=True")
 
+                # precomputed fields can depend on non-precomputed ones, as long
+                # as they are reachable through at least one many2one field
+                if check_precompute and field.store and field.compute and not field.precompute:
+                    warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}")
+                    self.precompute = False
+
                 field_seq.append(field)
 
                 # do not make self trigger itself: for instance, a one2many
@@ -731,6 +758,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 if field.type in ('one2many', 'many2many'):
                     for inv_field in Model.pool.field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
+
+                if check_precompute and field.type == 'many2one':
+                    check_precompute = False
 
                 model_name = field.comodel_name
 
