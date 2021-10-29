@@ -263,6 +263,10 @@ class MailRenderMixin(models.AbstractModel):
                               add_context=None, options=None):
         """ Render a raw QWeb template.
 
+        In addition to the generic evaluation context available, some other
+        variables are added:
+          * ``object``: record based on which the template is rendered;
+
         :param str template_src: raw QWeb template to render;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
@@ -273,9 +277,11 @@ class MailRenderMixin(models.AbstractModel):
         :param dict options: options for rendering (not used currently);
 
         :return dict: {res_id: string of rendered template based on record}
-
-        :notice: Experimental. Use at your own risks only.
         """
+        # prevent wrong values (rendering on a void record set, ...)
+        if any(r is None for r in res_ids):
+            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
+
         results = dict.fromkeys(res_ids, u"")
         if not template_src:
             return results

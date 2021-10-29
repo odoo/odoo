@@ -347,8 +347,6 @@ class TestComposerInternals(TestMailComposer):
 
             # changing template should update its content
             composer.write({'template_id': self.template.id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -368,8 +366,6 @@ class TestComposerInternals(TestMailComposer):
 
             # reset template should reset values
             composer.write({'template_id': False})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values are reset
             if composition_mode == 'comment':
@@ -380,8 +376,7 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                 self.assertEqual(composer.record_name, self.test_record.name)
             else:
-                # values are reset TDE FIXME: strange for subject
-                self.assertEqual(composer.subject, 'Back to my amazing subject')
+                self.assertFalse(composer.subject)
                 self.assertFalse(composer.body)
                 # TDE FIXME: server id is kept, not sure why
                 # self.assertFalse(composer.mail_server_id.id)
@@ -393,8 +388,6 @@ class TestComposerInternals(TestMailComposer):
             composer = self.env['mail.compose.message'].with_context(ctx).create({
                 'template_id': self.template.id,
             })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -413,8 +406,6 @@ class TestComposerInternals(TestMailComposer):
             composer = self.env['mail.compose.message'].with_context(ctx).create({
                 'template_id': self.template.id,
             })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -632,7 +623,7 @@ class TestComposerInternals(TestMailComposer):
         composer._onchange_template_id_wrapper()
         composer._action_send_mail()
 
-        self.assertEqual(self.test_record.message_ids[0].subject, 'TemplateSubject TestRecord')
+        self.assertEqual(self.test_record.message_ids[0].subject, 'Template Subject')
         self.assertEqual(
             sorted(self.test_record.message_ids[0].attachment_ids.mapped('name')),
             sorted(template_1_attachment_name))
