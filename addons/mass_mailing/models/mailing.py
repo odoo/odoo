@@ -30,7 +30,7 @@ class MassMailing(models.Model):
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
-    _order = 'sent_date DESC'
+    _order = 'calendar_date DESC'
     _inherits = {'utm.source': 'source_id'}
     _rec_name = "subject"
 
