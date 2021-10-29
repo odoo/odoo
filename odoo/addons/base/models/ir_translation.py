@@ -861,7 +861,7 @@ class IrTranslation(models.Model):
             mods = [x['name'] for x in self.env['ir.module.module'].sudo().search_read(
                 [('state', '=', 'installed')], ['name'])]
         if not lang:
-            lang = self._context["lang"]
+            lang = self._context.get("lang")
         langs = self.env['res.lang']._lang_get(lang)
         lang_params = None
         if langs:

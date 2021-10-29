@@ -713,4 +713,5 @@ class Web_Editor(http.Controller):
         document.check_access_rule('write')
 
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
-        request.env['bus.bus'].sendone(channel, bus_data)
+        bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
+        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)

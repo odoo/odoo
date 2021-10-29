@@ -15,15 +15,12 @@ var SnailmailAccountNotificationManager =  AbstractService.extend({
         this.call('bus_service', 'onNotification', this, this._onNotification);
     },
 
-    _onNotification: function (notifs) {
-        var self = this;
-        _.each(notifs, function (notif) {
-            var model = notif[0][1];
-            var type = notif[1].type;
-            if (model === 'res.partner' && type === 'snailmail_invalid_address') {
-                self.displayNotification({ title: notif[1].title, message: notif[1].message, type: 'danger' });
+    _onNotification: function(notifications) {
+        for (const { payload, type } of notifications) {
+            if (type === "snailmail_invalid_address") {
+                this.displayNotification({ title: payload.title, message: payload.message, type: 'danger' });
             }
-        });
+        }
     }
 
 });

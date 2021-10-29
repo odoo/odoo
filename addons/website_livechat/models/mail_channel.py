@@ -21,13 +21,13 @@ class MailChannel(models.Model):
         if self.livechat_active and not self.message_ids:
             self.unlink()
 
-    def channel_info(self, extra_info=False):
+    def channel_info(self):
         """
         Override to add visitor information on the mail channel infos.
         This will be used to display a banner with visitor informations
         at the top of the livechat channel discussion view in discuss module.
         """
-        channel_infos = super(MailChannel, self).channel_info(extra_info)
+        channel_infos = super().channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             visitor = channel.livechat_visitor_id

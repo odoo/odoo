@@ -26,7 +26,8 @@ class Http(models.AbstractModel):
         user = request.env.user
         version_info = odoo.service.common.exp_version()
 
-        user_context = request.session.get_context() if request.session.uid else {}
+        session_uid = request.session.uid
+        user_context = request.session.get_context() if session_uid else {}
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
         max_file_upload_size = int(IrConfigSudo.get_param(
             'web.max_file_upload_size',
@@ -36,10 +37,10 @@ class Http(models.AbstractModel):
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang)
         session_info = {
-            "uid": request.session.uid,
-            "is_system": user._is_system() if request.session.uid else False,
-            "is_admin": user._is_admin() if request.session.uid else False,
-            "user_context": request.session.get_context() if request.session.uid else {},
+            "uid": session_uid,
+            "is_system": user._is_system() if session_uid else False,
+            "is_admin": user._is_admin() if session_uid else False,
+            "user_context": user_context,
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
@@ -47,8 +48,8 @@ class Http(models.AbstractModel):
             "name": user.name,
             "username": user.login,
             "partner_display_name": user.partner_id.display_name,
-            "company_id": user.company_id.id if request.session.uid else None,  # YTI TODO: Remove this from the user context
-            "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
+            "company_id": user.company_id.id if session_uid else None,  # YTI TODO: Remove this from the user context
+            "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
             'profile_session': request.session.profile_session,

@@ -55,6 +55,7 @@ const Wysiwyg = Widget.extend({
         this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
+        this.customizableLinksSelector = 'a:not([data-toggle="tab"]):not([data-toggle="collapse"])';
     },
     /**
      *
@@ -185,7 +186,7 @@ const Wysiwyg = Widget.extend({
 
             self.openMediaDialog(params);
         });
-        this.$editable.on('dblclick', 'a', function (ev) {
+        this.$editable.on('dblclick', this.customizableLinksSelector, function (ev) {
             if (!this.getAttribute('data-oe-model') && self.toolbar.$el.is(':visible')) {
                 self.showTooltip = false;
                 self.toggleLinkTools({
@@ -252,14 +253,14 @@ const Wysiwyg = Widget.extend({
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
         this.call('bus_service', 'onNotification', this, (notifications) => {
-            for (const [channel, busData] of notifications) {
+            for (const { payload, type } of notifications) {
                 if (
-                    channel[1] === 'editor_collaboration' &&
-                    channel[2] === modelName &&
-                    channel[3] === fieldName &&
-                    channel[4] === resId
+                    type === 'editor_collaboration' &&
+                    payload.model_name === modelName &&
+                    payload.field_name === fieldName &&
+                    payload.res_id === resId
                 ) {
-                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(busData));
+                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
                 }
             }
         });
@@ -827,6 +828,10 @@ const Wysiwyg = Widget.extend({
      * @param {boolean} [options.noFocusUrl=false] Disable the automatic focusing of the URL field.
      */
     toggleLinkTools(options = {}) {
+        const linkEl = getInSelection(this.odooEditor.document, 'a');
+        if (linkEl && !linkEl.matches(this.customizableLinksSelector)) {
+            return;
+        }
         if (this.snippetsMenu && !options.forceDialog) {
             if (this.linkTools) {
                 this.linkTools.destroy();
@@ -1344,7 +1349,7 @@ const Wysiwyg = Widget.extend({
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
-        const link = getInSelection(this.odooEditor.document, 'a');
+        const link = getInSelection(this.odooEditor.document, this.customizableLinksSelector);
         if (isInMedia || link) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
