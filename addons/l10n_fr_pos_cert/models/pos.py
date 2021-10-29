@@ -14,9 +14,12 @@ class pos_config(models.Model):
     _inherit = 'pos.config'
 
     def open_ui(self):
-        for config in self.filtered(lambda c: c.company_id._is_accounting_unalterable()):
-            if config.current_session_id:
-                config.current_session_id._check_session_timing()
+        for config in self:
+            if not config.company_id.country_id:
+                raise UserError(_("You have to set a country in your company setting."))
+            if config.company_id._is_accounting_unalterable():
+                if config.current_session_id:
+                    config.current_session_id._check_session_timing()
         return super(pos_config, self).open_ui()
 
 
