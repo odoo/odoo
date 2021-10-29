@@ -27,8 +27,10 @@ class MailComposer(models.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
+        TDE FIXME: get_record_data was adding partner ids
+
         The behavior of the wizard depends on the composition_mode field:
-        - 'comment': post on a record. The wizard is pre-populated via ``get_record_data``
+        - 'comment': post on a record.
         - 'mass_mail': wizard in mass mailing mode where the mail details can
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
@@ -56,14 +58,9 @@ class MailComposer(models.TransientModel):
 
         result = super(MailComposer, self).default_get(fields)
 
-        if 'model' in fields and 'model' not in result:
-            result['model'] = self._context.get('active_model')
-        if 'res_id' in fields and 'res_id' not in result:
-            result['res_id'] = self._context.get('active_id')
-
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             result['active_domain'] = '%s' % self._context.get('active_domain')
-        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name'])):
+        if result.get('composition_mode') == 'comment' and (set(fields) & set(['partner_ids'])):
             result.update(self.get_record_data(result))
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
@@ -98,9 +95,11 @@ class MailComposer(models.TransientModel):
         ('comment', 'Post on a document'),
         ('mass_mail', 'Email Mass Mailing'),
         ('mass_post', 'Post on Multiple Documents')], string='Composition mode', default='comment')
-    model = fields.Char('Related Document Model')
-    res_id = fields.Integer('Related Document ID')
-    record_name = fields.Char('Message Record Name')
+    model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
+    res_id = fields.Integer('Related Document ID', compute='_compute_res_id', readonly=False, store=True)
+    record_name = fields.Char(
+        'Message Record Name',
+        compute='_compute_record_name', readonly=False, store=True)
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
@@ -193,6 +192,33 @@ class MailComposer(models.TransientModel):
                 if not composer.email_from:
                     composer.email_from = author.email_formatted
 
+    @api.depends('composition_mode', 'parent_id')
+    @api.depends_context('active_model', 'default_model')
+    def _compute_model(self):
+        for composer in self:
+            if composer.parent_id and composer.composition_mode == 'comment':
+                composer.model = composer.parent_id.model
+            else:
+                composer.model = self.env.context.get('default_model', self.env.context.get('active_model', False))
+
+    @api.depends('composition_mode', 'parent_id')
+    @api.depends_context('active_id', 'default_res_id')
+    def _compute_res_id(self):
+        for composer in self:
+            if composer.parent_id and composer.composition_mode == 'comment':
+                composer.res_id = composer.parent_id.res_id
+            else:
+                composer.res_id = self.env.context.get('default_res_id', self.env.context.get('active_id', 0))
+
+    @api.depends('composition_mode', 'model', 'parent_id', 'res_id')
+    def _compute_record_name(self):
+        for composer in self:
+            if not composer.record_name:
+                if composer.parent_id and composer.composition_mode == 'comment' and composer.parent_id.record_name:
+                    composer.record_name = composer.parent_id.record_name
+                elif composer.composition_mode == 'comment' and composer.model and composer.res_id:
+                    composer.record_name = self.env[composer.model].browse(composer.res_id).display_name
+
     @api.depends('template_id', 'composition_mode', 'model', 'res_id')
     def _compute_reply_to(self):
         for composer in self:
@@ -254,16 +280,8 @@ class MailComposer(models.TransientModel):
         result = {}
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
-            result['record_name'] = parent.record_name
-            if not values.get('model'):
-                result['model'] = parent.model
-            if not values.get('res_id'):
-                result['res_id'] = parent.res_id
             partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
             result['partner_ids'] = partner_ids
-        elif values.get('model') and values.get('res_id'):
-            doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
-            result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
 
         return result
 
@@ -641,7 +659,7 @@ class MailComposer(models.TransientModel):
                 default_composition_mode=composition_mode,
                 default_model=model,
                 default_res_id=res_id
-            ).default_get(['composition_mode', 'model', 'res_id', 'parent_id',
+            ).default_get(['composition_mode', 'parent_id',
                            'partner_ids',
                            'attachment_ids',
                           ])
