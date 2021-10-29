@@ -104,6 +104,23 @@ export const TimeOffCalendarController = CalendarController.extend({
         }
     },
 
+    _update() {
+        return this._super(...arguments).then(() => {
+            this._rpc({
+                model: 'hr.leave.stress.day',
+                method: 'get_stress_days',
+                args: [this.model.data.start_date, this.model.data.end_date],
+                context: this.context,
+            }).then((stressDays) => {
+                this.$el.find('td.fc-day').toArray().forEach((td) => {
+                    if (stressDays[td.dataset.date]) {
+                        td.classList.add('hr_stress_day_' + stressDays[td.dataset.date]);
+                    }
+                });
+            });
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

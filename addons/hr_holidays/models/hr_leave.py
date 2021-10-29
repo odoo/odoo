@@ -278,6 +278,7 @@ class HolidaysRequest(models.Model):
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
+    has_stress_day = fields.Boolean(compute='_compute_has_stress_day')
 
     _sql_constraints = [
         ('type_value',
@@ -519,6 +520,34 @@ class HolidaysRequest(models.Model):
                     holiday.department_id = self.env.user.employee_id.department_id
             else:
                 holiday.department_id = False
+
+    @api.depends('date_from', 'date_to', 'holiday_status_id')
+    def _compute_has_stress_day(self):
+        date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
+        resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
+        if date_from and date_to:
+            stress_days = self.env['hr.leave.stress.day'].search([
+                ('start_date', '<=', date_to.date()),
+                ('end_date', '>=', date_from.date()),
+                '|',
+                    ('resource_calendar_id', '=', False),
+                    ('resource_calendar_id', 'in', resource_calendar_id.ids),
+            ])
+
+            for leave in self:
+                domain = [
+                    ('start_date', '<=', leave.date_to.date()),
+                    ('end_date', '>=', leave.date_from.date()),
+                    '|',
+                        ('resource_calendar_id', '=', False),
+                        ('resource_calendar_id', '=', (leave.employee_id.resource_calendar_id or self.env.company.resource_calendar_id).id)
+                ]
+
+                if leave.holiday_status_id.company_id:
+                    domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
+                leave.has_stress_day = leave.date_from and leave.date_to and stress_days.filtered_domain(domain)
+        else:
+            self.has_stress_day = False
 
     @api.depends('date_from', 'date_to', 'employee_id')
     def _compute_number_of_days(self):
@@ -899,6 +928,12 @@ class HolidaysRequest(models.Model):
                         leave_type=leave.holiday_status_id.display_name,
                         date=vstop
                     ))
+
+    @api.constrains('date_from', 'date_to')
+    def _check_stress_day(self):
+        is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        if not is_leave_user and any(leave.has_stress_day for leave in self):
+            raise ValidationError(_('You are not allowed to request a time off on a Stress Day.'))
 
     def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
