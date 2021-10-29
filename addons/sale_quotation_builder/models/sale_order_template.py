@@ -31,10 +31,10 @@ class SaleOrderTemplateLine(models.Model):
             self.website_description = self.product_id.quotation_description
         return ret
 
-    @api.model
-    def create(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderTemplateLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
+        return super(SaleOrderTemplateLine, self).create(vals_list)
 
     def write(self, values):
         values = self._inject_quotation_description(values)
