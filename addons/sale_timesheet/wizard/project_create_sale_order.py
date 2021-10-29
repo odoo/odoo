@@ -119,7 +119,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
         })
         # rewrite the user as the onchange_partner_id erases it
         sale_order.write({'user_id': self.project_id.user_id.id})
-        sale_order.onchange_user_id()
 
         # create the sale lines, the map (optional), and assign existing timesheet to sale lines
         self._make_billable(sale_order)

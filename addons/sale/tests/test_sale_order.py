@@ -534,7 +534,6 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_in_team
-        sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
 
     def test_keep_sales_team_when_changing_user_with_no_team(self):
@@ -544,7 +543,6 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_not_in_team
-        sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
 
     def test_onchange_packaging_00(self):

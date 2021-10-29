@@ -117,10 +117,6 @@ class SaleOrder(models.Model):
             return _('Terms & Conditions: %s', baseurl)
         return use_invoice_terms and self.env.company.invoice_terms or ''
 
-    @api.model
-    def _get_default_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
             self.env.cr.execute("""
@@ -179,30 +175,31 @@ class SaleOrder(models.Model):
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
 
     user_id = fields.Many2one(
-        'res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user,
-        compute='_compute_order_info_from_partner', store=True, readonly=False,
+        'res.users', string='Salesperson', index=True, tracking=2,
+        compute='_compute_user_id', store=True, readonly=False, pre_compute=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', readonly=True, pre_compute=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        'res.partner', string='Customer', readonly=False, pre_compute=True,
+        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         required=True, change_default=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
         readonly=False, required=True, pre_compute=True,
-        states={'draft': [('done', True)], 'cancel': [('readonly', True)]},
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         compute='_compute_order_info_from_partner', store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
         'res.partner', string='Delivery Address', readonly=False, required=True,
-        states={'draft': [('done', True)], 'cancel': [('readonly', True)]},
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         compute='_compute_order_info_from_partner', store=True, pre_compute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
-        required=True, readonly=True, pre_compute=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=False, readonly=False, store=True, 
+        compute='_compute_order_info_from_partner', pre_compute=True,
+        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
@@ -253,8 +250,8 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
         ondelete="set null", tracking=True,
-        compute='_compute_order_info_from_partner', store=True, readonly=False,
-        change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
+        compute='_compute_team_id', store=True, readonly=False, pre_compute=True,
+        change_default=True, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     signature = fields.Image('Signature', help='Signature received through the portal.', copy=False, attachment=True, max_width=1024, max_height=1024)
@@ -440,18 +437,12 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
 
             addr = order.partner_id.address_get(['delivery', 'invoice'])
-            partner_user = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id
             values = {
                 'pricelist_id': order.partner_id.property_product_pricelist and order.partner_id.property_product_pricelist.id or False,
                 'payment_term_id': order.partner_id.property_payment_term_id and order.partner_id.property_payment_term_id.id or False,
                 'partner_invoice_id': addr['invoice'],
                 'partner_shipping_id': addr['delivery'],
             }
-            user_id = partner_user.id
-            if not self.env.context.get('not_self_saleperson'):
-                user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
-            if user_id and order.user_id.id != user_id:
-                values['user_id'] = user_id
 
             if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
                 if order.terms_type == 'html' and self.env.company.invoice_terms_html:
@@ -459,18 +450,22 @@ class SaleOrder(models.Model):
                     values['note'] = _('Terms & Conditions: %s', baseurl)
                 elif not is_html_empty(self.env.company.invoice_terms):
                     values['note'] = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
-            if not self.env.context.get('not_self_saleperson') or not order.team_id:
-                values['team_id'] = self.env['crm.team'].with_context(
-                    default_team_id=order.partner_id.team_id.id
-                )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
             order.update(values)
 
-    @api.onchange('user_id')
-    def onchange_user_id(self):
-        if self.user_id:
-            self.team_id = self.env['crm.team'].with_context(
-                default_team_id=self.team_id.id
-            )._get_default_team_id(user_id=self.user_id.id, domain=None)
+    @api.depends('partner_id')
+    def _compute_user_id(self):
+        for order in self:
+            order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or self.env.user
+
+    @api.depends('partner_id', 'user_id')
+    def _compute_team_id(self):
+        for order in self:
+            order.team_id = self.env['crm.team'].with_context(
+                default_team_id=(order.team_id or order.partner_id.team_id).id
+            )._get_default_team_id(
+                user_id=self.user_id.id,
+                domain=[('company_id', 'in', [self.company_id.id, False])]
+            )
 
     @api.onchange('partner_id')
     def _onchange_partner_id_warning(self):
