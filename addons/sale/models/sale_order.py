@@ -182,25 +182,26 @@ class SaleOrder(models.Model):
         compute='_compute_order_info_from_partner', store=True, readonly=False,
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', readonly=True,
+        'res.partner', string='Customer', readonly=True, pre_compute=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         required=True, change_default=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
-        readonly=False, required=True,
+        readonly=False, required=True, pre_compute=True,
         states={'draft': [('done', True)], 'cancel': [('readonly', True)]},
         compute='_compute_order_info_from_partner', store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
         'res.partner', string='Delivery Address', readonly=False, required=True,
         states={'draft': [('done', True)], 'cancel': [('readonly', True)]},
-        compute='_compute_order_info_from_partner', store=True,
+        compute='_compute_order_info_from_partner', store=True, pre_compute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=True, readonly=True, pre_compute=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
