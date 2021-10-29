@@ -635,7 +635,7 @@ class TestPacking(TestPackingCommon):
         """ Create a simple move in a delivery. Reserve the quantity but set as quantity done only a part.
         Call Put In Pack button. """
         self.productA.tracking = 'lot'
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '00001',
             'company_id': self.warehouse.company_id.id

@@ -67,7 +67,7 @@ class StockQuant(models.Model):
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number', index=True,
+        'stock.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
@@ -185,7 +185,7 @@ class StockQuant(models.Model):
             # Create an empty quant or write on a similar one.
             product = self.env['product.product'].browse(vals['product_id'])
             location = self.env['stock.location'].browse(vals['location_id'])
-            lot_id = self.env['stock.production.lot'].browse(vals.get('lot_id'))
+            lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
             owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
             quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)

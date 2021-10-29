@@ -171,7 +171,7 @@ class StockMove(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True, index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
-    lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
         help="This is a technical field for calculating when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
@@ -657,7 +657,7 @@ class StockMove(models.Model):
             view = self.env.ref('stock.view_stock_move_nosuggest_operations')
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
-            self.next_serial = self.env['stock.production.lot']._get_next_serial(self.company_id, self.product_id)
+            self.next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
 
         return {
             'name': _('Detailed Operations'),
@@ -766,7 +766,7 @@ class StockMove(models.Model):
         `next_serial`) and create a move line for each generated `lot_name`.
         """
         self.ensure_one()
-        lot_names = self.env['stock.production.lot'].generate_lot_names(self.next_serial, next_serial_count or self.next_serial_count)
+        lot_names = self.env['stock.lot'].generate_lot_names(self.next_serial, next_serial_count or self.next_serial_count)
         move_lines_commands = self._generate_serial_move_line_commands(lot_names)
         self.write({'move_line_ids': move_lines_commands})
         return True
@@ -993,7 +993,7 @@ class StockMove(models.Model):
                     self.update({'move_line_ids': move_lines_commands})
                 else:
                     self.update({'move_line_nosuggest_ids': move_lines_commands})
-                existing_lots = self.env['stock.production.lot'].search([
+                existing_lots = self.env['stock.lot'].search([
                     ('company_id', '=', self.company_id.id),
                     ('product_id', '=', self.product_id.id),
                     ('name', 'in', split_lines),
@@ -1317,7 +1317,7 @@ class StockMove(models.Model):
         self.ensure_one()
 
         if not lot_id:
-            lot_id = self.env['stock.production.lot']
+            lot_id = self.env['stock.lot']
         if not package_id:
             package_id = self.env['stock.quant.package']
         if not owner_id:

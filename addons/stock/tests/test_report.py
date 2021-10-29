@@ -48,7 +48,7 @@ class TestReports(TestReportsCommon):
             'tracking': 'lot',
             'barcode': 'scan_me'
         })
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'Volume-Beta',
             'product_id': product1.id,
             'company_id': self.env.company.id,

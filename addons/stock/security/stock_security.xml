@@ -105,7 +105,7 @@
 
     <record model="ir.rule" id="stock_production_lot_rule">
         <field name="name">Stock Production Lot multi-company</field>
-        <field name="model_id" search="[('model','=','stock.production.lot')]" model="ir.model"/>
+        <field name="model_id" search="[('model','=','stock.lot')]" model="ir.model"/>
         <field name="domain_force">[('company_id','in', company_ids)]</field>
     </record>
 

@@ -96,12 +96,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
 
         # Create Inventory Adjustment For Stick and Stone Tools with lot.
-        lot_product_4 = self.env['stock.production.lot'].create({
+        lot_product_4 = self.env['stock.lot'].create({
             'name': '0000000000001',
             'product_id': self.product_4.id,
             'company_id': self.env.company.id,
         })
-        lot_product_2 = self.env['stock.production.lot'].create({
+        lot_product_2 = self.env['stock.lot'].create({
             'name': '0000000000002',
             'product_id': self.product_2.id,
             'company_id': self.env.company.id,
@@ -159,7 +159,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """
         self.laptop.tracking = 'serial'
         mo_laptop = self.new_mo_laptop()
-        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
+        serial = self.env['stock.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
 
         mo_form = Form(mo_laptop)
         mo_form.qty_producing = 1

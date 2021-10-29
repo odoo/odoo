@@ -679,12 +679,12 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(len(picking), 1)
         self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
 
-        lot_id = self.env['stock.production.lot'].create({
+        lot_id = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.finished_product.id,
             'company_id': self.env.company.id,
         })
-        serial_id = self.env['stock.production.lot'].create({
+        serial_id = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.comp1_sn.id,
             'company_id': self.env.company.id,
@@ -787,7 +787,7 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
 
-        lot_comp2 = self.env['stock.production.lot'].create({
+        lot_comp2 = self.env['stock.lot'].create({
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
             'company_id': self.env.company.id,
@@ -795,12 +795,12 @@ class TestSubcontractingTracking(TransactionCase):
         serials_finished = []
         serials_comp1 = []
         for i in range(todo_nb):
-            serials_finished.append(self.env['stock.production.lot'].create({
+            serials_finished.append(self.env['stock.lot'].create({
                 'name': 'serial_fin_%s' % i,
                 'product_id': self.finished_product.id,
                 'company_id': self.env.company.id,
             }))
-            serials_comp1.append(self.env['stock.production.lot'].create({
+            serials_comp1.append(self.env['stock.lot'].create({
                 'name': 'serials_comp1_%s' % i,
                 'product_id': self.comp1_sn.id,
                 'company_id': self.env.company.id,
@@ -861,7 +861,7 @@ class TestSubcontractingTracking(TransactionCase):
             bom_line.product_qty = 1
         bom = bom_form.save()
 
-        finished_lot, component_lot = self.env['stock.production.lot'].create([{
+        finished_lot, component_lot = self.env['stock.lot'].create([{
             'name': 'lot_%s' % product.name,
             'product_id': product.id,
             'company_id': self.env.company.id,

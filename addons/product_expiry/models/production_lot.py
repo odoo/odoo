@@ -4,8 +4,8 @@ import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
 
 
-class StockProductionLot(models.Model):
-    _inherit = 'stock.production.lot'
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
@@ -82,7 +82,7 @@ class StockProductionLot(models.Model):
         No further activity will be generated on lots whose alert_date
         has already been reached (even if the alert_date is changed).
         """
-        alert_lots = self.env['stock.production.lot'].search([
+        alert_lots = self.env['stock.lot'].search([
             ('alert_date', '<=', fields.Date.today()),
             ('product_expiry_reminded', '=', False)])
 
@@ -129,6 +129,6 @@ class ProcurementGroup(models.Model):
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
         if use_new_cursor:
             self.env.cr.commit()

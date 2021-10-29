@@ -2,7 +2,7 @@
 <odoo>
     <record id="view_production_lot_form" model="ir.ui.view">
         <field name="name">stock.production.lot.form</field>
-        <field name="model">stock.production.lot</field>
+        <field name="model">stock.lot</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Lots/Serial Numbers">
@@ -59,7 +59,7 @@
 
     <record id="view_production_lot_tree" model="ir.ui.view">
         <field name="name">stock.production.lot.tree</field>
-        <field name="model">stock.production.lot</field>
+        <field name="model">stock.lot</field>
         <field name="arch" type="xml">
             <tree string="Lots/Serial Numbers" multi_edit="1">
                 <field name="name" decoration-bf="1"/>
@@ -73,7 +73,7 @@
     </record>
     <record model="ir.ui.view" id="search_product_lot_filter">
         <field name="name">Production Lots Filter</field>
-        <field name="model">stock.production.lot</field>
+        <field name="model">stock.lot</field>
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
@@ -88,7 +88,7 @@
     <record id="action_production_lot_form" model="ir.actions.act_window">
         <field name="name">Lots/Serial Numbers</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">stock.production.lot</field>
+        <field name="res_model">stock.lot</field>
         <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('view_production_lot_tree')}),

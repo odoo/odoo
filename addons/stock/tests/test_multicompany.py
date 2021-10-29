@@ -166,12 +166,12 @@ class TestMultiCompany(TransactionCase):
             'tracking': 'lot',
             'name': 'product lot',
         })
-        self.env['stock.production.lot'].create({
+        self.env['stock.lot'].create({
             'name': 'lotA',
             'company_id': self.company_a.id,
             'product_id': product_lot.id,
         })
-        self.env['stock.production.lot'].create({
+        self.env['stock.lot'].create({
             'name': 'lotA',
             'company_id': self.company_b.id,
             'product_id': product_lot.id,
@@ -210,7 +210,7 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(move1.move_line_ids[0].company_id, self.company_a)
         picking.with_user(self.user_b).button_validate()
         self.assertEqual(picking.state, 'done')
-        created_serial = self.env['stock.production.lot'].search([
+        created_serial = self.env['stock.lot'].search([
             ('name', '=', 'receipt_serial')
         ])
         self.assertEqual(created_serial.company_id, self.company_a)

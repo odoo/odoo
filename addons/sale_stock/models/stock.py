@@ -151,8 +151,8 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
-class ProductionLot(models.Model):
-    _inherit = 'stock.production.lot'
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
 
     sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
     sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')

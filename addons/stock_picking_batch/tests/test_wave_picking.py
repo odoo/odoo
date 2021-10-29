@@ -36,7 +36,7 @@ class TestBatchPicking(TransactionCase):
             'tracking': 'lot',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        cls.lots_p_a = cls.env['stock.production.lot'].create([{
+        cls.lots_p_a = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
             'product_id': cls.productA.id,
             'company_id': cls.env.company.id,
@@ -47,7 +47,7 @@ class TestBatchPicking(TransactionCase):
             'tracking': 'serial',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
-        cls.lots_p_b = cls.env['stock.production.lot'].create([{
+        cls.lots_p_b = cls.env['stock.lot'].create([{
             'name': 'lot_product_a_' + str(i + 1),
             'product_id': cls.productB.id,
             'company_id': cls.env.company.id,
@@ -253,7 +253,7 @@ class TestBatchPicking(TransactionCase):
 
     def test_wave_split_move_uom(self):
         self.uom_dozen = self.env.ref('uom.product_uom_dozen')
-        sns = self.env['stock.production.lot'].create([{
+        sns = self.env['stock.lot'].create([{
             'name': 'sn-' + str(i),
             'product_id': self.productB.id,
             'company_id': self.env.company.id

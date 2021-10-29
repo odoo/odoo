@@ -58,7 +58,7 @@ class TestPackingNeg(TransactionCase):
 
         # Put 120 pieces on Palneg 1 (package), 120 pieces on Palneg 2 with lot A and 60 pieces on Palneg 3
         # create lot A
-        lot_a = self.env['stock.production.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id, 'company_id': self.env.company.id})
+        lot_a = self.env['stock.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id, 'company_id': self.env.company.id})
         # create package
         package1 = self.env['stock.quant.package'].create({'name': 'Palneg 1'})
         package2 = self.env['stock.quant.package'].create({'name': 'Palneg 2'})
@@ -168,7 +168,7 @@ class TestPackingNeg(TransactionCase):
 
         # Receive 20 products with lot neg in stock with a new incoming shipment that should be on pallet 2
         delivery_reconcile.action_confirm()
-        lot = self.env["stock.production.lot"].search([
+        lot = self.env["stock.lot"].search([
             ('product_id', '=', product_neg.id),
             ('name', '=', 'Lot neg')], limit=1)
         pack = self.env["stock.quant.package"].search([('name', '=', 'Palneg 2')], limit=1)

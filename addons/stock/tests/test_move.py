@@ -277,7 +277,7 @@ class StockMove(TransactionCase):
         untracked quants. Two moves lines should be created: one for the tracked ones, another
         for the untracked ones.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -306,12 +306,12 @@ class StockMove(TransactionCase):
         reserved. Edit the reserve move lines to set them to new serial numbers, the reservation
         should stay. Validate and the final quantity in stock should be 0, not negative.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -336,12 +336,12 @@ class StockMove(TransactionCase):
             self.assertEqual(ml.product_qty, 1.0)
 
         # assign lot3 and lot 4 to both untracked move lines
-        lot3 = self.env['stock.production.lot'].create({
+        lot3 = self.env['stock.lot'].create({
             'name': 'lot3',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot4 = self.env['stock.production.lot'].create({
+        lot4 = self.env['stock.lot'].create({
             'name': 'lot4',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -375,12 +375,12 @@ class StockMove(TransactionCase):
         ones and assign them serial numbers on the fly. The final quantity in stock should be 0, not
         negative.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -404,12 +404,12 @@ class StockMove(TransactionCase):
         move1._action_done()
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 2)
-        lot3 = self.env['stock.production.lot'].create({
+        lot3 = self.env['stock.lot'].create({
             'name': 'lot3',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot4 = self.env['stock.production.lot'].create({
+        lot4 = self.env['stock.lot'].create({
             'name': 'lot4',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -446,12 +446,12 @@ class StockMove(TransactionCase):
         serial number to one that is not in stock. The original serial should go back to stock and
         the untracked quant should be tracked on the fly and sent instead.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -479,7 +479,7 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot2, strict=True), 0.0)
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1)
-        lot3 = self.env['stock.production.lot'].create({
+        lot3 = self.env['stock.lot'].create({
             'name': 'lot3',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -507,7 +507,7 @@ class StockMove(TransactionCase):
 
         # create an untracked quant
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0)
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -546,12 +546,12 @@ class StockMove(TransactionCase):
         move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -575,12 +575,12 @@ class StockMove(TransactionCase):
         untracked quant then increase a non-existing tracked one that will fallback on the
         untracked quant.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -624,7 +624,7 @@ class StockMove(TransactionCase):
         system will update the reservation and use the untracked quant. Now unreserve, no error
         should happen
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -650,7 +650,7 @@ class StockMove(TransactionCase):
 
         # change the lot_id to one not available in stock while an untracked quant is available
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1)
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -1647,12 +1647,12 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.availability, 50.0)
 
     def test_availability_3(self):
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -1803,7 +1803,7 @@ class StockMove(TransactionCase):
 
         # make 12 quants of 1
         for i in range(1, 13):
-            lot_id = self.env['stock.production.lot'].create({
+            lot_id = self.env['stock.lot'].create({
                 'name': 'lot%s' % str(i),
                 'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -2127,7 +2127,7 @@ class StockMove(TransactionCase):
             'type': 'product',
         })
 
-        serial_numbers = self.env['stock.production.lot'].create([{
+        serial_numbers = self.env['stock.lot'].create([{
             'name': str(x),
             'product_id': product.id,
             'company_id': self.env.company.id,
@@ -2214,7 +2214,7 @@ class StockMove(TransactionCase):
         """ Test the assignment mechanism when two chained stock moves try to move one unit of a
         tracked product.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -2337,7 +2337,7 @@ class StockMove(TransactionCase):
         """ Test the assignment mechanism when three chained stock moves (2 sources, 1 dest) try to
         move multiple units of a tracked by lot product.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -2624,7 +2624,7 @@ class StockMove(TransactionCase):
 
         # 6 units are available in stock
         for i in range(1, 13):
-            lot_id = self.env['stock.production.lot'].create({
+            lot_id = self.env['stock.lot'].create({
                 'name': 'lot%s' % str(i),
                 'product_id': self.product_serial.id,
                 'company_id': self.env.company.id,
@@ -2692,7 +2692,7 @@ class StockMove(TransactionCase):
             'uom_type': 'bigger',
         })
         for i in range(1, 4):
-            lot_id = self.env['stock.production.lot'].create({
+            lot_id = self.env['stock.lot'].create({
                 'name': 'lot%s' % str(i),
                 'product_id': self.product_serial.id,
                 'company_id': self.env.company.id,
@@ -2751,7 +2751,7 @@ class StockMove(TransactionCase):
         self.assertEqual(backordered_move.reserved_availability, 0)
 
         # force the serial number and validate
-        lot3 = self.env['stock.production.lot'].search([('name', '=', "lot3")])
+        lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
         backorder.write({'move_line_ids': [(0, 0, {
             'product_id': self.product_serial.id,
             'product_uom_id': self.uom_unit.id,
@@ -2960,7 +2960,7 @@ class StockMove(TransactionCase):
         """ Test that validating a stock move linked to a tracked product reserved by another one
         correctly unreserves the other one.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -3145,12 +3145,12 @@ class StockMove(TransactionCase):
         """ Test that editing a stock move line linked to a tracked product correctly and directly
         adapts the reservation. In this case, we edit the lot to another available one.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -3259,12 +3259,12 @@ class StockMove(TransactionCase):
         and directly adapts the reservation. In this case, we edit the lot to another available one
         that is not in a pack.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -3350,7 +3350,7 @@ class StockMove(TransactionCase):
         Validating the stock move should should not create a negative quant for this lot in stock
         location.
         # """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -3399,12 +3399,12 @@ class StockMove(TransactionCase):
         that does not have any should not change its reservation, and validating should not create
         a negative quant for this lot in stock.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -3512,12 +3512,12 @@ class StockMove(TransactionCase):
         """ Test that editing a done stock move line linked to a tracked product correctly and directly
         adapts the transfer. In this case, we edit the lot to another available one.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -3630,12 +3630,12 @@ class StockMove(TransactionCase):
         and directly adapts the transfer. In this case, we edit the lot to another available one
         that is not in a pack.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product.id,
             'company_id': self.env.company.id,
@@ -3925,12 +3925,12 @@ class StockMove(TransactionCase):
         adapts the transfer. In this case, we edit the lot to another one, but the original move line
         is not in the default product's UOM.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -3960,12 +3960,12 @@ class StockMove(TransactionCase):
         and directly adapts the transfer. In this case, we edit the lot to another available one
         that we put in the same pack.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -4174,7 +4174,7 @@ class StockMove(TransactionCase):
         filling any quantities should pop up the immediate transfer wizard.
         """
         partner = self.env['res.partner'].create({'name': 'Jean'})
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -4634,7 +4634,7 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id
         })
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -4702,12 +4702,12 @@ class StockMove(TransactionCase):
         correctly restores the original lot with its incoming date and remove the new lot
         with its incoming date.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -4811,12 +4811,12 @@ class StockMove(TransactionCase):
         """ Check that, when creating a move line on a done stock move, the lot and its incoming
         date are correctly moved to the destination location.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -5394,7 +5394,7 @@ class StockMove(TransactionCase):
         - Check for dupes when assigning serial number to a stock move line
         """
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,

@@ -101,12 +101,12 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': '1002',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -416,7 +416,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'usage': 'internal',
             'location_id': wh_location.id,
         })
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'name': 'SuperLot',
             'product_id': tracked_product.id,
             'company_id': self.env.company.id,

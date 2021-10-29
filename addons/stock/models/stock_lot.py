@@ -9,8 +9,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class ProductionLot(models.Model):
-    _name = 'stock.production.lot'
+class StockLot(models.Model):
+    _name = 'stock.lot'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
@@ -64,11 +64,11 @@ class ProductionLot(models.Model):
     def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
         if product.tracking == "serial":
-            last_serial = self.env['stock.production.lot'].search(
+            last_serial = self.env['stock.lot'].search(
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
-                return self.env['stock.production.lot'].generate_lot_names(last_serial.name, 2)[1]
+                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]
         return False
 
     @api.constrains('name', 'product_id', 'company_id')
@@ -131,7 +131,7 @@ class ProductionLot(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_create()
-        return super(ProductionLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -146,7 +146,7 @@ class ProductionLot(models.Model):
                     'if some stock moves have already been created with that number. '
                     'This would lead to inconsistencies in your stock.'
                 ))
-        return super(ProductionLot, self).write(vals)
+        return super().write(vals)
 
     def copy(self, default=None):
         if default is None:

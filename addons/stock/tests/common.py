@@ -16,7 +16,7 @@ class TestStockCommon(common.TransactionCase):
         cls.StockQuantObj = cls.env['stock.quant']
         cls.PickingObj = cls.env['stock.picking']
         cls.MoveObj = cls.env['stock.move']
-        cls.LotObj = cls.env['stock.production.lot']
+        cls.LotObj = cls.env['stock.lot']
 
         # Model Data
         cls.picking_type_in = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in')

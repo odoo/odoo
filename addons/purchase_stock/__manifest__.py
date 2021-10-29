@@ -19,7 +19,7 @@
         'views/stock_rule_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/stock_production_lot_views.xml',
+        'views/stock_lot_views.xml',
         'views/product_category_views.xml',
         'report/purchase_report_views.xml',
         'report/purchase_report_templates.xml',

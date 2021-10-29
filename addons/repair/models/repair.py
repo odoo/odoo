@@ -72,7 +72,7 @@ class Repair(models.Model):
         help="This is the location where the product to repair is located.",
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial',
+        'stock.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True,
         help="Products repaired are all belonging to this lot")
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
@@ -655,7 +655,7 @@ class RepairLine(models.Model):
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial',
+        'stock.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
     state = fields.Selection([
         ('draft', 'Draft'),

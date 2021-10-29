@@ -7,11 +7,11 @@ from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
 
-class TestStockProductionLot(TestStockCommon):
+class TestStockLot(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestStockProductionLot, cls).setUpClass()
+        super().setUpClass()
         # Creates a tracked product using expiration dates.
         cls.product_apple = cls.ProductObj.create({
             'name': 'Apple',

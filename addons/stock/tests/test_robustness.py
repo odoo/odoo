@@ -168,13 +168,13 @@ class TestRobustness(TransactionCase):
             'tracking': 'lot',
         })
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': product1.id,
             'company_id': self.env.company.id,
 
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': product2.id,
             'company_id': self.env.company.id,

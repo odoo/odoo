@@ -16,7 +16,7 @@ class TestRepairTraceability(TestMrpCommon):
             'name': 'product first serial to act repair',
             'tracking': 'serial',
         })
-        ptrepair_lot = self.env['stock.production.lot'].create({
+        ptrepair_lot = self.env['stock.lot'].create({
             'name': 'A1',
             'product_id': product_to_repair.id,
             'company_id': self.env.user.company_id.id
@@ -25,7 +25,7 @@ class TestRepairTraceability(TestMrpCommon):
             'name': 'other first serial to remove with repair',
             'tracking': 'serial',
         })
-        ptremove_lot = self.env['stock.production.lot'].create({
+        ptremove_lot = self.env['stock.lot'].create({
             'name': 'B2',
             'product_id': product_to_remove.id,
             'company_id': self.env.user.company_id.id
@@ -65,7 +65,7 @@ class TestRepairTraceability(TestMrpCommon):
         mo2 = mo2_form.save()
         mo2.action_confirm()
         # Set serial to A2
-        mo2.lot_producing_id = self.env['stock.production.lot'].create({
+        mo2.lot_producing_id = self.env['stock.lot'].create({
             'name': 'A2',
             'product_id': product_to_repair.id,
             'company_id': self.env.user.company_id.id

@@ -5,7 +5,7 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
         </record>
-         <record id="lot_product_27" model="stock.production.lot">
+         <record id="lot_product_27" model="stock.lot">
             <field name="name">0000000000029</field>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="company_id" ref="base.main_company"/>
