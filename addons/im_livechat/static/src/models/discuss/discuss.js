@@ -14,6 +14,12 @@ registerInstancePatchModel('mail.discuss', 'im_livechat/static/src/models/discus
         }
         return this._super(value);
     },
+
+    channelTypeMapping() {
+        const map = this._super();
+        // map.livechat = 'livechat';
+        return map;
+    }
 });
 
 registerFieldPatchModel('mail.discuss', 'im_livechat/static/src/models/discuss/discuss.js', {

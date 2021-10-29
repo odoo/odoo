@@ -196,17 +196,22 @@ function factory(dependencies) {
                 return;
             }
             thread.open();
+            console.log(this.messaging.device.isMobile && thread.channel_type);
             if (this.messaging.device.isMobile && thread.channel_type) {
-                const channelTypeTab = {
-                    chat: 'chat',
-                    group: 'chat',
-                    channel: 'channel',
-                    livechat: 'livechat',
-                };
+                const channelTypeTab = this.channelTypeMapping();
+                console.log(channelTypeTab);
                 this.update({ activeMobileNavbarTabId: channelTypeTab[thread.channel_type] });
             }
         }
 
+        channelTypeMapping() {
+            return {
+                chat: 'chat',
+                group: 'chat',
+                channel: 'channel',
+                livechat: 'livechat',
+            };
+        }
 
         /**
          * Opens the given thread in Discuss, and opens Discuss if necessary.
