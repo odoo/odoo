@@ -19,7 +19,7 @@ class StockAssignSerialNumbers(models.TransientModel):
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:
-            generated_serial_numbers = "\n".join(self.env['stock.production.lot'].generate_lot_names(self.next_serial_number, self.next_serial_count))
+            generated_serial_numbers = "\n".join(self.env['stock.lot'].generate_lot_names(self.next_serial_number, self.next_serial_count))
             self.serial_numbers = "\n".join([self.serial_numbers, generated_serial_numbers]) if self.serial_numbers else generated_serial_numbers
             self._onchange_serial_numbers()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
@@ -41,7 +41,7 @@ class StockAssignSerialNumbers(models.TransientModel):
             self.serial_numbers = ""
             self.produced_qty = 0
             raise UserError(_('Duplicate Serial Numbers (%s)') % ','.join(duplicate_serial_numbers))
-        existing_serial_numbers = self.env['stock.production.lot'].search([
+        existing_serial_numbers = self.env['stock.lot'].search([
             ('company_id', '=', self.production_id.company_id.id),
             ('product_id', '=', self.production_id.product_id.id),
             ('name', 'in', serial_numbers),

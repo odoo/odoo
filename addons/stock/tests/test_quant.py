@@ -148,7 +148,7 @@ class StockQuant(TransactionCase):
     def test_get_available_quantity_7(self):
         """ Quantity availability with only one tracked quant in a location.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -457,7 +457,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, pack_location), 2.0)
 
     def test_mix_tracked_untracked_1(self):
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -542,7 +542,7 @@ class StockQuant(TransactionCase):
         """ Check that an incoming date is correctly set when updating the quantity of a tracked
         quant.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -555,12 +555,12 @@ class StockQuant(TransactionCase):
         """ Check that the FIFO strategies correctly applies when you have multiple lot received
         at different times for a tracked product.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -581,12 +581,12 @@ class StockQuant(TransactionCase):
         """
         lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
         self.stock_location.removal_strategy_id = lifo_strategy
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
@@ -605,7 +605,7 @@ class StockQuant(TransactionCase):
         """ Receive the same lot at different times, once they're in the same location, the quants
         are merged and only the earliest incoming date is kept.
         """
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_lot.id,
             'company_id': self.env.company.id,
@@ -642,12 +642,12 @@ class StockQuant(TransactionCase):
         """
         closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
         self.stock_location.removal_strategy_id = closest_strategy
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,

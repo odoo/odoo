@@ -534,7 +534,7 @@ class StockMove(models.Model):
                     package_values.append(package_for_picking)
 
             _logger.info("Create lots (%d) for pickings to validate" % len(lot_values))
-            lots = self.env["stock.production.lot"].create(lot_values)
+            lots = self.env["stock.lot"].create(lot_values)
             _logger.info("Create packages (%d) for pickings to validate" % len(package_values))
             packages = self.env["stock.quant.package"].create(package_values)
 

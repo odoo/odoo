@@ -336,12 +336,12 @@ class TestPickShip(TestStockCommon):
         Editing the lot on the move line of the first move should impact the reservation of the second one.
         """
         self.productA.tracking = 'lot'
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -439,7 +439,7 @@ class TestPickShip(TestStockCommon):
         pack_location = self.env['stock.location'].browse(self.pack_location)
         customer_location = self.env['stock.location'].browse(self.customer_location)
         self.productA.tracking = 'lot'
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
             'company_id': self.env.company.id,
@@ -522,7 +522,7 @@ class TestPickShip(TestStockCommon):
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.productA.tracking = 'serial'
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
             'name': '123456789',
             'company_id': self.env.company.id,
@@ -744,17 +744,17 @@ class TestPickShip(TestStockCommon):
         return of the second picking suggest the lot from the picking returned.
         """
         self.productA.tracking = 'lot'
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
         })
-        lot3 = self.env['stock.production.lot'].create({
+        lot3 = self.env['stock.lot'].create({
             'name': 'lot3',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -1236,7 +1236,7 @@ class TestSinglePicking(TestStockCommon):
         Otherwise a new move lines with the new lot should be added.
         """
         self.productA.tracking = 'lot'
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -1289,12 +1289,12 @@ class TestSinglePicking(TestStockCommon):
         """ Same check than test_recheck_availability_2 but with different lots.
         """
         self.productA.tracking = 'lot'
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'lot2',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -1349,12 +1349,12 @@ class TestSinglePicking(TestStockCommon):
         Serial number reservation should always create a new move line.
         """
         self.productA.tracking = 'serial'
-        serial1 = self.env['stock.production.lot'].create({
+        serial1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
         })
-        serial2 = self.env['stock.production.lot'].create({
+        serial2 = self.env['stock.lot'].create({
             'name': 'serial2',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -1555,7 +1555,7 @@ class TestSinglePicking(TestStockCommon):
 
         # creating a lot from the view should raise
         with self.assertRaises(UserError):
-            self.env['stock.production.lot']\
+            self.env['stock.lot']\
                 .with_context(active_picking_id=delivery_order.id)\
                 .create({
                     'name': 'lot1',
@@ -1564,7 +1564,7 @@ class TestSinglePicking(TestStockCommon):
                 })
 
         # enter an existing lot_id, should work
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': self.productA.id,
             'company_id': self.env.company.id,
@@ -2197,7 +2197,7 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(move.product_uom_qty, 60.00, 'Wrong T_GT quantity')
         self.assertEqual(move.product_qty, 134400.00, 'Wrong T_LBS quantity')
 
-        lot = self.env['stock.production.lot'].create({'name': 'Lot TEST', 'product_id': T_TEST.id, 'company_id': self.env.company.id, })
+        lot = self.env['stock.lot'].create({'name': 'Lot TEST', 'product_id': T_TEST.id, 'company_id': self.env.company.id, })
         self.env['stock.move.line'].create({
             'move_id': move.id,
             'product_id': T_TEST.id,
@@ -3388,17 +3388,17 @@ class TestAutoAssign(TestStockCommon):
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
         self.assertEqual(move.state, 'draft')
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'name': 'serial2',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,
         })
-        lot3 = self.env['stock.production.lot'].create({
+        lot3 = self.env['stock.lot'].create({
             'name': 'serial3',
             'product_id': self.product_serial.id,
             'company_id': self.env.company.id,

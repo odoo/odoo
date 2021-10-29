@@ -115,7 +115,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         # We should be able to call the 'record_components' button
         self.assertTrue(picking_receipt.display_action_record_components)
 
-        lot_comp2 = self.env['stock.production.lot'].create({
+        lot_comp2 = self.env['stock.lot'].create({
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
             'company_id': self.env.company.id,
@@ -123,12 +123,12 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         serials_finished = []
         serials_comp1 = []
         for i in range(todo_nb):
-            serials_finished.append(self.env['stock.production.lot'].create({
+            serials_finished.append(self.env['stock.lot'].create({
                 'name': 'serial_fin_%s' % i,
                 'product_id': self.finished.id,
                 'company_id': self.env.company.id,
             }))
-            serials_comp1.append(self.env['stock.production.lot'].create({
+            serials_comp1.append(self.env['stock.lot'].create({
                 'name': 'serials_comp1_%s' % i,
                 'product_id': self.comp1.id,
                 'company_id': self.env.company.id,

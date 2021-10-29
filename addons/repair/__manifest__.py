@@ -29,7 +29,7 @@ The following topics are covered by this module:
         'wizard/stock_warn_insufficient_qty_views.xml',
         'views/stock_move_views.xml',
         'views/repair_views.xml',
-        'views/stock_production_lot_views.xml',
+        'views/stock_lot_views.xml',
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',
         'data/ir_sequence_data.xml',

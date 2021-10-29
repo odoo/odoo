@@ -171,17 +171,17 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         nb_product_todo = 4
         production, _, p_final, p1, p2 = self.generate_mo(qty_final=nb_product_todo, tracking_final='lot', tracking_base_1='lot', tracking_base_2='lot')
-        lot_final = self.env['stock.production.lot'].create({
+        lot_final = self.env['stock.lot'].create({
             'name': 'lot_final',
             'product_id': p_final.id,
             'company_id': self.env.company.id,
         })
-        lot_1 = self.env['stock.production.lot'].create({
+        lot_1 = self.env['stock.lot'].create({
             'name': 'lot_consumed_1',
             'product_id': p1.id,
             'company_id': self.env.company.id,
         })
-        lot_2 = self.env['stock.production.lot'].create({
+        lot_2 = self.env['stock.lot'].create({
             'name': 'lot_consumed_2',
             'product_id': p2.id,
             'company_id': self.env.company.id,
@@ -229,17 +229,17 @@ class TestMrpProductionBackorder(TestMrpCommon):
         production, _, p_final, p1, p2 = self.generate_mo(qty_final=nb_product_todo, tracking_final='serial', tracking_base_1='serial', tracking_base_2='serial', qty_base_1=1)
         serials_final, serials_p1, serials_p2 = [], [], []
         for i in range(nb_product_todo):
-            serials_final.append(self.env['stock.production.lot'].create({
+            serials_final.append(self.env['stock.lot'].create({
                 'name': f'lot_final_{i}',
                 'product_id': p_final.id,
                 'company_id': self.env.company.id,
             }))
-            serials_p1.append(self.env['stock.production.lot'].create({
+            serials_p1.append(self.env['stock.lot'].create({
                 'name': f'lot_consumed_1_{i}',
                 'product_id': p1.id,
                 'company_id': self.env.company.id,
             }))
-            serials_p2.append(self.env['stock.production.lot'].create({
+            serials_p2.append(self.env['stock.lot'].create({
                 'name': f'lot_consumed_2_{i}',
                 'product_id': p2.id,
                 'company_id': self.env.company.id,
@@ -304,7 +304,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         immediate_wizard.process()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, "Incorrect number of final product produced.")
-        self.assertEqual(len(self.env['stock.production.lot'].search([('product_id', '=', p_final.id)])), 2, "Serial Numbers were not correctly produced.")
+        self.assertEqual(len(self.env['stock.lot'].search([('product_id', '=', p_final.id)])), 2, "Serial Numbers were not correctly produced.")
 
     def test_backorder_name(self):
         def produce_one(mo):

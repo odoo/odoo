@@ -231,7 +231,7 @@ class TestEditableQuant(TransactionCase):
         in inventory mode.
         """
 
-        sn1 = self.env['stock.production.lot'].create({
+        sn1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_tracked_sn.id,
             'company_id': self.env.company.id,

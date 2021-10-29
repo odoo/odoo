@@ -84,7 +84,7 @@ class TestUnbuild(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='lot')
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': p_final.id,
             'company_id': self.env.company.id,
@@ -161,7 +161,7 @@ class TestUnbuild(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot')
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'name': 'lot1',
             'product_id': p1.id,
             'company_id': self.env.company.id,
@@ -245,17 +245,17 @@ class TestUnbuild(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_2='lot', tracking_base_1='lot')
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
-        lot_final = self.env['stock.production.lot'].create({
+        lot_final = self.env['stock.lot'].create({
             'name': 'lot_final',
             'product_id': p_final.id,
             'company_id': self.env.company.id,
         })
-        lot_1 = self.env['stock.production.lot'].create({
+        lot_1 = self.env['stock.lot'].create({
             'name': 'lot_consumed_1',
             'product_id': p1.id,
             'company_id': self.env.company.id,
         })
-        lot_2 = self.env['stock.production.lot'].create({
+        lot_2 = self.env['stock.lot'].create({
             'name': 'lot_consumed_2',
             'product_id': p2.id,
             'company_id': self.env.company.id,
@@ -357,17 +357,17 @@ class TestUnbuild(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='none', tracking_base_2='lot', tracking_base_1='none')
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
-        lot_1 = self.env['stock.production.lot'].create({
+        lot_1 = self.env['stock.lot'].create({
             'name': 'lot_1',
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
-        lot_2 = self.env['stock.production.lot'].create({
+        lot_2 = self.env['stock.lot'].create({
             'name': 'lot_2',
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
-        lot_3 = self.env['stock.production.lot'].create({
+        lot_3 = self.env['stock.lot'].create({
             'name': 'lot_3',
             'product_id': p2.id,
             'company_id': self.env.company.id,
@@ -419,14 +419,14 @@ class TestUnbuild(TestMrpCommon):
         # Young Tom
         #    \ Botox - 4 - p1
         #    \ Old Tom - 1 - p2
-        lot_1 = self.env['stock.production.lot'].create({
+        lot_1 = self.env['stock.lot'].create({
             'name': 'lot_1',
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot_1)
-        lot_finished_1 = self.env['stock.production.lot'].create({
+        lot_finished_1 = self.env['stock.lot'].create({
             'name': 'lot_finished_1',
             'product_id': p_final.id,
             'company_id': self.env.company.id,
@@ -447,14 +447,14 @@ class TestUnbuild(TestMrpCommon):
         backorder = Form(self.env[action['res_model']].with_context(**action['context']))
         backorder.save().action_backorder()
 
-        lot_2 = self.env['stock.production.lot'].create({
+        lot_2 = self.env['stock.lot'].create({
             'name': 'lot_2',
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 4, lot_id=lot_2)
-        lot_finished_2 = self.env['stock.production.lot'].create({
+        lot_finished_2 = self.env['stock.lot'].create({
             'name': 'lot_finished_2',
             'product_id': p_final.id,
             'company_id': self.env.company.id,

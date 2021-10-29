@@ -10,11 +10,11 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
 
 
-class TestStockProductionLot(TestStockCommon):
+class TestStockLot(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestStockProductionLot, cls).setUpClass()
+        super().setUpClass()
         # Creates a tracked product with expiration dates.
         cls.apple_product = cls.ProductObj.create({
             'name': 'Apple',
@@ -30,7 +30,7 @@ class TestStockProductionLot(TestStockCommon):
     def test_00_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
-        # create product 
+        # create product
         self.productAAA = self.ProductObj.create({
             'name': 'Product AAA',
             'type': 'product',
@@ -61,7 +61,7 @@ class TestStockProductionLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location
         })
-        
+
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
@@ -75,24 +75,24 @@ class TestStockProductionLot(TestStockCommon):
         picking_in._action_done()
 
         # run scheduled tasks
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has been created
         activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productAAA.id)
         ])
         self.assertEqual(activity_count, 1, 'No activity created while there should be one')
 
         # run the scheduler a second time
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
 
         # check there is still only one activity, no additional activity is created if there is already an existing activity
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productAAA.id)
         ])
         self.assertEqual(activity_count, 1, 'There should be one and only one activity')
@@ -100,7 +100,7 @@ class TestStockProductionLot(TestStockCommon):
         # mark the activity as done
         mail_activity = self.env['mail.activity'].search([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productAAA.id)
         ])
         mail_activity.action_done()
@@ -108,18 +108,18 @@ class TestStockProductionLot(TestStockCommon):
         # check there is no more activity (because it is already done)
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productAAA.id)
         ])
         self.assertEqual(activity_count, 0,"As activity is done, there shouldn't be any related activity")
-                
+
         # run the scheduler a third time
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
 
         # check there is no activity created
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=',self.lot1_productAAA.id)
         ])
         self.assertEqual(activity_count, 0, "As there is already an activity marked as done, there shouldn't be any related activity created for this lot")
@@ -127,9 +127,9 @@ class TestStockProductionLot(TestStockCommon):
     def test_01_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """
 
-        # create product 
+        # create product
         self.productBBB = self.ProductObj.create({
-            'name': 'Product BBB', 
+            'name': 'Product BBB',
             'type': 'product',
             'tracking':'lot'
         })
@@ -155,7 +155,7 @@ class TestStockProductionLot(TestStockCommon):
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
-        
+
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
@@ -169,13 +169,13 @@ class TestStockProductionLot(TestStockCommon):
         picking_in._action_done()
 
         # run scheduled tasks
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has not been created
         activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productBBB.id)
         ])
         self.assertEqual(activity_count, 0, "An activity has been created while it shouldn't")
@@ -183,7 +183,7 @@ class TestStockProductionLot(TestStockCommon):
     def test_02_stock_production_lot(self):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
-        # create product 
+        # create product
         self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'type': 'product', 'tracking':'lot'})
 
         # create a new lot with with alert date in the past
@@ -202,7 +202,7 @@ class TestStockProductionLot(TestStockCommon):
             'picking_id': picking_in.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
-        
+
         self.assertEqual(picking_in.move_ids.state, 'draft', 'Wrong state of move line.')
         picking_in.action_confirm()
         self.assertEqual(picking_in.move_ids.state, 'assigned', 'Wrong state of move line.')
@@ -216,13 +216,13 @@ class TestStockProductionLot(TestStockCommon):
         picking_in._action_done()
 
         # run scheduled tasks
-        self.env['stock.production.lot']._alert_date_exceeded()
+        self.env['stock.lot']._alert_date_exceeded()
 
         # check a new activity has not been created
         activity_id = self.env.ref('product_expiry.mail_activity_type_alert_date_reached').id
         activity_count = self.env['mail.activity'].search_count([
             ('activity_type_id', '=', activity_id),
-            ('res_model_id', '=', self.env.ref('stock.model_stock_production_lot').id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
             ('res_id', '=', self.lot1_productCCC.id)
         ])
         self.assertEqual(activity_count, 0, "An activity has been created while it shouldn't")
@@ -302,7 +302,7 @@ class TestStockProductionLot(TestStockCommon):
 
         receipt._action_done()
         # Get back the lot created when the picking was done...
-        apple_lot = self.env['stock.production.lot'].search(
+        apple_lot = self.env['stock.lot'].search(
             [('product_id', '=', self.apple_product.id)],
             limit=1,
         )
@@ -350,7 +350,7 @@ class TestStockProductionLot(TestStockCommon):
 
         receipt._action_done()
         # Get back the lot created when the picking was done...
-        apple_lot = self.env['stock.production.lot'].search(
+        apple_lot = self.env['stock.lot'].search(
             [('product_id', '=', self.apple_product.id)],
             limit=1,
         )

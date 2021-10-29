@@ -105,7 +105,7 @@ class MrpProduction(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]}, domain="[('category_id', '=', product_uom_category_id)]")
     lot_producing_id = fields.Many2one(
-        'stock.production.lot', string='Lot/Serial Number', copy=False,
+        'stock.lot', string='Lot/Serial Number', copy=False,
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
@@ -1129,10 +1129,10 @@ class MrpProduction(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
-        self.lot_producing_id = self.env['stock.production.lot'].create({
+        self.lot_producing_id = self.env['stock.lot'].create({
             'product_id': self.product_id.id,
             'company_id': self.company_id.id,
-            'name': self.env['stock.production.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial'),
+            'name': self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial'),
         })
         if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
             self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
@@ -1743,7 +1743,7 @@ class MrpProduction(models.Model):
             message += "\n".join(component.name for component in multiple_lot_components)
         if message:
             raise UserError(message)
-        next_serial = self.env['stock.production.lot']._get_next_serial(self.company_id, self.product_id)
+        next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
         action['context'] = {
             'default_production_id': self.id,
@@ -1945,7 +1945,7 @@ class MrpProduction(models.Model):
                 backorder.action_confirm()
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
             production.product_qty = 1
-            production.lot_producing_id = self.env['stock.production.lot'].create({
+            production.lot_producing_id = self.env['stock.lot'].create({
                 'product_id': production.product_id.id,
                 'company_id': production.company_id.id,
                 'name': serial_number,

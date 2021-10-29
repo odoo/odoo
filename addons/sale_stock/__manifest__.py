@@ -27,7 +27,7 @@ Preferences
         'views/stock_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_stock_portal_template.xml',
-        'views/stock_production_lot_views.xml',
+        'views/stock_lot_views.xml',
         'views/res_users_views.xml',
         'report/report_stock_forecasted.xml',
         'report/sale_order_report_templates.xml',

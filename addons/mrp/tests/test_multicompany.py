@@ -122,7 +122,7 @@ class TestMrpMulticompany(common.TransactionCase):
         component = self.env['product.product'].create({
             'name': 'p2',
         })
-        lot_b = self.env['stock.production.lot'].create({
+        lot_b = self.env['stock.lot'].create({
             'product_id': product.id,
             'company_id': self.company_b.id,
         })
@@ -150,7 +150,7 @@ class TestMrpMulticompany(common.TransactionCase):
             'name': 'p2',
             'tracking': 'lot',
         })
-        lot_b = self.env['stock.production.lot'].create({
+        lot_b = self.env['stock.lot'].create({
             'product_id': component.id,
             'company_id': self.company_b.id,
         })
