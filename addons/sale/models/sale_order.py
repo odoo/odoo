@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from functools import partial
 from itertools import groupby
 import json
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
@@ -865,6 +863,9 @@ class SaleOrder(models.Model):
                 'context': {'default_order_id': self.id},
                 'target': 'new'
             }
+        return self._action_cancel()
+
+    def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
         return self.write({'state': 'cancel'})
