@@ -181,10 +181,7 @@ class SaleOrder(models.Model):
     def action_view_delivery(self):
         return self._get_action_view_picking(self.picking_ids)
 
-    def action_cancel(self):
-        res = super(SaleOrder, self).action_cancel()
-        if(isinstance(res, dict)):
-            return res
+    def _action_cancel(self):
         documents = None
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
@@ -199,7 +196,7 @@ class SaleOrder(models.Model):
                         continue
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
-        return res
+        return super()._action_cancel()
 
     def _get_action_view_picking(self, pickings):
         '''
