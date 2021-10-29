@@ -1630,6 +1630,26 @@ class TestFields(TransactionCaseWithUserDemo):
         # check that this does not generate an infinite recursion
         new_disc._convert_to_write(new_disc._cache)
 
+    def test_40_new_convert_to_write(self):
+        new_disc = self.env['test_new_api.discussion'].new({
+            'name': "Stuff",
+            'moderator': self.env.uid,
+            'participants': [(6, 0, self.env.user.ids)],
+        })
+        # Put the user groups in the cache of the new record
+        new_disc.participants.groups_id
+
+        # Check that the groups in the cache are not returned by convert_to_write
+        # because no real change happened, the values are identical except that
+        # self.env.user.groups_id._ids = (Id1, Id2, ...) whereas
+        # new_disc.participants.groups_id._ids = (NewId(origin=Id1), NewId(origin=Id2), ...)
+        field = new_disc._fields.get("participants")
+        # make sure that there is no inverse field for discussions on res_users,
+        # as the test depends on it
+        self.assertFalse(new_disc.pool.field_inverses[field])
+        convert = field.convert_to_write(new_disc["participants"], new_disc)
+        self.assertEqual(convert, [(6, 0, self.env.user.ids)])
+
     def test_40_new_inherited_fields(self):
         """ Test the behavior of new records with inherited fields. """
         email = self.env['test_new_api.emailmessage'].new({'body': 'XXX'})
@@ -3411,3 +3431,179 @@ class TestWrongRelatedError(common.TransactionCase):
         )
         with self.assertRaisesRegex(KeyError, errMsg):
             self.registry.setup_models(self.env.cr)
+
+
+class TestPrecomputeModel(common.TransactionCase):
+
+    def test_precompute_consistency(self):
+        Model = self.registry['test_new_api.precompute']
+        self.assertEqual(Model.lower.compute, Model.upper.compute)
+        self.assertTrue(Model.lower.precompute)
+        self.assertTrue(Model.upper.precompute)
+
+        # see what happens if not both are precompute
+        self.addCleanup(self.registry.reset_changes)
+        self.patch(Model.upper, 'precompute', False)
+        with self.assertLogs('odoo.modules.registry', level='WARNING'):
+            self.registry.setup_models(self.cr)
+            self.registry.field_computed
+
+    def test_precompute_dependencies_base(self):
+        Model = self.registry['test_new_api.precompute']
+        self.assertTrue(Model.lower.precompute)
+        self.assertTrue(Model.upper.precompute)
+        self.assertTrue(Model.lowup.precompute)
+
+        # see what happens if precompute depends on non-precompute
+        self.addCleanup(self.registry.reset_changes)
+        self.patch(Model.lower, 'precompute', False)
+        self.patch(Model.upper, 'precompute', False)
+        with self.assertWarns(UserWarning):
+            self.registry.setup_models(self.cr)
+            self.registry.field_triggers
+
+    def test_precompute_dependencies_many2one(self):
+        Model = self.registry['test_new_api.precompute']
+        Partner = self.registry['res.partner']
+
+        # Model.commercial_id depends on partner_id.commercial_partner_id, and
+        # precomputation is valid when traversing many2one fields
+        self.assertTrue(Model.commercial_id.precompute)
+        self.assertFalse(Partner.commercial_partner_id.precompute)
+
+    def test_precompute_dependencies_one2many(self):
+        Model = self.registry['test_new_api.precompute']
+        Line = self.registry['test_new_api.precompute.line']
+        self.assertTrue(Model.size.precompute)
+        self.assertTrue(Line.size.precompute)
+
+        # see what happens if precompute depends on non-precompute
+        self.addCleanup(self.registry.reset_changes)
+        # ensure that Model.size.precompute is restored after setup_models()
+        self.patch(Model.size, 'precompute', True)
+        self.patch(Line.size, 'precompute', False)
+        with self.assertWarns(UserWarning):
+            self.registry.setup_models(self.cr)
+            self.registry.field_triggers
+
+
+class TestPrecompute(common.TransactionCase):
+
+    def test_precompute(self):
+        model = self.env['test_new_api.precompute']
+
+        # warmup
+        model.create({'name': 'Foo', 'line_ids': [Command.create({'name': 'bar'})]})
+
+        # the creation makes one insert query for the main record, and one for the line
+        with self.assertQueries([
+            insert(model, 'name', 'lower', 'upper', 'lowup', 'commercial_id', 'size'),
+            insert(model.line_ids, 'parent_id', 'name', 'size'),
+        ]):
+            record = model.create({'name': 'Foo', 'line_ids': [Command.create({'name': 'bar'})]})
+
+        # check the values in the database
+        self.cr.execute(f'SELECT * FROM "{model._table}" WHERE id=%s', [record.id])
+        [row] = self.cr.dictfetchall()
+
+        self.assertEqual(row['name'], 'Foo')
+        self.assertEqual(row['lower'], 'foo')
+        self.assertEqual(row['upper'], 'FOO')
+        self.assertEqual(row['lowup'], 'fooFOO')
+        self.assertEqual(row['size'], 3)
+
+    def test_precompute_combo(self):
+        model = self.env['test_new_api.precompute.combo']
+
+        # warmup
+        model.create({})
+        QUERIES = [insert(model, 'name', 'reader', 'editer', 'setter')]
+
+        # no value at all
+        with self.assertQueries(QUERIES):
+            record = model.create({'name': 'A'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'A')
+        self.assertEqual(record.setter, 'A')
+
+        # default value
+        with self.assertQueries(QUERIES), self.assertLogs('precompute_setter', level='WARNING'):
+            defaults = dict(default_reader='X', default_editer='Y', default_setter='Z')
+            record = model.with_context(**defaults).create({'name': 'A'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'Y')
+        self.assertEqual(record.setter, 'Z')
+
+        # explicit value
+        with self.assertQueries(QUERIES), self.assertLogs('precompute_setter', level='WARNING'):
+            record = model.create({'name': 'A', 'reader': 'X', 'editer': 'Y', 'setter': 'Z'})
+
+        self.assertEqual(record.reader, 'A')
+        self.assertEqual(record.editer, 'Y')
+        self.assertEqual(record.setter, 'Z')
+
+    def test_precompute_editable(self):
+        model = self.env['test_new_api.precompute.editable']
+
+        # no value for bar, no value for baz
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'COMPUTED')
+        self.assertEqual(record.baz2, 'COMPUTED')
+
+        # value for bar, no value for baz
+        record = model.create({'foo': 'foo', 'bar': 'bar'})
+        self.assertEqual(record.bar, 'bar')
+        self.assertEqual(record.baz, 'COMPUTED')
+        self.assertEqual(record.baz2, 'COMPUTED')
+
+        # no value for bar, value for baz: the computation of bar should not
+        # recompute baz in memory, in case a third field depends on it
+        record = model.create({'foo': 'foo', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'COMPUTED')
+        self.assertEqual(record.baz, 'baz')
+        self.assertEqual(record.baz2, 'baz')
+
+        # value for bar, value for baz
+        record = model.create({'foo': 'foo', 'bar': 'bar', 'baz': 'baz'})
+        self.assertEqual(record.bar, 'bar')
+        self.assertEqual(record.baz, 'baz')
+        self.assertEqual(record.baz2, 'baz')
+
+    def test_precompute_required(self):
+        model = self.env['test_new_api.precompute.required']
+
+        field = type(model).name
+        self.assertTrue(field.related)
+        self.assertTrue(field.store)
+        self.assertTrue(field.required)
+
+        partner = self.env['res.partner'].create({'name': 'Foo'})
+
+        # this will crash if field is not precomputed
+        record = model.create({'partner_id': partner.id})
+        self.assertEqual(record.name, 'Foo')
+
+        # check the queries being made
+        QUERIES = [insert(model, 'partner_id', 'name')]
+        with self.assertQueries(QUERIES):
+            record = model.create({'partner_id': partner.id})
+
+    def test_precompute_batch(self):
+        model = self.env['test_new_api.precompute.required']
+
+        partners = self.env['res.partner'].create([
+            {'name': name}
+            for name in "Foo Bar Baz".split()
+        ])
+
+        # warmup
+        model.create({'partner_id': partners[0].id})
+        model.flush()
+        model.invalidate_cache()
+
+        # check the number of queries: 1 SELECT + 3 INSERT
+        with self.assertQueryCount(4):
+            model.create([{'partner_id': pid} for pid in partners.ids])
