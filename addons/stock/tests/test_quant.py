@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, RedirectWarning, UserError
 
 
 class StockQuant(SavepointCase):
@@ -433,7 +433,7 @@ class StockQuant(SavepointCase):
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
-        with self.assertRaises(UserError):
+        with self.assertRaises(RedirectWarning):
             self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, -1.0, strict=True)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
 
@@ -478,7 +478,7 @@ class StockQuant(SavepointCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(RedirectWarning):
             self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
