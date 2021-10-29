@@ -1198,6 +1198,23 @@ class TestFields(TransactionCaseWithUserDemo):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_attributes(self):
+        """ test the attributes of related fields """
+        text = self.registry['test_new_api.foo'].text
+        self.assertFalse(text.trim, "The target field is defined with trim=False")
+
+        # trim=True is the default on the field's class
+        self.assertTrue(type(text).trim, "By default, a Char field has trim=True")
+
+        # the parameter 'trim' is not set in text1's definition, so the field
+        # retrieves its value from text.trim
+        text1 = self.registry['test_new_api.bar'].text1
+        self.assertFalse(text1.trim, "The related field retrieves trim=False from target")
+
+        # text2 is defined with trim=True, so it should get that value
+        text2 = self.registry['test_new_api.bar'].text2
+        self.assertTrue(text2.trim, "The related field was defined with trim=True")
+
     def test_25_related_single(self):
         """ test related fields with a single field in the path. """
         record = self.env['test_new_api.related'].create({'name': 'A'})
@@ -2162,7 +2179,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
 
         # test create inverse no store
-        record = self.env['test_new_api.model_image'].create({
+        record = self.env['test_new_api.model_image'].with_context(image_no_postprocess=True).create({
             'name': 'image',
             'image_256': image_w,
         })

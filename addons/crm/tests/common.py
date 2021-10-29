@@ -60,6 +60,21 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         super(TestCrmCommon, cls).setUpClass()
         cls._init_mail_gateway()
 
+        # Salesmen organization
+        # ------------------------------------------------------------
+        # Role: M (team member) R (team manager)
+        # SALESMAN---------------sales_team_1
+        # admin------------------M-----------
+        # user_sales_manager-----R-----------
+        # user_sales_leads-------M-----------
+        # user_sales_salesman----/-----------
+
+        # Sales teams organization
+        # ------------------------------------------------------------
+        # SALESTEAM-----------SEQU-----COMPANY
+        # sales_team_1--------5--------False
+        # data----------------9999-----??
+
         cls.sales_team_1.write({
             'alias_name': 'sales.test',
             'use_leads': True,
@@ -225,6 +240,45 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'module': 'crm',
             'model': cls.activity_type_1._name,
             'res_id': cls.activity_type_1.id,
+        })
+
+    @classmethod
+    def _activate_multi_company(cls):
+        cls.company_2 = cls.env['res.company'].create({
+            'country_id': cls.env.ref('base.au').id,
+            'currency_id': cls.env.ref('base.AUD').id,
+            'email': 'company.2@test.example.com',
+            'name': 'New Test Company',
+        })
+
+        cls.user_sales_manager_mc = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_2.id,
+            company_ids=[(4, cls.company_main.id), (4, cls.company_2.id)],
+            email='user.sales.manager.mc@test.example.com',
+            login='user_sales_manager_mc',
+            groups='sales_team.group_sale_manager,base.group_partner_manager',
+            name='Myrddin Sales Manager',
+            notification_type='inbox',
+        )
+        cls.team_company2 = cls.env['crm.team'].create({
+            'company_id': cls.company_2.id,
+            'name': 'C2 Team',
+            'sequence': 10,
+            'user_id': False,
+        })
+        cls.team_company2_m1 = cls.env['crm.team.member'].create({
+            'crm_team_id': cls.team_company2.id,
+            'user_id': cls.user_sales_manager_mc.id,
+            'assignment_max': 30,
+            'assignment_domain': False,
+        })
+
+        cls.team_company1 = cls.env['crm.team'].create({
+            'company_id': cls.company_main.id,
+            'name': 'MainCompany Team',
+            'sequence': 50,
+            'user_id': cls.user_sales_manager.id,
         })
 
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,

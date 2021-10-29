@@ -26,9 +26,9 @@
                     <field name="components_availability" options='{"lazy": true}'
                         attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
                         optional="show"
-                        decoration-success="components_availability_state == 'available'" 
-                        decoration-danger="components_availability_state == 'late'"
-                        decoration-warning="components_availability_state == 'expected'"/>
+                        decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
+                        decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
+                        decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
@@ -213,9 +213,9 @@
                             </div>
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
-                                decoration-warning="components_availability_state == 'expected'"
-                                decoration-danger="components_availability_state == 'late'"
-                                decoration-success="components_availability_state == 'available'"/>
+                                decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
+                                decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
+                                decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
@@ -295,7 +295,7 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
-                                    <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
+                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
@@ -517,7 +517,7 @@
                     <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
-                    <filter string="Waiting for Component" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
+                    <filter string="Waiting" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
                     <filter string="Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Planning Issues" name="planning_issues" help="Late MO or Late delivery of components"

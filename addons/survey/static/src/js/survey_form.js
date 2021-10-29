@@ -303,12 +303,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var nextPageEvent = false;
         if (notifications && notifications.length !== 0) {
             notifications.forEach(function (notification) {
-                if (notification.length >= 2) {
-                    var event = notification[1];
-                    if (event.type === 'next_question' ||
-                        event.type === 'end_session') {
-                        nextPageEvent = event;
-                    }
+                if (notification.type === 'next_question' ||
+                    notification.type === 'end_session') {
+                    nextPageEvent = notification;
                 }
             });
         }
@@ -321,7 +318,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         if (nextPageEvent) {
             if (nextPageEvent.type === 'next_question') {
-                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
+                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.payload.question_start).utc().valueOf();
                 if (serverDelayMS < 0) {
                     serverDelayMS = 0;
                 } else if (serverDelayMS > 1000) {

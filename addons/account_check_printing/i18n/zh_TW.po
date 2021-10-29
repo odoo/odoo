@@ -89,7 +89,7 @@ msgstr "支票上邊距"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "支票號碼只能由數字組成"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -215,6 +215,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"手動：通過 Odoo 之外的任何方式支付或獲得報酬。\n"
+"付款收單行：每個付款收單行都有自己的付款方式。借助合作夥伴在線購買或訂閱時保存的支付令牌，請求在卡上/向卡進行交易。\n"
+"支票：通過支票支付帳單並從 Odoo 列印。\n"
+"批次存款：一次收集多張客戶支票，生成批次存款並將其提交給您的銀行。模塊 account_batch_payment 是必要的。\n"
+"SEPA Credit Transfer：通過向您的銀行提交 SEPA Credit Transfer 文件在 SEPA 區域付款。模塊 account_sepa 是必要的。\n"
+"SEPA 直接借記：由於您的合作夥伴授予您的授權，在 SEPA 區域獲得付款。模塊 account_sepa 是必要的。\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -277,7 +283,7 @@ msgstr "請輸入您將首次預先印製的支票的號碼。"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
 msgid "Preferred Payment Method"
-msgstr ""
+msgstr "優先付款方式"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
@@ -286,7 +292,7 @@ msgid ""
 "Preferred payment method when paying this vendor. This is used to filter "
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
-msgstr ""
+msgstr "向該供應商付款時的首選付款方式。這用於通過首選付款方式過濾供應商賬單以批量登記付款。用例：為批量電匯創建銀行文件，檢查運行。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -353,7 +359,7 @@ msgstr "下個列印支票的序列編號。"
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
-msgstr ""
+msgstr "檢查格式出現問題，請在會計設置中選擇另一個格式，然後重試。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -362,6 +368,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"以下編號已被使用：\n"
+"%s"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -394,6 +402,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"此選項允許您根據 CPA 在支票上列印日期。\n"
+"如果您的預印支票包含日期，請禁用此功能。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -409,7 +419,7 @@ msgstr "無標記送出"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "支票作廢"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -417,4 +427,4 @@ msgstr ""
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
-msgstr ""
+msgstr "您必須選擇一個支票格式。為此，進入發票/會計設置，搜索“支票格式”並設置一個。"

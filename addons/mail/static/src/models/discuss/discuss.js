@@ -207,13 +207,13 @@ function factory(dependencies) {
          *
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
-         * @param {Boolean} [param1.focus=true]
+         * @param {Boolean} [param1.focus]
          */
-        async openThread(thread, { focus = true } = {}) {
+        async openThread(thread, { focus } = {}) {
             this.update({
                 thread: link(thread),
             });
-            if (focus) {
+            if (focus !== undefined ? focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
             if (!this.isOpen) {

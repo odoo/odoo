@@ -50,7 +50,7 @@ function factory(dependencies) {
                 globalWindowInnerHeight: this.env.browser.innerHeight,
                 globalWindowInnerWidth: this.env.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
-                isMobileDevice: this.env.device.isMobileDevice,
+                isMobileDevice: this.messaging.device.isMobileDevice,
                 sizeClass: this.env.device.size_class,
             });
         }

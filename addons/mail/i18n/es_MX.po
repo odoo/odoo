@@ -5367,9 +5367,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"Información sobre cómo manejar las notificaciones del Chatter:\n"
-"- Manejar por correo electrónico: las notificaciones se envían a su dirección de correo electrónico\n"
-"- Manejar en Odoo: las notificaciones aparecen en su bandeja de entrada de Odoo"
+"Información sobre cómo manejar las notificaciones del chatter:\n"
+"- Por correo electrónico: las notificaciones se envían a su dirección de correo electrónico\n"
+"- En Odoo: las notificaciones aparecen en su bandeja de entrada de Odoo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -5835,7 +5835,7 @@ msgstr "Eliminar este seguidor"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr "Modelo de renderización"
+msgstr "Modelo de visualización"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -5877,7 +5877,7 @@ msgstr "Responder a"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
 msgid "Report Filename"
-msgstr "Nombre del informe"
+msgstr "Nombre del reporte"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
@@ -5887,7 +5887,7 @@ msgstr "Partner solicitante"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
 msgid "Res Users Settings"
-msgstr "Ajustes de res usuario"
+msgstr "Ajustes del recurso del usuario"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -5902,7 +5902,7 @@ msgstr "Reenviar a los seleccionados"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
 msgid "Resend wizard"
-msgstr "Asistente de reenvio"
+msgstr "Asistente de reenvío"
 
 #. module: mail
 #. openerp-web
@@ -6007,7 +6007,7 @@ msgstr "Guardar como plantilla nueva"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr "Grabar nueva plantilla nueva"
+msgstr "Guardar como plantilla nueva"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -6029,7 +6029,7 @@ msgstr "Agendar actividad"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr "Agenda actividades que te ayuden a terminar tus pendientes."
+msgstr "Agendar actividades que te ayuden a terminar tus pendientes."
 
 #. module: mail
 #. openerp-web
@@ -6269,7 +6269,7 @@ msgstr "Acción del servidor"
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
 msgstr ""
-"Cambia la opción de activo a falso para ocultar el canal sin eliminarlo."
+"Cambie la opción de activo a falso para ocultar el canal sin eliminarlo."
 
 #. module: mail
 #. openerp-web
@@ -6496,9 +6496,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Atrasado: Ya pasó la fecha de vencimiento\n"
-"Hoy: Hoy es la fecha de la actividad\n"
-"Planeado: Actividades futuras."
+"Vencida: ya pasó la fecha límite\n"
+"Hoy: hoy es la fecha de la actividad\n"
+"Planificada: futuras actividades."
 
 #. module: mail
 #. openerp-web
@@ -6529,7 +6529,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_model_object_field
 msgid "Sub-field"
-msgstr "Sub-campo"
+msgstr "Subcampo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__sub_object
@@ -6537,7 +6537,7 @@ msgstr "Sub-campo"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_object
 msgid "Sub-model"
-msgstr "Sub-modelo"
+msgstr "Submodelo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
@@ -6778,8 +6778,8 @@ msgid ""
 "other document."
 msgstr ""
 "El seudónimo %(matching_alias_name)s de correo electrónico ya lo está usando"
-" %(model_name)s%(document_name)s. Escoja otro seudónimo o cámbielo en el "
-"otro documento."
+" %(model_name)s%(document_name)s. Escoja otro o cambie el del otro "
+"documento."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -6934,7 +6934,7 @@ msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
 msgstr ""
-"Este grupo es visible para los todos. Los grupos invisibles puede añadir "
+"Este grupo es visible para todos. Los grupos no visibles puede añadir "
 "miembros a través del botón invitar."
 
 #. module: mail
@@ -6947,7 +6947,7 @@ msgid ""
 "storage space of your Odoo database."
 msgstr ""
 "Esta opción elimina permanentemente cualquier rastro del correo electrónico "
-"después de enviarse, incluso desde el menú Técnico de la Configuración, con "
+"después de enviarse, incluso desde el menú técnico de la configuración, con "
 "el fin de cuidar el espacio de almacenamiento de su base de datos de Odoo."
 
 #. module: mail
@@ -7178,7 +7178,7 @@ msgstr "Tipo de la actividad de excepción registrada."
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Type the name of a person"
-msgstr "Escribir el nombre de la persona"
+msgstr "Escriba el nombre de la persona"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
@@ -7297,7 +7297,7 @@ msgstr "Número de mensajes sin leer"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr "Mensajes no leídos"
+msgstr "Mensajes sin leer"
 
 #. module: mail
 #. openerp-web
@@ -7394,7 +7394,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
-msgstr "Usado para ordenar los subtipos."
+msgstr "Se usa para ordenar los subtipos."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__user_id
@@ -7412,7 +7412,7 @@ msgstr "Usuario conectado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
 msgid "User Setting"
-msgstr "Ajuste de usuario"
+msgstr "Ajustes de usuario"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_guest_action
@@ -7513,7 +7513,7 @@ msgid ""
 msgstr ""
 "Es necesario que utilice su propio servidor de correo electrónico para "
 "enviar/recibir correos electrónicos de las versiones Community y Enterprise."
-" Los usuarios de la versión online ya disponen de un servidor de correo "
+" Los usuarios de la versión en línea ya disponen de un servidor de correo "
 "electrónico listo para usar (@mycompany.odoo.com)."
 
 #. module: mail
@@ -7753,7 +7753,8 @@ msgstr "Solo puede usar el chat con usuarios existentes."
 #: code:addons/mail/static/src/models/partner/partner.js:0
 #, python-format
 msgid "You can only chat with partners that have a dedicated user."
-msgstr "Solo puede chatear con los partners que tengan un usuario asignado."
+msgstr ""
+"Solo puede usar el chat con los partners que tengan un usuario asignado."
 
 #. module: mail
 #. openerp-web
@@ -8279,13 +8280,13 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "restricted to channel members"
-msgstr "Restringido a miembros del canal"
+msgstr "restringido a miembros del canal"
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "restricted to followers"
-msgstr "Restringido a seguidores"
+msgstr "restringido a seguidores"
 
 #. module: mail
 #: code:addons/mail/models/models.py:0

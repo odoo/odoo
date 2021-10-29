@@ -29,20 +29,20 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -102,7 +102,7 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -119,7 +119,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert', [{'id': test_user.partner_id.id, 'name': 'Test User'}])],
@@ -157,7 +157,7 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -174,7 +174,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
@@ -191,7 +191,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
@@ -226,21 +226,21 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [
@@ -272,21 +272,21 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert', [
@@ -327,14 +327,14 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedPartners': [('insert-and-unlink', [{'id': test_user.partner_id.id}])],
@@ -353,14 +353,14 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
@@ -391,27 +391,27 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert-and-unlink', [{'id': test_guest.id}])],
@@ -419,7 +419,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -454,7 +454,7 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
@@ -471,7 +471,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
@@ -488,7 +488,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel_update',
+                    'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
                         'invitedGuests': [('insert', [{'id': test_guest.id, 'name': 'Test Guest'}])],
@@ -513,13 +513,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -545,13 +545,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -576,13 +576,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': channel_partner.rtc_session_ids.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': channel_partner.rtc_session_ids.id}])],
@@ -616,13 +616,13 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'rtc_session_ended',
+                    'type': 'mail.channel.rtc.session/ended',
                     'payload': {
                         'sessionId': test_session.id,
                     },
                 },
                 {
-                    'type': 'rtc_sessions_update',
+                    'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
                         'rtcSessions': [('insert-and-unlink', [{'id': test_session.id}])],

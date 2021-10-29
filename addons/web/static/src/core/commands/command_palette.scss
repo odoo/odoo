@@ -90,8 +90,19 @@
       }
 
       .o_app_icon {
+        position: relative;
         border-radius: 4%;
         height: 1.8em;
+        width: 1.8em;
+
+        &> i.fa {
+          text-align: center;
+          position: absolute;
+          top: 25%;
+          left: 0;
+          bottom: auto;
+          right: 0;
+        }
       }
     }
   }

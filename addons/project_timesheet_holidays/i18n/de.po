@@ -40,6 +40,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"Sowohl das interne Projekt als auch die Aufgabe sind erforderlich, um einen "
+"Stundenzettel für die Abwesenheit zu erstellen%s. Wenn Sie keinen "
+"Stundenzettel wünschen, lassen Sie das interne Projekt und die Aufgabe leer."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -55,6 +58,8 @@ msgstr "Konfigurationseinstellungen"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
+"Standardprojektwert für den aus der Abwesenheitsart generierten "
+"Stundenzettel."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -69,7 +74,7 @@ msgstr "Zeiterfassung erstellen"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr ""
+msgstr "Unternehmensweite freie Zeit"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -77,6 +82,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird bei der Validierung einer Freistellung"
+" ein Stundenzettel im Urlaubsprojekt des Unternehmens erstellt."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -134,7 +141,7 @@ msgstr "Abwesenheiten"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr ""
+msgstr "Abwesenheiten (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
@@ -159,3 +166,5 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
+"Sie können keine Stundenzettel löschen, die mit einer Abwesenheit verbunden "
+"sind. Bitte stornieren Sie stattdessen die Freistellung."

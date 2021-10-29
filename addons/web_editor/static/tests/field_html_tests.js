@@ -10,8 +10,21 @@ var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
+var FieldHtml = require('web_editor.field.html');
+
+const { registerCleanup } = require("@web/../tests/helpers/cleanup");
+const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 
 var _t = core._t;
+
+FieldHtml.include({
+    _onLoadWysiwyg: function () {
+        this._super.apply(this, arguments);
+        if (FieldHtml._resolveTestPromise) {
+            FieldHtml._resolveTestPromise();
+        }
+    }
+});
 
 QUnit.module('web_editor', {}, function () {
 
@@ -167,8 +180,9 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.attr('style'), 'height: 100px',
                 "should have applied the style correctly");
 
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>toto toto toto</p><p>tata</p>',
@@ -190,8 +204,9 @@ QUnit.module('web_editor', {}, function () {
                 res_id: 6,
             });
             // check that there is no error on clicking Edit
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             assert.containsOnce(form, '.o_form_editable');
 
             form.destroy();
@@ -218,8 +233,9 @@ QUnit.module('web_editor', {}, function () {
                 }
             }, true);
 
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             await testUtils.dom.click(form.$('.o_form_button_save'));
 
             form.destroy();
@@ -436,8 +452,9 @@ QUnit.module('web_editor', {}, function () {
                 '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
                 "should have rendered a div with correct content in readonly");
 
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -484,8 +501,9 @@ QUnit.module('web_editor', {}, function () {
                 '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">This website</a></p>',
                 "should have rendered a div with correct content in readonly");
 
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -532,8 +550,9 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.children('.o_readonly').html(), '<p>New external link</p>',
                 "should have rendered a div with correct content in readonly");
 
+            const promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -581,8 +600,9 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.children('.o_readonly').html(), '<p>New internal link</p>',
                 "should have rendered a div with correct content in readonly");
 
+            let promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -611,8 +631,9 @@ QUnit.module('web_editor', {}, function () {
                 '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">New internal link</a></p>',
                 "the link should be created with the right format");
 
+            promise = new Promise((resolve) => FieldHtml._resolveTestPromise = resolve);
             await testUtils.form.clickEdit(form);
-            await new Promise((resolve)=>setTimeout(resolve, 100));
+            await promise;
 
             $field = form.$('.oe_form_field[name="body"]');
             pText = $field.find('.note-editable a').eq(0).contents()[0];
@@ -661,9 +682,34 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('Quick Edition: click on link inside html field', async function (assert) {
-            assert.expect(3);
+            assert.expect(6);
 
             this.data['note.note'].records[0]['body'] = '<p><a href="#">hello</a> world</p>';
+
+            const MULTI_CLICK_DELAY = 6498651354; // arbitrary large number to identify setTimeout calls
+            let quickEditCB;
+            let quickEditTimeoutId;
+            let nextId = 1;
+            const originalSetTimeout = window.setTimeout;
+            const originalClearTimeout = window.clearTimeout;
+            patchWithCleanup(window, {
+                setTimeout(fn, delay) {
+                    if (delay === MULTI_CLICK_DELAY) {
+                        quickEditCB = fn;
+                        quickEditTimeoutId = `quick_edit_${nextId++}`;
+                        return quickEditTimeoutId;
+                    } else {
+                        return originalSetTimeout(...arguments);
+                    }
+                },
+                clearTimeout(id) {
+                    if (id === quickEditTimeoutId) {
+                        quickEditCB = undefined;
+                    } else {
+                        return originalClearTimeout(...arguments);
+                    }
+                },
+            });
 
             const form = await testUtils.createView({
                 View: FormView,
@@ -672,6 +718,7 @@ QUnit.module('web_editor', {}, function () {
                 arch: '<form>' +
                     '<field name="body" widget="html" style="height: 100px"/>' +
                     '</form>',
+                formMultiClickTime: MULTI_CLICK_DELAY,
                 res_id: 1,
             });
 
@@ -679,10 +726,16 @@ QUnit.module('web_editor', {}, function () {
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] a'));
             await testUtils.nextTick();
+            assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
             assert.containsOnce(form, '.o_form_view.o_form_readonly');
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] p'));
             await testUtils.nextTick();
+            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+            assert.ok(quickEditCB, "quickEdit callback should have been set");
+            quickEditCB();
+            await testUtils.nextTick();
+            await legacyExtraNextTick();
             assert.containsOnce(form, '.o_form_view.o_form_editable');
 
             form.destroy();

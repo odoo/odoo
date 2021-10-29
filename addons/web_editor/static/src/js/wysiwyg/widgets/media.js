@@ -1276,20 +1276,30 @@ var VideoWidget = MediaWidget.extend({
      */
     save: function () {
         this._updateVideo();
+        const videoSrc = this.$content.attr('src');
         if (this.isForBgVideo) {
-            return Promise.resolve({bgVideoSrc: this.$content.attr('src')});
+            return Promise.resolve({bgVideoSrc: videoSrc});
         }
-        if (this.$('.o_video_dialog_iframe').is('iframe')) {
-            this.$media = $(
-                '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
-                    '<div class="css_editable_mode_display">&nbsp;</div>' +
-                    '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
-                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>' +
-                '</div>'
-            );
+        if (this.$('.o_video_dialog_iframe').is('iframe') && videoSrc) {
+            this.$media = this.getWrappedIframe(videoSrc);
             this.media = this.$media[0];
         }
         return Promise.resolve(this.media);
+    },
+
+    /**
+     * Get an iframe wrapped for the website builder.
+     *
+     * @param {string} src The video url.
+     */
+    getWrappedIframe: function (src) {
+        return $(
+            '<div class="media_iframe_video" data-oe-expression="' + src + '">' +
+                '<div class="css_editable_mode_display">&nbsp;</div>' +
+                '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
+                '<iframe src="' + src + '" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>' +
+            '</div>'
+        );
     },
 
     //--------------------------------------------------------------------------

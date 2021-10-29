@@ -28,11 +28,21 @@ export async function initAutoMoreMenu(el, options) {
     }, options || {});
 
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
-    const dropdownSubMenuClasses = ['show', 'border', 'position-static'];
+    const dropdownSubMenuClasses = ['show', 'border-0', 'position-static'];
+    const dropdownToggleClasses = ['h-auto', 'py-2', 'text-secondary'];
     var autoMarginLeftRegex = /\bm[lx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
     var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
     var extraItemsToggle = null;
     let debounce;
+    const afterFontsloading = new Promise((resolve) => {
+        if (document.fonts) {
+            document.fonts.ready.then(resolve);
+        } else {
+            // IE: don't wait more than max .15s.
+            setTimeout(resolve, 150);
+        }
+    });
+    afterFontsloading.then(_adapt);
 
     if (options.images.length) {
         await _afterImagesLoading(options.images);
@@ -44,7 +54,6 @@ export async function initAutoMoreMenu(el, options) {
         debounce = setTimeout(_adapt, 250);
     };
     window.addEventListener('resize', debouncedAdapt);
-    _adapt();
 
     el.addEventListener('dom:autoMoreMenu:adapt', _adapt);
     el.addEventListener('dom:autoMoreMenu:destroy', destroy, {once: true});
@@ -63,8 +72,12 @@ export async function initAutoMoreMenu(el, options) {
             } else {
                 item.classList.remove('dropdown-item');
                 const dropdownSubMenu = item.querySelector('.dropdown-menu');
+                const dropdownSubMenuButton = item.querySelector('.dropdown-toggle');
                 if (dropdownSubMenu) {
                     dropdownSubMenu.classList.remove(...dropdownSubMenuClasses);
+                }
+                if (dropdownSubMenuButton) {
+                    dropdownSubMenuButton.classList.remove(...dropdownToggleClasses);
                 }
             }
             el.insertBefore(item, extraItemsToggle);
@@ -127,9 +140,13 @@ export async function initAutoMoreMenu(el, options) {
                 navLink.classList.toggle('active', el.classList.contains('active'));
             } else {
                 const dropdownSubMenu = el.querySelector('.dropdown-menu');
-                el.classList.add('dropdown-item');
+                const dropdownSubMenuButton = el.querySelector('.dropdown-toggle');
+                el.classList.add('dropdown-item', 'p-0');
                 if (dropdownSubMenu) {
                     dropdownSubMenu.classList.add(...dropdownSubMenuClasses);
+                }
+                if (dropdownSubMenuButton) {
+                    dropdownSubMenuButton.classList.add(...dropdownToggleClasses);
                 }
             }
             dropdownMenu.appendChild(el);
@@ -152,8 +169,8 @@ export async function initAutoMoreMenu(el, options) {
     }
 
     function _addExtraItemsButton(target) {
-        let dropdownMenu = document.createElement('ul');
-        extraItemsToggle = document.createElement('li');
+        let dropdownMenu = document.createElement('div');
+        extraItemsToggle = dropdownMenu.cloneNode();
         const extraItemsToggleIcon = document.createElement('i');
         const extraItemsToggleLink = document.createElement('a');
 

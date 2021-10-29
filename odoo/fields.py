@@ -419,9 +419,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if extra_keys:
             attrs['_extra_keys'] = extra_keys
 
-        for key, val in attrs.items():
-            if getattr(self, key, Default) != val:
-                setattr(self, key, val)
+        self.__dict__.update(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -554,7 +552,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
-            if not getattr(self, attr):
+            # check whether 'attr' is explicitly set on self (from its field
+            # definition), and ignore its class-level value (only a default)
+            if attr not in self.__dict__:
                 setattr(self, attr, getattr(field, prop))
 
         for attr in field._extra_keys:

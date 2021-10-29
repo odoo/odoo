@@ -5,6 +5,7 @@ const core = require('web.core');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
 const Widget = require('web.Widget');
+const {isColorGradient} = require('web_editor.utils');
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
@@ -93,9 +94,11 @@ const Link = Widget.extend({
             this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
 
-        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
+        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn(?!-block)(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
+            .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
@@ -131,7 +134,6 @@ const Link = Widget.extend({
         }
 
         this._updateOptionsUI();
-        this._adaptPreview();
 
         if (!this.options.noFocusUrl) {
             // ensure the focus in the first input of the link modal
@@ -160,9 +162,16 @@ const Link = Widget.extend({
         if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
             data.classes += " btn btn-link";
         }
-        if (!['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
+        if (['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
             data.classes.includes(className)
         )) {
+            this.$link.css('color', data.classes.includes(data.customTextColor) ? '' : data.customTextColor);
+            this.$link.css('background-color', data.classes.includes(data.customFill) || isColorGradient(data.customFill) ? '' : data.customFill);
+            this.$link.css('background-image', isColorGradient(data.customFill) ? data.customFill : '');
+            this.$link.css('border-width', data.customBorderWidth);
+            this.$link.css('border-style', data.customBorderStyle);
+            this.$link.css('border-color', data.customBorder);
+        } else {
             this.$link.css('color', '');
             this.$link.css('background-color', '');
             this.$link.css('background-image', '');
@@ -289,6 +298,7 @@ const Link = Widget.extend({
         const customBorder = this._getLinkCustomBorder();
         const customBorderWidth = this._getLinkCustomBorderWidth();
         const customBorderStyle = this._getLinkCustomBorderStyle();
+        const customClasses = this._getLinkCustomClasses();
         const size = this._getLinkSize();
         const shape = this._getLinkShape();
         const shapes = shape ? shape.split(',') : [];
@@ -296,6 +306,7 @@ const Link = Widget.extend({
         const shapeClasses = shapes.slice(style ? 1 : 0).join(' ');
         const classes = (this.data.className || '') +
             (type ? (` btn btn-${style}${type}`) : '') +
+            (type === 'custom' ? customClasses : '') +
             (type && shapeClasses ? (` ${shapeClasses}`) : '') +
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
@@ -410,6 +421,14 @@ const Link = Widget.extend({
      * @returns {string}
      */
     _getLinkCustomFill: function () {},
+    /**
+     * Returns the custom text, fill and border color classes for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomClasses: function () {},
     /**
      * Abstract method: return true if the link should open in a new window.
      *

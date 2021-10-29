@@ -109,7 +109,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    inventory_quantity_set = fields.Boolean()  # Only used for UI purposes in the Inventory Adjustment page
+    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.")
@@ -129,8 +129,11 @@ class StockQuant(models.Model):
     @api.depends('inventory_quantity')
     def _compute_inventory_diff_quantity(self):
         for quant in self:
-            quant.inventory_quantity_set = True
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+
+    @api.depends('inventory_quantity')
+    def _compute_inventory_quantity_set(self):
+        self.inventory_quantity_set = True
 
     @api.depends('inventory_quantity', 'quantity', 'product_id')
     def _compute_is_outdated(self):
@@ -159,12 +162,12 @@ class StockQuant(models.Model):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise UserError(_('Operation not supported'))
         domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
+        quant_query = self.env['stock.quant']._search(domain_loc)
         if (operator == '!=' and value is True) or (operator == '=' and value is False):
             domain_operator = 'not in'
         else:
             domain_operator = 'in'
-        return [('id', domain_operator, quant_ids)]
+        return [('id', domain_operator, quant_query)]
 
     @api.model
     def create(self, vals):

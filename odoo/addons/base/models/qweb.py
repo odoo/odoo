@@ -20,7 +20,7 @@ from odoo.tools import pycompat, freehash
 _logger = logging.getLogger(__name__)
 
 # same list as for `--dev-mode`
-SUPPORTED_DEBUGGERS = ['pdb', 'ipbd', 'pudb', 'wdb']
+SUPPORTED_DEBUGGERS = ['pdb', 'ipdb', 'pudb', 'wdb']
 token.QWEB = token.NT_OFFSET - 1
 token.tok_name[token.QWEB] = 'QWEB'
 
@@ -939,10 +939,9 @@ class QWeb(object):
         body = []
         if el.getchildren():
             for item in el:
-                # ignore comments & processing instructions
-                if isinstance(item, etree._Comment):
-                    continue
-                body.extend(self._compile_node(item, options, indent))
+                if not isinstance(item, etree._Comment):
+                    body.extend(self._compile_node(item, options, indent))
+                # comments can also contains tail text
                 if item.tail is not None:
                     self._appendText(item.tail, options)
         return body

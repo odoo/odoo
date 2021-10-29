@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from PIL import Image
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools
 
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
 
 try:
@@ -27,18 +29,18 @@ class BaseDocumentLayout(models.TransientModel):
     @api.model
     def _default_report_footer(self):
         company = self.env.company
-        footer_fields = filter(None, [company.phone, company.email, company.website, company.vat])
-        return ' '.join(footer_fields)
+        footer_fields = [field for field in [company.phone, company.email, company.website, company.vat] if isinstance(field, str) and len(field) > 0]
+        return Markup(' ').join(footer_fields)
 
     @api.model
     def _default_company_details(self):
         company = self.env.company
-        return (
-            f'{company.name}\n'
-            f'{company.street}\n'
-            f'{company.city} {company.state_id.name} {company.zip}\n'
-            f'{company.country_id.name}\n'
-        )
+        address_format, company_data = company.partner_id._prepare_display_address()
+        # company_name may *still* be missing from prepared address in case commercial_company_name is falsy
+        if 'company_name' not in address_format:
+            address_format = '%(company_name)s\n' + address_format
+            company_data['company_name'] = company_data['company_name'] or company.name
+        return Markup(nl2br(address_format)) % company_data
 
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)

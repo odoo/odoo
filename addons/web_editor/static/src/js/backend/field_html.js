@@ -215,11 +215,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * Toggle the code view and update the UI.
      *
      * @param {JQuery} $codeview
-     * @param {JQuery} [$codeviewButton] include the button to move it back and
-     *                                   forth between the toolbar and the code
-     *                                   view.
      */
-    _toggleCodeView: function ($codeview, $codeviewButton) {
+    _toggleCodeView: function ($codeview) {
         this.wysiwyg.odooEditor.observerUnactive();
         $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
@@ -228,16 +225,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
             this.wysiwyg.odooEditor.historyStep();
-            if ($codeviewButton) {
-                this.wysiwyg.toolbar.$el.append($codeviewButton);
-            }
         } else {
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();
-            if ($codeviewButton) {
-                $codeview.after($codeviewButton);
-                this.wysiwyg.toolbar.$el.css({ visibility: 'hidden' });
-            }
         }
     },
     /**
@@ -335,6 +325,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         return;
                     }
                     var cwindow = self.$iframe[0].contentWindow;
+                    try {
+                        cwindow.document;
+                    } catch (e) {
+                        return;
+                    }
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
@@ -525,17 +520,20 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         });
         this.$el.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
-            const $codeviewButton = $(`
+            const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
                     <button class="o_codeview_btn btn btn-primary">
                         <i class="fa fa-code"></i>
                     </button>
                 </div>
             `);
+            this.$floatingCodeViewButton = $codeviewButtonToolbar.clone();
             this._$codeview = $('<textarea class="o_codeview d-none"/>');
             this.wysiwyg.$editable.after(this._$codeview);
-            this.wysiwyg.toolbar.$el.append($codeviewButton);
-            $codeviewButton.click(() => this._toggleCodeView(this._$codeview, $codeviewButton));
+            this._$codeview.after(this.$floatingCodeViewButton);
+            this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
+            $codeviewButtonToolbar.click(() => this._toggleCodeView(this._$codeview));
+            this.$floatingCodeViewButton.click(() => this._toggleCodeView(this._$codeview));
         }
     },
     /**

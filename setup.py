@@ -32,7 +32,6 @@ setup(
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'libsass',
-        'mako',
         'mock',
         'ofxparse',
         'passlib',
@@ -57,7 +56,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     extras_require={
         'ldap': ['python-ldap'],
         'SSL': ['pyopenssl'],

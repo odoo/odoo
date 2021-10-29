@@ -169,12 +169,16 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Array} notification
+     * @param {Object} notification
+     * @param {Object} notification.payload
+     * @param {string} notification.type
      */
-    _handleNotification: function (notification) {
-        const [livechatUUID, notificationData] = notification;
-        if (this._livechat && (livechatUUID === this._livechat.getUUID())) {
-            if (notificationData._type === 'history_command') { // history request
+    _handleNotification: function ({ payload, type }) {
+        switch (type) {
+            case 'im_livechat.history_command': {
+                if (payload.id !== this._livechat._id) {
+                    return;
+                }
                 const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
@@ -182,18 +186,29 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
-            } else if (notificationData.info === 'typing_status') {
-                const partnerID = notificationData.partner_id;
+                return;
+            }
+            case 'mail.channel.partner/typing_status': {
+                if (payload.channel_id !== this._livechat._id) {
+                    return;
+                }
+                const partnerID = payload.partner_id;
                 if (partnerID === this.options.current_partner_id) {
                     // ignore typing display of current partner.
                     return;
                 }
-                if (notificationData.is_typing) {
+                if (payload.is_typing) {
                     this._livechat.registerTyping({ partnerID });
                 } else {
                     this._livechat.unregisterTyping({ partnerID });
                 }
-            } else if ('body' in notificationData) { // normal message
+                return;
+            }
+            case 'mail.channel/new_message': {
+                if (payload.id !== this._livechat._id) {
+                    return;
+                }
+                const notificationData = payload.message;
                 // If message from notif is already in chatter messages, stop handling
                 if (this._messages.some(message => message.getID() === notificationData.id)) {
                     return;
@@ -204,6 +219,7 @@ var LivechatButton = Widget.extend({
                     this._livechat.incrementUnreadCounter();
                 }
                 this._renderMessages();
+                return;
             }
         }
     },

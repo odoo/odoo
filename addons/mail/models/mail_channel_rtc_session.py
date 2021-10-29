@@ -31,12 +31,9 @@ class MailRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        self.env['bus.bus'].sendmany([((self._cr.dbname, 'mail.channel', channel.id), {
-            'type': 'rtc_sessions_update',
-            'payload': {
-                'id': channel.id,
-                'rtcSessions': [('insert', sessions_data)],
-            },
+        self.env['bus.bus']._sendmany([(channel, 'mail.channel/rtc_sessions_update', {
+            'id': channel.id,
+            'rtcSessions': [('insert', sessions_data)],
         }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
         return rtc_sessions
 
@@ -48,25 +45,14 @@ class MailRtcSession(models.Model):
                 # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
                 # done before the delete to be able to know who was invited.
                 channel._rtc_cancel_invitations()
-        notifications = [((self._cr.dbname, 'mail.channel', channel.id), {
-            'type': 'rtc_sessions_update',
-            'payload': {
-                'id': channel.id,
-                'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
-            },
+        notifications = [(channel, 'mail.channel/rtc_sessions_update', {
+            'id': channel.id,
+            'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
         }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
         for rtc_session in self:
-            model_name, record_id = ('mail.guest', rtc_session.guest_id.id) if rtc_session.guest_id else ('res.partner', rtc_session.partner_id.id)
-            notifications.append([
-                (self._cr.dbname, model_name, record_id),
-                {
-                    'type': 'rtc_session_ended',
-                    'payload': {
-                        'sessionId': rtc_session.id,
-                    },
-                },
-            ])
-        self.env['bus.bus'].sendmany(notifications)
+            target = rtc_session.guest_id or rtc_session.partner_id
+            notifications.append((target, 'mail.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
+        self.env['bus.bus']._sendmany(notifications)
         return super().unlink()
 
     def _update_and_broadcast(self, values):
@@ -76,10 +62,7 @@ class MailRtcSession(models.Model):
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in valid_values})
         session_data = self._mail_rtc_session_format()
-        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.channel_id.id), {
-            'type': 'mail.rtc_session_update',
-            'payload': session_data,
-        })
+        self.env['bus.bus']._sendone(self.channel_id, 'mail.channel.rtc.session/insert', session_data)
 
     @api.autovacuum
     def _gc_inactive_sessions(self):
@@ -108,12 +91,9 @@ class MailRtcSession(models.Model):
         payload_by_target = defaultdict(lambda: {'sender': self.id, 'notifications': []})
         for target_session_ids, content in notifications:
             for target_session in self.env['mail.channel.rtc.session'].browse(target_session_ids).exists():
-                model, record_id = ('mail.guest', target_session.guest_id.id) if target_session.guest_id else ('res.partner', target_session.partner_id.id)
-                payload_by_target[(self._cr.dbname, model, record_id)]['notifications'].append(content)
-        return self.env['bus.bus'].sendmany([(target, {
-            'type': 'rtc_peer_notification',
-            'payload': payload,
-        }) for target, payload in payload_by_target.items()])
+                target = target_session.guest_id or target_session.partner_id
+                payload_by_target[target]['notifications'].append(content)
+        return self.env['bus.bus']._sendmany([(target, 'mail.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _mail_rtc_session_format(self, complete_info=True):
         self.ensure_one()

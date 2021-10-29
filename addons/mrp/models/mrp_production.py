@@ -184,13 +184,12 @@ class MrpProduction(models.Model):
         ('confirmed', 'Waiting'),
         ('assigned', 'Ready'),
         ('waiting', 'Waiting Another Operation')],
-        string='Material Availability',
+        string='MO Readiness',
         compute='_compute_reservation_state', copy=False, index=True, readonly=True,
         store=True, tracking=True,
-        help=" * Ready: The material is available to start the production.\n\
-            * Waiting: The material is not available to start the production.\n\
-            The material availability is impacted by the manufacturing readiness\
-            defined on the BoM.")
+        help="Manufacturing readiness for this MO, as per bill of material configuration:\n\
+            * Ready: The material is available to start the production.\n\
+            * Waiting: The material is not available to start the production.\n")
 
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Components',
@@ -258,7 +257,8 @@ class MrpProduction(models.Model):
     mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
     show_lock = fields.Boolean('Show Lock/unlock buttons', compute='_compute_show_lock')
     components_availability = fields.Char(
-        string="Component Availability", compute='_compute_components_availability')
+        string="Component Status", compute='_compute_components_availability',
+        help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.")
     components_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
@@ -286,19 +286,16 @@ class MrpProduction(models.Model):
     def _compute_components_availability(self):
         productions = self.filtered(lambda mo: mo.state not in ('cancel', 'done', 'draft'))
         productions.components_availability_state = 'available'
+        productions.components_availability = _('Available')
+
         other_productions = self - productions
         other_productions.components_availability = False
         other_productions.components_availability_state = False
 
-        productions_ready = productions.filtered(lambda mo: mo.reservation_state == 'assigned')
-        productions_ready.components_availability = _('Ready')
-        productions_not_ready = (productions - productions_ready)
-        productions_not_ready.components_availability = _('Available')
-
-        all_raw_moves = productions_not_ready.move_raw_ids
+        all_raw_moves = productions.move_raw_ids
         # Force to prefetch more than 1000 by 1000
         all_raw_moves._fields['forecast_availability'].compute_value(all_raw_moves)
-        for production in productions_not_ready:
+        for production in productions:
             if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
                 production.components_availability_state = 'late'
@@ -1596,7 +1593,7 @@ class MrpProduction(models.Model):
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
-            'context': dict(context, mo_ids_to_backorder=None)
+            'context': dict(context, mo_ids_to_backorder=None, button_mark_done_production_ids=None)
         }
         if len(backorders) == 1:
             action.update({

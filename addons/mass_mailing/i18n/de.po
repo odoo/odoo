@@ -5,6 +5,7 @@
 # Translators:
 # Wolfgang Taferner, 2021
 # Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,6 +188,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"This email is "
+"blacklisted for mass mailings\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -705,12 +710,12 @@ msgstr "Hinzufügen"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add Contacts to Mailing List"
-msgstr ""
+msgstr "Kontakte zur Mailingliste hinzufügen"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Selected Contacts to a Mailing List"
-msgstr ""
+msgstr "Hinzufügen ausgewählter Kontakte zu einer Mailingliste"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_picture
@@ -1000,17 +1005,17 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Blacklisted"
-msgstr ""
+msgstr "Auf der schwarzen Liste"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bl
 msgid "Blacklisted Address"
-msgstr ""
+msgstr "Schwarz gelistete Adressen"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Schwarz gelistete E-Mail-Adressen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -1064,7 +1069,7 @@ msgstr "Unzustellbar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Bounced (%)"
-msgstr ""
+msgstr "Unzustellbar (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced_ratio
@@ -1235,7 +1240,7 @@ msgstr "Angeklickt"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Clicked (%)"
-msgstr ""
+msgstr "Angeklickt (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -1385,7 +1390,7 @@ msgstr "Copyright &amp;copy;"
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Zähler der unzustellbaren Emails für diesen Kontakt"
+msgstr "Zähler der unzustellbaren E-Mails für diesen Kontakt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
@@ -1575,12 +1580,12 @@ msgstr "Ausgeliefert"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Delivered (%)"
-msgstr ""
+msgstr "Zugestellt (%)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "Gesendet an"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -1728,7 +1733,7 @@ msgstr "E-Mail"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Email Blacklisted"
-msgstr ""
+msgstr "E-Mail auf der schwarzen Liste"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1798,7 +1803,7 @@ msgstr "Fehlermeldung"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Blacklisted Emails"
-msgstr ""
+msgstr "E-Mails auf der schwarzen Liste ausschließen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -2385,7 +2390,7 @@ msgstr "E-Mail Empfängerliste"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
-msgstr ""
+msgstr "Mailinglisten-Kontakte"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
@@ -2437,7 +2442,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "Mailingtyp"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type_description
@@ -2694,7 +2699,7 @@ msgstr "Mein Konto"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Deadline für meine Aktivitäten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_text_social
@@ -2784,6 +2789,8 @@ msgid ""
 "No need to import mailing lists, you can send mailings to contacts saved in "
 "other Odoo apps."
 msgstr ""
+"Sie müssen keine Mailinglisten importieren, sondern können Mailings an "
+"Kontakte senden, die in anderen Odoo-Anwendungen gespeichert sind."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -2946,7 +2953,7 @@ msgstr "Geöffnet"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Opened (%)"
-msgstr ""
+msgstr "Geöffnet (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__open_datetime
@@ -3212,7 +3219,7 @@ msgstr "Beantwortet"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Replied (%)"
-msgstr ""
+msgstr "Beantwortet (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__reply_datetime
@@ -3450,7 +3457,7 @@ msgstr "Sende eine Testnachricht"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr ""
+msgstr "Senden Sie ein Testmailing an die unten stehende Adresse."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -3466,12 +3473,12 @@ msgstr "Jetzt senden"
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__scheduled
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Send on"
-msgstr ""
+msgstr "Versenden am"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
 msgid "Sending"
-msgstr "Sende"
+msgstr "Im Versand"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__sent
@@ -4254,7 +4261,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_mailing_schedule_date_action
 msgid "When do you want to send your mailing?"
-msgstr ""
+msgstr "Wann möchten Sie Ihr Mailing versenden?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_ir_model__is_mailing_enabled
