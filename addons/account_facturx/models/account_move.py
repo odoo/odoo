@@ -156,10 +156,6 @@ class AccountMove(models.Model):
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             invoice_form.partner_id = find_partner(partner_type)
 
-            # Delivery Partner
-            if 'partner_shipping_id' in self._fields:
-                invoice_form.partner_shipping_id = find_partner('ShipToTradeParty')
-
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
             if elements:
