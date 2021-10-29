@@ -203,14 +203,6 @@ class AccountEdiFormat(models.Model):
                 vat=self._find_value('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
             )
 
-            # Delivery partner
-            if 'partner_shipping_id' in invoice._fields:
-                invoice_form.partner_shipping_id = self_ctx._retrieve_partner(
-                    name=self._find_value('//ram:ShipToTradeParty/ram:Name', tree, namespaces=tree.nsmap),
-                    mail=self._find_value('//ram:ShipToTradeParty//ram:URIID[@schemeID=\'SMTP\']', tree, namespaces=tree.nsmap),
-                    vat=self._find_value('//ram:ShipToTradeParty/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
-                )
-
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
             if elements:
