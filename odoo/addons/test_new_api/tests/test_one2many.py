@@ -283,3 +283,72 @@ class One2manyCase(TransactionCase):
             order.write({
                 'line_ids': [Command.link(line0.id), Command.link(line1.id)],
             })
+
+    def test_new_real_interactions(self):
+        """ Test and specify the interactions between new and real records.
+        Through m2o and o2m, with real/unreal records on both sides, the behavior
+        varies greatly.  At least, the behavior will be clearly consistent and any
+        change will have to adapt the current test.
+        """
+        ##############
+        # REAL - NEW #
+        ##############
+        parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parentB'})
+        new_child = self.env['test_new_api.model_child_m2o'].new({'name': 'B', 'parent_id': parent.id})
+
+        # wanted behavior: when creating a new with a real parent id, the child
+        # isn't present in the parent childs until true creation
+        self.assertFalse(parent.child_ids)
+        self.assertEqual(new_child.parent_id, parent)
+
+        # current (wanted?) behavior: when adding a new record to a real record
+        # o2m, the record is created, but not linked to the new in cache
+        # REAL.O2M += NEW RECORD
+        parent.child_ids += new_child
+        self.assertTrue(parent.child_ids)
+        self.assertNotEqual(parent.child_ids, new_child)
+
+        #############
+        # NEW - NEW #
+        #############
+        # wanted behavior: linking new records to new records is totally fine
+        new_parent = self.env['test_new_api.model_parent_m2o'].new({
+            "name": 'parentC3PO',
+            "child_ids": [(0, 0, {"name": "C3"})],
+        })
+        self.assertEqual(new_parent, new_parent.child_ids.parent_id)
+        self.assertFalse(new_parent.id)
+        self.assertTrue(new_parent.child_ids)
+        self.assertFalse(new_parent.child_ids.ids)
+
+        new_child = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'PO',
+        })
+        new_parent.child_ids += new_child
+        self.assertIn(new_child, new_parent.child_ids)
+        self.assertEqual(len(new_parent.child_ids), 2)
+        self.assertListEqual(new_parent.child_ids.mapped('name'), ['C3', 'PO'])
+
+        new_child2 = self.env['test_new_api.model_child_m2o'].new({
+            'name': 'R2D2',
+            'parent_id': new_parent.id,
+        })
+        self.assertIn(new_child2, new_parent.child_ids)
+        self.assertEqual(len(new_parent.child_ids), 3)
+        self.assertListEqual(new_parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
+
+        ###############################
+        # NEW TO REAL CONVERSION TEST #
+        ###############################
+
+        # A bit out of scope, but was interesting to check everything was
+        # working fine on the way.
+        name = type(new_parent).name
+        child_ids = type(new_parent).child_ids
+        parent = self.env['test_new_api.model_parent_m2o'].create({
+            'name': name.convert_to_write(new_parent.name, new_parent),
+            'child_ids': child_ids.convert_to_write(new_parent.child_ids, new_parent),
+        })
+        self.assertEqual(len(parent.child_ids), 3)
+        self.assertEqual(parent, parent.child_ids.parent_id)
+        self.assertEqual(parent.child_ids.mapped('name'), ['C3', 'PO', 'R2D2'])
