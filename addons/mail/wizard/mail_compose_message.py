@@ -32,7 +32,7 @@ class MailComposer(models.TransientModel):
         at model and view levels to provide specific features.
 
         The behavior of the wizard depends on the composition_mode field:
-        - 'comment': post on a record. The wizard is pre-populated via ``get_record_data``
+        - 'comment': post on a record.
         - 'mass_mail': wizard in mass mailing mode where the mail details can
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
@@ -65,21 +65,8 @@ class MailComposer(models.TransientModel):
 
         result = super().default_get(fields_list)
 
-        # record context management
-        if 'model' in fields_list and 'model' not in result:
-            result['model'] = self.env.context.get('active_model')
-        if 'res_ids' in fields_list and 'res_ids' not in result:
-            if self.env.context.get('active_ids'):
-                active_res_ids = self._parse_res_ids(self.env.context['active_ids'])
-                # beware, field is limited in storage, usage of active_ids in context still required
-                if active_res_ids and len(active_res_ids) <= self._batch_size:
-                    result['res_ids'] = self.env.context['active_ids']
-            elif self.env.context.get('active_id'):
-                result['res_ids'] = [self.env.context['active_id']]
-            else:
-                result['res_ids'] = False
         # record / parent based computation
-        if result.get('composition_mode') == 'comment' and (set(fields_list) & {'model', 'res_ids', 'partner_ids'}):
+        if result.get('composition_mode') == 'comment' and (set(fields_list) & {'partner_ids'}):
             result.update(self.get_record_data(result))
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
@@ -133,9 +120,9 @@ class MailComposer(models.TransientModel):
         string='Composition mode', default='comment')
     composition_batch = fields.Boolean(
         'Batch composition', compute='_compute_composition_batch')  # more than 1 record (raw source)
-    model = fields.Char('Related Document Model')
+    model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
     model_is_thread = fields.Boolean('Thread-Enabled', compute='_compute_model_is_thread')
-    res_ids = fields.Text('Related Document IDs')
+    res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
     res_domain = fields.Text('Active domain')
     res_domain_user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -298,12 +285,43 @@ class MailComposer(models.TransientModel):
             res_ids = composer._evaluate_res_ids()
             composer.composition_batch = len(res_ids) > 1 if res_ids else False
 
+    @api.depends('composition_mode', 'parent_id')
+    def _compute_model(self):
+        """ Model can be set from parent or using 'active_model' context key
+        frequently used as the composer is most invoked from list or form
+        views. """
+        for composer in self:
+            if composer.parent_id and composer.composition_mode == 'comment':
+                composer.model = composer.parent_id.model
+            elif not composer.model:
+                composer.model = self.env.context.get('active_model')
+
     @api.depends('model')
     def _compute_model_is_thread(self):
         """ Determine if model is thread enabled. """
         for composer in self:
             model = self.env['ir.model']._get(composer.model)
             composer.model_is_thread = model.is_mail_thread
+
+    @api.depends('composition_mode', 'parent_id')
+    def _compute_res_ids(self):
+        """ Computation may come from parent in comment mode, if set. It takes
+        the parent message's res_id. Otherwise the composer uses the 'active_ids'
+        context key, unless it is too big to be stored in database. Indeed
+        when invoked for big mailings, 'active_ids' may be a very big list.
+        Support of 'active_ids' when sending is granted in order to not always
+        rely on 'res_ids' field. When 'active_ids' is not present, fallback
+        on 'active_id'. """
+        for composer in self.filtered(lambda composer: not composer.res_ids):
+            if composer.parent_id and composer.composition_mode == 'comment':
+                composer.res_ids = f"{[composer.parent_id.res_id]}"
+            else:
+                active_res_ids = self._parse_res_ids(self.env.context.get('active_ids'))
+                # beware, field is limited in storage, usage of active_ids in context still required
+                if active_res_ids and len(active_res_ids) <= self._batch_size:
+                    composer.res_ids = f"{self.env.context['active_ids']}"
+                elif not active_res_ids and self.env.context.get('active_id'):
+                    composer.res_ids = f"{[self.env.context['active_id']]}"
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain', 'res_ids')
     def _compute_record_name(self):
@@ -517,16 +535,8 @@ class MailComposer(models.TransientModel):
         a document (model, res_id). This is based on previously computed default
         values. """
         result = {}
-        model = values.get('model')
-        res_ids = self._parse_res_ids(values['res_ids']) if values.get('res_ids') else []
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
-            if not model:
-                model = parent.model
-                result['model'] = model
-            if not res_ids:
-                res_ids = [parent.res_id]
-                result['res_ids'] = res_ids
             result['partner_ids'] = values.get('partner_ids', list()) + parent.partner_ids.ids
 
         return result
