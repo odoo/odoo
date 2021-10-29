@@ -281,7 +281,7 @@
                         <t t-else="">Your order has been signed.</t>
                     </div>
 
-                    <div t-if="message == 'cant_reject' and sale_order.has_to_be_signed()" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                    <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
                         Your order is not in a state to be rejected.
                     </div>
