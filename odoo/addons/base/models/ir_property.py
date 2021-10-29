@@ -310,16 +310,20 @@ class Property(models.Model):
         ])
 
         # modify existing properties
-        for prop in props:
-            id = refs.pop(prop.res_id)
+        ref_list = list(refs.keys())
+        for ref in ref_list:
+            prop = props.filtered(lambda p: p.res_id == ref)
+            if not prop:
+                continue
+            id = refs.pop(ref)
             value = clean(values[id])
             if value == default_value:
                 # avoid prop.unlink(), as it clears the record cache that can
                 # contain the value of other properties to set on record!
                 prop.check_access_rights('unlink')
                 prop.check_access_rule('unlink')
-                self._cr.execute("DELETE FROM ir_property WHERE id=%s", [prop.id])
-            elif value != clean(prop.get_by_record()):
+                self._cr.execute("DELETE FROM ir_property WHERE id IN %s", (tuple(prop.ids), ))
+            elif any(value != clean(p.get_by_record()) for p in prop):
                 prop.write({'value': value})
 
         # create new properties for records that do not have one yet
