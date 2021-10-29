@@ -42,10 +42,10 @@ class SaleOrderLine(models.Model):
 
     website_description = fields.Html('Website Description', sanitize=False, translate=html_translate, sanitize_form=False)
 
-    @api.model
-    def create(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
+        return super(SaleOrderLine, self).create(vals_list)
 
     def write(self, values):
         values = self._inject_quotation_description(values)
