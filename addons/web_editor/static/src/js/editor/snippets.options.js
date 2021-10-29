@@ -281,6 +281,16 @@ const UserValueWidget = Widget.extend({
             // and just be ignored.
             return;
         }
+        if (!this.el.classList.contains('o_we_widget_opened')) {
+            // Small optimization: it would normally not matter asking to
+            // remove a class of an element if it does not already have it but
+            // in this case we do more: we trigger_up an event and ask to close
+            // all sub widgets. When we ask the editor to close all widgets...
+            // it makes sense not letting every sub button of every select
+            // trigger_up an event. This allows to avoid tens of thousands of
+            // instructions being done at each click in the editor.
+            return;
+        }
         this.trigger_up('user_value_widget_closing');
         this.el.classList.remove('o_we_widget_opened');
         this._userValueWidgets.forEach(widget => widget.close());
