@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, tagged
 from odoo.tests.common import users
 
@@ -187,3 +187,38 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         crm_lead_form.user_id = self.env.user
         # self.assertEqual(crm_lead_form.company_id, self.env['res.company'])  # FIXME
         self.assertEqual(crm_lead_form.company_id, self.company_2)
+
+    @users('user_sales_manager_mc')
+    def test_lead_mc_partner(self):
+        """ Check company on partner versus company on lead. As contacts may
+        be separated by company, lead with a partner should be limited to that
+        company. """
+        partner_c2 = self.env['res.partner'].create({
+            'company_id': self.company_2.id,
+            'email': 'partner_c2@multicompany.example.com',
+            'name': 'Customer for C2',
+        })
+        self.assertEqual(partner_c2.company_id, self.company_2)
+        lead = self.env['crm.lead'].create({
+            'partner_id': partner_c2.id,
+            'name': 'MC Partner, no company lead',
+            'user_id': False,
+            'team_id': False,
+        })
+        self.assertEqual(lead.company_id, self.company_2)
+
+        partner_main = self.env['res.partner'].create({
+            'company_id': self.company_main.id,
+            'email': 'partner_main@multicompany.example.com',
+            'name': 'Customer for Main',
+        })
+        lead.write({'partner_id': partner_main})
+        self.assertEqual(lead.company_id, self.company_main)
+
+        # writing current user on lead would imply putting its team and team's company
+        # on lead (aka self.company_2), and this clashes with company restriction on
+        # customer
+        with self.assertRaises(UserError):
+            lead.write({
+                'user_id': self.env.user,
+            })
