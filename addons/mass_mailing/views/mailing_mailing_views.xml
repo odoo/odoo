@@ -41,12 +41,12 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
-                    <field name="sent"/>
-                    <field name="received_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Delivered (%)"/>
-                    <field name="opened_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Opened (%)"/>
-                    <field name="bounced_ratio" string="Bounced (%)" optional="hide"/>
-                    <field name="clicks_ratio" string="Clicked (%)"/>
-                    <field name="replied_ratio" string="Replied (%)"/>
+                    <field name="sent" sum="Total" />
+                    <field name="received_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Delivered (%)" avg="Average"/>
+                    <field name="opened_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Opened (%)" avg="Average"/>
+                    <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average"/>
+                    <field name="clicks_ratio" string="Clicked (%)" avg="Average"/>
+                    <field name="replied_ratio" string="Replied (%)" avg="Average"/>
                     <field name="state" decoration-info="state in ['draft', 'in_queue']" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
                 </tree>
             </field>
@@ -235,7 +235,7 @@
                                     <field name="copyvalue"/>
                                 </group>
                             </page>
-                            <page string="A/B Tests" name="ab_testing" groups="mass_mailing.group_mass_mailing_campaign">
+                            <page string="A/B Tests" name="ab_testing">
                                 <group>
                                     <group>
                                         <label for="ab_testing_enabled"/>
@@ -285,7 +285,6 @@
                                 <group>
                                     <group string="Email Content">
                                         <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
@@ -331,6 +330,8 @@
                                             class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="user_id" widget="many2one_avatar_user"
+                                            domain="[('share', '=', False)]"/>
                                     </group>
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>
