@@ -7,8 +7,8 @@
 # Martin Trigaux, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Simon S, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Simon S, 2021\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -286,7 +286,7 @@ msgstr "Streckkodsmatchningsmönstret"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "Listan med streckkods regler"
+msgstr "Listan med streckkodsregler"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
@@ -315,6 +315,8 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"Det finns ett syntaxfel i streckkodsmönstret %(pattern)s: tomma "
+"klammerparenteser."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -322,6 +324,7 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
+"Denna regel gäller endast om streckkoden är kodad med den angivna kodningen"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -335,6 +338,10 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"UPC-koder kan konverteras till EAN genom att använda en nolla som prefix. "
+"Den här inställningen avgör om en UPC/EAN-streckkod ska konverteras "
+"automatiskt på ett eller annat sätt när man försöker matcha en regel med den"
+" andra kodningen."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca

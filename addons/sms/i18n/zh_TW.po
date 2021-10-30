@@ -80,6 +80,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">沒有記錄</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -115,7 +117,7 @@ msgstr "在相關的模型上添加上下文操作以使用此模板打開短信
 #: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an SMS."
-msgstr ""
+msgstr "發送簡訊時出錯。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -129,7 +131,7 @@ msgstr "應用於"
 msgid ""
 "Are you sure you want to discard %s SMS delivery failures? You won't be able"
 " to re-send these SMS later!"
-msgstr ""
+msgstr "確定要放棄 %s 條簡訊傳送失敗嗎？以後您將無法重新發送這些簡訊！"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -246,7 +248,7 @@ msgstr "客戶"
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
-msgstr ""
+msgstr "客戶：自動簡訊"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
@@ -413,7 +415,7 @@ msgstr "有簡訊錯誤"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "有未註冊的帳號"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -532,7 +534,7 @@ msgstr "指示列入黑名單的已清理電話號碼是否為電話號碼。當
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "指示 SMS 編輯器是否針對單個特定收件人"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -543,13 +545,13 @@ msgstr "點數不足"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Invalid phone number"
-msgstr ""
+msgstr "無效的電話號碼"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "收件人號碼無效。請更新它。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -559,7 +561,7 @@ msgstr "是關注人"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "有效"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -618,7 +620,7 @@ msgstr "最後更新於"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_mass_keep_log
 msgid "Log as Note"
-msgstr ""
+msgstr "記錄備註"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -711,7 +713,7 @@ msgstr "號碼"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "數字字段"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -738,12 +740,12 @@ msgstr "有發送錯誤的郵件數量"
 msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
-msgstr ""
+msgstr "如果以群發模式發送，而不應用 Active Domain 值，將接收 SMS 的收件人數量"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid "Number of records found when searching with the value in Active Domain"
-msgstr ""
+msgstr "使用 Active Domain 中的值搜索時找到的記錄數"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
@@ -826,7 +828,7 @@ msgstr "收件人"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "收件人編號"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -1097,7 +1099,7 @@ msgstr "伺服器錯誤"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "設置帳戶"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1114,7 +1116,7 @@ msgstr "在相關單據模型之記錄提供此模板的邊欄按鈕"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "單模"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1129,7 +1131,7 @@ msgstr "簡訊範本"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "存儲的收件人號碼"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -1202,7 +1204,7 @@ msgstr ""
 msgid ""
 "UX field allowing to edit the recipient number. If changed it will be stored"
 " onto the recipient."
-msgstr ""
+msgstr "允許編輯收件人號碼的 UX 字段。如果更改，它將存儲到收件人。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
@@ -1218,7 +1220,7 @@ msgstr "未讀消息計數器"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "未註冊賬戶"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1287,7 +1289,7 @@ msgstr "您無權訪問消息和/或相關的文件。"
 #, python-format
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
-msgstr ""
+msgstr "您的 SMS 文本消息必須包含至少一個非空白字符"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1297,7 +1299,7 @@ msgstr "無效"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "e.g. +1 415 555 0100"
-msgstr ""
+msgstr "例如+1 415 555 0100"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form

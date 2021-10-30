@@ -890,7 +890,7 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Según la configuración del producto, el mecanismo puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece manualmente en la línea.\n"
+"  - Manual: la cantidad se establece de forma manual en la línea.\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
@@ -1297,8 +1297,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversión entre las unidades de medidas solo puede ocurrir si pertenecen"
-" a la misma categoría. La conversión se hará según los datos establecidos."
+"La conversión entre las unidades de medidas solo pueden ocurrir si "
+"pertenecen a la misma categoría. La conversión se basará en las razones "
+"establecidas."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_coupon
@@ -2056,7 +2057,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Si se encuentra seleccionado, algunos mensajes tienen error de entrega."
+"Si se encuentra seleccionado, algunos mensajes presentan un error de "
+"entrega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2839,7 +2841,7 @@ msgstr "Orden a facturar"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr "Cantidad pedida: %(old_qty)s -> %(new_qty)s"
+msgstr "Cantidad ordenada: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2848,13 +2850,13 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Cantidad pedida: facturar cantidades pedidas por el cliente.\n"
+"Cantidad ordenada: facturar cantidades ordenadas por el cliente.\n"
 "Cantidad entregada: facturar cantidades entregadas al cliente."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr "Cantidades pedidas"
+msgstr "Cantidades ordenadas"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -3158,7 +3160,7 @@ msgstr "Cantidad facturada"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Cantidad pedida"
+msgstr "Cantidad ordenada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -3206,7 +3208,7 @@ msgstr "Número de cotización"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "Cotización / Orden"
+msgstr "Cotización/Orden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -3273,7 +3275,7 @@ msgstr "Cotizaciones"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr "Cotizaciones &amp; Órdenes"
+msgstr "Cotizaciones y órdenes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3653,7 +3655,7 @@ msgstr "Seleccione un producto o cree uno nuevo al instante."
 msgid "Select product attributes and optional products from the sales order"
 msgstr ""
 "Seleccione los atributos del producto y los productos opcionales de la orden"
-" de ventas."
+" de venta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3670,10 +3672,10 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"Advertencia\" se notificará a los usuarios con el "
+"Si selecciona la opción \"Advertencia\" se notificará a los usuarios con un "
 "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. Debe escribir el mensaje en el siguiente"
-" campo."
+"un mensaje y se bloqueará el flujo. Escriba el mensaje en el siguiente "
+"campo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3966,7 +3968,7 @@ msgid ""
 " this will then display a recomputation button"
 msgstr ""
 "Campo técnico, verdadero si se cambió la lista de precios;\n"
-" esto mostrará un botón de volver a calcular"
+"esto mostrará un botón para volver a calcular"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3985,7 +3987,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
-msgstr "Términos &amp; Condiciones"
+msgstr "Términos y condiciones"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -4144,7 +4146,7 @@ msgid ""
 " the order"
 msgstr ""
 "El tipo de cambio de la divisa a la divisa del tipo de cambio 1 aplicable en"
-" la fecha del pedido"
+" la fecha de la orden"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4650,12 +4652,13 @@ msgstr "Su orden ha sido confirmada."
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
-"Se ha firmado su orden, pero todavía necesita pagarse para confirmarla."
+"Se firmó su orden, pero todavía se necesita procesar el pago para "
+"confirmarla."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr "Se ha firmado su orden."
+msgstr "Se firmó su orden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

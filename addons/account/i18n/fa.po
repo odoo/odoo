@@ -19,12 +19,12 @@
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
 # Pouya Malekinejad <pouya.malekinejad@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
 # Martin Trigaux, 2021
 # rahim agh <rahim.aghareb@gmail.com>, 2021
 # Far Har <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
+# Hamed Mohammadi <hamed@dehongi.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,17 +68,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# صورتحساب های تهاتر شده"
+msgstr "# صورتحسابهای تطبیق داده شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# فاکتورهای تهاتر شده"
+msgstr "# فاکتورهای تطبیق داده شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr "# صورتحساب‌های تهاتر شده"
+msgstr "# صورتحساب‌های تطبیق داده شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -162,7 +162,7 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> مرور ثبت سندهای جزئی تهاتر شده"
+msgstr "-> مرور ثبت سندهای جزئی تطبیق داده شده"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -631,7 +631,7 @@ msgid ""
 "<span class=\"text-muted\">Leave empty to create a new journal for this bank"
 " account, or select a journal to link it with the bank account.</span>"
 msgstr ""
-"<span class=\"text-muted\">برای استفاده از یک دفتر روزانه بانکی اینجا را "
+"<span class=\"text-muted\">برای استفاده از یک دفترروزنامه بانکی اینجا را "
 "خالی بگذارید، یا یک دفتر روزانه را انتخاب کنید تا به این حساب بانکی متصل "
 "شود.</span>"
 
@@ -657,7 +657,7 @@ msgstr "<span role=\"separator\">جدید</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">تهاتر</span>"
+msgstr "<span role=\"separator\">تطبیق</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -680,8 +680,8 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">پرداخت‌ها/رسیدهای "
-"برجسته</span>"
+"<span title=\"Outstanding Payments/Receipts\">پرداختی/دریافتی های باقی "
+"مانده</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -874,7 +874,7 @@ msgstr "<strong>تاریخ فاکتور:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>نوع سند:</strong>"
+msgstr "<strong>دفترروزنامه:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -909,7 +909,7 @@ msgstr "<strong>شماره پیگیری:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>منبع:</strong>"
+msgstr "<strong>سند:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -982,7 +982,7 @@ msgstr "یک شرک پرداخت باید تنها یک سطر از نوع تر�
 #: code:addons/account/models/res_partner_bank.py:0
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr "یک حساب بانکی تنها می تواند به یک نوع سند تعلق داشته باشد."
+msgstr "یک حساب بانکی تنها می تواند به یک دفترروزنامه تعلق داشته باشد."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1006,7 +1006,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"یک ثبت سند از چند آیتم تشکیل شده، که هر\n"
+"یک سند دفترروزنامه از چند آیتم تشکیل شده، که هر\n"
 "                کدام یک تراکنش بستانکار یا بدهکار است."
 
 #. module: account
@@ -1334,7 +1334,7 @@ msgstr "انواع حساب"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "عدم تهاتر حساب"
+msgstr "عدم تطبیق حساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root

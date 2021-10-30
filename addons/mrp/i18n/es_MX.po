@@ -2832,6 +2832,19 @@ msgid "Not to restrict or prefer quants, but informative."
 msgstr "Informativo, mas no para restringir o preferir quants."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid ""
+"Note that archived work center(s): '%s' is/are still linked to active Bill "
+"of Materials, which means that operations can still be planned on it/them. "
+"To prevent this, deletion of the work center is recommended instead."
+msgstr ""
+"Tome en cuenta que los centros de trabajo archivados: \"%s\" aún están "
+"vinculados a listas de materiales activas, lo que significa que aún se "
+"pueden planear operaciones en ellos. Se recomienda eliminar los centros de "
+"trabajo para prevenir esto."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
