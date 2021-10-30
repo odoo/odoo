@@ -6,7 +6,6 @@
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # DE T1 <e2f8846@yahoo.com>, 2020
 # Anja Funk <anja.funk@afimage.de>, 2020
-# Anja Uebermuth <anja.uebermuth@arts.eu>, 2020
 # Philipp Hug <philipp@hug.cx>, 2020
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
 # Alexander Klockhaus <a.klockhaus@gmail.com>, 2020
@@ -1849,11 +1848,8 @@ msgstr "Standard Routen im Lager"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Definieren Sie eine Mindestbestandsregel, so dass Odoo automatisch "
-"Bestellanfragen oder Entwürfe für Fertigungsaufsträge erstellt, um Ihr Lager"
-" wieder zu aufzustocken."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -4176,7 +4172,7 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_count
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN"
-msgstr ""
+msgstr "Anzahl Seriennummern"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_has_error_counter
@@ -5580,7 +5576,7 @@ msgstr "Berichtswesen"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr ""
+msgstr "Verlangen Sie eine Unterschrift für Ihre Lieferaufträge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -6715,6 +6711,7 @@ msgstr "Der Name eines Lagers muss innerhalb eines Unternehmens klar sein"
 #, python-format
 msgid "The number of Serial Numbers to generate must greater than zero."
 msgstr ""
+"Die Anzahl der zu erzeugenden Seriennummern muss größer als Null sein."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action

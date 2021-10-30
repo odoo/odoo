@@ -402,7 +402,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Min :</span>\n"
-"<span class=\"o_stat_text\">Max:</span>"
+"<span class=\"o_stat_text\">Maks:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -411,7 +411,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Min:</span>\n"
-"<span class=\"o_stat_text\">Max:</span>"
+"<span class=\"o_stat_text\">Maks:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -570,7 +570,7 @@ msgstr "<strong>Ürün Barkodu</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Product(s) tracked: </strong>"
-msgstr "<strong>İzlenen Ürün: </strong>"
+msgstr "<strong>İzlenen Ürün(ler): </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -623,7 +623,7 @@ msgstr "<strong>Ürünleri nereye göndermek istiyorsunuz?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? This may lead to inconsistencies in your inventory."
+msgstr "? Bu stoğunuzda tutarsızlıklara sebep olabilir."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -727,7 +727,7 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Deponuzda ki ürün hareketleri işlemlerini yönetmek için rota ekleyin ve özelleştirin: Örn. Mal kabul > kalite kontrol > gelen ürünlerin depolanması, seçim > paketleme > giden ürünün sevkıyatı.\n"
+"Deponuzdaki ürün hareketleri işlemlerini yönetmek için rota operasyonlarını ekleyin ve özelleştirin: Örn. Mal kabul > kalite kontrol > gelen ürünlerin depolanması, seçim > paketleme > giden ürünün sevkiyatı.\n"
 "Ayrıca gelen ürünleri göndermek için belirli alt konumları depo konum stratejinizde ayarlayabilirsiniz. ( Örn. belirli ambarlar, raflar)"
 
 #. module: stock
@@ -859,7 +859,7 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
-"İkmal için ürünün varsayılan rotaları yerine belirli rotalar uygulayın."
+"İkmal için ürünün varsayılan rotaları yerine belirli rota(lar) uygulayın."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -1043,7 +1043,7 @@ msgstr "Barkodlar (PDF)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_zpl
 msgid "Barcodes (ZPL)"
-msgstr "Barkod(ZPL)"
+msgstr "Barkodlar (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1715,7 +1715,7 @@ msgstr "Müşteri Konumları"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL USA Connector"
-msgstr "DHL USA Connector"
+msgstr "DHL USA Bağlantısı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1830,10 +1830,10 @@ msgstr "Öntanımlı depo izleme rotası"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Odoo'nun stoklarına otomatik olarak taslak teklif talebi ve üretim emri "
-"oluşturması için minimum stok kuralı tanımlayın."
+"Odoo'nun otomatik olarak teklif talebi ve teyit edilen üretim emirlerini "
+"oluşturarak stoğunuzu tamamlaması için minimum stok kuralı tanımlayın."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2338,7 +2338,7 @@ msgstr "Seçimde istisna(lar) oluştu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s):"
-msgstr "İstisnalar:"
+msgstr "İstisna(lar):"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -3352,12 +3352,12 @@ msgstr "Aynı anda kısmen veya tüm teslim edilecek malların belirtir"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
 msgid "JSON data for the popover widget"
-msgstr "JSON data for the popover widget"
+msgstr "Popover widget'ı için JSON verisi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__json_lead_days_popover
 msgid "Json Lead Days Popover"
-msgstr ""
+msgstr "Json Teslim Günleri Popover"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule____last_update
@@ -4022,7 +4022,7 @@ msgstr "Sonraki Aktivite Türü"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr "Etkilenen sonraki transferler:"
+msgstr "Etkilenen sonraki transfer(ler):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4696,7 +4696,7 @@ msgstr "Planlama Sorunu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Planning Issues"
-msgstr "Planning Issues"
+msgstr "Planlama Sorunları"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4757,7 +4757,7 @@ msgstr "Yazdır"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Print Count Sheet"
-msgstr ""
+msgstr "Baskı Sayım Sayfası"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -4954,7 +4954,7 @@ msgstr "Ürün Şablonu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
 msgid "Product Tracking"
-msgstr "Product Tracking"
+msgstr "Ürün İzleme"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -6528,7 +6528,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__is_editable
 msgid "Technical field to restrict editing."
-msgstr ""
+msgstr "Düzenlemeyi engellemek için teknik alan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__internal_transit_location_id
@@ -7045,7 +7045,7 @@ msgstr "Bitiş"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "To Backorder"
+msgstr "Ön Teslimat İçin"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -7057,7 +7057,7 @@ msgstr "Yapılacak"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr "To Order"
+msgstr "Sipariş İçin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
@@ -7409,6 +7409,7 @@ msgstr "Rezervasyonu Kaldır"
 #, python-format
 msgid "Unsupported search on %s outside of an Inventory Adjustment"
 msgstr ""
+"Bir Envanter Ayarlamasının dışında %s'de yapılan desteklenmeyen arama "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7583,6 +7584,8 @@ msgstr "Bekleyen Transferler"
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Want to speed up your inventory counts? Try our Barcode app"
 msgstr ""
+"Envanter sayımlarını hızlandırmak mı istiyorsunuz? Barkod uygulamasını "
+"deneyin."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -8287,7 +8290,7 @@ msgstr "_İptal"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "below the minimum inventory of"
-msgstr ""
+msgstr "envanterin altında"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
@@ -8298,7 +8301,7 @@ msgstr "bpost Bağlantısı"
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "day(s)"
-msgstr "Günler"
+msgstr "gün(ler)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -8370,4 +8373,4 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
+msgstr "maksimumuna ulaşmak için yeniden doldurulmalıdır"
