@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Anja Funk <anja.funk@afimage.de>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
@@ -42,7 +43,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Ausweis ausdrucken - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -53,7 +54,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "12 Tage / Jahr, davon <br>6 nach Wahl."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -62,7 +63,7 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Gratulation!</b> Darf ich Sie empfehlen um einen <a "
+"<b>Gratulation!</b> Darf ich Ihnen vorschlagen, einen <a "
 "href=\"%s\">Einarbeitungsplan</a>aufzusetzen?"
 
 #. module: hr
@@ -140,23 +141,23 @@ msgstr "<span class=\"ml8 mr-2\">IP-Adressen (mit Komma getrennt)</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
-msgstr ""
-"<span class=\"ml8 mr-2\">Mindestanzahl E-Mails die zu schicken sind </span>"
+msgstr "<span class=\"ml8 mr-2\">Mindestanzahl an E-Mails zu verschicken </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Close Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Aktivitäten schließen</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Detailed Reason</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label\">Detaillierte Begründung</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Personal Info</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Persönliche Info</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -193,7 +194,7 @@ msgstr "<span class=\"o_stat_text\">Verbunden seit</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mitarbeiter</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -219,14 +220,14 @@ msgstr "<strong><span>Bericht</span></strong>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "Eine Vollzeitstelle <br>Attraktives Gehaltspaket."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
-"Ein Benutzer kann nicht mit verschiedenen Mitarbeiter der gleichen "
-"Unternehmung verbunden werden."
+"Ein Benutzer kann nicht mit mehreren Mitarbeitern desselben Unternehmens "
+"verknüpft werden."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
@@ -319,7 +320,7 @@ msgstr "Neuen Mitarbeiter hinzufügen"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "Neuen Plan hinzufügen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
@@ -534,13 +535,13 @@ msgstr "Avatar 128"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -705,7 +706,7 @@ msgstr "Unternehmen"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Land des Unternehmens"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -858,7 +859,7 @@ msgstr "Geburtsdatum"
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
-msgstr ""
+msgstr "Standardmäßige Austrittsgründe können nicht gelöscht werden."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -915,7 +916,7 @@ msgstr "Grund für den Austritt"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr ""
+msgstr "Austrittsgründe"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -988,7 +989,7 @@ msgstr "Doktor"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
-msgstr ""
+msgstr "Führerschein"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1005,6 +1006,11 @@ msgid ""
 "                        Several activities are often organized all over the year, such as weekly\n"
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Jeder Mitarbeiter/in hat die Möglichkeit die Auswirkungen seiner/ihrer Arbeit zu sehen.\n"
+"                        Sie können einen echten Beitrag zum Unternehmenserfolg leisten.\n"
+"                        <br>\n"
+"                        Mehrere Aktivitäten werden oft das ganze Jahr über organisiert, wie zum Beispiel\n"
+"                        wöchentliche Sporteinheiten, Teambuilding-Events, monatliches Trinken und vieles mehr."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1015,7 +1021,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Eat &amp; Drink"
-msgstr "Essen & Trinken"
+msgstr "Essen &amp; Trinken"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1091,7 +1097,7 @@ msgstr "Mitarbeiterbild"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr ""
+msgstr "Mitarbeiter Sprache"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1111,7 +1117,7 @@ msgstr "Mitarbeiter-Tags"
 #: code:addons/hr/static/src/js/hr_employee.js:0
 #, python-format
 msgid "Employee Termination"
-msgstr ""
+msgstr "Beendigung des Arbeitsverhältnisses"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
@@ -1119,7 +1125,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_type
 msgid "Employee Type"
-msgstr ""
+msgstr "Mitarbeitertyp"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1176,13 +1182,13 @@ msgstr "Mitarbeiter"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
-msgstr "Personal"
+msgstr "Mitarbeiter"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "# Mitarbeiter"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -1287,7 +1293,7 @@ msgstr "FontAwesome Icon, z.B. fa-tasks"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__freelance
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__freelance
 msgid "Freelancer"
-msgstr ""
+msgstr "Freelancer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1298,7 +1304,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr ""
+msgstr "Obst, Kaffee und <br>Snacks werden bereitgestellt."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1362,7 +1368,7 @@ msgstr "Personalabteilung"
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
 #: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
-msgstr ""
+msgstr "HR-Mitarbeiter: Gültigkeit der Arbeitserlaubnis prüfen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1375,7 +1381,7 @@ msgstr "HR Einstellungen"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hat eine Nachricht"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1412,7 +1418,7 @@ msgstr "HR Icon Display"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "HR Präsenzstatus"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1442,7 +1448,7 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
 msgid "ID Card Copy"
-msgstr ""
+msgstr "Ausweiskopie"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
@@ -1546,7 +1552,7 @@ msgstr "Ist ein Abonnent"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr ""
+msgstr "Ist ein System"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1577,7 +1583,7 @@ msgstr "Stelle"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Arbeitsstellen"
+msgstr "Offene Stellen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1598,7 +1604,7 @@ msgstr "Jobs"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
 msgid "Lang"
-msgstr ""
+msgstr "Sprache"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1705,12 +1711,12 @@ msgstr "Lassen Sie uns eine Arbeitsposition schaffen."
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Standort"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
-msgstr ""
+msgstr "Standortnummer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
@@ -1740,7 +1746,7 @@ msgstr "Manager"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
-msgstr ""
+msgstr "Der Manager des Mitarbeiters %s ist nicht festgelegt."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -1834,7 +1840,7 @@ msgstr "Name"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
-msgstr "Nationalität"
+msgstr "Nationalität (Land)"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2178,6 +2184,8 @@ msgstr "Pläne"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
 msgstr ""
+"Verabreden Sie sich mit Kollegen zum Sport, <br>die Rechnung wird "
+"übernommen."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -2326,7 +2334,7 @@ msgstr "Grund"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "Personalbeschaffung"
+msgstr "Rekrutierung"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__recruit
@@ -2441,7 +2449,7 @@ msgstr "RV-Nummer"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr "Ausführungsplan"
+msgstr "Arbeitsplan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -2469,6 +2477,8 @@ msgstr "Reihenfolge"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr ""
+"Legen Sie einen Standardzeitplan für Ihr Unternehmen fest, um die "
+"Arbeitszeit Ihrer Mitarbeiter zu verwalten."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
@@ -2535,7 +2545,7 @@ msgstr "Vollständiger Name des Ehepartners"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr "Einstellung starten"
+msgstr "Rekrutierung starten"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2674,7 +2684,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
-msgstr ""
+msgstr "Die erwartete Zahl der neuen Mitarbeiter muss positiv sein."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2711,7 +2721,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
-msgstr ""
+msgstr "Die Arbeitserlaubnis von %(employee)s läuft am %(date)s ab."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -2939,6 +2949,9 @@ msgid ""
 "               can easily find all the information you need for each person;\n"
 "               contact data, job position, availability, etc."
 msgstr ""
+"Mit einem kurzen Blick auf den Mitarbeiterbildschirm von Odoo \n"
+"finden Sie alle Informationen, die Sie für jede Person benötigen; \n"
+"Kontaktdaten, Position, Verfügbarkeit, usw."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3005,7 +3018,7 @@ msgstr "Arbeitsbeitrag"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr ""
+msgstr "Ablaufdatum der Arbeitserlaubnis"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -3038,6 +3051,8 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
+"Sie dürfen nur Ihre Präferenzen aktualisieren. Bitte wenden Sie sich an "
+"einen Personalverantwortlichen, um andere Informationen zu aktualisieren."
 
 #. module: hr
 #. openerp-web
@@ -3082,7 +3097,7 @@ msgstr "z.B. John Doe"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "e.g. Onboarding"
-msgstr ""
+msgstr "z.B. Onboarding"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form

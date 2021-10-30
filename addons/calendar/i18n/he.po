@@ -493,7 +493,7 @@ msgstr "<span> שעות</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr "למשתמש לא יכול להיות פעמיים אותו איש קשר."
+msgstr "למשתמש לא יכול להיות אותו איש קשר פעמיים."
 
 #. module: calendar
 #. openerp-web
@@ -566,13 +566,13 @@ msgstr "הוסף"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "הודעה נוספת"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "הודעה נוספת שתישלח עם הודעת התזכורת"
 
 #. module: calendar
 #. openerp-web
@@ -586,7 +586,7 @@ msgstr "כל היום"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "כל היום, %(day)s"
 
 #. module: calendar
 #. openerp-web
@@ -637,7 +637,7 @@ msgstr "זמין"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "זמין/פנוי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -692,7 +692,7 @@ msgstr "אירוע לוח שנה"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "מסננים ליומן"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -707,7 +707,7 @@ msgstr "פגישת לוח שנה"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date updated"
-msgstr ""
+msgstr "לוח שנה: שינויי תאריך אירוע"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -719,17 +719,17 @@ msgstr "לוח שנה: תזכורת אירוע"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "לוח שנה: שינויי אירוע"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "הזמנה בלוח שנה"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "אירוע לוח שנה: תזכורת"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -741,7 +741,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
 msgid "Checked"
-msgstr ""
+msgstr "נבדק"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -876,7 +876,7 @@ msgstr "פרטים"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
 msgid "Display Description"
-msgstr ""
+msgstr "הצג תיאור"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -1112,7 +1112,7 @@ msgstr "ניתוב HTTP"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "יש הודעה"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -1155,6 +1155,11 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the time is shown as 'free', this event won't         be visible to other people at all. Use this option to let other people know that you are available during         that period of time."
 msgstr ""
+"אם פרק זמן זה מוצג כ'עסוק', האירוע הזה יהיה גלוי לאנשים אחרים עם המידע המלא "
+"או פשוט 'עסוק' בהתאם לפרטיות שלו. השתמש באפשרות זו כדי ליידע אנשים אחרים "
+"שאתה לא זמין במהלך פרק הזמן הזה. אם השעה מוצגת כ'פנויה', אירוע זה לא יהיה "
+"גלוי לאנשים אחרים כלל. השתמש באפשרות זו כדי ליידע אנשים אחרים שאתה זמין "
+"במהלך פרק הזמן הזה."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1204,7 +1209,7 @@ msgstr "האם האירוע מודגש"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "האם המארגן לבד"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -1297,6 +1302,7 @@ msgstr "פגישה"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
+"פגישה '%(name)s' מתחילה '%(start_datetime)s' ונגמרת ב '%(end_datetime)s'"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1318,7 +1324,7 @@ msgstr "סוגי פגישות"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "URL לפגישה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -1398,7 +1404,7 @@ msgstr "נדרשת פעולה"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "הפעילות הבאה ביומן"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1413,7 +1419,7 @@ msgstr "<i>אין עדיין משוב.</i>"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "לא נמצאו פגישות. בואו לתזמן אחד!"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1448,7 +1454,7 @@ msgstr "התראה - 30 דקות"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
+msgstr "הודעות נשלחות לכל המשתתפים כדי להזכיר את הפגישה."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1491,7 +1497,7 @@ msgstr "בסדר"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "משתמשים פנימיים בלבד"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
@@ -1532,7 +1538,7 @@ msgstr "נתונים הקשורים ללקוח/ספק של המשתמש"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "אנשים שיוכלו לראות את פרטי האירוע."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -1542,7 +1548,7 @@ msgstr "טלפון"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__phone
 msgid "Phone number of Invited Person"
-msgstr ""
+msgstr "מספר הטלפון של האדם המוזמן"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -1559,7 +1565,7 @@ msgstr "פרטי"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Private Event Excluded"
-msgstr ""
+msgstr "אירוע פרטי לא נכלל"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1640,7 +1646,7 @@ msgstr "חזור x פעמים"
 #: code:addons/calendar/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Reschedule"
-msgstr ""
+msgstr "מתוזמן מחדש"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1672,7 +1678,7 @@ msgstr "יום שבת"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "מתוזמן ע\"י"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1693,12 +1699,12 @@ msgstr "בחר משתתפים..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "שלח Email למשתתפים"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "שלח את ההזמנות"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1708,7 +1714,7 @@ msgstr "שלח דוא\"ל"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "הצג זמן כ-"
 
 #. module: calendar
 #. openerp-web
@@ -1793,7 +1799,7 @@ msgstr "תגיות"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "תבנית המשמשת לעיבוד תוכן תזכורת בדואר."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1859,7 +1865,7 @@ msgstr "מספר החזרות לא יכול להיות שלילי."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "אין משתתפים באירועים אלו"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -1889,6 +1895,7 @@ msgid ""
 "This field is used to know if the partner is checked in the filter of the "
 "calendar view for the user_id."
 msgstr ""
+"שדה זה משמש כדי לדעת אם השותף מסומן במסנן של תצוגת לוח השנה עבור user_id."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -1911,7 +1918,7 @@ msgstr "אזור זמן"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "אזור זמן המשמש להצגת זמן בתבנית הדואר"
 
 #. module: calendar
 #: code:addons/calendar/models/res_users.py:0
@@ -2011,7 +2018,7 @@ msgstr "כן אני הולך."
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "לא ניתן לעדכן הישנות ללא אירוע בסיס."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -2040,13 +2047,13 @@ msgstr "למשל: ארוחת צהריים עסקית"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
-msgstr ""
+msgstr "הארועים של %s "
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on %s"
-msgstr ""
+msgstr "ב %s"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -2058,7 +2065,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"
-msgstr ""
+msgstr "עד %s"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -2073,4 +2080,4 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: עדכון אירוע"

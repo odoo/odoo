@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "逾期 %1d 天"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -52,7 +52,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>編輯安全設定"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -66,6 +66,8 @@ msgid ""
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-"
+"muted\">當您以此帳戶建立交易後，則無法透過此處更改公司名稱或統一編號。<br/>請直接聯繫我們並進行此項操作。</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -257,7 +259,7 @@ msgstr "一旦為您的帳戶簽發了文檔，就不允許更改公司名稱。
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "檢查失敗"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -319,7 +321,7 @@ msgstr "聯繫人"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "無法保存文件<strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -352,7 +354,7 @@ msgstr "建立於"
 msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
-msgstr ""
+msgstr "當前可供查看此文檔的所有人使用，點選更改限制為內部員工。"
 
 #. module: portal
 #. openerp-web
@@ -361,7 +363,7 @@ msgstr ""
 msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
-msgstr ""
+msgstr "當前僅限內部員工使用，點選更改使其可供查看此文檔的所有人使用。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -403,7 +405,7 @@ msgstr "文件"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "%1d 天後到期"
 
 #. module: portal
 #. openerp-web
@@ -428,30 +430,30 @@ msgstr "電郵線程"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "僅限員工"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Forgot password?"
-msgstr ""
+msgstr "忘記密碼？"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "授與權限"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 msgid "Grant Portal Access"
-msgstr "授予門戶存取權限"
+msgstr "授予網站登入存取權限"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.actions.server,name:portal.partner_wizard_action_create_and_open
 msgid "Grant portal access"
-msgstr "授予門戶存取權限"
+msgstr "授予網站登入存取權限"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -495,12 +497,12 @@ msgstr "邀請消息"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "為內部使用者"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "發送報價以測試客戶網站登入介面"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -526,7 +528,7 @@ msgstr "最後更新於"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "最近登入"
 
 #. module: portal
 #. openerp-web
@@ -556,7 +558,7 @@ msgstr "消息"
 msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
-msgstr ""
+msgstr "模型 %(model_name)s 不支持金鑰認證，因為它沒有 %(field_name)s 字段。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -571,7 +573,7 @@ msgstr "名稱"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "新密碼:"
 
 #. module: portal
 #. openerp-web
@@ -607,12 +609,12 @@ msgstr "合作夥伴"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "密碼已更新！"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "密碼:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -624,7 +626,7 @@ msgstr "電話"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "請輸入您的密碼以確認您可使用此帳戶"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -641,12 +643,12 @@ msgstr "網站入口訪問網址"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr "門戶 Mixin"
+msgstr "網站登入 Mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr "門戶共用"
+msgstr "網站登入分享"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -656,7 +658,7 @@ msgstr "網站入口使用者配置"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr ""
+msgstr "網站登入：用戶邀請"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -686,7 +688,7 @@ msgstr "已在 %s 時發佈"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "重新邀請"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -711,7 +713,7 @@ msgstr "相關的單據模型"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "收回使用權限"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -728,7 +730,7 @@ msgstr "安全"
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "資訊安全控制"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -777,7 +779,7 @@ msgstr "登入"
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
-msgstr ""
+msgstr "某些欄位是必填內容。請務必留下訊息或附上文件"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -788,7 +790,7 @@ msgstr "一些必要資訊尚未填入。"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "州/省"
+msgstr "縣市"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -833,13 +835,13 @@ msgstr "附件不存在，或者您沒有訪問它的許可權。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "聯繫人“%s”沒有有效的電子郵件。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
-msgstr ""
+msgstr "聯繫人“%s”的電子郵件地址與現有用戶 (%s) 相同。"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -865,13 +867,13 @@ msgstr "您提供的原密碼是錯誤的，密碼沒有改變。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "合作夥伴“%s”已經擁有網站登入訪問權限。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access."
-msgstr ""
+msgstr "合作夥伴“%s”沒有網站登入訪問權限。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -879,7 +881,7 @@ msgstr ""
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
-msgstr ""
+msgstr "找不到用於向網站登入用戶發送電子郵件的模板“網站登入：新會員”。"
 
 #. module: portal
 #. openerp-web
@@ -897,25 +899,25 @@ msgstr "此附件不存在。"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr "這是客戶門戶的預覽。"
+msgstr "這是客戶網站登入的預覽。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
-msgstr ""
+msgstr "該合作夥伴與內部使用者連結，並且曾登入系統。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
-msgstr ""
+msgstr "此文本包含在發送給新網站登入會員的電子郵件末尾。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "這段文字會被包含在發給網站入口網站的新使用者的電郵中。"
+msgstr "這段文字會被包含在發給網站登入的新使用者的信件中。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -940,7 +942,7 @@ msgstr "增值稅號碼"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "驗證新密碼:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1065,12 +1067,12 @@ msgstr "您必須"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "您應該首先向合作夥伴“%s”授予網站登入訪問權限。"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your account at {{ object.user_id.company_id.name }}"
-msgstr ""
+msgstr "您在 {{ object.user_id.company_id.name }} 的帳戶"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1118,7 +1120,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "密碼"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

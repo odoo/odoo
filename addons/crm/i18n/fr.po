@@ -8,6 +8,7 @@
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,6 +193,10 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"En enregistrant cette modification, l'e-mail du client sera "
+"également mis à jour.\" attrs=\"{'invisible': [('partner_email_update', '=',"
+" False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -200,6 +205,10 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"En enregistrant cette modification, le numéro de téléphone du client"
+" sera également mis à jour.\" attrs=\"{'invisible': "
+"[('partner_phone_update', '=', False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -665,7 +674,7 @@ msgstr "Le téléphone sur la liste noire est mobile"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr "Quel exploit ! Record de l'équipe au cours des 30 derniers jours."
+msgstr "Quel exploit ! Record de l'équipe au cours des 30 derniers jours."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
@@ -841,7 +850,7 @@ msgstr "Confirmer"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr "Félicitations, bonne chance pour attraper de si gros poissons! \\ :)"
+msgstr "Félicitations, bonne chance pour attraper de si gros poissons ! :)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -973,7 +982,7 @@ msgstr "Créer une piste"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr ""
+msgstr "Créer un motif de perte"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
@@ -1500,7 +1509,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0 code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
-msgstr "Continuez ! Félicitations pour votre premier contrat."
+msgstr "Continuez ! Félicitations pour votre premier contrat."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -1694,7 +1703,7 @@ msgstr "Est un abonné"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
 msgid "Is Won Stage?"
-msgstr "Est en étape gagné?"
+msgstr "Est en étape gagné ?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
@@ -2133,7 +2142,7 @@ msgstr "Marquer comme perdu"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as won"
-msgstr ""
+msgstr "Marquer comme gagné"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2305,7 +2314,7 @@ msgstr "Nouveau"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr ""
+msgstr "Nouvelle piste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
@@ -2444,7 +2453,7 @@ msgstr "Pas d'activité suivante planifiée"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "No opportunity to display!"
-msgstr ""
+msgstr "Aucune possibilité à afficher !"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2840,7 +2849,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "Piste dupliquée potentielle"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
@@ -2907,7 +2916,7 @@ msgstr "Qualifié"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
-msgstr "Prêt à booster vos ventes? Découvrons votre <b>Pipeline</b>."
+msgstr "Prêt à booster vos ventes ? Découvrons votre <b>Pipeline</b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -3450,14 +3459,14 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Ce nom vous aidera à suivre vos différentes campagnes marketing, p. ex. "
+"Ce nom vous aidera à suivre vos différentes campagnes marketing, p. ex. "
 "Campagne_automnale ou Spécial_Noël"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Le mode de livraison, p. ex. carte postale, e-mail ou bannière publicitaire"
+"Le mode de livraison, p. ex. carte postale, e-mail ou bannière publicitaire"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -3465,7 +3474,7 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"La source du lien, p. ex. moteur de recherche, domaine externe ou nom de la "
+"La source du lien, p. ex. moteur de recherche, domaine externe ou nom de la "
 "liste d'adresses e-mail"
 
 #. module: crm
@@ -3489,7 +3498,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
 msgstr ""
-"Ceci va attribuer des pistes à tous les membres. Voulez-vous continuer?"
+"Ceci va attribuer des pistes à tous les membres. Voulez-vous continuer ?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
@@ -3685,6 +3694,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr ""
+"Utilisez le bouton en haut à gauche <i>Create</i>, ou envoyer un e-mail à"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3818,7 +3828,7 @@ msgstr "Gagné dans les opportunités cibles"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr "Super ! Contrats de l'équipe au cours des 7 derniers jours."
+msgstr "Super ! Contrats de l'équipe au cours des 7 derniers jours."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -3836,14 +3846,14 @@ msgstr "Vous n'avez pas les accès nécessaires pour exécuter ce cron."
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr ""
-"Vous venez de battre votre record personnel au cours des 30 derniers jours."
+"Vous venez de battre votre record personnel au cours des 30 derniers jours."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr ""
-"Vous venez de battre votre record personnel au cours des 7 derniers jours."
+"Vous venez de battre votre record personnel au cours des 7 derniers jours."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -3869,7 +3879,7 @@ msgstr "Code postal"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr "par exemple: Négociation"
+msgstr "par exemple : Négociation"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3890,7 +3900,7 @@ msgstr "e.x. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "pour les pistes créées à partir de:"
+msgstr "pour les pistes créées à partir de :"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

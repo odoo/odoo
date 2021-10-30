@@ -9,6 +9,7 @@
 # Martin Trigaux, 2021
 # Rudolf Schnapka <rs@techno-flex.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
@@ -1116,7 +1117,7 @@ msgstr "Strichcode"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Barcode Nomenkaltur"
+msgstr "Barcode-Nomenklatur"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -1144,6 +1145,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Der nachfolgende Text dient als Anregung und liegt nicht in der "
+"Verantwortung von Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -1878,12 +1881,12 @@ msgstr "Auslieferungszeit"
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
 msgid "Customer Location"
-msgstr "Kundenlagerort"
+msgstr "Kundenstandort"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Kundenlagerorte"
+msgstr "Kundenstandorte"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2953,7 +2956,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__has_message
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hat eine Nachricht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -3859,6 +3862,11 @@ msgid "Late Transfers"
 msgstr "Verspätete Lieferungen"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__products_availability
+msgid "Latest product availability status of the picking"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
 msgid "Lead Days Date"
 msgstr ""
@@ -4655,7 +4663,7 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_count
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN"
-msgstr ""
+msgstr "Anzahl Seriennummern"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
@@ -5437,7 +5445,7 @@ msgstr "Prod. Anzahl"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Product"
-msgstr "Produkt"
+msgstr "Produkte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability
@@ -5987,7 +5995,7 @@ msgstr "Anlieferungsroute"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Kassenbelege"
+msgstr "Anlieferungen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6215,7 +6223,7 @@ msgstr ""
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr ""
+msgstr "Verlangen Sie eine Unterschrift für Ihre Lieferaufträge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
@@ -6921,7 +6929,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Sign"
-msgstr "Unterschreiben"
+msgstr "eSignatur"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_sign_delivery
@@ -7558,6 +7566,7 @@ msgstr "Der Name eines Lagers muss innerhalb eines Unternehmens klar sein"
 #, python-format
 msgid "The number of Serial Numbers to generate must greater than zero."
 msgstr ""
+"Die Anzahl der zu erzeugenden Seriennummern muss größer als Null sein."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9097,6 +9106,8 @@ msgstr ""
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+"Sie sollten dieses Dokument aktualisieren, damit es Ihre "
+"Geschäftsbedingungen widerspiegelt."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

@@ -78,6 +78,8 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"%(record_label)s 的統一編號 [%(wrong_vat)s] 未通過 VIES 增值稅驗證檢查或不符合預期的格式 "
+"%(expected_format)s。"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -86,6 +88,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"record_label 的統一編號 [%(wrong_vat)s] 似乎無效。\n"
+"注意：預期格式為 %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -93,7 +97,7 @@ msgstr ""
 msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
-msgstr ""
+msgstr "檢測到此外國統一編號的國家與此財務狀況中設置的國家不匹配。"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -122,10 +126,10 @@ msgstr "使用歐洲 VIES 服務驗證統一編號"
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "財政狀況 [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "合作夥伴 [%s]"

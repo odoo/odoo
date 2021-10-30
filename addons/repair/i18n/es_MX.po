@@ -29,7 +29,7 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'draft' and 'Cotización de Reparación - %s' % (object.name) or\n"
+"                object.state == 'draft' and 'Cotización de reparación - %s' % (object.name) u\n"
 "                'Orden de reparación - %s' % (object.name))"
 
 #. module: repair
@@ -270,7 +270,7 @@ msgid ""
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Elija el partner para el que se facturará y entregará el pedido. Puede "
-"encontrar un socio por su nombre, RFC, correo electrónico o referencia "
+"encontrar un partner por su nombre, RFC, correo electrónico o referencia "
 "interna."
 
 #. module: repair
@@ -284,7 +284,7 @@ msgstr "Índice de colores"
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
-msgstr "Compañía"
+msgstr "Empresa"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
@@ -469,7 +469,7 @@ msgstr "Seguidores"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Contactos)"
+msgstr "Seguidores (Partners)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
@@ -680,7 +680,7 @@ msgstr "Lote/Número de serie"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Adjuntos principales"
+msgstr "Archivos adjuntos principales"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -1041,7 +1041,7 @@ msgstr "Debe cancelar la reparación para ponerla en borrador."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr "La reparación debe estar confirmada antes de comenzar la reparación."
+msgstr "La reparación debe estar confirmada antes de comenzarse."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de stock"
+msgstr "Movimiento de inventario"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
