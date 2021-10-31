@@ -3,10 +3,10 @@
 # * base_address_extended
 # 
 # Translators:
-# Kristoffer Grundström <hamnisdude@gmail.com>, 2019
+# Kristoffer Grundström <lovaren@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
-# Kim Asplund <kim.asplund@gmail.com>, 2019
+# Kim Asplund <kim.asplund@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:48+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2019\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Ändra hur systemet beräknar hela gatufältet baserat på de olika "
+"gatudelfälten"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -67,6 +69,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Format att använda för gator som tillhör detta land.\n"
+"\n"
+"Du kan använda strängmönstret i python-stil med alla fält på gatan (till exempel använd '%(street_name)s, %(street_number)s' om du vill visa gatunamnet, följt av ett kommatecken och husnumret)\n"
+"%(street_name)s: namnet på gatan\n"
+"%(street_number)s: husnummer\n"
+"%(street_number2)s: dörrnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -110,4 +118,4 @@ msgstr "Gata format..."
 #: code:addons/base_address_extended/models/base_address_extended.py:113
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Ökänt fällt %s i gatuformat."
