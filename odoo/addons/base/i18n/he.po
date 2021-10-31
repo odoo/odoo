@@ -20,6 +20,7 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # yotam linder <linder@laylinetech.com>, 2021
 # hed shefetr <hed@laylinetech.com>, 2021
+# david danilov, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
@@ -1458,9 +1459,9 @@ msgstr ""
 "\n"
 "הרשאות לחשבונאות\n"
 "========================\n"
-"זה נותן למשתמש הרשאת גישה לכל תוכנות החשבונאיות כגון פריטים היומן ואת התרשים של חשבונות.\n"
+"זה נותן למשתמש הרשאת גישה לכל תוכנות החשבונאיות כגון פריטי היומן ואת התרשים של חשבונות.\n"
 "\n"
-"מקצה זכויות מנהל ומשתמש לאדמיניסטרטור עבור היישום החשבונאי ורק זכויות משתמש למשתמש ההדגמה.\n"
+"מקנה זכויות מנהל ומשתמש לאדמיניסטרטור עבור אפליקציית הנח\"ש ורק זכויות משתמש למשתמש שמדגים.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -6275,7 +6276,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr ""
+msgstr "# הרשאות גישה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
@@ -6884,6 +6885,8 @@ msgid ""
 "                            The key cannot be retrieved later and provides <b>full access</b>\n"
 "                            to your user account, it is very important to store it securely."
 msgstr ""
+"חשוב: לא ניתן לאחזר את המפתח בשלב מאוחר יותר והוא מספק גישה מלאה לחשבון "
+"המשתמש שלך, חשוב מאוד לאחסן אותו בצורה מאובטחת."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7261,17 +7264,17 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
-msgstr ""
+msgstr "מפתח API: קליטת נתונים באצמעות אשף"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 msgid "API Keys"
-msgstr ""
+msgstr "מפתח API"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr ""
+msgstr "רשימת מפתחות API"
 
 #. module: base
 #: code:addons/fields.py:0
@@ -7339,12 +7342,12 @@ msgstr "אסימון גישה"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr
 msgid "Access documents from the employee profile"
-msgstr ""
+msgstr "גישה למסמכים מחשבון העובד"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_profile
 msgid "Access the website profile of the users"
-msgstr ""
+msgstr "גישה לפרופיל האתר של המשתמשים"
 
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
@@ -7683,7 +7686,7 @@ msgstr "הוסף"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "הוסף שפה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -8200,6 +8203,8 @@ msgid ""
 "Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
+"מאפשר לגשת לפרופיל האתר של המשתמשים בכדי לראות את הסטטיסטיקה שלהם (קארמה, "
+"תגים וכו')"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_forum
@@ -9668,7 +9673,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr ""
+msgstr "לא ניתן לבטל שפה שנמצאת כעת בשימוש על ידי אנשי קשר."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -10256,7 +10261,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
 msgid "Compare To View"
-msgstr ""
+msgstr "השווה לצפייה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
@@ -10271,7 +10276,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
 msgid "Compare/Reset"
-msgstr ""
+msgstr "השווה/אפס"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address
@@ -10549,7 +10554,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Contact your administrator to request access if necessary."
-msgstr ""
+msgstr "פנה למנהל המערכת שלך כדי לבקש הרשאת גישה במידת הצורך."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -10864,7 +10869,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Create company"
-msgstr ""
+msgstr "צור חברה חדשה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -12542,7 +12547,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "הזן תיאור של המפתח ומטרתו."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -13917,7 +13922,7 @@ msgstr "צור מונחים חסרים"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Generate key"
-msgstr ""
+msgstr "צור מפתח"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -17998,7 +18003,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Name your key"
-msgstr ""
+msgstr "תן שם לפתח"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -18054,7 +18059,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr ""
+msgstr "מפתח API חדש"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -18379,7 +18384,7 @@ msgstr "מספר חברות"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr ""
+msgstr "מספר הרשאות הגישה החלות על המשתמש הנוכחי"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
@@ -19726,7 +19731,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
-msgstr ""
+msgstr "רק משתמשים פנימיים יכולים ליצור מפתחות API"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -20114,7 +20119,7 @@ msgstr "שרתי דואר יוצא"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "יומן Outlook"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -20342,7 +20347,7 @@ msgstr "השלמה אוטומטית של לקוח/ספק"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr ""
+msgstr "תגיות שותפים"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
@@ -23101,7 +23106,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
 msgid "Social media connectors for company settings."
-msgstr ""
+msgstr "קשרי המדיה החברתית להגדרות החברה."
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -23129,7 +23134,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
-msgstr ""
+msgstr "מצטערים, אינך רשאי לשדה זה במסמך המצורף."
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:0
@@ -23849,7 +23854,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
 msgid "Test API"
-msgstr ""
+msgstr "בדיקת API"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_action_bindings
@@ -23932,7 +23937,7 @@ msgstr "בדיקות"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr ""
+msgstr "בדיקות של זרימת מפתחות API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -24030,7 +24035,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique !"
-msgstr ""
+msgstr "קוד כתובת האתר של השפה חייב להיות ייחודי!"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -24115,7 +24120,7 @@ msgstr "אובייקט מסד הנתונים המצורף אליו יצורף."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "חברת ברירת המחדל עבור משתמש זה."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -24517,7 +24522,7 @@ msgstr "עמודה זו מכילה נתוני מודול ולא ניתן להס�
 #: model:ir.model.fields,help:base.field_res_company__favicon
 msgid ""
 "This field holds the image used to display a favicon for a given company."
-msgstr ""
+msgstr "שדה זה מכיל את התמונה המשמשת להצגת סמל עבור חברה נתונה."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
@@ -24617,7 +24622,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
-msgstr ""
+msgstr "ניתן לגשת לשיטה זו רק דרך HTTP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -26774,7 +26779,7 @@ msgstr "לא ניתן ליצור שני משתמשים עם אותם פרטי ה
 #, python-format
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
-msgstr ""
+msgstr "אינך יכול להסיר מפתחות API אלא אם הם שלך או שאתה משתמש במערכת"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -27194,7 +27199,7 @@ msgstr "השג"
 msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
-msgstr ""
+msgstr "הותקן בהצלחה.משתמשים יכולים לבחור את השפה המועדפת עליו בהעדפותיהם."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -27376,7 +27381,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "שני"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
@@ -27401,7 +27406,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr ""
+msgstr "בדיקה של זכויות גישה וכללים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
