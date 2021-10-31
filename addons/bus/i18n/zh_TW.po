@@ -3,17 +3,18 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +26,6 @@ msgstr ""
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "使用者只能有一個IM狀態 。"
-
-#. module: bus
-#: model:ir.model,name:bus.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "自動清空"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -49,12 +45,12 @@ msgstr "通信匯流排"
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "創建者"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
@@ -84,7 +80,7 @@ msgstr "IM的狀態"
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改時間"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -99,12 +95,12 @@ msgstr "最後登錄"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "最後更新者"
+msgstr "最後更新人"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -120,6 +116,21 @@ msgstr "離線"
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "線上"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "Refresh"
+msgstr "重新整理"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr "該頁面似乎已逾時"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

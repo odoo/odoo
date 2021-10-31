@@ -53,11 +53,13 @@ msgid ""
 "request did not return any result (no credits were used). Try removing some "
 "filters.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', "
+"'no_result')]}\">您的請求沒有找到任何結果（沒有使用積分）。嘗試刪除一些篩選條件。</span>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
-msgstr ""
+msgstr "<span class=\"col-md-6\">每個公司的額外聯繫人</span>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -77,27 +79,27 @@ msgstr "汽車及零部件"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
 msgid "Available State"
-msgstr ""
+msgstr "可用狀態"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69_157
 msgid "Banks & Insurance"
-msgstr ""
+msgstr "銀行與保險"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Buy credits."
-msgstr ""
+msgstr "購買積分。"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
 msgid "CEO"
-msgstr ""
+msgstr "CEO"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
 msgid "CRM IAP Lead Industry"
-msgstr ""
+msgstr "CRM IAP 線索行業"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
@@ -197,12 +199,12 @@ msgstr "建立於"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Default Tags"
-msgstr ""
+msgstr "默認標籤"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_lead_label
 msgid "Display Lead Label"
-msgstr ""
+msgstr "顯示線索標籤"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
@@ -216,7 +218,7 @@ msgstr "顯示名稱"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158_159
 msgid "Diversified Financials & Financial Services"
-msgstr ""
+msgstr "多元化金融及金融服務"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
@@ -238,7 +240,7 @@ msgstr "Email"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138_156
 msgid "Energy & Utilities "
-msgstr ""
+msgstr "能源與公用事業"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
@@ -249,7 +251,7 @@ msgstr "錯誤"
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error_type
 msgid "Error Type"
-msgstr ""
+msgstr "錯誤類型"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
@@ -339,12 +341,12 @@ msgstr "行業/產業"
 #. module: crm_iap_lead
 #: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
 msgid "Industry name already exists!"
-msgstr ""
+msgstr "行業名稱已存在！"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__credits
 msgid "Insufficient Credits"
-msgstr ""
+msgstr "點數不足"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
@@ -419,7 +421,7 @@ msgstr "線索"
 #. module: crm_iap_lead
 #: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
 msgid "List of available states based on selected countries"
-msgstr ""
+msgstr "基於選定國家/地區的可用狀態列表"
 
 #. module: crm_iap_lead
 #. openerp-web
@@ -427,7 +429,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
-msgstr ""
+msgstr "尋找更多機會？<br>嘗試<b>潛在客戶生成</b>工具。"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
@@ -462,14 +464,14 @@ msgstr "新的"
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__no_result
 msgid "No Result"
-msgstr ""
+msgstr "查無結果"
 
 #. module: crm_iap_lead
 #. openerp-web
 #: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Now, just let the magic happen!"
-msgstr ""
+msgstr "現在，讓魔法發生吧！"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
@@ -642,7 +644,7 @@ msgstr "電信服務"
 #. module: crm_iap_lead
 #: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
 msgid "The list of reveal_ids for this industry, separated with ','"
-msgstr ""
+msgstr "該行業的reveal_id列表，以','分隔"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
@@ -672,25 +674,25 @@ msgstr "將消耗%d額外的積分來識別%d每個公司的聯繫人。"
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "What do you need ?"
-msgstr ""
+msgstr "你需要什麼 ？"
 
 #. module: crm_iap_lead
 #. openerp-web
 #: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Which Industry do you want to target?"
-msgstr ""
+msgstr "您想針對哪個行業？"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "You do not have enough credits to submit this request."
-msgstr ""
+msgstr "您沒有足夠的積分來提交此請求。"
 
 #. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Your request could not be executed: %s"
-msgstr ""
+msgstr "無法執行您的請求：%s"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2

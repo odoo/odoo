@@ -8,7 +8,7 @@
 # Andy Cheng <andy.cheng@richsoda.com>, 2020
 # 曾逸民 <suncombo@gmail.com>, 2020
 # bluce Lan <bluce.lan@gmail.com>, 2020
-# Benson White <Benson.Dr@Gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
@@ -29,13 +29,13 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "%(amount)s %(currency)s 折扣總額"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(product_name)s 的 %(percentage)s%% 折扣"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -59,7 +59,7 @@ msgstr "%s%%總價上打折"
 #: code:addons/coupon/wizard/coupon_generate.py:0
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr ""
+msgstr "%s，已為您生成優惠券"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -73,6 +73,9 @@ msgid ""
 "'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
 "class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -86,14 +89,14 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\">如果為 0，則無限制</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid ""
 "<span> Days</span>\n"
 "                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
-msgstr ""
+msgstr "<span>天數</span><span class=\"oe_grey\">如果為 0，優惠券不會過期</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -107,23 +110,23 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>最低購買量</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>以上購買有效</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>產品</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 55px; color: #875A7B\">免運費</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
@@ -314,7 +317,7 @@ msgstr "優惠券規則"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Coupon Validity"
-msgstr ""
+msgstr "優惠券有效期"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
@@ -346,7 +349,7 @@ msgstr "優惠券計劃將只為選定的客戶"
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "優惠券：根據日期控制優惠券有效期限"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -544,12 +547,12 @@ msgstr "生成類型"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
 msgid "Has Partner Email"
-msgstr ""
+msgstr "有合作夥伴電子郵件"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "這是你的獎勵"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -891,7 +894,7 @@ msgstr "選擇獎勵產品"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "發送優惠券"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -913,12 +916,12 @@ msgstr "序號"
 msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
-msgstr ""
+msgstr "某些選定的客戶沒有電子郵件地址，因此不會收到優惠券。"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Specify a mail template to send the generated coupons as email."
-msgstr ""
+msgstr "指定郵件模板以將生成的優惠券作為電子郵件發送。"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -944,7 +947,7 @@ msgstr "含稅"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "非常感謝,"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
@@ -967,7 +970,7 @@ msgstr "固定金額折扣"
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "折扣百分比，介於 1 和 100 之間"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1008,7 +1011,7 @@ msgstr "此優惠券已過期 (%s)."
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "總訂單統計"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
@@ -1066,29 +1069,29 @@ msgstr "不能刪除處於活動狀態的程序。"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "e.g. 10% Discount"
-msgstr ""
+msgstr "例如10% 折扣"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off %s"
-msgstr ""
+msgstr "關閉%s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on %s"
-msgstr ""
+msgstr "%s 關閉"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on some products*"
-msgstr ""
+msgstr "關閉某些產品*"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on the cheapest product"
-msgstr ""
+msgstr "關閉最便宜的產品"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "在您的下一個訂單"

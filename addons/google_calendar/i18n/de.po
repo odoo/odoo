@@ -13,6 +13,7 @@
 # Kevin Harrings <kha@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Leon Grill <leg@odoo.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr ""
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
-msgstr ""
+msgstr "(Kein Titel)"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
@@ -168,7 +169,7 @@ msgstr "Erstellt am"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr ""
+msgstr "Aus Odoo löschen"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
@@ -178,7 +179,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr ""
+msgstr "Vom aktuellen Google Calendar Account löschen"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -228,7 +229,7 @@ msgstr "Google Calendar: synchronisierung"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr ""
+msgstr "Google-Synchronisierung angehalten"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -284,7 +285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr ""
+msgstr "Synchronisierung erforderlich"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
@@ -366,17 +367,17 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr ""
+msgstr "Einen Datensatz mit Google Calendar synchronisieren"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr ""
+msgstr "Alle bestehenden Termine sychronisieren"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr ""
+msgstr "Nur neue Termine synchronisieren"
 
 #. module: google_calendar
 #. openerp-web
@@ -402,18 +403,23 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"Der folgende Termin konnte nicht mit Google Calendar synchronisiert werden. "
+"</br>Er wird nicht synchronisiert, solange er nicht aktualisiert wird. "
+"</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Die Synchronisierung mit Google Calendar wurde erfolgreich gestoppt."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
+"Dies wirkt sich nur auf Ereignisse aus, für die der Benutzer der Eigentümer "
+"ist"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
@@ -448,6 +454,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"Sie sind dabei, die Synchronisierung Ihres Kalenders mit Google zu beenden. "
+"Sind Sie sicher, dass Sie fortfahren möchten?"
 
 #. module: google_calendar
 #. openerp-web
@@ -471,3 +479,5 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+"Sie scheinen keine Berechtigung zu haben, diesen Termin in Google Calendar "
+"zu ändern."
