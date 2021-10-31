@@ -71,6 +71,9 @@ models.Orderline = models.Orderline.extend({
             // not to be sent to the kitchen
             this.mp_skip  = false;
         }
+        if (!this.changes_uid) {
+            this.changes_uid = `${this.product.id}${Date.now()}`;
+        }
     },
     // can this orderline be potentially printed ?
     printable: function() {
@@ -80,11 +83,13 @@ models.Orderline = models.Orderline.extend({
         _super_orderline.init_from_JSON.apply(this,arguments);
         this.mp_dirty = json.mp_dirty;
         this.mp_skip  = json.mp_skip;
+        if (json.changes_uid) this.changes_uid = json.changes_uid;
     },
     export_as_JSON: function() {
         var json = _super_orderline.export_as_JSON.apply(this,arguments);
         json.mp_dirty = this.mp_dirty;
         json.mp_skip  = this.mp_skip;
+        json.changes_uid = this.changes_uid;
         return json;
     },
     set_quantity: function(quantity) {
@@ -117,9 +122,9 @@ models.Orderline = models.Orderline.extend({
     },
     get_line_diff_hash: function(){
         if (this.get_note()) {
-            return this.id + '|' + this.get_note();
+            return this.changes_uid + '|' + this.get_note();
         } else {
-            return '' + this.id;
+            return '' + this.changes_uid;
         }
     },
 });
