@@ -78,6 +78,10 @@ def rotate_pdf(pdf):
         writer.write(_buffer)
         return _buffer.getvalue()
 
+def get_pdf_number_of_pages(pdf):
+    file_pdf = PdfFileReader(io.BytesIO(pdf), strict=False, overwriteWarnings=False)
+    return file_pdf.getNumPages()
+
 # by default PdfFileReader will overwrite warnings.showwarning which is what
 # logging.captureWarnings does, meaning it essentially reverts captureWarnings
 # every time it's called which is undesirable
