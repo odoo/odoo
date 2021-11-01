@@ -25,7 +25,6 @@ class SaleOrder(models.Model):
         DeliveryCarrier = self.env['delivery.carrier']
 
         if self.only_services:
-            self.write({'carrier_id': None})
             self._remove_delivery_line()
             return True
         else:
@@ -72,12 +71,4 @@ class SaleOrder(models.Model):
     def _cart_update(self, *args, **kwargs):
         """ Override to update carrier quotation if quantity changed """
         self._remove_delivery_line()
-
-        # When you update a cart, it is not enough to remove the "delivery cost" line
-        # The carrier might also be invalid, eg: if you bought things that are too heavy
-        # -> this may cause a bug if you go to the checkout screen, choose a carrier,
-        #    then update your cart (the cart becomes uneditable)
-        if self.carrier_id:
-            self.carrier_id = False
-
         return super()._cart_update(*args, **kwargs)
