@@ -96,7 +96,12 @@ registerModel({
                 return `/web/image/${this.id}?signature=${this.checksum}`;
             }
             if (this.isPdf) {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}`;
+                const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`
+                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                    return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+                }
+                const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : '';
+                return `${pdf_lib}/web/content/${this.id}${accessToken}`;
             }
             if (this.isUrlYoutube) {
                 const urlArr = this.url.split('/');
@@ -110,7 +115,11 @@ registerModel({
                 }
                 return `https://www.youtube.com/embed/${token}`;
             }
-            return `/web/content/${this.id}`;
+            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+            }
+            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+            return `/web/content/${this.id}${accessToken}`;
         },
         /**
          * @private
