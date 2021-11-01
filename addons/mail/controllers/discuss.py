@@ -145,11 +145,11 @@ class DiscussController(http.Controller):
         return channel_partner_sudo.env['ir.http']._content_image(model='mail.guest', res_id=guest_id, field='avatar_128')
 
     @http.route('/mail/channel/<int:channel_id>/attachment/<int:attachment_id>', methods=['GET'], type='http', auth='public')
-    def mail_channel_attachment(self, channel_id, attachment_id, **kwargs):
+    def mail_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
         channel_partner_sudo = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
         if not channel_partner_sudo.env['ir.attachment'].search([('id', '=', int(attachment_id)), ('res_id', '=', int(channel_id)), ('res_model', '=', 'mail.channel')], limit=1):
             raise NotFound()
-        return channel_partner_sudo.env['ir.http']._get_content_common(res_id=int(attachment_id), download=True)
+        return channel_partner_sudo.env['ir.http']._get_content_common(res_id=int(attachment_id), download=download)
 
     @http.route([
         '/mail/channel/<int:channel_id>/image/<int:attachment_id>',
