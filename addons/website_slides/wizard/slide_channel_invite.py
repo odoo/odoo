@@ -66,7 +66,7 @@ class SlideChannelInvite(models.TransientModel):
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self._render_field('subject', slide_channel_partner.ids, options={'render_safe': True})[slide_channel_partner.id]
+        subject = self._render_field('subject', slide_channel_partner.ids)[slide_channel_partner.id]
         body = self._render_field('body', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
