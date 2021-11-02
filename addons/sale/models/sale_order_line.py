@@ -321,7 +321,11 @@ class SaleOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
-    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', default=False, domain="[('sales', '=', True), ('product_id','=',product_id)]", check_company=True)
+    product_packaging_id = fields.Many2one(
+        'product.packaging', string='Packaging',
+        compute='_compute_product_packaging_id', store=True, readonly=False,
+        domain="[('sales', '=', True), ('product_id','=',product_id)]",
+        check_company=True)
     product_packaging_qty = fields.Float('Packaging Quantity')
 
     @api.depends('state')
@@ -413,14 +417,16 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_manual = line.qty_delivered if line.qty_delivered_method == 'manual' else 0.0
 
-    @api.onchange('product_id', 'product_uom_qty', 'product_uom')
-    def _onchange_suggest_packaging(self):
-        # remove packaging if not match the product
-        if self.product_packaging_id.product_id != self.product_id:
-            self.product_packaging_id = False
-        # suggest biggest suitable packaging
-        if self.product_id and self.product_uom_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('sales')._find_suitable_product_packaging(self.product_uom_qty, self.product_uom)
+    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    def _compute_product_packaging_id(self):
+        for line in self:
+            # remove packaging if not match the product
+            if line.product_packaging_id.product_id != line.product_id:
+                line.product_packaging_id = False
+            # suggest biggest suitable packaging
+            if line.product_id and line.product_uom_qty and line.product_uom:
+                line.product_packaging_id = line.product_id.packaging_ids.filtered(
+                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
