@@ -60,7 +60,7 @@ class MicrosoftCalendarService():
             params['endDateTime'] = '2030-1-01T00:00:00Z'
 
         try:
-            _, data, _ = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
+            dummy, data, dummy = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
         except requests.HTTPError as e:
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content) and sync_token:
                 # retry with a full sync
@@ -70,7 +70,7 @@ class MicrosoftCalendarService():
         events = data.get('value', [])
         next_page_token = data.get('@odata.nextLink')
         while next_page_token:
-            _, data, _ = self.microsoft_service._do_request(next_page_token, {}, headers, preuri='', method='GET', timeout=timeout)
+            dummy, data, dummy = self.microsoft_service._do_request(next_page_token, {}, headers, preuri='', method='GET', timeout=timeout)
             next_page_token = data.get('@odata.nextLink')
             events += data.get('value', [])
 
@@ -95,7 +95,7 @@ class MicrosoftCalendarService():
             'startDateTime': '2016-12-01T00:00:00Z',
             'endDateTime': '2030-1-01T00:00:00Z',
         }
-        _, data, _ = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
+        dummy, data, dummy = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
         return MicrosoftEvent(data.get('value', []))
 
     @requires_auth_token
@@ -118,7 +118,7 @@ class MicrosoftCalendarService():
     def insert(self, values, token=None, timeout=TIMEOUT):
         url = "/v1.0/me/calendar/events"
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        _, data, _ = self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='POST', timeout=timeout)
+        dummy, data, dummy = self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='POST', timeout=timeout)
 
         return data['id'], data['iCalUId']
 
@@ -127,7 +127,7 @@ class MicrosoftCalendarService():
         url = "/v1.0/me/calendar/events/%s" % event_id
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         try:
-            status, _, _ = self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='PATCH', timeout=timeout)
+            status, dummy, dummy = self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='PATCH', timeout=timeout)
         except requests.HTTPError:
             _logger.info("Microsoft event %s has not been updated", event_id)
             return False
@@ -140,7 +140,7 @@ class MicrosoftCalendarService():
         headers = {'Authorization': 'Bearer %s' % token}
         params = {}
         try:
-            status, _, _ = self.microsoft_service._do_request(url, params, headers=headers, method='DELETE', timeout=timeout)
+            status, dummy, dummy = self.microsoft_service._do_request(url, params, headers=headers, method='DELETE', timeout=timeout)
         except requests.HTTPError as e:
             # For some unknown reason Microsoft can also return a 403 response when the event is already cancelled.
             if e.response.status_code in (410, 403):
@@ -156,7 +156,7 @@ class MicrosoftCalendarService():
         # TODO BAR: update to be able to answer for an attendee through the organizer event
         url = "/v1.0/me/calendar/events/%s/%s" % (event_id, answer)
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        status, _, _ = self.microsoft_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
+        status, dummy, dummy = self.microsoft_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
 
         return status not in RESOURCE_NOT_FOUND_STATUSES
 

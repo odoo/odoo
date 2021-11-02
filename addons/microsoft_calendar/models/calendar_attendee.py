@@ -4,7 +4,6 @@
 from odoo import models
 
 from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 
 
 class Attendee(models.Model):
@@ -40,15 +39,12 @@ class Attendee(models.Model):
         return res
 
     def _microsoft_sync_event(self, answer):
-        microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         params = {"comment": "", "sendResponse": True}
         # Microsoft prevent user to answer the meeting when they are the organizer
         linked_events = self.event_id._get_synced_events()
         for event in linked_events.filtered(lambda e: e.user_id != self.env.user):
             event._microsoft_patch(
-                microsoft_service,
                 event._get_organizer(),
                 event.ms_organizer_event_id,
                 event._microsoft_values(["attendee_ids"]),
             )
-            # event._microsoft_attendee_answer(microsoft_service, event.user_id, answer, params)

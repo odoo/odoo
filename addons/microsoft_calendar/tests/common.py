@@ -1,8 +1,6 @@
 import pytz
 from datetime import datetime, timedelta
 
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
-
 from odoo.tests.common import HttpCase
 from odoo.tools import html2plaintext, plaintext2html
 
@@ -26,7 +24,7 @@ class TestCommon(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.service = MicrosoftCalendarService(cls.env['microsoft.service'])
+        cls.service = cls.env["calendar.event"]._get_microsoft_service()
 
         # prepare users
         cls.organizer_user = cls.env["res.users"].search([("name", "=", "Mike Organizer")])

@@ -665,7 +665,7 @@ class TestUpdateEvents(TestCommon):
         )
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertEqual(self.simple_event.name, new_name)
@@ -689,7 +689,7 @@ class TestUpdateEvents(TestCommon):
         )
 
         # act
-        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar(self.service)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertEqual(self.simple_event.name, new_name)
@@ -715,7 +715,7 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         updated_event = self.env["calendar.event"].search([('ms_organizer_event_id', '=', ms_event_id)])
@@ -742,7 +742,7 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         updated_event = self.env["calendar.event"].search([('ms_organizer_event_id', '=', ms_event_id)])
@@ -771,7 +771,7 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         updated_event = self.env["calendar.event"].search([('ms_organizer_event_id', '=', ms_event_id)])
@@ -801,7 +801,7 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         updated_events = self.env["calendar.event"].search([
@@ -900,7 +900,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT --------------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT --------------
 
@@ -1020,7 +1020,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT --------------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT --------------
 
@@ -1071,7 +1071,7 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(events), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         updated_events = self.env["calendar.event"].search([
@@ -1154,7 +1154,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT -----------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT -----------
 
@@ -1184,7 +1184,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT -----------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT -----------
 
@@ -1214,7 +1214,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT -----------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT -----------
 
@@ -1259,7 +1259,7 @@ class TestUpdateEvents(TestCommon):
 
         # ----------- ACT -----------
 
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # ----------- ASSERT -----------
 

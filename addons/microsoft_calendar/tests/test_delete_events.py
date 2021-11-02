@@ -93,7 +93,7 @@ class TestDeleteEvents(TestCommon):
             }]),
             None
         )
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.assertFalse(self.simple_event.exists())
 
     def test_delete_simple_event_from_outlook_attendee_calendar(self):
@@ -263,7 +263,7 @@ class TestDeleteEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(rec_values), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertFalse(event_to_remove.exists())
@@ -286,7 +286,7 @@ class TestDeleteEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(rec_values), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertFalse(event_to_remove.exists())
@@ -309,7 +309,7 @@ class TestDeleteEvents(TestCommon):
         mock_get_events.return_value = (MicrosoftEvent(rec_values), None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         for e in event_to_remove:
@@ -331,7 +331,7 @@ class TestDeleteEvents(TestCommon):
         )
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertFalse(self.recurrence.exists())

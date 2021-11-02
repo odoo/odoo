@@ -91,7 +91,7 @@ class TestAnswerEvents(TestCommon):
                 lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)
             )]), None
         )
-        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar(self.service)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
 
         attendee = self.env["calendar.attendee"].search([
             ('event_id', '=', self.simple_event.id),
@@ -115,7 +115,7 @@ class TestAnswerEvents(TestCommon):
                 lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)
             )]), None
         )
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         attendee = self.env["calendar.attendee"].search([
             ('event_id', '=', self.simple_event.id),
@@ -151,7 +151,7 @@ class TestAnswerEvents(TestCommon):
                 lastModifiedDateTime=_modified_date_in_the_future(self.simple_event)
             )]), None
         )
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         attendee = self.env["calendar.attendee"].search([
             ('event_id', '=', self.simple_event.id),

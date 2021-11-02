@@ -3,8 +3,6 @@
 
 from odoo import api, fields, models
 
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
-
 
 class RecurrenceRule(models.Model):
     _name = 'calendar.recurrence'
@@ -37,8 +35,6 @@ class RecurrenceRule(models.Model):
         events = self.filtered('need_sync_m').calendar_event_ids
         detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit, generic_values_creation)
 
-        microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
-
         # If a synced event becomes a recurrence, the event needs to be deleted from
         # Microsoft since it's now the recurrence which is synced.
         # Those events are kept in the database and their ms_accross_calendars_event_id is updated
@@ -56,7 +52,7 @@ class RecurrenceRule(models.Model):
                     'active': False,
                     'need_sync_m': True,
                 }]
-                event._microsoft_delete(microsoft_service, event.user_id, event.ms_organizer_event_id)
+                event._microsoft_delete(event.user_id, event.ms_organizer_event_id)
                 event.ms_accross_calendars_event_id = False
         self.env['calendar.event'].create(vals)
         self.calendar_event_ids.need_sync_m = False

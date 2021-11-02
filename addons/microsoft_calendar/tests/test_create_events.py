@@ -65,7 +65,7 @@ class TestCreateEvents(TestCommon):
         record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
 
         with self.assertRaises(ValidationError):
-            record._sync_odoo2microsoft(MicrosoftCalendarService(self.env['microsoft.service']))
+            record._sync_odoo2microsoft()
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_create_simple_event_from_outlook_organizer_calendar(self, mock_get_events):
@@ -78,7 +78,7 @@ class TestCreateEvents(TestCommon):
         existing_records = self.env["calendar.event"].search([])
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         records = self.env["calendar.event"].search([])
@@ -99,7 +99,7 @@ class TestCreateEvents(TestCommon):
         existing_records = self.env["calendar.event"].search([])
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         records = self.env["calendar.event"].search([])
@@ -128,7 +128,7 @@ class TestCreateEvents(TestCommon):
         existing_records = self.env["calendar.event"].search([])
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         records = self.env["calendar.event"].search([])
@@ -186,7 +186,7 @@ class TestCreateEvents(TestCommon):
         mock_get_events.return_value = ([], None)
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         recurrence.invalidate_cache()
 
@@ -232,7 +232,7 @@ class TestCreateEvents(TestCommon):
         mock_get_events.return_value = ([], None)
 
         # act
-        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar(self.service)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         recurrence.invalidate_cache()
 
@@ -255,7 +255,7 @@ class TestCreateEvents(TestCommon):
         existing_recurrences = self.env["calendar.recurrence"].search([])
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar(self.service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         new_events = (self.env["calendar.event"].search([]) - existing_events)
@@ -278,7 +278,7 @@ class TestCreateEvents(TestCommon):
         existing_recurrences = self.env["calendar.recurrence"].search([])
 
         # act
-        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar(self.service)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
 
         # assert
         new_events = (self.env["calendar.event"].search([]) - existing_events)
