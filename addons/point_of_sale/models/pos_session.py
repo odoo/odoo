@@ -883,13 +883,12 @@ class PosSession(models.Model):
 
     def _get_statement_line_vals(self, statement, amount, payment=False, payment_method=False):
         date = False
-        receivable_account_id = self.env["account.account"]
         partner = self.env["res.partner"]
         if payment:
             payment_method = payment.payment_method_id
             partner = payment.pos_order_id.partner_id
             date = payment.payment_date
-            receivable_account_id = payment_method.receivable_account_id
+        receivable_account_id = payment_method.receivable_account_id or self.env["account.account"]
         return {
             'date': fields.Date.context_today(self, timestamp=date),
             'amount': amount,
