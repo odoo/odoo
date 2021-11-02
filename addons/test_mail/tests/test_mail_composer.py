@@ -305,8 +305,7 @@ class TestComposerInternals(TestMailComposer):
 
             # changing template should update its email_from
             composer.write({'template_id': self.template.id, 'author_id': self.env.user.partner_id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
+
             self.assertEqual(composer.author_id, self.env.user.partner_id,
                              'MailComposer: should take value given by user')
             if composition_mode == 'comment':
@@ -1050,7 +1049,6 @@ class TestComposerResultsMass(TestMailComposer):
             # template is sent directly using customer field, meaning we have recipients
             self.assertMailMail(record.customer_id, 'sent',
                                 mail_message=message,
-                                author=self.partner_employee,
                                 email_values={
                                     'email_from': self.partner_employee_2.email_formatted,
                                 })
@@ -1058,7 +1056,9 @@ class TestComposerResultsMass(TestMailComposer):
             # message content
             self.assertEqual(message.subject, 'TemplateSubject %s' % record.name)
             self.assertEqual(message.body, '<p>TemplateBody %s</p>' % record.name)
-            self.assertEqual(message.author_id, self.user_employee.partner_id)
+            # authorship
+            self.assertEqual(message.author_id, self.partner_employee)
+            self.assertEqual(message.email_from, record.user_id.email_formatted)
             # post-related fields are void
             self.assertFalse(message.subtype_id)
             self.assertFalse(message.partner_ids)
@@ -1122,7 +1122,6 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
                                 mail_message=message,
-                                author=self.partner_employee,
                                 email_values={
                                     'attachments_info': [
                                         {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},

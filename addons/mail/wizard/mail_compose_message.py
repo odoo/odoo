@@ -56,24 +56,10 @@ class MailComposer(models.TransientModel):
 
         result = super(MailComposer, self).default_get(fields)
 
-        # author
-        missing_author = 'author_id' in fields and 'author_id' not in result
-        missing_email_from = 'email_from' in fields and 'email_from' not in result
-        if missing_author or missing_email_from:
-            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_on_email=False)
-            if missing_email_from:
-                result['email_from'] = email_from
-            if missing_author:
-                result['author_id'] = author_id
-
         if 'model' in fields and 'model' not in result:
             result['model'] = self._context.get('active_model')
         if 'res_id' in fields and 'res_id' not in result:
             result['res_id'] = self._context.get('active_id')
-        if 'reply_to_mode' in fields and 'reply_to_mode' not in result and result.get('model'):
-            # doesn't support threading
-            if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
-                result['reply_to_mode'] = 'new'
 
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             result['active_domain'] = '%s' % self._context.get('active_domain')
@@ -101,9 +87,11 @@ class MailComposer(models.TransientModel):
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     email_add_signature = fields.Boolean(default=True)
     # origin
-    email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
+    email_from = fields.Char(
+        'From', compute='_compute_email_from', readonly=False, store=True,
+        help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
-        'res.partner', 'Author',
+        'res.partner', 'Author', compute='_compute_author_id', readonly=False, store=True,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     # composition
     composition_mode = fields.Selection(selection=[
@@ -129,9 +117,12 @@ class MailComposer(models.TransientModel):
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
-    reply_to = fields.Char('Reply To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
+    reply_to = fields.Char(
+        'Reply To', compute='_compute_reply_to', readonly=False, store=True,
+        help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     reply_to_force_new = fields.Boolean(
         string='Considers answers as new thread',
+        compute='_compute_reply_to_force_new', readonly=False, store=True,
         help='Manage answers as new incoming emails instead of replies going to the same thread.')
     reply_to_mode = fields.Selection([
         ('update', 'Store email and replies in the chatter of each record'),
@@ -148,6 +139,40 @@ class MailComposer(models.TransientModel):
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+
+    @api.depends('template_id', 'author_id', 'composition_mode', 'model', 'res_id')
+    def _compute_email_from(self):
+        for composer in self:
+            if composer.template_id.email_from:
+                composer._set_value_from_template('email_from')
+            elif composer.author_id and not composer.email_from:
+                composer.email_from = composer.author_id.email_formatted
+
+    @api.depends('email_from', 'composition_mode', 'model', 'res_id')
+    def _compute_author_id(self):
+        for composer in self:
+            if not composer.author_id:
+                if composer.email_from and composer.composition_mode == 'comment' and not composer.template_id:
+                    author = self.env['mail.thread']._mail_find_partner_from_emails([composer.email_from])[0]
+                else:
+                    author = self.env.user.partner_id
+                composer.author_id = author.id
+                # ensure email_from is set (inter dependent fields are hard to model
+                # in a compute)
+                if not composer.email_from:
+                    composer.email_from = author.email_formatted
+
+    @api.depends('template_id', 'composition_mode', 'model', 'res_id')
+    def _compute_reply_to(self):
+        for composer in self:
+            if composer.template_id.reply_to:
+                composer._set_value_from_template('reply_to')
+
+    @api.depends('model')
+    def _compute_reply_to_force_new(self):
+        for composer in self:
+            if not composer.model or not hasattr(self.env[composer.model], 'message_post'):
+                composer.reply_to_force_new = True
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
@@ -557,8 +582,6 @@ class MailComposer(models.TransientModel):
             values = dict(
                 (field, template[field])
                 for field in ['subject', 'body_html',
-                              'email_from',
-                              'reply_to',
                               'mail_server_id']
                 if template[field]
             )
@@ -570,8 +593,7 @@ class MailComposer(models.TransientModel):
             values = self._generate_email_for_composer(
                 template_id, [res_id],
                 ['subject', 'body_html',
-                 'email_from',
-                 'email_cc', 'email_to', 'partner_to', 'reply_to',
+                 'email_cc', 'email_to', 'partner_to',
                  'attachments', 'attachment_ids',
                  'mail_server_id',
                 ]
@@ -598,15 +620,13 @@ class MailComposer(models.TransientModel):
                 default_res_id=res_id
             ).default_get(['composition_mode', 'model', 'res_id', 'parent_id',
                            'subject', 'body',
-                           'email_from',
-                           'partner_ids', 'reply_to',
+                           'partner_ids',
                            'attachment_ids', 'mail_server_id'
                           ])
             values = dict(
                 (key, default_values[key])
                 for key in ['subject', 'body',
-                            'email_from',
-                            'partner_ids', 'reply_to',
+                            'partner_ids', 
                             'attachment_ids', 'mail_server_id'
                            ] if key in default_values)
 
@@ -698,3 +718,18 @@ class MailComposer(models.TransientModel):
             values[res_id] = res_id_values
 
         return values
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def _set_value_from_template(self, template_fname, composer_fname=False, force_void=False):
+        composer_fname = composer_fname if composer_fname else template_fname
+        if self.template_id and (self.template_id[template_fname] or force_void):
+            if self.composition_mode == 'comment' and self.res_id:
+                self[composer_fname] = self.template_id._render_field(
+                    template_fname, [self.res_id],
+                    compute_lang=True
+                )[self.res_id]
+            elif self.composition_mode == 'mass_mail':
+                self[composer_fname] = self.template_id[template_fname]
