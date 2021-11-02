@@ -29,8 +29,6 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
             } for x in range(0, 10)
         ])
 
-        self._init_mail_gateway()
-
     @mute_logger('odoo.addons.sms.models.sms_sms')
     @users('employee')
     @warmup
