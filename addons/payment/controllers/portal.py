@@ -159,9 +159,15 @@ class PaymentPortal(portal.CustomerPortal):
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             request.env.company.id, partner.id, force_tokenization=True, is_validation=True
         )
-        tokens = set(partner.payment_token_ids).union(
-            partner.commercial_partner_id.sudo().payment_token_ids
-        )  # Show all partner's tokens, regardless of which acquirer is available
+
+        # Get all partner's tokens for which acquirers are not disabled.
+        tokens = request.env['payment.token'].search([
+            ('partner_id', 'in', [partner.id, partner.commercial_partner_id.id]),
+            ('acquirer_id', 'in', request.env['payment.acquirer'].sudo()._search([
+                ('state', 'in', ['enabled', 'test'])
+            ])
+        )])
+
         access_token = payment_utils.generate_access_token(partner.id, None, None)
         rendering_context = {
             'acquirers': acquirers_sudo,
