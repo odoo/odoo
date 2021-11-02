@@ -210,6 +210,57 @@ def normalize_domain(domain):
     return result
 
 
+LEAF_FLAG = object()
+
+
+def expand_stack(stack):
+    domain = []
+    for i in stack:
+        if i[0] == LEAF_FLAG:
+            domain.extend(expand_stack(i[1]))
+        else:
+            domain.append(i)
+    return domain
+
+
+def simple_domain(domain):
+    if not domain:
+        return domain
+    stack = []
+    for token in reversed(distribute_not(normalize_domain(domain))):
+        if token == '&':
+            if FALSE_LEAF in stack[-2:]:
+                stack.pop()
+                stack.pop()
+                stack.append(FALSE_LEAF)
+            elif TRUE_LEAF in stack[-2:]:
+                if (x := stack.pop()) != TRUE_LEAF:
+                    stack.pop()
+                    stack.append(x)
+            else:
+                stack.append([LEAF_FLAG, [token, stack.pop(), stack.pop()]])
+        elif token == '|':
+            if TRUE_LEAF in stack[-2:]:
+                stack.pop()
+                stack.pop()
+                stack.append(TRUE_LEAF)
+            elif FALSE_LEAF in stack[-2:]:
+                if (x := stack.pop()) != FALSE_LEAF:
+                    stack.pop()
+                    stack.append(x)
+            else:
+                stack.append([LEAF_FLAG, [token, stack.pop(), stack.pop()]])
+        elif token[1] == 'in' and not token[2]:
+            stack.append(FALSE_LEAF)
+        elif token[1] == 'not in' and not token[2]:
+            stack.append(TRUE_LEAF)
+        else:
+            stack.append(token)
+
+    bomain = expand_stack(stack)
+    return bomain
+
+
 def is_false(model, domain):
     """ Return whether ``domain`` is logically equivalent to false. """
     # use three-valued logic: -1 is false, 0 is unknown, +1 is true
