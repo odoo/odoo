@@ -123,14 +123,11 @@ class AccountBankStatement(models.Model):
     # Note: the reason why we did 2 separate function with the same dependencies (one for balance_start and one for balance_end_real)
     # is because if we create a bank statement with a default value for one of the field but not the other, the compute method
     # won't be called and therefore the other field will have a value of 0 and we don't want that.
-    @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
+    @api.depends('previous_statement_id')
     def _compute_starting_balance(self):
         for statement in self:
-            if statement.previous_statement_id.balance_end_real != statement.balance_start:
+            if statement.state == 'open':
                 statement.balance_start = statement.previous_statement_id.balance_end_real
-            else:
-                # Need default value
-                statement.balance_start = statement.balance_start or 0.0
 
     @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
     def _compute_ending_balance(self):
