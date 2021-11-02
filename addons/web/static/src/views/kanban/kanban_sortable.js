@@ -51,7 +51,7 @@ export const useSortable = (params) => {
 
     let enabled = false;
     let started = false;
-    let locked = false;
+    let updatingDrag = false;
 
     let offsetX = 0;
     let offsetY = 0;
@@ -73,15 +73,6 @@ export const useSortable = (params) => {
         for (const key in style) {
             el.style[key] = style[key];
         }
-    };
-
-    const debounce = (callback) => {
-        if (locked) {
-            return;
-        }
-        locked = true;
-        callback();
-        requestAnimationFrame(() => (locked = false));
     };
 
     const onItemMouseenter = (ev) => {
@@ -167,17 +158,6 @@ export const useSortable = (params) => {
         }
     };
 
-    const drag = (x, y) => {
-        debounce(() => {
-            if (!lockedAxis.x) {
-                currentItem.style.left = `${x - offsetX}px`;
-            }
-            if (!lockedAxis.y) {
-                currentItem.style.top = `${y - offsetY}px`;
-            }
-        });
-    };
-
     const dragStop = (cancelled = false) => {
         if (!started) {
             return;
@@ -224,11 +204,18 @@ export const useSortable = (params) => {
         offsetY = ev.clientY;
     });
     useExternalListener(window, "mousemove", (ev) => {
-        if (!enabled || !currentItem) {
+        if (!enabled || !currentItem || updatingDrag) {
             return;
         }
         dragStart();
-        drag(ev.clientX, ev.clientY);
+        updatingDrag = true;
+        if (!lockedAxis.x) {
+            currentItem.style.left = `${ev.clientX - offsetX}px`;
+        }
+        if (!lockedAxis.y) {
+            currentItem.style.top = `${ev.clientY - offsetY}px`;
+        }
+        requestAnimationFrame(() => (updatingDrag = false));
     });
     useExternalListener(
         window,
