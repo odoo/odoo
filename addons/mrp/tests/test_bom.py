@@ -386,11 +386,10 @@ class TestBoM(TestMrpCommon):
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
-        # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
-        self.assertEqual(report_values['lines']['operations_time'], 13.0, 'Operation time should be the same for 1 unit or for the batch')
+        # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes for 1 biscuits so 13 * 11 = 143 minutes
+        self.assertEqual(report_values['lines']['operations_time'], 143.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line.
-        operation_cost = float_round(5 / 60 * 10, precision_digits=2) * 2 + float_round(3 / 60 * 10, precision_digits=2)
-        self.assertEqual(float_compare(report_values['lines']['operations_cost'], operation_cost, precision_digits=2), 0, '13 minute for 10$/hours -> 2.16')
+        self.assertEqual(float_compare(report_values['lines']['operations_cost'], 23.84, precision_digits=2), 0, '143 minute for 10$/hours -> 23.84')
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
@@ -400,9 +399,9 @@ class TestBoM(TestMrpCommon):
             if component_line['prod_id'] == biscuit.id:
                 # 6 kg of biscuits at 1.50$ for 11kg of crumble -> 9$
                 self.assertEqual(float_compare(component_line['total'], (1.5 * 6), precision_digits=2), 0)
-        # total price = 35.05 + 9 + operation_cost(0.83 + 0.83 + 0.5 = 2.16) = 46,21
-        self.assertEqual(float_compare(report_values['lines']['total'], 46.21, precision_digits=2), 0, 'Product Bom Price is not correct')
-        self.assertEqual(float_compare(report_values['lines']['total'] / 11.0, 4.20, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
+        # total price = 35.05 + 9 + operation_cost(23.84) = 67.89
+        self.assertEqual(float_compare(report_values['lines']['total'], 67.89, precision_digits=2), 0, 'Product Bom Price is not correct')
+        self.assertEqual(float_compare(report_values['lines']['total'] / 11.0, 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
 
         # TEST BOM STRUCTURE VALUE BY UNIT
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=1, searchVariant=False)
@@ -426,13 +425,9 @@ class TestBoM(TestMrpCommon):
         # TEST OPERATION COST WHEN PRODUCED QTY > BOM QUANTITY
         report_values_12 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=12, searchVariant=False)
         report_values_22 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=22, searchVariant=False)
-        operation_cost = float_round(10 / 60 * 10, precision_digits=2) * 2 + float_round(6 / 60 * 10, precision_digits=2)
-        # Both needs 2 operation cycle
-        self.assertEqual(report_values_12['lines']['operations_cost'], report_values_22['lines']['operations_cost'])
-        self.assertEqual(report_values_22['lines']['operations_cost'], operation_cost)
-        report_values_23 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=23, searchVariant=False)
-        operation_cost = float_round(15 / 60 * 10, precision_digits=2) * 2 + float_round(9 / 60 * 10, precision_digits=2)
-        self.assertEqual(report_values_23['lines']['operations_cost'], operation_cost)
+
+        #Operation cost = 47.66 € = 256 (min) * 10€/h
+        self.assertEqual(float_compare(report_values_22['lines']['operations_cost'], 47.66,precision_digits=2),0, 'Operation cost is not correct')
 
         # Create a more complex BoM with a sub product
         cheese_cake = self.env['product.product'].create({
@@ -477,13 +472,12 @@ class TestBoM(TestMrpCommon):
                 operation.name = 'Cake mounting'
                 operation.time_cycle_manual = 5
 
-
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
-        self.assertEqual(report_values['lines']['operations_time'], 40.0, 'Operation time should be the same for 1 unit or for the batch')
-        # Operation cost is the sum of operation line.
-        operation_cost = float_round(10 / 60 * 10, precision_digits=2) + float_round(30 / 60 * 20, precision_digits=2)
-        self.assertEqual(float_compare(report_values['lines']['operations_cost'], operation_cost, precision_digits=2), 0)
+        #Operation time = 15 min * 60 + time_start + time_stop = 925
+        self.assertEqual(report_values['lines']['operations_time'], 2400.0, 'Operation time should be the same for 1 unit or for the batch')
+        # Operation cost is the sum of operation line : 10 min * 60 * 10€/hr = 100€ + 30min * 60 * 20€/hr = 700€
+        self.assertEqual(float_compare(report_values['lines']['operations_cost'], 700, precision_digits=2), 0)
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
@@ -494,8 +488,8 @@ class TestBoM(TestMrpCommon):
                 # 5.4 kg of crumble at the cost of a batch.
                 crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['total']
                 self.assertEqual(float_compare(component_line['total'], crumble_cost, precision_digits=2), 0)
-        # total price = 15.51 + crumble_cost + operation_cost(10 + 1.67 = 11.67) = 27.18 + crumble_cost
-        self.assertEqual(float_compare(report_values['lines']['total'], 27.18 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
+        # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(700€) = 750.14€
+        self.assertEqual(float_compare(report_values['lines']['total'], 715.51 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
 
     def test_bom_report_dozens(self):
         """ Simulate a drawer bom with dozens as bom units
@@ -540,7 +534,7 @@ class TestBoM(TestMrpCommon):
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
-        self.assertEqual(report_values['lines']['operations_time'], 60.0, 'Operation time should be the same for 1 unit or for the batch')
+        self.assertEqual(report_values['lines']['operations_time'], 660.0, 'Operation time should be the same for 1 unit or for the batch')
 
 
     def test_21_bom_report_variant(self):
@@ -837,7 +831,7 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
+        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
 
     def test_validate_no_bom_line_with_same_product(self):
         """
