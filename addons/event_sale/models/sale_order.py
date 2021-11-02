@@ -123,10 +123,9 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
             self.event_ticket_id = None
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        if not self.event_ticket_id:
-            super(SaleOrderLine, self).product_uom_change()
+    @api.depends('product_uom', 'product_uom_qty')
+    def _compute_price_unit(self):
+        super(SaleOrderLine, self.filtered(lambda l: not l.event_ticket_id))._compute_price_unit()
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
