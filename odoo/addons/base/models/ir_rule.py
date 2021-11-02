@@ -158,9 +158,13 @@ class IrRule(models.Model):
                 group_domains.append(dom)
 
         # combine global domains and group domains
-        if not group_domains:
-            return expression.AND(global_domains)
-        return expression.AND(global_domains + [expression.OR(group_domains)])
+        if group_domains:
+            domain = expression.AND(global_domains + [expression.OR(group_domains)])
+        else:
+            domain = expression.AND(global_domains)
+        domain = expression.simple_domain(domain)
+        return domain
+
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():
