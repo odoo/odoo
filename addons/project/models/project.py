@@ -1650,7 +1650,7 @@ class Task(models.Model):
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
                 ).company_id.id or self.env.company.id
-            if project_id and "stage_id" not in vals:
+            if project_id and not vals.get("stage_id"):
                 # 1) Allows keeping the batch creation of tasks
                 # 2) Ensure the defaults are correct (and computed once by project),
                 # by using default get (instead of _get_default_stage_id or _stage_find),
