@@ -15,5 +15,5 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_cancel(self):
         mo_subcontracted_move = self.mrp_production_ids._get_subcontract_move()
         if mo_subcontracted_move:
-            return mo_subcontracted_move._action_record_components()
+            return mo_subcontracted_move.filtered(lambda move: move.state not in ('done', 'cancel'))._action_record_components()
         return super().action_cancel()
