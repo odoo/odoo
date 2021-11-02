@@ -3,11 +3,13 @@
 import logging
 import pprint
 
-from odoo import _, api, models
+from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
 
-from .authorize_request import AuthorizeAPI
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
+from odoo.addons.payment_authorize.const import TRANSACTION_STATUS_MAPPING
+
 
 _logger = logging.getLogger(__name__)
 
@@ -90,24 +92,66 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
+        self.ensure_one()
+
         if self.provider != 'authorize':
             return super()._send_refund_request(
                 amount_to_refund=amount_to_refund,
                 create_refund_transaction=create_refund_transaction,
             )
 
-        refund_tx = super()._send_refund_request(
-            amount_to_refund=amount_to_refund, create_refund_transaction=False
-        )
+        authorize_api = AuthorizeAPI(self.acquirer_id)
+        tx_details = authorize_api.get_transaction_details(self.acquirer_reference)
+        if 'err_code' in tx_details:  # Could not retrieve the transaction details.
+            raise ValidationError("Authorize.Net: " + _(
+                "Could not retrieve the transaction details. (error code: %s; error_details: %s)",
+                tx_details['err_code'], tx_details.get('err_msg')
+            ))
 
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        rounded_amount = round(self.amount, self.currency_id.decimal_places)
-        res_content = authorize_API.refund(self.acquirer_reference, rounded_amount)
-        _logger.info(
-            "refund request response for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(res_content)
-        )
-        self._handle_notification_data('authorize', {'response': res_content})
+        refund_tx = self.env['payment.transaction']
+        tx_status = tx_details.get('transaction', {}).get('transactionStatus')
+        if tx_status in TRANSACTION_STATUS_MAPPING['voided']:
+            # The payment has been voided from Authorize.net side before we could refund it.
+            self._set_canceled()
+        elif tx_status in TRANSACTION_STATUS_MAPPING['refunded']:
+            # The payment has been refunded from Authorize.net side before we could refund it. We
+            # create a refund tx on Odoo to reflect the move of the funds.
+            refund_tx = super()._send_refund_request(
+                amount_to_refund=amount_to_refund,
+                create_refund_transaction=True,
+            )
+            refund_tx._set_done()
+            # Immediately post-process the transaction as the post-processing will not be
+            # triggered by a customer browsing the transaction from the portal.
+            self.env.ref('payment.cron_post_process_payment_tx')._trigger()
+        elif any(tx_status in TRANSACTION_STATUS_MAPPING[k] for k in ('authorized', 'captured')):
+            if tx_status in TRANSACTION_STATUS_MAPPING['authorized']:
+                # The payment has not been settle on Authorize.net yet. It must be voided rather
+                # than refunded. Since the funds have not moved yet, we don't create a refund tx.
+                res_content = authorize_api.void(self.acquirer_reference)
+                tx_to_process = self
+            else:
+                # The payment has been settled on Authorize.net side. We can refund it.
+                refund_tx = super()._send_refund_request(
+                    amount_to_refund=amount_to_refund,
+                    create_refund_transaction=True,
+                )
+                rounded_amount = round(amount_to_refund, self.currency_id.decimal_places)
+                res_content = authorize_api.refund(
+                    self.acquirer_reference, rounded_amount, tx_details
+                )
+                tx_to_process = refund_tx
+            _logger.info(
+                "refund request response for transaction with reference %s:\n%s",
+                self.reference, pprint.pformat(res_content)
+            )
+            data = {'reference': tx_to_process.reference, 'response': res_content}
+            tx_to_process._handle_notification_data('authorize', data)
+        else:
+            raise ValidationError("Authorize.net: " + _(
+                "The transaction is not in a status to be refunded. (status: %s, details: %s)",
+                tx_status, tx_details.get('messages', {}).get('message')
+            ))
         return refund_tx
 
     def _send_capture_request(self):
@@ -196,13 +240,17 @@ class PaymentTransaction(models.Model):
                 if self.tokenize and not self.token_id:
                     self._authorize_tokenize()
                 if self.operation == 'validation':
-                    # Void the transaction. In last step because it calls _handle_notification_data.
-                    self._send_refund_request(create_refund_transaction=False)
+                    self._send_void_request()  # In last step because it processes the response.
             elif status_type == 'void':
                 if self.operation == 'validation':  # Validation txs are authorized and then voided
                     self._set_done()  # If the refund went through, the validation tx is confirmed
                 else:
                     self._set_canceled()
+            elif status_type == 'refund' and self.operation == 'refund':
+                self._set_done()
+                # Immediately post-process the transaction as the post-processing will not be
+                # triggered by a customer browsing the transaction from the portal.
+                self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif status_code == '2':  # Declined
             self._set_canceled()
         elif status_code == '4':  # Held for Review
