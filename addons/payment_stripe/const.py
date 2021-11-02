@@ -22,10 +22,11 @@ PAYMENT_METHOD_TYPES = [
 # See https://stripe.com/docs/payments/intents#intent-statuses for the exhaustive list of status.
 INTENT_STATUS_MAPPING = {
     'draft': ('requires_payment_method', 'requires_confirmation', 'requires_action'),
-    'pending': ('processing',),
+    'pending': ('processing', 'pending'),
     'authorized': ('requires_capture',),
     'done': ('succeeded',),
     'cancel': ('canceled',),
+    'error':('failed',),
 }
 
 # Events which are handled by the webhook
@@ -33,4 +34,6 @@ HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
     'setup_intent.succeeded',
+    'charge.refunded',
+    'charge.refund.updated'
 ]

@@ -87,26 +87,68 @@ class StripeController(http.Controller):
         _logger.info("notification received from Stripe with data:\n%s", pprint.pformat(event))
         try:
             if event['type'] in HANDLED_WEBHOOK_EVENTS:
-                intent = event['data']['object']  # PaymentIntent/SetupIntent, depending on the flow
+                # PaymentIntent/SetupIntent/Charge/Refund, depending on the flow
+                stripe_object = event['data']['object']
 
                 # Check the integrity of the event
-                data = {'reference': intent['description']}
+                data = {
+                    'reference': stripe_object.get('description')
+                                 or stripe_object['metadata']['reference']
+                }  # Refund objects don't have a description field
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'stripe', data
                 )
                 self._verify_notification_signature(tx_sudo)
                 if event['type'].startswith('payment_intent'):
-                    self._include_payment_intent_in_notification_data(intent, data)
-                else:  # Validation
+                    self._include_payment_intent_in_notification_data(stripe_object, data)
+                elif event['type'].startswith('setup_intent'):  # Validation
                     # Fetch the missing PaymentMethod object.
                     payment_method = tx_sudo.acquirer_id._stripe_make_request(
-                        f'payment_methods/{intent["payment_method"]}', method='GET'
+                        f'payment_methods/{stripe_object["payment_method"]}', method='GET'
                     )
                     _logger.info(
                         "received payment_methods response:\n%s", pprint.pformat(payment_method)
                     )
-                    intent['payment_method'] = payment_method
-                    self._include_setup_intent_in_notification_data(intent, data)
+                    stripe_object['payment_method'] = payment_method
+                    self._include_setup_intent_in_notification_data(stripe_object, data)
+                elif event['type'] == 'charge.refunded': # handle refunds issued from Stripe
+                    # Get all refunds for this charge
+                    refunds = stripe_object['refunds']['data']
+                    has_more = stripe_object['refunds']['has_more']
+                    while has_more:
+                        more_refunds = tx_sudo.acquirer_id._stripe_make_request(
+                            # The url provided by Stripe begin by /v1/, but it's already included in
+                            # _stripe_make_request()
+                            stripe_object['refunds']['url'][4:],
+                            payload={'starting_after': refunds[-1].get('id')},
+                            method='GET',
+                        )
+                        refunds += more_refunds['data']
+                        has_more = more_refunds['has_more']
+
+                    # Process refunds we aren't aware of
+                    for refund in filter(lambda r: r['metadata'] == {}, refunds):
+                        # _stripe_get_refund_tx() creates the transaction if it doesn't exist
+                        refund_tx = request.env['payment.transaction'].sudo()._stripe_get_refund_tx(
+                            tx_sudo, refund
+                        )
+                        # Update the reference on Stripe
+                        refund = tx_sudo.acquirer_id._stripe_make_request(
+                            f'refunds/{refund.get("id")}',
+                            payload={'metadata[reference]': refund_tx.reference},
+                            method='POST'
+                        )
+                        _logger.info(
+                            "refund from Stripe for transaction %s:\n%s",
+                            refund_tx.reference, pprint.pformat(refund)
+                        )
+                        # We don't handle notification data here because Stripe will send back
+                        # immediately a 'charge.refund.updated', with the reference of the
+                        # transaction that we just set, and it may result in a DB cursor error
+                        # trying to write on the same transaction at the same time.
+                        return ''
+                elif event['type'] == 'charge.refund.updated': # handle update of all refunds
+                    self._include_refund_in_notification_data(stripe_object, data)
 
                 # Handle the notification data crafted with Stripe API objects
                 tx_sudo._handle_notification_data('stripe', data)
@@ -129,6 +171,12 @@ class StripeController(http.Controller):
         notification_data.update({
             'setup_intent': setup_intent,
             'payment_method': setup_intent.get('payment_method'),
+        })
+
+    @staticmethod
+    def _include_refund_in_notification_data(refund, notification_data):
+        notification_data.update({
+            'refund': refund,
         })
 
     def _verify_notification_signature(self, tx_sudo):

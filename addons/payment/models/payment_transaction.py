@@ -699,7 +699,8 @@ class PaymentTransaction(models.Model):
         :param str state_message: The reason for which the transaction is set in 'error' state
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized')
+        # In some acquirers, transactions can fail after being done (e.g. Stripe refunds)
+        allowed_states = ('draft', 'pending', 'authorized', 'done')
         target_state = 'error'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()

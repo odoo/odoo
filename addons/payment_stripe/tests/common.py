@@ -30,3 +30,8 @@ class StripeCommon(PaymentCommon):
             },
             'type': 'payment_intent.succeeded'
         }
+
+    def create_transaction(self, *args, acquirer_reference=None, **kwargs):
+        if not acquirer_reference:
+            acquirer_reference = 'ch_000000000000000000000000'
+        return super().create_transaction(*args, acquirer_reference=acquirer_reference, **kwargs)
