@@ -280,8 +280,13 @@ class SaleOrderLine(models.Model):
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
              "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
-    qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', store=True, digits='Product Unit of Measure', default=0.0)
-    qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits='Product Unit of Measure', default=0.0)
+    qty_delivered = fields.Float(
+        'Delivered Quantity', copy=False,
+        compute='_compute_qty_delivered', store=True, readonly=False,
+        digits='Product Unit of Measure')
+    qty_delivered_manual = fields.Float(
+        'Delivered Manually', copy=False, digits='Product Unit of Measure',
+        compute='_compute_qty_delivered_manual', store=True, readonly=False)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
@@ -397,17 +402,16 @@ class SaleOrderLine(models.Model):
 
         return result
 
-    @api.onchange('qty_delivered')
-    def _inverse_qty_delivered(self):
-        """ When writing on qty_delivered, if the value should be modify manually (`qty_delivered_method` = 'manual' only),
-            then we put the value in `qty_delivered_manual`. Otherwise, `qty_delivered_manual` should be False since the
-            delivered qty is automatically compute by other mecanisms.
+    @api.depends('qty_delivered', 'qty_delivered_method')
+    def _compute_qty_delivered_manual(self):
+        """ When writing on qty_delivered, if the value should be
+            modified manually (`qty_delivered_method` = 'manual' only),
+            then we put the value in `qty_delivered_manual`.
+            Otherwise, `qty_delivered_manual` should be False since the
+            delivered qty is automatically computed by other mecanisms.
         """
         for line in self:
-            if line.qty_delivered_method == 'manual':
-                line.qty_delivered_manual = line.qty_delivered
-            else:
-                line.qty_delivered_manual = 0.0
+            line.qty_delivered_manual = line.qty_delivered if line.qty_delivered_method == 'manual' else 0.0
 
     @api.onchange('product_id', 'product_uom_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
