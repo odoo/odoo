@@ -347,3 +347,30 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertIn(
             "odoo.exceptions.ValidationError: The access token is invalid.",
             response.text)
+
+    def test_access_disabled_acquirers_tokens(self):
+        self.partner = self.portal_partner
+
+        # Log in as user from Company A
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+
+        token = self.create_token()
+        acquirer_b = self.acquirer.copy()
+        acquirer_b.state = 'test'
+        token_b = self.create_token(acquirer_id=acquirer_b.id)
+
+        # A partner should see all his tokens on the /my/payment_method route,
+        # even if they are in other companies otherwise he won't ever see them.
+        manage_context = self.get_tx_manage_context()
+        self.assertEqual(manage_context['partner_id'], self.partner.id)
+        self.assertIn(self.acquirer.id, manage_context['acquirer_ids'])
+        self.assertIn(acquirer_b.id, manage_context['acquirer_ids'])
+        self.assertIn(token.id, manage_context['token_ids'])
+        self.assertIn(token_b.id, manage_context['token_ids'])
+
+        # Token of disabled acquirer(s) & disabled acquirers should not be shown
+        self.acquirer.state = 'disabled'
+        manage_context = self.get_tx_manage_context()
+        self.assertEqual(manage_context['partner_id'], self.partner.id)
+        self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
+        self.assertEqual(manage_context['token_ids'], [token_b.id])
