@@ -25,11 +25,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
+        super()._compute_product_updatable()
         for line in self:
             if line.product_id.type == 'service' and line.state == 'sale':
                 line.product_updatable = False
-            else:
-                super(SaleOrderLine, line)._compute_product_updatable()
 
     def _auto_init(self):
         """

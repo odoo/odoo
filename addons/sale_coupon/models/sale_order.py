@@ -63,7 +63,6 @@ class SaleOrder(models.Model):
         return res
 
     def _get_reward_lines(self):
-        self.ensure_one()
         return self.order_line.filtered(lambda line: line.is_reward_line)
 
     def _is_reward_in_order_lines(self, program):
