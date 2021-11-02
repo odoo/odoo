@@ -398,6 +398,10 @@ class Property(models.Model):
             elif operator in ('in', 'not in'):
                 value = [makeref(v) for v in value]
             elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
+                if operator in ('not like', 'not ilike'):
+                    # To take in account False value_reference (as for other many2one fields)
+                    operator = 'like' if operator == 'not like' else 'ilike'
+                    include_zero = True
                 # most probably inefficient... but correct
                 target = self.env[comodel]
                 target_ids = target._name_search(value, operator=operator, limit=None)

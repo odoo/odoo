@@ -1427,6 +1427,38 @@ class TestFields(TransactionCaseWithUserDemo):
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
 
+    def test_27_company_dependent_search(self):
+        Model = self.env['test_new_api.company']
+        record1 = Model.create({})
+        self.env['ir.property']._set_default('foo', 'test_new_api.company', 'default')
+        self.assertEqual(Model.search([('foo', 'like', 'def')]), record1)
+        self.assertEqual(Model.search([('foo', 'not like', 'def')]), Model.browse())
+
+        record2 = Model.create({'foo': 'other'})
+        self.assertEqual(Model.search([('foo', 'like', 'def')]), record1)
+        self.assertEqual(Model.search([('foo', 'not like', 'def')]), record2)
+        record2.foo = 'default_other'
+        self.assertEqual(Model.search([('foo', 'like', 'def')]), record1 | record2)
+        self.assertEqual(Model.search([('foo', 'not like', 'def')]), Model.browse())
+
+        self.assertEqual(Model.search([('tag_id', 'like', 'tag')]), Model.browse())
+        self.assertEqual(Model.search([('tag_id', 'not like', 'tag')]), record1 | record2)
+        self.assertEqual(Model.search([('tag_id', '=', False)]), record1 | record2)
+        self.assertEqual(Model.search([('tag_id', '!=', False)]), Model.browse())
+
+        tag_record = self.env['test_new_api.multi.tag'].create({'name': 'tag_1'})
+        record2.tag_id = tag_record
+        self.assertEqual(Model.search([('tag_id', 'like', 'tag')]), record2)
+        self.assertEqual(Model.search([('tag_id', 'not like', 'tag')]), record1)
+        self.assertEqual(Model.search([('tag_id', '=', False)]), record1)
+        self.assertEqual(Model.search([('tag_id', '!=', False)]), record2)
+
+        record1.tag_id = tag_record
+        self.assertEqual(Model.search([('tag_id', 'like', 'tag')]), record1 | record2)
+        self.assertEqual(Model.search([('tag_id', 'not like', 'tag')]), Model.browse())
+        self.assertEqual(Model.search([('tag_id', '=', False)]), Model.browse())
+        self.assertEqual(Model.search([('tag_id', '!=', False)]), record1 | record2)
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
