@@ -121,6 +121,6 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
             "Each cart recovery mail has been sent exactly once."
         )
         self.assertTrue(
-            all(order.access_token in sent_mail[order].body for order in orders),
+            all(order.access_token in sent_mail[order].body_html for order in orders),
             "Each mail should contain the access token of the corresponding SO."
         )
