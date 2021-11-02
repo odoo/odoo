@@ -36,7 +36,7 @@ var SignatureDialog = Dialog.extend({
 
         if (!options.buttons) {
             options.buttons = [];
-            options.buttons.push({text: _t("Adopt and Sign"), classes: "btn-primary", disabled: true, click: function (e) {
+            options.buttons.push({text: _t("Adopt & Sign"), classes: "btn-primary", disabled: true, click: function (e) {
                 self._onConfirm();
             }});
             options.buttons.push({text: _t("Cancel"), close: true});
