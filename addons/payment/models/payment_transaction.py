@@ -697,7 +697,7 @@ class PaymentTransaction(models.Model):
         :param str state_message: The reason for which the transaction is set in 'cancel' state
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized')
+        allowed_states = ('draft', 'pending', 'authorized', 'done')  # 'done' for Authorize refunds.
         target_state = 'cancel'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         # Cancel the existing payments
