@@ -4400,6 +4400,7 @@ Fields:
             to_flush[self._name].update(fields)
         # also take into account the fields in the record rules
         domain = list(domain) + (self.env['ir.rule']._compute_domain(self._name, 'read') or [])
+        domain = expression.simple_domain(domain)
         for arg in domain:
             if isinstance(arg, str):
                 continue
