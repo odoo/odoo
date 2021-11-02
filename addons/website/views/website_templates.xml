@@ -2565,8 +2565,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
                 <div t-att-class="'h6 font-weight-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
                 <p t-if="description" class="mb-0" t-out="description"/>
-                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
-                    t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
+                <t t-if="extra_link">
+                    <t t-if="not isinstance(extra_link, dict)">
+                        <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
+                            t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
+                    </t>
+                    <t t-else="">
+                        <button class="btn btn-link btn-sm pr-0" disabled="disabled" t-out="extra_link.get('extra_link_title')"/>
+                        <t t-foreach="extra_link" t-as="link">
+                            <button t-if="result['extra_link_url'].get(link)" class="extra_link btn btn-link btn-sm p-0" t-out="extra_link.get(link)"
+                                t-attf-onclick="location.href='#{result['extra_link_url'].get(link)}';return false;"/>
+                        </t>
+                    </t>
+                </t>
             </div>
             <div class="flex-shrink-0">
                 <t t-if="result.get('detail_strike')">

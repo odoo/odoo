@@ -405,6 +405,31 @@ class Website(Home):
             results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
         results_data = results_data[:limit]
         result = []
+
+        def get_mapping_value(field_type, value, field_meta):
+            if field_type == 'text':
+                if value:
+                    value = shorten(value, max_nb_chars, placeholder='...')
+                if field_meta.get('match') and value and term:
+                    pattern = '|'.join(map(re.escape, term.split()))
+                    if pattern:
+                        parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
+                        if len(parts) > 1:
+                            value = request.env['ir.ui.view'].sudo()._render_template(
+                                "website.search_text_with_highlight",
+                                {'parts': parts}
+                            )
+                            field_type = 'html'
+
+            if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
+                opt = {}
+                if field_type == 'monetary':
+                    opt['display_currency'] = options['display_currency']
+                elif field_type == 'html':
+                    opt['template_options'] = {}
+                value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
+            return escape(value)
+
         for record in results_data:
             mapping = record['_mapping']
             mapped = {
@@ -416,28 +441,14 @@ class Website(Home):
                     mapped[mapped_name] = ''
                     continue
                 field_type = field_meta.get('type')
-                if field_type == 'text':
-                    if value:
-                        value = shorten(value, max_nb_chars, placeholder='...')
-                    if field_meta.get('match') and value and term:
-                        pattern = '|'.join(map(re.escape, term.split()))
-                        if pattern:
-                            parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
-                            if len(parts) > 1:
-                                value = request.env['ir.ui.view'].sudo()._render_template(
-                                    "website.search_text_with_highlight",
-                                    {'parts': parts}
-                                )
-                                field_type = 'html'
-
-                if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
-                    opt = {}
-                    if field_type == 'monetary':
-                        opt['display_currency'] = options['display_currency']
-                    elif field_type == 'html':
-                        opt['template_options'] = {}
-                    value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
-                mapped[mapped_name] = escape(value)
+                if field_type == 'dict':
+                    # Map a field with multiple values, stored in a dict with values type: item_type
+                    item_type = field_meta.get('item_type')
+                    mapped[mapped_name] = {}
+                    for key, item in value.items():
+                        mapped[mapped_name][key] = get_mapping_value(item_type, item, field_meta)
+                else:
+                    mapped[mapped_name] = get_mapping_value(field_type, value, field_meta)
             result.append(mapped)
 
         return {

@@ -22,7 +22,19 @@
                 <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
                 <div t-attf-class="h6 font-weight-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
                 <p t-if="description" class="mb-0" t-out="description"/>
-                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
+                <t t-if="extra_link">
+                    <t t-if="!extra_link['extra_link_title']">
+                        <button t-if="extra_link" class="extra_link btn btn-link btn-sm"
+                                t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
+                    </t>
+                    <t t-else="">
+                        <button class="btn btn-link btn-sm pr-0" disabled="disabled" t-out="extra_link['extra_link_title']"/>
+                        <t t-foreach="Object.keys(extra_link)" t-as="link">
+                            <button t-if="result['extra_link_url'][link]" class="extra_link btn btn-link btn-sm p-0"
+                                    t-att-data-target="result['extra_link_url'][link]" t-out="extra_link[link]"/>
+                        </t>
+                    </t>
+                </t>
             </div>
             <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0">
                 <t t-if="result['detail_strike']">

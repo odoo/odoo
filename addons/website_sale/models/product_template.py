@@ -375,8 +375,8 @@ class ProductTemplate(models.Model):
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
             mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
         if with_category:
-            mapping['extra_link'] = {'name': 'category', 'type': 'text', 'match': True}
-            mapping['extra_link_url'] = {'name': 'category_url', 'type': 'text'}
+            mapping['extra_link'] = {'name': 'category', 'type': 'dict', 'item_type': 'text'}
+            mapping['extra_link_url'] = {'name': 'category_url', 'type': 'dict', 'item_type': 'text'}
         return {
             'model': 'product.template',
             'base_domain': domains,
@@ -401,9 +401,12 @@ class ProductTemplate(models.Model):
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and product.public_categ_ids:
-                data['category'] = _('Category: %s', product.public_categ_ids.name)
-                slugs = [slug(category) for category in product.public_categ_ids]
-                data['category_url'] = '/shop/category/%s' % ','.join(slugs)
+                data['category'] = {'extra_link_title': _('Categories:') if len(product.public_categ_ids) > 1 else _('Category:')}
+                data['category_url'] = dict()
+                for categ in product.public_categ_ids:
+                    slug_categ = slug(categ)
+                    data['category'][slug_categ] = categ.name
+                    data['category_url'][slug_categ] = '/shop/category/%s' % slug_categ
         return results_data
 
     @api.model
