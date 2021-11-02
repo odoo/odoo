@@ -10,6 +10,7 @@ class SaleOrder(models.Model):
 
     website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate, sanitize_form=False)
 
+    # YTI TODO: This should be converted
     @api.onchange('partner_id')
     def onchange_update_description_lang(self):
         if not self.sale_order_template_id:
