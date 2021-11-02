@@ -8,8 +8,12 @@ from odoo.exceptions import UserError
 class MailTemplatePreview(models.TransientModel):
     _name = 'mail.template.preview'
     _description = 'Email Template Preview'
-    _MAIL_TEMPLATE_FIELDS = ['subject', 'body_html', 'email_from', 'email_to',
-                             'email_cc', 'reply_to', 'scheduled_date', 'attachment_ids']
+    _MAIL_TEMPLATE_FIELDS = ['subject', 'body_html',
+                             'email_from', 'reply_to',
+                             'email_to', 'email_cc', 'partner_to',
+                             'scheduled_date',
+                             'attachments', 'attachment_ids'
+                            ]
 
     @api.model
     def _selection_target_model(self):
@@ -83,6 +87,9 @@ class MailTemplatePreview(models.TransientModel):
 
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:
+            if field in ('attachments', 'partner_to'):
+                # partner_to is used to generate partner_ids, handled here below
+                continue
             field_value = values.get(field, False) if values else self.mail_template_id[field]
             self[field] = field_value
         self.partner_ids = values.get('partner_ids', False) if values else False

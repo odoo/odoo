@@ -572,7 +572,8 @@ class MailComposer(models.TransientModel):
                 ['subject', 'body_html',
                  'email_from',
                  'email_cc', 'email_to', 'partner_to', 'reply_to',
-                 'attachment_ids', 'mail_server_id'
+                 'attachments', 'attachment_ids',
+                 'mail_server_id',
                 ]
             )[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -663,7 +664,7 @@ class MailComposer(models.TransientModel):
             template_values = self._generate_email_for_composer(
                 self.template_id.id, res_ids,
                 ['email_to', 'partner_to', 'email_cc',
-                 'attachment_ids', 'mail_server_id'
+                 'attachments', 'attachment_ids', 'mail_server_id'
                 ])
         else:
             template_values = {}

@@ -32,6 +32,8 @@ class MailTemplate(models.Model):
 
         if self.model not in ['account.move', 'account.payment']:
             return res
+        if 'attachments' not in render_fields or 'attachment_ids' not in render_fields:
+            return res
 
         records = self.env[self.model].browse(res_ids)
         for record in records:
