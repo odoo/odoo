@@ -1886,14 +1886,18 @@ export class OdooEditor extends EventTarget {
                 listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
             }
         }
-        if (!activeLabel) {
-            // If no element from the text style dropdown was marked as active,
-            // mark the paragraph one as active and use its label.
-            const firstButtonEl = this.toolbar.querySelector('#paragraph');
-            firstButtonEl.classList.add('active');
-            activeLabel = firstButtonEl.textContent;
+
+        const styleSection = this.toolbar.querySelector('#style');
+        if (styleSection) {
+            if (!activeLabel) {
+                // If no element from the text style dropdown was marked as active,
+                // mark the paragraph one as active and use its label.
+                const firstButtonEl = styleSection.querySelector('#paragraph');
+                firstButtonEl.classList.add('active');
+                activeLabel = firstButtonEl.textContent;
+            }
+            styleSection.querySelector('button span').textContent = activeLabel;
         }
-        this.toolbar.querySelector('#style button span').textContent = activeLabel;
 
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
