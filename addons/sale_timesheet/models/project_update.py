@@ -26,7 +26,7 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_project_sols(self, project):
         # TODO: remove me in master
-	    return
+        return
 
     @api.model
     def _get_services_values(self, project):
