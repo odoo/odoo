@@ -261,7 +261,9 @@ class SaleOrderLine(models.Model):
         'product.template', string='Product Template',
         related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', default=True)
-    product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
+    product_uom_qty = fields.Float(
+        string='Quantity', digits='Product Unit of Measure', required=True, default=1.0,
+        compute='_compute_product_uom_qty', store=True, readonly=False, pre_compute=True)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_readonly = fields.Boolean(compute='_compute_product_uom_readonly')
@@ -459,14 +461,17 @@ class SaleOrderLine(models.Model):
                     packaging_uom_qty / line.product_packaging_id.qty,
                     precision_rounding=packaging_uom.rounding)
 
-    @api.onchange('product_packaging_qty')
-    def _onchange_product_packaging_qty(self):
-        if self.product_packaging_id:
-            packaging_uom = self.product_packaging_id.product_uom_id
-            qty_per_packaging = self.product_packaging_id.qty
-            product_uom_qty = packaging_uom._compute_quantity(self.product_packaging_qty * qty_per_packaging, self.product_uom)
-            if float_compare(product_uom_qty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
-                self.product_uom_qty = product_uom_qty
+    @api.depends('product_packaging_qty')
+    def _compute_product_uom_qty(self):
+        for line in self:
+            if not line.product_packaging_id:
+                continue
+            packaging_uom = line.product_packaging_id.product_uom_id
+            qty_per_packaging = line.product_packaging_id.qty
+            product_uom_qty = packaging_uom._compute_quantity(
+                line.product_packaging_qty * qty_per_packaging, line.product_uom)
+            if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom.rounding) != 0:
+                line.product_uom_qty = product_uom_qty
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
