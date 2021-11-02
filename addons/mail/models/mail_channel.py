@@ -596,8 +596,8 @@ class Channel(models.Model):
                 self._action_unfollow(p)
         return super(Channel, self)._message_receive_bounce(email, partner)
 
-    def _message_compute_author(self, author_id=None, email_from=None, raise_exception=False):
-        return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_exception=False)
+    def _message_compute_author(self, author_id=None, email_from=None, raise_on_email=True):
+        return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_on_email=False)
 
     def _message_compute_parent_id(self, parent_id):
         # super() unravels the chain of parents to set parent_id as the first

@@ -60,7 +60,7 @@ class MailComposer(models.TransientModel):
         missing_author = 'author_id' in fields and 'author_id' not in result
         missing_email_from = 'email_from' in fields and 'email_from' not in result
         if missing_author or missing_email_from:
-            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_exception=False)
+            author_id, email_from = self.env['mail.thread']._message_compute_author(result.get('author_id'), result.get('email_from'), raise_on_email=False)
             if missing_email_from:
                 result['email_from'] = email_from
             if missing_author:
