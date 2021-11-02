@@ -326,7 +326,8 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_packaging_id', store=True, readonly=False,
         domain="[('sales', '=', True), ('product_id','=',product_id)]",
         check_company=True)
-    product_packaging_qty = fields.Float('Packaging Quantity')
+    product_packaging_qty = fields.Float(
+        'Packaging Quantity', compute='_compute_product_packaging_qty', store=True, readonly=False)
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
@@ -446,14 +447,17 @@ class SaleOrderLine(models.Model):
                     },
                 }
 
-    @api.onchange('product_packaging_id', 'product_uom', 'product_uom_qty')
-    def _onchange_update_product_packaging_qty(self):
-        if not self.product_packaging_id:
-            self.product_packaging_qty = False
-        else:
-            packaging_uom = self.product_packaging_id.product_uom_id
-            packaging_uom_qty = self.product_uom._compute_quantity(self.product_uom_qty, packaging_uom)
-            self.product_packaging_qty = float_round(packaging_uom_qty / self.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+    @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
+    def _compute_product_packaging_qty(self):
+        for line in self:
+            if not line.product_packaging_id:
+                line.product_packaging_qty = False
+            else:
+                packaging_uom = line.product_packaging_id.product_uom_id
+                packaging_uom_qty = line.product_uom._compute_quantity(line.product_uom_qty, packaging_uom)
+                line.product_packaging_qty = float_round(
+                    packaging_uom_qty / line.product_packaging_id.qty,
+                    precision_rounding=packaging_uom.rounding)
 
     @api.onchange('product_packaging_qty')
     def _onchange_product_packaging_qty(self):
