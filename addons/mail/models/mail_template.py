@@ -243,21 +243,38 @@ class MailTemplate(models.Model):
           Note that 2many fields contain a list of IDs, not commands.
         """
         self.ensure_one()
+        render_fields_set = set(render_fields)
+        fields_specific = {
+            'attachments',  # attachments
+            'attachment_ids',  # attachments
+            # not rendered (static)
+            'auto_delete',
+            'mail_server_id',
+            'model',
+            'res_id',
+        }
 
-        results = dict()
+        render_results = {}
         for _lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
-            for field in render_fields:
+            # render fields not rendered by sub methods
+            fields_torender = {
+                field for field in render_fields
+                if field not in fields_specific
+            }
+            for field in fields_torender:
                 generated_field_values = template._render_field(
                     field, template_res_ids
                 )
                 for res_id, field_value in generated_field_values.items():
-                    results.setdefault(res_id, dict())[field] = field_value
-            # compute recipients
-            if any(field in render_fields for field in ['email_to', 'partner_to', 'email_cc']):
-                results = template._generate_recipients(results, template_res_ids)
-            # update values for all res_ids
+                    render_results.setdefault(res_id, {})[field] = field_value
+
+            # render recipients
+            if render_fields_set & {'email_cc', 'email_to', 'partner_to'}:
+                render_results = template._generate_recipients(render_results, template_res_ids)
+
+            # add values static for all res_ids
             for res_id in template_res_ids:
-                values = results[res_id]
+                values = render_results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
@@ -267,16 +284,19 @@ class MailTemplate(models.Model):
                     values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
 
                 # technical settings
-                values.update(
-                    mail_server_id=template.mail_server_id.id or False,
-                    auto_delete=template.auto_delete,
-                    model=template.model,
-                    res_id=res_id or False,
-                    attachment_ids=[attach.id for attach in template.attachment_ids],
-                )
+                if 'attachments' in render_fields or 'attachment_ids' in render_fields:
+                    values['attachment_ids'] = template.attachment_ids.ids
+                if 'auto_delete' in render_fields:
+                    values['auto_delete'] = template.auto_delete
+                if 'mail_server_id' in render_fields:
+                    values['mail_server_id'] = template.mail_server_id.id
+                if 'model' in render_fields:
+                    values['model'] = template.model
+                if 'res_id' in render_fields:
+                    values['res_id'] = res_id or False
 
-            # Add report in attachments: generate once for all template_res_ids
-            if template.report_template:
+            # render attachments (report part)
+            if ('attachments' in render_fields or 'attachment_ids' in render_fields) and template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = template._render_field('report_name', [res_id])[res_id]
@@ -299,18 +319,20 @@ class MailTemplate(models.Model):
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
-                    results[res_id]['attachments'] = attachments
+                    render_results[res_id]['attachments'] = attachments
 
             # hook for attachments-specific computation, used currently only for accounting
-            if 'attachments' in render_fields or 'attachment_ids' in render_fields and hasattr(self.env[self.model], '_process_attachments_for_template_post'):
+            if ('attachments' in render_fields or 'attachment_ids' in render_fields) and hasattr(self.env[self.model], '_process_attachments_for_template_post'):
                 records_attachments = self.env[self.model].browse(template_res_ids)._process_attachments_for_template_post(template)
                 for res_id, additional_attachments in records_attachments.items():
                     if not additional_attachments:
                         continue
-                    results[res_id]['attachment_ids'] += additional_attachments.get('attachment_ids', [])
-                    results[res_id]['attachments'] += additional_attachments.get('attachments', [])
+                    if additional_attachments.get('attachment_ids'):
+                        render_results[res_id].setdefault('attachment_ids', []).extend(additional_attachments['attachment_ids'])
+                    if additional_attachments.get('attachments'):
+                        render_results[res_id].setdefault('attachments', []).extend(additional_attachments['attachments'])
 
-        return results
+        return render_results
 
     # ------------------------------------------------------------
     # EMAIL
@@ -343,14 +365,19 @@ class MailTemplate(models.Model):
 
         # create a mail_mail based on values, without attachments
         values = self._generate_template(
-            res_id,
-            ('auto_delete',
+            [res_id],
+            ('attachments',
+             'attachment_ids',
+             'auto_delete',
              'body_html',
              'email_cc',
              'email_from',
              'email_to',
+             'mail_server_id',
+             'model',
              'partner_to',
              'reply_to',
+             'res_id',
              'scheduled_date',
              'subject',
             )

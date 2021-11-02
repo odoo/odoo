@@ -587,7 +587,8 @@ class MailComposer(models.TransientModel):
         elif template_id:
             values = self._generate_email_for_composer(
                 template_id, [res_id],
-                ('attachment_ids',
+                ('attachments',
+                 'attachment_ids',
                  'body_html',
                  'email_cc',
                  'email_from',
@@ -694,7 +695,8 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self._generate_email_for_composer(
                 self.template_id.id, res_ids,
-                ('attachment_ids',
+                ('attachments',
+                 'attachment_ids',
                  'email_to',
                  'email_cc',
                  'mail_server_id',
