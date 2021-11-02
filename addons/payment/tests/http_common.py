@@ -151,8 +151,8 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
         url = self._build_url(uri)
         return self._make_http_get_request(url, {})
 
-    def get_tx_manage_context(self, **route_kwargs):
-        response = self.portal_payment_method(**route_kwargs)
+    def get_tx_manage_context(self):
+        response = self.portal_payment_method()
 
         self.assertEqual(response.status_code, 200)
 
