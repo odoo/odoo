@@ -407,6 +407,14 @@ class MockEmail(common.BaseCase):
                 found_mail[fname], fvalue,
                 'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
 
+    def assertMessageFields(self, message, fields_values):
+        for fname, fvalue in fields_values.items():
+            self.assertEqual(
+                message[fname], fvalue,
+                'Message: expected %s for %s, got %s' % (fvalue, fname, message[fname])
+            )
+
+
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
         try:
@@ -432,7 +440,7 @@ class MockEmail(common.BaseCase):
         :param values: dictionary of additional values to check email content;
         """
         base_expected = {}
-        for fname in ['reply_to', 'subject', 'attachments', 'body', 'references',
+        for fname in ['author_id', 'reply_to', 'subject', 'attachments', 'body', 'references',
                       'body_content', 'body_alternative_content', 'references_content']:
             if fname in values:
                 base_expected[fname] = values[fname]
