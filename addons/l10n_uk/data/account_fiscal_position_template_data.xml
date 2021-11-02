@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Templates     -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+    <!-- Brexit Great Britain to Northern Ireland Fiscal Position -->
+    <record id="fiscal_position_template_gb_ni" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Great Britain to Northern Ireland</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False" />
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <!-- Brexit Northern Ireland to Great Britain Fiscal Position -->
+    <record id="fiscal_position_template_ni_gb" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Northern Ireland to Great Britain</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False" />
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <!-- Northern Ireland to EU Fiscal Position -->
+    <record id="fiscal_position_template_b2b_goods_ni_eu" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Northern Ireland to European Union Member States</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <!-- Great Britain to EU Fiscal Position -->
+    <record id="fiscal_position_template_gb_eu" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Great Britain to European Union Member States</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False" />
+        <field name="country_id" ref="base.uk"></field>
+    </record>
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+    <!-- <!-\- Northern Ireland to EU Fiscal Position Taxes -\-> -->
+    <!-- <!-\- Sales Taxes -\-> -->
+    <!-- <!-\- Zero Rated to Sales to customers in EC -\-> -->
+    <record id="fp_tax_template_b2b_ni_eu_ST0_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="ST0"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- <!-\- Exempt Sales to Sales to customers in EC -\-> -->
+    <record id="fp_tax_template_b2b_ni_eu_ST2_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="ST2"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- Zero rated sales to Sales to customers in EC -->
+    <record id="fp_tax_template_b2b_ni_eu_ST0_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="ST0"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- Reduced rate sales (5%) to Sales to customers in EC -->
+    <record id="fp_tax_template_b2b_ni_eu_ST5_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="ST5"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- Standard rate sales (20%) to Sales to customers in EC -->
+    <record id="fp_tax_template_b2b_ni_eu_ST11_ST4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="ST11"/>
+        <field name="tax_dest_id" ref="ST4"/>
+    </record>
+
+    <!-- Purchase Taxes -->
+    <!-- Zero rated purchases to Zero rated purchases from EC -->
+    <record id="fp_tax_template_b2b_ni_eu_PT0_PT7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="PT0"/>
+        <field name="tax_dest_id" ref="PT7"/>
+    </record>
+
+    <!-- Exempt purchases to Zero rated purchases from EC -->
+    <record id="fp_tax_template_b2b_ni_eu_PT2_PT7" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="PT2"/>
+        <field name="tax_dest_id" ref="PT7"/>
+    </record>
+
+    <!-- Lower rate purchases (5%) to Standard rated purchases from EC -->
+    <record id="fp_tax_template_b2b_ni_eu_PT5_PT8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="PT5"/>
+        <field name="tax_dest_id" ref="PT8"/>
+    </record>
+
+    <!-- Standard rate purchases (20%) to Standard rated purchases from EC -->
+    <record id="fp_tax_template_b2b_ni_eu_PT11_PT8" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_b2b_goods_ni_eu"/>
+        <field name="tax_src_id" ref="PT11"/>
+        <field name="tax_dest_id" ref="PT8"/>
+    </record>
+
+</odoo>
