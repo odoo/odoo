@@ -15,7 +15,7 @@ const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const snippetsEditor = require('web_editor.snippet.editor');
 const Toolbar = require('web_editor.toolbar');
 const weWidgets = require('wysiwyg.widgets');
-const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
+const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
@@ -41,6 +41,7 @@ const Wysiwyg = Widget.extend({
         lang: 'odoo',
         colors: customColors,
         recordInfo: {context: {}},
+        document: document,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -122,6 +123,7 @@ const Wysiwyg = Widget.extend({
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
             $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
+            this.$root = $wrapwrap;
         }
 
         if (this._peerToPeerLoading) {
@@ -226,6 +228,44 @@ const Wysiwyg = Widget.extend({
         // Ensure the Toolbar always have the correct layout in note.
         this._updateEditorUI();
 
+        this.$root.on('mousedown', (ev) => {
+            const $target = $(ev.target);
+
+            // Keep popover open if clicked inside it, but not on a button
+            if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
+                ev.preventDefault();
+            }
+
+            if ($target.is(this.customizableLinksSelector) && $target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length) {
+                if (!$target.data('popover-widget-initialized')) {
+                    // TODO this code is ugly maybe the mutex should be in the
+                    // editor root widget / the popover should not depend on
+                    // editor panel (like originally intended but...) / ...
+                    (async () => {
+                        if (this.snippetsMenu) {
+                            // Await for the editor panel to be fully updated
+                            // as some buttons of the link popover we create
+                            // here relies on clicking in that editor panel...
+                            await this.snippetsMenu._mutex.exec(() => null);
+                        }
+                        this.linkPopover = await weWidgets.LinkPopoverWidget.createFor(this, ev.target, { wysiwyg: this });
+                        $target.data('popover-widget-initialized', true);
+                    })();
+                }
+                $target.focus();
+                if ($target.closest('#wrapwrap').length) {
+                    this.toggleLinkTools({
+                        forceOpen: true,
+                        link: $target[0],
+                        noFocusUrl: true,
+                    });
+                }
+            }
+        });
+
+        this._onSelectionChange = this._onSelectionChange.bind(this);
+        this.odooEditor.document.addEventListener('selectionchange', this._onSelectionChange);
+
         return _super.apply(this, arguments).then(() => {
             if (this.options.autohideToolbar) {
                 if (this.odooEditor.isMobile) {
@@ -236,7 +276,6 @@ const Wysiwyg = Widget.extend({
             }
         });
     },
-
     setupCollaboration(collaborationChannel) {
         const modelName = collaborationChannel.collaborationModelName;
         const fieldName = collaborationChannel.collaborationFieldName;
@@ -463,6 +502,7 @@ const Wysiwyg = Widget.extend({
         }
 
         if (this.odooEditor) {
+            this.odooEditor.document.removeEventListener('selectionchange', this._onSelectionChange);
             this.odooEditor.destroy();
         }
         // If peer to peer is initializing, wait for properly closing it.
@@ -481,6 +521,11 @@ const Wysiwyg = Widget.extend({
         if ($wrapwrap.length) {
             $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
+        $(this.$root).off('mousedown');
+        if (this.linkPopover) {
+            this.linkPopover.hide();
+        }
+
         this._super();
     },
     /**
@@ -488,9 +533,11 @@ const Wysiwyg = Widget.extend({
      */
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
+        this.$root = this.$editable;
 
         if (this.options.resizable && !device.isMobile) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
+            this.$root = $wrapper;
             $wrapper.append(this.$editable);
             this.$resizer = $(`<div class="o_wysiwyg_resizer">
                 <div class="o_wysiwyg_resizer_hook"></div>
@@ -1825,6 +1872,14 @@ const Wysiwyg = Widget.extend({
             window.location.reload(true);
         }
         return new Promise(function () {});
+    },
+    _onSelectionChange() {
+        if (this.options.autohideToolbar) {
+            const isVisible = this.linkPopover && this.linkPopover.el.offsetParent;
+            if (isVisible && !this.odooEditor.document.getSelection().isCollapsed) {
+                this.linkPopover.hide();
+            }
+        }
     },
     _onDocumentMousedown: function (e) {
         if (!e.target.classList.contains('o_editable_date_field_linked')) {
