@@ -2,20 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
-from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing')
-class TestMassMailingServer(TestMassMailCommon, MockSmtplibCase):
+class TestMassMailingServer(TestMassMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMassMailingServer, cls).setUpClass()
-        cls._init_mail_gateway()
-        cls.env['ir.mail_server'].search([]).unlink()
         cls._init_mail_servers()
         cls.recipients = cls._create_mailing_test_records(model='mailing.test.optout', count=8)
 

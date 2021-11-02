@@ -247,8 +247,6 @@ class TestMailgateway(TestMailCommon):
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
 
-        cls._init_mail_gateway()
-
     # --------------------------------------------------
     # Base low-level tests
     # --------------------------------------------------
@@ -1276,8 +1274,6 @@ class TestMailThreadCC(TestMailCommon):
             'alias_user_id': False,
             'alias_model_id': cls.env['ir.model']._get('mail.test.cc').id,
             'alias_contact': 'everyone'})
-
-        cls._init_mail_gateway()
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_cc_new(self):
