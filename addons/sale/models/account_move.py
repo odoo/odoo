@@ -14,6 +14,7 @@ class AccountMove(models.Model):
 
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
@@ -58,10 +59,14 @@ class AccountMove(models.Model):
 
         return res
 
-    @api.onchange('invoice_user_id')
-    def onchange_user_id(self):
-        if self.invoice_user_id and self.invoice_user_id.sale_team_id:
-            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
+    @api.depends('invoice_user_id')
+    def _compute_team_id(self):
+        for move in self:
+            if not move.invoice_user_id.sale_team_id:
+                continue
+            move.team_id = self.env['crm.team']._get_default_team_id(
+                user_id=move.invoice_user_id.id,
+                domain=[('company_id', '=', move.company_id.id)])
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
