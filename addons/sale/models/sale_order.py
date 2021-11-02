@@ -197,7 +197,7 @@ class SaleOrder(models.Model):
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
-        required=False, readonly=False, store=True, 
+        required=False, readonly=False, store=True,
         compute='_compute_order_info_from_partner', pre_compute=True,
         states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
@@ -258,11 +258,12 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Delivery Date', copy=False,
-                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-                                      help="This is the delivery date promised to the customer. "
-                                           "If set, the delivery order will be scheduled based on "
-                                           "this date rather than product lead times.")
+    commitment_date = fields.Datetime(
+        'Delivery Date', copy=False,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        help="This is the delivery date promised to the customer. "
+             "If set, the delivery order will be scheduled based on "
+             "this date rather than product lead times.")
     expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
@@ -351,6 +352,9 @@ class SaleOrder(models.Model):
             tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
             order.tax_totals_json = json.dumps(tax_totals)
 
+    # YTI TODO: Convert into compute method, however this introduce 
+    # a behavior change that breaks the test test_reservation_method_w_sale
+    # Note: This should be the case
     @api.onchange('expected_date')
     def _onchange_expected_date(self):
         self.commitment_date = self.expected_date
