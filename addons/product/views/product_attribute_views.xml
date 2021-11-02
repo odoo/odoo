@@ -93,7 +93,7 @@
                 <field name="display_type"/>
                 <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}" widget="color"/>
                 <field name="ptav_active" optional="hide"/>
-                <field name="price_extra" widget="monetary"/>
+                <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
                 <field name="currency_id" invisible="1"/>
             </tree>
         </field>
@@ -111,7 +111,7 @@
                         <field name="name"/>
                         <field name="display_type" invisible="1"/>
                         <field name="html_color" attrs="{'invisible': [('display_type', '!=', 'color')]}"/>
-                        <field name="price_extra" widget="monetary"/>
+                        <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="exclude_for" widget="one2many" mode="tree">
                             <tree editable="bottom">
