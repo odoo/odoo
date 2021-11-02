@@ -236,7 +236,9 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
+    price_unit = fields.Float(
+        'Unit Price', required=True, digits='Product Price',
+        compute='_compute_price_unit', store=True, readonly=False)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', store=True)
@@ -645,22 +647,24 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        if not self.product_uom or not self.product_id:
-            self.price_unit = 0.0
-            return
-        if self.order_id.pricelist_id and self.order_id.partner_id:
-            product = self.product_id.with_context(
-                lang=self.order_id.partner_id.lang,
-                partner=self.order_id.partner_id,
-                quantity=self.product_uom_qty,
-                date=self.order_id.date_order,
-                pricelist=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id,
-                fiscal_position=self.env.context.get('fiscal_position')
-            )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+    @api.depends('product_uom', 'product_uom_qty')
+    def _compute_price_unit(self):
+        for line in self:
+            if not line.product_uom or not line.product_id:
+                line.price_unit = 0.0
+                continue
+            if line.order_id.pricelist_id and line.order_id.partner_id:
+                product = line.product_id.with_context(
+                    lang=line.order_id.partner_id.lang,
+                    partner=line.order_id.partner_id,
+                    quantity=line.product_uom_qty,
+                    date=line.order_id.date_order,
+                    pricelist=line.order_id.pricelist_id.id,
+                    uom=line.product_uom.id,
+                    fiscal_position=self.env.context.get('fiscal_position')
+                )
+                line.price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                    line._get_display_price(product), product.taxes_id, line.tax_id, line.company_id)
 
     def name_get(self):
         result = []
