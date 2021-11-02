@@ -602,7 +602,7 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self._render_field('subject', res_ids, options={"render_safe": True})
+        subjects = self._render_field('subject', res_ids)
         # We want to preserve comments in emails so as to keep mso conditionals
         bodies = self._render_field('body', res_ids, post_process=True, options={'preserve_comments': self.composition_mode == 'mass_mail'})
         emails_from = self._render_field('email_from', res_ids)
