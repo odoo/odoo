@@ -113,7 +113,13 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         res.results.forEach(record => {
             for (const fieldName of fieldNames) {
                 if (record[fieldName]) {
-                    record[fieldName] = Markup(record[fieldName]);
+                    if (typeof record[fieldName] === "object") {
+                        for (const fieldKey of Object.keys(record[fieldName])) {
+                            record[fieldName][fieldKey] = Markup(record[fieldName][fieldKey]);
+                        }
+                    } else {
+                        record[fieldName] = Markup(record[fieldName]);
+                    }
                 }
             }
         });
