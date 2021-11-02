@@ -132,24 +132,34 @@ class ChannelUsersRelation(models.Model):
                 template_to_records.setdefault(template, self.env['slide.channel.partner'])
                 template_to_records[template] += record
 
-        record_email_values = dict()
+        record_email_values = {}
         for template, records in template_to_records.items():
-            record_email_values.update(
-                template._generate_template(
-                    records.ids,
-                    ['body_html',
-                     'email_from',
-                     'partner_to',
-                     'subject',
-                    ]
-                )
+            record_values = template._generate_template(
+                records.ids,
+                ['attachments',
+                 'attachment_ids',
+                 'body_html',
+                 'email_cc',
+                 'email_from',
+                 'email_to',
+                 'mail_server_id',
+                 'model',
+                 'partner_to',
+                 'reply_to',
+                 'res_id',
+                 'scheduled_date',
+                 'subject',
+                ]
             )
+            for res_id, values in record_values.items():
+                # attachments specific not supported currently, only attachment_ids
+                values.pop('attachments', False)
+                values['body'] = values.get('body_html')  # keep body copy in chatter
+                record_email_values[res_id] = values
 
         mail_mail_values = []
         for record in self:
             email_values = record_email_values.get(record.id)
-            # attachments specific not supported currently, only attachment_ids
-            email_values.pop('attachments', False)
 
             if not email_values or not email_values.get('partner_ids'):
                 continue
