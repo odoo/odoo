@@ -280,6 +280,8 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+    customer_lead = fields.Float(
+        compute='_compute_customer_lead', store=True, readonly=False, pre_compute=True)
 
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
     def _compute_qty_to_deliver(self):
@@ -470,9 +472,10 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_updatable = False
 
-    @api.onchange('product_id')
-    def _onchange_product_id_set_customer_lead(self):
-        self.customer_lead = self.product_id.sale_delay
+    @api.depends('product_id')
+    def _compute_customer_lead(self):
+        for order in self:
+            order.customer_lead = order.product_id.sale_delay
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
