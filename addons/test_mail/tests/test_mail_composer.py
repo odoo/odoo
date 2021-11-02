@@ -18,7 +18,6 @@ class TestMailComposer(TestMailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposer, cls).setUpClass()
-        cls._init_mail_gateway()
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
@@ -609,8 +608,8 @@ class TestComposerResultsComment(TestMailComposer):
                                 'email_from': self.test_record.user_id.email_formatted,  # set by template
                                 'subject': 'TemplateSubject %s' % self.test_record.name,
                                 'attachments_info': [
-                                    {'name': '00.txt', 'raw': b'Att00', 'type': 'text/plain'},
-                                    {'name': '01.txt', 'raw': b'Att01', 'type': 'text/plain'},
+                                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                                     {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
                                 ]
                             },
@@ -624,8 +623,8 @@ class TestComposerResultsComment(TestMailComposer):
                                 'email_from': self.test_record.user_id.email_formatted,  # set by template
                                 'subject': 'TemplateSubject %s' % self.test_record.name,
                                 'attachments_info': [
-                                    {'name': '00.txt', 'raw': b'Att00', 'type': 'text/plain'},
-                                    {'name': '01.txt', 'raw': b'Att01', 'type': 'text/plain'},
+                                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                                     {'name': 'TestReport for %s.html' % self.test_record.name, 'type': 'text/plain'},
                                 ]
                             },
@@ -638,7 +637,7 @@ class TestComposerResultsComment(TestMailComposer):
         # attachments are copied on message and linked to document
         self.assertEqual(
             set(message.attachment_ids.mapped('name')),
-            set(['00.txt', '01.txt', 'TestReport for %s.html' % self.test_record.name])
+            set(['AttFileName_00.txt', 'AttFileName_01.txt', 'TestReport for %s.html' % self.test_record.name])
         )
         self.assertEqual(set(message.attachment_ids.mapped('res_model')), set([self.test_record._name]))
         self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(self.test_record.ids))

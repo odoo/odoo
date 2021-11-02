@@ -5,19 +5,17 @@ import psycopg2
 from unittest.mock import call
 
 from odoo import api
-from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
 @tagged('mail_mail')
-class TestMailMail(TestMailCommon, MockSmtplibCase):
+class TestMailMail(TestMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
-        cls._init_mail_gateway()
         cls._init_mail_servers()
 
         cls.server_domain_2 = cls.env['ir.mail_server'].create({
@@ -133,6 +131,7 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
 
+@tagged('mail_mail')
 class TestMailMailRace(common.TransactionCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

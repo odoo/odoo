@@ -48,6 +48,7 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
         self._flush_tracking()
+        self._init_mail_gateway()
 
     def _init_mail_gateway(self):
         # setup mail gateway
@@ -112,8 +113,6 @@ class TestBaseMailPerformance(BaseMailPerformance):
                 'partner_id': self.res_partner_12.id,
             }
         ])
-
-        self._init_mail_gateway()
 
     @users('__system__', 'demo')
     @warmup
@@ -222,8 +221,6 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
-
-        self._init_mail_gateway()
 
         # automatically follow activities, for backward compatibility concerning query count
         self.env.ref('mail.mt_activities').write({'default': True})
@@ -531,10 +528,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             self.partners |= Partners.create({'name': 'Test %s' % x, 'email': 'test%s@example.com' % x})
         self.container.message_subscribe(self.partners.ids, subtype_ids=[
             self.env.ref('mail.mt_comment').id,
-            self.env.ref('test_mail.st_mail_test_container_child_full').id]
-        )
-
-        self._init_mail_gateway()
+            self.env.ref('test_mail.st_mail_test_container_child_full').id
+        ])
 
         # `test_complex_mail_mail_send`
         self.container.flush()
@@ -990,8 +985,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'res_model': 'mail.compose.message',
             'res_id': 0,
         } for i in range(3)]
-
-        self._init_mail_gateway()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
