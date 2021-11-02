@@ -125,7 +125,6 @@ class SaleOrder(models.Model):
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     res = line.product_id_change() or res
                     line._onchange_discount()
-                    line._onchange_product_id_set_customer_lead()
                 return res
 
     def _get_matrix(self, product_template):
