@@ -58,6 +58,7 @@ class PaymentAcquirer(models.Model):
         super()._compute_feature_support_fields()
         self.filtered(lambda acq: acq.provider == 'authorize').update({
             'support_manual_capture': True,
+            'support_refund': 'full_only',
             'support_tokenization': True,
         })
 

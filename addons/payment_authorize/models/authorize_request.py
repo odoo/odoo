@@ -259,7 +259,7 @@ class AuthorizeAPI:
                 }
             }
 
-    def _get_transaction_details(self, transaction_id):
+    def get_transaction_details(self, transaction_id):
         """ Return detailed information about a specific transaction. Useful to issue refunds.
 
         :param str transaction_id: transaction id
@@ -306,29 +306,17 @@ class AuthorizeAPI:
         })
         return self._format_response(response, 'void')
 
-    def refund(self, transaction_id, amount):
+    def refund(self, transaction_id, amount, tx_details):
         """Refund a previously authorized payment. If the transaction is not settled
             yet, it will be voided.
 
         :param str transaction_id: the id of the authorized transaction in the
                                    Authorize.net backend
         :param float amount: transaction amount to refund
+        :param dict tx_details: The transaction details from `get_transaction_details()`.
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        tx_details = self._get_transaction_details(transaction_id)
-
-        if tx_details and tx_details.get('err_code'):
-            return {
-                'x_response_code': self.AUTH_ERROR_STATUS,
-                'x_response_reason_text': tx_details.get('err_msg')
-            }
-
-        # Void transaction not yet settled instead of issuing a refund
-        # (spoiler alert: a refund on a non settled transaction will throw an error)
-        if tx_details.get('transaction', {}).get('transactionStatus') in ['authorizedPendingCapture', 'capturedPendingSettlement']:
-            return self.void(transaction_id)
-
         card = tx_details.get('transaction', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
         response = self._make_request('createTransactionRequest', {
             'transactionRequest': {
