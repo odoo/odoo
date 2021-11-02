@@ -1295,7 +1295,7 @@ options.registry.menu_data = options.Class.extend({
      * @override
      */
     start: function () {
-        wLinkPopoverWidget.createFor(this, this.$target[0]);
+        wLinkPopoverWidget.createFor(this, this.$target[0], { wysiwyg: $('#wrapwrap').data('wysiwyg') });
         return this._super(...arguments);
     },
     /**

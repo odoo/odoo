@@ -1,16 +1,6 @@
 /** @odoo-module **/
 
-/**
- * Returns a list of all the ancestors nodes of the provided node.
- *
- * @param {Node} node
- * @param {Node} [stopElement] include to prevent bubbling up further than the stopElement.
- * @returns {HTMLElement[]}
- */
-function ancestors(node, stopElement) {
-    if (!node || !node.parentElement || node === stopElement) return [];
-    return [node.parentElement, ...ancestors(node.parentElement, stopElement)];
-}
+import { ancestors } from '@web_editor/js/common/wysiwyg_utils';
 
 export class QWebPlugin {
     constructor(options = {}) {
