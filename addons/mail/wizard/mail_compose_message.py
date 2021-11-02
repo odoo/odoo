@@ -93,9 +93,7 @@ class MailComposer(models.TransientModel):
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', ondelete='set null',
         help="Initial thread message.")
-    template_id = fields.Many2one(
-        'mail.template', 'Use template',
-        domain="[('model', '=', model)]")
+    template_id = fields.Many2one('mail.template', 'Use template', domain="[('model', '=', model)]")
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
@@ -111,8 +109,8 @@ class MailComposer(models.TransientModel):
         ('comment', 'Post on a document'),
         ('mass_mail', 'Email Mass Mailing'),
         ('mass_post', 'Post on Multiple Documents')], string='Composition mode', default='comment')
-    model = fields.Char('Related Document Model', index=True)
-    res_id = fields.Integer('Related Document ID', index=True)
+    model = fields.Char('Related Document Model')
+    res_id = fields.Integer('Related Document ID')
     record_name = fields.Char('Message Record Name', help="Name get of the related document.")
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
@@ -126,9 +124,7 @@ class MailComposer(models.TransientModel):
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null',
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
-    mail_activity_type_id = fields.Many2one(
-        'mail.activity.type', 'Mail Activity Type',
-        ondelete='set null')
+    mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
     reply_to = fields.Char('Reply To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     reply_to_force_new = fields.Boolean(
