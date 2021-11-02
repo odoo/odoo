@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { hasTouch, isMacOS } from "@web/core/browser/feature_detection";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { registerCleanup } from "./cleanup";
 import { download } from "@web/core/network/download";
