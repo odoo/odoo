@@ -400,8 +400,7 @@ class Property(models.Model):
             elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
                 # most probably inefficient... but correct
                 target = self.env[comodel]
-                target_names = target.name_search(value, operator=operator, limit=None)
-                target_ids = [n[0] for n in target_names]
+                target_ids = target._name_search(value, operator=operator, limit=None)
                 operator, value = 'in', [makeref(v) for v in target_ids]
         elif field.type in ('integer', 'float'):
             # No record is created in ir.property if the field's type is float or integer with a value
