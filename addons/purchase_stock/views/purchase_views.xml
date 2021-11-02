@@ -59,7 +59,7 @@
                 <field name="default_location_dest_id_usage" invisible="1"/>
                 <field name="incoterm_id"/>
             </xpath>
-            <xpath expr="//field[@name='origin']" position="after">
+            <xpath expr="//div[@name='reminder']" position="after">
                 <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
             </xpath>
