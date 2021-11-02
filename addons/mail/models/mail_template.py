@@ -193,7 +193,6 @@ class MailTemplate(models.Model):
             for field in fields:
                 generated_field_values = template._render_field(
                     field, template_res_ids,
-                    options={'render_safe': field == 'subject'},
                     post_process=(field == 'body_html')
                 )
                 for res_id, field_value in generated_field_values.items():
