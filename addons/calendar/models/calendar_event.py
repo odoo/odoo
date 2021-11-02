@@ -691,6 +691,11 @@ class Meeting(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
+    def _get_attendee_emails(self):
+        """ Get comma-separated attendee email addresses. """
+        self.ensure_one()
+        return ",".join([e for e in self.attendee_ids.mapped("email") if e])
+
     def _sync_activities(self, fields):
         # update activities
         for event in self:
