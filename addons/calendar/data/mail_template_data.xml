@@ -360,7 +360,7 @@
             <field name="model_id" ref="calendar.model_calendar_event"/>
             <field name="subject">{{object.name}}: Event update</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
-            <field name="email_to"></field>
+            <field name="email_to">{{ object._get_attendee_emails() }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="body_html" type="html">
 <div>
