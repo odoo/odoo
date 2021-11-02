@@ -115,6 +115,10 @@ var Tip = Widget.extend({
         this.$el.toggleClass('d-none', !!this.info.hidden);
         this.el.classList.add('o_tooltip_visible');
         core.bus.on("resize", this, _.debounce(function () {
+            if (this.isDestroyed()) {
+                // Because of the debounce, destroy() might have been called in the meantime.
+                return;
+            }
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             } else {
@@ -203,6 +207,11 @@ var Tip = Widget.extend({
      */
     _updatePosition: function (forceReposition = false) {
         if (this.info.hidden) {
+            return;
+        }
+        if (this.isDestroyed()) {
+            // TODO This should not be needed if the chain of events leading
+            // here was fully cancelled by destroy().
             return;
         }
         let halfHeight = 0;
