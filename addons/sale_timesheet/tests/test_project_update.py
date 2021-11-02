@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -23,8 +24,10 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
         self.assertTrue("Profitability" in update.description, "The description should contain 'Profitability'.")
 
     def test_project_update_description_profitability(self):
-        template_values = self.env['project.update']._get_template_values(self.project_pigs)
         today = date.today()
+        with freeze_time(today + timedelta(hours=12)):
+            template_values = self.env['project.update']._get_template_values(self.project_pigs)
+
         self.assertEqual(template_values['profitability']['month'], today.strftime('%B %Y'),
                          "The month used in the template should be well defined")
         self.assertEqual(template_values['profitability']['previous_month'], (today + relativedelta(months=-1)).strftime('%B'),
