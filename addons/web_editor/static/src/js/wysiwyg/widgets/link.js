@@ -3,7 +3,6 @@ odoo.define('wysiwyg.widgets.Link', function (require) {
 
 const core = require('web.core');
 const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
-const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
 const Widget = require('web.Widget');
 const {isColorGradient} = require('web_editor.utils');
 
