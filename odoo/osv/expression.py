@@ -234,7 +234,8 @@ def simple_domain(domain):
                 stack.pop()
                 stack.append(FALSE_LEAF)
             elif TRUE_LEAF in stack[-2:]:
-                if (x := stack.pop()) != TRUE_LEAF:
+                x = stack.pop()
+                if x != TRUE_LEAF:
                     stack.pop()
                     stack.append(x)
             else:
@@ -245,7 +246,8 @@ def simple_domain(domain):
                 stack.pop()
                 stack.append(TRUE_LEAF)
             elif FALSE_LEAF in stack[-2:]:
-                if (x := stack.pop()) != FALSE_LEAF:
+                x = stack.pop()
+                if x != FALSE_LEAF:
                     stack.pop()
                     stack.append(x)
             else:
