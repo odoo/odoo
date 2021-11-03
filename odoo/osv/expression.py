@@ -223,10 +223,12 @@ def expand_stack(stack):
     return domain
 
 
+
 def simple_domain(domain):
     if not domain:
         return domain
     stack = []
+
     for token in reversed(distribute_not(normalize_domain(domain))):
         if token == '&':
             if FALSE_LEAF in stack[-2:]:
@@ -252,6 +254,15 @@ def simple_domain(domain):
                     stack.append(x)
             else:
                 stack.append([LEAF_FLAG, [token, stack.pop(), stack.pop()]])
+        elif token == '!':
+            x = stack.pop()
+            if x == TRUE_LEAF:
+                stack.append(FALSE_LEAF)
+            elif x == FALSE_LEAF:
+                stack.append(TRUE_LEAF)
+            else:
+                stack.append([LEAF_FLAG, [token, x]])
+            print(stack)
         elif token[1] == 'in' and not token[2]:
             stack.append(FALSE_LEAF)
         elif token[1] == 'not in' and not token[2]:
