@@ -25,6 +25,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.fixedHeader = false;
         this.scrolledPoint = 0;
         this.hasScrolled = false;
+        this.closeOpenedMenus = false;
     },
     /**
      * @override
@@ -167,6 +168,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
             }
         } else {
             this.$el.removeClass('o_header_no_transition');
+            this.closeOpenedMenus = true;
         }
 
         // Indicates the page is scrolled, the logo size is changed.
@@ -177,9 +179,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
             this.headerIsScrolled = headerIsScrolled;
         }
 
-        // Close opened menus
-        this.$dropdowns.removeClass('show');
-        this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
+        if (this.closeOpenedMenus) {
+            this.$dropdowns.removeClass('show');
+            this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
+        }
     },
     /**
      * Called when the window is resized
