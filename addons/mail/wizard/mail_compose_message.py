@@ -307,15 +307,6 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.render_model = composer.model
 
-    # Onchanges
-
-    @api.onchange('template_id')
-    def _onchange_template_id_wrapper(self):
-        self.ensure_one()
-        values = self._onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
-        for fname, value in values.items():
-            setattr(self, fname, value)
-
     def _compute_can_edit_body(self):
         """Can edit the body if we are not in "mass_mail" mode because the template is
         rendered before it's modified.
@@ -473,7 +464,6 @@ class MailComposer(models.TransientModel):
 
             # generate the saved template
             record.write({'template_id': template.id})
-            record._onchange_template_id_wrapper()
             return _reopen(self, record.id, record.model, context=self._context)
 
     # ------------------------------------------------------------
@@ -660,9 +650,6 @@ class MailComposer(models.TransientModel):
 
     def _get_optout_emails(self, mail_values_dict):
         return []
-
-    def _onchange_template_id(self, template_id, composition_mode, model, res_id):
-        return {'value': {}}
 
     def _render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given

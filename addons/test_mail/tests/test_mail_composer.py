@@ -471,8 +471,6 @@ class TestComposerInternals(TestMailComposer):
 
             # changing template should update its content
             composer.write({'template_id': self.template.id})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
             new_partners = self.env['res.partner'].search(
                 [('email_normalized', 'in', ['test.cc.1@test.example.com',
                                              'test.cc.2@test.example.com'])
@@ -497,8 +495,6 @@ class TestComposerInternals(TestMailComposer):
 
             # reset template should reset values
             composer.write({'template_id': False})
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values are kepts, not sure why
             if composition_mode == 'comment':
@@ -515,8 +511,6 @@ class TestComposerInternals(TestMailComposer):
             composer = self.env['mail.compose.message'].with_context(ctx).create({
                 'template_id': self.template.id,
             })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -535,8 +529,6 @@ class TestComposerInternals(TestMailComposer):
             composer = self.env['mail.compose.message'].with_context(ctx).create({
                 'template_id': self.template.id,
             })
-            # currently onchange necessary
-            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -617,7 +609,6 @@ class TestComposerInternals(TestMailComposer):
             'template_id': template_1.id,
             'partner_ids': [self.partner_employee_2.id],
         })
-        composer._onchange_template_id_wrapper()
         composer._action_send_mail()
 
         self.assertEqual(self.test_record.message_ids[0].subject, 'Template Subject')
