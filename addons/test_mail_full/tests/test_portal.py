@@ -320,8 +320,6 @@ class TestPortalFlow(MailCommon, HttpCase):
         Other tests below check that that same link has the correct behavior.
         This test follows the common use case by using a template while the next send the mail without a template."""
         composer = self._get_composer_with_context(self.mail_template.id).create({})
-        # currently onchange necessary
-        composer._onchange_template_id_wrapper()
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()

@@ -262,7 +262,7 @@ class AccountEdiDocument(models.Model):
         Can be overridden where e.g. a zip-file needs to be sent with the individual files instead of the entire zip
         IMPORTANT:
         * If the attachment's id is returned, no new attachment will be created, the existing one on the move is linked
-        to the wizard (see _onchange_template_id in mail.compose.message).
+        to the wizard (see computed attachment_ids field in mail.compose.message).
         * If the attachment's content is returned, a new one is created and linked to the wizard. Thus, when sending
         the mail (clicking on 'send & print' in the wizard), a new attachment is added to the move (see
         _action_send_mail in mail.compose.message).
