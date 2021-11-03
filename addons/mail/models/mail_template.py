@@ -183,6 +183,53 @@ class MailTemplate(models.Model):
             results[res_id]['partner_ids'] = partner_ids
         return results
 
+    def _generate_template_attachments(self, res_ids, render_fields, render_results=None):
+        """ Render attachments of template 'self', returning values for records
+        given by 'res_ids'.
+
+        :param list render_fields: list of fields to render. Should contain
+          either attachments (reports) or attachment_ids (template attachments);
+        :param render_results: if given fill it instead of returning a new
+          dict;
+        """
+        self.ensure_one()
+        if render_results is None:
+            render_results = dict()
+
+        for res_id in res_ids:
+            values = render_results.setdefault(res_id, dict())
+
+            # link template attachments directly
+            if 'attachment_ids' in render_fields:
+                values['attachment_ids'] = [attach.id for attach in self.attachment_ids]
+
+            # generate attachments (reports)
+            if 'attachments' in render_fields and self.report_template:
+                report = self.report_template
+
+                if report.report_type in ['qweb-html', 'qweb-pdf']:
+                    result, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
+                else:
+                    render_res = self.env['ir.actions.report']._render(report, [res_id])
+                    if not render_res:
+                        raise UserError(_('Unsupported report type %s found.', report.report_type))
+                    result, report_format = render_res
+                # Note in trunk, change return format to binary to match message_post expected format
+                result = base64.b64encode(result)
+
+                report_name = self._render_field('report_name', [res_id])[res_id]
+                if not report_name:
+                    report_name = 'report.' + report.report_name
+                ext = "." + report_format
+                if not report_name.endswith(ext):
+                    report_name += ext
+
+                values['attachments'] = [(report_name, result)]
+            elif 'attachments' in render_fields:
+                values['attachments'] = []
+
+        return render_results
+
     def _generate_template(self, res_ids, render_fields):
         """Render values based on template 'self', returning values to create
         a mail.mail / mail.message. Model is defined on template and records
@@ -226,8 +273,6 @@ class MailTemplate(models.Model):
                     values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
 
                 # technical settings
-                if 'attachments' in render_fields or 'attachment_ids' in render_fields:
-                    values['attachment_ids'] = [attach.id for attach in template.attachment_ids]
                 if 'auto_delete' in render_fields:
                     values['auto_delete'] = template.auto_delete
                 if 'mail_server_id' in render_fields:
@@ -237,31 +282,9 @@ class MailTemplate(models.Model):
                 if 'res_id' in render_fields:
                     values['res_id'] = res_id or False
 
-            # render attachments (report part)
-            if ('attachments' in render_fields or 'attachment_ids' in render_fields) and template.report_template:
-                for res_id in template_res_ids:
-                    attachments = []
-                    report_name = template._render_field('report_name', [res_id])[res_id]
-                    report = template.report_template
-                    report_service = report.report_name
-
-                    if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
-                    else:
-                        res = self.env['ir.actions.report']._render(report, [res_id])
-                        if not res:
-                            raise UserError(_('Unsupported report type %s found.', report.report_type))
-                        result, report_format = res
-
-                    # TODO in trunk, change return report_format to binary to match message_post expected format
-                    result = base64.b64encode(result)
-                    if not report_name:
-                        report_name = 'report.' + report_service
-                    ext = "." + report_format
-                    if not report_name.endswith(ext):
-                        report_name += ext
-                    attachments.append((report_name, result))
-                    results[res_id]['attachments'] = attachments
+            # generate attachments if requested
+            if any(field in render_fields for field in ['attachments', 'attachment_ids']):
+                template._generate_template_attachments(template_res_ids, render_fields, render_results=results)
 
         return results
 

@@ -27,21 +27,21 @@ class MailTemplate(models.Model):
             return {}
         return {'attachment_ids': [document.attachment_id.id]}
 
-    def _generate_template(self, res_ids, render_fields):
-        res = super()._generate_template(res_ids, render_fields)
+    def _generate_template_attachments(self, res_ids, render_fields, render_results=None):
+        render_res = super()._generate_template_attachments(res_ids, render_fields, render_results=render_results)
 
         if self.model not in ['account.move', 'account.payment']:
-            return res
-        if 'attachments' not in render_fields or 'attachment_ids' not in render_fields:
-            return res
+            return render_res
+        if not 'attachments' in render_fields:
+            return render_res
 
         records = self.env[self.model].browse(res_ids)
         for record in records:
             for doc in record.edi_document_ids:
-                res[record.id].setdefault('attachment_ids', [])
-                res[record.id].setdefault('attachments', [])
+                render_res[record.id].setdefault('attachment_ids', [])
+                render_res[record.id].setdefault('attachments', [])
                 attachments = self._get_edi_attachments(doc)
-                res[record.id]['attachment_ids'] += attachments.get('attachment_ids', [])
-                res[record.id]['attachments'] += attachments.get('attachments', [])
+                render_res[record.id]['attachment_ids'] += attachments.get('attachment_ids', [])
+                render_res[record.id]['attachments'] += attachments.get('attachments', [])
 
-        return res
+        return render_res
