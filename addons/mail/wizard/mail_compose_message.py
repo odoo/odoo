@@ -27,8 +27,6 @@ class MailComposer(models.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
-        TDE FIXME: get_record_data was adding partner ids
-
         The behavior of the wizard depends on the composition_mode field:
         - 'comment': post on a record.
         - 'mass_mail': wizard in mass mailing mode where the mail details can
@@ -60,8 +58,6 @@ class MailComposer(models.TransientModel):
 
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             result['active_domain'] = '%s' % self._context.get('active_domain')
-        if result.get('composition_mode') == 'comment' and (set(fields) & set(['partner_ids'])):
-            result.update(self.get_record_data(result))
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
         if 'create_uid' in fields and 'create_uid' not in result:
@@ -133,7 +129,8 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
-        domain=[('type', '!=', 'private')])
+        domain=[('type', '!=', 'private')],
+        compute='_compute_partner_ids', readonly=False, store=True)
     # sending
     auto_delete = fields.Boolean('Delete Emails',
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
@@ -276,6 +273,26 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
 
+    @api.depends('composition_mode', 'model', 'parent_id', 'res_id', 'template_id')
+    def _compute_partner_ids(self):
+        """ Recipients computation. When based on template it uses its 3 fields
+        email_to, partner_to and email_cc. All emails are converted into partners
+        (creating new one if not found). Indeed composer does not deal with emails
+        but only with partners. """
+        for composer in self:
+            if composer.template_id and composer.composition_mode == 'comment':
+                rendered_values = composer.template_id._generate_template_recipients(
+                    [composer.res_id],
+                    ['email_to', 'partner_to', 'email_cc'],
+                    partners_only=True
+                )[composer.res_id]
+                if rendered_values.get('partner_ids'):
+                    composer.partner_ids = rendered_values['partner_ids']
+            elif composer.parent_id and composer.composition_mode == 'comment':
+                composer.partner_ids += composer.parent_id.partner_ids
+            else:
+                composer.partner_ids = False
+
     @api.depends('template_id')
     def _compute_mail_server_id(self):
         for composer in self:
@@ -306,20 +323,6 @@ class MailComposer(models.TransientModel):
         non_mass_mail = self.filtered(lambda m: m.composition_mode != 'mass_mail')
         non_mass_mail.can_edit_body = True
         super(MailComposer, self - non_mass_mail)._compute_can_edit_body()
-
-    @api.model
-    def get_record_data(self, values):
-        """ Returns a defaults-like dict with initial values for the composition
-        wizard when sending an email related a previous email (parent_id) or
-        a document (model, res_id). This is based on previously computed default
-        values. """
-        result = {}
-        if values.get('parent_id'):
-            parent = self.env['mail.message'].browse(values.get('parent_id'))
-            partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
-            result['partner_ids'] = partner_ids
-
-        return result
 
     # ------------------------------------------------------------
     # CRUD / ORM
@@ -659,36 +662,7 @@ class MailComposer(models.TransientModel):
         return []
 
     def _onchange_template_id(self, template_id, composition_mode, model, res_id):
-        """ - mass_mailing: we cannot render, so return the template values
-            - normal mode: return rendered values
-            /!\ for x2many field, this onchange return command instead of ids
-        """
-        values = {}
-        if template_id and composition_mode == 'mass_mail':
-            pass
-        elif template_id:
-            values = self._generate_email_for_composer(
-                template_id, [res_id],
-                ['email_cc', 'email_to', 'partner_to']
-            )[res_id]
-        else:
-            default_values = self.with_context(
-                default_composition_mode=composition_mode,
-                default_model=model,
-                default_res_id=res_id
-            ).default_get(['composition_mode', 'parent_id',
-                           'partner_ids'])
-            values = dict(
-                (key, default_values[key])
-                for key in ['partner_ids'] if key in default_values)
-
-        if values.get('body_html'):
-            values['body'] = values.pop('body_html')
-
-        # This onchange should return command instead of ids for x2many field.
-        values = self._convert_to_write(values)
-
-        return {'value': values}
+        return {'value': {}}
 
     def _render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
