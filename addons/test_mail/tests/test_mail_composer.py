@@ -945,8 +945,6 @@ class TestComposerInternals(TestMailComposer):
                 # rendering mode as well as when copying template values (and recipients
                 # are not computed until sending in rendering mode)
                 composer.write({'template_id': template_void.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment':
                     self.assertEqual(composer.partner_ids, base_recipients)
@@ -959,8 +957,8 @@ class TestComposerInternals(TestMailComposer):
 
                 # changing template should update its content
                 composer.write({'template_id': self.template.id})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
+                composer.flush_recordset()  # to be able to search for new partners
+
                 new_partners = self.env['res.partner'].search(
                     [('email_normalized', 'in', ['test.cc.1@test.example.com',
                                                  'test.cc.2@test.example.com'])
@@ -985,18 +983,14 @@ class TestComposerInternals(TestMailComposer):
 
                 # reset template should reset values
                 composer.write({'template_id': False})
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
-                # values are kept, should probably be reset
+                # values are reset
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.partner_ids, self.partner_admin,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.partner_ids)
                     self.assertFalse(composer.reply_to)
                     self.assertFalse(composer.reply_to_force_new)
                 else:
-                    self.assertEqual(composer.partner_ids, self.partner_admin,
-                                     'TODO: Values are kept (should be reset ?)')
+                    self.assertFalse(composer.partner_ids)
                     self.assertFalse(composer.reply_to)
                     self.assertFalse(composer.reply_to_force_new)
 
@@ -1005,8 +999,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'template_id': self.template.id,
                 })
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
@@ -1025,8 +1017,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'template_id': self.template.id,
                 })
-                # currently onchange necessary
-                composer._onchange_template_id_wrapper()
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
