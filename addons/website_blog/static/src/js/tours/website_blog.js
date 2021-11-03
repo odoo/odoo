@@ -30,7 +30,7 @@ odoo.define("website_blog.tour", function (require) {
         trigger: "we-button[data-background]:nth(1)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: Markup(_t("Set a blog post <b>cover</b>.")),
-        position: "right",
+        position: "top",
     }, {
         trigger: ".o_select_media_dialog .o_we_search",
         content: _t("Search for an image. (eg: type \"business\")"),
