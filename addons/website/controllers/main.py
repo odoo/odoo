@@ -159,9 +159,14 @@ class Website(Home):
         return redirect
 
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
-    def country_infos(self, country, **kw):
-        fields = country.get_address_fields()
-        return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
+    def country_infos(self, country, mode, **kw):
+        return dict(
+            fields=country.get_address_fields(),
+            states=[(st.id, st.name, st.code) for st in country.state_ids],
+            phone_code=country.phone_code,
+            zip_required=country.zip_required,
+            state_required=country.state_required,
+        )
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True, sitemap=False)
     def robots(self, **kwargs):
