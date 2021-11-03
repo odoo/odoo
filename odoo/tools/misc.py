@@ -143,7 +143,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
 
@@ -289,7 +289,7 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other direction
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -689,10 +689,10 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       
+
        :param int n: maximum size of each generated chunk
        :param Iterable iterable: iterable to chunk into pieces
-       :param piece_maker: callable taking an iterable and collecting each 
+       :param piece_maker: callable taking an iterable and collecting each
                            chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
@@ -1159,7 +1159,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             digits = currency_obj.decimal_places
         elif (hasattr(value, '_field') and getattr(value._field, 'digits', None)):
                 digits = value._field.digits[1]
-                if not digits and digits is not 0:
+                if not digits and digits != 0:
                     digits = DEFAULT_DIGITS
 
     if isinstance(value, pycompat.string_types) and not value:
