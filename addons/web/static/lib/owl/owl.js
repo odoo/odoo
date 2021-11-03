@@ -3702,8 +3702,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
                     component.__patch(target, fiber.vnode);
                 }
                 else {
-                    if (fiber.shouldPatch) {
-                        component.__patch(component.__owl__.vnode, fiber.vnode);
+                    const vnode = component.__owl__.vnode;
+                    if (fiber.shouldPatch && vnode) {
+                        component.__patch(vnode, fiber.vnode);
                         // When updating a Component's props (in directive),
                         // the component has a pvnode AND should be patched.
                         // However, its pvnode.elm may have changed if it is a High Order Component
@@ -5545,9 +5546,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '1.4.7';
-    __info__.date = '2021-10-19T14:49:16.603Z';
-    __info__.hash = '4e3b7c7';
+    __info__.version = '1.4.8';
+    __info__.date = '2021-11-03T12:45:36.455Z';
+    __info__.hash = '307b936';
     __info__.url = 'https://github.com/odoo/owl';
 
 
