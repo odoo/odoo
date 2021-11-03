@@ -180,6 +180,17 @@ var Tip = Widget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean} true if tip is visible
+     */
+    isShown() {
+        return this.el && !this.info.hidden;
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -406,6 +417,10 @@ var Tip = Widget.extend({
         }
         $consumeEventAnchors.on(consumeEvent + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
+                if (this.info.consumeVisibleOnly && !this.isShown()) {
+                    // Do not consume non-displayed tips.
+                    return;
+                }
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
             }

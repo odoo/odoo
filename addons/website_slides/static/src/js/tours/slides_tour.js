@@ -9,8 +9,9 @@ var tour = require('web_tour.tour');
 tour.register('slides_tour', {
     url: '/slides',
 }, [{
-    trigger: '#new-content-menu > a',
+    trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
     content: _t("Welcome on your course's home page. It's still empty for now. Click on \"<b>New</b>\" to write your first course."),
+    consumeVisibleOnly: true,
     position: 'bottom',
 }, {
     trigger: 'a[data-action="new_slide_channel"]',
