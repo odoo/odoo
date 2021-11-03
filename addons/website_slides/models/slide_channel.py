@@ -136,8 +136,7 @@ class ChannelUsersRelation(models.Model):
         for template, records in template_to_records.items():
             record_values = template._generate_template(
                 records.ids,
-                ['attachments',
-                 'attachment_ids',
+                ['attachment_ids',
                  'body_html',
                  'email_cc',
                  'email_from',
@@ -146,6 +145,7 @@ class ChannelUsersRelation(models.Model):
                  'model',
                  'partner_to',
                  'reply_to',
+                 'report_template',
                  'res_id',
                  'scheduled_date',
                  'subject',
