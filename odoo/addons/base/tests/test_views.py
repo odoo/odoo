@@ -2481,7 +2481,7 @@ class TestViewTranslations(common.TransactionCase):
         self.assertEqual(len(translations), 2)
 
         # modifying the arch should sync existing translations without errors
-        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        new_arch = archf % ('Subtotal', 'Subtotal : <br/>')
         view.write({"arch": new_arch})
         self.assertEqual(view.arch, new_arch)
 
@@ -2491,7 +2491,7 @@ class TestViewTranslations(common.TransactionCase):
             ('res_id', '=', view.id),
         ])
         # 'Subtotal' being src==value, it will be discared
-        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal : <br/>'
         self.assertEqual(len(translations), 0)
 
     def test_cache_consistency(self):

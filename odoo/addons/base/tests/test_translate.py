@@ -737,7 +737,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(len(translations), 2)
 
         # modifying the arch should sync existing translations without errors
-        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        new_arch = archf % ('Subtotal', 'Subtotal : <br/>')
         view.write({"arch_db": new_arch})
 
         translations = self.env['ir.translation'].search([
@@ -746,7 +746,7 @@ class TestXMLTranslation(TransactionCase):
             ('res_id', '=', view.id),
         ])
         # 'Subtotal' being src==value, it will be discared
-        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal : <br/>'
         self.assertEqual(len(translations), 0)
 
     def test_cache_consistency(self):

@@ -5,6 +5,7 @@ import itertools
 import json
 import logging
 import operator
+import lxml.html
 from collections import defaultdict
 from difflib import get_close_matches
 
@@ -425,9 +426,15 @@ class IrTranslation(models.Model):
                 else:
                     translations_to_match.append(translation)
 
+            terms_text_content = {}
+            if translations_to_match:
+                for term in terms:
+                    terms_text_content[lxml.html.fromstring(term).text_content()] = term
+
             for translation in translations_to_match:
-                matches = get_close_matches(translation.src, terms, 1, 0.9)
-                src = matches[0] if matches else None
+                src_text_content = lxml.html.fromstring(translation.src).text_content()
+                matches = get_close_matches(src_text_content, terms_text_content, 1, 0.9)
+                src = terms_text_content[matches[0]] if matches else None
                 if not src:
                     outdated += translation
                 elif (src, translation.lang) in done:
