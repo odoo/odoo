@@ -21171,11 +21171,11 @@ msgid ""
 "                            the uninstallation procedure on a duplicate database to guarantee that\n"
 "                            it works and then doing it on your production database."
 msgstr ""
-"Module uninstallation is not always consistent and can sometimes lead to issues,\n"
-"                            some data may be deleted, the database could be left in an unstable state,\n"
-"                            the server could crash, etc. While this is rare, we recommend testing\n"
-"                            the uninstallation procedure on a duplicate database to guarantee that\n"
-"                            it works and then doing it on your production database."
+"Việc gỡ cài đặt một module thì không phải lúc nào cũng nhất quá về dữ liệu và đôi khi có thể có trục trặc,\n"
+"                            một số dữ liệu có thể bị xóa, cơ sở dữ liệu có thể ở trạng thái không ổn định,\n"
+"                            hệ thống có thể bị treo, v.v. Mặc dù điều này hiếm khi xảy ra, chúng tôi đề nghị\n"
+"                            bạn kiểm thử quá trình gỡ bỏ này ở một bản sao để chắc chắn rằng mọi thứ hoạt động\n"
+"                            tốt trước khi bạn thực hiện trên cơ sở dữ liệu vận hành thực tế."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -30866,11 +30866,6 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
-"While assigning a sequence number to a record, the 'no gap' sequence "
-"implementation ensures that each previous sequence number has been assigned "
-"already. While this sequence implementation will not skip any sequence "
-"number upon assignment, there can still be gaps in the sequence if records "
-"are deleted. The 'no gap' implementation is slower than the standard one."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -30961,7 +30956,7 @@ msgstr "Quyền truy cập ghi / sửa"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr "Ghi ngày"
+msgstr "Ngày sửa"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -30986,7 +30981,7 @@ msgstr "Yemen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Yes, I understand the risks"
-msgstr "Đúng, tôi hiểu rủi ro này"
+msgstr "Vâng, tôi hiểu rủi ro này"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
@@ -31131,7 +31126,7 @@ msgstr "Bạn không thể kích hoạt superuser."
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
-msgstr ""
+msgstr "Bạn không thể lưu trữ một liên hệ mà liên kết đến một người dùng nội bộ hoặc người dùng portal."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -31281,7 +31276,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "ZIP"
-msgstr "Mã bưu điện"
+msgstr "Mã bưu chính"
 
 #. module: base
 #: model:res.country,name:base.zm
@@ -31304,7 +31299,7 @@ msgstr "Mã bưu chính"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
 msgid "Zip Required"
-msgstr "Cần có mã bưu điện"
+msgstr "Cần có mã bưu chính"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -31357,7 +31352,7 @@ msgstr "tại"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
 msgid "binary"
-msgstr "nhị phân"
+msgstr "binary"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
@@ -31388,12 +31383,12 @@ msgstr "database id"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr "ngày"
+msgstr "date"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
 msgid "datetime"
-msgstr "ngày giờ"
+msgstr "datetime"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -31420,7 +31415,7 @@ msgstr "ví dụ: BE0477472701"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. English"
-msgstr "ví dụ: tiếng Anh"
+msgstr "ví dụ: Tiếng Anh"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -31453,7 +31448,7 @@ msgstr "ví dụ: vi_VN"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. https://www.odoo.com"
-msgstr "vd: https://www.odoo.com"
+msgstr "vd: https://viindoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -31474,7 +31469,7 @@ msgstr "Quản lý giao hàng cho Thương mại điện tử"
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr "eLearning"
+msgstr "Học Trực tuyến"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -31491,7 +31486,7 @@ msgstr "external id"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
-msgstr "sai"
+msgstr "false"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
@@ -31506,7 +31501,7 @@ msgid ""
 "        record['size'] = len(record.name)"
 msgstr ""
 "for record in self:\n"
-" record['size'] = len(record.name)"
+"        record['size'] = len(record.name)"
 
 #. module: base
 #: code:addons/models.py:0
@@ -31523,7 +31518,7 @@ msgstr "format() phải chính xác %char theo tiêu chuẩn định dạng"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__get
 msgid "get"
-msgstr "lấy"
+msgstr "get"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
