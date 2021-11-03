@@ -375,8 +375,7 @@ class ProductTemplate(models.Model):
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
             mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
         if with_category:
-            mapping['extra_link'] = {'name': 'category', 'type': 'text', 'match': True}
-            mapping['extra_link_url'] = {'name': 'category_url', 'type': 'text'}
+            mapping['extra_link'] = {'name': 'category', 'type': 'html'}
         return {
             'model': 'product.template',
             'base_domain': domains,
@@ -401,9 +400,10 @@ class ProductTemplate(models.Model):
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and product.public_categ_ids:
-                data['category'] = _('Category: %s', product.public_categ_ids.name)
-                slugs = [slug(category) for category in product.public_categ_ids]
-                data['category_url'] = '/shop/category/%s' % ','.join(slugs)
+                data['category'] = self.env['ir.ui.view'].sudo()._render_template(
+                    "website_sale.product_category_extra_link",
+                    {'categories': product.public_categ_ids, 'slug': slug}
+                )
         return results_data
 
     @api.model
