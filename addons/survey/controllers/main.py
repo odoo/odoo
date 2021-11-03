@@ -484,16 +484,17 @@ class Survey(http.Controller):
         if answer_sudo.survey_time_limit_reached or survey_sudo.questions_layout == 'one_page':
             answer_sudo._mark_done()
         elif 'previous_page_id' in post:
+            # when going back, save the last displayed to reload the survey where the user left it.
+            answer_sudo.write({'last_displayed_page_id': post['previous_page_id']})
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
             return self._prepare_question_html(survey_sudo, answer_sudo, **post)
         else:
-            vals = {'last_displayed_page_id': page_or_question_id}
             if not answer_sudo.is_session_answer:
                 next_page = survey_sudo._get_next_page_or_question(answer_sudo, page_or_question_id)
                 if not next_page:
                     answer_sudo._mark_done()
 
-            answer_sudo.write(vals)
+            answer_sudo.write({'last_displayed_page_id': page_or_question_id})
 
         return self._prepare_question_html(survey_sudo, answer_sudo)
 
