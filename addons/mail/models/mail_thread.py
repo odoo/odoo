@@ -2193,18 +2193,7 @@ class MailThread(models.AbstractModel):
             composer = self.env['mail.compose.message'].with_context(
                 **composer_ctx
             ).create(composer_values)
-            # Simulate the onchange (like trigger in form the view) only
-            # when having a template in single-email mode
-            if template:
-                update_values = composer._onchange_template_id(
-                    template.id,
-                    'mass_mail',
-                    self._name,
-                    subset.ids,
-                )['value']
-                composer.write(update_values)
-
-            mails_as_sudo, _messages_as_sudo = composer._action_send_mail(auto_commit=auto_commit)
+            mails_as_sudo, _messages = composer._action_send_mail(auto_commit=auto_commit)
             mails_su += mails_as_sudo
         return mails_su
 
@@ -2262,7 +2251,7 @@ class MailThread(models.AbstractModel):
         if not subtype_id:
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
-        messages = self.env['mail.message']
+        messages_all = self.env['mail.message']
         for record in self:
             if template:
                 composer = self.env['mail.compose.message'].with_context(
@@ -2275,26 +2264,16 @@ class MailThread(models.AbstractModel):
                     'subtype_id': subtype_id,
                     **kwargs,
                 })
-
-                # Simulate the onchange (like trigger in form the view) to do the
-                # rendering in mono-record mode
-                update_values = composer._onchange_template_id(
-                    template.id,
-                    'comment',
-                    self._name,
-                    record.ids,
-                )['value']
-                composer.write(update_values)
                 _mails_as_sudo, messages = composer._action_send_mail()
-                messages += messages
+                messages_all += messages
             else:
-                messages += record.message_post(
+                messages_all += record.message_post(
                     body=bodies[record.id],
                     message_type=message_type,
                     subtype_id=subtype_id,
                     **kwargs
                 )
-        return messages
+        return messages_all
 
     @api.returns('mail.message', lambda value: value.id)
     def message_notify(self, *,
