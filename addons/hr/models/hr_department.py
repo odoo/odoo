@@ -91,3 +91,18 @@ class Department(models.Model):
                 ('parent_id', '=', department.manager_id.id)
             ])
         employees.write({'parent_id': manager_id})
+
+    def get_formview_action(self, access_uid=None):
+        res = super().get_formview_action(access_uid=access_uid)
+        if (not self.user_has_groups('hr.group_hr_user') and
+           self.env.context.get('open_employees_kanban', False)):
+            res.update({
+                'name': self.name,
+                'res_model': 'hr.employee.public',
+                'view_type': 'kanban',
+                'view_mode': 'kanban',
+                'views': [(False, 'kanban'), (False, 'form')],
+                'context': {'searchpanel_default_department_id': self.id},
+                'res_id': False,
+            })
+        return res
