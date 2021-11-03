@@ -24,7 +24,7 @@ class CouponProgram(models.Model):
             'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_quotation').id],
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', orders.ids)],
-            'context': dict(self._context, create=False),
+            'context': dict(create=False),
         }
 
     def _check_promo_code(self, order, coupon_code):

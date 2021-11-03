@@ -1463,7 +1463,11 @@ class Task(models.Model):
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window',
+<<<<<<< HEAD
             'context': self._context
+=======
+            'context': dict(create=False)
+>>>>>>> 14bfc6d8663... temp
         }
 
     # ------------

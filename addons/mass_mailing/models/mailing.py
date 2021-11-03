@@ -452,7 +452,7 @@ class MassMailing(models.Model):
             'view_mode': 'tree',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
-            'context': dict(self._context, create=False)
+            'context': dict(create=False)
         }
 
     def update_opt_out(self, email, list_ids, value):
