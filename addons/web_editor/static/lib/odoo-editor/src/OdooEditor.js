@@ -2230,7 +2230,7 @@ export class OdooEditor extends EventTarget {
         this._computeHistorySelection();
 
         const selection = this.document.getSelection();
-        this._updateToolbar(this._isSelectionInEditable(selection));
+        this._updateToolbar(!selection.isCollapsed && this._isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
@@ -2252,9 +2252,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     _isSelectionInEditable(selection) {
-        return !selection.isCollapsed &&
-            this.editable.contains(selection.anchorNode) &&
-            this.editable.contains(selection.focusNode);
+        return this.editable.contains(selection.anchorNode) && this.editable.contains(selection.focusNode);
     }
     getCurrentCollaborativeSelection() {
         const selection = this._latestComputedSelection || this._computeHistorySelection();
