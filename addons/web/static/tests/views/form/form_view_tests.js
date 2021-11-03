@@ -228,7 +228,7 @@ QUnit.module("Views", (hooks) => {
 
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
-        // serviceRegistry.add("dialog", dialogService);
+        serviceRegistry.add("dialog", dialogService);
         // serviceRegistry.add("localization", makeFakeLocalizationService());
         // serviceRegistry.add("user", makeFakeUserService());
     });
