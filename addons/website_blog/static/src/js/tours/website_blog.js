@@ -8,10 +8,10 @@ odoo.define("website_blog.tour", function (require) {
     tour.register("blog", {
         url: "/",
     }, [{
-        trigger: '#new-content-menu > a',
+        trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
         content: _t("Click here to add new content to your website."),
+        consumeVisibleOnly: true,
         position: 'bottom',
-
     }, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),
