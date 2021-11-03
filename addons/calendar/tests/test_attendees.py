@@ -36,6 +36,28 @@ class TestEventNotifications(SavepointCase):
         self.assertEqual(event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
         self.assertIn(self.partner, event.message_follower_ids.partner_id, "He should be follower of the event")
 
+    def test_attendee_added_create_with_specific_states(self):
+        """
+        When an event is created from an external calendar account (such as Google) which is not linked to an 
+        Odoo account, attendee info such as email and state are given at sync.
+        In this case, attendee_ids should be created accordingly.
+        """
+        organizer_partner = self.env['res.partner'].create({'name': "orga", "email": "orga@google.com"})
+        event = self.env['calendar.event'].with_user(self.user).create({
+            'name': "Doom's day",
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+            'attendee_ids': [
+                (0, 0, {'partner_id': self.partner.id, 'state': 'needsAction'}),
+                (0, 0, {'partner_id': organizer_partner.id, 'state': 'accepted'})
+            ],
+            'partner_ids': [(4, self.partner.id), (4, organizer_partner.id)],
+        })
+        attendees_info = [(a.email, a.state) for a in event.attendee_ids]
+        self.assertEqual(len(event.attendee_ids), 2)
+        self.assertIn((self.partner.email, "needsAction"), attendees_info)
+        self.assertIn((organizer_partner.email, "accepted"), attendees_info)
+
     def test_attendee_added_multi(self):
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
