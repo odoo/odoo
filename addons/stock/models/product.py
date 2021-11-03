@@ -223,6 +223,9 @@ class Product(models.Model):
             for item in values:
                 if isinstance(item, int):
                     ids.add(item)
+                elif model == 'stock.location':
+                    domain = expression.OR([[('name', 'ilike', item)], domain])
+                    domain = expression.OR([[('complete_name', 'ilike', item)], domain])
                 else:
                     domain = expression.OR([[('name', 'ilike', item)], domain])
             if domain:
