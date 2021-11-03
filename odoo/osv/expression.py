@@ -262,7 +262,6 @@ def simple_domain(domain):
                 stack.append(TRUE_LEAF)
             else:
                 stack.append([LEAF_FLAG, [token, x]])
-            print(stack)
         elif token[1] == 'in' and not token[2]:
             stack.append(FALSE_LEAF)
         elif token[1] == 'not in' and not token[2]:
