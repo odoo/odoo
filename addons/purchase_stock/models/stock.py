@@ -283,5 +283,5 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
-        action['context'] = dict(self._context, create=False)
+        action['context'] = dict(action.get('context', {}), create=False)
         return action
