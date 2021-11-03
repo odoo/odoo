@@ -65,10 +65,6 @@ class MailComposer(models.TransientModel):
 
         result = super().default_get(fields_list)
 
-        # record / parent based computation
-        if result.get('composition_mode') == 'comment' and (set(fields_list) & {'partner_ids'}):
-            result.update(self.get_record_data(result))
-
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
         if 'create_uid' in fields_list and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
@@ -159,7 +155,8 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
-        domain=_partner_ids_domain)
+        domain=_partner_ids_domain,
+        compute='_compute_partner_ids', readonly=False, store=True)
     # sending
     auto_delete = fields.Boolean(
         'Delete Emails',
@@ -391,6 +388,36 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
 
+    @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
+                 'res_ids', 'template_id')
+    def _compute_partner_ids(self):
+        """ Computation is coming either from template, either from context.
+        When having a template it uses its 3 fields 'email_cc', 'email_to' and
+        'partner_to', in monorecord comment mode. Emails are converted into
+        partners, creating new ones when the email does not match any existing
+        partner. Composer does not deal with emails but only with partners.
+        When having a template in other modes, no recipients are computed
+        as it is done at sending time. When removing the template, reset it.
+
+        When not having a template, recipients may come from the parent in
+        comment mode, to be sure to notify the same people. """
+        for composer in self:
+            if (composer.template_id and composer.composition_mode == 'comment'
+                and not composer.composition_batch):
+                res_ids = composer._evaluate_res_ids() or [0]
+                rendered_values = composer._generate_template_for_composer(
+                    composer.template_id,
+                    res_ids,
+                    {'email_cc', 'email_to', 'partner_ids'},
+                    find_or_create_partners=True,
+                )[res_ids[0]]
+                if rendered_values.get('partner_ids'):
+                    composer.partner_ids = rendered_values['partner_ids']
+            elif composer.parent_id and composer.composition_mode == 'comment':
+                composer.partner_ids = composer.parent_id.partner_ids
+            elif not composer.template_id:
+                composer.partner_ids = False
+
     @api.depends('composition_mode', 'template_id')
     def _compute_auto_delete(self):
         """ Computation is coming either from template, either from composition
@@ -493,9 +520,6 @@ class MailComposer(models.TransientModel):
                 self.env['mail.template'].browse(template_id),
                 template_res_ids,
                 ('attachment_ids',
-                 'email_cc',
-                 'email_to',
-                 'partner_ids',
                  'report_template_ids',
                 )
             )[template_res_ids[0]]
@@ -523,32 +547,17 @@ class MailComposer(models.TransientModel):
                            'composition_mode',
                            'model',
                            'parent_id',
-                           'partner_ids',
                            'res_ids',
                           ])
             values = dict(
                 (key, default_values[key])
                 for key in ('attachment_ids',
-                            'partner_ids',
                            ) if key in default_values)
 
         # This onchange should return command instead of ids for x2many field.
         values = self._convert_to_write(values)
 
         return {'value': values}
-
-    @api.model
-    def get_record_data(self, values):
-        """ Returns a defaults-like dict with initial values for the composition
-        wizard when sending an email related a previous email (parent_id) or
-        a document (model, res_id). This is based on previously computed default
-        values. """
-        result = {}
-        if values.get('parent_id'):
-            parent = self.env['mail.message'].browse(values.get('parent_id'))
-            result['partner_ids'] = values.get('partner_ids', list()) + parent.partner_ids.ids
-
-        return result
 
     # ------------------------------------------------------------
     # CRUD / ORM
@@ -899,6 +908,7 @@ class MailComposer(models.TransientModel):
                 mail_values_all[res_id].update(
                     default_recipients.get(res_id, {})
                 )
+        # TDE FIXME: seems to be missing an "else" here to add partner_ids in rendering mode
 
         # Handle reply-to. In update mode (force_new False), reply-to value is
         # computed from the records (to have their alias). In new mode, reply-to
