@@ -1,6 +1,8 @@
 odoo.define('web_editor.image_processing', function (require) {
 'use strict';
 
+const {getAffineApproximation, getProjective} = require('@web_editor/js/editor/perspective_utils');
+
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
 const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
@@ -216,6 +218,9 @@ async function applyModifications(img, dataOptions = {}) {
         glFilter,
         filterOptions,
         forceModification,
+        perspective,
+        svgAspectRatio,
+        imgAspectRatio,
     } = data;
     [width, height, resizeWidth] = [width, height, resizeWidth].map(s => parseFloat(s));
     quality = parseInt(quality);
@@ -230,20 +235,87 @@ async function applyModifications(img, dataOptions = {}) {
     const original = await loadImage(originalSrc);
     container.appendChild(original);
     await activateCropper(original, 0, data);
-    const croppedImg = $(original).cropper('getCroppedCanvas', {width, height});
+    let croppedImg = $(original).cropper('getCroppedCanvas', {width, height});
     $(original).cropper('destroy');
+
+    // Aspect Ratio
+    if (imgAspectRatio) {
+        document.createElement('div').appendChild(croppedImg);
+        imgAspectRatio = imgAspectRatio.split(':');
+        imgAspectRatio = parseFloat(imgAspectRatio[0]) / parseFloat(imgAspectRatio[1]);
+        await activateCropper(croppedImg, imgAspectRatio, {y: 0});
+        croppedImg = $(croppedImg).cropper('getCroppedCanvas');
+        $(croppedImg).cropper('destroy');
+    }
 
     // Width
     const result = document.createElement('canvas');
     result.width = resizeWidth || croppedImg.width;
-    result.height = croppedImg.height * result.width / croppedImg.width;
+    result.height = perspective ? result.width / svgAspectRatio : croppedImg.height * result.width / croppedImg.width;
     const ctx = result.getContext('2d');
     ctx.imageSmoothingQuality = "high";
     ctx.mozImageSmoothingEnabled = true;
     ctx.webkitImageSmoothingEnabled = true;
     ctx.msImageSmoothingEnabled = true;
     ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(croppedImg, 0, 0, croppedImg.width, croppedImg.height, 0, 0, result.width, result.height);
+
+    // Perspective 3D
+    if (perspective) {
+        // x, y coordinates of the corners of the image as a percentage
+        // (relative to the width or height of the image) needed to apply
+        // the 3D effect.
+        const points = JSON.parse(perspective);
+        const divisions = 10;
+        const w = croppedImg.width, h = croppedImg.height;
+
+        const project = getProjective(w, h, [
+            [(result.width / 100) * points[0][0], (result.height / 100) * points[0][1]], // Top-left [x, y]
+            [(result.width / 100) * points[1][0], (result.height / 100) * points[1][1]], // Top-right [x, y]
+            [(result.width / 100) * points[2][0], (result.height / 100) * points[2][1]], // bottom-right [x, y]
+            [(result.width / 100) * points[3][0], (result.height / 100) * points[3][1]], // bottom-left [x, y]
+        ]);
+
+        for (let i = 0; i < divisions; i++) {
+            for (let j = 0; j < divisions; j++) {
+                const [dx, dy] = [w / divisions, h / divisions];
+
+                const upper = {origin: [i * dx, j * dy], sides: [dx, dy], flange: 0.1, overlap: 0};
+                const lower = {origin: [i * dx + dx, j * dy + dy], sides: [-dx, -dy], flange: 0, overlap: 0.1};
+
+                for (let {origin, sides, flange, overlap} of [upper, lower]) {
+                    const [[a, c, e], [b, d, f]] = getAffineApproximation(project, [
+                        origin, [origin[0] + sides[0], origin[1]], [origin[0], origin[1] + sides[1]]
+                    ]);
+
+                    const ox = (i !== divisions ? overlap * sides[0] : 0) + flange * sides[0];
+                    const oy = (j !== divisions ? overlap * sides[1] : 0) + flange * sides[1];
+
+                    origin[0] += flange * sides[0];
+                    origin[1] += flange * sides[1];
+
+                    sides[0] -= flange * sides[0];
+                    sides[1] -= flange * sides[1];
+
+                    ctx.save();
+                    ctx.setTransform(a, b, c, d, e, f);
+
+                    ctx.beginPath();
+                    ctx.moveTo(origin[0] - ox, origin[1] - oy);
+                    ctx.lineTo(origin[0] + sides[0], origin[1] - oy);
+                    ctx.lineTo(origin[0] + sides[0], origin[1]);
+                    ctx.lineTo(origin[0], origin[1] + sides[1]);
+                    ctx.lineTo(origin[0] - ox, origin[1] + sides[1]);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(croppedImg, 0, 0);
+
+                    ctx.restore();
+                }
+            }
+        }
+    } else {
+        ctx.drawImage(croppedImg, 0, 0, croppedImg.width, croppedImg.height, 0, 0, result.width, result.height);
+    }
 
     // GL filter
     if (glFilter) {
