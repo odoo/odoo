@@ -722,6 +722,44 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % new_terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
+    def test_sync_xml(self):
+        """ Check translations of 'arch' after xml tags changes in source terms. """
+        archf = '<form string="X">%s</form>'
+        terms_en = ('Bread and cheese',)
+        terms_fr = ('Pain et fromage',)
+        terms_nl = ('Brood and kaas',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        env_nolang = self.env(context={})
+        env_en = self.env(context={'lang': 'en_US'})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nl = self.env(context={'lang': 'nl_NL'})
+
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        # modify source term in view (add css style)
+        terms_en = ('Bread <span style="font-weight:bold">and</span> cheese',)
+        view.with_env(env_en).write({'arch': archf % terms_en})
+
+        # check whether translations have been kept
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        # modify source term in view (actual text change)
+        terms_en = ('Bread <span style="font-weight:bold">and</span> butter',)
+        view.with_env(env_en).write({'arch': archf % terms_en})
+
+        # check whether translations have been reset
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_en)
+
     def test_sync_update(self):
         """ Check translations after major changes in source terms. """
         archf = '<form string="X"><div>%s</div><div>%s</div></form>'
@@ -737,7 +775,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(len(translations), 2)
 
         # modifying the arch should sync existing translations without errors
-        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        new_arch = archf % ('Subtotal', 'Subtotal : <br/>')
         view.write({"arch_db": new_arch})
 
         translations = self.env['ir.translation'].search([
@@ -746,7 +784,7 @@ class TestXMLTranslation(TransactionCase):
             ('res_id', '=', view.id),
         ])
         # 'Subtotal' being src==value, it will be discared
-        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal : <br/>'
         self.assertEqual(len(translations), 0)
 
     def test_cache_consistency(self):

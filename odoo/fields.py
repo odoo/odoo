@@ -1624,6 +1624,11 @@ class _String(Field):
         self.translate(terms.append, value)
         return terms
 
+    def get_text_content(self, term):
+        """ Return the textual content for the given term. """
+        func = getattr(self.translate, 'get_text_content', lambda term: term)
+        return func(term)
+
     def get_trans_func(self, records):
         """ Return a translation function `translate` for `self` on the given
         records; the function call `translate(record_id, value)` translates the

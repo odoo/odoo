@@ -320,6 +320,14 @@ def html_translate(callback, value):
     return value
 
 
+def get_text_content(term):
+    """ Return the textual content of the given term. """
+    return html.fromstring(term).text_content()
+
+xml_translate.get_text_content = get_text_content
+html_translate.get_text_content = get_text_content
+
+
 #
 # Warning: better use self.env['ir.translation']._get_source if you can
 #

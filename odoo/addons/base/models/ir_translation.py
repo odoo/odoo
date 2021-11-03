@@ -427,9 +427,13 @@ class IrTranslation(models.Model):
                 else:
                     translations_to_match.append(translation)
 
+            if translations_to_match:
+                text2term = {field.get_text_content(term): term for term in terms}
             for translation in translations_to_match:
-                matches = get_close_matches(translation.src, terms, 1, 0.9)
-                src = matches[0] if matches else None
+                # match the terms without formatting elements
+                src_text = field.get_text_content(translation.src)
+                matches = get_close_matches(src_text, text2term, 1, 0.9)
+                src = text2term[matches[0]] if matches else None
                 if not src:
                     outdated += translation
                 elif (src, translation.lang) in done:
