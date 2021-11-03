@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Domain } from "@web/core/domain";
 import { isRelational } from "@web/views/helpers/view_utils";
 import { RelationalModel } from "@web/views/relational_model";
 
@@ -41,7 +42,7 @@ export class KanbanModel extends RelationalModel {
 
     async fetchProgressData() {
         const { context, domain, groupBy } = this.progressSearchParams;
-        return this.orm.call(this.resModel, "read_progress_bar", [], {
+        return this.orm.call(this.root.resModel, "read_progress_bar", [], {
             domain,
             group_by: groupBy[0],
             progress_bar: {
@@ -66,7 +67,7 @@ export class KanbanModel extends RelationalModel {
             selection[FALSE_SYMBOL] = this.env._t("Other");
         }
 
-        for (const group of this.root.data) {
+        for (const group of this.root.groups) {
             const total = group.count;
             const values = progressData[group.displayName || group.value] || {
                 [FALSE_SYMBOL]: total,
@@ -90,36 +91,42 @@ export class KanbanModel extends RelationalModel {
     async filterProgressValue(group, value) {
         const { fieldName } = this.progress;
         group.activeProgressValue = group.activeProgressValue === value ? null : value;
+        let progressBarDomain;
         if (group.activeProgressValue) {
             const val = group.activeProgressValue;
-            group.domains.progress = [[fieldName, "=", val === FALSE_SYMBOL ? false : val]];
-        } else {
-            delete group.domains.progress;
+            progressBarDomain = [[fieldName, "=", val === FALSE_SYMBOL ? false : val]];
         }
+        group.list.domain = Domain.and([
+            group.domain,
+            group.groupDomain,
+            progressBarDomain,
+        ]).toList();
 
         await group.load();
         this.notify();
     }
 
     async moveRecord(dataRecordId, dataListId, refId, newListId) {
-        const record = this.db[dataRecordId];
-        const list = this.db[dataListId];
-        const newList = this.db[newListId];
+        const group = this.root.groups.find((g) => g.id === dataListId);
+        const newGroup = this.root.groups.find((g) => g.id === newListId);
+        const list = group.list;
+        const newList = newGroup.list;
+        const record = list.records.find((r) => r.id === dataRecordId);
 
         // Quick update: moves the record at the right position and notifies components
-        list.data = list.data.filter((r) => r !== record);
+        list.records = list.records.filter((r) => r !== record);
         list.count--;
         if (newList.isLoaded) {
-            const index = refId ? newList.data.findIndex((r) => r.id === refId) + 1 : 0;
-            newList.data.splice(index, 0, record);
+            const index = refId ? newList.records.findIndex((r) => r.id === refId) + 1 : 0;
+            newList.records.splice(index, 0, record);
         }
         newList.count++;
         this.notify();
 
-        // Actual processing
+        // move from one group to another
         if (dataListId !== newListId) {
             const { groupByField } = this.root;
-            const value = isRelational(groupByField) ? [newList.value] : newList.value;
+            const value = isRelational(groupByField) ? [newGroup.value] : newGroup.value;
             await record.update(groupByField.name, value);
             await record.save();
             const promises = [this.load({ keepRecords: true })];

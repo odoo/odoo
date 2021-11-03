@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { Field } from "@web/fields/field";
 
 const { Component, useState } = owl;
+
+const formatterRegistry = registry.category("formatters");
 
 const FIELD_CLASSES = {
     char: "o_list_char",
@@ -39,8 +42,8 @@ export class ListRenderer extends Component {
 
     createKeyOptionalFields() {
         const keyParts = {
-            fields: this.env.model.root.activeFields,
-            model: this.env.model.resModel,
+            fields: this.props.list.fieldNames,
+            model: this.props.list.resModel,
             viewMode: "list",
             viewId: this.env.config.viewId,
         };
@@ -77,20 +80,93 @@ export class ListRenderer extends Component {
             }));
     }
 
+    nbRecordsInGroup(group) {
+        if (group.isFolded) {
+            return 0;
+        } else if (group.list.isGrouped) {
+            let count = 0;
+            for (const gr of group.list.groups) {
+                count += this.nbRecordsInGroup(gr);
+            }
+            return count;
+        } else {
+            return group.list.records.length;
+        }
+    }
+    get selectAll() {
+        let nbDisplayedRecords = this.props.list.records.length;
+        return nbDisplayedRecords > 0 && this.selection.length === nbDisplayedRecords;
+    }
+
+    get aggregates() {
+        let values;
+        if (this.selection.length) {
+            values = this.selection.map((r) => r.data);
+        } else if (this.props.list.isGrouped) {
+            values = this.props.list.groups.map((g) => g.aggregates);
+        } else {
+            values = this.props.list.records.map((r) => r.data);
+        }
+        const aggregates = {};
+        for (const fieldName in this.props.list.activeFields) {
+            const field = this.props.list.fields[fieldName];
+            const type = field.type;
+            if (type !== "integer" && type !== "float" && type !== "monetary") {
+                continue;
+            }
+            const attrs = this.props.list.activeFields[fieldName].attrs;
+            const func =
+                (attrs.sum && "sum") ||
+                (attrs.avg && "avg") ||
+                (attrs.max && "max") ||
+                (attrs.min && "min");
+            if (func) {
+                let count = 0;
+                let aggregateValue = 0;
+                if (func === "max") {
+                    aggregateValue = -Infinity;
+                } else if (func === "min") {
+                    aggregateValue = Infinity;
+                }
+                for (const vals of values) {
+                    count += 1;
+                    const value = vals[fieldName];
+                    if (func === "avg" || func === "sum") {
+                        aggregateValue += value;
+                    } else if (func === "max") {
+                        aggregateValue = Math.max(aggregateValue, value);
+                    } else if (func === "min") {
+                        aggregateValue = Math.min(aggregateValue, value);
+                    }
+                }
+                if (func === "avg") {
+                    aggregateValue = count > 0 ? aggregateValue / count : aggregateValue;
+                }
+                const formatter = formatterRegistry.get(type, false);
+                aggregates[fieldName] = {
+                    help: attrs[func],
+                    value: formatter ? formatter(aggregateValue) : aggregateValue,
+                };
+            }
+        }
+        return aggregates;
+    }
+
     getGroupLevel(group) {
-        return this.env.model.root.groupBy.length - group.groupBy.length - 1;
+        return this.props.list.groupBy.length - group.list.groupBy.length - 1;
     }
 
     getColumnClass(column) {
+        const field = this.fields[column.name];
         const classNames = [];
-        if (column.sortable) {
+        if (field.sortable) {
             classNames.push("o_column_sortable");
         }
-        const orderByColumn = this.props.list.orderByColumn;
-        if (column.name === orderByColumn.name) {
-            classNames.push(orderByColumn.asc ? "o-sort-up" : "o-sort-down");
+        const orderedBy = this.props.list.orderedBy || {};
+        if (column.name === orderedBy.name) {
+            classNames.push(orderedBy.asc ? "o-sort-up" : "o-sort-down");
         }
-        if (["float", "integer", "monetary"].includes(this.fields[column.name].type)) {
+        if (["float", "integer", "monetary"].includes(field.type)) {
             classNames.push("o_list_number_th");
         }
         return classNames.join(" ");
@@ -176,8 +252,8 @@ export class ListRenderer extends Component {
         }
     }
 
-    onClickSortColumn(column) {
-        this.env.model.sortByColumn(column);
+    onClickSortColumn(fieldName) {
+        this.props.list.sortBy(fieldName);
     }
 
     openRecord(record) {
@@ -195,10 +271,10 @@ export class ListRenderer extends Component {
     }
 
     toggleSelection() {
-        if (this.selection.length === this.props.list.data.length) {
+        if (this.selection.length === this.props.list.records.length) {
             this.selection = [];
         } else {
-            this.selection = [...this.props.list.data];
+            this.selection = [...this.props.list.records];
         }
         this.render();
     }

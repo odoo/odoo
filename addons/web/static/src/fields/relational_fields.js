@@ -33,7 +33,9 @@ export class FieldMany2ManyTags extends Component {
 }
 
 FieldMany2ManyTags.template = "web.FieldMany2ManyTags";
-FieldMany2ManyTags.fieldsToFetch = ["display_name"];
+FieldMany2ManyTags.fieldsToFetch = {
+    display_name: { type: "char" },
+};
 
 fieldRegistry.add("many2many_tags", FieldMany2ManyTags);
 
