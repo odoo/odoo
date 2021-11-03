@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
-import { Pager, usePager } from "@web/search/pager/pager";
+import { usePager } from "@web/search/pager_hook";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
@@ -42,16 +42,16 @@ class FormView extends Component {
         if (!activeFields.display_name) {
             activeFields.display_name = { name: "display_name", type: "char" };
         }
+        const resIds = this.props.resIds || (this.props.resId ? [this.props.resId] : []);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             resId: this.props.resId,
-            resIds: this.props.resIds,
+            resIds,
             fields: this.props.fields,
             activeFields,
             viewMode: "form",
             rootType: "record",
         });
-        this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
         const { create, edit } = this.archInfo.activeActions;
 
         this.canCreate = create;
@@ -68,6 +68,16 @@ class FormView extends Component {
         useViewButtons(this.model);
         useSetupView({
             /** TODO **/
+        });
+
+        // FIXME: handle creation of new records (for now, indicates 0/total)
+        usePager(() => {
+            return {
+                offset: resIds.indexOf(this.model.root.resId),
+                limit: 1,
+                total: resIds.length,
+                onUpdate: ({ offset }) => this.model.load({ resId: this.props.resIds[offset] }),
+            };
         });
     }
 
@@ -106,7 +116,7 @@ FormView.multiRecord = false;
 FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
-FormView.components = { Layout, FormRenderer, Pager };
+FormView.components = { Layout, FormRenderer };
 FormView.props = { ...standardViewProps };
 
 registry.category("views").add("form", FormView);
