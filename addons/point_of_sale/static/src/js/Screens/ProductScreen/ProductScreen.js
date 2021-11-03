@@ -67,6 +67,13 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
+        get_lot_error(packLotLinesToEdit, product) {
+            if (!packLotLinesToEdit.length) {
+                return false;
+            }
+            var lot_error = this.env.pos.db.load('lot_error', {});
+            return lot_error[product.id];
+        }
         async _getAddProductOptions(product, base_code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
@@ -103,10 +110,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                         packLotLinesToEdit = [];
                     }
                 }
+                const lot_error = this.get_lot_error(packLotLinesToEdit, product);
                 const { confirmed, payload } = await this.showPopup('EditListPopup', {
                     title: this.env._t('Lot/Serial Number(s) Required'),
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
+                    lot_error: lot_error,
                 });
                 if (confirmed) {
                     // Segregate the old and new packlot lines

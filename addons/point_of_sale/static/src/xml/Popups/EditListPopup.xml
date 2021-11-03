@@ -12,6 +12,9 @@
                     <t t-foreach="state.array" t-as="item" t-key="item._id">
                         <EditListInput item="item" />
                     </t>
+                    <div t-if="props.lot_error" class="popup-lot-error">
+                        <span t-esc="props.lot_error"/>
+                    </div>
                 </main>
                 <footer class="footer">
                     <div class="button confirm" t-on-click="confirm">

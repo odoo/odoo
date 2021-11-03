@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="exception_stock_pickings">
+        <div>
+            <p t-if="message"><t t-esc="message"/></p>
+            <div class="mt16">
+                <ul t-foreach="stock_pickings" t-as="stock_picking">
+                    <li>
+                        <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="stock_picking.id"><t t-esc="stock_picking.name"/></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
+</odoo>

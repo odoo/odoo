@@ -234,6 +234,21 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
             }
 
+            var order_lines = this.currentOrder.get_orderlines();
+            order_lines.forEach(function(order_line) {
+                if (order_line.has_product_lot) {
+                    order_line.pack_lot_lines.models.forEach(function(model) {
+                        order_line.product.stock_production_lot.forEach(function(stock_production_lot) {
+                            if (stock_production_lot.name === model.attributes.lot_name) {
+                                stock_production_lot.product_qty -= model.order_line.quantity;
+                            }
+                        });
+                    });
+                } else {
+                    order_line.product.qty_available -= order_line.quantity;
+                }
+            });
+
             this.showScreen(this.nextScreen);
 
             // If we succeeded in syncing the current order, and

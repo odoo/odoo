@@ -66,6 +66,9 @@ exports.PosModel = Backbone.Model.extend({
         this.partners = [];
         this.taxes = [];
         this.pos_session = null;
+        this.pos_order_line = [];
+        this.pos_pack_operation_lot = [];
+        this.stock_production_lot = [];
         this.config = null;
         this.units = [];
         this.units_by_id = {};
@@ -312,7 +315,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state', 'update_stock_at_closing'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state', 'update_stock_at_closing', 'order_ids'],
         domain: function(self){
             var domain = [
                 ['state','in',['opening_control','opened']],
@@ -326,6 +329,39 @@ exports.PosModel = Backbone.Model.extend({
             self.pos_session.login_number = odoo.login_number;
             self.config_id = self.config_id || self.pos_session && self.pos_session.config_id[0];
             tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
+        },
+    },{
+        model:  'pos.pack.operation.lot',
+        fields: ['id', 'order_id', 'lot_name', 'product_id'],
+        domain: function(self){
+            var domain = [
+                ['pos_order_line_id.order_id', 'in', self.pos_session.order_ids],
+            ];
+            return domain;
+        },
+        loaded: function(self, pos_pack_operation_lot){
+            self.pos_pack_operation_lot = pos_pack_operation_lot;
+        },
+    },{
+        model:  'pos.order.line',
+        fields: ['id', 'product_id', 'qty', 'pack_lot_ids'],
+        domain: function(self){
+            var domain = [
+                ['order_id', 'in', self.pos_session.order_ids],
+            ];
+            return domain;
+        },
+        loaded: function(self, pos_order_line){
+            self.pos_order_line = pos_order_line;
+            self.pos_order_line.forEach(function(pos_order_line) {
+                var pack_lot_ids = []
+                self.pos_pack_operation_lot.forEach(function(pos_pack_operation_lot) {
+                    if (pos_order_line.pack_lot_ids.find(id => id === pos_pack_operation_lot.id)) {
+                        pack_lot_ids.push(pos_pack_operation_lot);
+                    }
+                });
+                pos_order_line.pack_lot_ids = pack_lot_ids;
+            });
         },
     },{
         model: 'pos.config',
@@ -485,11 +521,17 @@ exports.PosModel = Backbone.Model.extend({
             self.db.add_categories(categories);
         },
     },{
+        model: 'stock.production.lot',
+        fields: ['name', 'product_id', 'product_qty'],
+        loaded: function(self, stock_production_lot) {
+            self.stock_production_lot = stock_production_lot;
+        }
+    },{
         model:  'product.product',
         label: 'load_products',
         condition: function (self) { return !self.config.limited_products_loading; },
         fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
-                 'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
+                 'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'qty_available',
                  'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids', 'active'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: function(self){
@@ -1691,6 +1733,43 @@ exports.load_models = function(models,options) {
 exports.Product = Backbone.Model.extend({
     initialize: function(attr, options){
         _.extend(this, options);
+        this.stock_production_lot = this.get_stock_production_lot(options);
+    },
+    get_stock_production_lot: function(options) {
+        var self = this;
+        var lots = [];
+        if (options.tracking === 'none' && self.pos.pos_session.update_stock_at_closing) {
+            options.pos.pos_order_line.forEach(function(pos_order_line) {
+                if (self.id === pos_order_line.product_id[0]) {
+                    self.qty_available -= pos_order_line.qty;
+                }
+            });
+        } else if (['serial', 'lot'].includes(options.tracking)) {
+            options.pos.stock_production_lot.forEach(function(stock_production_lot) {
+                if (options.id === stock_production_lot.product_id[0] && self.pos.pos_session.update_stock_at_closing) {
+                    options.pos.pos_order_line.forEach(function(pos_order_line) {
+                        if (pos_order_line.product_id[0] === stock_production_lot.product_id[0] && pos_order_line.pack_lot_ids.every(pack_lot_id => pack_lot_id.lot_name === stock_production_lot.name)) {
+                            if (options.tracking == 'lot') {
+                                stock_production_lot.product_qty -= pos_order_line.qty;
+                            }
+                            else if (pos_order_line.qty > 0 && options.tracking === 'serial') {
+                                stock_production_lot.product_qty -= 1;
+                            }
+                            else if (pos_order_line.qty < 0 && options.tracking === 'serial') {
+                                stock_production_lot.product_qty += 1;
+                            }
+                            if(!Boolean(lots.length) || !lots.includes(stock_production_lot)) {
+                                lots.push(stock_production_lot);
+                            }
+                        }
+                    });
+                }
+                if (options.id === stock_production_lot.product_id[0] && !lots.includes(stock_production_lot)) {
+                    lots.push(stock_production_lot);
+                }
+            });
+        }
+        return lots;
     },
     isAllowOnlyOneLot: function() {
         const productUnit = this.get_unit();
@@ -2046,12 +2125,97 @@ exports.Orderline = Backbone.Model.extend({
         return lots_required;
     },
 
+    check_duplicate_serial_number: function(lot_name) {
+        var count = 0;
+        var duplicate_name = false;
+        this.get_lot_lines().forEach(function(lot_line) {
+            if (lot_line.attributes.lot_name === lot_name) {
+                count++;
+                if (count > 1) {
+                    duplicate_name = lot_name;
+                }
+            }
+        });
+
+        return { duplicate_name, count };
+    },
+
+    has_available_lot_or_error: function () {
+        var lot_error = this.pos.db.load('lot_error', {});
+        var has_available_lot = false;
+        var quantity = this.quantity;
+
+        if (quantity === 0) {
+            lot_error[product_id.id] = false;
+            return { has_available_lot, lot_error }
+        }
+
+        var self = this;
+        var checked = false;
+        var lot_line = null;
+        var product_id = this.get_product();
+        var lot_lines = this.get_lot_lines();
+
+        for (var i = 0; i < lot_lines.length; i++) {
+            lot_line = lot_lines[i];
+            checked = false;
+            if (product_id.tracking === 'serial') {
+                var { duplicate_name, count } = self.check_duplicate_serial_number(lot_line.attributes.lot_name);
+                if (count > 1 && duplicate_name) {
+                    lot_error[product_id.id] = duplicate_name + _.str.sprintf(self.pos.env._t(" - Serial Number(s) use %s times."), count);
+                    return { has_available_lot, lot_error }
+                }
+            }
+
+            product_id.stock_production_lot.forEach(function(stock_production_lot) {
+                if (product_id.id === stock_production_lot.product_id[0] && lot_line.attributes.lot_name === stock_production_lot.name) {
+                    if (product_id.tracking === 'lot') {
+                        if (stock_production_lot.product_qty >= quantity) {
+                            has_available_lot = true;
+                            lot_error[product_id.id] = false;
+                        } else if (stock_production_lot.product_qty < quantity) {
+                            checked = true;
+                            lot_error[product_id.id] = lot_line.attributes.lot_name + " - This lot/serial number has already been delivered and is not available anymore.";
+                        }
+                    } else if (product_id.tracking === 'serial') {
+                        if (stock_production_lot.product_qty === 1 || quantity < 0) {
+                            has_available_lot = true;
+                            lot_error[product_id.id] = false;
+                        } else if (stock_production_lot.product_qty < 1) {
+                            checked = true;
+                            lot_error[product_id.id] = lot_line.attributes.lot_name + " - This lot/serial number has already been delivered and is not available anymore.";
+                        }
+                    }
+                } else if (lot_line.attributes.lot_name !== stock_production_lot.name && !has_available_lot && !checked) {
+                    lot_error[product_id.id] = lot_line.attributes.lot_name + " - This lot/serial number could not be found.";
+                }
+            });
+
+            if (lot_error[product_id.id] != false) {
+                has_available_lot = false;
+                return { has_available_lot, lot_error }
+            }
+        }
+
+        return { has_available_lot, lot_error };
+    },
+
+    has_available_lot: function() {
+        var { has_available_lot, lot_error } = this.has_available_lot_or_error();
+        this.pos.db.save("lot_error", lot_error);
+        return has_available_lot;
+    },
+
+    has_available_quantity: function() {
+        return this.get_product().qty_available >= this.quantity;
+    },
+
     has_valid_product_lot: function(){
         if(!this.has_product_lot){
             return true;
         }
         var valid_product_lot = this.pack_lot_lines.get_valid_lots();
-        return this.get_required_number_of_lots() === valid_product_lot.length;
+        return this.get_required_number_of_lots() === valid_product_lot.length && this.has_available_lot();
     },
 
     // return the unit of measure of the product
@@ -3204,6 +3368,9 @@ exports.Order = Backbone.Model.extend({
     },
     remove_orderline: function( line ){
         this.assert_editable();
+        if (this.pos.db.load('lot_error')) {
+            delete this.pos.db.load('lot_error')[line.product.id];
+        }
         this.orderlines.remove(line);
         this.select_orderline(this.get_last_orderline());
     },

@@ -33,6 +33,13 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
         get orderlinesArray() {
             return this.order ? this.order.get_orderlines() : [];
         }
+        get_lot_error(packLotLinesToEdit, product) {
+            if (!packLotLinesToEdit.length) {
+                return false;
+            }
+            var lot_error = this.env.pos.db.load('lot_error', {});
+            return lot_error[product.id];
+        }
         _selectLine(event) {
             this.order.select_orderline(event.detail.orderline);
         }
@@ -47,10 +54,12 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             const orderline = event.detail.orderline;
             const isAllowOnlyOneLot = orderline.product.isAllowOnlyOneLot();
             const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
+            const lot_error = this.get_lot_error(packLotLinesToEdit, orderline.product);
             const { confirmed, payload } = await this.showPopup('EditListPopup', {
                 title: this.env._t('Lot/Serial Number(s) Required'),
                 isSingleItem: isAllowOnlyOneLot,
                 array: packLotLinesToEdit,
+                lot_error: lot_error,
             });
             if (confirmed) {
                 // Segregate the old and new packlot lines

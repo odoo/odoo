@@ -13,19 +13,31 @@ class StockPicking(models.Model):
     pos_session_id = fields.Many2one('pos.session')
     pos_order_id = fields.Many2one('pos.order')
 
-    def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
+    def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id, pos_session, pos_order):
         return {
             'partner_id': partner.id if partner else False,
-            'user_id': False,
+            'user_id': self.env.user.id,
             'picking_type_id': picking_type.id,
             'move_type': 'direct',
             'location_id': location_id,
             'location_dest_id': location_dest_id,
+            'pos_session_id': pos_session.id if pos_session else False,
+            'pos_order_id': pos_order.id if pos_order else False,
+            'origin': pos_order.name if pos_order else (pos_session.name if pos_session else False)
         }
 
 
+    def _action_done(self):
+        res = super(StockPicking, self)._action_done()
+        move_lines = self.mapped('move_line_ids')
+        for move in move_lines:
+            qty = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id, lot_id=move.lot_id, allow_negative=True)
+            if qty < 0 and self.state == 'done':
+                self.pos_session_id.generate_activity_for_non_available_quantity(self)
+        return res
+
     @api.model
-    def _create_picking_from_pos_order_lines(self, location_dest_id, lines, picking_type, partner=False):
+    def _create_picking_from_pos_order_lines(self, location_dest_id, lines, picking_type, partner=False, pos_session=False, pos_order=False):
         """We'll create some picking based on order_lines"""
 
         pickings = self.env['stock.picking']
@@ -38,7 +50,7 @@ class StockPicking(models.Model):
         if positive_lines:
             location_id = picking_type.default_location_src_id.id
             positive_picking = self.env['stock.picking'].create(
-                self._prepare_picking_vals(partner, picking_type, location_id, location_dest_id)
+                self._prepare_picking_vals(partner, picking_type, location_id, location_dest_id, pos_session, pos_order)
             )
 
             positive_picking._create_move_from_pos_order_lines(positive_lines)
@@ -58,7 +70,7 @@ class StockPicking(models.Model):
                 return_location_id = picking_type.default_location_src_id.id
 
             negative_picking = self.env['stock.picking'].create(
-                self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
+                self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id, pos_session, pos_order)
             )
             negative_picking._create_move_from_pos_order_lines(negative_lines)
             try:

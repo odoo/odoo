@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -311,6 +312,35 @@ class PosSession(models.Model):
         self._check_bank_statement_state()
         return self._validate_session(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
+    def generate_activity_for_non_available_quantity(self, non_available_quantity_stock_picking):
+        activity_warning = self.env.ref('mail.mail_activity_data_warning')
+        message = "Some operations processed with more than available quantity:"
+        activity_id = self.activity_ids.filtered(lambda l: l.activity_type_id == activity_warning and message in l.note)
+        if not activity_id:
+            pos_manager = self.env['res.users'].search(
+                [('company_ids', 'in', self.company_id.ids), ('groups_id', 'in', self.env.ref('point_of_sale.group_pos_manager').ids)],
+                limit=1, order="id ASC")
+            self._activity_schedule_with_view('mail.mail_activity_data_warning',
+                views_or_xmlid='point_of_sale.exception_stock_pickings',
+                render_context={'stock_pickings': non_available_quantity_stock_picking, 'message': message},
+                user_id=pos_manager.id or self.env.user.id)
+        elif activity_id and not non_available_quantity_stock_picking.name in activity_id.note:
+            note = activity_id.note + (Markup('<ul><li><a href="#" data-oe-model="%s" data-oe-id="%s">%s</a></li></ul>') %
+                                (non_available_quantity_stock_picking._name, non_available_quantity_stock_picking.id, non_available_quantity_stock_picking.name))
+            activity_id.write({'note': note})
+
+    def generate_activity_for_pending_pickings(self):
+        not_done_stock_pickings = self.picking_ids.filtered(lambda l: l.state in ('assigned', 'confirmed'))
+        if not_done_stock_pickings:
+            pos_manager = self.env['res.users'].search(
+                [('company_ids', 'in', self.company_id.ids), ('groups_id', 'in', self.env.ref('point_of_sale.group_pos_manager').ids)],
+                limit=1, order="id ASC")
+            message = "Some operations could not be validated due to exceptions:"
+            self._activity_schedule_with_view('mail.mail_activity_data_warning',
+                views_or_xmlid='point_of_sale.exception_stock_pickings',
+                render_context={'stock_pickings': not_done_stock_pickings, 'message': message},
+                user_id=pos_manager.id or self.env.user.id)
+
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
@@ -325,6 +355,7 @@ class PosSession(models.Model):
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
                 self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
+            self.generate_activity_for_pending_pickings()
             try:
                 data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
             except AccessError as e:
@@ -592,8 +623,7 @@ class PosSession(models.Model):
                 lines_grouped_by_dest_location[destination_id] = order.lines
 
         for location_dest_id, lines in lines_grouped_by_dest_location.items():
-            pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
-            pickings.write({'pos_session_id': self.id, 'origin': self.name})
+            self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type, pos_session=self)
 
     def _create_balancing_line(self, data, balancing_account, amount_to_balance):
         if (not float_is_zero(amount_to_balance, precision_rounding=self.currency_id.rounding)):
