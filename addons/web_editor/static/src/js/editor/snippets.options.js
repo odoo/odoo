@@ -5450,10 +5450,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+        const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
         // We will store the image in base64 inside the SVG.
         // applyModifications will return a dataURL with the current filters
         // and size options.
-        const imgDataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        const options = {
+            mimetype: this._getImageMimetype(img),
+            perspective: svg.dataset.imgPerspective || null,
+            imgAspectRatio: svg.dataset.imgAspectRatio || null,
+            svgAspectRatio: svgAspectRatio,
+        };
+        const imgDataURL = await applyModifications(img, options);
         svg.removeChild(svg.querySelector('#preview'));
         svg.querySelector('image').setAttribute('xlink:href', imgDataURL);
         // Force natural width & height (note: loading the original image is
@@ -5467,7 +5474,6 @@ registry.ImageTools = ImageHandlerOption.extend({
             svg.setAttribute('height', originalImage.naturalHeight);
         } else {
             const imageWidth = Math.trunc(img.dataset.resizeWidth || img.dataset.width || initialImageWidth);
-            const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
             const newHeight = imageWidth / svgAspectRatio;
             svg.setAttribute('width', imageWidth);
             svg.setAttribute('height', newHeight);
@@ -5635,9 +5641,17 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _initializeImage() {
         const img = this._getImg();
-        const match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
+        let match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
         if (img.dataset.shape && match) {
-            return this._loadImageInfo(`/web/image/${match[1]}`);
+            match = match[1];
+            if (match.endsWith("_perspective")) {
+                // As an image might already have been modified with a
+                // perspective for some customized snippets in themes. We need
+                // to find the original image to set the 'data-original-src'
+                // attribute.
+                match = match.slice(0, -12);
+            }
+            return this._loadImageInfo(`/web/image/${match}`);
         }
         return this._super(...arguments);
     },
