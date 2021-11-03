@@ -2568,10 +2568,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <div class="media-body px-3">
                 <t t-set="description" t-value="result.get('description')"/>
                 <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
+                <t t-set="extra_link_html" t-value="not result.get('extra_link_url') and result.get('extra_link')"/>
                 <div t-att-class="'h6 font-weight-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
                 <p t-if="description" class="mb-0" t-out="description"/>
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
+                <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
             <div class="flex-shrink-0">
                 <t t-if="result.get('detail_strike')">
