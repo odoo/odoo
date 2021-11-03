@@ -251,6 +251,8 @@ class MrpWorkcenter(models.Model):
                     else:
                         # Decrease a part of the remaining duration
                         remaining -= interval_minutes
+                        # Go to the next available interval because the possible current interval duration has been used
+                        break
         return False, 'Not available slot 700 days after the planned start'
 
     def action_archive(self):
