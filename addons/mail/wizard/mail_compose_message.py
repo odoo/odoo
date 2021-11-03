@@ -720,7 +720,11 @@ class MailComposer(models.TransientModel):
         returned_fields = list(render_fields) + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id)._generate_template(res_ids, render_fields)
+        template_values = self.env['mail.template'].browse(template_id)._generate_template(
+            res_ids,
+            render_fields,
+            partners_only=True
+        )
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')
