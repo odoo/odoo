@@ -16,7 +16,7 @@
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title" t-esc="getGroupName(group)" />
-                                <t t-if="group.isLoaded">
+                                <t t-if="!group.isFolded">
                                     <Dropdown t-if="state.hoveredColumn === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
@@ -66,7 +66,7 @@
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
                             </div>
-                            <div t-if="group.isLoaded and group.progress" class="o_kanban_counter">
+                            <div t-if="!group.isFolded and group.progress" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
                                     <t t-foreach="group.progress" t-as="progressData" t-key="progressData.color">
                                         <div t-if="progressData.count"
@@ -90,11 +90,11 @@
                                 </div>
                             </div>
                         </div>
-                        <t t-if="group.isLoaded">
+                        <t t-if="!group.isFolded">
                             <t t-if="state.quickCreate[group.id]">
                                 <View resModel="props.list.resModel" type="'form'" display="{ controlPanel: false }" />
                             </t>
-                            <t t-foreach="group.data" t-as="record" t-key="record.id">
+                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
                                 <t t-call="{{ cardTemplate }}" />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />

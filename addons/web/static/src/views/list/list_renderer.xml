@@ -8,10 +8,10 @@
                     <thead>
                         <tr>
                             <th t-if="props.hasSelectors" class="o_list_record_selector">
-                                <CheckBox value="selection.length === props.list.data.length" t-on-change="toggleSelection"/>
+                                <CheckBox value="selectAll" t-on-change="toggleSelection"/>
                             </th>
                             <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                                <th t-if="column.sortable" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
+                                <th t-if="fields[column.name].gsortable" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
                                   <t t-esc="column.string"/>
                                 </th>
                                 <th t-else="" t-att-class="getColumnClass(column)" >
@@ -28,7 +28,6 @@
                     <tfoot>
                         <tr>
                             <td t-if="props.hasSelectors"/>
-                            <t t-set="aggregates" t-value="props.list.getAggregates(selection)"/>
                             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                                 <t t-set="aggregate" t-value="aggregates[column.name]"/>
                                 <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
@@ -60,16 +59,16 @@
 
     <t t-name="web.ListRenderer.Rows" owl="1">
         <t t-if="!list.isGrouped">
-            <t t-foreach="list.data" t-as="record" t-key="record.id">
+            <t t-foreach="list.records" t-as="record" t-key="record.id">
                 <t t-call="web.ListRenderer.RecordRow"/>
             </t>
         </t>
         <t t-else="">
-            <t t-foreach="list.data" t-as="group" t-key="group.id">
+            <t t-foreach="list.groups" t-as="group" t-key="group.id">
                 <t t-call="web.ListRenderer.GroupRow"/>
-                <t t-if="group.isLoaded">
+                <t t-if="!group.isFolded">
                     <t t-call="web.ListRenderer.Rows">
-                        <t t-set="list" t-value="group"/>
+                        <t t-set="list" t-value="group.list"/>
                     </t>
                 </t>
             </t>
@@ -77,7 +76,7 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow" owl="1">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{group.isLoaded ? 'o_group_open' : ''}}" t-on-click="toggleGroup(group)">
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}}" t-on-click="toggleGroup(group)">
             <th class="o_group_name" t-att-colspan="getGroupNameCellColSpan(group)">
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>

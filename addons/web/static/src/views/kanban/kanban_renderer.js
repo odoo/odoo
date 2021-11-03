@@ -57,8 +57,8 @@ export class KanbanRenderer extends Component {
                 group.classList.remove("o_kanban_hover");
             },
             onStart(group, item) {
-                dataListId = Number(group.dataset.id);
-                dataRecordId = Number(item.dataset.id);
+                dataListId = group.dataset.id;
+                dataRecordId = item.dataset.id;
                 item.classList.add("o_currently_dragged", "ui-sortable-helper");
             },
             onStop(group, item) {
@@ -66,11 +66,11 @@ export class KanbanRenderer extends Component {
             },
             onDrop: async ({ previous, parent }) => {
                 const groupEl = parent.closest(".o_kanban_group");
-                const refId = previous ? Number(previous.dataset.id) : null;
-                const groupId = Number(groupEl.dataset.id);
-                const group = this.props.list.data.find((g) => g.id === groupId);
+                const refId = previous ? previous.dataset.id : null;
+                const groupId = groupEl.dataset.id;
+                const group = this.props.list.groups.find((g) => g.id === groupId);
                 await this.env.model.moveRecord(dataRecordId, dataListId, refId, groupId);
-                if (!group.isLoaded) {
+                if (group.isFolded) {
                     await group.toggle();
                 }
             },
@@ -128,13 +128,21 @@ export class KanbanRenderer extends Component {
             body: this.env._t(
                 "Are you sure that you want to archive all the records from this column?"
             ),
-            confirm: () => group.archive(),
+            confirm: async () => {
+                const resIds = group.list.records.map((r) => r.resId);
+                await this.orm.call(group.resModel, "action_archive", [resIds]);
+                await this.props.list.load();
+                this.props.list.model.notify();
+            },
             cancel: () => {},
         });
     }
 
-    unarchiveGroup(group) {
-        group.unarchive();
+    async unarchiveGroup(group) {
+        const resIds = group.list.records.map((r) => r.resId);
+        await this.orm.call(group.resModel, "action_unarchive", [resIds]);
+        await this.props.list.load();
+        this.props.list.model.notify();
     }
 
     deleteGroup(group) {
@@ -143,12 +151,12 @@ export class KanbanRenderer extends Component {
     }
 
     openRecord(record) {
-        const resIds = this.props.list.data.map((datapoint) => datapoint.resId);
+        const resIds = this.props.list.records.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });
     }
 
     onGroupClick(group, ev) {
-        if (!ev.target.closest(".dropdown") && !group.isLoaded) {
+        if (!ev.target.closest(".dropdown") && group.isFolded) {
             group.toggle();
         }
     }
@@ -214,12 +222,14 @@ export class KanbanRenderer extends Component {
      * @returns {any[]}
      */
     getGroupsOrRecords() {
-        const { data, isGrouped } = this.props.list;
-        return isGrouped ? data.sort((a) => (a.value ? 1 : -1)) : data;
+        if (this.props.list.isGrouped) {
+            return this.props.list.groups.sort((a) => (a.value ? 1 : -1));
+        }
+        return this.props.list.records;
     }
 
-    getGroupName({ count, displayName, isLoaded }) {
-        return isLoaded ? displayName : `${displayName} (${count})`;
+    getGroupName({ count, displayName, isFolded }) {
+        return isFolded ? `${displayName} (${count})` : displayName;
     }
 
     canArchiveGroup(group) {
@@ -247,17 +257,17 @@ export class KanbanRenderer extends Component {
         return activeActions.groupEdit && isRelational(groupByField) && group.value;
     }
 
-    getGroupClasses({ activeProgressValue, count, isLoaded, progress }) {
+    getGroupClasses({ activeProgressValue, count, isFolded, progress }) {
         const classes = [];
         if (!count) {
             classes.push("o_kanban_no_records");
         }
-        if (!isLoaded) {
+        if (isFolded) {
             classes.push("o_column_folded");
         }
         if (progress) {
             classes.push("o_kanban_has_progressbar");
-            if (isLoaded && activeProgressValue) {
+            if (!isFolded && activeProgressValue) {
                 const progressValue = progress.find((d) => d.value === activeProgressValue);
                 classes.push("o_kanban_group_show", `o_kanban_group_show_${progressValue.color}`);
             }
@@ -265,12 +275,12 @@ export class KanbanRenderer extends Component {
         return classes.join(" ");
     }
 
-    getGroupUnloadedCount({ activeProgressValue, count, data, progress }) {
+    getGroupUnloadedCount({ activeProgressValue, count, list, progress }) {
         if (activeProgressValue) {
             const progressValue = progress.find((d) => d.value === activeProgressValue);
-            return progressValue.count - data.length;
+            return progressValue.count - list.records.length;
         } else {
-            return count - data.length;
+            return count - list.records.length;
         }
     }
 
@@ -292,7 +302,7 @@ export class KanbanRenderer extends Component {
                 string = field.string;
                 if (group.activeProgressValue) {
                     value = 0;
-                    for (const record of group.data) {
+                    for (const record of group.list.records) {
                         value += record.data[sumField];
                     }
                 } else {
@@ -350,7 +360,7 @@ export class KanbanRenderer extends Component {
      */
     kanban_image(model, field, idOrIds, placeholder) {
         const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-        const record = this.props.list.model.get({ resId: id }) || { data: {} };
+        const record = /** this.props.list.model.get({ resId: id }) || */ { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type

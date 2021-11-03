@@ -8,7 +8,7 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { FieldParser } from "@web/views/helpers/view_utils";
+import { processField, getActiveActions } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
@@ -20,19 +20,15 @@ const { Component, useState } = owl;
 class FormArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
-        const fieldParser = new FieldParser(fields, "form");
+        const activeActions = getActiveActions(xmlDoc);
+        const activeFields = {};
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
-                fieldParser.addField(node);
+                const fieldInfo = processField(node, fields, "form");
+                activeFields[fieldInfo.name] = fieldInfo;
             }
         });
-        return {
-            arch,
-            activeActions: this.getActiveActions(xmlDoc),
-            xmlDoc,
-            fields: ["display_name", ...fieldParser.getFields()],
-            relations: fieldParser.getRelations(),
-        };
+        return { arch, activeActions, fields: activeFields, xmlDoc };
     }
 }
 
@@ -42,13 +38,16 @@ class FormView extends Component {
     setup() {
         this.router = useService("router");
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
+        const activeFields = this.archInfo.fields;
+        if (!activeFields.display_name) {
+            activeFields.display_name = { name: "display_name", type: "char" };
+        }
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             resId: this.props.resId,
             resIds: this.props.resIds,
             fields: this.props.fields,
-            relations: this.archInfo.relations,
-            activeFields: this.archInfo.fields,
+            activeFields,
             viewMode: "form",
             rootType: "record",
         });

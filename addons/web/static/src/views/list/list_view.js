@@ -2,14 +2,14 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { XMLParser } from "@web/core/utils/xml";
+import { XMLParser, isAttr } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/views/layout";
-import { FieldParser } from "../helpers/view_utils";
-import { RelationalModel } from "../relational_model";
+import { getActiveActions, processField } from "../helpers/view_utils";
 import { ListRenderer } from "./list_renderer";
+import { RelationalModel } from "../relational_model";
 
 const { onWillStart } = owl.hooks;
 
@@ -17,37 +17,30 @@ const { useSubEnv } = owl.hooks;
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
-        const fieldParser = new FieldParser(fields, "list");
         const xmlDoc = this.parseXML(arch);
         const activeActions = {
-            ...this.getActiveActions(xmlDoc),
-            exportXlsx: this.isAttr(xmlDoc, "export_xlsx").truthy(true),
+            ...getActiveActions(xmlDoc),
+            exportXlsx: isAttr(xmlDoc, "export_xlsx").truthy(true),
         };
+        const activeFields = {};
+        const columns = [];
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
-                if (this.isAttr(node, "invisible").falsy(true)) {
-                    fieldParser.addField(node, (fieldName) => {
-                        const optional = node.getAttribute("optional") || false;
-                        const sortable = fields[fieldName].sortable;
-                        const string = node.getAttribute("string") || fields[fieldName].string;
-                        const widget = node.getAttribute("widget") || null;
-                        return {
-                            type: "field",
-                            name: fieldName,
-                            optional,
-                            sortable,
-                            string,
-                            widget,
-                        };
+                if (isAttr(node, "invisible").falsy(true)) {
+                    const fieldInfo = processField(node, fields, "list");
+                    activeFields[fieldInfo.name] = fieldInfo;
+                    columns.push({
+                        ...fieldInfo,
+                        optional: node.getAttribute("optional") || false,
+                        type: "field",
                     });
                 }
             }
+            // if (node.tagName === "button") {
+            //     columns.push({ type: "button" });
+            // }
         });
-        return {
-            activeActions,
-            columns: fieldParser.getFields(),
-            relations: fieldParser.getRelations(),
-        };
+        return { activeActions, fields: activeFields, columns };
     }
 }
 
@@ -63,8 +56,7 @@ class ListView extends owl.Component {
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
-            relations: this.archInfo.relations,
-            activeFields: this.archInfo.columns.map((col) => col.name),
+            activeFields: this.archInfo.fields,
             viewMode: "list",
         });
 
@@ -82,7 +74,7 @@ class ListView extends owl.Component {
     }
 
     openRecord(record) {
-        const resIds = this.model.root.data.map((datapoint) => datapoint.resId);
+        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
         this.actionService.switchView("form", { resId: record.resId, resIds });
     }
 

@@ -2,11 +2,11 @@
 
 import { Field } from "../../fields/field";
 import { evaluateExpr } from "../../core/py_js/py";
+import { isAttr } from "../../core/utils/xml";
 import { archParseBoolean } from "./utils";
 
 const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
-const SPECIAL_FIELDS = ["color_field"];
 
 /**
  * @param {any} field
@@ -50,89 +50,57 @@ export const getIds = (idsList) => {
     }
 };
 
-export class FieldParser {
-    /**
-     * @param {any} fields
-     * @param {string} viewType
-     */
-    constructor(fields, viewType) {
-        this.fields = fields;
-        this.viewType = viewType;
-        this.parsedFields = Object.create(null);
-        this.widgets = Object.create(null);
-        this.relations = {};
+export function processField(node, fields, viewType) {
+    const name = node.getAttribute("name");
+    const widget = node.getAttribute("widget");
+    const modifiers = evaluateExpr(node.getAttribute("modifiers") || "{}");
+    const field = fields[name];
+    const fieldInfo = {
+        name,
+        string: node.getAttribute("string") || field.string,
+        widget,
+        onChange: archParseBoolean(node.getAttribute("on_change")),
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        invisible: modifiers.invisible === true, // || modifiers.column_invisible === true;
+        attrs: {},
+    };
+    for (const attribute of node.attributes) {
+        // FIXME: black list special attributes like on_change, name... ?
+        fieldInfo.attrs[attribute.name] = attribute.value;
     }
-
-    get record() {
-        return {
-            fields: this.fields,
-            viewType: this.viewType,
+    if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
+        fieldInfo.relation = field.relation;
+        const relatedFields = {
+            id: { name: "id", type: "integer", readonly: true },
         };
-    }
-
-    /**
-     * @param {Element} node
-     * @param {(fieldName: string) => any} [getFieldInfo=(fieldName)=>fieldName]
-     * @returns {{ name: string, field: any, widget: string | false }}
-     */
-    addField(node, getFieldInfo) {
-        const fieldName = node.getAttribute("name");
-        const widget = node.getAttribute("widget");
-        const field = this.fields[fieldName];
-        const onChange = archParseBoolean(node.getAttribute("on_change"));
-        const options = evaluateExpr(node.getAttribute("options") || "{}");
-        this.parsedFields[fieldName] = getFieldInfo ? getFieldInfo(fieldName) : fieldName;
-        this.widgets[fieldName] = widget;
-        if (isRelational(field)) {
-            const relatedFields = [];
-            const FieldClass = Field.getTangibleField(this.record, widget, fieldName);
-            if (FieldClass.fieldsToFetch) {
-                relatedFields.push(...FieldClass.fieldsToFetch);
-            }
-            for (const specialFieldDef of SPECIAL_FIELDS) {
-                const specialFieldName = options[specialFieldDef];
-                if (specialFieldName) {
-                    relatedFields.push(specialFieldName);
-                }
-            }
-            this.addRelation(field.relation, ...relatedFields);
-            if (X2M_TYPES.includes(field.type) && FieldClass.useSubView) {
-                // TODO: is it a good idea to modify the field in place?
-                field.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
+        const FieldClass = Field.getTangibleField({ fields, viewType }, widget, name);
+        if (FieldClass.useSubView) {
+            // FIXME: this part is incomplete, we have to parse the subview archs
+            // and extract the field info
+            fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
+            fieldInfo.views = field.views;
+            const firstView = fieldInfo.views[fieldInfo.viewMode];
+            if (firstView) {
+                Object.assign(relatedFields, firstView.fields);
             }
         }
-        return { name: fieldName, field, widget, onChange, options };
-    }
-
-    /**
-     * @param {string} relation
-     * @param  {...string} fields
-     */
-    addRelation(relation, ...fields) {
-        if (!fields.length) {
-            return;
+        // add fields required by specific FieldComponents
+        Object.assign(relatedFields, FieldClass.fieldsToFetch);
+        // special case for color field
+        const colorField = fieldInfo.options.color_field;
+        if (colorField) {
+            relatedFields[colorField] = { name: colorField, type: "integer" };
         }
-        if (!(relation in this.relations)) {
-            this.relations[relation] = new Set();
-        }
-        for (const field of fields) {
-            this.relations[relation].add(field);
-        }
+        fieldInfo.relatedFields = relatedFields;
     }
+    return fieldInfo;
+}
 
-    getFields() {
-        return Object.values(this.parsedFields);
-    }
-
-    getWidget(fieldName) {
-        return this.widgets[fieldName];
-    }
-
-    getRelations() {
-        const relations = {};
-        for (const fieldName in this.relations) {
-            relations[fieldName] = [...this.relations[fieldName]];
-        }
-        return relations;
-    }
+export function getActiveActions(rootNode) {
+    return {
+        edit: isAttr(rootNode, "edit").truthy(true),
+        create: isAttr(rootNode, "create").truthy(true),
+        delete: isAttr(rootNode, "delete").truthy(true),
+        duplicate: isAttr(rootNode, "duplicate").truthy(true),
+    };
 }

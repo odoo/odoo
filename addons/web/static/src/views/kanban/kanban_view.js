@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { combineAttributes, XMLParser } from "@web/core/utils/xml";
+import { combineAttributes, isAttr, XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { FieldParser } from "@web/views/helpers/view_utils";
+import { getActiveActions, processField } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { Layout } from "@web/views/layout";
@@ -74,34 +74,22 @@ export class KanbanArchParser extends XMLParser {
         const className = xmlDoc.getAttribute("class") || null;
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
-        const recordsDraggable = this.isAttr(xmlDoc, "records_draggable").truthy(true);
+        const recordsDraggable = isAttr(xmlDoc, "records_draggable").truthy(true);
         const activeActions = {
-            ...this.getActiveActions(xmlDoc),
-            groupArchive: this.isAttr(xmlDoc, "archivable").truthy(true),
-            groupCreate: this.isAttr(xmlDoc, "group_create").truthy(true),
-            groupDelete: this.isAttr(xmlDoc, "group_delete").truthy(true),
-            groupEdit: this.isAttr(xmlDoc, "group_edit").truthy(true),
+            ...getActiveActions(xmlDoc),
+            groupArchive: isAttr(xmlDoc, "archivable").truthy(true),
+            groupCreate: isAttr(xmlDoc, "group_create").truthy(true),
+            groupDelete: isAttr(xmlDoc, "group_delete").truthy(true),
+            groupEdit: isAttr(xmlDoc, "group_edit").truthy(true),
         };
         const quickCreate =
             activeActions.create &&
-            this.isAttr(xmlDoc, "quick_create").truthy(true) &&
-            this.isAttr(xmlDoc, "on_create").equalTo("quick_create");
-        const fieldParser = new FieldParser(fields, "kanban");
+            isAttr(xmlDoc, "quick_create").truthy(true) &&
+            isAttr(xmlDoc, "on_create").equalTo("quick_create");
         const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
         let colorField = "color";
-
-        const lookForTooltip = (field, options) => {
-            const tooltipFields = options.group_by_tooltip;
-            if (tooltipFields) {
-                fieldParser.addRelation(
-                    field.relation,
-                    "display_name",
-                    ...Object.keys(tooltipFields)
-                );
-                Object.assign(tooltips, tooltipFields);
-            }
-        };
+        const activeFields = {};
 
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
@@ -111,9 +99,11 @@ export class KanbanArchParser extends XMLParser {
             }
             // Case: field node
             if (node.tagName === "field") {
-                const { field, name, options } = fieldParser.addField(node);
-                lookForTooltip(field, options);
-                if (fieldParser.getWidget(name)) {
+                const fieldInfo = processField(node, fields, "kanban");
+                const name = fieldInfo.name;
+                activeFields[name] = fieldInfo;
+                Object.assign(tooltips, fieldInfo.options.group_by_tooltip);
+                if (fieldInfo.widget) {
                     combineAttributes(node, "class", "oe_kanban_action");
                 } else {
                     // Fields without a specified widget are rendered as simple
@@ -226,7 +216,7 @@ export class KanbanArchParser extends XMLParser {
                         "field",
                         "auto-open",
                     ]);
-                    const widget = fieldParser.getWidget(fieldName);
+                    const widget = activeFields[fieldName].widget;
                     Object.assign(params, { fieldName, widget, autoOpen });
                 }
                 combineAttributes(el, "class", "oe_kanban_action");
@@ -248,12 +238,11 @@ export class KanbanArchParser extends XMLParser {
             colorField,
             quickCreate,
             recordsDraggable,
-            limit: limit ? parseInt(limit) : 40,
+            limit: limit ? parseInt(limit, 10) : 40,
             progress: progressBarInfo,
             xmlDoc: applyDefaultAttributes(kanbanBox),
-            fields: fieldParser.getFields(),
+            activeFields,
             tooltips,
-            relations: fieldParser.getRelations(),
         };
     }
 }
@@ -264,7 +253,7 @@ class KanbanView extends owl.Component {
     setup() {
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, limit, relations, defaultGroupBy } = this.archInfo;
+        const { activeFields, limit, relations, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progress: this.archInfo.progress,

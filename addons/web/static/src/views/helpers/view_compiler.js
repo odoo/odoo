@@ -522,7 +522,7 @@ export class ViewCompiler {
 
     compileLabel(node, params) {
         const forAttr = node.getAttribute("for");
-        if (forAttr && this.fields.includes(forAttr)) {
+        if (forAttr && this.fields[forAttr]) {
             const label = this.document.createElement("label");
             const string = node.getAttribute("string");
             if (string) {
