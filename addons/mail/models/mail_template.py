@@ -146,42 +146,65 @@ class MailTemplate(models.Model):
     # MESSAGE/EMAIL VALUES GENERATION
     # ------------------------------------------------------------
 
-    def _generate_recipients(self, results, res_ids):
-        """Generates the recipients of the template. Default values can ben generated
-        instead of the template values if requested by template or context.
-        Emails (email_to, email_cc) can be transformed into partners if requested
-        in the context. """
+    def _generate_template_recipients(self, res_ids, render_fields, partners_only=False, render_results=None):
+        """ Render recipients of the template 'self', returning values for records
+        given by 'res_ids'. Default values can be generated instead of the template
+        values if requested by template. Emails (email_to, email_cc) can be
+        transformed into partners if requested. """
         self.ensure_one()
+        if render_results is None:
+            render_results = dict()
 
-        if self.use_default_to or self._context.get('tpl_force_default_to'):
+        # backward compatibility based on context
+        if 'tpl_partners_only' in self._context:
+            partners_only = self._context.get('tpl_partners_only')
+
+        # if using default recipients -> ``_message_get_default_recipients`` gives
+        # values for email_to, email_cc and partner_ids
+        if self.use_default_to and self.model:
             records = self.env[self.model].browse(res_ids).sudo()
             default_recipients = records._message_get_default_recipients()
             for res_id, recipients in default_recipients.items():
-                results[res_id].pop('partner_to', None)
-                results[res_id].update(recipients)
+                render_results.setdefault(res_id, dict()).update(recipients)
+        # render fields dynamically which generates recipients
+        else:
+            fields_torender = [
+                field for field in render_fields
+                if field in ['email_to', 'partner_to', 'email_cc']
+            ]
+            for field in fields_torender:
+                generated_field_values = self._render_field(field, res_ids)
+                for res_id, field_value in generated_field_values.items():
+                    render_results.setdefault(res_id, dict())[field] = field_value
 
         records_company = None
-        if self._context.get('tpl_partners_only') and self.model and results and 'company_id' in self.env[self.model]._fields:
-            records = self.env[self.model].browse(results.keys()).read(['company_id'])
+        if partners_only and self.model and 'company_id' in self.env[self.model]._fields:
+            records = self.env[self.model].browse(render_results.keys()).read(['company_id'])
             records_company = {rec['id']: (rec['company_id'][0] if rec['company_id'] else None) for rec in records}
 
-        for res_id, values in results.items():
-            partner_ids = values.get('partner_ids', list())
-            if self._context.get('tpl_partners_only'):
-                mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
+        # consolidate partner_ids: based on partner_to + create partners if requested
+        for res_id in res_ids:
+            record_values = render_results[res_id]
+
+            partner_ids = record_values.get('partner_ids', list())
+            if partners_only:
+                mails = tools.email_split(record_values.pop('email_to', '')) + tools.email_split(record_values.pop('email_cc', ''))
                 Partner = self.env['res.partner']
                 if records_company:
                     Partner = Partner.with_context(default_company_id=records_company[res_id])
                 for mail in mails:
                     partner = Partner.find_or_create(mail)
                     partner_ids.append(partner.id)
-            partner_to = values.pop('partner_to', '')
+
+            partner_to = record_values.pop('partner_to', '')
             if partner_to:
                 # placeholders could generate '', 3, 2 due to some empty field values
                 tpl_partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
                 partner_ids += self.env['res.partner'].sudo().browse(tpl_partner_ids).exists().ids
-            results[res_id]['partner_ids'] = partner_ids
-        return results
+
+            record_values['partner_ids'] = partner_ids
+
+        return render_results
 
     def _generate_template_attachments(self, res_ids, render_fields, render_results=None):
         """ Render attachments of template 'self', returning values for records
@@ -255,6 +278,7 @@ class MailTemplate(models.Model):
             fields_torender = [
                 field for field in render_fields
                 if field not in ['attachments', 'attachment_ids', 'auto_delete',
+                                 'email_cc', 'email_to', 'partner_to',
                                  'mail_server_id', 'model', 'res_id']
             ]
             for field in fields_torender:
@@ -266,7 +290,7 @@ class MailTemplate(models.Model):
 
             # render recipients
             if any(field in render_fields for field in ['email_to', 'partner_to', 'email_cc']):
-                results = template._generate_recipients(results, template_res_ids)
+                template._generate_template_recipients(template_res_ids, render_fields, render_results=results)
 
             # add values static for all res_ids
             for res_id in template_res_ids:
