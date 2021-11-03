@@ -14,13 +14,12 @@ class Employee(models.Model):
         self.ensure_one()
         cars = self.env['fleet.vehicle.assignation.log'].search([
             ('driver_id', 'in', (self.user_id.partner_id | self.sudo().address_home_id).ids)]).mapped('vehicle_id')
-
         return {
             "type": "ir.actions.act_window",
             "res_model": "fleet.vehicle",
             "views": [[False, "kanban"], [False, "form"], [False, "tree"]],
             "domain": [("id", "in", cars.ids)],
-            "context": dict(self._context, create=False),
+            "context": dict(create=False),
             "name": "History Employee Cars",
         }
 

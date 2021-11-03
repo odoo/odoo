@@ -1375,7 +1375,7 @@ class Picking(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
         action['domain'] = [('id', 'in', scraps.ids)]
-        action['context'] = dict(self._context, create=False)
+        action['context'] = dict(action.get('context', {}), create=False)
         return action
 
     def action_see_packages(self):
