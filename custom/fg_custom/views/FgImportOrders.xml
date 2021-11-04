@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="fg_custom_import_order" model="ir.ui.view">
+            <field name="name">fg.custom.import.order.form</field>
+            <field name="model">fg.custom.import.order</field>
+            <field name="arch" type="xml">
+                <form string="Import  Orders">
+                    <group name="help-import">
+                      <div>
+                        <p>Upload POS Orders.</p>
+                        <a href="/fg_custom/static/csv/pos_order_template.csv" aria-label="Download" title="Download">
+                            <i class="fa fa-download"></i> <span>Download Import Template for POS Orders</span>
+                        </a>
+                      </div>
+                    </group>
+                    <group name="import">
+                        <field name="order_file" filename="order_filename"/>
+                        <field name="order_filename" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="import_order_button" type="object" class="oe_highlight" string="Validate and Import"/>
+                        <button name="cancel_button" type="object"  string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="fg_action_view_import_order" model="ir.actions.act_window">
+            <field name="name">Import POS Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fg.custom.import.order</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem
+            name="Import Orders"
+            action="fg_action_view_import_order"
+            id="fg_menu_view_import_order"
+            parent="point_of_sale.menu_point_of_sale"
+            sequence="7"/>
+
+</odoo>
+

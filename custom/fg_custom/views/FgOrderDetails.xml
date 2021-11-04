@@ -17,22 +17,6 @@
                <field name="x_card_number"/>
             </xpath>
 
-            <field name="amount_paid" position="after">
-                <field name="x_total_so_pwd" string="PWD Discount"/>
-            </field>
-            <field name="x_total_so_pwd" position="after">
-                <field name="x_balance" string="PWD Running Balance"/>
-            </field>
-            <field name="x_balance" position="after">
-                <field name="x_date_from" string="Date From"/>
-            </field>
-            <field name="x_date_from" position="after">
-                <field name="x_date_to" string="Date Until"/>
-            </field>
-            <field name="x_date_to" position="after">
-                <field name="x_date_from1" invisible="1"/>
-            </field>
-
         </field>
     </record>
 
@@ -50,6 +34,16 @@
         </field>
     </record>
 
-
+    <record id="view_pos_order_tree_inherit" model="ir.ui.view">
+        <field name="name">pos.order.tree.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_id']" position="after">
+                <field name="x_ext_source"/>
+                <field name="x_ext_order_ref"/>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

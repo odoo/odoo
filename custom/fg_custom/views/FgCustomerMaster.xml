@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- add field and remove field in contact form (inherit)-->
+     <record id="fg_customer_master_inherit" model="ir.ui.view">
+        <field name="name">fg.customer.master.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+<!--            <field name="vat" position="before">-->
+<!--                 <field name="fg_customer_code" string="Customer Code" placeholder="Customer Code"/>-->
+<!--            </field>-->
+<!--            <field name="vat" position="before">-->
+<!--                 <field name="fg_category" string="Category"/>-->
+<!--            </field>-->
+<!--            <field name="vat" position="before">-->
+<!--                 <field name="fg_branch" string="Branch"/>-->
+<!--            </field>-->
+
+
+            <xpath expr="//field[@name='vat']" position="before">
+                 <field name="x_type_of_business" string="Type of Business"/>
+            </xpath>
+
+
+
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/field[@name='email']" position="before" >
+               <field name="x_birthdate" string="Birthdate"  />
+            </xpath>
+
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/field[@name='email']" position="before" >
+               <field name="x_age" string="Age" attrs="{'invisible': [('type','!=', 'contact')]}"/>
+            </xpath>
+
+            <xpath expr="//page[@name='contact_addresses']/field[@name='child_ids']/form/sheet/group/group/field[@name='email']" position="before" >
+               <field name="x_gender" string="Gender" attrs="{'invisible': [('type','!=', 'contact')]}"/>
+            </xpath>
+
+<!--            <xpath expr="//page[@name='internal_notes']" position="before" >-->
+<!--                <page string="Other Details" name="other_details" autofocus="autofocus">-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                 <field name="fg_credit_limit" string="Credit Limit"/>-->
+<!--                                    <field name="fg_credit_balance" string="Credit Balance"/>-->
+<!--                                    <field name="fg_discount_limit" string="Discount Limit"/>-->
+<!--                                    <field name="fg_discount_balance" string="Discount Balance"/>-->
+<!--                                    <field name="fg_discount_allowance" string="Discount/Allowance"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                  <field name="fg_price_mode" string="Price Mode"/>-->
+<!--                                    <field name="fg_earned_points" string="Earned Points"/>-->
+<!--                                    <field name="fg_member_since" string="Member Since"/>-->
+<!--                                    <field name="fg_valid_thru" string="Valid Thru"/>-->
+<!--                            </group>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                </page>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+
+
+</odoo>
