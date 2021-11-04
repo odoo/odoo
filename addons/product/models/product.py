@@ -122,6 +122,9 @@ class ProductProduct(models.Model):
         'product.packaging', 'product_id', 'Product Packages',
         help="Gives the different ways to package the same product.")
 
+    additional_product_tag_ids = fields.Many2many('product.tag', 'product_tag_product_product_rel')
+    all_product_tag_ids = fields.Many2many('product.tag', compute='_compute_all_product_tag_ids', search='_search_all_product_tag_ids')
+
     # all image fields are base64 encoded and PIL-supported
 
     # all image_variant fields are technical and should not be displayed to the user
@@ -294,6 +297,16 @@ class ProductProduct(models.Model):
                 '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
                 '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
+
+    @api.depends('product_tag_ids', 'additional_product_tag_ids')
+    def _compute_all_product_tag_ids(self):
+        for product in self:
+            product.all_product_tag_ids = product.product_tag_ids | product.additional_product_tag_ids
+
+    def _search_all_product_tag_ids(self, operator, operand):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+        return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):

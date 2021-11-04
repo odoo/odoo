@@ -15,6 +15,7 @@
                 <field name="priority" widget="priority" optional="show" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
+                <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '>', 1)]}"/>
                 <field name="company_id" options="{'no_create_edit': True}"
                     groups="base.group_multi_company" optional="hide"/>

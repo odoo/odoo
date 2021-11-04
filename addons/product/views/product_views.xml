@@ -87,6 +87,7 @@
                                         </span>
                                     </div>
                                     <field name="categ_id" string="Product Category"/>
+                                    <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
@@ -289,6 +290,12 @@
                                     context="{'tree_view_ref':'product.product_packaging_tree_view2'}"/>
                             </group>
                         </group>
+                        <group>
+                            <group name="tags" string="Tags">
+                                <field name="product_tag_ids" string="Product Template Tags" widget="many2many_tags" readonly="1" options="{'no_open': True, 'color_field': 'color'}"/>
+                                <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -335,6 +342,7 @@
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
                     <field name="categ_id" optional="hide"/>
+                    <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" invisible="1" readonly="1"/>
@@ -373,6 +381,12 @@
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
                 </xpath>
+                <field name="product_tag_ids" position="attributes">
+                    <attribute name="options">{'no_open': true}</attribute>
+                </field>
+                <field name="product_tag_ids" position="after">
+                    <field name="additional_product_tag_ids" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                </field>
             </field>
         </record>
 
