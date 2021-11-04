@@ -7,9 +7,13 @@
     'description': """
     Pilmico custom addons
         """,
-    'depends': ['product','website', 'account', 'point_of_sale'],
+    'depends': ['product', 'website', 'account', 'point_of_sale'],
     'data': [
-        'views/FgOrderDetails.xml'
+        'views/FgOrderDetails.xml',
+        'views/FgImportOrders.xml',
+        'views/FgMessageWizard.xml',
+        'views/FgPosOrder.xml',
+        'security/ir.model.access.csv'
     ],
     'author': "1FG",
      'demo': [],

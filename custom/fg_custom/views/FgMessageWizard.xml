@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fg_message_wizard_form" model="ir.ui.view">
+        <field name="name">fg.message.wizard.form</field>
+        <field name="model">fg.message.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p class="text-center">
+                    <field name="message"/>
+                </p>
+            <footer>
+                <button name="action_ok" string="Ok" type="object" default_focus="1" class="oe_highlight"/>
+            </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
