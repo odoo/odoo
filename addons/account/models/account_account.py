@@ -95,6 +95,10 @@ class AccountAccount(models.Model):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
+    non_trade = fields.Boolean(default=False,
+                               help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
+                                    "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
+
     @api.constrains('reconcile', 'internal_group', 'tax_ids')
     def _constrains_reconcile(self):
         for record in self:
