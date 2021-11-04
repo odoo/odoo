@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <!-- Chart template -->
+        <record id="chart_template" model="account.chart.template">
+            <field name="name">План счетов РФ</field>
+            <field name="currency_id" ref="base.RUB"/>
+            <field name="code_digits">2</field>
+            <field name="bank_account_code_prefix">51.</field>
+            <field name="cash_account_code_prefix">50.1.</field>
+            <field name="transfer_account_code_prefix">57.</field>
+            <field name="country_id" ref="base.ru"/>
+        </record>
+</odoo>
