@@ -133,7 +133,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         // named so they are handled properly by the snippets menu.
         this.$content.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
-        this.$content.removeClass('o_editable').addClass('o_not_editable')
+        this.$content.removeClass('o_editable');
     },
     /**
      * Returns true if the editable area is empty.
