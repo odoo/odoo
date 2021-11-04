@@ -105,14 +105,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'company_id': self.env.company.id,
         })
         self.subcontractor_partner1.property_stock_subcontractor = partner_subcontract_location.id
-        resupply_rule = resupply_sub_on_order_route.rule_ids.filtered(lambda l:
-            l.location_id == self.comp1.property_stock_production and
-            l.location_src_id == self.env.company.subcontracting_location_id)
+        resupply_rule = resupply_sub_on_order_route.rule_ids.filtered(lambda r:
+            r.location_dest_id == self.comp1.property_stock_production and
+            r.location_src_id == self.env.company.subcontracting_location_id)
         resupply_rule.copy({'location_src_id': partner_subcontract_location.id})
-        resupply_warehouse_rule = self.warehouse.route_ids.rule_ids.filtered(lambda l:
-            l.location_id == self.env.company.subcontracting_location_id and
-            l.location_src_id == self.warehouse.lot_stock_id)
-        resupply_warehouse_rule.copy({'location_id': partner_subcontract_location.id})
+        resupply_warehouse_rule = self.warehouse.route_ids.rule_ids.filtered(lambda r:
+            r.location_dest_id == self.env.company.subcontracting_location_id and
+            r.location_src_id == self.warehouse.lot_stock_id)
+        resupply_warehouse_rule.copy({'location_dest_id': partner_subcontract_location.id})
         # Add a manufacturing lead time to check that the resupply delivery is correctly planned 2 days
         # before the subcontracting receipt
         self.finished.produce_delay = 2

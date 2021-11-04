@@ -31,7 +31,7 @@ class TestProcRule(TransactionCase):
                 'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': self.ref('stock.stock_location_stock'),
-                'location_id': self.ref('stock.stock_location_output'),
+                'location_dest_id': self.ref('stock.stock_location_output'),
             })],
         })
 
@@ -121,7 +121,7 @@ class TestProcRule(TransactionCase):
         # get auto-created pull rule from when warehouse is created
         rule = self.env['stock.rule'].search([
             ('route_id', '=', warehouse.reception_route_id.id),
-            ('location_id', '=', warehouse.lot_stock_id.id),
+            ('location_dest_id', '=', warehouse.lot_stock_id.id),
             ('location_src_id', '=', self.env.ref('stock.stock_location_suppliers').id),
             ('action', '=', 'pull'),
             ('procure_method', '=', 'make_to_stock'),
@@ -185,7 +185,7 @@ class TestProcRule(TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Rule Supplier',
             'route_id': warehouse.reception_route_id.id,
-            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
             'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
             'action': 'pull',
             'delay': 9.0,
@@ -266,7 +266,7 @@ class TestProcRule(TransactionCase):
                 'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': self.ref('stock.stock_location_stock'),
-                'location_id': self.ref('stock.stock_location_output'),
+                'location_dest_id': self.ref('stock.stock_location_output'),
                 'group_propagation_option': 'fixed',
                 'group_id': wave_pg.id,
             })],
@@ -364,7 +364,7 @@ class TestProcRuleLoad(TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Rule Shelf1',
             'route_id': warehouse.reception_route_id.id,
-            'location_id': shelf1.id,
+            'location_dest_id': shelf1.id,
             'location_src_id': stock_loc.id,
             'action': 'pull',
             'procure_method': 'make_to_order',
@@ -373,7 +373,7 @@ class TestProcRuleLoad(TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Rule Shelf2',
             'route_id': warehouse.reception_route_id.id,
-            'location_id': shelf2.id,
+            'location_dest_id': shelf2.id,
             'location_src_id': stock_loc.id,
             'action': 'pull',
             'procure_method': 'make_to_order',
@@ -382,7 +382,7 @@ class TestProcRuleLoad(TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Rule Supplier',
             'route_id': warehouse.reception_route_id.id,
-            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'location_src_id': supplier_loc.id,
             'action': 'pull',
             'procure_method': 'make_to_stock',
@@ -395,7 +395,7 @@ class TestProcRuleLoad(TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Trap Rule',
             'route_id': wrong_route.id,
-            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'location_src_id': supplier_loc.id,
             'action': 'pull',
             'procure_method': 'make_to_order',

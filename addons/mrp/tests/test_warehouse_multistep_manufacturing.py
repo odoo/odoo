@@ -70,7 +70,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self._check_location_and_routes()
         # Check locations of existing pull rule
         self.assertFalse(self.warehouse.pbm_route_id.rule_ids, 'only the update of global manufacture route should happen.')
-        self.assertEqual(self.warehouse.manufacture_pull_id.location_id.id, self.warehouse.lot_stock_id.id)
+        self.assertEqual(self.warehouse.manufacture_pull_id.location_dest_id.id, self.warehouse.lot_stock_id.id)
 
     def test_01_warehouse_twostep_manufacturing(self):
         """ Warehouse testing for picking before manufacturing """
@@ -78,7 +78,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm'
         self._check_location_and_routes()
         self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 2)
-        self.assertEqual(self.warehouse.manufacture_pull_id.location_id.id, self.warehouse.lot_stock_id.id)
+        self.assertEqual(self.warehouse.manufacture_pull_id.location_dest_id.id, self.warehouse.lot_stock_id.id)
 
     def test_02_warehouse_twostep_manufacturing(self):
         """ Warehouse testing for picking ans store after manufacturing """
@@ -86,7 +86,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
         self._check_location_and_routes()
         self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 3)
-        self.assertEqual(self.warehouse.manufacture_pull_id.location_id.id, self.warehouse.sam_loc_id.id)
+        self.assertEqual(self.warehouse.manufacture_pull_id.location_dest_id.id, self.warehouse.sam_loc_id.id)
 
     def test_manufacturing_3_steps(self):
         """ Test MO/picking before manufacturing/picking after manufacturing

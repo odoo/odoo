@@ -48,7 +48,7 @@
                 <tree string="Rules">
                     <field name="action"/>
                     <field name="location_src_id" options="{'no_create': True}"/>
-                    <field name="location_id" options="{'no_create': True}"/>
+                    <field name="location_dest_id" options="{'no_create': True}"/>
                     <field name="route_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -73,7 +73,7 @@
                                 <field name="action"/>
                                 <field name="picking_type_id"/>
                                 <field name="location_src_id" options="{'no_create': True}" attrs="{'required': [('action', 'in', ['pull', 'push', 'pull_push'])]}"/>
-                                <field name="location_id" options="{'no_create': True}"/>
+                                <field name="location_dest_id" options="{'no_create': True}"/>
                                 <field name="auto" attrs="{'invisible': [('action', 'not in', ['push', 'pull_push'])]}"/>
                                 <field name="procure_method" attrs="{'invisible': [('action', 'not in', ['pull', 'pull_push'])]}"/>
                             </group>

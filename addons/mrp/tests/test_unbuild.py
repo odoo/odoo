@@ -507,7 +507,7 @@ class TestUnbuild(TestMrpCommon):
                 'action': 'push',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': unbuild_location.id,
-                'location_id': self.stock_location.id,
+                'location_dest_id': self.stock_location.id,
             })],
         })
 

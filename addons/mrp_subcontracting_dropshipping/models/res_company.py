@@ -22,7 +22,7 @@ class ResCompany(models.Model):
                 vals.append({
                     'name': '%s → %s' % (supplier_location.name, subcontracting_location.name),
                     'action': 'buy',
-                    'location_id': subcontracting_location.id,
+                    'location_dest_id': subcontracting_location.id,
                     'location_src_id': supplier_location.id,
                     'procure_method': 'make_to_stock',
                     'route_id': route.id,

@@ -787,7 +787,7 @@ class StockMove(models.Model):
             else:
                 rule = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
-            if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_id.id):
+            if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
                 if new_move:
                     new_moves.append(new_move)
@@ -1867,7 +1867,7 @@ class StockMove(models.Model):
             product_id = move.product_id
             domain = [
                 ('location_src_id', '=', move.location_id.id),
-                ('location_id', '=', move.location_dest_id.id),
+                ('location_dest_id', '=', move.location_dest_id.id),
                 ('action', '!=', 'push')
             ]
             rules = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)

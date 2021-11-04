@@ -86,7 +86,7 @@ class ReportStockRule(models.AbstractModel):
     @api.model
     def _get_rule_loc(self, rule, product):
         rule.ensure_one()
-        return {'rule': rule, 'source': rule.location_src_id, 'destination': rule.location_id}
+        return {'rule': rule, 'source': rule.location_src_id, 'destination': rule.location_dest_id}
 
     @api.model
     def _sort_locations(self, rules_and_loc, warehouses):

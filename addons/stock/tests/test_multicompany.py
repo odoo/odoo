@@ -410,7 +410,7 @@ class TestMultiCompany(TransactionCase):
                 'name': 'create a move to company b',
                 'company_id': self.company_b.id,
                 'location_src_id': intercom_location.id,
-                'location_id': self.stock_location_b.id,
+                'location_dest_id': self.stock_location_b.id,
                 'action': 'push',
                 'auto': 'manual',
                 'picking_type_id': self.warehouse_b.in_type_id.id,

@@ -75,7 +75,7 @@ class StockWarehouse(models.Model):
                     'auto': 'manual',
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, 'MTO'),
-                    'location_id': subcontract_location_id.id,
+                    'location_dest_id': subcontract_location_id.id,
                     'location_src_id': self.lot_stock_id.id,
                     'picking_type_id': self.subcontracting_resupply_type_id.id
                 },
@@ -93,7 +93,7 @@ class StockWarehouse(models.Model):
                     'route_id': self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
                                                         _('Resupply Subcontractor on Order')).id,
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, False),
-                    'location_id': production_location_id.id,
+                    'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
                     'picking_type_id': self.subcontracting_resupply_type_id.id
                 },

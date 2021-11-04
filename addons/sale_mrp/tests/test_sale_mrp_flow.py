@@ -1372,7 +1372,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 'action': 'pull',
                 'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
                 'location_src_id': stock_location_components.id,
-                'location_id': self.ref('stock.stock_location_customers'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
 
@@ -1384,7 +1384,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 'action': 'pull',
                 'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
                 'location_src_id': stock_location_14.id,
-                'location_id': self.ref('stock.stock_location_customers'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
 

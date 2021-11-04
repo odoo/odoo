@@ -30,7 +30,7 @@ class StockWarehouse(models.Model):
                     'route_id': self._find_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping',
                                                         _('Dropship Subcontractor on Order')).id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
-                    'location_id': production_location_id.id,
+                    'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
                     'picking_type_id': self.subcontracting_type_id.id
                 },

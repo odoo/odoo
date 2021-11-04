@@ -395,7 +395,7 @@ class Warehouse(models.Model):
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
-                    'location_id': location_dest_id.id,
+                    'location_dest_id': location_dest_id.id,
                     'location_src_id': location_id.id,
                     'picking_type_id': picking_type_id.id,
                 }
@@ -571,7 +571,7 @@ class Warehouse(models.Model):
             existing_rule = self.env['stock.rule'].search([
                 ('picking_type_id', '=', rule_vals['picking_type_id']),
                 ('location_src_id', '=', rule_vals['location_src_id']),
-                ('location_id', '=', rule_vals['location_id']),
+                ('location_dest_id', '=', rule_vals['location_dest_id']),
                 ('route_id', '=', rule_vals['route_id']),
                 ('action', '=', rule_vals['action']),
                 ('active', '=', False),
@@ -774,7 +774,7 @@ class Warehouse(models.Model):
             route_rule_values = {
                 'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
                 'location_src_id': routing.from_loc.id,
-                'location_id': routing.dest_loc.id,
+                'location_dest_id': routing.dest_loc.id,
                 'action': routing.action,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
@@ -822,13 +822,13 @@ class Warehouse(models.Model):
         Check routes being delivery bu this warehouse and change the rule going to transit location """
         Rule = self.env["stock.rule"]
         routes = self.env['stock.route'].search([('supplier_wh_id', '=', self.id)])
-        rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_id.usage', '=', 'transit')])
+        rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_dest_id.usage', '=', 'transit')])
         rules.write({
             'location_src_id': new_location.id,
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
-            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
+            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.location_dest_id]
             mto_vals = self._get_global_route_rules_values().get('mto_pull_id')
             values = mto_vals['create_values']
             mto_rule_vals = self._get_rule_values(routings, values, name_suffix='MTO')
@@ -839,7 +839,7 @@ class Warehouse(models.Model):
             # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
             Rule.search([
                 '&', ('route_id', '=', self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id),
-                ('location_id.usage', '=', 'transit'),
+                ('location_dest_id.usage', '=', 'transit'),
                 ('action', '!=', 'push'),
                 ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
 
@@ -853,7 +853,7 @@ class Warehouse(models.Model):
                 '&',
                     ('action', '!=', 'push'),
                     ('location_src_id.usage', '=', 'transit')
-        ]).write({'location_id': new_location.id})
+        ]).write({'location_dest_id': new_location.id})
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:

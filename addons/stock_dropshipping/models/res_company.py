@@ -94,7 +94,7 @@ class ResCompany(models.Model):
             dropship_vals.append({
                 'name': '%s → %s' % (supplier_location.name, customer_location.name),
                 'action': 'buy',
-                'location_id': customer_location.id,
+                'location_dest_id': customer_location.id,
                 'location_src_id': supplier_location.id,
                 'procure_method': 'make_to_stock',
                 'route_id': dropship_route.id,
