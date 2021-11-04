@@ -68,7 +68,6 @@ const LinkTools = Link.extend({
         this.$button.removeClass('active');
         this.options.wysiwyg.odooEditor.observerActive();
         this.applyLinkToDom(this._getData());
-        setSelection(this.$link[0], 0, this.$link[0], 1);
         this.options.wysiwyg.odooEditor.historyStep();
         this._super(...arguments);
     },
