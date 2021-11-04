@@ -196,6 +196,11 @@
                             <field name="bg_color"/>
                         </group>
                     </group>
+                    <group string="Products">
+                        <group>
+                            <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>

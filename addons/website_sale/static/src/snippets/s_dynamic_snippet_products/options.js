@@ -21,6 +21,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
             this.contextualFilterDomain.push(['product_cross_selling', '=', false]);
         }
         this.productCategories = {};
+        this.productTags = {};
     },
     //--------------------------------------------------------------------------
     // Private
@@ -42,6 +43,21 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         });
     },
     /**
+     * Fetches product tags.
+     * @private
+     * @returns {Promise}
+     */
+    _fetchProductTags: function () {
+        return this._rpc({
+            model: 'product.tag',
+            method: 'search_read',
+            kwargs: {
+                domain: wUtils.websiteDomain(this),
+                fields: ['id', 'name'],
+            }
+        });
+    },
+    /**
      *
      * @override
      * @private
@@ -49,6 +65,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     _renderCustomXML: async function (uiFragment) {
         await this._super.apply(this, arguments);
         await this._renderProductCategorySelector(uiFragment);
+        await this._renderProductTagSelector(uiFragment);
     },
     /**
      * Renders the product categories option selector content into the provided uiFragment.
@@ -64,11 +81,25 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         return this._renderSelectUserValueWidgetButtons(productCategoriesSelectorEl, this.productCategories);
     },
     /**
+     * Renders the product tags option selector content into the provided uiFragment.
+     * @private
+     * @param {HTMLElement} uiFragment
+     */
+    _renderProductTagSelector: async function (uiFragment) {
+        const productTags = await this._fetchProductTags();
+        for (let index in productTags) {
+            this.productTags[productTags[index].id] = productTags[index];
+        }
+        const productTagsSelectorEl = uiFragment.querySelector('[data-name="product_tag_opt"]');
+        return this._renderSelectUserValueWidgetButtons(productTagsSelectorEl, this.productTags);
+    },
+    /**
      * @override
      * @private
      */
     _setOptionsDefaultValues: function () {
         this._setOptionValue('productCategoryId', 'all');
+        this._setOptionValue('productTagId', 'all');
         this._super.apply(this, arguments);
     },
 });

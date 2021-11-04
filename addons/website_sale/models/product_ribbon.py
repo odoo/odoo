@@ -15,3 +15,4 @@ class ProductRibbon(models.Model):
     bg_color = fields.Char(string='Ribbon background color', required=False)
     text_color = fields.Char(string='Ribbon text color', required=False)
     html_class = fields.Char(string='Ribbon class', required=True, default='')
+    product_tag_ids = fields.One2many('product.tag', 'ribbon_id', string='Product Tags')

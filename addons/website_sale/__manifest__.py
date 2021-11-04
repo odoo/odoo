@@ -18,6 +18,7 @@
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
         'views/product_attribute_views.xml',
+        'views/product_tag_views.xml',
         'views/product_views.xml',
         'views/account_views.xml',
         'views/onboarding_views.xml',

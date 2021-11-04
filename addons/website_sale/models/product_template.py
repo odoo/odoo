@@ -306,7 +306,9 @@ class ProductTemplate(models.Model):
         return self.product_variant_id._is_sold_out()
 
     def _get_website_ribbon(self):
-        return self.website_ribbon_id
+        if self.website_ribbon_id:
+            return self.website_ribbon_id
+        return self.product_tag_ids.ribbon_id[:1] or self.product_variant_ids.additional_product_tag_ids.ribbon_id[:1]
 
     # ---------------------------------------------------------
     # Rating Mixin API

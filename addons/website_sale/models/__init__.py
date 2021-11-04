@@ -12,6 +12,7 @@ from . import product_pricelist
 from . import product_product
 from . import product_public_category
 from . import product_ribbon
+from . import product_tag
 from . import product_template
 from . import res_company
 from . import res_config_settings
