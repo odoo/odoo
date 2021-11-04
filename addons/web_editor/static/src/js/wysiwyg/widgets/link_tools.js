@@ -78,7 +78,9 @@ const LinkTools = Link.extend({
 
     applyLinkToDom() {
         this._observer.disconnect();
+        this.options.wysiwyg.odooEditor.observerActive();
         this._super(...arguments);
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
     },
 
