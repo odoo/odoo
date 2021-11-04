@@ -179,7 +179,7 @@ class TestReorderingRule(TransactionCase):
             'usage': 'internal',
             'location_id': self.env.ref('stock.stock_location_locations').id,
         })
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'resupply outside',
             'rule_ids': [
                 (0, False, {
@@ -550,7 +550,7 @@ class TestReorderingRule(TransactionCase):
              ('location_id', '=', customer_loc.id)
             ]
         )
-        route_mto = self.env["stock.location.route"].create({
+        route_mto = self.env["stock.route"].create({
             "name": "MTO",
             "active": True,
             "sequence": 3,

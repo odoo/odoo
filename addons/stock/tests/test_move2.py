@@ -251,7 +251,7 @@ class TestPickShip(TestStockCommon):
         warehouse_1.write({
             'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
         })
-        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
+        resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route)
         self.productA.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
 
@@ -2492,7 +2492,7 @@ class TestRoutes(TestStockCommon):
         warehouse_1.write({
             'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
         })
-        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
+        resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route, "Ressuply route not found")
         self.product1.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
         self.wh = warehouse_1
@@ -2525,7 +2525,7 @@ class TestRoutes(TestStockCommon):
         })
 
         # TODO: maybe add a new type on the "applicable on" fields?
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'new route',
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
@@ -2570,7 +2570,7 @@ class TestRoutes(TestStockCommon):
             'default_location_dest_id': new_loc.id,
             'warehouse_id': self.wh.id,
         })
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'new route',
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
@@ -3070,7 +3070,7 @@ class TestRoutes(TestStockCommon):
             'name': 'push location 2',
         })
 
-        route_on_product = self.env['stock.location.route'].create({
+        route_on_product = self.env['stock.route'].create({
             'name': 'route on product',
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location 1',
@@ -3083,7 +3083,7 @@ class TestRoutes(TestStockCommon):
             })],
         })
 
-        route_on_packaging = self.env['stock.location.route'].create({
+        route_on_packaging = self.env['stock.route'].create({
             'name': 'route on packaging',
             'packaging_selectable': True,
             'rule_ids': [(0, False, {

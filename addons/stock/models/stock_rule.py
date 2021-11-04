@@ -61,7 +61,7 @@ class StockRule(models.Model):
         domain="[('id', '=?', route_company_id)]")
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
-    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
+    route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade')
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),

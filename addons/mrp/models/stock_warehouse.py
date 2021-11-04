@@ -36,7 +36,7 @@ class StockWarehouse(models.Model):
         the components from the Stock to Input location first, and then\
         transfer it to the Production location.")
 
-    pbm_route_id = fields.Many2one('stock.location.route', 'Picking Before Manufacturing Route', ondelete='restrict')
+    pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict')
 
     pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location', check_company=True)
     sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location', check_company=True)

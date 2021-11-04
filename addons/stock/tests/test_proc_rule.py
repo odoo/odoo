@@ -23,7 +23,7 @@ class TestProcRule(TransactionCase):
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
         # generate a move from Stock for every procurement created in Output
-        product_route = self.env['stock.location.route'].create({
+        product_route = self.env['stock.route'].create({
             'name': 'Stock -> output route',
             'product_selectable': True,
             'rule_ids': [(0, 0, {
@@ -257,7 +257,7 @@ class TestProcRule(TransactionCase):
 
         # Create a route which will allows 'wave picking'
         wave_pg = self.env['procurement.group'].create({'name': 'Wave PG'})
-        wave_route = self.env['stock.location.route'].create({
+        wave_route = self.env['stock.route'].create({
             'name': 'Wave for ProductA',
             'product_selectable': True,
             'sequence': 1,
@@ -389,7 +389,7 @@ class TestProcRuleLoad(TransactionCase):
             'picking_type_id': warehouse.in_type_id.id,
         })
 
-        wrong_route = self.env['stock.location.route'].create({
+        wrong_route = self.env['stock.route'].create({
             'name': 'Wrong Route',
         })
         self.env['stock.rule'].create({

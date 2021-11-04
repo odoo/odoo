@@ -23,7 +23,7 @@ class ProductReplenish(models.TransientModel):
         'stock.warehouse', string='Warehouse', required=True,
         domain="[('company_id', '=', company_id)]")
     route_ids = fields.Many2many(
-        'stock.location.route', string='Preferred Routes',
+        'stock.route', string='Preferred Routes',
         help="Apply specific route(s) for the replenishment instead of product's default routes.",
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company')

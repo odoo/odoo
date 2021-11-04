@@ -17,7 +17,7 @@ class StockWarehouse(models.Model):
         'stock.rule', 'Subcontracting MTS Rule'
     )
 
-    subcontracting_route_id = fields.Many2one('stock.location.route', 'Resupply Subcontractor', ondelete='restrict')
+    subcontracting_route_id = fields.Many2one('stock.route', 'Resupply Subcontractor', ondelete='restrict')
 
     subcontracting_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Operation Type',

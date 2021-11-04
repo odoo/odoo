@@ -7,8 +7,8 @@ from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
 
 
-class StockLocationRoute(models.Model):
-    _inherit = "stock.location.route"
+class StockRoute(models.Model):
+    _inherit = "stock.route"
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
 

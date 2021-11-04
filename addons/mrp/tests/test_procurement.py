@@ -543,7 +543,7 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',

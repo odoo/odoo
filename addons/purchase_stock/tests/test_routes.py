@@ -37,7 +37,7 @@ class TestRoutes(TransactionCase):
             'default_location_dest_id': location_2.id,
         })
 
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'Buy',
             'company_id': False
         })

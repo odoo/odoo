@@ -547,7 +547,7 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        self.env['stock.location.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',

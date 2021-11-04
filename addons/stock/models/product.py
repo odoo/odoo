@@ -646,9 +646,9 @@ class ProductTemplate(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
     has_available_route_ids = fields.Boolean(
         'Routes can be selected on this product', compute='_compute_has_available_route_ids',
-        default=lambda self: self.env['stock.location.route'].search_count([('product_selectable', '=', True)]))
+        default=lambda self: self.env['stock.route'].search_count([('product_selectable', '=', True)]))
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
+        'stock.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_moves_in = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of incoming stock moves in the past 12 months")
@@ -661,7 +661,7 @@ class ProductTemplate(models.Model):
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
-        relation="stock.location.route", string="Category Routes",
+        relation="stock.route", string="Category Routes",
         related='categ_id.total_route_ids', related_sudo=False)
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
@@ -673,7 +673,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
-        self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
+        self.has_available_route_ids = self.env['stock.route'].search_count([('product_selectable', '=', True)])
 
     @api.depends(
         'product_variant_ids.qty_available',
@@ -942,13 +942,13 @@ class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes',
+        'stock.route', 'stock_route_categ', 'categ_id', 'route_id', 'Routes',
         domain=[('product_categ_selectable', '=', True)])
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Force Removal Strategy',
         help="Set a specific removal strategy that will be used regardless of the source location for this product category")
     total_route_ids = fields.Many2many(
-        'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
+        'stock.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
     packaging_reserve_method = fields.Selection([
@@ -972,7 +972,7 @@ class ProductPackaging(models.Model):
 
     package_type_id = fields.Many2one('stock.package.type', 'Package Type')
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_location_route_packaging', 'packaging_id', 'route_id', 'Routes',
+        'stock.route', 'stock_route_packaging', 'packaging_id', 'route_id', 'Routes',
         domain=[('packaging_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
 

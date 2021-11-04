@@ -351,8 +351,8 @@ class Location(models.Model):
         return True
 
 
-class Route(models.Model):
-    _name = 'stock.location.route'
+class StockRoute(models.Model):
+    _name = 'stock.route'
     _description = "Inventory Routes"
     _order = 'sequence'
     _check_company_auto = True
@@ -374,8 +374,8 @@ class Route(models.Model):
     product_ids = fields.Many2many(
         'product.template', 'stock_route_product', 'route_id', 'product_id',
         'Products', copy=False, check_company=True)
-    categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
-    packaging_ids = fields.Many2many('product.packaging', 'stock_location_route_packaging', 'route_id', 'packaging_id', 'Packagings', copy=False, check_company=True)
+    categ_ids = fields.Many2many('product.category', 'stock_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    packaging_ids = fields.Many2many('product.packaging', 'stock_route_packaging', 'route_id', 'packaging_id', 'Packagings', copy=False, check_company=True)
     warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
@@ -400,4 +400,4 @@ class Route(models.Model):
     def toggle_active(self):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
-        super(Route, self).toggle_active()
+        super().toggle_active()

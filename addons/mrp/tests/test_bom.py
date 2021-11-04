@@ -1014,7 +1014,7 @@ class TestBoM(TestMrpCommon):
 
         # We select the manufacturing route and check the impact on the quantities
         manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
-        manufacturing_route = self.env['stock.location.route'].search([('id', '=', manufacturing_route_id)])
+        manufacturing_route = self.env['stock.route'].search([('id', '=', manufacturing_route_id)])
         orderpoint_form = Form(orderpoint)
         orderpoint_form.route_id = manufacturing_route
         orderpoint_form.save()
