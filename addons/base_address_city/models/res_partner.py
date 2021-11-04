@@ -39,7 +39,7 @@ class Partner(models.Model):
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ['', False ])],
                         'readonly': [('type', '=', 'contact')%(parent_condition)s]
-                    }"
+                    }"%(required)s
                 />
                 <field name='city_id' placeholder="%(placeholder)s" string="%(placeholder)s" class="o_address_city"
                     context="{'default_country_id': country_id,
@@ -77,8 +77,12 @@ class Partner(models.Model):
         for city_node in doc.xpath("//field[@name='city']"):
             location = _arch_location(city_node)
             replacement_data['parent_condition'] = ''
+            replacement_data['required'] = ''
             if location['view_type'] == 'form' or not location['in_subview']:
                 replacement_data['parent_condition'] = ", ('parent_id', '!=', False)"
+            if 'required' in city_node.attrib:
+                existing_value = city_node.attrib.get('required')
+                replacement_data['required'] = f' required="{existing_value}"'
 
             replacement_formatted = replacement_xml % replacement_data
             for replace_node in etree.fromstring(replacement_formatted).getchildren():
