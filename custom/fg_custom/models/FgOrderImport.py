@@ -81,14 +81,15 @@ class FgImportOrders(models.TransientModel):
             orderfile_string = orderfile.decode('utf-8')
             # data = json.loads(file_string)
             orders = orderfile_string.split('\r\n')
-            notNotFound = ''
-            notNotFoundInPOS = ''
+            notNotFound = None
+            notNotFoundInPOS = None
 
-            duplicateRef = '' #duplicate orders
+            duplicateRef = None #duplicate orders
 
-            orderReferencesSesion = ''  # hold order ref for session not found
-            customerNames = ''
-            noCustomerNames=''
+            orderReferencesSesion = None  # hold order ref for session not found
+            customerNames = None
+
+            noCustomerNames=None
 
             header = True
             # data in sheet
@@ -117,14 +118,14 @@ class FgImportOrders(models.TransientModel):
                         product_template = self.env['product.template'].search([('default_code', '=', sku)])
                         if not product_template:
                             hasErrors = True
-                            if notNotFound == '':
+                            if not notNotFound:
                                 notNotFound = sku
                             else:
                                 if sku not in notNotFound:
                                     notNotFound += ", " + sku
                         elif not product_template.available_in_pos:
                             hasErrors = True
-                            if notNotFoundInPOS == '':
+                            if not notNotFoundInPOS:
                                 notNotFoundInPOS = sku
                             else:
                                 if sku not in notNotFoundInPOS:
@@ -138,7 +139,7 @@ class FgImportOrders(models.TransientModel):
                             orderexist = self.env['pos.order'].search([('x_ext_order_ref', '=', orderRef), ('x_ext_source', '=', orderSource)])
                         if orderexist:
                             hasErrors = True
-                            if duplicateRef == '':
+                            if not duplicateRef:
                                 duplicateRef = orderSource + ' ' +orderRef
                             else:
                                 duplicateRef += ", " + orderSource + ' ' +orderRef
@@ -149,7 +150,7 @@ class FgImportOrders(models.TransientModel):
                         company = self.env['res.company'].search([('name', '=', comp)])
                         session_id = ''
                         if company:
-                            session = self.env['pos.session'].search([('name', '=', sess),('state', '=', 'opened')])
+                            session = self.env['pos.session'].search([('name', '=', sess), ('state', '=', 'opened')])
                             config = session.config_id
                             session_company = config.company_id
                             if session and company:
@@ -157,21 +158,21 @@ class FgImportOrders(models.TransientModel):
                                 if not session_company.id == company.id:
                                     hasErrors = True
                                     if (orderSource + ' ' +orderRef) not in orderReferencesSesion:
-                                        if orderReferencesSesion == '':
+                                        if not orderReferencesSesion:
                                             orderReferencesSesion = orderSource + ' ' +orderRef
                                         else:
                                             orderReferencesSesion += ", " + orderSource + ' ' +orderRef
                             else:
                                 hasErrors = True
                                 if (orderSource + ' ' +orderRef) not in orderReferencesSesion:
-                                    if orderReferencesSesion == '':
+                                    if not orderReferencesSesion:
                                         orderReferencesSesion = orderSource + ' ' +orderRef
                                     else:
                                         orderReferencesSesion += ", " + orderSource + ' ' +orderRef
 
                         elif (orderSource + ' ' +orderRef) not in orderReferencesSesion:
                             hasErrors = True
-                            if orderReferencesSesion == '':
+                            if not orderReferencesSesion:
                                 orderReferencesSesion = orderSource + ' ' +orderRef
                             else:
                                 orderReferencesSesion += ", " + orderSource + ' ' +orderRef
@@ -201,7 +202,7 @@ class FgImportOrders(models.TransientModel):
 
                         if not customer_id:
                             if (orderSource + ' ' +orderRef) not in noCustomerNames:
-                                if noCustomerNames == '':
+                                if not noCustomerNames:
                                     noCustomerNames = orderSource + ' ' +orderRef
                                 else:
                                     noCustomerNames += ", " + orderSource + ' ' +orderRef
@@ -236,21 +237,21 @@ class FgImportOrders(models.TransientModel):
                             jsonOrders.append(jsonOrder)
                 header = False
             errorMsg = ''
-            if notNotFound != '':
+            if not notNotFound:
                 errorMsg += "Items not found: " + notNotFound
 
-            if notNotFoundInPOS != '':
-                errorMsg = "\nItems found but not available in POS: " + notNotFoundInPOS
+            if not notNotFoundInPOS:
+                errorMsg += "\nItems found but not available in POS: " + notNotFoundInPOS
 
-            if duplicateRef != '':
+            if not duplicateRef:
                 errorMsg += "\nDuplicate orders: " + duplicateRef
 
 
-            if orderReferencesSesion != '':
+            if not orderReferencesSesion:
                 errorMsg += "\nError in Company and Session data for order ref: " + orderReferencesSesion
 
 
-            if noCustomerNames != '':
+            if not noCustomerNames:
                 errorMsg += "\nNo customer specified in order/s: " + noCustomerNames
 
             if errorMsg != '':
