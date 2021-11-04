@@ -200,3 +200,68 @@ class TestSaleStockMargin(TestStockValuationCommon):
         so.action_confirm()
         self.assertEqual(so_line.purchase_price, 200)
         self.assertEqual(so_line.price_unit, 400)
+
+    def test_so_and_multicompany(self):
+        """ In a multicompany environnement, when the user is on company C01 and confirms a SO that
+        belongs to a second company C02, this test ensures that the computations will be based on
+        C02's data"""
+        main_company = self.env['res.company']._get_main_company()
+        main_company_currency = main_company.currency_id
+        new_company_currency = self.env.ref('base.EUR') if main_company_currency == self.env.ref('base.USD') else self.env.ref('base.USD')
+
+        date = fields.Date.today()
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create([
+            {'currency_id': main_company_currency.id, 'rate': 1, 'name': date, 'company_id': False},
+            {'currency_id': new_company_currency.id, 'rate': 3, 'name': date, 'company_id': False},
+        ])
+
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': new_company_currency.id,
+        })
+        self.env.user.company_id = new_company.id
+
+        self.pricelist.currency_id = new_company_currency.id
+
+        product = self._create_product()
+
+        incoming_picking_type = self.env['stock.picking.type'].search([('company_id', '=', new_company.id), ('code', '=', 'incoming')])
+        production_location = self.env['stock.location'].search([('company_id', '=', new_company.id), ('usage', '=', 'production')])
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': incoming_picking_type.id,
+            'location_id': production_location.id,
+            'location_dest_id': incoming_picking_type.default_location_dest_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'Incoming Product',
+            'product_id': product.id,
+            'location_id': production_location.id,
+            'location_dest_id': incoming_picking_type.default_location_dest_id.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': 100,
+            'picking_type_id': incoming_picking_type.id,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        self.pricelist.currency_id = new_company_currency.id
+        partner = self.env['res.partner'].create({'name': 'Super Partner'})
+        so = self.env['sale.order'].create({
+            'name': 'Sale order',
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'pricelist_id': self.pricelist.id,
+        })
+        sol = self._create_sale_order_line(so, product, 1, price_unit=200)
+
+        self.env.user.company_id = main_company.id
+        so.action_confirm()
+
+        self.assertEqual(sol.purchase_price, 100)
+        self.assertEqual(sol.margin, 100)
