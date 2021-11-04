@@ -146,7 +146,7 @@ class StockMove(models.Model):
         'res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'",
         check_company=True)
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route",
+        'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route",
         check_company=True)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')

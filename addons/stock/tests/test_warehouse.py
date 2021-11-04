@@ -550,7 +550,7 @@ class TestWarehouse(TestStockCommon):
             'warehouse_ids': [(4, self.warehouse_1.id)]
         })
 
-        route = Form(self.env['stock.location.route'])
+        route = Form(self.env['stock.route'])
         route.name = "Stair"
         route = route.save()
 

@@ -17,10 +17,10 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         - Po created for the component.
         """
         self.env.ref('stock.route_warehouse0_mto').active = True
-        mto_route = self.env['stock.location.route'].search([('name', '=', 'Replenish on Order (MTO)')])
-        resupply_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
-        buy_route = self.env['stock.location.route'].search([('name', '=', 'Buy')])
-        dropship_route = self.env['stock.location.route'].search([('name', '=', 'Dropship')])
+        mto_route = self.env['stock.route'].search([('name', '=', 'Replenish on Order (MTO)')])
+        resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
         self.comp2.write({'route_ids': [(4, buy_route.id), (4, mto_route.id), (4, resupply_route.id)]})
         self.finished.write({'route_ids': [(4, dropship_route.id)]})
 
@@ -86,7 +86,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Tick "resupply subconractor on order on component"
         self.bom.bom_line_ids = [(5, 0, 0)]
         self.bom.bom_line_ids = [(0, 0, {'product_id': self.comp1.id, 'product_qty': 1})]
-        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
         # Create a supplier and set it to component
         vendor = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})

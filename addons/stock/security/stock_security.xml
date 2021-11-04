@@ -152,8 +152,8 @@
     </record>
 
     <record model="ir.rule" id="stock_location_route_comp_rule">
-        <field name="name">stock_location_route multi-company</field>
-        <field name="model_id" ref="model_stock_location_route"/>
+        <field name="name">stock_route multi-company</field>
+        <field name="model_id" ref="model_stock_route"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 

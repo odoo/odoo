@@ -403,7 +403,7 @@ class TestMultiCompany(TransactionCase):
             }).id,
         })
 
-        route = self.env['stock.location.route'].create({
+        route = self.env['stock.route'].create({
             'name': 'Push',
             'company_id': False,
             'rule_ids': [(0, False, {
@@ -487,7 +487,7 @@ class TestMultiCompany(TransactionCase):
         intercom_location.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'Deco Addict'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
-        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
+        resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', self.warehouse_b.id),
                                                                   ('supplied_wh_id', '=', self.warehouse_a.id)])
         self.assertTrue(resupply_route, "Resupply route not found")
 
