@@ -124,11 +124,18 @@ class ProfitabilityAnalysis(models.Model):
                                                                 AND INVL.parent_state = 'posted'
                                                                 AND INVL.exclude_from_invoice_tab = 'f'
                                                                 AND INVL.product_id = RINVL.product_id
-                                LEFT JOIN sale_order_line_invoice_rel SOINV ON SOINV.invoice_line_id = INVL.id
-                                LEFT JOIN sale_order_line SOL ON SOINV.order_line_id = SOL.id
-                                                             AND SOL.product_id = AAL.product_id
+
+                                -- Check if it's not a bill which has been reversed
+                                -- In this case, RINVL should be considered as a Vendor Bill line, and here below we search for the bill reversal.
+                                LEFT JOIN account_move RBILL ON RBILL.reversed_entry_id = RINVL.move_id
+                                LEFT JOIN account_move_line RBILLL ON RBILLL.move_id = RBILL.id
+                                                                AND RBILLL.parent_state = 'posted'
+                                                                AND RBILLL.exclude_from_invoice_tab = 'f'
+                                                                AND RBILLL.product_id = RINVL.product_id
+
                             WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
-                              AND SOL.id IS NULL -- exclude credit notes from this subquery
+                              AND INVL.id IS NULL -- exclude credit notes from this subquery
+                              AND RBILLL.id IS NULL
                             GROUP BY P.id, AA.id, AAL.so_line, AAL.product_id
 
                             UNION
