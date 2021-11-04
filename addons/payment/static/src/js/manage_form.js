@@ -181,7 +181,7 @@ odoo.define('payment.manage_form', require => {
         /**
          * Handle the creation of a new token or the assignation of a token to a record.
          *
-         * Called when clicking on the 'Save Payment Method' button of when submitting the form.
+         * Called when clicking on the 'Add Payment Method' button of when submitting the form.
          *
          * @private
          * @param {Event} ev
