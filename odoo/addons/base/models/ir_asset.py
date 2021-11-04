@@ -10,7 +10,6 @@ from werkzeug import urls
 import odoo
 from odoo.tools import misc
 from odoo import tools
-from odoo.addons import __path__ as ADDONS_PATH
 from odoo import api, fields, http, models
 
 _logger = getLogger(__name__)
@@ -215,14 +214,7 @@ class IrAsset(models.Model):
                 continue
             manifest_assets = manifest.get('assets', {})
             for command in manifest_assets.get(bundle, []):
-                if isinstance(command, str):
-                    # Default directive: append
-                    directive, target, path_def = APPEND_DIRECTIVE, None, command
-                elif command[0] in DIRECTIVES_WITH_TARGET:
-                    directive, target, path_def = command
-                else:
-                    directive, path_def = command
-                    target = None
+                directive, target, path_def = self._process_command(command)
                 process_path(directive, target, path_def)
 
         # 3. Process the rest of 'ir.asset' records
@@ -387,6 +379,19 @@ class IrAsset(models.Model):
             for path in paths
             if not extensions or path.split('.')[-1] in extensions
         ]
+
+    def _process_command(self, command):
+        """Parses a given command to return its directive, target and path definition."""
+        if isinstance(command, str):
+            # Default directive: append
+            directive, target, path_def = APPEND_DIRECTIVE, None, command
+        elif command[0] in DIRECTIVES_WITH_TARGET:
+            directive, target, path_def = command
+        else:
+            directive, path_def = command
+            target = None
+        return directive, target, path_def
+
 
 class AssetPaths:
     """ A list of asset paths (path, addon, bundle) with efficient operations. """

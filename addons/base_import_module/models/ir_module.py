@@ -106,6 +106,43 @@ class IrModule(models.Model):
                     else:
                         IrAttachment.create(values)
 
+        IrAsset = self.env['ir.asset']
+        assets_vals = []
+
+        # Generate 'ir.asset' record values for each asset delared in the manifest
+        for bundle, commands in terp.get('assets', {}).items():
+            for command in commands:
+                directive, target, path = IrAsset._process_command(command)
+                path = path if path.startswith('/') else '/' + path # Ensures a '/' at the start
+                assets_vals.append({
+                    'name': f'{module}.{bundle}.{path}',
+                    'directive': directive,
+                    'target': target,
+                    'path': path,
+                    'bundle': bundle,
+                })
+
+        # Look for existing assets
+        existing_assets = IrAsset.search([('name', 'in', [vals['name'] for vals in assets_vals])])
+        existing_assets = existing_assets.mapped(lambda r: (r.name, r))
+        assets_to_create = []
+
+        # Update existing assets and generate the list of new assets values
+        for values in assets_vals:
+            if values['name'] in existing_assets:
+                existing_assets[values['name']].write(values)
+            else:
+                assets_to_create.append(values)
+
+        # Create new assets and attach 'ir.model.data' records to them
+        created_assets = IrAsset.create(assets_to_create)
+        self.env['ir.model.data'].create([{
+            'name': f"{asset['bundle']}.{asset['path']}",
+            'model': 'ir.asset',
+            'module': module,
+            'res_id': asset.id,
+        } for asset in created_assets])
+
         return True
 
     @api.model
@@ -157,8 +194,15 @@ class IrModule(models.Model):
         modules_to_delete = self.filtered('imported')
         res = super().module_uninstall()
         if modules_to_delete:
+            deleted_modules_names = modules_to_delete.mapped('name')
+            assets_data = self.env['ir.model.data'].search([
+                ('model', '=', 'ir.asset'),
+                ('module', 'in', deleted_modules_names),
+            ])
+            assets = self.env['ir.asset'].search([('id', 'in', assets_data.mapped('res_id'))])
+            assets.unlink()
             _logger.info("deleting imported modules upon uninstallation: %s",
-                         ", ".join(modules_to_delete.mapped('name')))
+                         ", ".join(deleted_modules_names))
             modules_to_delete.unlink()
         return res
 
