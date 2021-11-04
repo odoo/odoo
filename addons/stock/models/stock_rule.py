@@ -59,7 +59,7 @@ class StockRule(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
         domain="[('id', '=?', route_company_id)]")
-    location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
+    location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade')
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
@@ -107,7 +107,7 @@ class StockRule(models.Model):
         Enable the delay alert if the picking type is a delivery
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
-        self.location_id = self.picking_type_id.default_location_dest_id.id
+        self.location_dest_id = self.picking_type_id.default_location_dest_id.id
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -123,7 +123,7 @@ class StockRule(models.Model):
         _get_message_dict functions since it often requires those data.
         """
         source = self.location_src_id and self.location_src_id.display_name or _('Source Location')
-        destination = self.location_id and self.location_id.display_name or _('Destination Location')
+        destination = self.location_dest_id and self.location_dest_id.display_name or _('Destination Location')
         operation = self.picking_type_id and self.picking_type_id.name or _('Operation Type')
         return source, destination, operation
 
@@ -147,7 +147,7 @@ class StockRule(models.Model):
             }
         return message_dict
 
-    @api.depends('action', 'location_id', 'location_src_id', 'picking_type_id', 'procure_method')
+    @api.depends('action', 'location_dest_id', 'location_src_id', 'picking_type_id', 'procure_method')
     def _compute_action_message(self):
         """ Generate dynamicaly a message that describe the rule purpose to the
         end user.
@@ -178,13 +178,13 @@ class StockRule(models.Model):
         new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
-            move.write({'date': new_date, 'location_dest_id': self.location_id.id})
+            move.write({'date': new_date, 'location_dest_id': self.location_dest_id.id})
             # make sure the location_dest_id is consistent with the move line location dest
             if move.move_line_ids:
                 move.move_line_ids.location_dest_id = move.location_dest_id._get_putaway_strategy(move.product_id) or move.location_dest_id
 
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_id != old_dest_location:
+            if self.location_dest_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
                 return move._push_apply()[:1]
         else:
@@ -203,7 +203,7 @@ class StockRule(models.Model):
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
-            'location_dest_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
             'date': new_date,
             'company_id': company_id,
             'picking_id': False,
@@ -270,7 +270,7 @@ class StockRule(models.Model):
         """
         return []
 
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'pull' or 'pull_push') set on it.
 
@@ -298,13 +298,13 @@ class StockRule(models.Model):
         qty_left = product_qty
 
         move_dest_ids = []
-        if not self.location_id.should_bypass_reservation():
+        if not self.location_dest_id.should_bypass_reservation():
             move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
         if not partner and move_dest_ids:
             move_dest = values['move_dest_ids']
-            if location_id == company_id.internal_transit_location_id:
+            if location_dest_id == company_id.internal_transit_location_id:
                 partners = move_dest.location_dest_id.warehouse_id.partner_id
                 if len(partners) == 1:
                     partner = partners
@@ -312,13 +312,13 @@ class StockRule(models.Model):
 
         move_values = {
             'name': name[:2000],
-            'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
+            'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_dest_id.company_id.id or company_id.id,
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
             'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
-            'location_dest_id': location_id.id,
+            'location_dest_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'procure_method': self.procure_method,
@@ -502,7 +502,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_rule_domain(self, location, values):
-        domain = ['&', ('location_id', '=', location.id), ('action', '!=', 'push')]
+        domain = ['&', ('location_dest_id', '=', location.id), ('action', '!=', 'push')]
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.

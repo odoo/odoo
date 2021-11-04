@@ -129,7 +129,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.env['stock.rule'].create({
             'name': 'Rule Supplier',
             'route_id': self.wh.reception_route_id.id,
-            'location_id': self.wh.lot_stock_id.id,
+            'location_dest_id': self.wh.lot_stock_id.id,
             'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
             'action': 'pull',
             'delay': 1.0,

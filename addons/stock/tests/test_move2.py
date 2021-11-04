@@ -2433,8 +2433,8 @@ class TestRoutes(TestStockCommon):
             'group_id': procurement_group0.id,
         })
 
-        ship_location = pick_rule.location_id
-        customer_location = push_rule.location_id
+        ship_location = pick_rule.location_dest_id
+        customer_location = push_rule.location_dest_id
         partners = self.env['res.partner'].search([], limit=2)
         partner0 = partners[0]
         partner1 = partners[1]
@@ -2530,7 +2530,7 @@ class TestRoutes(TestStockCommon):
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
                 'location_src_id': stock_location.id,
-                'location_id': push_location.id,
+                'location_dest_id': push_location.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
@@ -2575,7 +2575,7 @@ class TestRoutes(TestStockCommon):
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
                 'location_src_id': self.env.ref('stock.stock_location_stock').id,
-                'location_id': new_loc.id,
+                'location_dest_id': new_loc.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'transparent',
@@ -3075,7 +3075,7 @@ class TestRoutes(TestStockCommon):
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location 1',
                 'location_src_id': stock_location.id,
-                'location_id': push_location_1.id,
+                'location_dest_id': push_location_1.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
@@ -3089,7 +3089,7 @@ class TestRoutes(TestStockCommon):
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location 2',
                 'location_src_id': stock_location.id,
-                'location_id': push_location_2.id,
+                'location_dest_id': push_location_2.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',

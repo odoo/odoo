@@ -184,7 +184,7 @@ class TestReorderingRule(TransactionCase):
             'rule_ids': [
                 (0, False, {
                     'name': 'Buy',
-                    'location_id': warehouse_1.lot_stock_id.id,
+                    'location_dest_id': warehouse_1.lot_stock_id.id,
                     'company_id': self.env.company.id,
                     'action': 'buy',
                     'sequence': 2,
@@ -194,7 +194,7 @@ class TestReorderingRule(TransactionCase):
                 (0, False, {
                     'name': 'ressuply from stock',
                     'location_src_id': warehouse_1.lot_stock_id.id,
-                    'location_id': outside_loc.id,
+                    'location_dest_id': outside_loc.id,
                     'company_id': self.env.company.id,
                     'action': 'pull',
                     'procure_method': 'mts_else_mto',
@@ -547,7 +547,7 @@ class TestReorderingRule(TransactionCase):
         mto_rule = self.env['stock.rule'].search(
             [('warehouse_id', '=', warehouse.id),
              ('procure_method', '=', 'mts_else_mto'),
-             ('location_id', '=', customer_loc.id)
+             ('location_dest_id', '=', customer_loc.id)
             ]
         )
         route_mto = self.env["stock.route"].create({

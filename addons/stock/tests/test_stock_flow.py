@@ -1723,7 +1723,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 2'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_2.out_type_id
-            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
@@ -1788,7 +1788,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 2'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_2.out_type_id
-            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
@@ -1804,7 +1804,7 @@ class TestStockFlow(TestStockCommon):
             rule.name = 'From InterCompany to Company 3'
             rule.action = 'pull'
             rule.picking_type_id = warehouse_company_3.out_type_id
-            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.location_dest_id = self.env.ref('stock.stock_location_inter_wh')
             rule.procure_method = 'make_to_stock'
         route_c = f.save()
 
