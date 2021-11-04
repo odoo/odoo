@@ -76,7 +76,7 @@ export class Pager extends Component {
      * @returns {{ minimum: number, maximum: number }}
      */
     parse(value) {
-        let [minimum, maximum] = value.trim().split(/\s*[\-\s,;]\s*/);
+        let [minimum, maximum] = value.trim().split(/\s*[-\s,;]\s*/);
         const clamp = (value) => Math.min(Math.max(value, 1), this.props.total);
         return {
             minimum: clamp(parseInt(minimum, 10)) - 1,
