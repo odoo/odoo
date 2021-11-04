@@ -886,16 +886,19 @@ const Wysiwyg = Widget.extend({
             return;
         }
         if (this.snippetsMenu && !options.forceDialog) {
-            if (this.linkTools) {
-                this.linkTools.destroy();
-            }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this, noFocusUrl: options.noFocusUrl}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
+                if (!this.linkTools || ![options.link, ...wysiwygUtils.ancestors(options.link)].includes(this.linkTools.$link[0])) {
+                    this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this, noFocusUrl: options.noFocusUrl}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
+                }
                 const _onMousedown = ev => {
-                    if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')) {
+                    if (
+                        !ev.target.closest('.oe-toolbar') &&
+                        !ev.target.closest('.ui-autocomplete') &&
+                        (!this.linkTools || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkTools.$link[0]))
+                    ) {
                         // Destroy the link tools on click anywhere outside the
-                        // toolbar.
+                        // toolbar if the target is the orgiginal target not in the original target.
                         this.linkTools && this.linkTools.destroy();
                         this.linkTools = undefined;
                         this.odooEditor.document.removeEventListener('mousedown', _onMousedown, true);
@@ -904,6 +907,7 @@ const Wysiwyg = Widget.extend({
                 this.odooEditor.document.addEventListener('mousedown', _onMousedown, true);
                 this.linkTools.appendTo(this.toolbar.$el);
             } else {
+                this.linkTools.destroy();
                 this.linkTools = undefined;
             }
         } else {
