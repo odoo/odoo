@@ -72,7 +72,7 @@ class HolidaysAllocation(models.Model):
         'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
-        'Duration (days)', compute='_compute_number_of_days_display',
+        'Duration (days)', default=1,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
     number_of_hours_display = fields.Float(
@@ -261,11 +261,6 @@ class HolidaysAllocation(models.Model):
             leave_type = allocation.holiday_status_id.with_context(employee_id=allocation.employee_id.id)
             allocation.max_leaves = leave_type.max_leaves
             allocation.leaves_taken = leave_type.leaves_taken
-
-    @api.depends('number_of_days')
-    def _compute_number_of_days_display(self):
-        for allocation in self:
-            allocation.number_of_days_display = allocation.number_of_days
 
     @api.depends('number_of_days', 'employee_id')
     def _compute_number_of_hours_display(self):
