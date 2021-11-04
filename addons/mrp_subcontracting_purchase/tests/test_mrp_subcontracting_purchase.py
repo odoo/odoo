@@ -9,7 +9,7 @@ from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCom
 class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def test_count_smart_buttons(self):
-        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro

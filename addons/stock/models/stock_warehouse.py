@@ -50,7 +50,7 @@ class Warehouse(models.Model):
         required=True, check_company=True)
     code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
+        'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
         domain="[('warehouse_selectable', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help='Defaults routes through the warehouse', check_company=True)
@@ -77,14 +77,14 @@ class Warehouse(models.Model):
     in_type_id = fields.Many2one('stock.picking.type', 'In Type', check_company=True)
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type', check_company=True)
     return_type_id = fields.Many2one('stock.picking.type', 'Return Type', check_company=True)
-    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route', ondelete='restrict')
-    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route', ondelete='restrict')
-    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route', ondelete='restrict')
+    crossdock_route_id = fields.Many2one('stock.route', 'Crossdock Route', ondelete='restrict')
+    reception_route_id = fields.Many2one('stock.route', 'Receipt Route', ondelete='restrict')
+    delivery_route_id = fields.Many2one('stock.route', 'Delivery Route', ondelete='restrict')
     resupply_wh_ids = fields.Many2many(
         'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
         'Resupply From', help="Routes will be created automatically to resupply this warehouse from the warehouses ticked")
     resupply_route_ids = fields.One2many(
-        'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
+        'stock.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the warehouses.")
@@ -151,7 +151,7 @@ class Warehouse(models.Model):
                 if warehouse.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
 
-        Route = self.env['stock.location.route']
+        Route = self.env['stock.route']
         warehouses = self.with_context(active_test=False)
         warehouses._create_missing_locations(vals)
 
@@ -358,7 +358,7 @@ class Warehouse(models.Model):
         """ return a route record set from an xml_id or its name. """
         route = self.env.ref(xml_id, raise_if_not_found=False)
         if not route:
-            route = self.env['stock.location.route'].search([('name', 'like', route_name)], limit=1)
+            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
         if not route:
             raise UserError(_('Can\'t find any generic route %s.') % (route_name))
         return route
@@ -435,7 +435,7 @@ class Warehouse(models.Model):
             else:
                 if 'route_update_values' in route_data:
                     route_data['route_create_values'].update(route_data['route_update_values'])
-                route = self.env['stock.location.route'].create(route_data['route_create_values'])
+                route = self.env['stock.route'].create(route_data['route_create_values'])
                 self[route_field] = route
             # Get rules needed for the route
             routing_key = route_data.get('routing_key')
@@ -649,7 +649,7 @@ class Warehouse(models.Model):
                 warehouse.write(missing_location)
 
     def create_resupply_routes(self, supplier_warehouses):
-        Route = self.env['stock.location.route']
+        Route = self.env['stock.route']
         Rule = self.env['stock.rule']
 
         input_location, output_location = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
@@ -821,7 +821,7 @@ class Warehouse(models.Model):
         """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
         Check routes being delivery bu this warehouse and change the rule going to transit location """
         Rule = self.env["stock.rule"]
-        routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
+        routes = self.env['stock.route'].search([('supplier_wh_id', '=', self.id)])
         rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_id.usage', '=', 'transit')])
         rules.write({
             'location_src_id': new_location.id,
@@ -846,7 +846,7 @@ class Warehouse(models.Model):
     def _check_reception_resupply(self, new_location):
         """ Check routes being delivered by the warehouses (resupply routes) and
         change their rule coming from the transit location """
-        routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
+        routes = self.env['stock.route'].search([('supplied_wh_id', 'in', self.ids)])
         self.env['stock.rule'].search([
             '&',
                 ('route_id', 'in', routes.ids),
@@ -1047,7 +1047,7 @@ class Warehouse(models.Model):
     @api.returns('self')
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
-        routes |= self.env["stock.location.route"].search([('supplied_wh_id', 'in', self.ids)])
+        routes |= self.env["stock.route"].search([('supplied_wh_id', 'in', self.ids)])
         return routes
 
     def action_view_all_routes(self):
@@ -1055,7 +1055,7 @@ class Warehouse(models.Model):
         return {
             'name': _('Warehouse\'s Routes'),
             'domain': [('id', 'in', routes.ids)],
-            'res_model': 'stock.location.route',
+            'res_model': 'stock.route',
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',

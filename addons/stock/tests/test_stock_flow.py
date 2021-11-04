@@ -1705,7 +1705,7 @@ class TestStockFlow(TestStockCommon):
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        f = Form(self.env['stock.location.route'])
+        f = Form(self.env['stock.route'])
         f.name = 'From Company 1 to InterCompany'
         f.company_id = self.env.company
         with f.rule_ids.new() as rule:
@@ -1716,7 +1716,7 @@ class TestStockFlow(TestStockCommon):
             rule.procure_method = 'make_to_order'
         route_a = f.save()
         warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
-        f = Form(self.env['stock.location.route'])
+        f = Form(self.env['stock.route'])
         f.name = 'From InterCompany to Company 2'
         f.company_id = company_2
         with f.rule_ids.new() as rule:
@@ -1769,7 +1769,7 @@ class TestStockFlow(TestStockCommon):
 
         warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        f = Form(self.env['stock.location.route'])
+        f = Form(self.env['stock.route'])
         f.name = 'From Company 1 to InterCompany'
         f.company_id = self.env.company
         with f.rule_ids.new() as rule:
@@ -1781,7 +1781,7 @@ class TestStockFlow(TestStockCommon):
         route_a = f.save()
 
         warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
-        f = Form(self.env['stock.location.route'])
+        f = Form(self.env['stock.route'])
         f.name = 'From InterCompany to Company 2'
         f.company_id = company_2
         with f.rule_ids.new() as rule:
@@ -1797,7 +1797,7 @@ class TestStockFlow(TestStockCommon):
         })
 
         warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
-        f = Form(self.env['stock.location.route'])
+        f = Form(self.env['stock.route'])
         f.name = 'From InterCompany to Company 3'
         f.company_id = company_3
         with f.rule_ids.new() as rule:

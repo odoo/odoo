@@ -498,7 +498,7 @@ class TestUnbuild(TestMrpCommon):
         })
 
         # Create a product route containing a stock rule that will move product from QC/Unbuild location to stock
-        product_route = self.env['stock.location.route'].create({
+        self.env['stock.route'].create({
             'name': 'QC/Unbuild -> Stock',
             'warehouse_selectable': True,
             'warehouse_ids': [(4, warehouse.id)],

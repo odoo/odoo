@@ -1364,7 +1364,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 line.product_uom_id = self.uom_unit
 
         # Creating 2 specific routes for each of the components of the kit
-        route_shelf1 = self.env['stock.location.route'].create({
+        route_shelf1 = self.env['stock.route'].create({
             'name': 'Shelf1 -> Customer',
             'product_selectable': True,
             'rule_ids': [(0, 0, {
@@ -1376,7 +1376,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             })],
         })
 
-        route_shelf2 = self.env['stock.location.route'].create({
+        route_shelf2 = self.env['stock.route'].create({
             'name': 'Shelf2 -> Customer',
             'product_selectable': True,
             'rule_ids': [(0, 0, {
