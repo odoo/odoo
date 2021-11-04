@@ -498,8 +498,15 @@ var NumericField = InputField.extend({
      * @param {Object} [options]
      */
     _setValue: function (value, options) {
+        if (core._t.database.parameters.thousands_sep) {
+            var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+            value = value.replace(new RegExp(escapedSep, 'g'), '');
+        }
+        if (core._t.database.parameters.decimal_point) {
+            value = value.replace(core._t.database.parameters.decimal_point, '.');
+        }
+        value = value.replace(/[^0-9.+*/()^=-]/g, '')
         var originalValue = value;
-        value = value.trim();
         if (value.startsWith('=')) {
             try {
                 // Evaluate the formula
