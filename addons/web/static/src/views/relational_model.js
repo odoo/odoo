@@ -1,14 +1,10 @@
 /* @odoo-module */
 
 import { Domain } from "@web/core/domain";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
-import { useService } from "../core/utils/hooks";
-import { isX2Many, getX2MViewModes, isRelational } from "@web/views/helpers/view_utils";
-import { SEARCH_KEYS } from "@web/search/with_search/with_search";
+import { isX2Many } from "@web/views/helpers/view_utils";
 
 const LOADED_GROUP_LIMIT = 10;
 const DEFAULT_LIMIT = 40;
