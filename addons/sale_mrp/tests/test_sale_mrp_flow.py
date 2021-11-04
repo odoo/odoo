@@ -1718,3 +1718,35 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertNotEqual(qty_del_return_validated, 1.0, "The return was validated, therefore the delivery from client to"
                                                            " company was successful, and the client is left without his 1 product.")
         self.assertEqual(qty_del_return_validated, 0.0, "The return has processed, client doesn't have any quantity anymore")
+
+    def test_reconfirm_cancelled_kit(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit_1.name,
+                    'product_id': self.kit_1.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+
+        # Updating the quantities in stock to prevent a 'Not enough inventory' warning message.
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 10)
+
+        so.action_confirm()
+        # Check picking creation
+        self.assertEqual(len(so.picking_ids), 1, "A picking should be created after the SO validation")
+
+        wiz_act = so.picking_ids.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        so.action_cancel()
+        so.action_draft()
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")
