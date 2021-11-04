@@ -1220,35 +1220,47 @@ class AccountMoveLine(models.Model):
         """ :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
                 debit-credit == 0 while creating the move lines composing the move.
         """
+        lines = self
+
         for vals in vals_list:
-            account = self.env['account.account'].browse(vals['account_id'])
-            vals.setdefault('company_currency_id', account.company_id.currency_id.id) # important to bypass the ORM limitation where monetary fields are not rounded; more info in the commit message
-            amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-            move = self.env['account.move'].browse(vals['move_id'])
-            if account.deprecated:
-                raise UserError(_('The account %s (%s) is deprecated.') %(account.name, account.code))
-            journal = vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']) or move.journal_id
-            vals['date_maturity'] = vals.get('date_maturity') or vals.get('date') or move.date
+            # Multidados: Adicina verificação de existencia do move_id para
+            # Geração do move line
+            if 'move_id' in vals:
+                account = self.env['account.account'].browse(vals['account_id'])
+                vals.setdefault('company_currency_id', account.company_id.currency_id.id) # important to bypass the ORM limitation where monetary fields are not rounded; more info in the commit message
+                amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+                move = self.env['account.move'].browse(vals['move_id'])
+                if account.deprecated:
+                    raise UserError(_('The account %s (%s) is deprecated.') %(account.name, account.code))
+                journal = vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']) or move.journal_id
+                vals['date_maturity'] = vals.get('date_maturity') or vals.get('date') or move.date
 
-            ok = (
-                (not journal.type_control_ids and not journal.account_control_ids)
-                or account.user_type_id in journal.type_control_ids
-                or account in journal.account_control_ids
-            )
-            if not ok:
-                raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+                ok = (
+                    (not journal.type_control_ids and not journal.account_control_ids)
+                    or account.user_type_id in journal.type_control_ids
+                    or account in journal.account_control_ids
+                )
+                if not ok:
+                    raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
-            # Automatically convert in the account's secondary currency if there is one and
-            # the provided values were not already multi-currency
-            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
-                vals['currency_id'] = account.currency_id.id
-                date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
-                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
+                # Automatically convert in the account's secondary currency if there is one and
+                # the provided values were not already multi-currency
+                if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
+                    vals['currency_id'] = account.currency_id.id
+                    date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
+                    vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
 
-        lines = super(AccountMoveLine, self).create(vals_list)
+                line = super(AccountMoveLine, self).create(vals)
 
-        if self._context.get('check_move_validity', True):
-            lines.mapped('move_id')._post_validate()
+                if self._context.get('check_move_validity', True):
+                    line.mapped('move_id')._post_validate()
+
+                lines |= line
+
+        # Comentado pela Multidados, Adiciona acima o Lines
+        # lines = super(AccountMoveLine, self).create(vals_list)
+        # if self._context.get('check_move_validity', True):
+        #     lines.mapped('move_id')._post_validate()
 
         return lines
 
