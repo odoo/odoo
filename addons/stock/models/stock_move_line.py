@@ -174,6 +174,10 @@ class StockMoveLine(models.Model):
             lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
+    def _prepare_new_lot_vals(self):
+        self.ensure_one()
+        return {'name': self.lot_name, 'product_id': self.product_id.id, 'company_id': self.move_id.company_id.id}
+
     def init(self):
         if not tools.index_exists(self._cr, 'stock_move_line_free_reservation_index'):
             self._cr.execute("""
@@ -433,7 +437,7 @@ class StockMoveLine(models.Model):
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
-                                lot_vals_to_create.append({'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id})
+                                lot_vals_to_create.append(ml._prepare_new_lot_vals())
                                 associate_line_lot.append(ml)
                                 continue  # Avoid the raise after because not lot_id is set
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
