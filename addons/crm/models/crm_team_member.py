@@ -15,7 +15,7 @@ from odoo.osv import expression
 _logger = logging.getLogger(__name__)
 
 
-class Team(models.Model):
+class TeamMember(models.Model):
     _inherit = 'crm.team.member'
 
     # assignment

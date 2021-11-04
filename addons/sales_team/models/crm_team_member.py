@@ -137,6 +137,9 @@ class CrmTeamMember(models.Model):
                 else:
                     member.member_warning = False
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, values_list):
@@ -146,11 +149,17 @@ class CrmTeamMember(models.Model):
             archived (a warning already told it in form view);
           * creating a membership already existing as archived: do nothing as
             people can manage them from specific menu "Members";
+
+        Also remove autofollow on create. No need to follow team members
+        when creating them as chatter is mainly used for information purpose
+        (tracked fields).
         """
         is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
         if not is_membership_multi:
             self._synchronize_memberships(values_list)
-        return super(CrmTeamMember, self).create(values_list)
+        return super(CrmTeamMember, self.with_context(
+            mail_create_nosubscribe=True
+        )).create(values_list)
 
     def write(self, values):
         """ Specific behavior about active. If you change user_id / team_id user
