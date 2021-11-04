@@ -60,8 +60,10 @@ class MailTestActivity(models.Model):
             summary=action_summary
         )
 
-    def action_close(self, action_feedback):
-        self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
+    def action_close(self, action_feedback, attachment_ids=None):
+        self.activity_feedback(['test_mail.mail_act_test_todo'],
+                               feedback=action_feedback,
+                               attachment_ids=attachment_ids)
 
 
 class MailTestTicket(models.Model):
