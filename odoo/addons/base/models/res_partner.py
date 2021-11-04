@@ -753,6 +753,9 @@ class Partner(models.Model):
         return name
 
     def name_get(self):
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        self._origin._read(['is_company', 'name', 'parent_id', 'type', 'company_name', 'commercial_company_name'])
+
         res = []
         for partner in self:
             name = partner._get_name()
