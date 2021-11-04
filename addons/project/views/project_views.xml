@@ -357,18 +357,6 @@
                                 </span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
-                            <div class="pl-4">
-                                <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
-                            </div>
-                        </button>
-                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
-                            <div class="pl-4">
-                                <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
-                            </div>
-                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
