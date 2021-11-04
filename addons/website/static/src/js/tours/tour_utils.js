@@ -73,9 +73,12 @@ function changeImage(snippet, position = "bottom") {
 
 /**
     wTourUtils.changeOption('HeaderTemplate', '[data-name="header_alignment_opt"]', _t('alignment')),
+    By default, prevents the step from being active if a palette is opened.
+    Set allowPalette to true to select options within a palette.
 */
-function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom") {
-    const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`
+function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
+    const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
+    const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
         content: Markup(_.str.sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel)),
@@ -84,8 +87,9 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     };
 }
 
-function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabel = '', position = "top") {
-    const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`;
+function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
+    const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
+    const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger,
         content: Markup(_.str.sprintf(_t("<b>Select</b> a %s."), optionTooltipLabel)),
