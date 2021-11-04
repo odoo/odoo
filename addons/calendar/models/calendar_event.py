@@ -13,7 +13,7 @@ from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html2plaintext, is_html_empty
+from odoo.tools import pycompat, html2plaintext, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -149,6 +149,7 @@ class Meeting(models.Model):
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
+    invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
@@ -199,6 +200,13 @@ class Meeting(models.Model):
     until = fields.Date(compute='_compute_recurrence', readonly=False)
     # UI Fields.
     display_description = fields.Boolean(compute='_compute_display_description')
+
+    @api.depends('attendee_ids')
+    def _compute_invalid_email_partner_ids(self):
+        for event in self:
+            event.invalid_email_partner_ids = event.partner_ids.filtered(
+                lambda a: not (a.email and single_email_re.match(a.email))
+            )
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':

@@ -136,6 +136,10 @@
                             <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
                         </div>
                     </div>
+                    <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
+                        <p><strong>The following attendees have invalid email addresses and won't receive any email notifications:</strong></p>
+                        <field name="invalid_email_partner_ids" widget="many2manyattendee" class="oe_inline o_calendar_attendees"/>
+                    </div>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>

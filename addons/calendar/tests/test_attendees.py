@@ -68,3 +68,21 @@ class TestEventNotifications(TransactionCase):
         self.assertNotIn(self.partner, self.event.attendee_ids.partner_id, "It should have removed the attendee")
         self.assertNotIn(self.partner, self.event.message_follower_ids.partner_id, "It should have unsubscribed the partner")
         self.assertIn(partner_bis, self.event.attendee_ids.partner_id, "It should have left the attendee")
+
+    def test_attendee_without_email(self):
+        self.partner.email = False
+        self.event.partner_ids = self.partner
+
+        self.assertTrue(self.event.attendee_ids)
+        self.assertEqual(self.event.attendee_ids.partner_id, self.partner)
+        self.assertTrue(self.event.invalid_email_partner_ids)
+        self.assertEqual(self.event.invalid_email_partner_ids, self.partner)
+
+    def test_attendee_with_invalid_email(self):
+        self.partner.email = "I'm an invalid email"
+        self.event.partner_ids = self.partner
+
+        self.assertTrue(self.event.attendee_ids)
+        self.assertEqual(self.event.attendee_ids.partner_id, self.partner)
+        self.assertTrue(self.event.invalid_email_partner_ids)
+        self.assertEqual(self.event.invalid_email_partner_ids, self.partner)
