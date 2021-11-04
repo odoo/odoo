@@ -106,6 +106,7 @@ function changePaddingSize(direction) {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: Markup(_.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
+        consumeEvent: 'mousedown',
         position: position,
     };
 }
