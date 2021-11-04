@@ -19,13 +19,12 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to provide a search
-     * domain if needed.
-     * @override
+     * Gets the category search domain
+     *
      * @private
      */
-    _getSearchDomain: function () {
-        const searchDomain = this._super.apply(this, arguments);
+    _getCategorySearchDomain() {
+        const searchDomain = [];
         let productCategoryId = this.$el.get(0).dataset.productCategoryId;
         if (productCategoryId && productCategoryId !== 'all') {
             if (productCategoryId === 'current') {
@@ -55,6 +54,40 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
                 searchDomain.push(['public_categ_ids', 'child_of', parseInt(productCategoryId)]);
             }
         }
+        return searchDomain;
+    },
+    /**
+     * Gets the tag search domain
+     *
+     * @private
+     */
+    _getTagSearchDomain() {
+        const searchDomain = [];
+        let productTagId = this.$el.get(0).dataset.productTagId;
+        if (productTagId && productTagId !== 'all') {
+            if (productTagId === 'current') {
+                productTagId = undefined;
+                const productTagField = $("#product_details").find(".product_tag_id");
+                if (productTagField && productTagField.length) {
+                    productTagId = parseInt(productTagField[0].value);
+                }
+            }
+            if (productTagId) {
+                searchDomain.push(['all_product_tag_ids', '=', parseInt(productTagId)]);
+            }
+        }
+        return searchDomain;
+    },
+    /**
+     * Method to be overridden in child components in order to provide a search
+     * domain if needed.
+     * @override
+     * @private
+     */
+    _getSearchDomain: function () {
+        const searchDomain = this._super.apply(this, arguments);
+        searchDomain.push(...this._getCategorySearchDomain());
+        searchDomain.push(...this._getTagSearchDomain());
         const productNames = this.$el.get(0).dataset.productNames;
         if (productNames) {
             const nameDomain = [];
