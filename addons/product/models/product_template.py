@@ -140,6 +140,8 @@ class ProductTemplate(models.Model):
         ('1', 'Favorite'),
     ], default='0', string="Favorite")
 
+    product_tag_ids = fields.Many2many('product.tag', 'product_tag_product_template_rel', string='Product Tags')
+
     def _compute_item_count(self):
         for template in self:
             # Pricelist item count counts the rules applicable on current template or on its variants.

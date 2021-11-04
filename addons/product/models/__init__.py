@@ -14,6 +14,7 @@ from . import product
 
 from . import product_attribute
 from . import product_pricelist
+from . import product_tag
 from . import res_company
 from . import res_currency
 from . import res_partner
