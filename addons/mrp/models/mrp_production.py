@@ -1752,6 +1752,7 @@ class MrpProduction(models.Model):
             'default_production_id': self.id,
             'default_expected_qty': self.product_qty,
             'default_next_serial_number': next_serial,
+            'default_next_serial_count': self.product_qty - self.qty_produced,
         }
         return action
 
