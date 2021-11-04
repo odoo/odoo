@@ -204,7 +204,12 @@
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                            <span class="o_form_label o_td_label" attrs="{'readonly': [('parent_id','!=',False)]}">
+                                <label for="vat"/>
+                            </span>
+                            <div>
+                                <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                            </div>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"

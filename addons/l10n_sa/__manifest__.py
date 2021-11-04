@@ -15,7 +15,6 @@ In future this module will include some payroll rules for ME .
     'website': 'http://www.dvit.me',
     'depends': ['account', 'l10n_multilang'],
     'data': [
-        'data/account_data.xml',
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
         'data/account_tax_group.xml',
