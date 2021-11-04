@@ -61,7 +61,7 @@ const LinkTools = Link.extend({
         if (!this.el) {
             return this._super(...arguments);
         }
-        this.$link.removeClass('oe_edited_link');
+        $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
         const $contents = this.$link.contents();
         if (!this.$link.attr('href') && !this.colorCombinationClass) {
             $contents.unwrap();
