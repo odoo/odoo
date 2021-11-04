@@ -1910,3 +1910,35 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         invoice = so.invoice_ids
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
+
+    def test_reconfirm_cancelled_kit(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit_1.name,
+                    'product_id': self.kit_1.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+
+        # Updating the quantities in stock to prevent a 'Not enough inventory' warning message.
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 10)
+
+        so.action_confirm()
+        # Check picking creation
+        self.assertEqual(len(so.picking_ids), 1, "A picking should be created after the SO validation")
+
+        wiz_act = so.picking_ids.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
+
+        so.action_cancel()
+        so.action_draft()
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")
