@@ -103,6 +103,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             'price_subtotal': vals[1],
             'quantity': vals[2],
         } for vals in expected_values_list]
+
         self.assertRecordValues(reports, expected_values_dict)
 
     def test_invoice_report_multiple_types(self):
@@ -112,7 +113,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [1000,           1000,           1],
             [250,            750,            3],
             [6,              6,              1],
-            [-20,            -20,           -1],
-            [-20,            -20,           -1],
-            [-600,           -600,          -1],
+            [20,             -20,           -1],
+            [20,             -20,           -1],
+            [600,            -600,          -1],
         ])
