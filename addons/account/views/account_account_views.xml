@@ -97,6 +97,7 @@
                     <field name="internal_type" invisible="1"/>
                     <field name="internal_group" invisible="1"/>
                     <field name="reconcile" widget="boolean_toggle" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
+                    <field name="non_trade" widget="boolean_toggle" attrs="{'invisible': [('internal_type', 'not in', ('payable','receivable'))]}"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>

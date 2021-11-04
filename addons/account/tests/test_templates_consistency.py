@@ -40,7 +40,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id', 'is_off_balance'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id', 'is_off_balance', 'non_trade'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
