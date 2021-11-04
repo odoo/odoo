@@ -40,32 +40,14 @@ class CrmLead(models.Model):
 
     def action_new_quotation(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
-        action['context'] = {
-            'search_default_opportunity_id': self.id,
-            'default_opportunity_id': self.id,
-            'search_default_partner_id': self.partner_id.id,
-            'default_partner_id': self.partner_id.id,
-            'default_campaign_id': self.campaign_id.id,
-            'default_medium_id': self.medium_id.id,
-            'default_origin': self.name,
-            'default_source_id': self.source_id.id,
-            'default_company_id': self.company_id.id or self.env.company.id,
-            'default_tag_ids': [(6, 0, self.tag_ids.ids)]
-        }
-        if self.team_id:
-            action['context']['default_team_id'] = self.team_id.id,
-        if self.user_id:
-            action['context']['default_user_id'] = self.user_id.id
+        action['context'] = self._prepare_opportunity_quotation_context()
+        action['context']['search_default_opportunity_id'] = self.id
         return action
 
     def action_view_sale_quotation(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
-        action['context'] = {
-            'search_default_draft': 1,
-            'search_default_partner_id': self.partner_id.id,
-            'default_partner_id': self.partner_id.id,
-            'default_opportunity_id': self.id
-        }
+        action['context'] = self._prepare_opportunity_quotation_context()
+        action['context']['search_default_draft'] = 1
         action['domain'] = [('opportunity_id', '=', self.id), ('state', 'in', ['draft', 'sent'])]
         quotations = self.mapped('order_ids').filtered(lambda l: l.state in ('draft', 'sent'))
         if len(quotations) == 1:
@@ -86,6 +68,26 @@ class CrmLead(models.Model):
             action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
             action['res_id'] = orders.id
         return action
+
+    def _prepare_opportunity_quotation_context(self):
+        """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
+        self.ensure_one()
+        quotation_context = {
+            'search_default_partner_id': self.partner_id.id,
+            'default_opportunity_id': self.id,
+            'default_partner_id': self.partner_id.id,
+            'default_campaign_id': self.campaign_id.id,
+            'default_medium_id': self.medium_id.id,
+            'default_origin': self.name,
+            'default_source_id': self.source_id.id,
+            'default_company_id': self.company_id.id or self.env.company.id,
+            'default_tag_ids': [(6, 0, self.tag_ids.ids)]
+        }
+        if self.team_id:
+            quotation_context['default_team_id'] = self.team_id.id,
+        if self.user_id:
+            quotation_context['default_user_id'] = self.user_id.id
+        return quotation_context
 
     def _merge_get_fields_specific(self):
         fields_info = super(CrmLead, self)._merge_get_fields_specific()
