@@ -90,7 +90,7 @@ class StockRule(models.Model):
             return values['bom_id']
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
-    def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
+    def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(product_id, company_id, values)
         date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
         return {
@@ -99,8 +99,8 @@ class StockRule(models.Model):
             'product_description_variants': values.get('product_description_variants'),
             'product_qty': product_qty,
             'product_uom_id': product_uom.id,
-            'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
-            'location_dest_id': location_id.id,
+            'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
+            'location_dest_id': location_dest_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_planned_start': date_planned,

@@ -135,7 +135,7 @@ class TestProcurement(TestMrpCommon):
         self.env['stock.location']._parent_store_compute()
         warehouse.reception_route_id.rule_ids.filtered(
             lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
-            p.location_id == warehouse.wh_qc_stock_loc_id).write({
+            p.location_dest_id == warehouse.wh_qc_stock_loc_id).write({
                 'procure_method': 'make_to_stock'
             })
 

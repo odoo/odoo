@@ -279,13 +279,13 @@ class StockWarehouseOrderpoint(models.Model):
         self = self.filtered(lambda o: not o.route_id)
         rules_groups = self.env['stock.rule'].read_group([
             ('route_id.product_selectable', '!=', False),
-            ('location_id', 'in', self.location_id.ids),
+            ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull'])
-        ], ['location_id', 'route_id'], ['location_id', 'route_id'], lazy=False)
+        ], ['location_dest_id', 'route_id'], ['location_dest_id', 'route_id'], lazy=False)
         for g in rules_groups:
             if not g.get('route_id'):
                 continue
-            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_id'][0])
+            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_dest_id'][0])
             orderpoints.route_id = g['route_id']
 
     def _get_lead_days_values(self):
