@@ -29,9 +29,12 @@ class PaymentAcquirerAuthorize(models.Model):
 
     @api.constrains('payment_flow')
     def _check_authorize_payment_flow(self):
-        for acquirer in self.filtered(lambda x: x.provider == "authorize" and x.website_published):
-            if acquirer.payment_flow == 'form':
-                raise UserError(_('The "Redirection to the acquirer website" payment flow is deprecated for Authorize.net. Please choose the "Payment From Odoo" flow.'))
+        form_authorize_acquirers = self.filtered(lambda x: x.provider == "authorize" and x.payment_flow == "form")
+        if form_authorize_acquirers:
+            form_string = [t[1] for t in self._fields['payment_flow']._description_selection(self.env) if t[0] == 'form'][0]
+            s2s_string = [t[1] for t in self._fields['payment_flow']._description_selection(self.env) if t[0] == 's2s'][0]
+            raise UserError(_('The "%s" payment flow is deprecated for Authorize.net. Please choose the "%s" flow.\n'
+                              'Acquirer names: %s' % (form_string, s2s_string, '\n'.join(form_authorize_acquirers.mapped('name')))))
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
