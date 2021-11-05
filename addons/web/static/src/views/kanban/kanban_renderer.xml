@@ -3,9 +3,9 @@
 
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
-            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.id">
-                <t t-if="props.list.isGrouped">
-                    <t t-set="group" t-value="groupOrRecord" />
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
+                <t t-if="groupOrRecord.group">
+                    <t t-set="group" t-value="groupOrRecord.group" />
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group)"
                         t-att-data-id="(recordsDraggable or columnsDraggable) and group.id"
@@ -80,7 +80,7 @@
                                             t-att-aria-valuenow="progressData.count"
                                             t-attf-data-tooltip="{{ progressData.count }} {{ progressData.string }}"
                                             data-tooltip-delay="0"
-                                            t-on-click="props.list.model.filterProgressValue(group, progressData.value)"
+                                            t-on-click="props.list.filterProgressValue(group, progressData.value)"
                                         />
                                     </t>
                                 </div>
@@ -108,7 +108,7 @@
                 </t>
                 <t t-else="">
                     <t t-call="{{ cardTemplate }}">
-                        <t t-set="record" t-value="groupOrRecord" />
+                        <t t-set="record" t-value="groupOrRecord.record" />
                     </t>
                 </t>
             </t>
