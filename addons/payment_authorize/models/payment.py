@@ -31,8 +31,9 @@ class PaymentAcquirerAuthorize(models.Model):
     def _check_authorize_payment_flow(self):
         form_authorize_acquirers = self.filtered(lambda x: x.provider == "authorize" and x.payment_flow == "form")
         if form_authorize_acquirers:
-            form_string = [t[1] for t in self._fields['payment_flow']._description_selection(self.env) if t[0] == 'form'][0]
-            s2s_string = [t[1] for t in self._fields['payment_flow']._description_selection(self.env) if t[0] == 's2s'][0]
+            payment_flow_desc = {value: desc for value, desc in self._fields['payment_flow']._description_selection(self.env)}
+            form_string = payment_flow_desc.get('form', "Redirection to the acquirer website")
+            s2s_string = payment_flow_desc.get('s2s', "Payment from Odoo")
             raise UserError(_('The "%s" payment flow is deprecated for Authorize.net. Please choose the "%s" flow.\n'
                               'Acquirer names: %s' % (form_string, s2s_string, '\n'.join(form_authorize_acquirers.mapped('name')))))
 
