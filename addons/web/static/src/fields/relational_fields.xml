@@ -15,7 +15,7 @@
     </t>
 
     <t t-name="web.FieldMany2ManyTags" owl="1">
-        <div class="o_field_widget o_field_many2manytags">
+        <div class="o_field_many2manytags">
             <t t-foreach="data" t-as="tag" t-key="tag.id">
                 <div class="badge badge-pill" t-attf-class="o_tag_color_{{ tag.data.color }}">
                     <t t-esc="tag.data.display_name" />
@@ -25,7 +25,7 @@
     </t>
 
     <t t-name="web.FieldKanbanMany2ManyTags" owl="1">
-        <div class="o_field_widget o_field_many2manytags o_kanban_tags">
+        <div class="o_field_many2manytags o_kanban_tags">
             <t t-foreach="data" t-as="tag" t-key="tag.id">
                 <span class="o_tag" t-attf-class="o_tag_color_{{ tag.data.color }}">
                     <span />
@@ -36,12 +36,8 @@
     </t>
 
     <t t-name="web.FieldX2Many" owl="1">
-        <div>
-            <t t-if="Renderer" t-component="Renderer" model="env.model" info="archInfo" fields="fields" record="record" openRecord="openRecord" />
-            <t t-else="">
-                One2Many
-                <table/>
-            </t>
+        <div t-attf-class="o_field_x2many o_field_x2many_{{viewType}}">
+            <t t-if="Renderer" t-component="Renderer" t-props="rendererProps"/>
         </div>
     </t>
 
