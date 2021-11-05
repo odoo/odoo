@@ -80,7 +80,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
 });
 
 QUnit.test(
-    "handle RPC_ERROR of type='server' and associated custom dialog class",
+    "handle custom RPC_ERROR of type='server' and associated custom dialog class",
     async (assert) => {
         assert.expect(2);
         class CustomDialog extends Component {}
@@ -89,23 +89,67 @@ QUnit.test(
         const error = new RPCError();
         error.code = 701;
         error.message = "Some strange error occured";
-        error.exceptionName = "strange_error";
+        const errorData = {
+            context: { exception_class: "strange_error" },
+            name: "strange_error",
+        };
+        error.data = errorData;
         function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, CustomDialog);
             assert.deepEqual(props, {
                 name: "RPC_ERROR",
                 type: "server",
                 code: 701,
-                data: null,
+                data: errorData,
                 subType: null,
                 message: "Some strange error occured",
-                exceptionName: "strange_error",
+                exceptionName: null,
                 traceback: error.stack,
             });
         }
         serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
         await makeTestEnv();
         errorDialogRegistry.add("strange_error", CustomDialog);
+        const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
+        await unhandledRejectionCb(errorEvent);
+    }
+);
+
+QUnit.test(
+    "handle normal RPC_ERROR of type='server' and associated custom dialog class",
+    async (assert) => {
+        assert.expect(2);
+        class CustomDialog extends Component {}
+        CustomDialog.template = tags.xml`<RPCErrorDialog title="'Strange Error'"/>`;
+        CustomDialog.components = { RPCErrorDialog };
+        class NormalDialog extends Component {}
+        NormalDialog.template = tags.xml`<RPCErrorDialog title="'Normal Error'"/>`;
+        NormalDialog.components = { RPCErrorDialog };
+        const error = new RPCError();
+        error.code = 701;
+        error.message = "A normal error occured";
+        const errorData = {
+            context: { exception_class: "strange_error" },
+        };
+        error.exceptionName = "normal_error";
+        error.data = errorData;
+        function addDialog(dialogClass, props) {
+            assert.strictEqual(dialogClass, NormalDialog);
+            assert.deepEqual(props, {
+                name: "RPC_ERROR",
+                type: "server",
+                code: 701,
+                data: errorData,
+                subType: null,
+                message: "A normal error occured",
+                exceptionName: "normal_error",
+                traceback: error.stack,
+            });
+        }
+        serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
+        await makeTestEnv();
+        errorDialogRegistry.add("strange_error", CustomDialog);
+        errorDialogRegistry.add("normal_error", NormalDialog);
         const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
         await unhandledRejectionCb(errorEvent);
     }
