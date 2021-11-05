@@ -27,6 +27,12 @@ class PaymentAcquirerAuthorize(models.Model):
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
     authorize_signature_key = fields.Char(string='API Signature Key', groups='base.group_user', compute="_compute_auth_signature_key", inverse="_inverse_auth_signature_key")
 
+    @api.constrains('payment_flow')
+    def _check_authorize_payment_flow(self):
+        for acquirer in self:
+            if acquirer.payment_flow == 'form':
+                raise UserError(_('The "Redirection to the acquirer website" payment flow is deprecated for Authorize.net. Please choose the "Payment From Odoo" flow.'))
+
     def _get_feature_support(self):
         """Get advanced feature support by provider.
 
@@ -187,6 +193,19 @@ class PaymentAcquirerAuthorize(models.Model):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
         return transaction.test_authenticate()
+
+    @api.multi
+    def write(self, values):
+        super(PaymentAcquirerAuthorize, self).write(values)
+        self._check_authorize_payment_flow()
+
+    def render(self, reference, amount, currency_id, partner_id=False, values=None):
+        try:
+            self._check_authorize_payment_flow()
+        except UserError as e:
+            raise UserError(_('This payment method has been deprecated, please select another payment method or contact the administrator.'))
+        result = super(PaymentAcquirerAuthorize, self).render(reference, amount, currency_id, partner_id, values)
+        return result
 
 class TxAuthorize(models.Model):
     _inherit = 'payment.transaction'
