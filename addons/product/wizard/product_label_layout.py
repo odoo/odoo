@@ -55,7 +55,6 @@ class ProductLabelLayout(models.TransientModel):
 
         # Build data to pass to the report
         data = {
-            'picking_quantity': self.picking_quantity,
             'active_model': active_model,
             'quantity_by_product': {p: self.custom_quantity for p in products},
             'layout_wizard': self.id,
