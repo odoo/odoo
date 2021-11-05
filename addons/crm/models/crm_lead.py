@@ -801,17 +801,17 @@ class Lead(models.Model):
             if 'stage_id' in vals:
                 if vals['stage_id'] in won_stage_ids:
                     if lead.probability == 0:
-                        leads_leave_lost |= lead
-                    leads_reach_won |= lead
+                        leads_leave_lost += lead
+                    leads_reach_won += lead
                 elif lead.stage_id.id in won_stage_ids and lead.active:  # a lead can be lost at won_stage
-                    leads_leave_won |= lead
+                    leads_leave_won += lead
             if 'active' in vals:
                 if not vals['active'] and lead.active:  # archive lead
                     if lead.stage_id.id in won_stage_ids and lead not in leads_leave_won:
-                        leads_leave_won |= lead
-                    leads_reach_lost |= lead
+                        leads_leave_won += lead
+                    leads_reach_lost += lead
                 elif vals['active'] and not lead.active:  # restore lead
-                    leads_leave_lost |= lead
+                    leads_leave_lost += lead
 
         leads_reach_won._pls_increment_frequencies(to_state='won')
         leads_leave_won._pls_increment_frequencies(from_state='won')
@@ -933,7 +933,7 @@ class Lead(models.Model):
             if not stage_id:
                 stage_id = next((stage for stage in reversed(won_stages) if stage.sequence <= lead.stage_id.sequence), won_stages)
             if stage_id in leads_by_won_stage:
-                leads_by_won_stage[stage_id] |= lead
+                leads_by_won_stage[stage_id] += lead
             else:
                 leads_by_won_stage[stage_id] = lead
         for won_stage_id, leads in leads_by_won_stage.items():
