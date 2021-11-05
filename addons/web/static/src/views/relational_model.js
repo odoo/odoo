@@ -114,7 +114,7 @@ class DataPoint {
 }
 class Record extends DataPoint {
     constructor(model, params) {
-        super(model, params);
+        super(...arguments);
         this.resId = params.resId;
         this._values = params.values || {};
         this._changes = {};
@@ -253,20 +253,27 @@ class Record extends DataPoint {
 }
 
 class DynamicList extends DataPoint {
-    constructor(model, params) {
-        super(model, params);
+    constructor(model, params, state = {}) {
+        super(...arguments);
 
         this.groupBy = params.groupBy || [];
         this.domain = params.domain || [];
         this.orderedBy = params.orderedBy; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
+        this.limit = state.limit || 80;
+    }
+
+    exportState() {
+        return {
+            limit: this.limit,
+        };
     }
 }
 
 class DynamicRecordList extends DynamicList {
     constructor(model, params) {
-        super(model, params);
+        super(...arguments);
 
         this.records = [];
         this.type = "record-list";
@@ -328,7 +335,7 @@ class DynamicRecordList extends DynamicList {
 
 class DynamicGroupList extends DynamicList {
     constructor(model, params, state = {}) {
-        super(model, params);
+        super(...arguments);
 
         this.groupBy = params.groupBy;
         this.groupLimit = params.groupLimit || LOADED_GROUP_LIMIT;
@@ -445,7 +452,7 @@ class DynamicGroupList extends DynamicList {
 
 class Group extends DataPoint {
     constructor(model, params, state = {}) {
-        super(model, params);
+        super(...arguments);
 
         this.value = params.value;
         this.displayName = params.displayName;
@@ -494,7 +501,7 @@ class Group extends DataPoint {
 }
 class StaticList extends DataPoint {
     constructor(model, params) {
-        super(model, params);
+        super(...arguments);
 
         this.resIds = params.resIds || [];
         this.records = [];
