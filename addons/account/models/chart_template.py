@@ -99,35 +99,83 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
+
+    # Code prefixes are used to create Suspense Account, Outstanding Payments, Outstanding Receipts accounts
+    # if those are not set implicitly in the chart template.
+    # It could be also used to create `default_account_id` in `account.journal`
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True)
     cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
+    # Transfers accounts are used for Inter-Banks Transfers.
     transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts', required=True)
+
+    # Currency exchange accounts
     income_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country this chart of accounts belongs to. None if it's generic.")
 
+    # Payments accounts.
+    # Suspense account is used to register an unreconiled bank entries created via bank statement.
+    # Once it's reconciled, the suspense account in `account.move` will be replaced with a proper account.
+    # Suspense account is an exceptional case when account is supposed to be replaced in the transaction.
+    # The new account depends on `account.payment` records. There are two cases
+    # 1. `account.payment' exists before reconciliation aka Blue lines in reconciliation wizard
+    # 2. `account.payment' is created on reconciliation aka regular Black lines in reconciliation wizard
+    #
+    # For case n.1 the new account is Outstanding Receipts/Payments account and the workflow is following:
+    #
+    # Initial transactions:
+    # * Invoice/bill: Payable/Receivable vs Expenses/Sales
+    # * Payment:             Outstanding vs Payable/Receivable
+    # After creating bank statement
+    # * Bank entry:                 Bank vs Suspense
+    # After reconciliation:
+    # * Bank entry:                 Bank vs Outstanding
+    #
+    # For case n.2 the new account is Payable/Receivable account from invoice/bill and the workflow is following:
+    #
+    # Initial transactions:
+    # * Invoice/bill: Payable/Receivable vs Expenses/Sales
+    # After creating bank statement
+    # * Bank entry:                 Bank vs Suspense
+    # After reconciliation:
+    # * Bank entry:                 Bank vs Payable/Receivable
     account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
     account_journal_payment_debit_account_id = fields.Many2one('account.account.template', string='Journal Outstanding Receipts Account')
     account_journal_payment_credit_account_id = fields.Many2one('account.account.template', string='Journal Outstanding Payments Account')
 
+    # Cash accounts
+    # Corresponds to profit_account_id / loss_account_id
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
+
+    # Pos accounts
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
 
     property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account')
-    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account')
-    property_account_income_categ_id = fields.Many2one('account.account.template', string='Category of Income Account')
-    property_account_expense_id = fields.Many2one('account.account.template', string='Expense Account on Product Template')
-    property_account_income_id = fields.Many2one('account.account.template', string='Income Account on Product Template')
+
+    # Product income/expense accounts
+    property_account_expense_categ_id = fields.Many2one('account.account.template', string='Default Expense Account for a Product Category')
+    property_account_income_categ_id = fields.Many2one('account.account.template', string='Default Income Account for a Product Category')
+    property_account_expense_id = fields.Many2one('account.account.template', string='Default Expense Account for a Product Template')
+    property_account_income_id = fields.Many2one('account.account.template', string='Default Income Account for a Product Template')
+
+    # Stock Valuation accounts
     property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
+
+    # Tax accounts to  balance current/advance tax payments.
+    # It's used in `env['account.generic.tax.report']._generate_tax_closing_entries`
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
+
+    # Corresponds to `account_cash_basis_base_account_id` field.
+    # It's used for taxes with `tax_exigibility` equal to `on_payment`
     property_cash_basis_base_account_id = fields.Many2one(
         comodel_name='account.account.template',
         domain=[('deprecated', '=', False)],
@@ -282,7 +330,6 @@ class AccountChartTemplate(models.Model):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
 
-        # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
             company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
