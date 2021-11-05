@@ -4439,7 +4439,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("pager (ungrouped and grouped mode), default limit", async function (assert) {
+    QUnit.test("pager (ungrouped and grouped mode), default limit", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
@@ -4447,26 +4447,22 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            searchViewArch: `
+                <search>
+                    <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                </search>`,
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/search_read") {
-                    assert.strictEqual(args.limit, 80, "default limit should be 80 in List");
+                if (args.method === "web_search_read") {
+                    assert.strictEqual(args.kwargs.limit, 80, "default limit should be 80 in List");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        assert.containsOnce(list.el, "div.o_control_panel .o_cp_pager");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(list),
-            "4",
-            "pager's size should be 4"
-        );
-        await list.update({ groupBy: ["bar"] });
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(list),
-            "2",
-            "pager's size should be 2"
-        );
+        assert.containsOnce(list.el, "div.o_control_panel .o_cp_pager .o_pager");
+        assert.strictEqual(list.el.querySelector(".o_pager_limit").innerText, "4");
+        await toggleGroupByMenu(list);
+        await toggleMenuItem(list, "Bar");
+        assert.strictEqual(list.el.querySelector(".o_pager_limit").innerText, "2");
     });
 
     QUnit.skip("can sort records when clicking on header", async function (assert) {

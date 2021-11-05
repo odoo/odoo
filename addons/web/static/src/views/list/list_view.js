@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { XMLParser, isAttr } from "@web/core/utils/xml";
+import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
@@ -70,6 +71,20 @@ class ListView extends owl.Component {
 
         useSetupView({
             /** TODO **/
+        });
+
+        usePager(() => {
+            return {
+                offset: this.model.root.offset,
+                limit: this.model.root.limit,
+                total: this.model.root.count,
+                onUpdate: async ({ offset, limit }) => {
+                    this.model.root.offset = offset;
+                    this.model.root.limit = limit;
+                    await this.model.root.load();
+                    this.render();
+                },
+            };
         });
     }
 
