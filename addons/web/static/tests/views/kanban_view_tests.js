@@ -22,7 +22,7 @@ const getRecords = (kanban) => {
     return records;
 };
 
-const toggleColumnOptions = async (kanban, columnIndex) => {
+const toggleColumnActions = async (kanban, columnIndex) => {
     const group = kanban.el.querySelector(`.o_kanban_group:nth-child(${columnIndex + 1})`);
     await triggerEvent(group, null, "mouseenter");
     await click(group, ".o_kanban_config .dropdown-toggle");
@@ -287,7 +287,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(1) .o_kanban_record");
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
 
-        await toggleColumnOptions(kanban, 0);
+        await toggleColumnActions(kanban, 0);
 
         // check available actions in kanban header's config dropdown
         assert.containsOnce(
@@ -315,7 +315,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "basic grouped rendering with active field (archivable by default)",
         async (assert) => {
-            // const done = assert.async();
             assert.expect(10);
 
             // add active field on partner model and make all records active
@@ -353,7 +352,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const clickColumnButton = await toggleColumnOptions(kanban, 1);
+            const clickColumnAction = await toggleColumnActions(kanban, 1);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
@@ -369,7 +368,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
             assert.verifySteps([]);
 
-            await clickColumnButton("Archive All");
+            await clickColumnAction("Archive All");
 
             assert.containsOnce(kanban, ".o_kanban_group");
             assert.containsOnce(kanban, ".o_kanban_record");
@@ -417,7 +416,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const clickColumnButton = await toggleColumnOptions(kanban, 0);
+            const clickColumnAction = await toggleColumnActions(kanban, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
@@ -433,7 +432,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
             assert.verifySteps([]);
 
-            await clickColumnButton("Archive All");
+            await clickColumnAction("Archive All");
 
             assert.containsOnce(kanban, ".o_kanban_group");
             assert.containsN(kanban, ".o_kanban_record", 3);
@@ -467,7 +466,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await toggleColumnOptions(kanban, 0);
+            await toggleColumnActions(kanban, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsNone(
@@ -526,7 +525,7 @@ QUnit.module("Views", (hooks) => {
                 ["Undefined blork", "gold yopblip", "silver yopgnap"]
             );
 
-            await toggleColumnOptions(kanban, 0);
+            await toggleColumnActions(kanban, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             // despite the fact that the kanban view is configured to be archivable,
@@ -1919,7 +1918,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold the first column
-        await toggleColumnOptions(kanban, 0);
+        await toggleColumnActions(kanban, 0);
         await click(kanban.el.querySelector(".o_kanban_group:first .o_kanban_toggle_fold"));
 
         assert.hasClass(
@@ -1946,7 +1945,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold again the first column
-        await toggleColumnOptions(kanban, 0);
+        await toggleColumnActions(kanban, 0);
         await click(kanban.el.querySelector(".o_kanban_group:first .o_kanban_toggle_fold"));
 
         assert.hasClass(
@@ -3367,7 +3366,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(kanban, ".o_form_view");
 
         // click to fold the first column
-        await toggleColumnOptions(kanban, 0);
+        await toggleColumnActions(kanban, 0);
         await click(kanban.el.querySelector(".o_kanban_group:first .o_kanban_toggle_fold"));
 
         assert.containsOnce(kanban, ".o_column_folded");
@@ -4519,7 +4518,7 @@ QUnit.module("Views", (hooks) => {
         // fold the second group and check that the res_ids it contains are no
         // longer in the environment
         envIDs = [1, 3];
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group:last .o_kanban_toggle_fold"));
         assert.deepEqual(kanban.exportState().resIds, envIDs);
 
@@ -4612,7 +4611,7 @@ QUnit.module("Views", (hooks) => {
 
         // fold and unfold the created column, and check that no RPC is done (as there is no record)
         nbRPCs = 0;
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group:last .o_kanban_toggle_fold"));
         assert.hasClass(
             kanban.el.querySelector(".o_kanban_group:last"),
@@ -4824,7 +4823,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // delete second column (first cancel the confirm request, then confirm)
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group:last .o_column_delete"));
         assert.ok($(".modal").length, "a confirm modal should be displayed");
         await modalCancel(); // click on cancel
@@ -4833,7 +4832,7 @@ QUnit.module("Views", (hooks) => {
             5,
             'column [5, "xmo"] should still be there'
         );
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group:last .o_column_delete"));
         assert.ok($(".modal").length, "a confirm modal should be displayed");
         await modalOk(); // click on confirm
@@ -4940,7 +4939,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(kanban, ".o_kanban_group", 3, "should have two columns");
 
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group:last .o_column_delete"));
         await modalOk();
 
@@ -4989,7 +4988,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // edit the title of column [5, 'xmo'] and close without saving
-        await toggleColumnOptions(kanban, 4);
+        await toggleColumnActions(kanban, 4);
         await click(kanban.el.querySelector(".o_kanban_group[data-id=5] .o_column_edit"));
         assert.containsOnce(
             document.body,
@@ -5013,7 +5012,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and discard
-        await toggleColumnOptions(kanban, 4);
+        await toggleColumnActions(kanban, 4);
         await click(kanban.el.querySelector(".o_kanban_group[data-id=5] .o_column_edit"));
         await testUtils.fields.editInput($(".modal .o_form_editable input"), "ged"); // change the value
         nbRPCs = 0;
@@ -5027,7 +5026,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and save
-        await toggleColumnOptions(kanban, 4);
+        await toggleColumnActions(kanban, 4);
         await click(kanban.el.querySelector(".o_kanban_group[data-id=5] .o_column_edit"));
         await testUtils.fields.editInput($(".modal .o_form_editable input"), "ged"); // change the value
         nbRPCs = 0;
@@ -5080,7 +5079,7 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-        await toggleColumnOptions(kanban, 4);
+        await toggleColumnActions(kanban, 4);
         await click(kanban.el.querySelector(".o_kanban_group[data-id=5] .o_column_edit"));
     });
 
@@ -5608,7 +5607,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group:last .o_kanban_record", 3);
 
         // archive the records of the last column
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_kanban_group .o_column_archive_records"));
         assert.containsOnce(document.body, ".modal");
         await modalOk();
@@ -8019,7 +8018,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // archive all records of the second columns
-        await toggleColumnOptions(kanban, 1);
+        await toggleColumnActions(kanban, 1);
         await click(kanban.el.querySelector(".o_column_archive_records:visible"));
         await click($(".modal-footer button:first"));
 
@@ -8083,7 +8082,7 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);
 
             // archive all records of the first column
-            await toggleColumnOptions(kanban, 0);
+            await toggleColumnActions(kanban, 0);
             await click(kanban.el.querySelector(".o_column_archive_records:visible"));
             await click($(".modal-footer button:first"));
 

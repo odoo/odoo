@@ -60,10 +60,9 @@ const applyDefaultAttributes = (kanbanBox) => {
 
 const extractAttributes = (node, attributes) => {
     const attrs = Object.create(null);
-    for (const rawAttr of attributes) {
-        const attr = rawAttr.replace(/-([a-z])/gi, (_, c) => c.toUpperCase());
-        attrs[attr] = node.getAttribute(rawAttr) || "";
-        node.removeAttribute(rawAttr);
+    for (const attr of attributes) {
+        attrs[attr] = node.getAttribute(attr) || "";
+        node.removeAttribute(attr);
     }
     return attrs;
 };
@@ -212,10 +211,10 @@ export class KanbanArchParser extends XMLParser {
                 if (ACTION_TYPES.includes(type)) {
                     Object.assign(params, extractAttributes(el, ["name", "confirm"]));
                 } else if (type === "set_cover") {
-                    const { field: fieldName, "auto-open": autoOpen } = extractAttributes(el, [
-                        "field",
-                        "auto-open",
-                    ]);
+                    const { "data-field": fieldName, "auto-open": autoOpen } = extractAttributes(
+                        el,
+                        ["data-field", "auto-open"]
+                    );
                     const widget = activeFields[fieldName].widget;
                     Object.assign(params, { fieldName, widget, autoOpen });
                 }
@@ -253,12 +252,11 @@ class KanbanView extends owl.Component {
     setup() {
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, limit, relations, defaultGroupBy } = this.archInfo;
+        const { fields: activeFields, limit, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progress: this.archInfo.progress,
             fields,
-            relations,
             resModel,
             limit,
             defaultGroupBy,
