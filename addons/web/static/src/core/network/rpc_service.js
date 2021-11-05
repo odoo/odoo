@@ -31,7 +31,7 @@ export function makeErrorFromResponse(reponse) {
     const { code, data: errorData, message, type: subType } = reponse;
     const { context: data_context, name: data_name } = errorData || {};
     const { exception_class } = data_context || {};
-    const exception_class_name = exception_class || data_name;
+    const exception_class_name = data_name !== 'odoo.exceptions.UserError' ? exception_class || data_name : data_name;
     const error = new RPCError();
     error.exceptionName = exception_class_name;
     error.subType = subType;
