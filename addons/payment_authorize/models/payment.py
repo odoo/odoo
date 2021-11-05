@@ -29,7 +29,7 @@ class PaymentAcquirerAuthorize(models.Model):
 
     @api.constrains('payment_flow')
     def _check_authorize_payment_flow(self):
-        for acquirer in self.filtered(lambda x: x.provider == "authorize"):
+        for acquirer in self.filtered(lambda x: x.provider == "authorize" and x.website_published):
             if acquirer.payment_flow == 'form':
                 raise UserError(_('The "Redirection to the acquirer website" payment flow is deprecated for Authorize.net. Please choose the "Payment From Odoo" flow.'))
 
@@ -196,8 +196,11 @@ class PaymentAcquirerAuthorize(models.Model):
 
     @api.multi
     def write(self, values):
-        super(PaymentAcquirerAuthorize, self).write(values)
+        res = super(PaymentAcquirerAuthorize, self).write(values)
+        # force the constraint check for any update on acquirers to alert
+        # as soon as possible if the acquirer cannot work in its current state
         self._check_authorize_payment_flow()
+        return res
 
     def render(self, reference, amount, currency_id, partner_id=False, values=None):
         try:
