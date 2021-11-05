@@ -2,10 +2,12 @@
 <odoo>
     <data>
         <template id="label_product_product_view">
-            <t t-foreach="quantity.items()" t-as="qty_by_product">
-                <t t-set="product" t-value="qty_by_product[0]"/>
-                <t t-foreach="range(qty_by_product[1])" t-as="qty">
-                    <t t-translation="off">
+		<t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
+                    <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                    <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
+                        <t t-translation="off">
 ^XA
 ^FT100,80^A0N,40,30^FD<t t-esc="product.display_name"/>^FS
 <t t-if="product.default_code and len(product.default_code) &gt; 15">
@@ -25,14 +27,15 @@
 ^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
 </t>
 </t>
-<t t-if="product.barcode">
+<t t-if="barcode">
 ^FO100,160^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="product.barcode"/>^FS
+^FD<t t-esc="barcode"/>^FS
 </t>
 ^XZ
                         </t>
                     </t>
+                </t>
             </t>
         </template>
         <template id="label_lot_template_view">

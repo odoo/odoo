@@ -12,9 +12,9 @@
                     <div class="o_label_data">
                         <div class="text-center o_label_left_column">
                             <span class="text-nowrap" t-field="product.default_code"/>
-                            <t t-if="product.barcode">
-                                <div t-field="product.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                                <span class="text-center" t-field="product.barcode"/>
+                            <t t-if="barcode">
+                                <div t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                                <span class="text-center" t-out="barcode"/>
                             </t>
                         </div>
                         <div class="text-right" style="line-height:normal">
@@ -52,9 +52,9 @@
                     </div>
                     <div class= "text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
-                        <t t-if="product.barcode">
-                            <div t-field="product.barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-field="product.barcode"/>
+                        <t t-if="barcode">
+                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <span class="text-center" t-out="barcode"/>
                         </t>
                     </div>
                 </div>
@@ -88,9 +88,9 @@
                         </div>
                     </t>
                     <div class= "text-center o_label_small_barcode">
-                        <t t-if="product.barcode">
-                            <div t-field="product.barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-field="product.barcode"/>
+                        <t t-if="barcode">
+                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <span class="text-center" t-out="barcode"/>
                         </t>
                     </div>
                 </div>
@@ -101,9 +101,12 @@
             <div class="o_label_sheet o_label_dymo" t-att-style="padding_page">
                 <div class="o_label_full" t-att-style="table_style">
                     <div class= "text-left o_label_small_barcode">
-                        <t t-if="product.barcode">
+                        <t t-if="barcode">
                             <!-- `quiet=0` to remove the left and right margins on the barcode -->
-                            <div t-field="product.barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <div class="o_label_name" style="line-height: 130%;height:2.7em;background-color: transparent;">
+                                <span t-out="barcode"/>
+                            </div>
                         </t>
                     </div>
                     <div class="o_label_name" style="line-height: 130%;height:2.7em;background-color: transparent;">
@@ -151,11 +154,18 @@
                                             <t t-if="not current_quantity and quantity">
                                                 <t t-set="current_data" t-value="quantity.popitem()"/>
                                                 <t t-set="product" t-value="current_data[0]"/>
-                                                <t t-set="current_quantity" t-value="current_data[1]"/>
+                                                <t t-set="barcode_and_qty" t-value="current_data[1].pop()"/>
+                                                <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                                                <t t-set="current_quantity" t-value="barcode_and_qty[1]"/>
                                             </t>
                                             <t t-if="current_quantity">
                                                 <t t-set="make_invisible" t-value="False"/>
                                                 <t t-set="current_quantity" t-value="current_quantity - 1"/>
+                                            </t>
+                                            <t t-elif="current_data and current_data[1]">
+                                                <t t-set="barcode_and_qty" t-value="current_data[1].pop()"/>
+                                                <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                                                <t t-set="current_quantity" t-value="barcode_and_qty[1] - 1"/>
                                             </t>
                                             <t t-else="">
                                                 <t t-set="make_invisible" t-value="True"/>
@@ -177,10 +187,13 @@
                 <t t-set="barcode_size" t-value="'width:45.5mm;height:7.5mm'"/>
                 <t t-set="table_style" t-value="'width:100%;height:32mm;'"/>
                 <t t-set="padding_page" t-value="'padding: 2mm'"/>
-                <t t-foreach="quantity.items()" t-as="qty_by_product">
-                    <t t-set="product" t-value="qty_by_product[0]"/>
-                    <t t-foreach="range(qty_by_product[1])" t-as="qty">
-                        <t t-call="product.report_simple_label_dymo"/>
+                <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                    <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                    <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
+                        <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                        <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
+                            <t t-call="product.report_simple_label_dymo"/>
+                        </t>
                     </t>
                 </t>
             </t>
