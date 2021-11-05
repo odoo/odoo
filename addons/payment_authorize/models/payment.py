@@ -29,7 +29,7 @@ class PaymentAcquirerAuthorize(models.Model):
 
     @api.constrains('payment_flow')
     def _check_authorize_payment_flow(self):
-        for acquirer in self:
+        for acquirer in self.filtered(lambda x: x.provider == "authorize"):
             if acquirer.payment_flow == 'form':
                 raise UserError(_('The "Redirection to the acquirer website" payment flow is deprecated for Authorize.net. Please choose the "Payment From Odoo" flow.'))
 
