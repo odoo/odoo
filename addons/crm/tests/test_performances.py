@@ -8,7 +8,7 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('lead_assign', 'crm_performance', '-standard')
+@tagged('lead_assign', 'crm_performance')
 class TestLeadAssignPerf(TestLeadAssignCommon):
     """ Test performances of lead assignment feature added in saas-14.2
 
@@ -21,15 +21,13 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
     of random in tests.
     """
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestLeadAssignPerf, cls).setUpClass()
-        random.seed('crm_assign')
-
     @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
     def test_assign_perf_duplicates(self):
         """ Test assign process with duplicates on partner. Allow to ensure notably
         that de duplication is effectively performed. """
+        # fix the seed and avoid randomness
+        random.seed(1940)
+
         leads = self._create_leads_batch(
             lead_type='lead',
             user_ids=[False],
@@ -50,7 +48,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=1336):  # crm only: ??
+            with self.assertQueryCount(user_sales_manager=1363):  # 1354 ??
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -71,6 +69,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
     def test_assign_perf_no_duplicates(self):
+        # fix the seed and avoid randomness
+        random.seed(1945)
+
         leads = self._create_leads_batch(
             lead_type='lead',
             user_ids=[False],
@@ -91,7 +92,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=586):  # crm only: ?? (583 often)
+            with self.assertQueryCount(user_sales_manager=674):
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -112,6 +113,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
     def test_assign_perf_populated(self):
         """ Test assignment on a more high volume oriented test set in order to
         have more insights on query counts. """
+        # fix the seed and avoid randomness
+        random.seed(1871)
+
         # create leads enough to have interesting counters
         _lead_count, _email_dup_count, _partner_count = 600, 50, 150
         leads = self._create_leads_batch(
@@ -170,7 +174,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=5861):  # crm only: ??
+            with self.assertQueryCount(user_sales_manager=6579):
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign
