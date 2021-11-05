@@ -10,10 +10,9 @@
             <field name="view_template_id" ref="authorize_form"/>
             <field name="registration_view_template_id" ref="authorize_s2s_form"/>
             <field name="environment">test</field>
-            <field name="pre_msg"><![CDATA[
-<p>You will be redirected to the Authorize website after clicking on the payment button.</p>]]></field>
             <field name='authorize_login'>dummy</field>
             <field name="authorize_transaction_key">dummy</field>
+            <field name="payment_flow">s2s</field>
         </record>
 
     </data>
