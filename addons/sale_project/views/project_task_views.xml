@@ -93,7 +93,7 @@
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
             </xpath>
             <xpath expr="//search/group/filter[@name='customer']" position="after">
-                <filter string="Sales Order Item" name="sale_order_id" context="{'group_by': 'sale_order_id'}"/>
+                <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
             </xpath>
         </field>
     </record>
