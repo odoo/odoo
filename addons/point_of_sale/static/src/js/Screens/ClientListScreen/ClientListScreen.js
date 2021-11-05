@@ -24,9 +24,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     class ClientListScreen extends PosComponent {
         constructor() {
             super(...arguments);
-            useListener('click-save', () => this.env.bus.trigger('save-customer'));
+            useListener('click-save', this.saveChanges);
             useListener('click-edit', () => this.editClient());
-            useListener('save-changes', this.saveChanges);
 
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
@@ -39,12 +38,15 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 detailIsShown: false,
                 isEditMode: false,
                 editModeProps: {
+                    // default partner
                     partner: {
                         country_id: this.env.pos.company.country_id,
                         state_id: this.env.pos.company.state_id,
-                    }
+                    },
+                    changes: {},
                 },
             };
+            this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
             this.updateClientList = debounce(this.updateClientList, 70);
         }
         // Lifecycle hooks
@@ -86,7 +88,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         get nextButton() {
             if (!this.props.client) {
                 return { command: 'set', text: this.env._t('Set Customer') };
-            } else if (this.props.client && this.props.client === this.state.selectedClient) {
+            } else if (this.props.client && this.props.client.id === this.state.selectedClient.id) {
                 return { command: 'deselect', text: this.env._t('Deselect Customer') };
             } else {
                 return { command: 'set', text: this.env._t('Change Customer') };
@@ -118,26 +120,43 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             this.render();
         }
         editClient() {
-            this.state.editModeProps = {
-                partner: this.state.selectedClient,
-            };
+            this.state.editModeProps.partner = this.state.selectedClient;
             this.state.detailIsShown = true;
             this.render();
         }
-        clickNext() {
+        async clickNext() {
+            if (this.isUnsavedChanges() && await this.isSaveWanted()) {
+                await this.saveChanges();
+            }
             this.state.selectedClient = this.nextButton.command === 'set' ? this.state.selectedClient : null;
             this.confirm();
         }
+        isUnsavedChanges() {
+            return Object.keys(this.state.editModeProps.changes).length > 0;
+        }
+        async isSaveWanted() {
+            const { confirmed } = await this.showPopup('ConfirmPopup', {
+                title: this.env._t('Unsaved changes'),
+                body: this.env._t('Do you want to save your changes?'),
+                confirmText: this.env._t('Yes'),
+                cancelText: this.env._t('No'),
+            });
+            return confirmed;
+        }
         activateEditMode(event) {
             const { isNewClient } = event.detail;
+            if (isNewClient) {
+                const { partner } = this.state.editModeProps;
+                this.state.editModeProps.changes = {
+                    'country_id': partner.country_id && partner.country_id[0],
+                    'state_id': partner.state_id && partner.state_id[0],
+                };
+            } else {
+                this.state.editModeProps.partner = this.state.selectedClient;
+            }
             this.state.isEditMode = true;
             this.state.detailIsShown = true;
             this.state.isNewClient = isNewClient;
-            if (!isNewClient) {
-                this.state.editModeProps = {
-                    partner: this.state.selectedClient,
-                };
-            }
             this.render();
         }
         deactivateEditMode() {
@@ -150,12 +169,27 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             };
             this.render();
         }
-        async saveChanges(event) {
+        async saveChanges() {
             try {
+                let processedChanges = {};
+                for (let [key, value] of Object.entries(this.state.editModeProps.changes)) {
+                    if (this.intFields.includes(key)) {
+                        processedChanges[key] = parseInt(value) || false;
+                    } else {
+                        processedChanges[key] = value;
+                    }
+                }
+                if ((!this.state.editModeProps.partner.name && !processedChanges.name) || processedChanges.name === '') {
+                    return this.showPopup('ErrorPopup', {
+                        title: this.env._t('A Customer Name Is Required'),
+                    });
+                }
+                processedChanges.id = this.state.editModeProps.partner.id || false;
+
                 let partnerId = await this.rpc({
                     model: 'res.partner',
                     method: 'create_from_ui',
-                    args: [event.detail.processedChanges],
+                    args: [processedChanges],
                 });
                 await this.env.pos.load_new_partners();
                 this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
@@ -170,6 +204,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 } else {
                     throw error;
                 }
+            } finally {
+                this.state.editModeProps.changes = {};
             }
         }
         cancelEdit() {

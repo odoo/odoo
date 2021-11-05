@@ -6,7 +6,7 @@ odoo.define('point_of_sale.ClientLine', function(require) {
 
     class ClientLine extends PosComponent {
         get highlight() {
-            return this.props.partner !== this.props.selectedClient ? '' : 'highlight';
+            return this.props.selectedClient && this.props.selectedClient.id === this.props.partner.id ? 'highlight' : '';
         }
     }
     ClientLine.template = 'ClientLine';

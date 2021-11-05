@@ -1,33 +1,17 @@
 odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
     'use strict';
 
-    const { _t } = require('web.core');
     const { getDataURLFromFile } = require('web.utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
     class ClientDetailsEdit extends PosComponent {
-        constructor() {
-            super(...arguments);
-            this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
-            const partner = this.props.partner;
-            this.changes = {
-                'country_id': partner.country_id && partner.country_id[0],
-                'state_id': partner.state_id && partner.state_id[0],
-            };
-        }
-        mounted() {
-            this.env.bus.on('save-customer', this, this.saveChanges);
-        }
-        willUnmount() {
-            this.env.bus.off('save-customer', this);
-        }
         get partnerImageUrl() {
             // We prioritize image_1920 in the `changes` field because we want
             // to show the uploaded image without fetching new data from the server.
             const partner = this.props.partner;
-            if (this.changes.image_1920) {
-                return this.changes.image_1920;
+            if (this.props.changes.image_1920) {
+                return this.props.changes.image_1920;
             } else if (partner.id) {
                 return `/web/image?model=res.partner&id=${partner.id}&field=avatar_128&write_date=${partner.write_date}&unique=1`;
             } else {
@@ -38,25 +22,7 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
          * Save to field `changes` all input changes from the form fields.
          */
         captureChange(event) {
-            this.changes[event.target.name] = event.target.value;
-        }
-        saveChanges() {
-            let processedChanges = {};
-            for (let [key, value] of Object.entries(this.changes)) {
-                if (this.intFields.includes(key)) {
-                    processedChanges[key] = parseInt(value) || false;
-                } else {
-                    processedChanges[key] = value;
-                }
-            }
-            if ((!this.props.partner.name && !processedChanges.name) ||
-                processedChanges.name === '' ){
-                return this.showPopup('ErrorPopup', {
-                  title: _t('A Customer Name Is Required'),
-                });
-            }
-            processedChanges.id = this.props.partner.id || false;
-            this.trigger('save-changes', { processedChanges });
+            this.props.changes[event.target.name] = event.target.value;
         }
         async uploadImage(event) {
             const file = event.target.files[0];
@@ -72,7 +38,7 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                 const loadedImage = await this._loadImage(imageUrl);
                 if (loadedImage) {
                     const resizedImage = await this._resizeImage(loadedImage, 800, 600);
-                    this.changes.image_1920 = resizedImage.toDataURL();
+                    this.props.changes.image_1920 = resizedImage.toDataURL();
                     // Rerender to reflect the changes in the screen
                     this.render();
                 }
