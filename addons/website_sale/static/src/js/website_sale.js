@@ -771,6 +771,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onApplyShopLayoutChange: function (ev) {
+        const wysiwyg =  $('#wrapwrap').data('wysiwyg');
         var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
         if (!this.editableMode) {
             this._rpc({
@@ -779,6 +780,10 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
                     'layout_mode': switchToList ? 'list' : 'grid',
                 },
             });
+        } else {
+            // If in edit mode, we need to stop the observer so that it
+            // doesn't apply o_dirty to every products that are in the list.
+            wysiwyg.odooEditor.observerUnactive();
         }
         var $grid = this.$('#products_grid');
         // Disable transition on all list elements, then switch to the new
@@ -789,6 +794,9 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         $grid.toggleClass('o_wsale_layout_list', switchToList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
+        if (this.editableMode) {
+            wysiwyg.odooEditor.observerActive();
+        }
     },
 });
 
