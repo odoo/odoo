@@ -1185,6 +1185,21 @@ class MrpProduction(models.Model):
             production.move_raw_ids._action_assign()
         return True
 
+    def action_assign_from_forecast_report(self, model, product_id):
+        """ Calls `action_assign` but also keeps track of reservations to know
+        if there is reservations who can't be fully done.
+
+        :returns: a dict of flags to pass to the client.
+        :rtype: dict
+        """
+        self.ensure_one()
+        moves_before_reservation = self.move_raw_ids._track_move_from_forecast_report(model, product_id)
+        self.action_assign()
+        flags = self.move_raw_ids._generate_flags_for_forecast_report(moves_before_reservation)
+        if flags['should_alert']:
+            flags['doc_name'] = self.display_name
+        return flags
+
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: not order.is_planned)
