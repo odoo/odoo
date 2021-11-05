@@ -1,17 +1,14 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
-import { getX2MViewModes } from "../views/helpers/view_utils";
 import { KanbanRenderer } from "../views/kanban/kanban_renderer";
-import { KanbanArchParser } from "../views/kanban/kanban_view";
 import { ListRenderer } from "../views/list/list_renderer";
-import { ListArchParser } from "../views/list/list_view";
 
 const { Component } = owl;
 const fieldRegistry = registry.category("fields");
 
 const X2M_RENDERERS = {
-    list: [ListRenderer, ListArchParser],
-    kanban: [KanbanRenderer, KanbanArchParser],
+    list: ListRenderer,
+    kanban: KanbanRenderer,
 };
 
 export class FieldMany2one extends Component {
@@ -47,23 +44,18 @@ fieldRegistry.add("kanban.many2many_tags", FieldKanbanMany2ManyTags);
 
 export class FieldX2Many extends Component {
     setup() {
-        // To remove when we can discriminate between in list view or in formView
-        // Also, make a loadViews if archs is passed but not set
-        if ("archs" in this.props) {
-            const viewModes = this.props.viewMode || ["tree"];
-            const { arch, fields } = this.props.archs[viewModes[0]] || {};
-            if (!arch) {
-                return;
-            }
-            this.fields = fields;
-            this.record = this.props.record.data[this.props.name];
-
-            const [viewMode] = getX2MViewModes(viewModes);
-            if (viewMode in X2M_RENDERERS) {
-                const [Renderer, Parser] = X2M_RENDERERS[viewMode];
-                this.archInfo = new Parser().parse(arch, fields);
-                this.Renderer = Renderer;
-            }
+        const fieldInfo = this.props.record.activeFields[this.props.name];
+        if (fieldInfo.views && fieldInfo.viewMode in fieldInfo.views) {
+            const subViewInfo = fieldInfo.views[fieldInfo.viewMode];
+            this.Renderer = X2M_RENDERERS[fieldInfo.viewMode];
+            this.viewType = fieldInfo.viewMode;
+            this.rendererProps = {
+                info: subViewInfo,
+                fields: subViewInfo.fields, // is this necessary?
+                list: this.props.value,
+                readonly: true,
+                openRecord: this.openRecord.bind(this),
+            };
         }
     }
 

@@ -12,6 +12,8 @@ import { processField, getActiveActions } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
+import { ListArchParser } from "../list/list_view";
+import { KanbanArchParser } from "../kanban/kanban_view";
 
 const { Component, useState } = owl;
 
@@ -25,6 +27,49 @@ class FormArchParser extends XMLParser {
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = processField(node, fields, "form");
+                const field = fields[fieldInfo.name];
+                if (field.views) {
+                    fieldInfo.views = {};
+                    for (let viewType in field.views) {
+                        const subView = field.views[viewType];
+                        viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
+                        let Parser;
+                        switch (viewType) {
+                            case "form": {
+                                Parser = FormArchParser;
+                                break;
+                            }
+                            case "kanban": {
+                                Parser = KanbanArchParser;
+                                break;
+                            }
+                            case "list": {
+                                Parser = ListArchParser;
+                                break;
+                            }
+                        }
+                        const archInfo = new Parser().parse(subView.arch, subView.fields);
+                        fieldInfo.views[viewType] = archInfo;
+                    }
+                }
+                if (!fieldInfo.invisible && ["one2many", "many2many"].includes(field.type)) {
+                    fieldInfo.relation = field.relation;
+                    const relatedFields = {};
+                    if (fieldInfo.FieldComponent.useSubView) {
+                        const firstView = fieldInfo.views && fieldInfo.views[fieldInfo.viewMode];
+                        if (firstView) {
+                            Object.assign(relatedFields, firstView.fields);
+                        }
+                    }
+                    // add fields required by specific FieldComponents
+                    Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
+                    // special case for color field
+                    const colorField = fieldInfo.options.color_field;
+                    if (colorField) {
+                        relatedFields[colorField] = { name: colorField, type: "integer" };
+                    }
+                    fieldInfo.relatedFields = relatedFields;
+                }
                 activeFields[fieldInfo.name] = fieldInfo;
             }
         });
@@ -39,6 +84,7 @@ class FormView extends Component {
         this.router = useService("router");
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         const activeFields = this.archInfo.fields;
+        // FIXME: probably not at the right place (also necessary for x2m form views)
         if (!activeFields.display_name) {
             activeFields.display_name = { name: "display_name", type: "char" };
         }

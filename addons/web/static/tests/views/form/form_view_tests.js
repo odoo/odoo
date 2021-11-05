@@ -3339,26 +3339,27 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("many2one in a one2many", async function (assert) {
+    QUnit.test("many2one in a one2many", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
-        this.data.partner.records[1].product_id = 37;
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].product_id = 37;
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="product_id"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="product_id"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 1,
         });
+
         assert.containsOnce(form, "td:contains(xphone)", "should display the name of the many2one");
     });
 

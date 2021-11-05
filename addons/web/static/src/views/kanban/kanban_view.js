@@ -241,7 +241,7 @@ export class KanbanArchParser extends XMLParser {
             limit: limit ? parseInt(limit, 10) : 40,
             progress: progressBarInfo,
             xmlDoc: applyDefaultAttributes(kanbanBox),
-            activeFields,
+            fields: activeFields,
             tooltips,
         };
     }
@@ -253,7 +253,7 @@ class KanbanView extends owl.Component {
     setup() {
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { activeFields, limit, relations, defaultGroupBy } = this.archInfo;
+        const { fields: activeFields, limit, relations, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progress: this.archInfo.progress,

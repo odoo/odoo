@@ -151,19 +151,24 @@ class Record extends DataPoint {
             if (invisible) {
                 // FIXME: we'll maybe have to create a datapoint anyway, for instance when we'll
                 // implement the edition
-                return;
+                continue;
             }
+
+            const fields = {
+                id: { name: "id", type: "integer", readonly: true },
+                ...relatedFields,
+            };
 
             const list = new StaticList(this.model, {
                 resModel: relation,
-                fields: relatedFields,
+                fields,
                 activeFields: relatedFields,
                 resIds: this.data[fieldName],
                 views,
                 viewMode,
             });
             this.data[fieldName] = list;
-            return list.load();
+            proms.push(list.load());
         }
         return Promise.all(proms);
     }
@@ -492,7 +497,7 @@ class StaticList extends DataPoint {
         super(model, params);
 
         this.resIds = params.resIds || [];
-        this.data = [];
+        this.records = [];
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
@@ -502,7 +507,7 @@ class StaticList extends DataPoint {
         if (!this.resIds.length) {
             return [];
         }
-        this.data = await Promise.all(
+        this.records = await Promise.all(
             this.resIds.map(async (resId) => {
                 const record = new Record(this.model, {
                     resModel: this.resModel,
@@ -556,7 +561,7 @@ export class RelationalModel extends Model {
      * @param {DomainListRepr} [params.domain]
      * @param {string[]} [params.groupBy]
      * @param {string[]} [params.orderBy]
-     * @param {number} [params.resId]
+     * @param {number} [params.resId] should not be there
      * @returns {Promise<void>}
      */
     async load(params) {

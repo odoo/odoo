@@ -44,11 +44,10 @@ export class Field extends Component {
             this.el.classList.add("o_field_widget");
             this.el.classList.add(`o_field_${this.type}`);
             this.el.setAttribute("name", this.name);
+            this.el.setAttribute("id", this.props.fieldId);
         });
     }
 }
 
 Field.template = tags.xml/* xml */ `
-    <div t-attf-id="{{ props.fieldId }}">
-        <t t-component="FieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>
-    </div>`;
+    <t t-component="FieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>`;
