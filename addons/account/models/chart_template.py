@@ -218,6 +218,44 @@ class AccountChartTemplate(models.Model):
             # Do not rollback installation of CoA if demo data failed
             _logger.exception('Error while loading accounting demo data')
 
+    def _get_extra_modules(self):
+        """Get the list of extra modules to install depending on the country.
+
+        Using accounting in some countries requires some additional features by
+        default. These features cannot be put as dependencies oterwise bridge
+        modules would not get installed automatically.
+
+        :return extra_modules (list): all modules that should be installed.
+        """
+        company_country_code = self.env.company.country_id.code
+        loc_module = self.get_xml_id()[self.id].split('.')[0][5:]
+
+        # hard coded "auto-installed" modules for "must have" features in a country
+        extra_modules = [
+            module
+            for module, countries in {
+                'account_check_printing': {'US', 'CA'},
+                'account_edi_proxy_client': {'IT'},
+                'base_vat': {
+                    'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX',
+                    'NL', 'NO', 'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN', 'SYSCOHADA',
+                },
+                'l10n_gcc_invoice': {'SA'},
+            }.items()
+            if {company_country_code, loc_module.upper()} & countries
+        ]
+
+        # always install bridge modules for standard accounting extensions, whatever
+        # the dependencies are
+        for module_extension in (
+            'edi',
+            'reports',
+        ):
+            module = self.env.ref(f'base.module_account_{module_extension}', raise_if_not_found=False)
+            if module and module.state in ('installed', 'to install', 'to_upgrade'):
+                extra_modules.append(f'l10n_{loc_module}_{module_extension}')
+        return extra_modules
+
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing
         the existing one if it had already one defined. If some accounting entries
@@ -232,6 +270,13 @@ class AccountChartTemplate(models.Model):
         self = self.with_context(lang=company.partner_id.lang).with_company(company)
         if not self.env.is_admin():
             raise AccessError(_("Only administrators can load a chart of accounts"))
+
+        module_ids = self.env['ir.module.module'].search([
+            ('name', 'in', self._get_extra_modules()),
+            ('state', '=', 'uninstalled'),
+        ])
+        if module_ids:
+            module_ids.sudo().button_install()
 
         existing_accounts = self.env['account.account'].search([('company_id', '=', company.id)])
         if existing_accounts:
