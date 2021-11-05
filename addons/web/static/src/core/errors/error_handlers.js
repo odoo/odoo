@@ -97,6 +97,12 @@ export function rpcErrorHandler(env, error, originalError) {
                 ErrorComponent = errorDialogRegistry.get(exceptionName);
             }
         }
+        if (!ErrorComponent && originalError.data.context) {
+            const exceptionClass = originalError.data.context.exception_class;
+            if (errorDialogRegistry.contains(exceptionClass)) {
+                ErrorComponent = errorDialogRegistry.get(exceptionClass);
+            }
+        }
 
         env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
             traceback: error.traceback,
