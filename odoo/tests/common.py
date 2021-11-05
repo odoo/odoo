@@ -1017,10 +1017,11 @@ class ChromeBrowser():
 
     def start_screencast(self):
         if self.screencasts_dir:
+            self._logger.info("Starting screencast")
             os.makedirs(self.screencasts_dir, exist_ok=True)
             self.screencasts_frames_dir = os.path.join(self.screencasts_dir, 'frames')
             os.makedirs(self.screencasts_frames_dir, exist_ok=True)
-        self._websocket_send('Page.startScreencast')
+            self._websocket_send("Page.startScreencast")
 
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
@@ -1061,6 +1062,7 @@ class ChromeBrowser():
         return False
 
     def _wait_code_ok(self, code, timeout):
+        self.start_screencast()
         self._logger.info('Evaluate test code "%s"', code)
         code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
         start_time = time.time()
@@ -1330,9 +1332,6 @@ class HttpCase(TransactionCase):
             url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
-            if self.browser.screencasts_dir:
-                self._logger.info('Starting screencast')
-                self.browser.start_screencast()
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
