@@ -38,8 +38,10 @@ PROJECT_TASK_READABLE_FIELDS = {
     'company_id',
     'displayed_image_id',
     'display_name',
-    'priority',
     'portal_user_names',
+    'legend_normal',
+    'legend_blocked',
+    'legend_done',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -54,6 +56,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'kanban_state',
     'child_ids',
     'parent_id',
+    'priority',
 }
 
 class ProjectTaskType(models.Model):

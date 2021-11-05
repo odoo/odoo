@@ -51,10 +51,12 @@ class TestProjectSharingCommon(TestProjectCommon):
             'project_id': cls.project_portal.id,
         })
 
+        cls.project_sharing_form_view_xml_id = 'project.project_sharing_project_task_view_form'
+
     def get_project_sharing_form_view(self, record, with_user=None):
         return Form(
             record.with_user(with_user or self.env.user),
-            view="project.project_sharing_project_task_view_form"
+            view=self.project_sharing_form_view_xml_id
         )
 
 @tagged('project_sharing')
