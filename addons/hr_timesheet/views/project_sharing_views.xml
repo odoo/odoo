@@ -25,11 +25,11 @@
                                 <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </div>
                             <field name="planned_hours" widget="timesheet_uom_no_toggle" nolabel="1"/>
-                            <div class="o_td_label" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                            <div class="o_td_label" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
                                 <label for="subtask_planned_hours" string="Sub-tasks Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                 <label for="subtask_planned_hours" string="Sub-tasks Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                             </div>
-                            <field name="subtask_planned_hours" widget="timesheet_uom_no_toggle" nolabel="1" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
+                            <field name="subtask_planned_hours" widget="timesheet_uom_no_toggle" nolabel="1" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
                         </group>
                         <group>
                             <field name="progress" widget="progressbar"/>
@@ -37,18 +37,19 @@
                     </group>
                     <field name="timesheet_ids" mode="tree,kanban"
                           attrs="{'invisible': [('analytic_account_active', '=', False)]}">
-                        <!-- TODO: see how to disable the _onRowclicked to not try to open form view -->
                         <tree string="Timesheet Activities" default_order="date" no_open="1">
                             <field name="date"/>
+                            <!-- [XBO] TODO: remove me in master -->
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" widget="many2one_avatar_employee" options="{'no_open_chat': True}"/>
+                            <field name="employee_id"/>
                             <field name="name"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
+                            <!-- [XBO] TODO: remove me in master -->
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" widget="many2one_avatar_employee" options="{'no_open_chat': True}"/>
+                            <field name="employee_id"/>
                             <field name="name"/>
                             <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
@@ -154,8 +155,8 @@
                 <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>
                 <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
-                <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
-                <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
+                <field name="total_hours_spent" widget="timesheet_uom" attrs="{'column_invisible' : ['|', ('allow_subtasks', '=', False), ('allow_timesheets', '=', False)]}" optional="hide"/>
+                <field name="progress" widget="progressbar" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}" optional="show"/>
             </field>
         </field>
     </record>

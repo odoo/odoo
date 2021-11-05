@@ -27,6 +27,7 @@
                 on_create="quick_create"
                 quick_create_view="project.project_sharing_quick_create_task_form"
                 archivable="0"
+                import="0"
             >
                 <field name="color"/>
                 <field name="priority"/>
@@ -42,6 +43,9 @@
                 <field name="active"/>
                 <field name="allow_subtasks"/>
                 <field name="child_text"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
                 <templates>
                 <t t-name="kanban-box">
@@ -70,7 +74,8 @@
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
-                                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
+                                        <!-- [XBO] TODO: remove me in master -->
+                                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item d-none" data-field="displayed_image_id">Set Cover Image</a>
                                         <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                                         <div role="separator" class="dropdown-divider"></div>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
@@ -115,7 +120,7 @@
         <field name="model">project.task</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <tree string="Tasks" sample="1" delete="0">
+            <tree string="Tasks" sample="1" delete="0" import="0">
                 <field name="is_closed" invisible="1" />
                 <field name="allow_subtasks" invisible="1" />
                 <field name="sequence" invisible="1" readonly="1"/>
@@ -130,6 +135,9 @@
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="kanban_state" widget="state_selection" optional="hide"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
                 <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
             </tree>
         </field>
@@ -159,6 +167,9 @@
                             <field name="priority" widget="priority" class="mr-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
                             <field name="kanban_state" widget="state_selection" class="ml-auto"/>
+                            <field name="legend_blocked" invisible="1"/>
+                            <field name="legend_normal" invisible="1"/>
+                            <field name="legend_done" invisible="1"/>
                         </h1>
                     </div>
                     <group>
@@ -186,7 +197,7 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': [(6, 0, [uid])], 'default_parent_id': id, 'default_partner_id': partner_id}">
+                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': [(6, 0, [uid])], 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
@@ -232,6 +243,7 @@
                 <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                 <separator/>
                 <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                <separator/>
                 <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
@@ -242,11 +254,13 @@
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                     <!-- TODO: [XBO] remove me in master -->
                     <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}" invisible="1"/>
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                    <!-- [XBO] TODO: remove me in master -->
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="1"/>
                     <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                     <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
                     <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
-                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}"/>
+                    <!-- [XBO] TODO: remove me in master -->
+                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}" invisible="1"/>
                 </group>
             </search>
         </field>
