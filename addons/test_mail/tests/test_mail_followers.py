@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
-
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
 from odoo.tests import users
-from odoo.tools.misc import mute_logger
 
 
 @tagged('mail_followers')
@@ -17,7 +14,6 @@ class BaseFollowersTest(TestMailCommon):
         super(BaseFollowersTest, cls).setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._create_portal_user()
-        cls._create_channel_listener()
 
         # allow employee to update partners
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
@@ -369,7 +365,7 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
     def setUp(self):
         super(AdvancedResponsibleNotifiedTest, self).setUp()
 
-        # patch registry to simulate a ready environment so that _message_auto_subscribe_notify
+        # patch registry to simulate a ready environment so that _message_auto_subscribe notifications
         # will be executed with the associated notification
         old = self.env.registry.ready
         self.env.registry.ready = True
