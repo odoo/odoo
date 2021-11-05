@@ -25,10 +25,15 @@ class ProductLabelLayout(models.TransientModel):
 
         if self.picking_quantity == 'picking' and self.move_line_ids:
             qties = defaultdict(int)
+            custom_barcodes = defaultdict(list)
             uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
             for line in self.move_line_ids:
                 if line.product_uom_id.category_id == uom_unit:
+                    if (line.lot_id or line.lot_name) and int(line.qty_done):
+                        custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.qty_done)))
+                        continue
                     qties[line.product_id.id] += line.qty_done
             # Pass only products with some quantity done to the report
             data['quantity_by_product'] = {p: int(q) for p, q in qties.items() if q}
+            data['custom_barcodes'] = custom_barcodes
         return xml_id, data
