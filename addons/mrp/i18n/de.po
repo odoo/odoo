@@ -1124,7 +1124,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Status"
-msgstr ""
+msgstr "Komponentenstatus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
@@ -2412,6 +2412,9 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
+"Aktueller Status der Komponentenverfügbarkeit für diesen Produktionsauftrag."
+" Wenn der Status grün ist, ist der Fertigungsauftrag gemäß der "
+"Stücklistenkonfiguration bereit."
 
 #. module: mrp
 #: model_terms:product.product,description:mrp.product_product_wood_ply
@@ -2529,7 +2532,7 @@ msgstr "MO von %s generiert"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
 msgid "MO Readiness"
-msgstr ""
+msgstr "Bereitschaft des Fertigungsauftrags"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -2745,6 +2748,9 @@ msgid ""
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
+"Fertigungsbereitschaft für diesen Produktionsauftrag gemäß der Stücklistenkonfiguration:\n"
+"* Bereit: Das Material ist verfügbar, um die Produktion zu starten.\n"
+"* Wartet: Das Material ist nicht verfügbar, um die Produktion zu starten.\n"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2976,6 +2982,10 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"Beachten Sie, dass der/die archivierte(n) Arbeitsplatz(e): '%s' noch mit "
+"einer aktiven Stückliste verknüpft ist/sind, d.h., dass noch Vorgänge auf "
+"ihm/ihnen geplant werden können. Um dies zu verhindern, wird stattdessen die"
+" Löschung des Arbeitsplatzes empfohlen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter

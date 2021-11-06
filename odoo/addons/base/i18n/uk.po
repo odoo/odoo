@@ -1612,6 +1612,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"   Зробіть дату блокування незворотною:\n"
+"\n"
+"    * Ви не можете встановлювати суворіші обмеження для консультантів, ніж для користувачів. Тому дата блокування всіх користувачів має передувати (або дорівнювати) даті блокування рахунків-фактур/рахунків постачальників.\n"
+"    * Ви не можете заблокувати період, який ще не закінчився. Таким чином, дата блокування всіх користувачів має передувати (або дорівнювати) останньому дню попереднього місяця.\n"
+"    * Будь-яка нова дата блокування всіх користувачів має бути наступною (або рівною) до попередньої.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -1666,6 +1673,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Керуйте знижками з доставками в обчисленнях taxcloud.\n"
+"    Цей модуль дотримується тієї ж логіки, що і \"Account Taxcloud - Sale (купон)\".\n"
+"    Додаткову інформацію можна знайти там про те, як обчислюються знижки для TaxCloud.\n"
+"\n"
+"    Є додаткова опція знижки (безкоштовна доставка) на доставку.\n"
+"    Із купоном знижки на доставку розрахунок знижки не застосовується на рядки доставки.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1800,6 +1815,23 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Додайте звіт про ПДВ, який є юридичною вимогою в Аргентині та містить детальну інформацію про ПДВ про продажі чи покупки, здійснені за певний період часу.\n"
+"* Додайте підсумковий звіт ПДВ, який використовується для аналізу виставлення рахунків\n"
+"* Додайте функцію Digital PAT Book, яка дозволить нам генерувати файли TXT для імпорту в AFIP. Ті, які ми реалізуємо:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Офіційна документація AFIP\n"
+"\n"
+"* Digital VAT Book - дизайн записуhttps://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - дизайн запису (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - специфікація (надає додаткову інформацію про те, як форматувати числа та заповнення числових/буквенно-цифрових полів): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -2454,6 +2486,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Додайте інформацію про зв’язок між замовленнями на продаж і замовленнями на покупку, якщо для одного проданого товару активовано «Зробити на замовлення» (MTO).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -16048,6 +16082,9 @@ msgid ""
 "\n"
 "%(error)s"
 msgstr ""
+"Помилка при підтвердженні перегляду:\n"
+"\n"
+"%(error)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_menu.py:0
@@ -16108,22 +16145,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
 msgid "Event CRM"
-msgstr ""
+msgstr "Подія CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm_sale
 msgid "Event CRM Sale"
-msgstr ""
+msgstr "Подія продажу CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_exhibitor
 msgid "Event Exhibitors"
-msgstr ""
+msgstr "Учасники подій"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr ""
+msgstr "Зустріч події / кімнати"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social

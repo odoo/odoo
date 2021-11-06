@@ -1477,7 +1477,7 @@ msgstr "Kies je datum"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
-msgstr "Zichtbaar"
+msgstr "Wissen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -2118,10 +2118,11 @@ msgstr "Standaard routes door het magazijn"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definieer een minimale voorraadregel, zodat Odoo automatisch aanvragen voor "
-"offertes of productieorders kan aanmaken om je voorraad te aan te vullen."
+"offertes of bevestigde productieorders kan aanmaken om je voorraad aan te "
+"vullen."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -6873,21 +6874,24 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"Serienummer (%s) bevindt zich niet in %s, maar bevindt zich in locatie(s): "
-"%s. Corrigeer dit om inconsistente gegevens te voorkomen."
+"Serienummer (%s) bevindt zich niet in %s, maar bevindt zich in locatie(s): %s. \n"
+"Corrigeer dit om inconsistente gegevens te voorkomen."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Source location for this move will be changed to %s"
 msgstr ""
-"Serienummer (%s) bevindt zich niet in %s, maar bevindt zich in locatie(s): "
-"%s. De bronlocatie voor deze verplaatsing wordt gewijzigd in %s"
+"Serienummer (%s) bevindt zich niet in %s, maar bevindt zich in locatie(s): %s. \n"
+"\n"
+"De bronlocatie voor deze verplaatsing wordt gewijzigd in %s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -7630,11 +7634,11 @@ msgstr ""
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
-"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial numbershould be corrected to prevent inconsistent data."
+"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
 "Het serienummer (%s) wordt al gebruikt op deze locatie(s): %s.\n"
 "\n"
-"Wordt dit verwacht? Dit kan bijvoorbeeld gebeuren als een leveringsbewerking wordt gevalideerd voordat de bijbehorende ontvangstbewerking wordt gevalideerd. In dit geval wordt het probleem automatisch opgelost zodra alle stappen zijn voltooid. Anders moeten de serienummers worden gecorrigeerd om inconsistente gegevens te voorkomen."
+"Wordt dit verwacht? Dit kan bijvoorbeeld gebeuren als een leveringsbewerking wordt bevestigd voordat de bijbehorende ontvangstbewerking wordt bevestigd. In dit geval wordt het probleem automatisch opgelost zodra alle stappen zijn voltooid. Anders moeten de serienummers worden gecorrigeerd om inconsistente gegevens te voorkomen."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -8349,7 +8353,8 @@ msgstr "Activeer een andere regel als er geen voorraad is"
 #: code:addons/stock/static/src/js/report_stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Probeer enkele inkomende of uitgaande overschrijvingen toe te voegen."
+msgstr ""
+"Probeer enkele inkomende of uitgaande voorraadverplaatsingen toe te voegen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type

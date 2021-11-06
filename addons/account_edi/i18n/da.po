@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Mads Søndergaard, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Mads Søndergaard, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,19 +24,19 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr "Elektronisk faktureringsfejl"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr "Elektronisk faktureringsinfo"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr "Elektronisk faktureringsadvarsel(er)"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -47,7 +48,7 @@ msgstr "Der er blevet anmodet om en annullering af EDI'en."
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "En anmodning om annullering af EDI'en er blevet tilbagekaldt."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -58,7 +59,7 @@ msgstr "Vedhæftning"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "Blokeringsniveau"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -68,11 +69,15 @@ msgid ""
 "  * Warning : there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error : there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Blokere dokumentets nuværende operation afhændig af fejlens alvorlighed:\n"
+"* Info: Dokumentet er ikke blokeret, og alt virker som det br.\n"
+"* Advarsel: Der er en fejl som ikke forhindre gennemførslen af den pågældende Elektronisk fakturerings-operation.\n"
+"* Fejl: Der er en fejl som blokere den pågældende Elektronisk fakturerings-operation."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "Tilbagekald EDI Annullering"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -146,7 +151,7 @@ msgstr "EDI format der understøtter bevægelser i denne journal"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "EDI Blokeringsniveau"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -167,7 +172,7 @@ msgstr "EDI Antal Fejl"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "EDI Fejlbesked"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -179,7 +184,7 @@ msgstr "EDI Format"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "EDI Vis Opgiv Annuller Knap"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
@@ -218,7 +223,7 @@ msgstr "Elektronisk fakturering"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "Elektronisk faktureringsstatus"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -264,6 +269,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Ugyldig faktura konfiguration:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -323,7 +331,7 @@ msgstr "Betalinger"
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Behandel nu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
@@ -372,6 +380,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr ""
+"Den aggregerede tilstand for alle EDI'er med webservice for dette træk"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -388,6 +397,8 @@ msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"Fakturaen vil blive behandlet asynkront af den følgende "
+"E-faktureringstjeneste:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
@@ -395,6 +406,8 @@ msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"Betalingen vil blive behandlet asynkront af den følgende "
+"E-Faktureringsservice:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error

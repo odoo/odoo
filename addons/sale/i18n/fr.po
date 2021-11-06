@@ -10,6 +10,8 @@
 # Rémi CAZENAVE, 2021
 # Martin Trigaux, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
+# Sebastien LANGE, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -959,7 +961,7 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"Une commande est à faire monter en gamme quand les quantités livrées\n"
+"Une commande additionnelle est à faire quand les quantités livrées\n"
 "                sont supérieurs aux quantités commandées initialement, et la politique de facturation est basée sur les quantités commandées."
 
 #. module: sale
@@ -2572,7 +2574,7 @@ msgstr "Pas de commandes à facturer trouvées"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr "Aucune commande à faire monter en gamme."
+msgstr "Aucune commande additionnelle à réaliser."
 
 #. module: sale
 #. openerp-web
@@ -2784,7 +2786,7 @@ msgstr "État de la commande"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "Montée en gamme d'ordre"
+msgstr "Commande additionnelle"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2835,7 +2837,7 @@ msgstr "Commandes à facturer"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Commandes à faire monter en gamme"
+msgstr "Commandes additionnelles à réaliser"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2865,7 +2867,7 @@ msgstr "Conditionnement"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Qté de Conditionnements"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3938,12 +3940,12 @@ msgstr "Sous-total"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Total"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Total Hors Taxes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -3960,7 +3962,7 @@ msgstr "Taxes totales"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals_json
 msgid "Tax Totals Json"
-msgstr ""
+msgstr "Tax Totals Json"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4354,7 +4356,7 @@ msgstr "Quantitée à facturer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "À faire monter en gamme"
+msgstr "Commande addtionnelle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4546,13 +4548,13 @@ msgstr "Mettre à jour les prix"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Commande additionnelle %(order)s pour le client %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "Opportunité de montée en gamme"
+msgstr "Opportunité de vente additionnelle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4764,7 +4766,7 @@ msgstr "bon de commande"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

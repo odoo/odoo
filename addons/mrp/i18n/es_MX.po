@@ -170,8 +170,8 @@ msgstr ": cantidad insuficiente para desmantelar"
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
-"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Gestione\" "
-"title=\"Gestione\"/>"
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Gestionar\" "
+"title=\"Gestionar\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -586,7 +586,7 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Centros de trabajo alternativos que pueden ser sustituidos por este para "
+"Centros de trabajo alternativos que se pueden sustituir por este para "
 "despachar la producción"
 
 #. module: mrp
@@ -701,9 +701,9 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Promedio de tiempo de entrega en días para fabricar este producto. En el "
-"caso de la lista de materiales de varios niveles, los tiempos de entrega de "
-"fabricación de los componentes serán agregados."
+"Promedio de plazo de entrega en días para fabricar este producto. En el caso"
+" de la lista de materiales de varios niveles, los plazos de fabricación de "
+"los componentes se agregarán."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -2763,7 +2763,7 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
-"Las producciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se compone de\n"
+"Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se compone de\n"
 "                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear capacidad, etc."
 
 #. module: mrp
@@ -2773,9 +2773,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Las operaciones de fabricación son procesadas en centros de trabajo. Un centro de trabajo se puede componer de\n"
+"Las operaciones de fabricación se procesan en centros de trabajo. Un centro de trabajo se puede componer de\n"
 "                trabajadores y/o maquinaria, se utilizan para calcular costos, programar actividades, planear la capacidad, etc.\n"
-"                Pueden ser definidos a través del menú de configuración."
+"                Se pueden definir a través del menú de configuración."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -3488,7 +3488,7 @@ msgid ""
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
 "Producir: Mueva los componentes a la ubicación de producción directamente y comience el proceso de fabricación.\n"
-"Selección / producción: descargue primero los componentes de las existencias a la ubicación de entrada y luego trasládelos a la ubicación de producción."
+"Recolectar/producir: Primero descargue        los componentes de las existencias a la ubicación de entrada y luego        trasládelos a la ubicación de producción."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4706,8 +4706,8 @@ msgid ""
 "the costs of the components and operations needed to build the product."
 msgstr ""
 "Este es el costo basado en la lista de materiales del producto. Se calcula "
-"sumando los costos de los componentes y operaciones necesarios para "
-"construir el producto."
+"mediante la suma de los costos de los componentes y operaciones necesarios "
+"para construir el producto."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -5003,7 +5003,7 @@ msgstr "Desplegar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
 msgid "Unit Factor"
-msgstr "Factor unidad"
+msgstr "Factor unitario"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
@@ -5025,8 +5025,8 @@ msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
-"Unidad de Medida (Unidad de Medida) es la unidad de medición para el control"
-" del inventario"
+"La unidad de medida (unidad de medida) es la unidad de medición para el "
+"control del inventario"
 
 #. module: mrp
 #: model:product.product,uom_name:mrp.product_product_computer_desk
@@ -5073,7 +5073,7 @@ msgstr "Desbloquear órdenes de fabricación"
 msgid ""
 "Unlock the manufacturing order to adjust what has been consumed or produced."
 msgstr ""
-"Desbloquea la orden de manufactura para ajusta lo que se ha consumido o "
+"Desbloquee la orden de fabricación para ajustar lo que se ha consumido o "
 "producido."
 
 #. module: mrp
@@ -5188,29 +5188,29 @@ msgstr "En espera"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__waiting
 msgid "Waiting Another Operation"
-msgstr "Esperando otra operación"
+msgstr "En espera de otra operación"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Waiting Availability"
-msgstr "Esperando disponibilidad"
+msgstr "En espera de disponibilidad"
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/js/mrp.js:0
 #, python-format
 msgid "Waiting Materials"
-msgstr "Esperando de materiales "
+msgstr "En espera de materiales "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Component"
-msgstr "Esperando componente"
+msgstr "En espera de componente"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr "Esperando otra orden de trabajo"
+msgstr "En espera de otra orden de trabajo"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__waiting
@@ -5222,7 +5222,7 @@ msgstr "Esperando componentes"
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Esperando la orden de trabajo anterior, planeada de %(start)s a %(end)s"
+"En espera de la orden de trabajo anterior, planeada de %(start)s a %(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -5300,7 +5300,8 @@ msgstr "Cuando los componentes para la primer operación están disponibles"
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr "Cuando los productos son fabricados, pueden serlo en este almacén."
+msgstr ""
+"Cuando se fabrican los productos, pueden ser fabricados en este almacén."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -5309,8 +5310,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
-"Cuando los productos son necesarios en <b>%s</b>, <br/> una orden de "
-"fabricación es generada para cumplir con la necesidad."
+"Cuando los productos son necesarios en <b>%s</b>, <br/> se genera una orden "
+"de fabricación para cumplir con la necesidad."
 
 #. module: mrp
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
@@ -5548,7 +5549,7 @@ msgstr "Centro de trabajo bloqueado, haga clic para desbloquear."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
 msgid "Working Hours"
-msgstr "Horas laborales"
+msgstr "Horas laborables"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -5579,9 +5580,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
-"No tiene permitido crear o editar un número lote o de serie para los "
+"No tiene permitido crear o editar un número de lote o de serie para los "
 "componentes con el tipo de operación \"fabricación\". Para cambiar esto, "
-"vaya al tipo de operación y marque la casilla \"crear nuevos números de "
+"vaya al tipo de operación y seleccione la casilla \"crear nuevos números de "
 "lotes o de serie para componentes\"."
 
 #. module: mrp
@@ -5590,8 +5591,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Puede ya sea subir un archivo de su computadora como copiar y pegar un "
-"enlace de internet a su archivo."
+"Puede tanto subir un archivo de su computadora como copiar y pegar un enlace"
+" de internet a su archivo."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5611,7 +5612,7 @@ msgid ""
 "Please close or cancel it first."
 msgstr ""
 "No puede eliminar una lista de materiales con órdenes de fabricación en ejecución.\n"
-"Por favor, cierre o cancélela primero.."
+"Por favor, cierre o cancélela primero."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5640,7 +5641,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot have %s  as the finished product and in the Byproducts"
-msgstr "No puede tener %s  como un producto terminado y como un sub-producto"
+msgstr "No puede tener %s  como un producto terminado y como un subproducto"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5706,9 +5707,7 @@ msgstr ""
 msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
-msgstr ""
-"Ya ha procesado %(quantity)s. Por favor, ingrese una cantidad mayor a "
-"%(minimum)s "
+msgstr "Ya procesó %(quantity)s. Ingrese una cantidad mayor a %(minimum)s "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -5881,7 +5880,7 @@ msgstr "ordenado en lugar de"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
-msgstr "se ha actualizado la cantidad."
+msgstr "se actualizó la cantidad."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view

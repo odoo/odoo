@@ -2051,11 +2051,11 @@ msgstr "Standard Routen im Lager"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Definieren Sie eine Mindestbestandsregel, so dass Odoo automatisch "
-"Bestellanfragen oder Entwürfe für Fertigungsaufsträge erstellt, um Ihr Lager"
-" wieder zu aufzustocken."
+"Definieren Sie eine Mindestbestandsregel, damit Odoo automatisch Anfragen "
+"für Angebote oder bestätigte Produktionsaufträge erstellt, um Ihren Bestand "
+"wieder aufzufüllen."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3864,7 +3864,7 @@ msgstr "Verspätete Lieferungen"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
 msgid "Latest product availability status of the picking"
-msgstr ""
+msgstr "Aktueller Stand der Produktverfügbarkeit bei der Kommissionierung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
@@ -6729,17 +6729,25 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Seriennummer (%s) befindet sich nicht in %s, sondern hier: %s.\n"
+"\n"
+"Bitte korrigieren Sie dies, um inkonsistente Daten zu vermeiden."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Source location for this move will be changed to %s"
 msgstr ""
+"Seriennummer (%s) befindet sich nicht in %s, sondern hier: %s.\n"
+"\n"
+"Die Quelle für diese Bewegung wird geändert in %s "
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -7297,7 +7305,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_storage_categoty_capacity_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_capacity_tree
 msgid "Storage Category Capacity"
-msgstr ""
+msgstr "Lagerkategorie Kapazität"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -7469,8 +7477,11 @@ msgstr ""
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
-"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial numbershould be corrected to prevent inconsistent data."
+"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"Die Seriennummer (%s) wird bereits an folgenden Orten verwendet: %s.\n"
+"\n"
+"Ist dies zu erwarten? Dies kann zum Beispiel auftreten, wenn ein Liefervorgang validiert wird, bevor der zugehörige Empfangsvorgang validiert wird. In diesem Fall wird das Problem automatisch gelöst, sobald alle Schritte abgeschlossen sind. Andernfalls sollte die Seriennummer korrigiert werden, um inkonsistente Daten zu vermeiden."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9295,10 +9306,11 @@ msgstr ""
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'n/a' }})"
