@@ -93,20 +93,13 @@ var PrinterMixin = {
     htmlToImg: function (receipt) {
         var self = this;
         $('.pos-receipt-print').html(receipt);
-        var promise = new Promise(function (resolve, reject) {
-            self.receipt = $('.pos-receipt-print>.pos-receipt');
-            html2canvas(self.receipt[0], {
-                onparsed: function(queue) {
-                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
-                },
-                onrendered: function (canvas) {
-                    $('.pos-receipt-print').empty();
-                    resolve(self.process_canvas(canvas));
-                },
-                letterRendering: self.htmlToImgLetterRendering,
-            })
+        return html2canvas(self.receipt[0], {
+            height: Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top),
+            scale: 1
+        }).then(function (canvas) {
+            $('.pos-receipt-print').empty();
+            return self.process_canvas(canvas)
         });
-        return promise;
     },
 
     _onIoTActionResult: function (data){
