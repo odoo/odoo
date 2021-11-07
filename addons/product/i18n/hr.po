@@ -15,7 +15,7 @@
 # Martin Trigaux, 2020
 # Bole <bole@dajmi5.com>, 2021
 # Marko Carević <marko.carevic@live.com>, 2021
-# Helena Viher <viherhelena@gmail.com>, 2021
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2021
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
@@ -2858,7 +2858,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product

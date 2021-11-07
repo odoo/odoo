@@ -497,6 +497,16 @@ msgid ""
 "                    </span>\n"
 "                    ("
 msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        Der Mitarbeiter hat eine andere Zeitzone als Sie! Hier werden Daten und Uhrzeiten entsprechend der Zeitzone des Mitarbeiters angezeigt\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        Das Unternehmen der Abteilung hat eine andere Zeitzone als Sie! Hier werden Daten und Uhrzeiten entsprechend der Zeitzone des Unternehmens angezeigt\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        Das Unternehmen hat eine andere Zeitzone als Sie! Hier werden Daten und Uhrzeiten entsprechend der Zeitzone des Unternehmens angezeigt\n"
+"                    </span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
@@ -1141,7 +1151,7 @@ msgstr "Abbrechen"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel Future Leaves"
-msgstr ""
+msgstr "Zukünftige Abwesenheiten stornieren"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
@@ -2086,7 +2096,7 @@ msgstr "Neuer Abwesenheitsanspruch"
 msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
-msgstr ""
+msgstr "Neue Anfrage erstellt von %(user)s: %(count)s Tage%(allocation_type)s"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2757,7 +2767,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__valid
 msgid "This indicates if it is still possible to use this type of leave"
-msgstr ""
+msgstr "Zeigt an, ob Sie diesen Abwesenheitstyp noch benutzen können"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3290,6 +3300,8 @@ msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
 msgstr ""
+"Sie können die Freistellung von %s noch nicht genehmigen, da Sie nicht der "
+"Abwesenheitsmanager sind."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3304,6 +3316,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
+"Sie müssen entweder %ss Manager oder Abwesenheitsmanager sein um diesen "
+"Antrag zu genehmigen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3324,7 +3338,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr ""
+msgstr "Ihr/e %(leave_type)s geplant für %(date)s wurde genehmigt"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
