@@ -5,20 +5,21 @@
 # Translators:
 # e2f <projects@e2f.com>, 2019
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # 966ff43e6966712895a590e7320ca288, 2019
 # Sabina Batlle <sbb@odoo.com>, 2019
-# Martin Trigaux, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Martin Trigaux, 2020
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-06-12 12:36+0000\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,21 @@ msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Agregar al carrito
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Price</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Product</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Quantity</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Total:</strong>"
 
@@ -42,9 +58,7 @@ msgid "Add"
 msgstr "Añadir"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Add one"
 msgstr "Agregue uno"
 
@@ -103,7 +117,7 @@ msgstr "Creado el"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Valores personalizados"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
@@ -113,7 +127,7 @@ msgstr "Nombre mostrado"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Valores extra"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
@@ -123,7 +137,7 @@ msgstr "ID"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "¿El producto es configurable?"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
@@ -168,18 +182,12 @@ msgid "Options"
 msgstr "Opciones"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Price"
-msgstr "Precio"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
 msgid "Pricelist"
 msgstr "Tarifa"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Product"
 msgstr "Producto"
 
@@ -196,15 +204,17 @@ msgid "Product Template"
 msgstr "Plantilla de producto"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Variantes de producto"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Quitar uno"
 

@@ -3,18 +3,19 @@
 # 	* website_customer
 # 
 # Translators:
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "Бүх улсууд"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
+msgid "All Industries"
 msgstr ""
 
 #. module: website_customer
@@ -66,7 +67,7 @@ msgstr "Өнгийг өөрчлөх Bootstrap класс"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Нийтлэж болно"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
@@ -86,27 +87,27 @@ msgstr "Хаах"
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
 msgid "Contact"
-msgstr "Харилцах хаяг"
+msgstr "Холбох хаяг"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr ""
+msgstr "Шинэ холобгдох пайз үүсгэх"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
-msgstr "Үүсгэсэн этгээд"
+msgstr "Үүсгэгч"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн огноо"
+msgstr "Үүсгэсэн"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
-msgstr "Дэлгэрэнгүй нэр"
+msgstr "Дэлгэцийн Нэр"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
@@ -121,22 +122,22 @@ msgstr "Хэрэгжүүлсэн"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Нийтлэгдсэн эсэх"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлд зассан этгээд"
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
-msgstr "Сүүлд зассан огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
@@ -174,10 +175,11 @@ msgid "Partners"
 msgstr "Харилцагч"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
-msgstr "Өмнөх түүх"
+msgstr "Сурвалж"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
@@ -186,7 +188,7 @@ msgstr "Код Улсаар"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
+msgid "References by Industries"
 msgstr ""
 
 #. module: website_customer
@@ -202,7 +204,7 @@ msgstr "Хайх"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
-msgstr ""
+msgstr "Харилцагчийн пайз хайх"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
@@ -218,6 +220,11 @@ msgstr "Дэлхий даяар сая сая хүний итгэлийг олс
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
 msgstr "Одоогийн вебсайт дээр харагдах"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Вэбсайт"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -241,7 +248,7 @@ msgstr "Вэбсайт пайзууд"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
-msgstr "Дэлхийн газрын зураг"
+msgstr "Дэлхийн Газрын зураг"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block

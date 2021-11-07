@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Minj P <pminj322@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-06-12 12:36+0000\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,21 @@ msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Сагсанд х�
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Price</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Product</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Quantity</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Нийт:</strong>"
 
@@ -37,9 +52,7 @@ msgid "Add"
 msgstr "Нэмэх"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Add one"
 msgstr "Нэгийг нэмэх"
 
@@ -118,7 +131,7 @@ msgstr "ID"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Энэ барааны мэдээллийг өөрчлөх боломжтой юу?"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
@@ -163,18 +176,12 @@ msgid "Options"
 msgstr "Сонголтууд"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Price"
-msgstr "Үнэ"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
 msgid "Pricelist"
 msgstr "Үнийн хүснэгт"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Product"
 msgstr "Бараа"
 
@@ -191,15 +198,17 @@ msgid "Product Template"
 msgstr "Барааны загвар"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Барааны хувилбар"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Нэгийг хасах"
 

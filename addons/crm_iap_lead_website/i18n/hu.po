@@ -3,18 +3,19 @@
 # 	* crm_iap_lead_website
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2019
+# krnkris, 2019
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,13 +194,13 @@ msgstr "IP cím"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
-msgstr ""
+msgstr "Iparágak"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Módosítva"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__write_uid
@@ -304,7 +305,7 @@ msgid "Number of Contacts"
 msgstr "Ügyfelek száma"
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr ""
 
@@ -340,6 +341,12 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
+msgstr ""
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
 #. module: crm_iap_lead_website
@@ -409,7 +416,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
 msgid "Sequence"
-msgstr "Sorszám"
+msgstr "Sorrend"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
@@ -449,7 +456,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
 msgid "To Process"
-msgstr ""
+msgstr "Feldolgozandó"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_type
@@ -517,4 +524,4 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "to"
-msgstr "eddig"
+msgstr "ig"

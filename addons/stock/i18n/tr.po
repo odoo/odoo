@@ -417,7 +417,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span attrs=\"{'invisible': [('state', '=', 'done')]}\"> / </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('state', '=', 'done')]}\"> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2006,10 +2006,10 @@ msgstr "Öntanımlı depo izleme rotası"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Odoo'nun stoklarına otomatik olarak taslak teklif talebi ve üretim emri "
-"oluşturması için minimum stok kuralı tanımlayın."
+"Odoo'nun otomatik olarak teklif talebi ve teyit edilen üretim emirlerini "
+"oluşturarak stoğunuzu tamamlaması için minimum stok kuralı tanımlayın."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -4267,7 +4267,7 @@ msgstr "İsim"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 msgid "Name Inventory Adjustement"
-msgstr ""
+msgstr "İsim Envanter Düzeltmesi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -5601,7 +5601,7 @@ msgstr "Miktarlar Çoktan Belirlendi"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities Not Entered"
-msgstr ""
+msgstr "Girilmeyen Miktarlar"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0

@@ -3,16 +3,19 @@
 # 	* fetchmail
 # 
 # Translators:
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
 # Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +41,17 @@ msgstr "Розширено"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Розширені налаштування"
+msgstr "Додаткові налаштування"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+"Виникла помилка SSL. Перевірте налаштування SSL/TLS на порті сервера.\n"
+" %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -84,7 +97,7 @@ msgstr "Створив"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
@@ -155,6 +168,16 @@ msgid "Incoming Mail Servers"
 msgstr "Сервери вхідної пошти"
 
 #. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+"Недійсна назва сервера!\n"
+" %s"
+
+#. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
 msgid "Keep Attachments"
 msgstr "Зберегти вкладення"
@@ -172,7 +195,7 @@ msgstr "Дата останнього отримання"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_uid
@@ -210,7 +233,17 @@ msgstr "Повідомлення"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
 msgid "Name"
-msgstr "Ім'я"
+msgstr "Назва"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+"Відповіді не отримано. Перевірте інформацію сервера.\n"
+" %s"
 
 #. module: fetchmail
 #: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
@@ -306,12 +339,22 @@ msgstr "Назва сервера"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__priority
 msgid "Server Priority"
-msgstr "Пріоритет сервера"
+msgstr "Сервер пріоритету"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "Тип сервера"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+"Сервер відповів з наступною помилкою:\n"
+" %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -336,7 +379,7 @@ msgstr "Перевірити та підтвердити"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__user
 msgid "Username"
-msgstr "Ім'я користувач"
+msgstr "Користувач"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__original

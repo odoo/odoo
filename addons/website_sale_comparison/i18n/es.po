@@ -3,20 +3,27 @@
 # 	* website_sale_comparison
 # 
 # Translators:
-# ES T2 <e2f48ds4f2ds1@outlook.com>, 2019
-# Martin Trigaux, 2019
-# Nicole Kist <nki@odoo.com>, 2019
-# Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Nicole Kist <nki@odoo.com>, 2017
+# ES T2 <e2f48ds4f2ds1@outlook.com>, 2017
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,8 +47,8 @@ msgstr "<i class=\"fa fa-exchange\"/> Compara"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Añadir a la Cesta"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -49,9 +56,9 @@ msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange\"/> Add to compare"
-msgstr "<span class=\"fa fa-exchange\"/> Agregue para comparar"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
+msgid "<span class=\"fa fa-exchange mr-2\"/>Add to compare"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
@@ -62,6 +69,11 @@ msgstr "<span class=\"h3\">Alternativas sugeridas: </span>"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
 msgstr "<strong>Precio:</strong>"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
@@ -84,10 +96,10 @@ msgstr "Nombre de categoría"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
 #, python-format
 msgid "Compare"
-msgstr "Comparar"
+msgstr "Compara"
 
 #. module: website_sale_comparison
 #. openerp-web
@@ -95,7 +107,7 @@ msgstr "Comparar"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
-msgstr "Comparar Productos"
+msgstr "Compara Productos"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__create_uid
@@ -134,6 +146,7 @@ msgstr "Última actualización el"
 
 #. module: website_sale_comparison
 #. openerp-web
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
@@ -183,7 +196,7 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce"
 msgstr ""
-"Establecer una categoría para reagrupar atributos similares bajo la misma "
+"Establece una categoría para reagrupar atributos similares bajo la misma "
 "sección el la página comparativa de eCommerce "
 
 #. module: website_sale_comparison
@@ -193,8 +206,8 @@ msgstr "Comparador de Tiendas"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
-msgstr "Especificaciones para"
+msgid "Specifications"
+msgstr "Especificaciones"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
@@ -205,6 +218,7 @@ msgstr "Sin categoría"
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "Alerta"
@@ -214,7 +228,7 @@ msgstr "Alerta"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "You can compare max 4 products."
-msgstr "Puede comparar un máximo de 4 productos. "
+msgstr "Puedes comparar un máximo de 4 productos. "
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body

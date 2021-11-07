@@ -3,20 +3,19 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Tamás Dombos, 2019
+# gezza <geza.nagy@oregional.hu>, 2017
 # Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# krnkris, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: krnkris, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +53,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Alkalmazott PIN kódja</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -69,24 +68,27 @@ msgid ""
 "                            Last Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                       Múlt hónap\n"
+"                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Jelenlét</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attended Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Jelen van</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nincs jelen</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -95,14 +97,18 @@ msgid ""
 "oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
 "title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
+"title=\"Available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
-"title=\"Not available\"/>"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -114,7 +120,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Adminisztrátor"
 
 #. module: hr_attendance
 #. openerp-web
@@ -153,12 +159,14 @@ msgstr "Részvételi elemzés"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr ""
+msgstr "Jelenlét állapot"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
@@ -168,6 +176,7 @@ msgstr "Jelenlétek"
 
 #. module: hr_attendance
 #. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -226,7 +235,7 @@ msgstr "Belépés"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "Belépés / Kilépés"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -241,7 +250,7 @@ msgstr "Kilépés"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
-msgstr ""
+msgstr "Belépés/Kilépés"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -277,7 +286,7 @@ msgstr "Ekkor lépett ki"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Click to"
-msgstr ""
+msgstr "Kattintson ide"
 
 #. module: hr_attendance
 #. openerp-web
@@ -294,27 +303,27 @@ msgstr "Konfigurációs beállítások"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Configuration"
-msgstr "Konfiguráció"
+msgstr "Beállítások"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
-msgstr ""
+msgstr "Új alkalmazott létrehozása"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr "Létrehozás dátuma"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
-msgstr "Részleg"
+msgstr "Osztály, részleg"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
@@ -359,7 +368,6 @@ msgstr "Alkalmazotti jelenlétek"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
 msgid "Employees"
 msgstr "Alkalmazottak"
 
@@ -394,9 +402,10 @@ msgstr "Örülünk, hogy ismét itt van, már eltelt egy kis idő!"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Go back"
-msgstr ""
+msgstr "Menjen vissza"
 
 #. module: hr_attendance
 #. openerp-web
@@ -480,7 +489,7 @@ msgstr "Órák"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr ""
+msgstr "Óra a múlt hónapban"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
@@ -495,7 +504,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr ""
+msgstr "Óra a mai napon"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -505,14 +514,14 @@ msgstr "Emberi erőforrás jelenlét keresés"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
-msgid "Identify"
-msgstr ""
+msgid "Identify Manually"
+msgstr "Manuális azonosítás"
 
 #. module: hr_attendance
 #. openerp-web
@@ -529,7 +538,12 @@ msgid "Invalid request, please return to the main menu."
 msgstr "Érvénytelen igény, kérem térjen vissza a fő menühöz."
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "Kiosk Attendance"
+msgstr "Kioszk jelenlét"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
 msgstr "Kioszk mód"
 
@@ -538,27 +552,22 @@ msgstr "Kioszk mód"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Legutóbbi jelenlét"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
 msgid "Last Updated by"
-msgstr "Frissítette"
+msgstr "Utoljára frissítette"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
-msgid "Manager"
-msgstr "Menedzser"
+msgstr "Utoljára frissítve "
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
@@ -566,11 +575,9 @@ msgid "Manual Attendance"
 msgstr "Kézi jelenlét"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#, python-format
-msgid "Manually"
-msgstr "Kézzel"
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menü"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -590,24 +597,31 @@ msgstr "Nincs kilépés"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "No attendance records found"
-msgstr ""
+msgstr "Nem található jelenlét bejegyzés"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
-msgstr ""
+msgstr "Nincs megjeleníthető jelenlét bejegyzés"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_graph_filtered
+msgid "No data yet!"
+msgstr "Még nincs adat!"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
-msgid "No employee corresponding to barcode %(barcode)s"
-msgstr "Ehhez vonalkódhoz nem tartozik alkalmazott: %(barcode)s"
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Not available"
-msgstr ""
+msgstr "Nem elérhető"
 
 #. module: hr_attendance
 #. openerp-web
@@ -619,14 +633,14 @@ msgstr "Ok"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Tisztviselő"
+msgstr "Hivatalnok"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "Kérem, adja meg PIN kódját ehhez: "
 
 #. module: hr_attendance
 #. openerp-web
@@ -638,7 +652,7 @@ msgstr "Kérem térjen vissza a fő menühöz."
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
-msgstr "Kimutatás készítés"
+msgstr "Riport készítés"
 
 #. module: hr_attendance
 #. openerp-web
@@ -661,6 +675,8 @@ msgstr "Beállítások"
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "Bejelentkezés"
@@ -670,9 +686,18 @@ msgstr "Bejelentkezés"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign out"
 msgstr "Kijelentkezés"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -686,6 +711,12 @@ msgstr ""
 #, python-format
 msgid "The early bird catches the worm"
 msgstr "Korai madár kapja el a gilisztát"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
+msgid ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr ""
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -711,7 +742,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr ""
+msgstr "Mai munkaórák:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -729,7 +760,7 @@ msgstr "Felhasználók"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Ki akar lépni?"
 
 #. module: hr_attendance
 #. openerp-web
@@ -745,7 +776,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome"
-msgstr "Üdvözöljük"
+msgstr "Üdvözlet"
 
 #. module: hr_attendance
 #. openerp-web
@@ -760,12 +791,12 @@ msgstr "Üdvözlöm"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Welcome!"
-msgstr ""
+msgstr "Üdvözöljük!"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr ""
+msgstr "Munkaórák"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -776,7 +807,7 @@ msgstr "Ledolgozott órák"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "Múlt havi ledolgozott órák"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -791,12 +822,8 @@ msgid "You cannot duplicate an attendance."
 msgstr "Nem sokszorozhat meg egy jelenlétet."
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#, python-format
-msgid "check in"
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
 msgstr ""
 
 #. module: hr_attendance
@@ -805,8 +832,17 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
+msgid "check in"
+msgstr "belépés"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
 msgid "check out"
-msgstr ""
+msgstr "kilépés"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids

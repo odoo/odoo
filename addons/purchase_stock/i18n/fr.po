@@ -30,8 +30,8 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # Christophe Ricevuto <cri@nalios.be>, 2021
-# Thomas Deleval <thd@odoo.com>, 2021
 # R HT, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2018-08-02 11:17+0000\n"
-"Last-Translator: R HT, 2021\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +94,7 @@ msgstr "<span class=\"o_stat_text\">Achats</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -184,7 +184,7 @@ msgstr "Contact"
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Corresponding receipt not found."
-msgstr ""
+msgstr "Reçu correspondant non trouvé."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
@@ -286,6 +286,9 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
+"Pour l'article %s, l'entrepôt du type de transfert (%s) est inconsistant "
+"avec l'emplacement (%s) de la règle de réapprovisionnement (%s). Changez le "
+"type de transfert ou annulez la commande."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -691,12 +694,14 @@ msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
 msgstr ""
+"Ces dates ne peuvent être modifiées sur la réception %s qui a déjà été "
+"validée"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr ""
+msgstr "Ces dates ont été mise à jour en rapport avec la réception %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total

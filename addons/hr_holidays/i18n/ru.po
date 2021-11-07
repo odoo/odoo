@@ -498,7 +498,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<i class=\"fa fa-thumbs-up\"/> Approve"
-msgstr ""
+msgstr "<i class=\"fa fa-thumbs-up\"/> Согласовать"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -606,6 +606,9 @@ msgid ""
 "                                    From\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
+"                                    С\n"
+"                                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -635,7 +638,7 @@ msgstr "<span>Добавить</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span>Days</span>"
-msgstr ""
+msgstr "<span>Дней</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -658,6 +661,7 @@ msgid ""
 "A great way to keep track on your time off requests, sick days, and approval"
 " status."
 msgstr ""
+"Отличный способ отслеживать ваши отпуска, больничные и статус согласований. "
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -707,7 +711,7 @@ msgstr "Отсутствует сегодня"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr ""
+msgstr "Резервирование по начислению"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -836,7 +840,7 @@ msgstr "одобрение распределения"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__private_name
 msgid "Allocation Description"
-msgstr ""
+msgstr "Описание резервирования"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -880,7 +884,7 @@ msgstr "Второе утверждение распределения"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
 msgid "Allocation Type"
-msgstr ""
+msgstr "Тип резервирования"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_display
@@ -983,7 +987,7 @@ msgstr "Аттестационный анализ"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Approval"
-msgstr ""
+msgstr "Согласование"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -999,7 +1003,7 @@ msgstr "Одобрить"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr ""
+msgstr "Согласовать резервирования"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
@@ -1245,13 +1249,13 @@ msgstr "Контакт"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr ""
+msgstr "Создать плановый отпуск"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr ""
+msgstr "Создать заявку на плановый отпуск"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__create_uid
@@ -1362,7 +1366,7 @@ msgstr "Подразделение"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr ""
+msgstr "Мастер увольнения"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__name
@@ -1619,7 +1623,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
 msgid "HR Approval"
-msgstr ""
+msgstr "Согласование HR"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -1912,7 +1916,7 @@ msgstr "Менеджер"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_manager_approval
 msgid "Manager Approval"
-msgstr ""
+msgstr "Согласование руководителя"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
@@ -2045,7 +2049,7 @@ msgstr "Мои запросы"
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
-msgstr ""
+msgstr "Мой отпуск"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2062,7 +2066,7 @@ msgstr "Название"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Need Second Approval"
-msgstr ""
+msgstr "Требует второго согласования"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__draft
@@ -2082,7 +2086,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Allocation"
-msgstr ""
+msgstr "Новое резервирование"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2097,7 +2101,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Time Off"
-msgstr ""
+msgstr "Новый отпуск"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2401,7 +2405,7 @@ msgstr "Отказано"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 msgid "Regular Allocation"
-msgstr ""
+msgstr "Регулярное резервирование"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
@@ -2566,7 +2570,7 @@ msgstr "Показать все записи с просроченой дато�
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr ""
+msgstr "Отпуск по болезни"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -2793,14 +2797,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "Time Off"
-msgstr ""
+msgstr "Отпуск"
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "Time Off : %s"
-msgstr ""
+msgstr "Отпуск : %s"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
@@ -2818,7 +2822,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 msgid "Time Off Approval"
-msgstr ""
+msgstr "Согласовать отпуск"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
@@ -2874,7 +2878,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
 msgid "Time Off Second Approve"
-msgstr ""
+msgstr "Подтвердить отгул"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -2906,14 +2910,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Time Off Type"
-msgstr ""
+msgstr "Тип отпуска"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Time Off Types"
-msgstr ""
+msgstr "Типы отпуска"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report

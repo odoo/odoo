@@ -3,18 +3,19 @@
 # 	* sale_crm
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,12 +36,17 @@ msgstr "Geassocieerde Lead"
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "Confirm"
 msgstr "Bevestigen"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__create
+msgid "Create a new customer"
+msgstr "Maak een nieuwe klant"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
@@ -65,7 +71,12 @@ msgstr "Klant"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__nothing
+msgid "Do not link to a customer"
+msgstr "Koppel niet aan een klant"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
@@ -95,12 +106,17 @@ msgstr "Laatst bijgewerkt op"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Lead/Prospect"
+msgstr "Lead/Verkoopkans"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
+msgid "Link to an existing customer"
+msgstr "Koppel aan een bestaande klant"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr "In de chat opslaan welke prospect aan de basis van de verkoop ligt"
+msgstr "In de chat opslaan welke verkoopkans aan de basis van de verkoop ligt"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -127,7 +143,7 @@ msgstr "Aantal verkooporders"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
-msgstr "Prospect"
+msgstr "Verkoopkans"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
@@ -175,11 +191,6 @@ msgstr "Verkoop: Totaal excl. BTW"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "Totaal orders"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
-msgid "Tags"
-msgstr "Labels"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total

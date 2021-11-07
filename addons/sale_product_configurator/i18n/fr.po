@@ -3,23 +3,23 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Clo <clo@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Richard Mathot <rim@odoo.com>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # LEONARD Jean-Christophe <jean-christophe.leonard@myceliandre.fr>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
-# Martin Trigaux, 2019
+# omaodoo <oma@odoo.com>, 2019
+# edc <edc@odoo.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-06-12 12:36+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,21 @@ msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Ajouter au panier"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Price</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Product</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
+msgid "<span class=\"label\">Quantity</span>"
+msgstr ""
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Total :</strong>"
 
@@ -43,9 +58,7 @@ msgid "Add"
 msgstr "Ajouter"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Add one"
 msgstr "Ajouter"
 
@@ -104,17 +117,17 @@ msgstr "Créé le"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Valeur non standard"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom affiché"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Valeur supplémentaire"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
@@ -124,7 +137,7 @@ msgstr "ID"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Cet article est-il configurable?"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
@@ -150,7 +163,7 @@ msgstr "Option non disponible."
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr "Articles optionnels"
+msgstr "Produits optionnels"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,help:sale_product_configurator.field_product_product__optional_product_ids
@@ -168,18 +181,12 @@ msgid "Options"
 msgstr "Options"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-msgid "Price"
-msgstr "Prix"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
 msgid "Pricelist"
 msgstr "Liste de prix"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_template_id
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Product"
 msgstr "Article"
 
@@ -196,22 +203,24 @@ msgid "Product Template"
 msgstr "Modèle d'article"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Variante d'article"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
 msgstr "Quantité"
 
 #. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Supprimer"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_product_configurator
 msgid "Sale Product Configurator"
-msgstr ""
+msgstr "Configurateur de produits pour la vente"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
@@ -231,4 +240,4 @@ msgstr "Cette combinaison n'existe pas."
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Ce produit n'a pas de combinaison existante"

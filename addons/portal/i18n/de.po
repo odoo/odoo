@@ -44,13 +44,13 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "%1d Tage überfällig"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%s  ist nicht die Referenz eines Berichts"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -323,7 +323,7 @@ msgstr ""
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Für jede Anlage muss ein Zugangstoken angegeben werden."
 
 #. module: portal
 #. openerp-web
@@ -363,13 +363,16 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Eine Änderung des Firmennamens ist nicht mehr möglich, sobald Dokumente für "
+"Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang "
+"direkt an uns."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Check fehlgeschlagen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -472,6 +475,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Zurzeit beschränkt auf interne Mitarbeiter, klicken Sie hier um es für alle "
+"zugänglich zu machen, die sich dieses Dokument ansehen."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -550,7 +555,7 @@ msgstr "Passwort vergessen?"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "Zugang gewähren"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -596,7 +601,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Ungültiger Berichtstyp: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -611,7 +616,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Ist Portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -637,7 +642,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Letzte Authentifizierung"
 
 #. module: portal
 #. openerp-web
@@ -668,6 +673,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Das Modell %(model_name)s unterstützt die Token-Signatur nicht, da es "
+"kein%(field_name)s Feld hat."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -761,12 +768,12 @@ msgstr "Portalzugriffs-URL"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portal Mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Portalfreigabe"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -806,7 +813,7 @@ msgstr "Am %s veröffentlicht"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Erneut einladen"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -826,7 +833,7 @@ msgstr "Zugehöriges Dokumenten-Modell"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Zugang widerrufen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -893,6 +900,8 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Einige Felder sind erforderlich. Bitte schreiben Sie eine Nachricht oder "
+"hängen Sie ein Dokument an."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -922,6 +931,8 @@ msgstr "Vielen Dank!"
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
 msgstr ""
+"Der Anhang %s kann nicht entfernt werden, da er mit einer Nachricht "
+"verknüpft ist."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -935,26 +946,28 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Der Anhang existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "TDer Kontakt \"%s\" hat keine gültige E-Mail-Adresse."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
 msgstr ""
+"Der Kontakt\"%s\" hat dieselbe E-Mail-Adresse wie ein bereits bestehender "
+"Nutzer (%s)."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -962,6 +975,8 @@ msgstr ""
 msgid ""
 "The document does not exist or you do not have the rights to access it."
 msgstr ""
+"Das Dokument existiert nicht oder Sie verfügen nicht über eine "
+"Zugriffsberechtigung."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -982,7 +997,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Der Partner \"%s\" hat bereits Zugang zum Portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1011,7 +1026,7 @@ msgstr "Momentan sind keine Kommentare vorhanden."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "Dieses Dokument existiert nicht."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -1033,6 +1048,8 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Dieser Partner ist mit einem internen Benutzer verknüpft und hat bereits "
+"Zugang zum Portal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1198,7 +1215,7 @@ msgstr "Sie müssen sein"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Sie sollten dem Partner \"%s\" erst Zugang zum Portal gewähren."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

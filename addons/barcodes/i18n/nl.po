@@ -3,17 +3,18 @@
 # 	* barcodes
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,28 +23,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr " '*' is geen geldig regex barcode patroon. Bedoelde u soms '.*' ?"
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": a rule can only contain one pair of braces."
-msgstr ": een regel kan enkel één paar accolades bevatten."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": braces can only contain N's followed by D's."
-msgstr ": accolades kunnen enkel N bevatten gevolgd door D."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": empty braces."
-msgstr ": lege accolades."
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -96,7 +79,7 @@ msgstr "Een interne identificatie van de barcode nomenclatuur"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
 msgid "Any"
-msgstr "één"
+msgstr "Elke"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -155,14 +138,13 @@ msgstr "Aangemaakt op"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Discard"
-msgstr "Negeren"
+msgstr "Annuleren"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
@@ -180,40 +162,16 @@ msgid "EAN-8"
 msgstr "EAN-8"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Enable edit mode to modify this document"
+msgstr "Schakel de bewerkingsmodus in om dit document te wijzigen"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
 msgstr "Codering"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Barcode command is undefined"
-msgstr "Fout: Barcode commando is niet gedefinieerd"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Document not editable"
-msgstr "Fout: Document kan niet gewijzigd worden"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: No last scanned barcode"
-msgstr "Fout: geen laatst gescande barcode"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Pager not available"
-msgstr "Fout: pager niet beschikbaar"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -223,14 +181,12 @@ msgstr "HTTP routing"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -255,6 +211,13 @@ msgstr "Nooit"
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
 msgstr "Nomenclature"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Pager unavailable"
+msgstr "Pager niet beschikbaar"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -286,13 +249,20 @@ msgstr "Regels"
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
+msgid "Scan a barcode to set the quantity"
+msgstr "Scan een barcode om het aantal in te stellen"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
 msgid "Select"
 msgstr "Selecteren"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "Volgorde"
+msgstr "Reeks"
 
 #. module: barcodes
 #. openerp-web
@@ -322,12 +292,32 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Het overeenkomstige patroon zal naar deze barcode verwijzen"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern "
-msgstr "Er is een fout in de syntax van het barcode patroon"
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"Er is een syntaxisfout in het barcodepatroon %(pattern)s: een regel kan maar"
+" één paar accolades bevatten."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"Er is een syntaxisfout in het barcodepatroon %(pattern)s: accolades kunnen "
+"alleen N's bevatten gevolgd door D's."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+"Er is een syntaxisfout in het barcodepatroon %(pattern)s: lege accolades."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -337,20 +327,6 @@ msgid ""
 msgstr ""
 "Deze regel zal enkel toegepast worden indien de barcode van de juiste "
 "codering voorzien is"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To modify this document, please first start edition."
-msgstr "Om dit document te wijzigen moet u eerst de wijzigingsmodus starten."
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To set the quantity please scan a barcode first."
-msgstr "Om het aantal in te stellen scant u eerst uw barcode. "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -366,7 +342,7 @@ msgid ""
 msgstr ""
 "UPC codes kunnen naar EAN omgezet worden door ze met het prefix nul te "
 "voorzien. Deze instelling bepaalt of de UPC/EAN-omzetting automatisch moet "
-"uitgevoerd wanneer er een overeenkomst wordt gezocht in een regel met de een"
+"uitgevoerd wanneer er een overeenkomst wordt gezocht in een regel met de ene"
 " of andere codering. "
 
 #. module: barcodes
@@ -383,6 +359,13 @@ msgstr "UPC-A naar EAN-13"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC/EAN Conversion"
 msgstr "UPC/EAN omzetting"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Undefined barcode command"
+msgstr "Ongedefinieerde barcode-opdracht"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
