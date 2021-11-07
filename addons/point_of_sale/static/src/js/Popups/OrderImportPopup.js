@@ -3,6 +3,7 @@ odoo.define('point_of_sale.OrderImportPopup', function(require) {
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { _lt } = require('@web/core/l10n/translation');
 
     // formerly OrderImportPopupWidget
     class OrderImportPopup extends AbstractAwaitablePopup {
@@ -16,8 +17,8 @@ odoo.define('point_of_sale.OrderImportPopup', function(require) {
     }
     OrderImportPopup.template = 'OrderImportPopup';
     OrderImportPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
+        confirmText: _lt('Ok'),
+        cancelText: _lt('Cancel'),
         body: '',
     };
 

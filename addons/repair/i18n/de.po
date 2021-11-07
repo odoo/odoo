@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Chris Egal <sodaswed@web.de>, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
@@ -465,7 +466,7 @@ msgstr "Gruppieren nach Partner-Rechnungsadressen"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hat eine Nachricht"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -942,7 +943,7 @@ msgstr "Reparaturposition (Teile)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Reparaturhinweise"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -975,7 +976,7 @@ msgstr "Reparaturaufträge"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "Reparaturauftrags-Tags"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1397,7 +1398,7 @@ msgstr "vom Ort"
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
@@ -1405,3 +1406,5 @@ msgid ""
 "{{ object.partner_id.name or '' }} Repair Orders (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name or '' }} Reparaturaufträge (Ref {{ object.name or "
+"'n/a' }})"

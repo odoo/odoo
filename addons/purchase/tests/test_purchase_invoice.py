@@ -299,3 +299,31 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         move = move_form.save()
 
         self.assertEqual(move.amount_total, 0.01)
+
+    def test_vendor_bill_analytic_account_default_change(self):
+        """ Tests whether, when an analytic account rule is set, and user changes manually the analytic account on
+        the po, it is the same that is mentioned in the bill.
+        """
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'product_id': self.product_order.id,
+        })
+
+        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.name = self.product_order.name
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1.0
+            po_line_form.price_unit = 10
+            po_line_form.account_analytic_id = analytic_account_manual
+
+        purchase_order = po_form.save()
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+
+        aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase_order.order_line.id)])
+        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_manual.id}])

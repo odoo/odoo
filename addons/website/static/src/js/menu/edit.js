@@ -103,7 +103,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this._saving) {
             return false;
         }
-        this.observer.disconnect();
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
+        }
         var self = this;
         this._saving = true;
         this.trigger_up('edition_will_stopped');
@@ -279,11 +282,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         // 1. Make sure every .o_not_editable is not editable.
         // 2. Observe changes to mark dirty structures and fields.
-        this.observer = new MutationObserver(records => {
-            this.wysiwyg.odooEditor.observerUnactive();
-            $('#wrap').find('.o_not_editable[contenteditable!=false]').attr('contenteditable', false);
-            this.wysiwyg.odooEditor.observerActive();
-
+        const processRecords = (records) => {
             records = this.wysiwyg.odooEditor.filterMutationRecords(records);
             // Skip the step for this stack because if the editor undo the first
             // step that has a dirty element, the following code would have
@@ -303,15 +302,29 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
                 });
             }
-        });
+        };
+        this.observer = new MutationObserver(processRecords);
+        const observe = () => {
+            if (this.observer) {
+                this.observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeOldValue: true,
+                    characterData: true,
+                });
+            }
+        }
+        observe();
 
-        this.observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeOldValue: true,
-            characterData: true,
-        });
+        this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
+            if (this.observer) {
+                processRecords(this.observer.takeRecords());
+                this.observer.disconnect();
+            }
+        })
+        this.wysiwyg.odooEditor.addEventListener('observerActive', observe)
+
         $('body').addClass('editor_started');
     },
 
@@ -451,7 +464,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
-        this.observer.disconnect();
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
+        }
     },
     /**
      * Called when edition was stopped. Notifies the

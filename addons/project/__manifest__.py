@@ -87,7 +87,9 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/**/*.xml',
+            'project/static/src/xml/**/*',
+            'project/static/src/burndown_chart/**/*.xml',
+            'project/static/src/project_control_panel/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
@@ -115,6 +117,7 @@
             'web/static/src/legacy/js/public/public_widget.js',
             'portal/static/src/js/portal_chatter.js',
             'portal/static/src/js/portal_composer.js',
+            'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*.js',
             'project/static/src/scss/project_sharing/*',
             'web/static/src/start.js',

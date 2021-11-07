@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
@@ -1185,7 +1186,7 @@ msgstr "Vorlage für die Zertifizierung"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "Zertifizierung: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1268,7 +1269,7 @@ msgstr "Cliff Burton"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Close"
-msgstr "Abschliessen"
+msgstr "Abschließen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -1938,7 +1939,7 @@ msgstr "Schwer"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hat eine Nachricht"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_2
@@ -2600,7 +2601,7 @@ msgstr "Maximalwert"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "Maybe you were looking for"
-msgstr "Vielleicht hast du gesucht"
+msgstr "Sie suchen vielleicht"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
@@ -2955,6 +2956,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Optionale Übersetzung (ISO Code) zur Auswahl beim E-Mailversand. Falls es "
+"keinen Eintrag gibt, wird die Englische Version verwendet. Es sollte sich "
+"normalerweise um einen Platzhalter Ausdruck handeln, der die passende "
+"Sprache enthält, z.B. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__null_value
@@ -3027,7 +3032,7 @@ msgstr "Kısmen"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr ""
+msgstr "An Umfrage teilnehmen: {{ object.survey_id.display_name }} "
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3206,7 +3211,7 @@ msgstr ""
 #: model:ir.ui.menu,name:survey.survey_menu_questions
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Questions"
-msgstr "Fragestellungen"
+msgstr "Fragen"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz

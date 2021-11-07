@@ -53,6 +53,8 @@
 
 .floor-map .tables {
     position: relative;
+    --scale: 1;
+    transform: scale(var(--scale));
 }
 @media screen and (min-width: 1024px) {
     .floor-map .tables {
@@ -281,10 +283,11 @@
 /* ------ FLOOR BUTTON IN THE ORDER SELECTOR ------- */
 
 .pos .order-button.floor-button {
+    display: flex;
+    align-items: center;
     background: #6EC89B;
     font-weight: bold;
     font-size: 16px;
-    min-width: 128px;
     padding-left: 16px;
     padding-right: 16px;
 }

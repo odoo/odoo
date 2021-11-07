@@ -92,7 +92,7 @@ msgstr "額外的到岸成本"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr ""
+msgstr "允許調撥"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -234,13 +234,13 @@ msgstr "預設日記帳"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "預設拆分方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "用於到岸成本時的預設拆分方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -566,7 +566,7 @@ msgstr "請配置產品: %s的庫存費用帳戶。"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "請定義這些額外費用應適用於哪些 %s。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -755,7 +755,7 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
-msgstr ""
+msgstr "您不能對選定的%s應用到岸成本。到岸成本只能應用於採用自動庫存評估並使用先進先出或平均成本計算方法的產品。"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
@@ -763,4 +763,4 @@ msgstr ""
 msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
-msgstr ""
+msgstr "您不能更改產品類型或禁用到岸成本選項，因為產品用於傳票項目。"

@@ -3,8 +3,8 @@
 # 	* project
 # 
 # Translators:
+# Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
-# Benson White <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,6 +371,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -418,7 +420,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -426,11 +428,13 @@ msgid ""
 "<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1549,7 +1553,7 @@ msgstr ""
 "定義專案任務的可見性：\n"
 "- 受邀員工：員工只能看到跟隨的專案和任務。\n"
 "- 所有員工：員工可以查看所有專案和任務。\n"
-"- 受邀門戶用戶和所有員工：員工可以看到一切。受邀門戶用戶可能會看到專案和任務緊隨其後。\n"
+"- 受邀網站登入會員和所有員工：員工可以看到一切。受邀網站登入會員可能會看到專案和任務緊隨其後。\n"
 "   他們或他們公司的某個人。"
 
 #. module: project
@@ -1922,7 +1926,7 @@ msgstr "永遠"
 #: model:ir.model.fields,field_description:project.field_project_task__fri
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__fri
 msgid "Fri"
-msgstr "週五"
+msgstr "五"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__fri
@@ -2277,7 +2281,7 @@ msgstr "受邀員工"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr "受邀門戶用戶和所有員工"
+msgstr "受邀網站登入會員和所有員工"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2694,7 +2698,7 @@ msgstr "混合"
 #: model:ir.model.fields,field_description:project.field_project_task__mon
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__mon
 msgid "Mon"
-msgstr "週一"
+msgstr "一"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
@@ -3917,7 +3921,7 @@ msgstr "悲傷的表情"
 #: model:ir.model.fields,field_description:project.field_project_task__sat
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sat
 msgid "Sat"
-msgstr "週六"
+msgstr "六"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
@@ -4263,7 +4267,7 @@ msgstr "與此任務相關聯的所有子任務的計劃時間總和。通常小
 #: model:ir.model.fields,field_description:project.field_project_task__sun
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sun
 msgid "Sun"
-msgstr "週日"
+msgstr "日"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
@@ -4679,7 +4683,7 @@ msgstr "這將封存以下專案中的階段及其包含的所有任務："
 #: model:ir.model.fields,field_description:project.field_project_task__thu
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__thu
 msgid "Thu"
-msgstr "週四"
+msgstr "四"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
@@ -4709,7 +4713,7 @@ msgstr "提示：根據專案自定義任務和階段"
 #: model:ir.model.fields,field_description:project.field_project_update__name
 #, python-format
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
@@ -4803,7 +4807,7 @@ msgstr "追蹤在專案和任務上花費的時間"
 #: model:ir.model.fields,field_description:project.field_project_task__tue
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__tue
 msgid "Tue"
-msgstr "週二"
+msgstr "二"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__tue
@@ -5005,7 +5009,7 @@ msgstr "網站溝通記錄"
 #: model:ir.model.fields,field_description:project.field_project_task__wed
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__wed
 msgid "Wed"
-msgstr "週三"
+msgstr "三"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__wed

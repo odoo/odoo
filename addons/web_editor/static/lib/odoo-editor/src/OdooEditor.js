@@ -424,6 +424,7 @@ export class OdooEditor extends EventTarget {
             clearTimeout(this.observerTimeout);
             this.observer.disconnect();
             this.observerFlush();
+            this.dispatchEvent(new Event('observerUnactive'));
         }
     }
     observerFlush() {
@@ -454,6 +455,7 @@ export class OdooEditor extends EventTarget {
             characterData: true,
             characterDataOldValue: true,
         });
+        this.dispatchEvent(new Event('observerActive'));
     }
 
     observerApply(records) {
@@ -552,6 +554,9 @@ export class OdooEditor extends EventTarget {
             if (record.type === 'attributes') {
                 // Skip the attributes change on the dom.
                 if (record.target === this.editable) continue;
+                if (record.attributeName === 'contenteditable') {
+                    continue;
+                }
 
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
                 if (
@@ -1886,14 +1891,18 @@ export class OdooEditor extends EventTarget {
                 listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
             }
         }
-        if (!activeLabel) {
-            // If no element from the text style dropdown was marked as active,
-            // mark the paragraph one as active and use its label.
-            const firstButtonEl = this.toolbar.querySelector('#paragraph');
-            firstButtonEl.classList.add('active');
-            activeLabel = firstButtonEl.textContent;
+
+        const styleSection = this.toolbar.querySelector('#style');
+        if (styleSection) {
+            if (!activeLabel) {
+                // If no element from the text style dropdown was marked as active,
+                // mark the paragraph one as active and use its label.
+                const firstButtonEl = styleSection.querySelector('#paragraph');
+                firstButtonEl.classList.add('active');
+                activeLabel = firstButtonEl.textContent;
+            }
+            styleSection.querySelector('button span').textContent = activeLabel;
         }
-        this.toolbar.querySelector('#style button span').textContent = activeLabel;
 
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');

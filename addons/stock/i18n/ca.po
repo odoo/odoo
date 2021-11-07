@@ -2015,10 +2015,8 @@ msgstr "Rutes per defecte a través del magatzem"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Definir una norma d'estoc mínim per a que Odoo creï peticions de pressupost "
-"automàticament o esborranys d'ordres de fabricació per restablir l'estoc."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3808,6 +3806,11 @@ msgstr "Activitats endarrerides"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
 msgstr "Transferències retardades"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__products_availability
+msgid "Latest product availability status of the picking"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
@@ -6661,7 +6664,8 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
 
@@ -6669,7 +6673,8 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Serial number (%s) is not located in %s, but is located in location(s): %s. "
+"Serial number (%s) is not located in %s, but is located in location(s): %s.\n"
+"\n"
 "Source location for this move will be changed to %s"
 msgstr ""
 
@@ -7402,7 +7407,7 @@ msgstr ""
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
-"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial numbershould be corrected to prevent inconsistent data."
+"Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
 
 #. module: stock

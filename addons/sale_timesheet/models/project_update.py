@@ -26,7 +26,7 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_project_sols(self, project):
         # TODO: remove me in master
-	    return
+        return
 
     @api.model
     def _get_services_values(self, project):
@@ -67,8 +67,7 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_profitability_values(self, project):
         costs_revenues = project.analytic_account_id and project.allow_billable
-        timesheets = project.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user')
-        if not (self.user_has_groups('project.group_project_manager') and (costs_revenues or timesheets)):
+        if not (self.user_has_groups('project.group_project_manager') and costs_revenues):
             return {}
         profitability = project._get_profitability_common()
         return {

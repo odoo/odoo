@@ -26,7 +26,7 @@ msgid ""
 "                                Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
 "<i class=\"fa fa-arrow-right\">\n"
-"                                演示如何獲取 Twitter API 金鑰和 Twitter API 金鑰"
+"                                展示如何獲取 Twitter API 金鑰和 Twitter API secret"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -147,7 +147,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Internet connection refused: We failed to reach a twitter server."
-msgstr ""
+msgstr "網路連線被拒：我們無法訪問 Twitter 伺服器。"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
@@ -176,7 +176,7 @@ msgstr "請為一個網站設定的推特螢幕名稱來上載您的喜好（它
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr "請在網站設定Twitter API密鑰和秘密。"
+msgstr "請在網站設定Twitter API密鑰和secret。"
 
 #. module: website_twitter
 #. openerp-web
@@ -203,7 +203,7 @@ msgstr "螢幕名稱"
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr "您想從中上載的喜好推特帳號的螢幕名稱。它不必與 API 密鑰/秘密相匹配。"
+msgstr "您想從中上載的喜好推特帳號的螢幕名稱。它不必與 API 密鑰/secret相匹配。"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -231,7 +231,7 @@ msgstr "Twiiter伺服器已運作，但是由於我們的棧中某些錯誤，�
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
-msgstr "該請求可以被理解，但是已被拒絕或者拒絕訪問。請核查您的Twitter API密鑰和秘密。"
+msgstr "該請求可以被理解，但是已被拒絕或者拒絕訪問。請核查您的Twitter API密鑰和secret。"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -270,7 +270,7 @@ msgstr "Twitter API 密鑰"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API 秘密"
+msgstr "Twitter API secret"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
@@ -285,12 +285,12 @@ msgstr "您可以通過 https://apps.twitter.com/ 獲取 Twitter API 密鑰"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API 秘密"
+msgstr "Twitter API secret"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr "您可以通過 https://apps.twitter.com/ 獲取 Twitter API 密鑰"
+msgstr "您可以通過 https://apps.twitter.com/ 獲取 Twitter API secret"
 
 #. module: website_twitter
 #. openerp-web
@@ -305,7 +305,7 @@ msgstr "Twitter 配置"
 msgid ""
 "Twitter authorization error! Please double-check your Twitter API Key and "
 "Secret!"
-msgstr ""
+msgstr "Twitter 授權錯誤！請檢查您的 Twitter API 密鑰和secret！"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -372,4 +372,4 @@ msgstr "https://apps.twitter.com/app/new"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "with the following values:"
-msgstr "用下列值:"
+msgstr "使用以下數值:"
