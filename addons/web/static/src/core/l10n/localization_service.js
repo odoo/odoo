@@ -41,6 +41,16 @@ export const localizationService = {
         Object.setPrototypeOf(translatedTerms, terms);
         env._t = _t;
         env.qweb.translateFn = _t;
+
+        // Setup lang inside luxon. The locale codes received from the server contain "_", whereas
+        // the Intl codes use "-" (Unicode BCP 47). There's only one exception, which is locale
+        // "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
+        if (lang === "sr@latin") {
+            luxon.Settings.defaultLocale = "sr-Latn-RS";
+        } else if (lang) {
+            luxon.Settings.defaultLocale = lang.replace(/_/g, "-");
+        }
+
         const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
         const timeFormat = strftimeToLuxonFormat(userLocalization.time_format);
         const dateTimeFormat = `${dateFormat} ${timeFormat}`;
