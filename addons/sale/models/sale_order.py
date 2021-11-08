@@ -526,6 +526,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         lines_to_update = []
         for line in self.order_line.filtered(lambda line: not line.display_type):
+            # TODO VFE remove price field usage
             product = line.product_id.with_context(
                 partner=self.partner_id,
                 quantity=line.product_uom_qty,

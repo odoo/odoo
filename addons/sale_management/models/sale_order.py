@@ -69,7 +69,7 @@ class SaleOrder(models.Model):
         discount = 0
 
         if self.pricelist_id:
-            pricelist_price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
+            pricelist_price = self.pricelist_id._get_product_price(option.product_id, 1, uom=option.uom_id)
 
             if self.pricelist_id.discount_policy == 'without_discount' and price:
                 discount = max(0, (price - pricelist_price) * 100 / price)
@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         res = super().update_prices()
         for line in self.sale_order_option_ids:
-            line.price_unit = self.pricelist_id.get_product_price(line.product_id, line.quantity, self.partner_id, uom_id=line.uom_id.id)
+            line.price_unit = self.pricelist_id._get_product_price(line.product_id, line.quantity, uom=line.uom_id)
         return res
 
     @api.onchange('sale_order_template_id')
@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
                 discount = 0
 
                 if self.pricelist_id:
-                    pricelist_price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                    pricelist_price = self.pricelist_id._get_product_price(line.product_id, 1, uom=line.product_uom_id)
 
                     if self.pricelist_id.discount_policy == 'without_discount' and price:
                         discount = max(0, (price - pricelist_price) * 100 / price)
@@ -224,16 +224,10 @@ class SaleOrderOption(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        product = self.product_id.with_context(
-            lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id,
-            quantity=self.quantity,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.uom_id.id,
-            fiscal_position=self.env.context.get('fiscal_position')
-        )
-        self.name = product.get_product_multiline_description_sale()
+        product = self.product_id
+        product_lang = product.with_context(lang=self.order_id.partner_id.lang)
+
+        self.name = product_lang.get_product_multiline_description_sale()
         self.uom_id = self.uom_id or product.uom_id
         # To compute the discount a so line is created in cache
         values = self._get_values_to_add_to_order()

@@ -73,7 +73,7 @@ class TestPricelist(TransactionCase):
         # make sure 'tonne' resolves down to 1 'kg'.
         self.uom_ton.write({'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
-        spam_id = self.env['product.product'].create({
+        spam = self.env['product.product'].create({
             'name': '1 tonne of spam',
             'uom_id': self.uom_ton.id,
             'uom_po_id': self.uom_ton.id,
@@ -88,13 +88,13 @@ class TestPricelist(TransactionCase):
             'base': 'list_price',  # based on public price
             'min_quantity': 3,  # min = 3 tonnes
             'price_surcharge': -10,  # -10 EUR / tonne
-            'product_id': spam_id.id
+            'product_id': spam.id
         })
         pricelist = self.public_pricelist
 
-        def test_unit_price(qty, uom, expected_unit_price):
-            spam = spam_id.with_context({'uom': uom})
-            unit_price = pricelist.with_context({'uom': uom}).get_product_price(spam, qty, False)
+        def test_unit_price(qty, uom_id, expected_unit_price):
+            uom = self.env['uom.uom'].browse(uom_id)
+            unit_price = pricelist._get_product_price(spam, qty, uom=uom)
             self.assertAlmostEqual(unit_price, expected_unit_price, msg='Computed unit price is wrong')
 
         # Test prices - they are *per unit*, the quantity is only here to match the pricelist rules!

@@ -42,13 +42,13 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         # (see `self._create_other_currency_config` method)
         # Except for product2 where the price is specified in the pricelist.
 
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product1, 1, self.customer), 5.00)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product2, 1, self.customer), 12.99)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product3, 1, self.customer), 15.00)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product4, 1, self.customer), 50)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product5, 1, self.customer), 100)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product6, 1, self.customer), 22.65)
-        self.assertAlmostEqual(self.config.pricelist_id.get_product_price(self.product7, 1, self.customer), 3.50)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product1, 1), 5.00)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product2, 1), 12.99)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product3, 1), 15.00)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product4, 1), 50)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product5, 1), 100)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product6, 1), 22.65)
+        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product7, 1), 3.50)
 
     def test_02_orders_without_invoice(self):
         """ orders without invoice

@@ -1707,7 +1707,7 @@ exports.Product = Backbone.Model.extend({
         }
         return this.pos.units_by_id[unit_id];
     },
-    // Port of get_product_price on product.pricelist.
+    // Port of _get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
     // the default UOM set on the product and the user cannot change
