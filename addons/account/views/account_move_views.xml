@@ -200,7 +200,7 @@
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
-                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency" optional="show"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
@@ -833,13 +833,13 @@
                                         options="{'no_create': True}"
                                         attrs="{'readonly': [('posted_before', '=', True)]}"/>
                                     <span class="oe_inline o_form_label mx-3 oe_read_only"
-                                        groups="base.group_multi_currency"> in </span>
+                                        groups="base.group_multi_currency" attrs="{'invisible': [('move_type', '=', 'entry')]}"> in </span>
                                     <!-- Bigger margin on the left because in edit mode the external link button covers the text -->
                                     <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only"
-                                        groups="base.group_multi_currency"> in </span>
+                                        groups="base.group_multi_currency" attrs="{'invisible': [('move_type', '=', 'entry')]}"> in </span>
                                     <field name="currency_id"
                                         groups="base.group_multi_currency"
-                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('move_type', '=', 'entry')]}"/>
                                 </div>
                             </group>
                         </group>
@@ -1085,7 +1085,7 @@
                                                groups="base.group_multi_currency"
                                                optional="hide"/>
                                         <field name="currency_id" options="{'no_create': True}"
-                                               groups="base.group_multi_currency"
+                                               optional="hide" groups="base.group_multi_currency"
                                                attrs="{'column_invisible': [('parent.move_type', '!=', 'entry')]}"/>
                                         <field name="tax_ids" widget="many2many_tags"
                                                optional="hide"
