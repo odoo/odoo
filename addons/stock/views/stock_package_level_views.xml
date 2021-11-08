@@ -35,9 +35,9 @@
                             <field name="lot_id" attrs="{'column_invisible': [('parent.show_lots_m2o', '=', False)]}" groups="stock.group_production_lot"/>
                             <field name="lot_name" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)]}" groups="stock.group_production_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
-                            <field name="product_uom_qty"/>
+                            <field name="reserved_uom_qty"/>
                             <field name="qty_done"/>
-                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="uom.group_uom"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('reserved_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="uom.group_uom"/>
                             <field name="state" invisible="1"/>
                         </tree>
                     </field>

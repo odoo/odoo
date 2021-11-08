@@ -1513,7 +1513,7 @@ class MrpProduction(models.Model):
 
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
-        backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
+        backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.reserved_qty == 0).unlink()
 
         for old_wo, wo in zip(self.workorder_ids, backorders.workorder_ids):
             wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
@@ -1921,19 +1921,19 @@ class MrpProduction(models.Model):
                         new_moves_vals.append(move_vals[0])
                         new_moves_quantity_to_split.append(uom_qty_to_split)
                     elif move.raw_material_production_id:
-                        move.move_line_ids.product_uom_qty = 0
-                        move.move_line_ids[0].product_uom_qty = move.product_uom_qty
+                        move.move_line_ids.reserved_uom_qty = 0
+                        move.move_line_ids[0].reserved_uom_qty = move.product_uom_qty
             if backorder:
                 new_moves = self.env['stock.move'].create(new_moves_vals)
                 for move, quantity_to_split, new_move in zip(new_moves_origin, new_moves_quantity_to_split, new_moves):
                     if move.raw_material_production_id:
                         move.move_line_ids[0].copy({
                             'move_id': new_move.id,
-                            'product_uom_qty': quantity_to_split,
+                            'reserved_uom_qty': quantity_to_split,
                             'lot_id': move.move_line_ids[0].lot_id.id if move.move_line_ids[0].lot_id else 0,
                         })
-                        move.with_context(bypass_reservation_update=True).move_line_ids.product_uom_qty = 0
-                        move.with_context(bypass_reservation_update=True).move_line_ids[0].product_uom_qty = move.product_uom_qty
+                        move.with_context(bypass_reservation_update=True).move_line_ids.reserved_uom_qty = 0
+                        move.with_context(bypass_reservation_update=True).move_line_ids[0].reserved_uom_qty = move.product_uom_qty
                 for old_wo, wo in zip(production.workorder_ids, backorder.workorder_ids):
                     wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
                     wo.qty_producing = 1

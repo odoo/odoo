@@ -56,7 +56,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             and not ml.result_package_id
         )
         if not move_line_ids:
-            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
                                  precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                  precision_rounding=ml.product_uom_id.rounding) == 0)
 

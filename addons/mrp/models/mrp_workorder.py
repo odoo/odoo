@@ -788,7 +788,7 @@ class MrpWorkorder(models.Model):
             if move_line:
                 if self.product_id.tracking == 'serial':
                     raise UserError(_('You cannot produce the same serial number twice.'))
-                move_line.product_uom_qty += self.qty_producing
+                move_line.reserved_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
                 quantity = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -797,7 +797,7 @@ class MrpWorkorder(models.Model):
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
                     'lot_id': self.finished_lot_id.id,
-                    'product_uom_qty': self.qty_producing,
+                    'reserved_uom_qty': self.qty_producing,
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': self.qty_producing,
                     'location_id': production_move.location_id.id,

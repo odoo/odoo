@@ -495,7 +495,7 @@ class StockMove(models.Model):
                 for move in picking.move_ids:
                     # For assigned moves
                     for move_line in move._get_move_lines():
-                        move_line.qty_done = move_line.product_uom_qty
+                        move_line.qty_done = move_line.reserved_uom_qty
                     # Create move line for remaining qty
                     missing_to_do = move.product_qty - move.quantity_done
                     missing_to_do = move.product_uom._compute_quantity(missing_to_do, move.product_uom, rounding_method='HALF-UP')

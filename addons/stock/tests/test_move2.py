@@ -647,7 +647,7 @@ class TestPickShip(TestStockCommon):
         backorder_wizard.process()
 
         self.assertTrue(picking_client.move_line_ids, 'A move line should be created.')
-        self.assertEqual(picking_client.move_line_ids.product_uom_qty, 5, 'The move line should have 5 unit reserved.')
+        self.assertEqual(picking_client.move_line_ids.reserved_uom_qty, 5, 'The move line should have 5 unit reserved.')
 
         # Directly delete the move lines on the picking. (Use show detail operation on picking type)
         # Should do the same behavior than unreserve
@@ -769,24 +769,24 @@ class TestPickShip(TestStockCommon):
         picking_pick.action_confirm()
         picking_pick.action_assign()
         for move_line in picking_pick.move_line_ids:
-            move_line.qty_done = move_line.product_uom_qty
+            move_line.qty_done = move_line.reserved_uom_qty
         picking_pick._action_done()
         picking_client.action_confirm()
         picking_client.action_assign()
         for move_line in picking_client.move_line_ids:
-            move_line.qty_done = move_line.product_uom_qty
+            move_line.qty_done = move_line.reserved_uom_qty
         picking_client._action_done()
 
         picking_pick, picking_client = self.create_pick_ship()
         picking_pick.action_confirm()
         picking_pick.action_assign()
         for move_line in picking_pick.move_line_ids:
-            move_line.qty_done = move_line.product_uom_qty
+            move_line.qty_done = move_line.reserved_uom_qty
         picking_pick._action_done()
         picking_client.action_confirm()
         picking_client.action_assign()
         for move_line in picking_client.move_line_ids:
-            move_line.qty_done = move_line.product_uom_qty
+            move_line.qty_done = move_line.reserved_uom_qty
         picking_client._action_done()
 
         # Following FIFO strategy, First picking should have empty lot1 and took 3 of lot2.
@@ -804,9 +804,9 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(len(return_pick.move_line_ids), 2)
         self.assertEqual(return_pick.move_line_ids[0].lot_id, lot2)
-        self.assertEqual(return_pick.move_line_ids[0].product_uom_qty, 4)
+        self.assertEqual(return_pick.move_line_ids[0].reserved_uom_qty, 4)
         self.assertEqual(return_pick.move_line_ids[1].lot_id, lot3)
-        self.assertEqual(return_pick.move_line_ids[1].product_uom_qty, 6)
+        self.assertEqual(return_pick.move_line_ids[1].reserved_uom_qty, 6)
         self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.return_type_id)
 
 class TestSinglePicking(TestStockCommon):
@@ -1021,7 +1021,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move1.product_qty, 2.0)
         self.assertEqual(move1.quantity_done, 2.0)
         self.assertEqual(move1.reserved_availability, 0.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
+        self.assertEqual(move1.move_line_ids.reserved_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
 
@@ -1066,7 +1066,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move1.product_qty, 3.0)
         self.assertEqual(move1.quantity_done, 3.0)
         self.assertEqual(move1.reserved_availability, 0.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
+        self.assertEqual(move1.move_line_ids.reserved_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 3.0)
         self.assertEqual(move1.state, 'done')
 
@@ -1103,7 +1103,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move1.product_qty, 2.0)
         self.assertEqual(move1.quantity_done, 2.0)
         self.assertEqual(move1.reserved_availability, 0.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
+        self.assertEqual(move1.move_line_ids.reserved_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
 
@@ -1212,7 +1212,7 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 1.0)
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.assertEqual(move1.move_line_ids.product_qty, 1)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 1)
 
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location,
@@ -1227,7 +1227,7 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 2.0)
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.assertEqual(move1.move_line_ids.product_qty, 2)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 2)
 
     def test_recheck_availability_2(self):
         """ Same check than test_recheck_availability_1 but with lot this time.
@@ -1266,7 +1266,7 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 1.0)
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.assertEqual(move1.move_line_ids.product_qty, 1)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 1)
 
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location,
@@ -1283,7 +1283,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move1.reserved_availability, 2.0)
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(move1.move_line_ids.lot_id.id, lot1.id)
-        self.assertEqual(move1.move_line_ids.product_qty, 2)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 2)
 
     def test_recheck_availability_3(self):
         """ Same check than test_recheck_availability_2 but with different lots.
@@ -1324,7 +1324,7 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 1.0)
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.assertEqual(move1.move_line_ids.product_qty, 1)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 1)
 
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location,
@@ -1384,7 +1384,7 @@ class TestSinglePicking(TestStockCommon):
         # Check reserved quantity
         self.assertEqual(move1.reserved_availability, 1.0)
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.assertEqual(move1.move_line_ids.product_qty, 1)
+        self.assertEqual(move1.move_line_ids.reserved_qty, 1)
 
         inventory_quant = self.env['stock.quant'].create({
             'location_id': self.stock_location,
@@ -2273,9 +2273,9 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
         move_line = picking.move_line_ids
         # check that we do not reserve more (in the same UOM) than the quantity in stock
-        self.assertEqual(float_compare(move_line.product_qty, quant.quantity, precision_digits=precision_digits), -1, "We do not reserve more (in the same UOM) than the quantity in stock")
+        self.assertEqual(float_compare(move_line.reserved_qty, quant.quantity, precision_digits=precision_digits), -1, "We do not reserve more (in the same UOM) than the quantity in stock")
         # check that we reserve the same quantity in the ml and the quant
-        self.assertTrue(float_is_zero(move_line.product_qty - quant.reserved_quantity, precision_digits=precision_digits))
+        self.assertTrue(float_is_zero(move_line.reserved_qty - quant.reserved_quantity, precision_digits=precision_digits))
 
     def test_update_product_move_line_with_different_uom(self):
         """ Check that when the move line and corresponding
@@ -2375,9 +2375,9 @@ class TestStockUOM(TestStockCommon):
             ('lot_id', '=', quant_LtDA.lot_id.id),
             ('package_id', '=', quant_LtDA.package_id.id),
             ('owner_id', '=', quant_LtDA.owner_id.id),
-            ('product_qty', '!=', 0)
+            ('reserved_qty', '!=', 0)
         ])
-        reserved_on_move_lines_LtDA = sum(move_lines_LtDA.mapped('product_qty'))
+        reserved_on_move_lines_LtDA = sum(move_lines_LtDA.mapped('reserved_qty'))
 
         move_lines_GtDA = self.env["stock.move.line"].search([
             ('product_id', '=', quant_GtDA.product_id.id),
@@ -2385,9 +2385,9 @@ class TestStockUOM(TestStockCommon):
             ('lot_id', '=', quant_GtDA.lot_id.id),
             ('package_id', '=', quant_GtDA.package_id.id),
             ('owner_id', '=', quant_GtDA.owner_id.id),
-            ('product_qty', '!=', 0)
+            ('reserved_qty', '!=', 0)
         ])
-        reserved_on_move_lines_GtDA = sum(move_lines_GtDA.mapped('product_qty'))
+        reserved_on_move_lines_GtDA = sum(move_lines_GtDA.mapped('reserved_qty'))
 
         # check that we do not reserve more (in the same UOM) than the quantity in stock
         self.assertEqual(float_compare(reserved_on_move_lines_LtDA, quant_LtDA.quantity, precision_digits=precision_digits), -1, "We do not reserve more (in the same UOM) than the quantity in stock")

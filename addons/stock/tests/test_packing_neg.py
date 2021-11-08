@@ -118,7 +118,7 @@ class TestPackingNeg(TransactionCase):
 
         for rec in delivery_order_neg.move_line_ids:
             if rec.package_id.name == 'Palneg 1':
-                rec.qty_done = rec.product_qty
+                rec.qty_done = rec.reserved_qty
                 rec.result_package_id = False
             elif rec.package_id.name == 'Palneg 2' and rec.lot_id.name == 'Lot neg':
                 rec.write({

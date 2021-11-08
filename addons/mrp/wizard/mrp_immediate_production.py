@@ -61,8 +61,8 @@ class MrpImmediateProduction(models.TransientModel):
             for move in production.move_raw_ids.filtered(lambda m: m.state not in ['done', 'cancel']):
                 rounding = move.product_uom.rounding
                 for move_line in move.move_line_ids:
-                    if move_line.product_uom_qty:
-                        move_line.qty_done = min(move_line.product_uom_qty, move_line.move_id.should_consume_qty)
+                    if move_line.reserved_uom_qty:
+                        move_line.qty_done = min(move_line.reserved_uom_qty, move_line.move_id.should_consume_qty)
                     if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) >= 0:
                         break
                 if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) == 1:

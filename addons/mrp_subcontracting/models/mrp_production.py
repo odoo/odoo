@@ -89,27 +89,27 @@ class MrpProduction(models.Model):
                 rounding = ml.product_uom_id.rounding
                 if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
                     break
-                quantity_to_process = min(quantity, ml.product_uom_qty - ml.qty_done)
+                quantity_to_process = min(quantity, ml.reserved_uom_qty - ml.qty_done)
                 quantity -= quantity_to_process
 
                 new_quantity_done = (ml.qty_done + quantity_to_process)
 
                 # on which lot of finished product
-                if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
+                if float_compare(new_quantity_done, ml.reserved_uom_qty, precision_rounding=rounding) >= 0:
                     ml.write({
                         'qty_done': new_quantity_done,
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     })
                 else:
-                    new_qty_reserved = ml.product_uom_qty - new_quantity_done
+                    new_qty_reserved = ml.reserved_uom_qty - new_quantity_done
                     default = {
-                        'product_uom_qty': new_quantity_done,
+                        'reserved_uom_qty': new_quantity_done,
                         'qty_done': new_quantity_done,
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     }
                     ml.copy(default=default)
                     ml.with_context(bypass_reservation_update=True).write({
-                        'product_uom_qty': new_qty_reserved,
+                        'reserved_uom_qty': new_qty_reserved,
                         'qty_done': 0
                     })
 
@@ -120,7 +120,7 @@ class MrpProduction(models.Model):
                     'product_id': self.product_id.id,
                     'location_id': subcontract_move_id.location_id.id,
                     'location_dest_id': subcontract_move_id.location_dest_id.id,
-                    'product_uom_qty': 0,
+                    'reserved_uom_qty': 0,
                     'product_uom_id': self.product_uom_id.id,
                     'qty_done': quantity,
                     'lot_id': self.lot_producing_id and self.lot_producing_id.id,
@@ -128,10 +128,10 @@ class MrpProduction(models.Model):
             if not self._get_quantity_to_backorder():
                 ml_reserved = subcontract_move_id.move_line_ids.filtered(lambda ml:
                     float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) and
-                    not float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding))
+                    not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))
                 ml_reserved.unlink()
                 for ml in subcontract_move_id.move_line_ids:
-                    ml.product_uom_qty = ml.qty_done
+                    ml.reserved_uom_qty = ml.qty_done
                 subcontract_move_id._recompute_state()
 
     def _subcontracting_filter_to_done(self):
