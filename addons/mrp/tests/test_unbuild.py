@@ -383,11 +383,11 @@ class TestUnbuild(TestMrpCommon):
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids.filtered(lambda ml: ml.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
-            ml.qty_done = ml.product_uom_qty
+            ml.qty_done = ml.reserved_uom_qty
         with details_operation_form.move_line_ids.edit(1) as ml:
-            ml.qty_done = ml.product_uom_qty
+            ml.qty_done = ml.reserved_uom_qty
         with details_operation_form.move_line_ids.edit(2) as ml:
-            ml.qty_done = ml.product_uom_qty
+            ml.qty_done = ml.reserved_uom_qty
         details_operation_form.save()
 
         mo.button_mark_done()

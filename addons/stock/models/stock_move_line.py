@@ -29,10 +29,10 @@ class StockMoveLine(models.Model):
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    product_qty = fields.Float(
+    reserved_qty = fields.Float(
         'Real Reserved Quantity', digits=0, copy=False,
-        compute='_compute_product_qty', inverse='_set_product_qty', store=True)
-    product_uom_qty = fields.Float(
+        compute='_compute_reserved_qty', inverse='_set_product_qty', store=True)
+    reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
     package_id = fields.Many2one(
@@ -94,17 +94,17 @@ class StockMoveLine(models.Model):
     def _search_picking_type_id(self, operator, value):
         return [('picking_id.picking_type_id', operator, value)]
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
-    def _compute_product_qty(self):
+    @api.depends('product_id', 'product_uom_id', 'reserved_uom_qty')
+    def _compute_reserved_qty(self):
         for line in self:
-            line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
+            line.reserved_qty = line.product_uom_id._compute_quantity(line.reserved_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
 
-    def _set_product_qty(self):
-        """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
+    def _set_reserved_qty(self):
+        """ The meaning of reserved_qty field changed lately and is now a functional field computing the quantity
         in the default product UoM. This code has been added to raise an error if a write is made given a value
-        for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
+        for `reserved_qty`, where the same write should set the `reserved_uom_qty` field instead, in order to
         detect errors. """
-        raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+        raise UserError(_('The requested operation cannot be processed because of a programming error setting the `reserved_qty` field instead of the `reserved_uom_qty`.'))
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
@@ -116,10 +116,10 @@ class StockMoveLine(models.Model):
                     product_name=line.product_id.display_name
                 ))
 
-    @api.constrains('product_uom_qty')
+    @api.constrains('reserved_uom_qty')
     def _check_reserved_done_quantity(self):
         for move_line in self:
-            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
+            if move_line.state == 'done' and not float_is_zero(move_line.reserved_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
     @api.constrains('qty_done')
@@ -215,7 +215,7 @@ class StockMoveLine(models.Model):
     def _get_putaway_additional_qty(self):
         addtional_qty = {}
         for ml in self._origin:
-            qty = max(ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id), ml.product_uom_qty)
+            qty = max(ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id), ml.reserved_uom_qty)
             addtional_qty[ml.location_dest_id.id] = addtional_qty.get(ml.location_dest_id.id, 0) - qty
         return addtional_qty
 
@@ -226,7 +226,7 @@ class StockMoveLine(models.Model):
                 ON
                     stock_move_line (id, company_id, product_id, lot_id, location_id, owner_id, package_id)
                 WHERE
-                    (state IS NULL OR state NOT IN ('cancel', 'done')) AND product_qty > 0""")
+                    (state IS NULL OR state NOT IN ('cancel', 'done')) AND reserved_qty > 0""")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -334,31 +334,31 @@ class StockMoveLine(models.Model):
                     package_level.unlink()
 
         # When we try to write on a reserved move line any fields from `triggers` or directly
-        # `product_uom_qty` (the actual reserved quantity), we need to make sure the associated
+        # `reserved_uom_qty` (the actual reserved quantity), we need to make sure the associated
         # quants are correctly updated in order to not make them out of sync (i.e. the sum of the
-        # move lines `product_uom_qty` should always be equal to the sum of `reserved_quantity` on
+        # move lines `reserved_uom_qty` should always be equal to the sum of `reserved_quantity` on
         # the quants). If the new charateristics are not available on the quants, we chose to
         # reserve the maximum possible.
-        if updates or 'product_uom_qty' in vals:
+        if updates or 'reserved_uom_qty' in vals:
             for ml in self.filtered(lambda ml: ml.state in ['partially_available', 'assigned'] and ml.product_id.type == 'product'):
 
-                if 'product_uom_qty' in vals:
-                    new_product_uom_qty = ml.product_uom_id._compute_quantity(
-                        vals['product_uom_qty'], ml.product_id.uom_id, rounding_method='HALF-UP')
-                    # Make sure `product_uom_qty` is not negative.
-                    if float_compare(new_product_uom_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
+                if 'reserved_uom_qty' in vals:
+                    new_reserved_uom_qty = ml.product_uom_id._compute_quantity(
+                        vals['reserved_uom_qty'], ml.product_id.uom_id, rounding_method='HALF-UP')
+                    # Make sure `reserved_uom_qty` is not negative.
+                    if float_compare(new_reserved_uom_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
                 else:
-                    new_product_uom_qty = ml.product_qty
+                    new_reserved_uom_qty = ml.reserved_qty
 
                 # Unreserve the old charateristics of the move line.
                 if not ml.move_id._should_bypass_reservation(ml.location_id):
                     try:
-                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     except UserError:
                         # If we were not able to unreserve on tracked quants, we can use untracked ones.
                         if ml.lot_id:
-                            Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                            Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                         else:
                             raise
 
@@ -366,22 +366,22 @@ class StockMoveLine(models.Model):
                 if not ml.move_id._should_bypass_reservation(updates.get('location_id', ml.location_id)):
                     reserved_qty = 0
                     try:
-                        q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_product_uom_qty, lot_id=updates.get('lot_id', ml.lot_id),
+                        q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_reserved_uom_qty, lot_id=updates.get('lot_id', ml.lot_id),
                                                              package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
                         reserved_qty = sum([x[1] for x in q])
                     except UserError:
                         if updates.get('lot_id'):
                             # If we were not able to reserve on tracked quants, we can use untracked ones.
                             try:
-                                q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_product_uom_qty, lot_id=False,
+                                q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_reserved_uom_qty, lot_id=False,
                                                                      package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
                                 reserved_qty = sum([x[1] for x in q])
                             except UserError:
                                 pass
-                    if reserved_qty != new_product_uom_qty:
-                        new_product_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
+                    if reserved_qty != new_reserved_uom_qty:
+                        new_reserved_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         moves_to_recompute_state |= ml.move_id
-                        ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
+                        ml.with_context(bypass_reservation_update=True).reserved_uom_qty = new_reserved_uom_qty
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
@@ -443,7 +443,7 @@ class StockMoveLine(models.Model):
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer and not ml.product_uom_qty).mapped('move_id')
+            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer and not ml.reserved_uom_qty).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
@@ -464,12 +464,12 @@ class StockMoveLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
             # Unlinking a move line should unreserve.
-            if ml.product_id.type == 'product' and not ml.move_id._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
+            if ml.product_id.type == 'product' and not ml.move_id._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.reserved_qty, precision_digits=precision):
                 try:
-                    self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                 except UserError:
                     if ml.lot_id:
-                        self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                        self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     elif not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
                         raise   # pylint: disable=raise-unlink-override
         moves = self.mapped('move_id')
@@ -566,16 +566,16 @@ class StockMoveLine(models.Model):
                 rounding = ml.product_uom_id.rounding
 
                 # if this move line is force assigned, unreserve elsewhere if needed
-                if not ml.move_id._should_bypass_reservation(ml.location_id) and float_compare(ml.qty_done, ml.product_uom_qty, precision_rounding=rounding) > 0:
+                if not ml.move_id._should_bypass_reservation(ml.location_id) and float_compare(ml.qty_done, ml.reserved_uom_qty, precision_rounding=rounding) > 0:
                     qty_done_product_uom = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id, rounding_method='HALF-UP')
-                    extra_qty = qty_done_product_uom - ml.product_qty
+                    extra_qty = qty_done_product_uom - ml.reserved_qty
                     ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
                 # unreserve what's been reserved
-                if not ml.move_id._should_bypass_reservation(ml.location_id) and ml.product_id.type == 'product' and ml.product_qty:
+                if not ml.move_id._should_bypass_reservation(ml.location_id) and ml.product_id.type == 'product' and ml.reserved_qty:
                     try:
-                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     except UserError:
-                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
 
                 # move what's been actually done
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
@@ -591,7 +591,7 @@ class StockMoveLine(models.Model):
             ml_ids_to_ignore.add(ml.id)
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.with_context(bypass_reservation_update=True).write({
-            'product_uom_qty': 0.00,
+            'reserved_uom_qty': 0.00,
             'date': fields.Datetime.now(),
         })
 
@@ -686,7 +686,7 @@ class StockMoveLine(models.Model):
                 ('location_id', '=', location_id.id),
                 ('owner_id', '=', owner_id.id if owner_id else False),
                 ('package_id', '=', package_id.id if package_id else False),
-                ('product_qty', '>', 0.0),
+                ('reserved_qty', '>', 0.0),
                 ('id', 'not in', tuple(ml_ids_to_ignore)),
             ]
 
@@ -706,11 +706,11 @@ class StockMoveLine(models.Model):
 
             rounding = self.product_uom_id.rounding
             for candidate in outdated_candidates:
-                if float_compare(candidate.product_qty, quantity, precision_rounding=rounding) <= 0:
-                    quantity -= candidate.product_qty
+                if float_compare(candidate.reserved_qty, quantity, precision_rounding=rounding) <= 0:
+                    quantity -= candidate.reserved_qty
                     if candidate.qty_done:
                         move_to_recompute_state |= candidate.move_id
-                        candidate.product_uom_qty = 0.0
+                        candidate.reserved_uom_qty = 0.0
                     else:
                         to_unlink_candidate_ids.add(candidate.id)
                     if float_is_zero(quantity, precision_rounding=rounding):
@@ -718,10 +718,10 @@ class StockMoveLine(models.Model):
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
-                        candidate.product_qty - quantity,
+                        candidate.reserved_qty - quantity,
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
-                    candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
+                    candidate.reserved_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
                     move_to_recompute_state |= candidate.move_id
                     break
             self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()

@@ -92,7 +92,7 @@
                                                         <span t-esc="sum(move_operation.mapped('qty_done'))"/>
                                                     </t>
                                                     <t t-else="">
-                                                        <span t-esc="sum(move_operation.mapped('product_uom_qty'))"/>
+                                                        <span t-esc="sum(move_operation.mapped('reserved_uom_qty'))"/>
                                                     </t>
                                                 </t>
                                                 <t t-if="has_package">
