@@ -1849,7 +1849,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         for line in self.line_ids:
-            analytic_account = line.analytic_account_id
+            analytic_account = line._cache.get('analytic_account_id')
 
             # Do something only on invoice lines.
             if line.exclude_from_invoice_tab:
