@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { Field } from "@web/fields/field";
+import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, useState } = owl;
 
@@ -162,12 +163,15 @@ export class ListRenderer extends Component {
         if (field.sortable) {
             classNames.push("o_column_sortable");
         }
-        const orderedBy = this.props.list.orderedBy || {};
-        if (column.name === orderedBy.name) {
-            classNames.push(orderedBy.asc ? "o-sort-up" : "o-sort-down");
+        const orderBy = this.props.list.orderedBy;
+        if (orderBy.fieldName === column.name) {
+            classNames.push(orderBy.asc ? "o-sort-up" : "o-sort-down");
         }
         if (["float", "integer", "monetary"].includes(field.type)) {
             classNames.push("o_list_number_th");
+        }
+        if (column.type === "button_group") {
+            classNames.push("o_list_button");
         }
         return classNames.join(" ");
     }
@@ -204,17 +208,17 @@ export class ListRenderer extends Component {
     // [ group name ][ aggregate cells  ][ pager]
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
     getFirstAggregateIndex(group) {
-        return this.allColumns.findIndex((col) => col.name in group.aggregates);
+        return this.state.columns.findIndex((col) => col.name in group.aggregates);
     }
     getLastAggregateIndex(group) {
-        const reversedColumns = [...this.allColumns].reverse(); // reverse is destructive
+        const reversedColumns = [...this.state.columns].reverse(); // reverse is destructive
         const index = reversedColumns.findIndex((col) => col.name in group.aggregates);
-        return index > -1 ? this.allColumns.length - index - 1 : -1;
+        return index > -1 ? this.state.columns.length - index - 1 : -1;
     }
     getAggregateColumns(group) {
         const firstIndex = this.getFirstAggregateIndex(group);
         const lastIndex = this.getLastAggregateIndex(group);
-        return this.allColumns.slice(firstIndex, lastIndex + 1);
+        return this.state.columns.slice(firstIndex, lastIndex + 1);
     }
     getGroupNameCellColSpan(group) {
         // if there are aggregates, the first th spans until the first
@@ -253,7 +257,9 @@ export class ListRenderer extends Component {
     }
 
     onClickSortColumn(fieldName) {
-        this.props.list.sortBy(fieldName);
+        if (this.fields[fieldName].sortable) {
+            this.props.list.sortBy(fieldName);
+        }
     }
 
     openRecord(record) {
@@ -300,4 +306,4 @@ export class ListRenderer extends Component {
 }
 
 ListRenderer.template = "web.ListRenderer";
-ListRenderer.components = { CheckBoxDropdownItem, Field };
+ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton };

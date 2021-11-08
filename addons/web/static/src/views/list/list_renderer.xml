@@ -11,12 +11,10 @@
                                 <CheckBox value="selectAll" t-on-change="toggleSelection"/>
                             </th>
                             <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                                <th t-if="fields[column.name].gsortable" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
+                                <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
                                   <t t-esc="column.string"/>
                                 </th>
-                                <th t-else="" t-att-class="getColumnClass(column)" >
-                                  <t t-esc="column.string"/>
-                                </th>
+                                <th t-else=""></th>
                             </t>
                         </tr>
                     </thead>
@@ -96,10 +94,24 @@
                 <CheckBox value="selection.includes(record)" t-on-change="toggleRecordSelection(record)"/>
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
-                    <Field name="column.name" record="record" readonly="true" type="column.widget" />
-                </td>
-            </t>
+                <t t-if="column.type === 'field'">
+                    <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
+                        <Field name="column.name" record="record" readonly="true" type="column.widget" />
+                    </td>
+                </t>
+                <t t-if="column.type === 'button_group'">
+                    <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
+                        <t t-foreach="column.buttons" t-as="button" t-key="button.id">
+                            <ViewButton
+                                classes="['btn-link']"
+                                icon="button.icon"
+                                title="button.title"
+                                record="record"
+                                clickParams="button.clickParams"/>
+                        </t>
+                    </td>
+                </t>
+             </t>
         </tr>
     </t>
 </templates>

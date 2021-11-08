@@ -11,6 +11,7 @@ import { Layout } from "@web/views/layout";
 import { getActiveActions, processField } from "../helpers/view_utils";
 import { ListRenderer } from "./list_renderer";
 import { RelationalModel } from "../relational_model";
+import { useViewButtons } from "@web/views/view_button/hook";
 
 const { onWillStart } = owl.hooks;
 
@@ -25,8 +26,20 @@ export class ListArchParser extends XMLParser {
         };
         const activeFields = {};
         const columns = [];
+        let buttonId = 0;
         this.visitXML(arch, (node) => {
-            if (node.tagName === "field") {
+            if (node.tagName === "button") {
+                columns.push({
+                    type: "button",
+                    id: buttonId++,
+                    icon: node.getAttribute("icon") || false,
+                    title: node.getAttribute("string") || false,
+                    clickParams: {
+                        name: node.getAttribute("name"),
+                        type: node.getAttribute("type") || "object",
+                    },
+                });
+            } else if (node.tagName === "field") {
                 if (isAttr(node, "invisible").falsy(true)) {
                     const fieldInfo = processField(node, fields, "list");
                     activeFields[fieldInfo.name] = fieldInfo;
@@ -37,11 +50,28 @@ export class ListArchParser extends XMLParser {
                     });
                 }
             }
-            // if (node.tagName === "button") {
-            //     columns.push({ type: "button" });
-            // }
         });
-        return { activeActions, fields: activeFields, columns };
+
+        function processColumns(unprocessedColumns) {
+            const columns = [];
+            unprocessedColumns.forEach((col) => {
+                if (col.type === "button") {
+                    if (columns.length && columns[columns.length - 1].type === "button_group") {
+                        columns[columns.length - 1].buttons.push(col);
+                    } else {
+                        columns.push({
+                            type: "button_group",
+                            buttons: [col],
+                        });
+                    }
+                } else {
+                    columns.push(col);
+                }
+            });
+            return columns;
+        }
+
+        return { activeActions, fields: activeFields, columns: processColumns(columns) };
     }
 }
 
@@ -60,6 +90,7 @@ class ListView extends owl.Component {
             activeFields: this.archInfo.fields,
             viewMode: "list",
         });
+        useViewButtons(this.model);
 
         onWillStart(async () => {
             this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
