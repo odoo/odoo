@@ -609,7 +609,7 @@ class ProductTemplate(models.Model):
             },
         }
 
-    def price_compute(self, price_type, uom=False, currency=False, company=None):
+    def price_compute(self, price_type, uom=False, currency=False, company=None, date=False):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
@@ -625,7 +625,7 @@ class ProductTemplate(models.Model):
             templates = self.with_company(company).sudo()
         if not company:
             company = self.env.company
-        date = self.env.context.get('date') or fields.Date.today()
+        date = date or fields.Date.today()
 
         prices = dict.fromkeys(self.ids, 0.0)
         for template in templates:

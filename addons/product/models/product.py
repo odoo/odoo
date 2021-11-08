@@ -663,7 +663,7 @@ class ProductProduct(models.Model):
                 res |= seller
         return res.sorted('price')[:1]
 
-    def price_compute(self, price_type, uom=False, currency=False, company=None):
+    def price_compute(self, price_type, uom=False, currency=False, company=None, date=False):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
@@ -676,7 +676,11 @@ class ProductProduct(models.Model):
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            products = self.with_company(company or self.env.company).sudo()
+            products = self.with_company(company).sudo()
+        if not company:
+            company = self.env.company
+
+        date = date or fields.Date.today()
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:
@@ -696,7 +700,7 @@ class ProductProduct(models.Model):
             # This is right cause a field cannot be in more than one currency
             if currency:
                 prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                    prices[product.id], currency, company, date)
 
         return prices
 
