@@ -160,6 +160,7 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         })
         self.test_digest._action_subscribe_users(self.user_demo)
         self.base_url = self.test_digest.get_base_url()
+        self.user_demo_unsubscribe_token = self.test_digest._get_unsubscribe_token(self.user_demo.id)
 
     @users('demo')
     def test_unsubscribe_classic(self):
@@ -182,13 +183,21 @@ class TestUnsubscribe(HttpCaseWithUserDemo):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(self.user_demo, self.test_digest.user_ids)
 
+    def test_unsubscribe_token(self):
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+        self.authenticate(None, None)
+        response = self._url_unsubscribe(token=self.user_demo_unsubscribe_token, user_id=self.user_demo.id)
+        self.assertEqual(response.status_code, 200)
+        self.test_digest.invalidate_cache()
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
     def test_unsubscribe_public(self):
         """ Check public users are redirected when trying to catch unsubscribe
         route. """
         self.authenticate(None, None)
 
         response = self._url_unsubscribe()
-        self.assertIn('web/login?redirect', response.url)
+        self.assertEqual(response.status_code, 404)
 
     def _url_unsubscribe(self, token=None, user_id=None):
         url_params = {}
