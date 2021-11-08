@@ -971,10 +971,21 @@ function makeActionManager(env) {
             report_url: _getReportUrl(action, "html"),
             context: Object.assign({}, action.context),
         });
-        const clientActionOptions = Object.assign({}, options, {
-            props,
+
+        const controller = {
+            jsId: `controller_${++id}`,
+            // for historical reasons, the report Component is a client action,
+            // but there's no need to keep this when it will be converted to owl.
+            Component: actionRegistry.get("report.client_action"),
+            action,
+            ..._getActionInfo(action, props),
+        };
+
+        return _updateUI(controller, {
+            clearBreadcrumbs: options.clearBreadcrumbs,
+            stackPosition: options.stackPosition,
+            onClose: options.onClose,
         });
-        return doAction("report.client_action", clientActionOptions);
     }
 
     /**
