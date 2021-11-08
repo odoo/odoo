@@ -931,6 +931,7 @@ class MassMailing(models.Model):
         """Send an email to the responsible of each finished mailing with the statistics."""
         self.kpi_mail_required = False
 
+        mails_sudo = self.env['mail.mail'].sudo()
         for mailing in self:
             user = mailing.user_id
             mailing = mailing.with_context(lang=user.lang or self._context.get('lang'))
@@ -973,9 +974,10 @@ class MassMailing(models.Model):
                 'email_to': user.email_formatted,
                 'body_html': full_mail,
                 'auto_delete': True,
+                'state': 'outgoing',
             }
-            mail = self.env['mail.mail'].sudo().create(mail_values)
-            mail.send(raise_exception=False)
+            mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
+        return mails_sudo
 
     def _prepare_statistics_email_values(self):
         """Return some statistics that will be displayed in the mailing statistics email.
