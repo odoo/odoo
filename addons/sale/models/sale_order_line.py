@@ -134,7 +134,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.depends('order_id.fiscal_position_id')
+    @api.depends('order_id.fiscal_position_id', 'tax_id.price_include')
     def _compute_tax_id(self):
         for line in self:
             line = line.with_company(line.company_id)
@@ -666,7 +666,9 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.depends('product_uom', 'product_uom_qty')
+    @api.depends(
+        'product_uom', 'product_uom_qty', 'product_id',
+        'order_id.partner_id')
     def _compute_price_unit(self):
         for line in self:
             if not line.product_uom or not line.product_id:

@@ -148,6 +148,8 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
         # Remove tax from Conference Chair and Chair floor protection
         self.product_product_conf_chair.taxes_id = None
         self.product_product_conf_chair_floor_protect.taxes_id = None
+        # YTI FIXME: This tour requires sale_management, as the Sale
+        # root menu item is clicked
         self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login="admin")
 
     def test_06_product_configurator_optional_products(self):
