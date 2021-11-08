@@ -1632,8 +1632,8 @@ export class OdooEditor extends EventTarget {
         const mainCommands = [
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 1',
-                description: 'Big section heading.',
+                title: this.options._t('Heading 1'),
+                description: this.options._t('Big section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H1');
@@ -1641,8 +1641,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 2',
-                description: 'Medium section heading.',
+                title: this.options._t('Heading 2'),
+                description: this.options._t('Medium section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H2');
@@ -1650,8 +1650,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 3',
-                description: 'Small section heading.',
+                title: this.options._t('Heading 3'),
+                description: this.options._t('Small section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H3');
@@ -1659,8 +1659,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Text',
-                description: 'Paragraph block.',
+                title: this.options._t('Text'),
+                description: this.options._t('Paragraph block.'),
                 fontawesome: 'fa-paragraph',
                 callback: () => {
                     this.execCommand('setTag', 'P');
@@ -1668,8 +1668,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Bulleted list',
-                description: 'Create a simple bulleted list.',
+                title: this.options._t('Bulleted list'),
+                description: this.options._t('Create a simple bulleted list.'),
                 fontawesome: 'fa-list-ul',
                 callback: () => {
                     this.execCommand('toggleList', 'UL');
@@ -1677,8 +1677,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Numbered list',
-                description: 'Create a list with numbering.',
+                title: this.options._t('Numbered list'),
+                description: this.options._t('Create a list with numbering.'),
                 fontawesome: 'fa-list-ol',
                 callback: () => {
                     this.execCommand('toggleList', 'OL');
@@ -1686,8 +1686,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Checklist',
-                description: 'Track tasks with a checklist.',
+                title: this.options._t('Checklist'),
+                description: this.options._t('Track tasks with a checklist.'),
                 fontawesome: 'fa-check-square-o',
                 callback: () => {
                     this.execCommand('toggleList', 'CL');
@@ -1695,8 +1695,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Separator',
-                description: 'Insert an horizontal rule separator.',
+                title: this.options._t('Separator'),
+                description: this.options._t('Insert an horizontal rule separator.'),
                 fontawesome: 'fa-minus',
                 callback: () => {
                     this.execCommand('insertHorizontalRule');
@@ -1704,20 +1704,14 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Table',
-                description: 'Insert a table.',
+                title: this.options._t('Table'),
+                description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
                 callback: () => {
                     this.commandbarTablePicker.show();
                 },
             },
         ];
-        // Translate the command title and description if a translate function
-        // is provided.
-        for (const command of mainCommands) {
-            command.title = this.options._t(command.title);
-            command.description = this.options._t(command.description);
-        }
         this.commandBar = new Powerbox({
             editable: this.editable,
             document: this.document,
@@ -2324,7 +2318,7 @@ export class OdooEditor extends EventTarget {
 
         const block = this.options.getPowerboxElement();
         if (block) {
-            this._makeHint(block, 'Type "/" for commands', true);
+            this._makeHint(block, this.options._t('Type "/" for commands'), true);
         }
 
         // placeholder hint
