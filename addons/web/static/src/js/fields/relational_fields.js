@@ -1869,7 +1869,7 @@ var FieldOne2Many = FieldX2Many.extend({
                         index = self.value.data.length - 1;
                     }
                     var newID = self.value.data[index].id;
-                    self.renderer.editRecord(newID);
+                    return self.renderer.editRecord(newID);
                 }
             }
         });
