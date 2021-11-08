@@ -8,7 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, format_datetime
+from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 
 
 class MrpWorkorder(models.Model):
@@ -529,7 +529,7 @@ class MrpWorkorder(models.Model):
 
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
-        else:
+        elif float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             self.qty_producing = self.qty_remaining
 
         self.env['mrp.workcenter.productivity'].create(
