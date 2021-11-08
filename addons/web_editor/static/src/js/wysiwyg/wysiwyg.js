@@ -242,7 +242,8 @@ const Wysiwyg = Widget.extend({
             }
 
             if ($target.is(this.customizableLinksSelector) && $target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length) {
-                if (!$target.data('popover-widget-initialized')) {
+                this.linkPopover = $target.data('popover-widget-initialized');
+                if (!this.linkPopover) {
                     // TODO this code is ugly maybe the mutex should be in the
                     // editor root widget / the popover should not depend on
                     // editor panel (like originally intended but...) / ...
@@ -254,7 +255,7 @@ const Wysiwyg = Widget.extend({
                             await this.snippetsMenu._mutex.exec(() => null);
                         }
                         this.linkPopover = await weWidgets.LinkPopoverWidget.createFor(this, ev.target, { wysiwyg: this });
-                        $target.data('popover-widget-initialized', true);
+                        $target.data('popover-widget-initialized', this.linkPopover);
                     })();
                 }
                 $target.focus();
