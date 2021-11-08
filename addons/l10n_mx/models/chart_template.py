@@ -38,12 +38,3 @@ class AccountChartTemplate(models.Model):
             'show_on_dashboard': True,
         })
         return res
-
-    @api.model
-    def _prepare_transfer_account_for_direct_creation(self, name, company):
-        res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
-        if company.account_fiscal_country_id.code == 'MX':
-            xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
-            res.setdefault('tag_ids', [])
-            res['tag_ids'].append((4, xml_id))
-        return res

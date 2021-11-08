@@ -427,29 +427,6 @@ class AccountChartTemplate(models.Model):
         return [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]
 
     @api.model
-    def _prepare_transfer_account_for_direct_creation(self, name, company):
-        """ Prepare values to create a transfer account directly, based on the
-        method _prepare_transfer_account_template().
-
-        This is needed when dealing with installation of payment modules
-        that requires the creation of their own transfer account.
-
-        :param name:        The transfer account name.
-        :param company:     The company owning this account.
-        :return:            A dictionary of values to create a new account.account.
-        """
-        vals = self._prepare_transfer_account_template()
-        digits = self.code_digits or 6
-        prefix = self.transfer_account_code_prefix or ''
-        vals.update({
-            'code': self.env['account.account']._search_new_account_code(company, digits, prefix),
-            'name': name,
-            'company_id': company.id,
-        })
-        del(vals['chart_template_id'])
-        return vals
-
-    @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         """
         This method is used for creating journals.
