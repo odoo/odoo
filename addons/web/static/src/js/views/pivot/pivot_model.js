@@ -749,6 +749,9 @@ var PivotModel = AbstractModel.extend({
         values.slice(0, values.length - 1).forEach(function (value) {
             tree = tree.directSubTrees.get(value);
         });
+        if (tree.directSubTrees.get(values[values.length - 1]) !== undefined){
+            return;
+        }
         tree.directSubTrees.set(values[values.length - 1], {
             root: {
                 labels: labels,
