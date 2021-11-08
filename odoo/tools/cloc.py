@@ -20,7 +20,7 @@ DEFAULT_EXCLUDE = [
     "upgrades/**/*",
 ]
 
-STANDARD_MODULES = ['web', 'web_enterprise', 'base']
+STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 
 class Cloc(object):
