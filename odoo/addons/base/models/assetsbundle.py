@@ -408,7 +408,7 @@ class AssetsBundle(object):
 
     def is_css_preprocessed(self):
         preprocessed = True
-        attachments = None
+        old_attachments = self.env['ir.attachment']
         asset_types = [SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset]
         if self.user_direction == 'rtl':
             asset_types.append(StylesheetAsset)
@@ -419,6 +419,7 @@ class AssetsBundle(object):
             if assets:
                 assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
+                old_attachments += attachments
                 for attachment in attachments:
                     asset = assets[attachment.url]
                     if asset.last_modified > attachment['__last_update']:
@@ -435,7 +436,7 @@ class AssetsBundle(object):
                 if outdated:
                     preprocessed = False
 
-        return preprocessed, attachments
+        return preprocessed, old_attachments
 
     def preprocess_css(self, debug=False, old_attachments=None):
         """
