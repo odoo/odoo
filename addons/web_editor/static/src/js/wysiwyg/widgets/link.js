@@ -183,6 +183,7 @@ const Link = Widget.extend({
             target: data.isNewWindow ? '_blank' : '',
         });
         if (data.classes) {
+            data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }
         if (data.rel) {
