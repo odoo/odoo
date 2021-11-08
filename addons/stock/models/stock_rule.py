@@ -542,6 +542,9 @@ class ProcurementGroup(models.Model):
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
+            
+            if company_id:
+                self = self.with_company(company_id)
 
             self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         finally:
