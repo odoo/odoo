@@ -449,7 +449,10 @@ return AbstractModel.extend({
             droppable: true,
             navLinks: false,
             eventLimit: this.eventLimit, // allow "more" link when too many events
-            snapMinutes: 15,
+            snapMinutes: this.data.context.calendar_slot_duration || "00:30:00",
+            slotDuration: this.data.context.calendar_slot_duration || "00:30:00",
+            minTime: this.data.context.calendar_min_time || '00:00:00',
+            maxTime: this.data.context.calendar_max_time || '24:00:00',
             longPressDelay: 500,
             eventResizableFromStart: true,
             weekNumbers: true,
