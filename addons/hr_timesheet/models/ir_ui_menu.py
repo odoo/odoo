@@ -11,6 +11,6 @@ class IrUiMenu(models.Model):
         res = super()._load_menus_blacklist()
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver'):
             res.append(self.env.ref('hr_timesheet.timesheet_menu_activity_user').id)
-        if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user') and not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver'):
+        else:
             res.append(self.env.ref('hr_timesheet.menu_hr_activity_analysis').id)
         return res

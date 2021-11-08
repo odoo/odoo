@@ -234,10 +234,16 @@
     <record model="ir.rule" id="report_project_task_user_rule">
         <field name="name">Tasks Analysis: project visibility</field>
         <field name="model_id" ref="model_report_project_task_user"/>
-        <field name="domain_force">['|',
+        <field name="domain_force">[
+        '|',
             ('project_id.privacy_visibility', '!=', 'followers'),
-            ('project_id.message_partner_ids', 'in', [user.partner_id.id])]
-        </field>
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('id', '=', user.id),
+                    ('project_id.user_id', '=', user.id)
+        ]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
     <record id="update_visibility_project_admin" model="ir.rule">
