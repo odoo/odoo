@@ -8,7 +8,7 @@ class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
     l10n_latam_use_documents = fields.Boolean(compute='_compute_document_type')
-    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False)
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_document_type')
     l10n_latam_document_number = fields.Char(string='Document Number')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
@@ -35,7 +35,6 @@ class AccountMoveReversal(models.TransientModel):
     @api.depends('move_ids')
     def _compute_document_type(self):
         self.l10n_latam_available_document_type_ids = False
-        self.l10n_latam_document_type_id = False
         self.l10n_latam_use_documents = False
         for record in self:
             if len(record.move_ids) > 1:
@@ -52,7 +51,8 @@ class AccountMoveReversal(models.TransientModel):
                     'partner_id': record.move_ids.partner_id.id,
                     'company_id': record.move_ids.company_id.id,
                 })
-                record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
+                if record.l10n_latam_document_type_id not in refund.l10n_latam_available_document_type_ids._origin:
+                    record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
                 record.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
     def _prepare_default_reversal(self, move):
