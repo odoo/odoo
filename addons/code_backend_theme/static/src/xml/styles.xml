@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--Align Invite Button in Settings-->
+    <t t-inherit="base_setup.res_config_invite_users" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('d-flex')]" position="attributes">
+            <attribute name="class">d-flex align-items-center</attribute>
+        </xpath>
+    </t>
+
+    <!--Remove App Icon in Settings-->
+    <t t-inherit="web.BaseSetting.Tabs" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('tab')]" position="replace">
+            <div class="tab" t-attf-data-key="#{tab.key}" role="tab">
+                <span class="app_name"><t t-esc="tab.string"/></span>
+            </div>
+        </xpath>
+    </t>
+
+    <!--Active Color for App Counter-->
+    <t t-inherit="web.SearchPanel.Category" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('o_search_panel_counter')]" position="attributes">
+            <attribute name="class">o_search_panel_counter ml-2 small</attribute>
+        </xpath>
+    </t>
+
+
+</templates>

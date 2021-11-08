@@ -1,0 +1,68 @@
+/* date time picker colour changes for the theme */
+.datepicker {
+    .table-sm {
+        > thead {
+            > tr > .prev {
+                color: #fff !important;
+                background-color: $primary_accent !important;
+                &:hover{
+                    background-color: darken($primary_accent, 10%) !important;
+                }
+                > .fa{
+                    color: #fff !important;
+                }
+            }
+            > tr > .next {
+                color: #fff !important;
+                background-color: $primary_accent !important;
+                &:hover{
+                    background-color: darken($primary_accent, 10%) !important;
+                }
+                > .fa{
+                    color: #fff !important;
+                }
+            }
+            > tr > .picker-switch {
+                color: #fff !important;
+                background-color: $primary_accent !important;
+                &:hover{
+                    background-color: darken($primary_accent, 10%) !important;
+                }
+            }
+        }
+        > tbody > tr > td {
+            &.today:before {
+                border-bottom-color: $primary_accent !important;
+            }
+            &.active {
+                background-color: $primary_accent !important;
+            }
+        }
+    }
+}
+.picker-switch {
+    span.fa {
+        margin: 0;
+        @include transition($btn-transition);
+        &.primary {
+            background-color: $primary_accent;
+            color: white;
+            &:hover {
+                background-color: darken($primary_accent, 20%);
+            }
+        }
+    }
+}
+
+.daterangepicker .drp-calendar .calendar-table thead tr:first-child {
+    color: #FFFFFF;
+    background-color: $primary_accent;
+}
+
+.daterangepicker .drp-calendar .calendar-table tbody tr td:not(.off).active, .daterangepicker .drp-calendar .calendar-table tbody tr td:not(.off).active:hover {
+    background-color: $primary_accent;
+}
+
+.daterangepicker .drp-calendar .calendar-table thead tr:first-child th.prev:hover, .daterangepicker .drp-calendar .calendar-table thead tr:first-child th.next:hover {
+    background-color: darken($primary_accent, 20%);
+}
