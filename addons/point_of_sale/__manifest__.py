@@ -111,7 +111,6 @@
             'point_of_sale/static/src/js/Screens/ProductScreen/CategoryBreadcrumb.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/CategoryButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/CategorySimpleButton.js',
-            'point_of_sale/static/src/js/Screens/ProductScreen/HomeCategoryBreadcrumb.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ProductList.js',
