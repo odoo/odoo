@@ -2324,7 +2324,7 @@ export class OdooEditor extends EventTarget {
 
         const block = this.options.getPowerboxElement();
         if (block) {
-            this._makeHint(block, 'Type "/" for commands', true);
+            this._makeHint(block, this.options._t('Type "/" for commands'), true);
         }
 
         // placeholder hint
