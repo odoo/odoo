@@ -6,9 +6,12 @@ import random
 
 from dateutil.relativedelta import relativedelta
 from lxml import html
+from werkzeug.urls import url_encode
 
-from odoo import fields
+from odoo import fields, SUPERUSER_ID
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tests import common as mail_test
+from odoo.tests import tagged
 from odoo.tests.common import users
 
 
@@ -109,3 +112,94 @@ class TestDigest(mail_test.MailCommon):
             "check the user was subscribed as action_subscribe will silently "
             "ignore subs of non-employees"
         )
+
+    @users('admin')
+    def test_digest_tone_down(self):
+        digest = self.env['digest.digest'].browse(self.test_digest.ids)
+        digest._action_subscribe_users(self.user_employee)
+
+        # initial data
+        self.assertEqual(digest.periodicity, 'daily')
+
+        # no logs for employee -> should tone down periodicity
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+
+        self.assertEqual(digest.periodicity, 'weekly')
+
+    @users('admin')
+    def test_digest_tone_down_wlogs(self):
+        digest = self.env['digest.digest'].browse(self.test_digest.ids)
+        digest._action_subscribe_users(self.user_employee)
+
+        # initial data
+        self.assertEqual(digest.periodicity, 'daily')
+
+        # logs for employee -> should not tone down
+        self.env['res.users.log'].with_user(SUPERUSER_ID).create({'create_uid': self.user_employee.id})
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+
+        self.assertEqual(digest.periodicity, 'daily')
+
+
+@tagged('-at_install', 'post_install')
+class TestUnsubscribe(HttpCaseWithUserDemo):
+
+    def setUp(self):
+        super(TestUnsubscribe, self).setUp()
+
+        self.test_digest = self.env['digest.digest'].create({
+            'kpi_mail_message_total': True,
+            'kpi_res_users_connected': True,
+            'name': "My Digest",
+            'periodicity': 'daily',
+            'user_ids': self.user_demo.ids,
+        })
+        self.test_digest._action_subscribe_users(self.user_demo)
+        self.base_url = self.test_digest.get_base_url()
+
+    @users('demo')
+    def test_unsubscribe_classic(self):
+        self.assertIn(self.user_demo, self.test_digest.user_ids)
+        self.authenticate(self.env.user.login, self.env.user.login)
+
+        response = self._url_unsubscribe()
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
+    @users('demo')
+    def test_unsubscribe_issues(self):
+        """ Test when not being member """
+        self.test_digest.write({'user_ids': [(3, self.user_demo.id)]})
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
+        # unsubscribe
+        self.authenticate(self.env.user.login, self.env.user.login)
+        response = self._url_unsubscribe()
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.user_demo, self.test_digest.user_ids)
+
+    def test_unsubscribe_public(self):
+        """ Check public users are redirected when trying to catch unsubscribe
+        route. """
+        self.authenticate(None, None)
+
+        response = self._url_unsubscribe()
+        self.assertIn('web/login?redirect', response.url)
+
+    def _url_unsubscribe(self, token=None, user_id=None):
+        url_params = {}
+        if token is not None:
+            url_params['token'] = token
+        if user_id is not None:
+            url_params['user_id'] = user_id
+
+        url = "%s/digest/%s/unsubscribe?%s" % (
+            self.base_url,
+            self.test_digest.id,
+            url_encode(url_params)
+        )
+        return self.url_open(url)
