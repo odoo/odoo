@@ -249,7 +249,7 @@ class DynamicList extends DataPoint {
 
         this.groupBy = params.groupBy || [];
         this.domain = params.domain || [];
-        this.orderedBy = params.orderedBy; // rename orderBy + get back from state
+        this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
         this.limit = state.limit || 80;
@@ -288,6 +288,20 @@ export class DynamicRecordList extends DynamicList {
         this.model.notify();
     }
 
+    async sortBy(fieldName) {
+        if (this.orderedBy.fieldName === fieldName) {
+            this.orderedBy.asc = !this.orderedBy.asc;
+        } else {
+            this.orderedBy = {
+                fieldName,
+                asc: true,
+            };
+        }
+
+        await this.load();
+        this.model.notify();
+    }
+
     // TODO: only for Kanban
     async loadMore() {
         this.offset = this.records.length;
@@ -301,13 +315,16 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _loadRecords() {
+        const order = this.orderedBy.fieldName
+            ? `${this.orderedBy.fieldName} ${this.orderedBy.asc ? "ASC" : "DESC"}`
+            : "";
         const { records, length } = await this.model.orm.webSearchRead(
             this.resModel,
             this.domain,
             this.fieldNames,
             {
                 limit: this.limit,
-                order: this.orderedBy,
+                order,
                 offset: this.offset,
             },
             { bin_size: true }
