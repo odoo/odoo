@@ -197,6 +197,9 @@ var PaymentAdyen = PaymentInterface.extend({
                 self.poll_error_order = self.pos.get_order();
                 return self._handle_odoo_connection_failure(data);
             }
+            // This is to make sure that if 'data' is not an instance of Error (i.e. timeout error),
+            // this promise don't resolve -- that is, it doesn't go to the 'then' clause.
+            return Promise.reject(data);
         }).then(function (status) {
             var notification = status.latest_response;
             var last_diagnosis_service_id = status.last_received_diagnosis_id;
@@ -302,7 +305,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
                 self.polling = setInterval(function () {
                     self._poll_for_response(resolve, reject);
-                }, 3000);
+                }, 5500);
             });
 
             // make sure to stop polling when we're done
