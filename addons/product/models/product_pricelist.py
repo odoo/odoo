@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from itertools import chain
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_datetime, formatLang
-from odoo.tools.misc import get_lang
+from odoo.tools import format_datetime, formatLang, get_lang
 
 
 class Pricelist(models.Model):
