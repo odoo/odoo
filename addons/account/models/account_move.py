@@ -2072,8 +2072,13 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
 
+<<<<<<< HEAD
         invoice_lines = self.line_ids.filtered(lambda x: not x.exclude_from_invoice_tab and not x.display_type and not x._origin)
         cached_vals_list = [dict(x._cache) for x in invoice_lines]
+=======
+        for line in self.line_ids:
+            analytic_account = line._cache.get('analytic_account_id')
+>>>>>>> 6968a1dd007... temp
 
         for cached_vals, line in zip(cached_vals_list, invoice_lines):
 
