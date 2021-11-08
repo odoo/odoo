@@ -100,9 +100,9 @@
                         </tr>
                     </table>
                     <h2>
-                        <span t-if="not o"><t t-esc="company.l10n_din5008_document_title"/></span>
-                        <span t-elif="'l10n_din5008_document_title' in o"><t t-esc="o.l10n_din5008_document_title"/></span>
-                        <span t-else="" t-field="o.name"/>
+                        <span t-if="'l10n_din5008_document_title' in company"><t t-esc="company.l10n_din5008_document_title"/></span>
+                        <span t-elif="o and 'l10n_din5008_document_title' in o"><t t-esc="o.l10n_din5008_document_title"/></span>
+                        <span t-elif="o" t-field="o.name"/>
                     </h2>
                     <t t-out="0"/>
                 </div>
