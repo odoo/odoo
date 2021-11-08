@@ -402,7 +402,14 @@
             </div>
             <div class="by_odoo">
                 Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
-                <t t-if="object and object._name == 'digest.digest'">
+                <t t-if="unsubscribe_token">
+                    –
+                    <a t-attf-href="/digest/#{object.id}/unsubscribe?token=#{unsubscribe_token}&amp;user_id=#{user.id}"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Unsubscribe</span>
+                    </a>
+                </t>
+                <t t-elif="object and object._name == 'digest.digest'">
                     –
                     <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id"
                        target="_blank" style="text-decoration: none;">
