@@ -35,7 +35,6 @@ class AccountMoveReversal(models.TransientModel):
     @api.depends('move_ids')
     def _compute_document_type(self):
         self.l10n_latam_available_document_type_ids = False
-        self.l10n_latam_document_type_id = False
         self.l10n_latam_use_documents = False
         for record in self:
             if len(record.move_ids) > 1:
@@ -52,7 +51,8 @@ class AccountMoveReversal(models.TransientModel):
                     'partner_id': record.move_ids.partner_id.id,
                     'company_id': record.move_ids.company_id.id,
                 })
-                record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
+                if record.l10n_latam_document_type_id not in refund.l10n_latam_available_document_type_ids._origin:
+                    record.l10n_latam_document_type_id = refund.l10n_latam_document_type_id
                 record.l10n_latam_available_document_type_ids = refund.l10n_latam_available_document_type_ids
 
     def _prepare_default_reversal(self, move):
@@ -60,7 +60,7 @@ class AccountMoveReversal(models.TransientModel):
         the wizard """
         res = super()._prepare_default_reversal(move)
         res.update({
-            'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
+            'l10n_latam_document_type_id': self._context.get('l10n_latam_document_type_id', self.l10n_latam_document_type_id.id),
             'l10n_latam_document_number': self.l10n_latam_document_number,
         })
         return res
