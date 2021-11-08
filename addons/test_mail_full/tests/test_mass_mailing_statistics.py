@@ -47,7 +47,7 @@ class TestMailingStatistics(TestMassSMSCommon):
         self.assertEqual(mailing.opened_ratio, 30)
         self.assertEqual(mailing.sent, 10)
 
-        with self.mock_mail_gateway(mail_unlink_sent=False):
+        with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing._action_send_statistics()
 
         self.assertEqual(len(self._new_mails), 1, "Mailing: a mail should have been created for statistics")
@@ -57,7 +57,7 @@ class TestMailingStatistics(TestMassSMSCommon):
         self.assertEqual(mail.email_from, self.user_marketing_2.email_formatted)
         self.assertEqual(mail.email_to, self.user_marketing_2.email_formatted)
         self.assertEqual(mail.reply_to, formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))))
-        self.assertEqual(mail.state, 'sent')
+        self.assertEqual(mail.state, 'outgoing')
         # test body content: KPIs
         body_html = html.fromstring(mail.body_html)
         kpi_values = body_html.xpath('//div[@data-field="sms"]//*[hasclass("kpi_value")]/text()')
