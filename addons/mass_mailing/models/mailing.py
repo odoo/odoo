@@ -774,6 +774,7 @@ class MassMailing(models.Model):
         kpi = {}
         if self.mailing_type == 'mail':
             kpi = {
+                'kpi_name': '',
                 'kpi_fullname': _('Engagement on %(expected)i %(mailing_type)s Sent',
                                   expected=self.expected,
                                   mailing_type=mailing_type
