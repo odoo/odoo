@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="a1200"/>
+        <field name="property_account_payable_id" ref="a3300"/>
+        <field name="property_account_expense_categ_id" ref="a1330"/>
+        <field name="property_account_income_categ_id" ref="a6010"/>
+        <field name="expense_currency_exchange_account_id" ref="a7430"/>
+        <field name="income_currency_exchange_account_id" ref="a6250"/>
+        <field name="account_journal_payment_debit_account_id" ref="a1030_0_1200"/>
+        <field name="account_journal_payment_credit_account_id" ref="a1030_0_3300"/>
+        <field name="account_journal_suspense_account_id" ref="a1030_0_0"/>
+        <field name="default_cash_difference_income_account_id" ref="a6210"/>
+        <field name="default_cash_difference_expense_account_id" ref="a7410"/>
+        <field name="default_pos_receivable_account_id" ref="a1200" />
+        <field name="property_stock_account_input_categ_id" ref="a6210"/>
+        <field name="property_stock_account_output_categ_id" ref="a7410"/>
+        <field name="property_stock_valuation_account_id" ref="a1300"/>
+        <field name="property_tax_payable_account_id" ref="a3100"/>
+        <field name="property_tax_receivable_account_id" ref="a3100"/>
+        <field name="property_advance_tax_payment_account_id" ref="a3100"/>
+        <field name="property_cash_basis_base_account_id" ref="a5710"/>
+    </record>
+</odoo>

@@ -1,0 +1,2017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="a1000" model="account.account.template">
+        <field name="name">Денежные средства</field>
+        <field name="code">1000</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1100" model="account.account.template">
+        <field name="name">Краткосрочные финансовые активы</field>
+        <field name="code">1100</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1200" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность</field>
+        <field name="code">1200</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1300" model="account.account.template">
+        <field name="name">Запасы</field>
+        <field name="code">1300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1400" model="account.account.template">
+        <field name="name">Текущие налоговые активы</field>
+        <field name="code">1400</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1500" model="account.account.template">
+        <field name="name">Долгосрочные активы, предназначенные для продажи</field>
+        <field name="code">1500</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1600" model="account.account.template">
+        <field name="name">Биологические активы</field>
+        <field name="code">1600</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1700" model="account.account.template">
+        <field name="name">Прочие краткосрочные активы</field>
+        <field name="code">1700</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1010" model="account.account.template">
+        <field name="name">Денежные средства в кассе</field>
+        <field name="code">1010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитывается движение денежных средств в кассе в национальной и в иностранных валютах</field>
+    </record>
+    <record id="a1020" model="account.account.template">
+        <field name="name">Денежные средства в пути</field>
+        <field name="code">1020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитывается движение денежных средств в пути и конвертации валюты</field>
+    </record>
+    <record id="a1030" model="account.account.template">
+        <field name="name">Денежные средства на текущих банковских счетах</field>
+        <field name="code">1030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитывается движение денежных средств на текущих банковских счетах в национальной и в иностранных валютах</field>
+    </record>
+    <record id="a1030_0_0" model="account.account.template">
+        <field name="name">Неидентифицированные Платежи</field>
+        <field name="code">1030.0.0</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">прендазначен для использования во временных
+        проводках, которые создаются после загрузки банковской выписки, и
+        существуют до завершения идентификации платежа.</field>
+    </record>
+    <record id="a1030_0_3300" model="account.account.template">
+        <field name="name">Неподтвержденные исходящие платежи</field>
+        <field name="code">1030.0.3300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">
+        прендазначен для создания промежуточной проводки по исходящим платежам.
+        Вместо прямой проводки "счет 1030 - счет 3300",
+        будут созданы проводки "счет 1030.0.3300 - счет 3300" (неподтвержденный платеж)
+        и "счет 1030 - счет 1030.0.3300" (подтверждение платежа).
+        </field>
+    </record>
+    <record id="a1030_0_1200" model="account.account.template">
+        <field name="name">Неподтвержденные входящие платежи</field>
+        <field name="code">1030.0.1200</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">
+        прендазначен для создания промежуточной проводки по входящим платежам.
+        Вместо прямой проводки "счет 1030 - счет 1200",
+        будут созданы проводки "счет 1030.0.1200 - счет 1200" (неподтвержденный платеж)
+        и "счет 1200 - счет 1030.0.1200" (подтверждение платежа).
+        </field>
+    </record>
+    <record id="a1040" model="account.account.template">
+        <field name="name">Денежные средства на корреспондентских счетах</field>
+        <field name="code">1040</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитывается движение денежных средств на корреспондентских счетах в национальной и в иностранных валютах</field>
+    </record>
+    <record id="a1050" model="account.account.template">
+        <field name="name">Денежные средства на сберегательных счетах</field>
+        <field name="code">1050</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитывается движение денежных средств на сберегательных счетах в национальной и в иностранных валютах</field>
+    </record>
+    <record id="a1060" model="account.account.template">
+        <field name="name">Денежные средства, ограниченные в использовании</field>
+        <field name="code">1060</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитываются денежные средства в кассе, на текущих, корреспондентских и сберегательных счетах, ограниченные в использовании</field>
+    </record>
+    <record id="a1070" model="account.account.template">
+        <field name="name">Учет электронных денежных средств</field>
+        <field name="code">1070</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитываются электронные денежные средства в системе</field>
+    </record>
+    <record id="a1080" model="account.account.template">
+        <field name="name">Прочие денежные средства</field>
+        <field name="code">1080</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитываются прочие денежные средства, не указанные в предыдущих группах</field>
+    </record>
+    <record id="a1090" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения денежных средств</field>
+        <field name="code">1090</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="note">учитываются оценочные резервы под ожидаемые кредитные убытки от обесценения денежных средств.</field>
+    </record>
+    <record id="a1110" model="account.account.template">
+        <field name="name">Краткосрочные финансовые активы, оцениваемые по амортизированной стоимости</field>
+        <field name="code">1110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются краткосрочные финансовые активы, оцениваемые по амортизированной стоимости</field>
+    </record>
+    <record id="a1120" model="account.account.template">
+        <field name="name">Краткосрочные финансовые активы, оцениваемые по справедливой стоимости через прочий совокупный доход</field>
+        <field name="code">1120</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются краткосрочные финансовые активы, оцениваемые по справедливой стоимости через прочий совокупный доход</field>
+    </record>
+    <record id="a1130" model="account.account.template">
+        <field name="name">Краткосрочные финансовые активы, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+        <field name="code">1130</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются краткосрочные финансовые активы, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+    </record>
+    <record id="a1140" model="account.account.template">
+        <field name="name">Производные финансовые инструменты</field>
+        <field name="code">1140</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются производные финансовые инструменты, в том числе встроенные</field>
+    </record>
+    <record id="a1150" model="account.account.template">
+        <field name="name">Краткосрочные вознаграждения к получению</field>
+        <field name="code">1150</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">отражаются операции, связанные с движением дебиторской задолженности по:
+        начисленным дивидендам по акциям (долям участия);
+
+        начисленным вознаграждениям по финансовой аренде, предоставленным займам, приобретенным финансовым инвестициям, доверительному управлению, и прочим начисленным вознаграждениям;
+        </field>
+    </record>
+    <record id="a1160" model="account.account.template">
+        <field name="name">Прочие краткосрочные финансовые активы</field>
+        <field name="code">1160</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются прочие краткосрочные финансовые активы, не указанные в предыдущих группах</field>
+    </record>
+    <record id="a1170" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения краткосрочных финансовых активов</field>
+        <field name="code">1170</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются оценочные резервы под ожидаемые кредитные убытки от обесценения краткосрочных финансовых активов.</field>
+    </record>
+    <record id="a1210" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность покупателей и заказчиков</field>
+        <field name="code">1210</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции по расчетам с покупателями и заказчиками за реализованные активы и оказанные услуги сроком до одного года, и прочая краткосрочная дебиторская задолженность покупателей и заказчиков</field>
+    </record>
+    <record id="a1220" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность дочерних организаций</field>
+        <field name="code">1220</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции по расчетам с дочерними организациями за реализованные активы и оказанные услуги сроком до одного года, и прочая краткосрочная дебиторская задолженность дочерних организаций</field>
+    </record>
+    <record id="a1230" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность ассоциированных и совместных организаций</field>
+        <field name="code">1230</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции по расчетам с ассоциированными и совместными организациями за реализованные активы и оказанные услуги сроком до одного года, и прочая краткосрочная дебиторская задолженность ассоциированных и совместных организаций</field>
+    </record>
+    <record id="a1240" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность филиалов и структурных подразделений</field>
+        <field name="code">1240</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции по поступлению и списанию денежных средств на счета филиалов, и прочая краткосрочная дебиторская задолженность филиалов и структурных подразделений</field>
+    </record>
+    <record id="a1250" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность работников</field>
+        <field name="code">1250</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции, связанные с движением дебиторской задолженности работников по:
+      выданным в подотчет денежным средствам на приобретение активов, оплате услуг, служебным командировкам и другие;
+      предоставленным работникам займам, а также расчеты по возмещению материального ущерба (недостача, хищение, порча и другие), причиненного организации работником, и прочая краткосрочная дебиторская задолженность работников;
+        </field>
+    </record>
+    <record id="a1260" model="account.account.template">
+        <field name="name">Краткосрочная дебиторская задолженность по аренде</field>
+        <field name="code">1260</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">учитываются расходы по осуществлению текущих арендных платежей по операционной и финансовой аренде за текущий период</field>
+    </record>
+    <record id="a1270" model="account.account.template">
+        <field name="name">Прочая краткосрочная дебиторская задолженность</field>
+        <field name="code">1270</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">отражаются операции по прочей дебиторской задолженности сроком до одного года, не указанные в предыдущих группах, например, задолженность по векселям полученным, по осуществлению страховых выплат страховым организациям</field>
+    </record>
+    <record id="a1280" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения краткосрочной дебиторской задолженности</field>
+        <field name="code">1280</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения краткосрочной дебиторской задолженности.</field>
+    </record>
+    <record id="a1310" model="account.account.template">
+        <field name="name">Сырье и материалы</field>
+        <field name="code">1310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются сырье и материалы, в том числе сельскохозяйственные, предназначенные для дальнейшего использования в производственном процессе</field>
+    </record>
+    <record id="a1320" model="account.account.template">
+        <field name="name">Готовая продукция</field>
+        <field name="code">1320</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитывается готовая продукция, в том числе сельскохозяйственная продукция</field>
+    </record>
+    <record id="a1330" model="account.account.template">
+        <field name="name">Товары</field>
+        <field name="code">1330</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">отражаются операции, связанные с движением товаров, в том числе сельскохозяйственных, закупленных и хранящихся для перепродажи</field>
+    </record>
+    <record id="a1340" model="account.account.template">
+        <field name="name">Незавершенное производство</field>
+        <field name="code">1340</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются затраты по незавершенному производству</field>
+    </record>
+    <record id="a1350" model="account.account.template">
+        <field name="name">Прочие запасы</field>
+        <field name="code">1350</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются прочие запасы, не указанные в предыдущих группах</field>
+    </record>
+    <record id="a1360" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения запасов</field>
+        <field name="code">1360</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения запасов</field>
+    </record>
+    <record id="a1370" model="account.account.template">
+        <field name="name">Актив по праву на возврат запасов</field>
+        <field name="code">1370</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитывается себестоимость запасов в части ожидаемых возвратов.</field>
+    </record>
+    <record id="a1410" model="account.account.template">
+        <field name="name">Корпоративный подоходный налог</field>
+        <field name="code">1410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с отражением излишне уплаченного в бюджет корпоративного подоходного налога, а также авансовые платежи по уплате корпоративного подоходного налога</field>
+    </record>
+    <record id="a1420" model="account.account.template">
+        <field name="name">Налог на добавленную стоимость</field>
+        <field name="code">1420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по налогу на добавленную стоимость, подлежащему отнесению в зачет, в том числе подлежащего возмещению в соответствии с налоговым законодательством, а также излишне уплаченные в бюджет суммы налога на добавленную стоимость</field>
+    </record>
+    <record id="a1430" model="account.account.template">
+        <field name="name">Прочие налоги и другие обязательные платежи в бюджет</field>
+        <field name="code">1430</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются прочие налоги и другие обязательные платежи, подлежащие к возмещению и(или) подлежащие зачету в соответствии с законодательством Республики Казахстан.</field>
+    </record>
+    <record id="a1510" model="account.account.template">
+        <field name="name">Долгосрочные активы, предназначенные для продажи</field>
+        <field name="code">1510</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются долгосрочные активы, предназначенные для продажи, например, оборудование, подготовленное для продажи</field>
+    </record>
+    <record id="a1520" model="account.account.template">
+        <field name="name">Группы на выбытие, предназначенные для продажи</field>
+        <field name="code">1520</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются группы на выбытие, предназначенные для продажи, например, действующий завод, подготовленный к продаже</field>
+    </record>
+    <record id="a1530" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения долгосрочных активов (или выбывающих групп), предназначенных для продажи</field>
+        <field name="code">1530</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения долгосрочных активов (или выбывающих групп), предназначенных для продажи.</field>
+    </record>
+    <record id="a1610" model="account.account.template">
+        <field name="name">Растения</field>
+        <field name="code">1610</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1620" model="account.account.template">
+        <field name="name">Животные</field>
+        <field name="code">1620</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a1630" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения биологических активов</field>
+        <field name="code">1630</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения биологических активов.</field>
+    </record>
+    <record id="a1710" model="account.account.template">
+        <field name="name">Краткосрочные авансы выданные</field>
+        <field name="code">1710</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="note">учитываются авансы, выданные под поставку активов, а также по оплате продукции, услуг, принятых от заказчиков по частичной готовности, в течение отчетного периода, и прочие краткосрочные авансы выданные</field>
+    </record>
+    <record id="a1720" model="account.account.template">
+        <field name="name">Расходы будущих периодов</field>
+        <field name="code">1720</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="note">учитываются расходы, произведенные в настоящем периоде, но относящиеся к будущим периодам в отчетном году (страховые премии, выплаченные страховым организациям, арендная плата и др.)</field>
+    </record>
+    <record id="a1730" model="account.account.template">
+        <field name="name">Краткосрочные активы по договорам</field>
+        <field name="code">1730</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются активы по договорам с покупателями</field>
+    </record>
+    <record id="a1740" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения краткосрочных активов по договорам</field>
+        <field name="code">1740</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения краткосрочных активов по договорам с покупателями</field>
+    </record>
+    <record id="a1750" model="account.account.template">
+        <field name="name">Прочие краткосрочные активы</field>
+        <field name="code">1750</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">отражаются операции по прочим краткосрочным активам, не указанным в предыдущих группах.</field>
+    </record>
+    <record id="a2010" model="account.account.template">
+        <field name="name">Долгосрочные финансовые активы, оцениваемые по амортизированной стоимости</field>
+        <field name="code">2010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются долгосрочные финансовые активы, оцениваемые по амортизированной стоимости</field>
+    </record>
+    <record id="a2020" model="account.account.template">
+        <field name="name">Долгосрочные финансовые активы, оцениваемые по справедливой стоимости через прочий совокупный доход</field>
+        <field name="code">2020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются долгосрочные финансовые активы, оцениваемые по справедливой стоимости через прочий совокупный доход</field>
+    </record>
+    <record id="a2030" model="account.account.template">
+        <field name="name">Долгосрочные финансовые активы, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+        <field name="code">2030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются долгосрочные финансовые активы, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+    </record>
+    <record id="a2040" model="account.account.template">
+        <field name="name">Производные финансовые инструменты</field>
+        <field name="code">2040</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются производные финансовые инструменты, в том числе встроенные</field>
+    </record>
+    <record id="a2050" model="account.account.template">
+        <field name="name">Долгосрочные вознаграждения к получению</field>
+        <field name="code">2050</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">отражаются операции, связанные с движением долгосрочной дебиторской задолженности по начисленным вознаграждениям по финансовой аренде, предоставленным займам, приобретенным финансовым инвестициям, доверительному управлению, и прочие долгосрочные вознаграждения к получению</field>
+    </record>
+    <record id="a2060" model="account.account.template">
+        <field name="name">Долевые инструменты</field>
+        <field name="code">2060</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются долевые инструменты, оцениваемые по справедливой стоимости через прочий совокупный доход и долевые инструменты, оцениваемые по справедливой стоимости через прибыль и убыток</field>
+    </record>
+    <record id="a2070" model="account.account.template">
+        <field name="name">Прочие долгосрочные финансовые активы</field>
+        <field name="code">2070</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются прочие долгосрочные финансовые активы, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a2080" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения долгосрочных финансовых активов</field>
+        <field name="code">2080</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются оценочные резервы под ожидаемые кредитные убытки от обесценения долгосрочных финансовых активов.</field>
+    </record>
+    <record id="a2110" model="account.account.template">
+        <field name="name">Долгосрочная задолженность покупателей и заказчиков</field>
+        <field name="code">2110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с покупателями и заказчиками за реализованные активы и оказанные услуги сроком свыше одного года</field>
+    </record>
+    <record id="a2120" model="account.account.template">
+        <field name="name">Долгосрочная дебиторская задолженность дочерних организаций</field>
+        <field name="code">2120</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с дочерними организациями за реализованные активы и оказанные услуги сроком свыше одного года, и прочая долгосрочная дебиторская задолженность дочерних организаций</field>
+    </record>
+    <record id="a2130" model="account.account.template">
+        <field name="name">Долгосрочная дебиторская задолженность ассоциированных и совместных организаций</field>
+        <field name="code">2130</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с ассоциированными и совместными организациями за реализованные активы и оказанные услуги сроком свыше одного года, и прочая долгосрочная дебиторская задолженность ассоциированных и совместных организаций</field>
+    </record>
+    <record id="a2140" model="account.account.template">
+        <field name="name">Долгосрочная дебиторская задолженность филиалов и структурных подразделений</field>
+        <field name="code">2140</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитывается долгосрочная дебиторская задолженность филиалов и структурных подразделений</field>
+    </record>
+    <record id="a2150" model="account.account.template">
+        <field name="name">Долгосрочная дебиторская задолженность работников</field>
+        <field name="code">2150</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с движением дебиторской задолженности работников по предоставленным работникам долгосрочным займам, а также расчеты по возмещению материального ущерба (недостача, хищение, порча и другие), причиненного организации работником, сроком свыше одного года</field>
+    </record>
+    <record id="a2160" model="account.account.template">
+        <field name="name">Долгосрочная дебиторская задолженность по аренде</field>
+        <field name="code">2160</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются долгосрочная дебиторская задолженность по финансовой аренде, и прочая долгосрочная дебиторская задолженность по аренде</field>
+    </record>
+    <record id="a2170" model="account.account.template">
+        <field name="name">Прочая долгосрочная дебиторская задолженность</field>
+        <field name="code">2170</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по прочей долгосрочной дебиторской задолженности, не указанной в предыдущих группах, например, долгосрочной задолженности по векселям полученным, по осуществлению страховых выплат страховым организациям</field>
+    </record>
+    <record id="a2180" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения долгосрочной дебиторской задолженности</field>
+        <field name="code">2180</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения долгосрочной дебиторской задолженности.</field>
+    </record>
+    <record id="a2210" model="account.account.template">
+        <field name="name">Инвестиции, учитываемые методом долевого участия</field>
+        <field name="code">2210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">отражаются операции по инвестициям в долевые инструменты, учитываемые методом долевого участия.</field>
+    </record>
+    <record id="a2220" model="account.account.template">
+        <field name="name">Инвестиции, учитываемые по первоначальной стоимости</field>
+        <field name="code">2220</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">отражаются операции по инвестициям в долевые инструменты, учитываемые по первоначальной стоимости</field>
+    </record>
+    <record id="a2230" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения инвестиций</field>
+        <field name="code">2230</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения инвестиций.</field>
+    </record>
+    <record id="a2310" model="account.account.template">
+        <field name="name">Инвестиционное имущество</field>
+        <field name="code">2310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитывается инвестиционное имущество</field>
+    </record>
+    <record id="a2320" model="account.account.template">
+        <field name="name">Амортизация инвестиционного имущества</field>
+        <field name="code">2320</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">аккумулируются суммы амортизации инвестиционного имущества</field>
+    </record>
+    <record id="a2330" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения инвестиционного имущества</field>
+        <field name="code">2330</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">аккумулируются суммы оценочного резерва под убытки от обесценения инвестиционного имущества.</field>
+    </record>
+    <record id="a2410" model="account.account.template">
+        <field name="name">Основные средства</field>
+        <field name="code">2410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитывается основные средства</field>
+    </record>
+    <record id="a2420" model="account.account.template">
+        <field name="name">Амортизация основных средств</field>
+        <field name="code">2420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">аккумулируются суммы амортизации основных средств</field>
+    </record>
+    <record id="a2430" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения основных средств</field>
+        <field name="code">2430</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения основных средств</field>
+    </record>
+    <record id="a2440" model="account.account.template">
+        <field name="name">Право пользования активом</field>
+        <field name="code">2440</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">отражается стоимость права пользования арендованными активами, удовлетворяющими критериям признания основного средства</field>
+    </record>
+    <record id="a2450" model="account.account.template">
+        <field name="name">Амортизация права пользования активом</field>
+        <field name="code">2450</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">аккумулируются суммы амортизации права пользования активами</field>
+    </record>
+    <record id="a2460" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения права пользования активом</field>
+        <field name="code">2460</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения права пользования активами.</field>
+    </record>
+    <record id="a2510" model="account.account.template">
+        <field name="name">Растения</field>
+        <field name="code">2510</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a2520" model="account.account.template">
+        <field name="name">Животные</field>
+        <field name="code">2520</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a2530" model="account.account.template">
+        <field name="name">Амортизация биологических активов</field>
+        <field name="code">2530</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">аккумулируются суммы амортизации биологических активов в случае, если их справедливая стоимость не поддается оценке</field>
+    </record>
+    <record id="a2540" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения биологических активов</field>
+        <field name="code">2540</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения биологических активов.</field>
+    </record>
+    <record id="a2610" model="account.account.template">
+        <field name="name">Разведочные и оценочные активы</field>
+        <field name="code">2610</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">отражаются операции, связанные с признанием расходов в качестве разведочных и оценочных активов</field>
+    </record>
+    <record id="a2620" model="account.account.template">
+        <field name="name">Амортизация разведочных и оценочных активов</field>
+        <field name="code">2620</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">аккумулируются суммы амортизации разведочных и оценочных активов</field>
+    </record>
+    <record id="a2630" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения разведочных и оценочных активов</field>
+        <field name="code">2630</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">аккумулируются суммы оценочного резерва под убытки от обесценения разведочных и оценочных активов.</field>
+    </record>
+    <record id="a2710" model="account.account.template">
+        <field name="name">Гудвилл</field>
+        <field name="code">2710</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">отражаются операции, связанные с наличием и движением гудвилла, как части статьи инвестиций</field>
+    </record>
+    <record id="a2720" model="account.account.template">
+        <field name="name">Обесценение гудвилла</field>
+        <field name="code">2720</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">отражаются операции по отражению обесценения гудвилла по итогам регулярно проводимого тестирования на предмет возможных убытков от обесценения</field>
+    </record>
+    <record id="a2730" model="account.account.template">
+        <field name="name">Прочие нематериальные активы</field>
+        <field name="code">2730</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note"></field>
+    </record>
+    <record id="a2910" model="account.account.template">
+        <field name="name">Долгосрочные авансы выданные</field>
+        <field name="code">2910</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются авансы, выданные под поставку активов, а также по оплате продукции, услуг, принятых от заказчиков по частичной готовности, сроком свыше одного года, и прочие долгосрочные авансы выданные</field>
+    </record>
+    <record id="a2920" model="account.account.template">
+        <field name="name">Расходы будущих периодов</field>
+        <field name="code">2920</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы, произведенные в отчетном периоде, но относящиеся к будущим отчетным периодам</field>
+    </record>
+    <record id="a2930" model="account.account.template">
+        <field name="name">Незавершенное строительство</field>
+        <field name="code">2930</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+        <field name="note">учитываются затраты по незавершенному строительству, например, затраты:
+        * связанные со строительством основных средств;
+        * связанные со строительством объекта, который в будущем предполагается использовать в качестве инвестиций в недвижимость.
+        </field>
+    </record>
+    <record id="a2940" model="account.account.template">
+        <field name="name">Долгосрочные активы по договорам</field>
+        <field name="code">2940</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются активы по договорам с покупателями</field>
+    </record>
+    <record id="a2950" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения долгосрочных активов по договорам</field>
+        <field name="code">2950</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения долгосрочных активов по договорам с покупателями</field>
+    </record>
+    <record id="a2960" model="account.account.template">
+        <field name="name">Затраты по договорам</field>
+        <field name="code">2960</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются затраты по договорам с покупателями</field>
+    </record>
+    <record id="a2970" model="account.account.template">
+        <field name="name">Амортизация затрат по договорам</field>
+        <field name="code">2970</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+        <field name="note">учитываются суммы амортизации затрат по договорам</field>
+    </record>
+    <record id="a2980" model="account.account.template">
+        <field name="name">Оценочный резерв под убытки от обесценения затрат по договорам</field>
+        <field name="code">2980</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются оценочные резервы под убытки от обесценения затрат по договорам</field>
+    </record>
+    <record id="a2990" model="account.account.template">
+        <field name="name">Прочие долгосрочные активы</field>
+        <field name="code">2990</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="note">учитываются прочие группы долгосрочных активов, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a3000" model="account.account.template">
+        <field name="name">Краткосрочные финансовые обязательства</field>
+        <field name="code">3000</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3100" model="account.account.template">
+        <field name="name">Обязательства по налогам</field>
+        <field name="code">3100</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3200" model="account.account.template">
+        <field name="name">Обязательства по другим обязательным и добровольным платежам</field>
+        <field name="code">3200</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3300" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность</field>
+        <field name="code">3300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3400" model="account.account.template">
+        <field name="name">Краткосрочные оценочные обязательства</field>
+        <field name="code">3400</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3500" model="account.account.template">
+        <field name="name">Прочие краткосрочные обязательства</field>
+        <field name="code">3500</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a3010" model="account.account.template">
+        <field name="name">Краткосрочные финансовые обязательства, оцениваемые по амортизированной стоимости</field>
+        <field name="code">3010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются краткосрочные финансовые обязательства, оцениваемые по амортизированной стоимости</field>
+    </record>
+    <record id="a3020" model="account.account.template">
+        <field name="name">Краткосрочные финансовые обязательства, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+        <field name="code">3020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются финансовые обязательства, оцениваемые по справедливой стоимости</field>
+    </record>
+    <record id="a3030" model="account.account.template">
+        <field name="name">Производные финансовые инструменты</field>
+        <field name="code">3030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются производные финансовые инструменты, в том числе встроенные</field>
+    </record>
+    <record id="a3040" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность по дивидендам и доходам участников</field>
+        <field name="code">3040</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по начислению и выплате дивидендов по акциям и доходов участникам юридического лица, имеющим долю в уставном капитале</field>
+    </record>
+    <record id="a3050" model="account.account.template">
+        <field name="name">Краткосрочные вознаграждения к выплате</field>
+        <field name="code">3050</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с наличием и движением начисленных вознаграждений к оплате по полученным займам, выданным векселям, эмитированным ценным бумагам и договорам доверительного управления, и прочие краткосрочные вознаграждения к выплате</field>
+    </record>
+    <record id="a3060" model="account.account.template">
+        <field name="name">Текущая часть долгосрочных финансовых обязательств, оцениваемых по амортизированной стоимости</field>
+        <field name="code">3060</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитывается текущая часть долгосрочных финансовых обязательств, оцениваемых по амортизированной стоимости</field>
+    </record>
+    <record id="a3070" model="account.account.template">
+        <field name="name">Текущая часть долгосрочных финансовых обязательств, оцениваемых по справедливой стоимости через прибыль или убытки</field>
+        <field name="code">3070</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитывается текущая часть долгосрочных финансовых обязательств, оцениваемых по справедливой стоимости через прибыль или убытки</field>
+    </record>
+    <record id="a3080" model="account.account.template">
+        <field name="name">Прочие краткосрочные финансовые обязательства</field>
+        <field name="code">3080</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются прочие краткосрочные финансовые обязательства, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a3110" model="account.account.template">
+        <field name="name">Корпоративный подоходный налог, подлежащий уплате</field>
+        <field name="code">3110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитывается корпоративный подоходный налог, подлежащий уплате</field>
+    </record>
+    <record id="a3120" model="account.account.template">
+        <field name="name">Индивидуальный подоходный налог</field>
+        <field name="code">3120</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой индивидуального подоходного налога</field>
+    </record>
+    <record id="a3130" model="account.account.template">
+        <field name="name">Налог на добавленную стоимость</field>
+        <field name="code">3130</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитывается операции, связанные с начислением и уплатой налога на добавленную стоимость</field>
+    </record>
+    <record id="a3140" model="account.account.template">
+        <field name="name">Акцизы</field>
+        <field name="code">3140</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой акцизов</field>
+    </record>
+    <record id="a3150" model="account.account.template">
+        <field name="name">Социальный налог</field>
+        <field name="code">3150</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой социального налога</field>
+    </record>
+    <record id="a3160" model="account.account.template">
+        <field name="name">Земельный налог</field>
+        <field name="code">3160</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой земельного налога</field>
+    </record>
+    <record id="a3170" model="account.account.template">
+        <field name="name">Налог на транспортные средства</field>
+        <field name="code">3170</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой налога на транспортные средства</field>
+    </record>
+    <record id="a3180" model="account.account.template">
+        <field name="name">Налог на имущество</field>
+        <field name="code">3180</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой налога на имущество</field>
+    </record>
+    <record id="a3190" model="account.account.template">
+        <field name="name">Прочие налоги</field>
+        <field name="code">3190</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой прочих налогов, не указанных в предыдущих группах.</field>
+    </record>
+    <record id="a3210" model="account.account.template">
+        <field name="name">Обязательства по социальному страхованию</field>
+        <field name="code">3210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой отчислений по социальному страхованию</field>
+    </record>
+    <record id="a3220" model="account.account.template">
+        <field name="name">Обязательства по пенсионным отчислениям</field>
+        <field name="code">3220</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой пенсионных отчислений</field>
+    </record>
+    <record id="a3230" model="account.account.template">
+        <field name="name">Прочие обязательства по другим обязательным платежам</field>
+        <field name="code">3230</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой отчислений по другим обязательным платежам, например, сборы, государственная пошлина, платы</field>
+    </record>
+    <record id="a3240" model="account.account.template">
+        <field name="name">Прочие обязательства по другим добровольным платежам</field>
+        <field name="code">3240</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с начислением и уплатой отчислений по другим добровольным платежам</field>
+    </record>
+    <record id="a3310" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность поставщикам и подрядчикам</field>
+        <field name="code">3310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с поставщиками и подрядчиками за приобретенные активы и полученные услуги, включая расходы по доставке или переработке запасов со сроком оплаты менее года, и прочая краткосрочная задолженность поставщикам и подрядчикам</field>
+    </record>
+    <record id="a3320" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность дочерним организациям</field>
+        <field name="code">3320</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с дочерними организациями за приобретенные активы и полученные услуги сроком до одного года, и прочая краткосрочная кредиторская задолженность дочерним организациям</field>
+    </record>
+    <record id="a3330" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность ассоциированным и совместным организациям</field>
+        <field name="code">3330</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с ассоциированными и совместными организациями за приобретенные активы и полученные услуги сроком до одного года, и прочая краткосрочная кредиторская задолженность ассоциированным и совместным организациям</field>
+    </record>
+    <record id="a3340" model="account.account.template">
+        <field name="name">Краткосрочная кредиторская задолженность филиалам и структурным подразделениям</field>
+        <field name="code">3340</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции по поступлению и списанию денежных средств на счета филиалов и структурных подразделений, и прочая краткосрочная кредиторская задолженность филиалам и структурным подразделениям</field>
+    </record>
+    <record id="a3350" model="account.account.template">
+        <field name="name">Краткосрочная задолженность по оплате труда</field>
+        <field name="code">3350</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются вознаграждения работникам (кроме выходных пособий и компенсационных выплат долевыми инструментами), подлежащие выплате в полном объеме в течение двенадцати месяцев после окончания периода, в котором работники оказали соответствующие услуги, и прочая краткосрочная задолженность по оплате труда</field>
+    </record>
+    <record id="a3360" model="account.account.template">
+        <field name="name">Краткосрочная задолженность по аренде</field>
+        <field name="code">3360</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с выплатой арендных обязательств по краткосрочной аренде, и прочая краткосрочная задолженность по аренде</field>
+    </record>
+    <record id="a3370" model="account.account.template">
+        <field name="name">Текущая часть долгосрочной кредиторской задолженности</field>
+        <field name="code">3370</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с выплатой текущей части долгосрочной кредиторской задолженности</field>
+    </record>
+    <record id="a3380" model="account.account.template">
+        <field name="name">Прочая краткосрочная кредиторская задолженность</field>
+        <field name="code">3380</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитывается прочая краткосрочная кредиторская задолженность, не указанная в предыдущих группах.</field>
+    </record>
+    <record id="a3410" model="account.account.template">
+        <field name="name">Краткосрочные гарантийные обязательства</field>
+        <field name="code">3410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с созданием и движением резерва по гарантийным обязательствам по реализованной продукции и оказанным услугам со сроком гарантии до одного года, и прочие краткосрочные гарантийные обязательства</field>
+    </record>
+    <record id="a3420" model="account.account.template">
+        <field name="name">Краткосрочные обязательства по юридическим претензиям</field>
+        <field name="code">3420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с созданием и движением резерва по судебным искам, срок рассмотрения которых истекает до одного года, и прочие краткосрочные обязательства по юридическим претензиям</field>
+    </record>
+    <record id="a3430" model="account.account.template">
+        <field name="name">Краткосрочные оценочные обязательства по вознаграждениям работникам</field>
+        <field name="code">3430</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">отражаются ожидаемые затраты на выплату краткосрочных вознаграждений работникам в форме оплачиваемых отсутствий на работе, а также ожидаемые затраты на участие в прибыли и выплату премий, и прочие краткосрочные оценочные обязательства по вознаграждениям работникам</field>
+    </record>
+    <record id="a3440" model="account.account.template">
+        <field name="name">Прочие краткосрочные оценочные обязательства</field>
+        <field name="code">3440</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются прочие краткосрочные оценочные обязательства, не указанные в предыдущих группах счетов.</field>
+    </record>
+    <record id="a3510" model="account.account.template">
+        <field name="name">Краткосрочные авансы полученные</field>
+        <field name="code">3510</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="note">учитываются полученные авансы под поставку товаров, сырья, материалов, оказание услуг, а также по оплате продукции, произведенной для заказчиков по частичной готовности, и прочие краткосрочные авансы полученные</field>
+    </record>
+    <record id="a3520" model="account.account.template">
+        <field name="name">Доходы будущих периодов</field>
+        <field name="code">3520</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются доходы, полученные в текущем месяце, но относящиеся к будущим месяцам отчетного периода</field>
+    </record>
+    <record id="a3530" model="account.account.template">
+        <field name="name">Обязательства группы на выбытие, предназначенной для продажи</field>
+        <field name="code">3530</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="note">отражаются обязательства группы на выбытие, предназначенной для продажи</field>
+    </record>
+    <record id="a3540" model="account.account.template">
+        <field name="name">Краткосрочные обязательства по договорам</field>
+        <field name="code">3540</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются обязательства по договорам с покупателями</field>
+    </record>
+    <record id="a3550" model="account.account.template">
+        <field name="name">Долговой компонент комбинированного краткосрочного финансового инструмента</field>
+        <field name="code">3550</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитывается долговой компонент комбинированного краткосрочного финансового инструмента</field>
+    </record>
+    <record id="a3560" model="account.account.template">
+        <field name="name">Прочие краткосрочные обязательства</field>
+        <field name="code">3560</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="note">учитываются прочие краткосрочные обязательства, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a4000" model="account.account.template">
+        <field name="name">Долгосрочные финансовые обязательства</field>
+        <field name="code">4000</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a4100" model="account.account.template">
+        <field name="name">Долгосрочная кредиторская задолженность</field>
+        <field name="code">4100</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a4200" model="account.account.template">
+        <field name="name">Долгосрочные оценочные обязательства</field>
+        <field name="code">4200</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a4300" model="account.account.template">
+        <field name="name">Отложенные налоговые обязательства</field>
+        <field name="code">4300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a4400" model="account.account.template">
+        <field name="name">Прочие долгосрочные обязательства</field>
+        <field name="code">4400</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note"></field>
+    </record>
+    <record id="a4010" model="account.account.template">
+        <field name="name">Долгосрочные финансовые обязательства, оцениваемые по амортизированной стоимости</field>
+        <field name="code">4010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются долгосрочные финансовые обязательства, оцениваемые по амортизированной стоимости</field>
+    </record>
+    <record id="a4020" model="account.account.template">
+        <field name="name">Долгосрочные финансовые обязательства, оцениваемые по справедливой стоимости через прибыль или убыток</field>
+        <field name="code">4020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются долгосрочные финансовые обязательства, оцениваемые по справедливой стоимости</field>
+    </record>
+    <record id="a4030" model="account.account.template">
+        <field name="name">Производные финансовые инструменты</field>
+        <field name="code">4030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются производные финансовые инструменты, в том числе встроенные</field>
+    </record>
+    <record id="a4040" model="account.account.template">
+        <field name="name">Долгосрочная задолженность по дивидендам и доходам участников</field>
+        <field name="code">4040</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по начислению и выплате дивидендов по акциям и доходов участникам юридического лица, имеющим долю в уставном капитале</field>
+    </record>
+    <record id="a4050" model="account.account.template">
+        <field name="name">Долгосрочные вознаграждения к выплате</field>
+        <field name="code">4050</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с наличием и движением начисленных вознаграждений к оплате по начисленным вознаграждениям по финансовой аренде, по полученным займам, выданным векселям, эмитированным ценным бумагам и договорам доверительного управления, и прочие долгосрочные вознаграждения к выплате</field>
+    </record>
+    <record id="a4060" model="account.account.template">
+        <field name="name">Прочие долгосрочные финансовые обязательства</field>
+        <field name="code">4060</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются прочие финансовые обязательства, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a4110" model="account.account.template">
+        <field name="name">Долгосрочная кредиторская задолженность поставщикам и подрядчикам</field>
+        <field name="code">4110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с поставщиками и подрядчиками за приобретенные активы и потребленные услуги, включая расходы по доставке или переработке запасов со сроком оплаты свыше одного года, и прочая долгосрочная задолженность поставщикам и подрядчикам</field>
+    </record>
+    <record id="a4120" model="account.account.template">
+        <field name="name">Долгосрочная кредиторская задолженность дочерним организациям</field>
+        <field name="code">4120</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с дочерними организациями за приобретенные активы и потребленные услуги сроком свыше одного года, и прочая долгосрочная кредиторская задолженность дочерним организациям</field>
+    </record>
+    <record id="a4130" model="account.account.template">
+        <field name="name">Долгосрочная кредиторская задолженность ассоциированным и совместным организациям</field>
+        <field name="code">4130</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции по расчетам с ассоциированными и совместными организациями за полученные активы и потребленные услуги, сроком свыше одного года, и прочая долгосрочная кредиторская задолженность ассоциированным и совместным организациям</field>
+    </record>
+    <record id="a4140" model="account.account.template">
+        <field name="name">Долгосрочная кредиторская задолженность филиалам и структурным подразделениям</field>
+        <field name="code">4140</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитывается долгосрочная кредиторская задолженность филиалам и структурным подразделениям</field>
+    </record>
+    <record id="a4150" model="account.account.template">
+        <field name="name">Долгосрочная задолженность по аренде</field>
+        <field name="code">4150</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с выплатой арендных обязательств по финансовой и операционной аренде сроком свыше одного года</field>
+    </record>
+    <record id="a4160" model="account.account.template">
+        <field name="name">Прочая долгосрочная кредиторская задолженность</field>
+        <field name="code">4160</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются прочая долгосрочная кредиторская задолженность, не указанная в предыдущих группах.</field>
+    </record>
+    <record id="a4210" model="account.account.template">
+        <field name="name">Долгосрочные гарантийные обязательства</field>
+        <field name="code">4210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с созданием и движением резерва по гарантийным обязательствам по реализованной продукции со сроком гарантии свыше одного года, и прочие долгосрочные гарантийные обязательства</field>
+    </record>
+    <record id="a4220" model="account.account.template">
+        <field name="name">Долгосрочные оценочные обязательства по юридическим претензиям</field>
+        <field name="code">4220</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются операции, связанные с созданием и движением резерва по судебным искам и прочим долгосрочным оценочным обязательствам по юридическим претензиям, срок рассмотрения которых свыше одного года</field>
+    </record>
+    <record id="a4230" model="account.account.template">
+        <field name="name">Долгосрочные оценочные обязательства по вознаграждениям работникам</field>
+        <field name="code">4230</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">отражаются ожидаемые затраты на выплату вознаграждений работникам в форме оплачиваемых отсутствий на работе и на участие в прибыли и выплату премий, подлежащие выплате через двенадцать месяцев или более, по окончании периода, в котором работники предоставили соответствующие услуги, и прочие долгосрочные оценочные обязательства по вознаграждениям работникам</field>
+    </record>
+    <record id="a4240" model="account.account.template">
+        <field name="name">Прочие долгосрочные оценочные обязательства</field>
+        <field name="code">4240</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются прочие долгосрочные оценочные обязательства, не указанные в предыдущих группах счетов.</field>
+    </record>
+    <record id="a4310" model="account.account.template">
+        <field name="name">Отложенные налоговые обязательства по корпоративному подоходному налогу</field>
+        <field name="code">4310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются суммы налога на прибыль, подлежащие уплате в будущих периодах в связи с налогооблагаемыми временными разницами.</field>
+    </record>
+    <record id="a4410" model="account.account.template">
+        <field name="name">Долгосрочные авансы полученные</field>
+        <field name="code">4410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются полученные авансы под поставку товаров, сырья, материалов, оказание услуг, а также по оплате продукции, произведенной для заказчиков по частичной готовности, и прочие долгосрочные авансы полученные</field>
+    </record>
+    <record id="a4420" model="account.account.template">
+        <field name="name">Доходы будущих периодов</field>
+        <field name="code">4420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="note">отражаются доходы, полученные в текущем отчетном периоде, но относящиеся к будущим отчетным периодам</field>
+    </record>
+    <record id="a4430" model="account.account.template">
+        <field name="name">Долгосрочные обязательства по договорам</field>
+        <field name="code">4430</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются обязательства по договорам с покупателями</field>
+    </record>
+    <record id="a4440" model="account.account.template">
+        <field name="name">Долговой компонент комбинированного долгосрочного финансового инструмента</field>
+        <field name="code">4440</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитывается долговой компонент комбинированного долгосрочного финансового инструмента</field>
+    </record>
+    <record id="a4450" model="account.account.template">
+        <field name="name">Прочие долгосрочные обязательства</field>
+        <field name="code">4450</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+        <field name="note">учитываются прочие долгосрочные обязательства, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a5000" model="account.account.template">
+        <field name="name">Уставный капитал</field>
+        <field name="code">5000</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5100" model="account.account.template">
+        <field name="name">Неоплаченный капитал</field>
+        <field name="code">5100</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5200" model="account.account.template">
+        <field name="name">Выкупленные собственные долевые инструменты</field>
+        <field name="code">5200</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5300" model="account.account.template">
+        <field name="name">Эмиссионный доход</field>
+        <field name="code">5300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5400" model="account.account.template">
+        <field name="name">Дополнительно оплаченный капитал</field>
+        <field name="code">5400</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5500" model="account.account.template">
+        <field name="name">Резервы</field>
+        <field name="code">5500</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5600" model="account.account.template">
+        <field name="name">Нераспределенная прибыль (непокрытый убыток)</field>
+        <field name="code">5600</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5700" model="account.account.template">
+        <field name="name">Итоговая прибыль (итоговый убыток)</field>
+        <field name="code">5700</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note"></field>
+    </record>
+    <record id="a5010" model="account.account.template">
+        <field name="name">Привилегированные акции</field>
+        <field name="code">5010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается суммарная номинальная стоимость оплаченных эмитированных привилегированных акций акционерного общества</field>
+    </record>
+    <record id="a5020" model="account.account.template">
+        <field name="name">Простые акции</field>
+        <field name="code">5020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается суммарная номинальная стоимость оплаченных эмитированных простых акций акционерного общества</field>
+    </record>
+    <record id="a5030" model="account.account.template">
+        <field name="name">Вклады и паи</field>
+        <field name="code">5030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается стоимость вложений в уставный капитал товарищества.</field>
+    </record>
+    <record id="a5110" model="account.account.template">
+        <field name="name">Неоплаченный капитал</field>
+        <field name="code">5110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются операции по оплате эмитированных акций, внесению вкладов (имущественных взносов) в уставный капитал организаций, а также задолженность физических лиц и организаций по оплате эмитированных акций и задолженность учредителей по внесению вкладов (имущественных взносов) в уставный капитал организаций.</field>
+    </record>
+    <record id="a5210" model="account.account.template">
+        <field name="name">Выкупленные собственные долевые инструменты</field>
+        <field name="code">5210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются изменения в собственном капитале в результате приобретении собственных долевых инструментов.</field>
+    </record>
+    <record id="a5310" model="account.account.template">
+        <field name="name">Эмиссионный доход</field>
+        <field name="code">5310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается эмиссионный доход по выпущенным собственным долевым инструментам.</field>
+    </record>
+    <record id="a5410" model="account.account.template">
+        <field name="name">Дополнительно оплаченный капитал по безвозмездным операциям с основной организацией</field>
+        <field name="code">5410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается дополнительно оплаченный капитал по безвозмездным операциям с основной организацией</field>
+    </record>
+    <record id="a5420" model="account.account.template">
+        <field name="name">Дополнительно оплаченный капитал по прочим операциям</field>
+        <field name="code">5420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается дополнительно оплаченный капитал по прочим операциям.</field>
+    </record>
+    <record id="a5510" model="account.account.template">
+        <field name="name">Резервный капитал, установленный учредительными документами</field>
+        <field name="code">5510</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражается резервный капитал, установленный в соответствии с законодательством Республики Казахстан и учредительными документами</field>
+    </record>
+    <record id="a5520" model="account.account.template">
+        <field name="name">Резерв на переоценку основных средств</field>
+        <field name="code">5520</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются операции по переоценке основных средств</field>
+    </record>
+    <record id="a5530" model="account.account.template">
+        <field name="name">Резерв на переоценку нематериальных активов</field>
+        <field name="code">5530</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются операции по переоценке нематериальных активов</field>
+    </record>
+    <record id="a5540" model="account.account.template">
+        <field name="name">Резерв на переоценку финансовых активов, учитываемых по справедливой стоимости через прочий совокупный доход</field>
+        <field name="code">5540</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитывается переоценка по финансовым активам, учитываемым по справедливой стоимости через прочий совокупный доход</field>
+    </record>
+    <record id="a5550" model="account.account.template">
+        <field name="name">Резерв под убытки по финансовым активам</field>
+        <field name="code">5550</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">учитываются оценочные резервы под ожидаемые кредитные убытки по финансовым активам</field>
+    </record>
+    <record id="a5560" model="account.account.template">
+        <field name="name">Резерв на пересчет иностранной валюты по зарубежной деятельности</field>
+        <field name="code">5560</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются курсовые разницы, возникшие по монетарной статье, которая по существу составляет часть чистых инвестиций организации в зарубежную организацию, и классифицируются в финансовой отчетности организации как собственный капитал вплоть до выбытия чистой инвестиции, после чего признаются как доход или расход</field>
+    </record>
+    <record id="a5570" model="account.account.template">
+        <field name="name">Прочие резервы</field>
+        <field name="code">5570</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражаются прочие резервы, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a5610" model="account.account.template">
+        <field name="name">Нераспределенная прибыль (непокрытый убыток) отчетного года</field>
+        <field name="code">5610</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражается прибыль или убыток отчетного года</field>
+    </record>
+    <record id="a5620" model="account.account.template">
+        <field name="name">Нераспределенная прибыль (непокрытый убыток) предыдущих лет</field>
+        <field name="code">5620</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражается прибыль или убыток предыдущих лет.</field>
+    </record>
+    <record id="a5710" model="account.account.template">
+        <field name="name">Итоговая прибыль (итоговый убыток)</field>
+        <field name="code">5710</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="note">отражается итоговая прибыль (итоговый убыток) организации за отчетный период, а также обобщается информация по формированию конечного финансового результата организации за отчетный период.</field>
+    </record>
+    <record id="a6010" model="account.account.template">
+        <field name="name">Доход от реализации продукции и оказания услуг</field>
+        <field name="code">6010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="note">отражаются операции, связанные с получением доходов от реализации продукции и оказания услуг</field>
+    </record>
+    <record id="a6020" model="account.account.template">
+        <field name="name">Возврат проданной продукции</field>
+        <field name="code">6020</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с возвратом проданной продукции</field>
+    </record>
+    <record id="a6030" model="account.account.template">
+        <field name="name">Скидки с цены и продаж</field>
+        <field name="code">6030</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с предоставлением скидки с цены или продаж.</field>
+    </record>
+    <record id="a6110" model="account.account.template">
+        <field name="name">Доходы по вознаграждениям</field>
+        <field name="code">6110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов по финансовым активам, например, депозитам, предоставленным займам</field>
+    </record>
+    <record id="a6120" model="account.account.template">
+        <field name="name">Доходы по дивидендам</field>
+        <field name="code">6120</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов по полученным дивидендам по ценным бумагам</field>
+    </record>
+    <record id="a6130" model="account.account.template">
+        <field name="name">Доходы от финансовой аренды</field>
+        <field name="code">6130</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов по переданным в финансовую аренду активам</field>
+    </record>
+    <record id="a6140" model="account.account.template">
+        <field name="name">Доходы от операций с инвестициями в недвижимость</field>
+        <field name="code">6140</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от недвижимости (земли, здания, или их части), находящейся в распоряжении (владельца или арендатора по договору аренды) с целью получения арендных платежей или доходов от прироста стоимости капитала или того и другого</field>
+    </record>
+    <record id="a6150" model="account.account.template">
+        <field name="name">Доходы от изменения справедливой стоимости финансовых инструментов</field>
+        <field name="code">6150</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от изменения справедливой стоимости финансового актива или обязательства, оцениваемого по справедливой стоимости через прибыль или убыток с признанием ее изменения в качестве дохода</field>
+    </record>
+    <record id="a6160" model="account.account.template">
+        <field name="name">Прочие доходы от финансирования</field>
+        <field name="code">6160</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от финансирования, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a6210" model="account.account.template">
+        <field name="name">Доходы от выбытия активов</field>
+        <field name="code">6210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от реализации активов, например, основных средств, нематериальных активов, финансовых активов</field>
+    </record>
+    <record id="a6220" model="account.account.template">
+        <field name="name">Доходы от безвозмездно полученных активов</field>
+        <field name="code">6220</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с безвозмездным получением активов</field>
+    </record>
+    <record id="a6230" model="account.account.template">
+        <field name="name">Доходы от государственных субсидий</field>
+        <field name="code">6230</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением государственных субсидий</field>
+    </record>
+    <record id="a6240" model="account.account.template">
+        <field name="name">Доходы от восстановления убытка от обесценения по нефинансовым активам</field>
+        <field name="code">6240</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются доходы от восстановления убытка от обесценения нефинансового актива</field>
+    </record>
+    <record id="a6250" model="account.account.template">
+        <field name="name">Доходы от курсовой разницы</field>
+        <field name="code">6250</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от курсовой разницы, возникающей в результате отражения в отчетах одинакового количества единиц иностранной валюты, выраженной в валюте отчетности с использованием разных обменных курсов валют</field>
+    </record>
+    <record id="a6260" model="account.account.template">
+        <field name="name">Доходы от операционной аренды</field>
+        <field name="code">6260</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов по переданным в операционную аренду активам</field>
+    </record>
+    <record id="a6270" model="account.account.template">
+        <field name="name">Доходы от изменения справедливой стоимости биологических активов</field>
+        <field name="code">6270</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от изменения справедливой стоимости биологических активов</field>
+    </record>
+    <record id="a6280" model="account.account.template">
+        <field name="name">Доходы от восстановления убытка от обесценения по финансовым активам</field>
+        <field name="code">6280</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">учитываются доходы от восстановления убытка от обесценения финансового актива</field>
+    </record>
+    <record id="a6290" model="account.account.template">
+        <field name="name">Прочие доходы</field>
+        <field name="code">6290</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением прочих доходов, не указанных в предыдущих группах.</field>
+    </record>
+    <record id="a6310" model="account.account.template">
+        <field name="name">Доходы, связанные с прекращаемой деятельностью</field>
+        <field name="code">6310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">отражаются операции, связанные с получением доходов от реализованных активов или расчетов по обязательствам, связанным с прекращаемой деятельностью.</field>
+    </record>
+    <record id="a6410" model="account.account.template">
+        <field name="name">Доля прибыли ассоциированных организаций</field>
+        <field name="code">6410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">учитывается доля прибыли ассоциированных организаций, учитываемых методом долевого участия</field>
+    </record>
+    <record id="a6420" model="account.account.template">
+        <field name="name">Доля прибыли совместных организаций</field>
+        <field name="code">6420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_other_income"/>
+        <field name="note">учитывается доля прибыли совместных организаций, учитываемых методом долевого участия.</field>
+    </record>
+    <record id="a7010" model="account.account.template">
+        <field name="name">Себестоимость реализованной продукции и оказанных услуг</field>
+        <field name="code">7010</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note">учитываются себестоимость реализованной продукции, оказанных услуг.</field>
+    </record>
+    <record id="a7110" model="account.account.template">
+        <field name="name">Расходы по реализации продукции и оказанию услуг</field>
+        <field name="code">7110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы, связанные с реализацией продукции и оказанием услуг по реализации продукции.</field>
+    </record>
+    <record id="a7210" model="account.account.template">
+        <field name="name">Административные расходы</field>
+        <field name="code">7210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются управленческие и хозяйственные расходы, не связанные с производственным процессом.</field>
+    </record>
+    <record id="a7310" model="account.account.template">
+        <field name="name">Расходы по вознаграждениям</field>
+        <field name="code">7310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">отражаются расходы по финансовым обязательствам, например, расходы на выплату процентов по полученным займам</field>
+    </record>
+    <record id="a7320" model="account.account.template">
+        <field name="name">Расходы на выплату процентов по финансовой аренде</field>
+        <field name="code">7320</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">отражаются расходы по полученным в финансовую аренду активам, например, основным средствам</field>
+    </record>
+    <record id="a7330" model="account.account.template">
+        <field name="name">Расходы от изменения справедливой стоимости финансовых инструментов</field>
+        <field name="code">7330</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">отражаются расходы от изменения справедливой стоимости финансового актива или обязательства, оцениваемого по справедливой стоимости</field>
+    </record>
+    <record id="a7340" model="account.account.template">
+        <field name="name">Прочие расходы на финансирование</field>
+        <field name="code">7340</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">отражаются прочие расходы на финансирование, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a7410" model="account.account.template">
+        <field name="name">Расходы по выбытию активов</field>
+        <field name="code">7410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по реализации, безвозмездной передачи и списанию активов, например, расходы по реализации, безвозмездной передаче или списанию основных средств, нематериальных активов, финансовых активов, расходы по демонтажу</field>
+    </record>
+    <record id="a7420" model="account.account.template">
+        <field name="name">Расходы от обесценения нефинансовых активов</field>
+        <field name="code">7420</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы от обесценения нефинансовых активов</field>
+    </record>
+    <record id="a7430" model="account.account.template">
+        <field name="name">Расходы по курсовой разнице</field>
+        <field name="code">7430</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по курсовой разнице, возникающей при погашении монетарных статей или при представлении в отчетности монетарных статей организации по курсам, отличным от тех, по которым они были первоначально признаны в текущем периоде или представлены в предшествующих финансовых отчетах, за исключением расходов по курсовой разнице в зарубежную деятельность</field>
+    </record>
+    <record id="a7440" model="account.account.template">
+        <field name="name">Расходы по обесценению дебиторской задолженности</field>
+        <field name="code">7440</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по обесценению дебиторской задолженности</field>
+    </record>
+    <record id="a7450" model="account.account.template">
+        <field name="name">Расходы по операционной аренде</field>
+        <field name="code">7450</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по операционной аренде</field>
+    </record>
+    <record id="a7460" model="account.account.template">
+        <field name="name">Расходы от изменения справедливой стоимости биологических активов</field>
+        <field name="code">7460</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы от изменения справедливой стоимости биологических активов</field>
+    </record>
+    <record id="a7470" model="account.account.template">
+        <field name="name">Расходы от обесценения финансовых инструментов</field>
+        <field name="code">7470</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы от обесценения финансовых инструментов</field>
+    </record>
+    <record id="a7480" model="account.account.template">
+        <field name="name">Прочие расходы</field>
+        <field name="code">7480</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются прочие расходы, не указанные в предыдущих группах.</field>
+    </record>
+    <record id="a7510" model="account.account.template">
+        <field name="name">Расходы, связанные с прекращаемой деятельностью</field>
+        <field name="code">7510</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по реализованным активам или расчетам по обязательствам, связанным с прекращаемой деятельностью.</field>
+    </record>
+    <record id="a7610" model="account.account.template">
+        <field name="name">Доля в убытке ассоциированных организациях</field>
+        <field name="code">7610</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитывается доля в убытке ассоциированных организаций, учитываемых методом долевого участия</field>
+    </record>
+    <record id="a7620" model="account.account.template">
+        <field name="name">Доля в убытке совместных организациях</field>
+        <field name="code">7620</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитывается доля в убытке совместных организаций, учитываемых методом долевого участия.</field>
+    </record>
+    <record id="a7710" model="account.account.template">
+        <field name="name">Расходы по корпоративному подоходному налогу</field>
+        <field name="code">7710</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="note">учитываются расходы по корпоративному подоходному налогу.</field>
+    </record>
+    <record id="a8100" model="account.account.template">
+        <field name="name">Основное производство</field>
+        <field name="code">8100</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note"></field>
+    </record>
+    <record id="a8200" model="account.account.template">
+        <field name="name">Полуфабрикаты собственного производства</field>
+        <field name="code">8200</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note"></field>
+    </record>
+    <record id="a8300" model="account.account.template">
+        <field name="name">Вспомогательные производства</field>
+        <field name="code">8300</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note"></field>
+    </record>
+    <record id="a8400" model="account.account.template">
+        <field name="name">Накладные расходы</field>
+        <field name="code">8400</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note"></field>
+    </record>
+    <record id="a8110" model="account.account.template">
+        <field name="name">Основное производство</field>
+        <field name="code">8110</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note">учитываются затраты на основное производство, в том числе расход сырья и материалов, оплата труда и отчисления от сумм оплаты труда работников, непосредственно занятых в основном производстве, накладные расходы, относящиеся к основному производству.</field>
+    </record>
+    <record id="a8210" model="account.account.template">
+        <field name="name">Полуфабрикаты собственного производства</field>
+        <field name="code">8210</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note">учитываются затраты на производство полуфабрикатов.</field>
+    </record>
+    <record id="a8310" model="account.account.template">
+        <field name="name">Вспомогательные производства</field>
+        <field name="code">8310</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note">учитываются затраты производств, которые являются вспомогательными по отношению к основному производству организации.</field>
+    </record>
+    <record id="a8410" model="account.account.template">
+        <field name="name">Накладные расходы</field>
+        <field name="code">8410</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="l10n_kz.chart_template"/>
+        <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+        <field name="note">отражаются накладные расходы по основному и вспомогательным производствам, а также полуфабрикатам собственного производства.</field>
+    </record>
+</odoo>
