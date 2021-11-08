@@ -234,14 +234,12 @@ class ProductProduct(models.Model):
     def _compute_is_product_variant(self):
         self.is_product_variant = True
 
-    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
+    @api.depends_context('pricelist', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
-            partner = self.env.context.get('partner', False)
-            quantity = self.env.context.get('quantity', 1.0)
 
             # Support context pricelists specified as list, display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, list):
@@ -254,9 +252,10 @@ class ProductProduct(models.Model):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
-                quantities = [quantity] * len(self)
-                partners = [partner] * len(self)
-                prices = pricelist.get_products_price(self, quantities, partners)
+                quantity = self.env.context.get('quantity', 1.0)
+                uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
+                date = self.env.context.get('date')
+                prices = pricelist._get_products_price(self, quantity, uom=uom, date=date)
 
         for product in self:
             product.price = prices.get(product.id, 0.0)

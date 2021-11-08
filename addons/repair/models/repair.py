@@ -734,10 +734,9 @@ class RepairLine(models.Model):
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
-        partner = self.repair_id.partner_id
         pricelist = self.repair_id.pricelist_id
         if pricelist and self.product_id and self.type != 'remove':
-            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
+            price = pricelist._get_product_price(self.product_id, self.product_uom_qty, uom=self.product_uom)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found.'),
@@ -822,10 +821,9 @@ class RepairFee(models.Model):
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
-        partner = self.repair_id.partner_id
         pricelist = self.repair_id.pricelist_id
         if pricelist and self.product_id:
-            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner, uom_id=self.product_uom.id)
+            price = pricelist._get_product_price(self.product_id, self.product_uom_qty, uom=self.product_uom)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found.'),

@@ -70,7 +70,7 @@ class ProductTemplate(models.Model):
         'res.currency', 'Cost Currency', compute='_compute_cost_currency_id')
 
     # price fields
-    # price: total template price, context dependent (partner, pricelist, quantity)
+    # price: total template price, context dependent (pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits='Product Price')
@@ -202,8 +202,6 @@ class ProductTemplate(models.Model):
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
-            partner = self.env.context.get('partner')
-            quantity = self.env.context.get('quantity', 1.0)
 
             # Support context pricelists specified as list, display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, list):
@@ -216,9 +214,10 @@ class ProductTemplate(models.Model):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
-                quantities = [quantity] * len(self)
-                partners = [partner] * len(self)
-                prices = pricelist.get_products_price(self, quantities, partners)
+                quantity = self.env.context.get('quantity', 1.0)
+                uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
+                date = self.env.context.get('date')
+                prices = pricelist._get_products_price(self, quantity, uom=uom, date=date)
 
         return prices
 
