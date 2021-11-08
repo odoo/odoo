@@ -391,6 +391,8 @@
     </div>
 </div>
 
+<t t-if="body" t-out="body"/>
+
 <div>
     <div class="global_layout">
         <div class="preference_div">
@@ -412,7 +414,6 @@
     </div>
 </div>
 
-<t t-if="body" t-out="body"/>
 <div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
 
 <div class="global_layout" id="footer">
