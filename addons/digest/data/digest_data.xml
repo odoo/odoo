@@ -391,6 +391,8 @@
     </div>
 </div>
 
+<t t-if="body" t-out="body"/>
+
 <div>
     <div class="global_layout">
         <div class="preference_div">
@@ -400,7 +402,7 @@
             </div>
             <div class="by_odoo">
                 Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
-                <t t-if="object">
+                <t t-if="object and object._name == 'digest.digest'">
                     –
                     <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id"
                        target="_blank" style="text-decoration: none;">
@@ -412,7 +414,6 @@
     </div>
 </div>
 
-<t t-if="body" t-out="body"/>
 <div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
 
 <div class="global_layout" id="footer">
