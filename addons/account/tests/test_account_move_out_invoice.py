@@ -2961,3 +2961,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(copy_invoice.line_ids.filtered('date_maturity'), [
             {'date_maturity': fields.Date.from_string('2018-01-01')},
         ])
+
+    def test_select_specific_product_account(self):
+        """ When a product has a specific income account, the latter should be used on the related account move
+        lines.
+        """
+        sale_journal = self.company_data['default_journal_sale']
+        other_income_account = sale_journal.default_account_id.copy()
+        self.product_a.property_account_income_id = other_income_account
+
+        invoice = self.env['account.move'].create({
+            'journal_id': sale_journal.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+                'price_unit': 16,
+            })],
+        })
+        self.assertRecordValues(invoice.invoice_line_ids, [{'account_id': other_income_account.id}])
