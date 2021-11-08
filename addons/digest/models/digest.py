@@ -7,7 +7,6 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -137,6 +136,7 @@ class Digest(models.Model):
                 'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
+                'unsubscribe_token': self._get_unsubscribe_token(user.id),
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
@@ -175,6 +175,14 @@ class Digest(models.Model):
                 digest.action_send()
             except MailDeliveryException as e:
                 _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.', digest.id)
+
+    def _get_unsubscribe_token(self, user_id):
+        """Generate a secure hash for this digest and user. It allows to
+        unsubscribe from a digest while keeping some security in that process.
+
+        :param int user_id: ID of the user to unsubscribe
+        """
+        return tools.hmac(self.env(su=True), 'digest-unsubscribe', (self.id, user_id))
 
     # ------------------------------------------------------------
     # KPIS
