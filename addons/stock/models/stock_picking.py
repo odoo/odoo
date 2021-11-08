@@ -356,7 +356,7 @@ class Picking(models.Model):
         default=lambda self: self.env.user)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
-    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'picking_id', domain=[('product_qty', '=', 0.0)])
+    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'picking_id', domain=[('reserved_qty', '=', 0.0)])
     move_line_exist = fields.Boolean(
         'Has Pack Operations', compute='_compute_move_line_exist',
         help='Check the existence of pack operation on the picking')
@@ -867,7 +867,7 @@ class Picking(models.Model):
         return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'product_qty')
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'reserved_qty')
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
@@ -936,7 +936,7 @@ class Picking(models.Model):
             picking_type = picking.picking_type_id
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
-            no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids)
+            no_reserved_quantities = all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids)
             if no_reserved_quantities and no_quantities_done:
                 pickings_without_quantities |= picking
 
@@ -1337,28 +1337,28 @@ class Picking(models.Model):
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
                 for line in move_line_ids:
-                    line.qty_done = line.product_uom_qty
+                    line.qty_done = line.reserved_uom_qty
 
             for ml in move_line_ids:
-                if float_compare(ml.qty_done, ml.product_uom_qty,
+                if float_compare(ml.qty_done, ml.reserved_uom_qty,
                                  precision_rounding=ml.product_uom_id.rounding) >= 0:
                     move_lines_to_pack |= ml
                 else:
                     quantity_left_todo = float_round(
-                        ml.product_uom_qty - ml.qty_done,
+                        ml.reserved_uom_qty - ml.qty_done,
                         precision_rounding=ml.product_uom_id.rounding,
                         rounding_method='UP')
                     done_to_keep = ml.qty_done
                     new_move_line = ml.copy(
-                        default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
-                    vals = {'product_uom_qty': quantity_left_todo, 'qty_done': 0.0}
+                        default={'reserved_uom_qty': 0, 'qty_done': ml.qty_done})
+                    vals = {'reserved_uom_qty': quantity_left_todo, 'qty_done': 0.0}
                     if pick.picking_type_id.code == 'incoming':
                         if ml.lot_id:
                             vals['lot_id'] = False
                         if ml.lot_name:
                             vals['lot_name'] = False
                     ml.write(vals)
-                    new_move_line.write({'product_uom_qty': done_to_keep})
+                    new_move_line.write({'reserved_uom_qty': done_to_keep})
                     move_lines_to_pack |= new_move_line
             if not package.package_type_id:
                 package_type = move_lines_to_pack.move_id.product_packaging_id.package_type_id
@@ -1368,7 +1368,7 @@ class Picking(models.Model):
                 default_dest_location = move_lines_to_pack._get_default_dest_location()
                 move_lines_to_pack.location_dest_id = default_dest_location._get_putaway_strategy(
                     product=move_lines_to_pack.product_id,
-                    quantity=move_lines_to_pack.product_uom_qty,
+                    quantity=move_lines_to_pack.reserved_uom_qty,
                     package=package)
             move_lines_to_pack.write({
                 'result_package_id': package.id,
@@ -1400,7 +1400,7 @@ class Picking(models.Model):
                 and not ml.result_package_id
             )
             if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
             if move_line_ids:

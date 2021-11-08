@@ -83,7 +83,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         # Check effective date, it should be date on which the first shipment successfully delivered to customer
         picking = sale_order.picking_ids[0]
         for ml in picking.move_line_ids:
-            ml.qty_done = ml.product_uom_qty
+            ml.qty_done = ml.reserved_uom_qty
         picking._action_done()
         self.assertEqual(picking.state, 'done', "Picking not processed correctly!")
         self.assertEqual(fields.Date.today(), sale_order.effective_date.date(), "Wrong effective date on sale order!")

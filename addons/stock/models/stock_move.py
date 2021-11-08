@@ -130,7 +130,7 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, check_company=True)
     is_inventory = fields.Boolean('Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
-    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('product_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
+    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('reserved_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
     origin_returned_move_id = fields.Many2one(
         'stock.move', 'Origin return move', copy=False, index=True,
         help='Move that created the return move', check_company=True)
@@ -376,7 +376,7 @@ class StockMove(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
-    @api.depends('move_line_ids.product_qty')
+    @api.depends('move_line_ids.reserved_qty')
     def _compute_reserved_availability(self):
         """ Fill the `availability` field on a stock move, which is the actual reserved quantity
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
@@ -385,13 +385,13 @@ class StockMove(models.Model):
         if not any(self._ids):
             # onchange
             for move in self:
-                reserved_availability = sum(move.move_line_ids.mapped('product_qty'))
+                reserved_availability = sum(move.move_line_ids.mapped('reserved_qty'))
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
                     reserved_availability, move.product_uom, rounding_method='HALF-UP')
         else:
             # compute
-            result = {data['move_id'][0]: data['product_qty'] for data in
-                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'product_qty'], ['move_id'])}
+            result = {data['move_id'][0]: data['reserved_qty'] for data in
+                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'reserved_qty'], ['move_id'])}
             for move in self:
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
                     result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
@@ -489,7 +489,7 @@ class StockMove(models.Model):
 
     @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
-        domain_nosuggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), '|', ('qty_done', '!=', 0.0), ('product_qty', '=', 0.0)]
+        domain_nosuggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), '|', ('qty_done', '!=', 0.0), ('reserved_qty', '=', 0.0)]
         domain_suggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), ('qty_done', '!=', 0.0)]
         lots_by_move_id_list = []
         for domain in [domain_nosuggest, domain_suggest]:
@@ -754,7 +754,7 @@ class StockMove(models.Model):
         ml_to_update, ml_to_unlink = self.env['stock.move.line'].browse(ml_to_update), self.env['stock.move.line'].browse(ml_to_unlink)
         moves_not_to_recompute = self.env['stock.move'].browse(moves_not_to_recompute)
 
-        ml_to_update.write({'product_uom_qty': 0})
+        ml_to_update.write({'reserved_uom_qty': 0})
         ml_to_unlink.unlink()
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
@@ -1293,9 +1293,9 @@ class StockMove(models.Model):
             uom_quantity = float_round(uom_quantity, precision_digits=rounding)
             uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                vals = dict(vals, product_uom_qty=uom_quantity)
+                vals = dict(vals, reserved_uom_qty=uom_quantity)
             else:
-                vals = dict(vals, product_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)
+                vals = dict(vals, reserved_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)
         package = None
         if reserved_quant:
             package = reserved_quant.package_id
@@ -1366,7 +1366,7 @@ class StockMove(models.Model):
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
                 uom_quantity_back_to_product_uom = to_update.product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update.with_context(bypass_reservation_update=True).product_uom_qty += uom_quantity
+                to_update.with_context(bypass_reservation_update=True).reserved_uom_qty += uom_quantity
             else:
                 if self.product_id.tracking == 'serial':
                     self.env['stock.move.line'].create([self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))])
@@ -1388,7 +1388,7 @@ class StockMove(models.Model):
 
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
-        considered reserved once the sum of `product_qty` for all its move lines is
+        considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
         """
@@ -1425,7 +1425,7 @@ class StockMove(models.Model):
                     qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
                 grouped_move_lines_out[k] = qty_done
             for k, g in groupby(move_lines_out_reserved, key=_keys_out_groupby):
-                grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*g).mapped('product_qty'))
+                grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*g).mapped('reserved_qty'))
             available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in}
             # pop key if the quantity available amount to 0
             return dict((k, v) for k, v in available_move_lines.items() if v)
@@ -1472,7 +1472,7 @@ class StockMove(models.Model):
                                                             not ml.package_id and
                                                             not ml.owner_id)
                     if to_update:
-                        to_update[0].product_uom_qty += move.product_id.uom_id._compute_quantity(
+                        to_update[0].reserved_uom_qty += move.product_id.uom_id._compute_quantity(
                             missing_reserved_quantity, move.product_uom, rounding_method='HALF-UP')
                     else:
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
@@ -1509,11 +1509,11 @@ class StockMove(models.Model):
                     available_move_lines = _get_available_move_lines(move)
                     if not available_move_lines:
                         continue
-                    for move_line in move.move_line_ids.filtered(lambda m: m.product_qty):
+                    for move_line in move.move_line_ids.filtered(lambda m: m.reserved_qty):
                         if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)):
-                            available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.product_qty
+                            available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.reserved_qty
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
-                        need = move.product_qty - sum(move.move_line_ids.mapped('product_qty'))
+                        need = move.product_qty - sum(move.move_line_ids.mapped('reserved_qty'))
                         # `quantity` is what is brought by chained done move lines. We double check
                         # here this quantity is available on the quants themselves. If not, this
                         # could be the result of an inventory adjustment that removed totally of
@@ -1788,7 +1788,7 @@ class StockMove(models.Model):
     def _set_quantity_done_prepare_vals(self, qty):
         res = []
         for ml in self.move_line_ids:
-            ml_qty = ml.product_uom_qty - ml.qty_done
+            ml_qty = ml.reserved_uom_qty - ml.qty_done
             if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) <= 0:
                 continue
             # Convert move line qty into move uom
@@ -1812,7 +1812,7 @@ class StockMove(models.Model):
                 break
 
         for ml in self.move_line_ids:
-            if float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
+            if float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
                 res.append((2, ml.id))
 
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
@@ -1845,7 +1845,7 @@ class StockMove(models.Model):
             for move_line in move.move_line_ids:
                 if move.has_tracking != 'none' and not (move_line.lot_id or move_line.lot_name):
                     continue
-                move_line.qty_done = move_line.product_uom_qty
+                move_line.qty_done = move_line.reserved_uom_qty
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if

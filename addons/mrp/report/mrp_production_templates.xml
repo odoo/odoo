@@ -119,7 +119,7 @@
                         <t t-set="move_lines" t-value="move.move_line_ids.filtered(lambda x: x.state == 'done' and x.qty_done)"/>
                     </t>
                     <t t-else="">
-                        <t t-set="move_lines" t-value="move.move_line_ids.filtered(lambda x: x.state != 'done' and x.product_qty)"/>
+                        <t t-set="move_lines" t-value="move.move_line_ids.filtered(lambda x: x.state != 'done' and x.reserved_qty)"/>
                     </t>
                     <t t-foreach="move_lines" t-as="move_line">
                         <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
@@ -142,7 +142,7 @@
                                                     <span t-field="move_line.product_uom_id" groups="uom.group_uom"/>
                                                 </t>
                                                 <t t-else="">
-                                                    <span t-esc="move_line.product_uom_qty" t-if="move_line.state !='done'"/>
+                                                    <span t-esc="move_line.reserved_uom_qty" t-if="move_line.state !='done'"/>
                                                     <span t-esc="move_line.qty_done"  t-if="move_line.state =='done'"/>
                                                     <span t-field="move_line.product_uom_id" groups="uom.group_uom"/>
                                                 </t>

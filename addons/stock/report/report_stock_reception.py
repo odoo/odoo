@@ -219,13 +219,13 @@ class ReceptionReport(models.AbstractModel):
                     out.move_line_ids.move_id = new_out
                     assigned_amount = 0
                     for move_line_id in new_out.move_line_ids:
-                        if assigned_amount + move_line_id.product_qty > qty_to_link:
-                            new_move_line = move_line_id.copy({'product_uom_qty': 0, 'qty_done': 0})
-                            new_move_line.product_uom_qty = move_line_id.product_uom_qty
-                            move_line_id.product_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
-                            new_move_line.product_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.product_qty, out.product_uom, rounding_method='HALF-UP')
+                        if assigned_amount + move_line_id.reserved_qty > qty_to_link:
+                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
+                            new_move_line.reserved_uom_qty = move_line_id.reserved_uom_qty
+                            move_line_id.reserved_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
+                            new_move_line.reserved_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty, out.product_uom, rounding_method='HALF-UP')
                         move_line_id.move_id = out
-                        assigned_amount += move_line_id.product_qty
+                        assigned_amount += move_line_id.reserved_qty
                         if float_compare(assigned_amount, qty_to_link, precision_rounding=out.product_id.uom_id.rounding) == 0:
                             break
 
@@ -282,10 +282,10 @@ class ReceptionReport(models.AbstractModel):
                     for move_line_id in new_out.move_line_ids:
                         if reserved_amount_to_remain <= 0:
                             break
-                        if move_line_id.product_qty > reserved_amount_to_remain:
-                            new_move_line = move_line_id.copy({'product_uom_qty': 0, 'qty_done': 0})
-                            new_move_line.product_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.product_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
-                            move_line_id.product_uom_qty -= new_move_line.product_uom_qty
+                        if move_line_id.reserved_qty > reserved_amount_to_remain:
+                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
+                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
+                            move_line_id.reserved_uom_qty -= new_move_line.reserved_uom_qty
                             new_move_line.move_id = out
                             break
                         else:

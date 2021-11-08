@@ -556,7 +556,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'move_line_ids': [
                 (0, 0, {
                     'product_id': item1.id,
-                    'product_uom_qty': 0,
+                    'reserved_uom_qty': 0,
                     'qty_done': 1,
                     'product_uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
@@ -564,7 +564,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 }),
                 (0, 0, {
                     'product_id': item1.id,
-                    'product_uom_qty': 0,
+                    'reserved_uom_qty': 0,
                     'qty_done': 1,
                     'product_uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
@@ -572,7 +572,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 }),
                 (0, 0, {
                     'product_id': item1.id,
-                    'product_uom_qty': 0,
+                    'reserved_uom_qty': 0,
                     'qty_done': 1,
                     'product_uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
