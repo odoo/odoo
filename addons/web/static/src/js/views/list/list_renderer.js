@@ -555,7 +555,9 @@ var ListRenderer = BasicRenderer.extend({
         };
         var formattedValue = formatter(value, field, formatOptions);
         var title = '';
-        if (field.type !== 'boolean') {
+        if(field.type === 'monetary') {
+            title = formatter(value, field, _.extend(formatOptions, {escape: false, forceString: true}));
+        }else if (field.type !== 'boolean') {
             title = formatter(value, field, _.extend(formatOptions, {escape: false}));
         }
         return $td.html(formattedValue).attr('title', title);
