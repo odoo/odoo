@@ -87,11 +87,21 @@ class Digest(models.Model):
 
     def action_subscribe(self):
         if self.env.user.has_group('base.group_user') and self.env.user not in self.user_ids:
-            self.sudo().user_ids |= self.env.user
+            self._action_subscribe_users(self.env.user)
+
+    def _action_subscribe_users(self, users):
+        """ Private method to manage subscriptions. Done as sudo() to speedup
+        computation and avoid ACLs issues. """
+        self.sudo().user_ids |= users
 
     def action_unsubcribe(self):
         if self.env.user.has_group('base.group_user') and self.env.user in self.user_ids:
-            self.sudo().user_ids -= self.env.user
+            self._action_unsubscribe_users(self.env.user)
+
+    def _action_unsubscribe_users(self, users):
+        """ Private method to manage subscriptions. Done as sudo() to speedup
+        computation and avoid ACLs issues. """
+        self.sudo().user_ids -= users
 
     def action_activate(self):
         self.state = 'activated'
