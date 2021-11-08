@@ -41,6 +41,7 @@ class Digest(models.Model):
     kpi_mail_message_total = fields.Boolean('Messages')
     kpi_mail_message_total_value = fields.Integer(compute='_compute_kpi_mail_message_total_value')
 
+    @api.depends('user_ids')
     def _compute_is_subscribed(self):
         for digest in self:
             digest.is_subscribed = self.env.user in digest.user_ids
