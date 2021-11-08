@@ -391,10 +391,11 @@
     </div>
 </div>
 
-<div t-if="preferences">
+<div>
     <div class="global_layout">
         <div class="preference_div">
-            <div t-foreach="preferences" t-as="preference" class="preference">
+            <div t-if="preferences" t-foreach="preferences" t-as="preference"
+                class="preference">
                 <t t-out="preference"/>
             </div>
             <div class="by_odoo">
