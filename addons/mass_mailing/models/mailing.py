@@ -791,6 +791,7 @@ class MassMailing(models.Model):
                     'col_subtitle': _('REPLIED (%i)', self.replied),
                 },
                 'kpi_action': None,
+                'kpi_name': self.mailing_type,
             }
 
         random_tip = self.env['digest.tip'].search(
@@ -823,6 +824,7 @@ class MassMailing(models.Model):
                     'kpi_col1': {},
                     'kpi_col2': {},
                     'kpi_col3': {},
+                    'kpi_name': 'trace',
                 },
             ],
             'tips': [random_tip] if random_tip else False,
