@@ -39,6 +39,9 @@ export default class ProjectRightPanel extends owl.Component {
             model: 'project.project',
             method: 'get_panel_data',
             args: [this.project_id],
+            kwargs: {
+                context: this.context
+            }
         });
         this.state.data = data;
         return data;
