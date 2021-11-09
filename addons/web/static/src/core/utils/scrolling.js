@@ -14,33 +14,35 @@ export function scrollTo(element, options = { scrollable: null, isAnchor: false 
             return null;
         }
 
-        if (node.scrollHeight > node.clientHeight) {
+        if (node.scrollHeight > node.clientHeight && node.clientHeight > 0) {
             return node;
         } else {
             return _getScrollParent(node.parentNode);
         }
     }
-    const scrollable = options.scrollable ? options.scrollable : _getScrollParent(element);
 
-    // Scrollbar is present ?
-    if (scrollable.scrollHeight > scrollable.clientHeight) {
+    const scrollable = options.scrollable
+        ? options.scrollable
+        : _getScrollParent(element.parentNode);
+    if (scrollable) {
         const scrollBottom = scrollable.getBoundingClientRect().bottom;
         const scrollTop = scrollable.getBoundingClientRect().top;
         const elementBottom = element.getBoundingClientRect().bottom;
         const elementTop = element.getBoundingClientRect().top;
-        if (elementBottom > scrollBottom) {
-            // Scroll down
-            if (options.isAnchor) {
-                // For an anchor, the scroll place the element at the top
-                scrollable.scrollTop += elementTop - scrollBottom + scrollable.clientHeight;
-            } else {
-                // The scroll make the element visible in the scrollable
-                scrollable.scrollTop +=
-                    elementTop - scrollBottom + element.getBoundingClientRect().height;
-            }
-        } else if (elementTop < scrollTop) {
-            // Scroll up
+        if (elementBottom > scrollBottom && !options.isAnchor) {
+            // The scroll place the element at the bottom border of the scrollable
+            scrollable.scrollTop +=
+                elementTop - scrollBottom + element.getBoundingClientRect().height;
+        } else if (elementTop < scrollTop || options.isAnchor) {
+            // The scroll place the element at the top of the scrollable
             scrollable.scrollTop -= scrollTop - elementTop;
+            if (options.isAnchor) {
+                // If the scrollable is within a scrollable, another scroll should be done
+                const parentScrollable = _getScrollParent(scrollable.parentNode);
+                if (parentScrollable) {
+                    scrollTo(scrollable, { isAnchor: true, scrollable: parentScrollable });
+                }
+            }
         }
     }
 }
