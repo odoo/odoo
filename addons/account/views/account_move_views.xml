@@ -200,7 +200,7 @@
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
-                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="amount_currency" sum="Total Amount in Currency" readonly="1" groups="base.group_multi_currency" optional="show"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
