@@ -29,11 +29,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=company.po_lead) - timedelta(days=self.product_1.seller_ids.delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Purchase Lead Time - Delivery Lead Time.')
 
         # Check scheduled date of purchase order
-        schedule_date = datetime.combine(order_date + timedelta(days=self.product_1.seller_ids.delay), time.min).replace(tzinfo=None, hour=12)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
@@ -41,7 +41,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled and deadline date of In Type shipment
         self.assertEqual(purchase.picking_ids.scheduled_date, schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
-        self.assertEqual(purchase.picking_ids.date_deadline, schedule_date + timedelta(days=company.po_lead), 'Deadline date of should be equal to: schedule date of purchase order + lead_po.')
+        self.assertEqual(purchase.picking_ids.date_deadline, schedule_date, 'Deadline date of should be equal to: schedule date of purchase order.')
 
     def test_01_product_level_delay(self):
         """ To check schedule dates of multiple purchase order line of the same purchase order,
@@ -74,11 +74,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase2.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
 
         # Check scheduled date of purchase order line for product_1
-        schedule_date_1 = datetime.combine(order_date + timedelta(days=self.product_1.seller_ids.delay), time.min).replace(tzinfo=None, hour=12)
+        schedule_date_1 = order_date + timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(order_line_pro_1.date_planned, schedule_date_1, 'Schedule date of purchase order line for product_1 should be equal to: Order date of purchase order + Delivery Lead Time of product_1.')
 
         # Check scheduled date of purchase order line for product_2
-        schedule_date_2 = datetime.combine(order_date + timedelta(days=self.product_2.seller_ids.delay), time.min).replace(tzinfo=None, hour=12)
+        schedule_date_2 = order_date + timedelta(days=self.product_2.seller_ids.delay)
         self.assertEqual(order_line_pro_2.date_planned, schedule_date_2, 'Schedule date of purchase order line for product_2 should be equal to: Order date of purchase order + Delivery Lead Time of product_2.')
 
         # Check scheduled date of purchase order
@@ -133,11 +133,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         self.assertEqual(date_planned, str(schedule_date), 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
 
         # Check the picking crated or not
@@ -145,7 +145,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of Internal Type shipment
         incoming_shipment1 = self.env['stock.picking'].search([('move_ids.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
-        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay + company.po_lead)
+        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
         self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date)
         old_deadline1 = incoming_shipment1.date_deadline
