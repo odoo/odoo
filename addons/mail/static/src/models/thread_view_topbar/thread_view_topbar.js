@@ -559,7 +559,7 @@ function factory(dependencies) {
          * an instruction to set a new selection. Must be set together with
          * `doSetSelectionEndOnThreadDescriptionInput` and `doSetSelectionStartOnThreadDescriptionInput`
          * to have an effect.
-         */ 
+         */
         doSetSelectionDirectionOnThreadDescriptionInput: attr(),
         /**
          * Determines the ending position where to place the selection on this

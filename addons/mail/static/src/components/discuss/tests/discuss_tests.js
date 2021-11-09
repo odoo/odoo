@@ -1244,7 +1244,7 @@ QUnit.test('basic rendering of message', async function (assert) {
         1,
         "should have date in header of message"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector('.o_Message').click()
     );
     assert.strictEqual(
@@ -1359,7 +1359,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
         message2.querySelector(`:scope .o_Message_sidebar`).classList.contains('o-message-squashed'),
         "message 2 should have squashed sidebar"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector('.o_Message.o-squashed').click()
     );
     assert.strictEqual(

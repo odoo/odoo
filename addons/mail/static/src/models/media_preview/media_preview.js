@@ -26,9 +26,9 @@ function factory(dependencies) {
         /**
          * Iterates tracks of the provided MediaStream, calling the `stop`
          * method on each of them.
-         * 
+         *
          * @static
-         * @param {MediaStream} mediaStream 
+         * @param {MediaStream} mediaStream
          */
         static stopTracksOnMediaStream(mediaStream) {
             for (const track of mediaStream.getTracks()) {
@@ -130,7 +130,7 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {boolean} 
+         * @returns {boolean}
          */
         _computeDoesBrowserSupportMediaDevices() {
             return Boolean(
@@ -142,7 +142,7 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {boolean} 
+         * @returns {boolean}
          */
         _computeIsMicrophoneEnabled() {
             return this.audioStream !== null;
@@ -150,7 +150,7 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {boolean} 
+         * @returns {boolean}
          */
         _computeIsVideoEnabled() {
             return this.videoStream !== null;
@@ -165,7 +165,7 @@ function factory(dependencies) {
         audioRef: attr(),
         /**
          * The MediaStream from the microphone.
-         * 
+         *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
@@ -197,7 +197,7 @@ function factory(dependencies) {
         videoRef: attr(),
         /**
          * The MediaStream from the camera.
-         * 
+         *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */

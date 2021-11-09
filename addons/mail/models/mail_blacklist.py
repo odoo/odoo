@@ -82,7 +82,7 @@ class MailBlackList(models.Model):
         record = self._remove(email)
         if reason:
             record.message_post(body=_("Unblacklisting Reason: %s", reason))
-        
+
         return record
 
     def _remove(self, email):

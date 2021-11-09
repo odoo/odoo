@@ -15,7 +15,7 @@ export class RtcActivityNotice extends Component {
         this.env = owl.Component.env;
         super.setup();
     }
-    
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

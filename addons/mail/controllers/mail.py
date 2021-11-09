@@ -83,7 +83,7 @@ class MailController(http.Controller):
                     #   _get_mail_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
-                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
