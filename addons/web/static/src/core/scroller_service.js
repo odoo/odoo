@@ -5,7 +5,7 @@ import { registry } from "./registry";
 import { scrollTo } from "./utils/scrolling";
 
 export const scrollerService = {
-    start() {
+    start(env) {
         /**
          * Listen to click event to allow having links with href towards an anchor.
          * Since odoo use hashtag to represent the current state of the view, we can't
@@ -41,7 +41,15 @@ export const scrollerService = {
                     } catch (e) {
                         // Invalid selector: not an anchor anyway
                     }
-                    if (matchingEl) {
+                    const triggerEv = new CustomEvent("anchor-link-clicked", {
+                        detail: {
+                            element: matchingEl,
+                            id: href.value,
+                            originalEv: ev,
+                        },
+                    });
+                    env.bus.trigger("SCROLLER:ANCHOR_LINK_CLICKED", triggerEv);
+                    if (matchingEl && !triggerEv.defaultPrevented) {
                         ev.preventDefault();
                         scrollTo(matchingEl, { isAnchor: true });
                     }
