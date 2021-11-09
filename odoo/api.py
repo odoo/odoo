@@ -74,10 +74,6 @@ class Meta(type):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
-
-                if (getattr(value, '_api', None) or '').startswith('cr'):
-                    _logger.warning("Deprecated method %s.%s in module %s", name, key, attrs.get('__module__'))
-
                 attrs[key] = value
 
         return type.__new__(meta, name, bases, attrs)

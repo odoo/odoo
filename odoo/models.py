@@ -46,7 +46,6 @@ import dateutil.relativedelta
 import psycopg2, psycopg2.extensions
 from lxml import etree
 from lxml.builder import E
-from psycopg2.extensions import AsIs
 
 import odoo
 from . import SUPERUSER_ID
@@ -55,7 +54,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
+                   LastOrderedSet, OrderedSet, IterableGenerator, \
                    groupby, discardattr, partition
 from .tools.config import config
 from .tools.func import frame_codeinfo
@@ -67,10 +66,9 @@ from .tools import unique
 from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
-_schema = logging.getLogger(__name__ + '.schema')
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -118,10 +116,6 @@ def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
     if regex_private.match(name):
         raise AccessError(_('Private methods (such as %s) cannot be called remotely.') % (name,))
-
-def same_name(f, g):
-    """ Test whether functions ``f`` and ``g`` are identical or have the same name """
-    return f == g or getattr(f, '__name__', 0) == getattr(g, '__name__', 1)
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -515,7 +509,6 @@ class BaseModel(metaclass=MetaModel):
     _date_name = 'date'         #: field to use for default calendar view
     _fold_name = 'fold'         #: field to determine folded groups in kanban views
 
-    _needaction = False         # whether the model supports "need actions" (Old API)
     _translate = True           # False disables translations export for this model (Old API)
     _check_company_auto = False
     """On write and create, call ``_check_company`` to ensure companies
@@ -661,10 +654,6 @@ class BaseModel(metaclass=MetaModel):
         # link the class to the registry, and update the registry
         ModelClass.pool = pool
         pool[name] = ModelClass
-
-        # backward compatibility: instantiate the model, and initialize it
-        model = object.__new__(ModelClass)
-        model.__init__(pool, cr)
 
         return ModelClass
 
@@ -826,15 +815,6 @@ class BaseModel(metaclass=MetaModel):
         # optimization: memoize result on cls, it will not be recomputed
         cls._onchange_methods = methods
         return methods
-
-    def __new__(cls):
-        # In the past, this method was registering the model class in the server.
-        # This job is now done entirely by the metaclass MetaModel.
-        return None
-
-    def __init__(self, pool, cr):
-        """ Deprecated method to initialize the model. """
-        pass
 
     def _is_an_ordinary_table(self):
         return self.pool.is_an_ordinary_table(self)
@@ -1032,9 +1012,6 @@ class BaseModel(metaclass=MetaModel):
             assert not xidmap, "failed to export xids for %s" % ', '.join('{}:{}' % it for it in xidmap.items())
 
         return lines
-
-    # backward compatibility
-    __export_rows = _export_rows
 
     def export_data(self, fields_to_export):
         """ Export fields for selected objects

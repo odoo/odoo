@@ -21,10 +21,6 @@ class IrUiMenu(models.Model):
     _order = "sequence,id"
     _parent_store = True
 
-    def __init__(self, *args, **kwargs):
-        super(IrUiMenu, self).__init__(*args, **kwargs)
-        self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
-
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
