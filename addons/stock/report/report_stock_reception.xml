@@ -13,7 +13,7 @@
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
                             <div t-out="move.product_id.display_name"/>
-                            <div t-out="move._get_source_document().name"/>
+                            <div t-if="move._get_source_document()" t-out="move._get_source_document().name"/>
                             <div class="address"
                                 t-if="move.picking_id and move.picking_id.partner_id"
                                 t-field="move.picking_id.partner_id"
