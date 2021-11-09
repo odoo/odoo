@@ -190,6 +190,9 @@ class PurchaseOrder(models.Model):
 
     @api.depends('name', 'partner_ref')
     def name_get(self):
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        self._origin._read(['name', 'partner_ref'])
+
         result = []
         for po in self:
             name = po.name
