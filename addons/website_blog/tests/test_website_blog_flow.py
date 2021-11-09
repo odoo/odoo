@@ -16,7 +16,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'name': 'Dorian Portal',
             'login': 'portal_user',
             'email': 'portal_user@example.com',
-            'notification_type': 'inbox',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [group_portal.id])]
         })
 

@@ -271,6 +271,7 @@ class Users(models.Model):
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
             'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id',
             'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
+            'share',
         ]
 
     @property
@@ -1235,7 +1236,8 @@ class GroupsView(models.Model):
                     user_type_field_name = field_name
                     user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
-                    attrs['groups'] = 'base.group_no_one'
+                    # Trigger the on_change of this "virtual field"
+                    attrs['on_change'] = '1'
                     xml1.append(E.field(name=field_name, **attrs))
                     xml1.append(E.newline())
 
@@ -1273,9 +1275,9 @@ class GroupsView(models.Model):
                 xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(
-                E.group(*(xml1), col="2"),
+                E.group(*(xml1), col="2", groups="base.group_no_one"),
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
-                E.group(*(xml3), col="4", attrs=str(user_type_attrs)), name="groups_id", position="replace")
+                E.group(*(xml3), col="4", attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view
@@ -1431,6 +1433,22 @@ class UsersView(models.Model):
         return values
 
     def onchange(self, values, field_name, field_onchange):
+        # field_name can be either a string, a list or Falsy
+        if isinstance(field_name, list):
+            names = field_name
+        elif field_name:
+            names = [field_name]
+        else:
+            names = []
+
+        if any(is_reified_group(field) for field in names):
+            field_name = (
+                ['groups_id']
+                + [field for field in names if not is_reified_group(field)]
+            )
+            values.pop('groups_id', None)
+            values.update(self._remove_reified_groups(values))
+
         field_onchange['groups_id'] = ''
         result = super().onchange(values, field_name, field_onchange)
         if not field_name: # merged default_get
