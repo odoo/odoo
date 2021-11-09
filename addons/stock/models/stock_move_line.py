@@ -131,9 +131,11 @@ class StockMoveLine(models.Model):
     def _onchange_result_package_id(self):
         if self.result_package_id:
             if not self.id and self.user_has_groups('stock.group_stock_multi_locations'):
+                qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
                 default_dest_location = self._get_default_dest_location()
                 self.location_dest_id = default_dest_location._get_putaway_strategy(
-                    self.product_id, package=self.result_package_id, packaging=self.move_id.product_packaging_id)
+                    self.product_id, quantity=qty_done, package=self.result_package_id,
+                    packaging=self.move_id.product_packaging_id)
 
     @api.onchange('product_id', 'product_uom_id')
     def _onchange_product_id(self):
@@ -142,7 +144,7 @@ class StockMoveLine(models.Model):
                 qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
                 default_dest_location = self._get_default_dest_location()
                 self.location_dest_id = default_dest_location._get_putaway_strategy(
-                    self.product_id, qty_done, packaging=self.move_id.product_packaging_id)
+                    self.product_id, quantity=qty_done, packaging=self.move_id.product_packaging_id)
             if self.picking_id:
                 product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
                 self.description_picking = product._get_description(self.picking_id.picking_type_id)
@@ -208,7 +210,7 @@ class StockMoveLine(models.Model):
             if not self.id and self.user_has_groups('stock.group_stock_multi_locations') and not self.result_package_id:
                 default_dest_location = self._get_default_dest_location()
                 self.location_dest_id = default_dest_location._get_putaway_strategy(
-                    self.product_id, qty_done, packaging=self.move_id.product_packaging_id)
+                    self.product_id, quantity=qty_done, packaging=self.move_id.product_packaging_id)
             if self.product_id.tracking == 'serial':
                 qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
                 if float_compare(qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
@@ -219,7 +221,7 @@ class StockMoveLine(models.Model):
     def _get_default_dest_location(self):
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
-        return self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id
+        return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[0]
 
     def init(self):
         if not tools.index_exists(self._cr, 'stock_move_line_free_reservation_index'):
