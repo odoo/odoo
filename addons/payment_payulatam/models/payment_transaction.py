@@ -151,7 +151,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled(state_message=state_message)
         else:
             _logger.warning(
-                "received unrecognized payment state %s for transaction with reference %s",
+                "received data with invalid payment status (%s) for transaction with reference %s",
                 status, self.reference
             )
             self._set_error("PayU Latam: " + _("Invalid payment status."))

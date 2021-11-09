@@ -68,10 +68,16 @@ class PaymentTransaction(models.Model):
         authorize_API = AuthorizeAPI(self.acquirer_id)
         if self.acquirer_id.capture_manually:
             res_content = authorize_API.authorize(self, token=self.token_id)
-            _logger.info("authorize request response:\n%s", pprint.pformat(res_content))
+            _logger.info(
+                "authorize request response for transaction with reference %s:\n%s",
+                self.reference, pprint.pformat(res_content)
+            )
         else:
             res_content = authorize_API.auth_and_capture(self, token=self.token_id)
-            _logger.info("auth_and_capture request response:\n%s", pprint.pformat(res_content))
+            _logger.info(
+                "auth_and_capture request response for transaction with reference %s:\n%s",
+                self.reference, pprint.pformat(res_content)
+            )
 
         # As the API has no redirection flow, we always know the reference of the transaction.
         # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
@@ -102,7 +108,10 @@ class PaymentTransaction(models.Model):
         authorize_API = AuthorizeAPI(self.acquirer_id)
         rounded_amount = round(self.amount, self.currency_id.decimal_places)
         res_content = authorize_API.refund(self.acquirer_reference, rounded_amount)
-        _logger.info("refund request response:\n%s", pprint.pformat(res_content))
+        _logger.info(
+            "refund request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(res_content)
+        )
         # As the API has no redirection flow, we always know the reference of the transaction.
         # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
         # data in order to go through the centralized `_handle_feedback_data` method.
@@ -125,7 +134,10 @@ class PaymentTransaction(models.Model):
         authorize_API = AuthorizeAPI(self.acquirer_id)
         rounded_amount = round(self.amount, self.currency_id.decimal_places)
         res_content = authorize_API.capture(self.acquirer_reference, rounded_amount)
-        _logger.info("capture request response:\n%s", pprint.pformat(res_content))
+        _logger.info(
+            "capture request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(res_content)
+        )
         # As the API has no redirection flow, we always know the reference of the transaction.
         # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
         # data in order to go through the centralized `_handle_feedback_data` method.
@@ -145,7 +157,10 @@ class PaymentTransaction(models.Model):
 
         authorize_API = AuthorizeAPI(self.acquirer_id)
         res_content = authorize_API.void(self.acquirer_reference)
-        _logger.info("void request response:\n%s", pprint.pformat(res_content))
+        _logger.info(
+            "void request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(res_content)
+        )
         # As the API has no redirection flow, we always know the reference of the transaction.
         # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
         # data in order to go through the centralized `_handle_feedback_data` method.
@@ -214,8 +229,13 @@ class PaymentTransaction(models.Model):
         else:  # Error / Unknown code
             error_code = response_content.get('x_response_reason_text')
             _logger.info(
-                "received data with invalid status code %s and error code %s",
-                status_code, error_code
+                "received data with invalid status (%(status)s) and error code (%(err)s) for "
+                "transaction with reference %(ref)s",
+                {
+                    'status': status_code,
+                    'err': error_code,
+                    'ref': self.reference,
+                },
             )
             self._set_error(
                 "Authorize.Net: " + _(
@@ -237,7 +257,10 @@ class PaymentTransaction(models.Model):
         cust_profile = authorize_API.create_customer_profile(
             self.partner_id, self.acquirer_reference
         )
-        _logger.info("create_customer_profile request response:\n%s", pprint.pformat(cust_profile))
+        _logger.info(
+            "create_customer_profile request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(cust_profile)
+        )
         if cust_profile:
             token = self.env['payment.token'].create({
                 'acquirer_id': self.acquirer_id.id,
@@ -253,5 +276,11 @@ class PaymentTransaction(models.Model):
                 'tokenize': False,
             })
             _logger.info(
-                "created token with id %s for partner with id %s", token.id, self.partner_id.id
+                "created token with id %(token_id)s for partner with id %(partner_id)s from "
+                "transaction with reference %(ref)s",
+                {
+                    'token_id': token.id,
+                    'partner_id': self.partner_id.id,
+                    'ref': self.reference,
+                },
             )

@@ -126,15 +126,15 @@ class PaymentTransaction(models.Model):
 
         if float_compare(float(data.get('total_fee', '0.0')), (self.amount + self.fees), 2) != 0:
             # mc_gross is amount + fees
-            logging_values = {
-                'amount': data.get('total_fee', '0.0'),
-                'total': self.amount,
-                'fees': self.fees,
-                'reference': self.reference,
-            }
             _logger.error(
                 "the paid amount (%(amount)s) does not match the total + fees (%(total)s + "
-                "%(fees)s) for the transaction with reference %(reference)s", logging_values
+                "%(fees)s) for transaction with reference %(ref)s",
+                {
+                    'amount': data.get('total_fee', '0.0'),
+                    'total': self.amount,
+                    'fees': self.fees,
+                    'ref': self.reference,
+                }
             )
             raise ValidationError("Alipay: " + _("The amount does not match the total + fees."))
         if self.acquirer_id.alipay_payment_method == 'standard_checkout':
@@ -147,8 +147,13 @@ class PaymentTransaction(models.Model):
                 )
         elif data.get('seller_email') != self.acquirer_id.alipay_seller_email:
             _logger.error(
-                "the seller email (%s) does not match the configured Alipay account (%s).",
-                data.get('seller_email'), self.acquirer_id.alipay_seller_email
+                "the seller email (%(email)s) does not match the configured Alipay account "
+                "(%(acc_email)s) for transaction with reference %(ref)s",
+                {
+                    'email': data.get('seller_email'),
+                    'acc_email:':  self.acquirer_id.alipay_seller_email,
+                    'ref': self.reference,
+                },
             )
             raise ValidationError(
                 "Alipay: " + _("The seller email does not match the configured Alipay account.")
@@ -162,7 +167,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         else:
             _logger.info(
-                "received invalid transaction status for transaction with reference %s: %s",
-                self.reference, status
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                status, self.reference,
             )
             self._set_error("Alipay: " + _("received invalid transaction status: %s", status))

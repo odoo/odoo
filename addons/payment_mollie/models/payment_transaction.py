@@ -112,7 +112,10 @@ class PaymentTransaction(models.Model):
         elif payment_status in ['expired', 'canceled', 'failed']:
             self._set_canceled("Mollie: " + _("Canceled payment with status: %s", payment_status))
         else:
-            _logger.info("Received data with invalid payment status: %s", payment_status)
+            _logger.info(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                payment_status, self.reference
+            )
             self._set_error(
                 "Mollie: " + _("Received data with invalid payment status: %s", payment_status)
             )

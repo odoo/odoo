@@ -14,6 +14,6 @@ class PayuLatamController(http.Controller):
 
     @http.route(_return_url, type='http', auth='public', methods=['GET'])
     def payulatam_return(self, **data):
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(data))
+        _logger.info("handling redirection from PayU Latam with data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('payulatam', data)
         return request.redirect('/payment/status')
