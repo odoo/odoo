@@ -338,6 +338,15 @@ const UserValueWidget = Widget.extend({
         return null;
     },
     /**
+     * Focus the main focusable element of the widget.
+     */
+    focus() {
+        const el = this._getFocusableElement();
+        if (el) {
+            el.focus();
+        }
+    },
+    /**
      * Returns the value that the widget would hold if it was active, by default
      * the internal value it holds.
      *
@@ -574,13 +583,32 @@ const UserValueWidget = Widget.extend({
      * @param {boolean} show
      */
     toggleVisibility: function (show) {
+        let doFocus = false;
+        if (show) {
+            const wasInvisible = this.el.classList.contains('d-none');
+            doFocus = wasInvisible && this.el.dataset.requestFocus === "true";
+        }
         this.el.classList.toggle('d-none', !show);
+        if (doFocus) {
+            this.focus();
+        }
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns the main focusable element of the widget. By default supposes
+     * nothing is focusable.
+     *
+     * @todo review all specific widget's method
+     * @private
+     * @returns {HTMLElement}
+     */
+    _getFocusableElement: function () {
+        return null;
+    },
     /**
      * @private
      * @param {OdooEvent|Event}
@@ -1200,6 +1228,17 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
     async setValue() {
         await this._super(...arguments);
         this.inputEl.value = this._value;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _getFocusableElement() {
+        return this.inputEl;
     },
 
     //--------------------------------------------------------------------------
@@ -4685,6 +4724,23 @@ registry.SnippetMove = SnippetOptionWidget.extend({
  * Allows for media to be replaced.
  */
 registry.ReplaceMedia = SnippetOptionWidget.extend({
+    xmlDependencies: ['/web_editor/static/src/xml/image_link_tools.xml'],
+
+    /**
+     * @override
+     */
+    async start() {
+        core.bus.on('activate_image_link_tool', this, this._activateLinkTool);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus() {
+        // When we start editing an image, rerender the UI to ensure the
+        // we-select that suggests the anchors is in a consistent state.
+        this.rerender = true;
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -4699,6 +4755,122 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         // TODO for now, this simulates a double click on the media,
         // to be refactored when the new editor is merged
         this.$target.dblclick();
+    },
+    /**
+     * Makes the image a clickable link by wrapping it in an <a>.
+     * This function is also called for the opposite operation.
+     *
+     * @see this.selectClass for parameters
+     */
+    setLink(previewMode, widgetValue, params) {
+        const parentEl = this.$target[0].parentNode;
+        if (parentEl.tagName !== 'A') {
+            const wrapperEl = document.createElement('a');
+            this.$target[0].after(wrapperEl);
+            wrapperEl.appendChild(this.$target[0]);
+        } else {
+            parentEl.replaceWith(this.$target[0]);
+        }
+    },
+    /**
+     * Changes the image link so that the URL is opened on another tab or not
+     * when it is clicked.
+     *
+     * @see this.selectClass for parameters
+     */
+    setNewWindow(previewMode, widgetValue, params) {
+        const linkEl = this.$target[0].parentElement;
+        if (widgetValue) {
+            linkEl.setAttribute('target', '_blank');
+        } else {
+            linkEl.removeAttribute('target');
+        }
+    },
+    /**
+     * Records the target url of the hyperlink.
+     *
+     * @see this.selectClass for parameters
+     */
+    setUrl(previewMode, widgetValue, params) {
+        const linkEl = this.$target[0].parentElement;
+        let url = widgetValue;
+        if (!url) {
+            // As long as there is no URL, the image is not considered a link.
+            linkEl.removeAttribute('href');
+            return;
+        }
+        if (!url.startsWith('/') && !url.startsWith('#')
+                && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
+            // We permit every protocol (http:, https:, ftp:, mailto:,...).
+            // If none is explicitly specified, we assume it is a http.
+            url = 'http://' + url;
+        }
+        linkEl.setAttribute('href', url);
+        this.rerender = true;
+    },
+    /**
+     * @override
+     */
+    async updateUI() {
+        if (this.rerender) {
+            this.rerender = false;
+            await this._rerenderXML();
+            return;
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _activateLinkTool() {
+        if (this.$target[0].parentElement.tagName === 'A') {
+            this._requestUserValueWidgets('media_url_opt')[0].focus();
+        } else {
+            this._requestUserValueWidgets('media_link_opt')[0].enable();
+        }
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        const parentEl = this.$target[0].parentElement;
+        const linkEl = parentEl.tagName === 'A' ? parentEl : null;
+        switch (methodName) {
+            case 'setLink': {
+                return linkEl ? 'true' : '';
+            }
+            case 'setUrl': {
+                let href = linkEl ? linkEl.getAttribute('href') : '';
+                return href || '';
+            }
+            case 'setNewWindow': {
+                const target = linkEl ? linkEl.getAttribute('target') : '';
+                return target && target === '_blank' ? 'true' : '';
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'media_link_opt') {
+            return !this.$target[0].classList.contains('media_iframe_video');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const rowEl = uiFragment.querySelector('we-row');
+        rowEl.insertAdjacentHTML('beforeend', qweb.render('web_editor.media_link_tools_button'));
+        rowEl.insertAdjacentHTML('afterend', qweb.render('web.editor.media_link_tools_fields'));
     },
 });
 
