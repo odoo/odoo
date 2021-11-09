@@ -61,7 +61,6 @@ class PortalWizard(models.TransientModel):
 
     def _action_open_modal(self):
         """Allow to keep the wizard modal open after executing the action."""
-        self.refresh()
         return {
             'name': _('Portal Access Management'),
             'type': 'ir.actions.act_window',
