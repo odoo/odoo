@@ -690,23 +690,13 @@ exports.PosModel = Backbone.Model.extend({
 
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
-            if (json.pos_session_id === this.pos_session.id) {
+            if (json.lines.length > 0) {
                 orders.push(new exports.Order({},{
                     pos:  this,
                     json: json,
                 }));
             }
-        }
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id !== this.pos_session.id && json.lines.length > 0) {
-                orders.push(new exports.Order({},{
-                    pos:  this,
-                    json: json,
-                }));
-            } else if (json.pos_session_id !== this.pos_session.id) {
-                this.db.remove_unpaid_order(jsons[i]);
-            }
+            this.db.remove_unpaid_order(jsons[i]);
         }
 
         orders = orders.sort(function(a,b){
@@ -2366,14 +2356,9 @@ exports.Order = Backbone.Model.extend({
      */
     init_from_JSON: function(json) {
         var client;
-        if (json.pos_session_id !== this.pos.pos_session.id) {
-            this.sequence_number = this.pos.pos_session.sequence_number++;
-        } else {
-            this.sequence_number = json.sequence_number;
-            this.pos.pos_session.sequence_number = Math.max(this.sequence_number+1,this.pos.pos_session.sequence_number);
-        }
+        this.sequence_number = this.pos.pos_session.sequence_number++;
         this.session_id = this.pos.pos_session.id;
-        this.uid = json.uid;
+        this.uid = this.generate_unique_id();
         this.name = _.str.sprintf(_t("Order %s"), this.uid);
         this.validation_date = json.creation_date;
         this.server_id = json.server_id ? json.server_id : false;
