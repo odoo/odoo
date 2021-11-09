@@ -49,7 +49,6 @@ class StockRule(models.Model):
 
             # Get the schedule date in order to find a valid seller
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
-            schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
             supplier = False
             if procurement.values.get('supplierinfo_id'):
@@ -58,7 +57,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=schedule_date.date(),
+                    date=procurement_date_planned.date(),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
@@ -261,7 +260,6 @@ class StockRule(models.Model):
         dates = [fields.Datetime.from_string(value['date_planned']) for value in values]
 
         procurement_date_planned = min(dates)
-        schedule_date = (procurement_date_planned - relativedelta(days=company_id.po_lead))
         supplier_delay = max([int(value['supplier'].delay) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
@@ -270,7 +268,7 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].partner_id
-        purchase_date = schedule_date - relativedelta(days=supplier_delay)
+        purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
@@ -305,7 +303,7 @@ class StockRule(models.Model):
             ('user_id', '=', False),
         )
         if values.get('orderpoint_id'):
-            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
+            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
             delta_days = int(self.env['ir.config_parameter'].get_param('purchase_stock.delta_days_merge') or 0)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
