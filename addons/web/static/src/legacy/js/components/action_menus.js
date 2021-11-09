@@ -120,6 +120,7 @@ odoo.define('web.ActionMenus', function (require) {
                     args: [this.props.domain],
                     kwargs: {
                         limit: this.env.session.active_ids_limit,
+                        context: this.props.context,
                     },
                 });
             }
