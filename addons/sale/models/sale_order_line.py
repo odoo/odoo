@@ -143,27 +143,11 @@ class SaleOrderLine(models.Model):
             taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
             line.tax_id = fpos.map_tax(taxes)
 
-    @api.model
-    def _prepare_add_missing_fields(self, values):
-        """ Deduce missing required fields from the onchange """
-        res = {}
-        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
-        if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
-            line = self.new(values)
-            line.product_id_change()
-            for field in onchange_fields:
-                if field not in values:
-                    res[field] = line._fields[field].convert_to_write(line[field], line)
-        return res
-
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
             if values.get('display_type', self.default_get(['display_type'])['display_type']):
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom=False, customer_lead=0)
-
-            values.update(self._prepare_add_missing_fields(values))
-
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.order_id.state == 'sale':
@@ -226,7 +210,9 @@ class SaleOrderLine(models.Model):
         return result
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
-    name = fields.Text(string='Description', required=True)
+    name = fields.Text(
+        string='Description', required=True,
+        compute='_compute_name', store=True, readonly=False, pre_compute=True)
     sequence = fields.Integer(string='Sequence', default=10)
 
     invoice_lines = fields.Many2many('account.move.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_line_id', string='Invoice Lines', copy=False)
@@ -238,7 +224,7 @@ class SaleOrderLine(models.Model):
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, default='no')
     price_unit = fields.Float(
         'Unit Price', required=True, digits='Product Price',
-        compute='_compute_price_unit', store=True, readonly=False)
+        compute='_compute_price_unit', store=True, readonly=False, pre_compute=True)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', store=True)
@@ -264,14 +250,22 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(
         string='Quantity', digits='Product Unit of Measure', required=True, default=1.0,
         compute='_compute_product_uom_qty', store=True, readonly=False, pre_compute=True)
-    product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
+    product_uom = fields.Many2one(
+        'uom.uom', string='Unit of Measure',
+        compute='_compute_product_uom', store=True, readonly=False, pre_compute=True,
+        domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_readonly = fields.Boolean(compute='_compute_product_uom_readonly')
-    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string="Custom Values", copy=True)
+    product_custom_attribute_value_ids = fields.One2many(
+        'product.attribute.custom.value', 'sale_order_line_id',
+        string="Custom Values", copy=True,
+        compute='_compute_custom_attribute_values', store=True, readonly=False)
 
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
-    product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Extra Values", ondelete='restrict')
+    product_no_variant_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string="Extra Values", ondelete='restrict',
+        compute='_compute_no_variant_attribute_values', store=True, readonly=False)
 
     qty_delivered_method = fields.Selection([
         ('manual', 'Manual'),
@@ -325,11 +319,12 @@ class SaleOrderLine(models.Model):
 
     product_packaging_id = fields.Many2one(
         'product.packaging', string='Packaging',
-        compute='_compute_product_packaging_id', store=True, readonly=False,
+        compute='_compute_product_packaging_id', store=True, readonly=False, pre_compute=True,
         domain="[('sales', '=', True), ('product_id','=',product_id)]",
         check_company=True)
     product_packaging_qty = fields.Float(
-        'Packaging Quantity', compute='_compute_product_packaging_qty', store=True, readonly=False)
+        'Packaging Quantity',
+        compute='_compute_product_packaging_qty', store=True, readonly=False, pre_compute=True)
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
@@ -461,9 +456,17 @@ class SaleOrderLine(models.Model):
                     packaging_uom_qty / line.product_packaging_id.qty,
                     precision_rounding=packaging_uom.rounding)
 
-    @api.depends('product_packaging_qty')
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for line in self:
+            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
+                line.product_uom = line.product_id.uom_id
+
+    @api.depends('product_packaging_qty', 'product_id')
     def _compute_product_uom_qty(self):
         for line in self:
+            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
+                line.product_uom_qty = line.product_uom_qty or 1.0
             if not line.product_packaging_id:
                 continue
             packaging_uom = line.product_packaging_id.product_uom_id
@@ -620,41 +623,47 @@ class SaleOrderLine(models.Model):
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
 
+    @api.depends('product_id')
+    def _compute_name(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            product = line.product_id.with_context(
+                lang=get_lang(line.env, line.order_id.partner_id.lang).code,
+                partner=line.order_id.partner_id,
+                quantity=line.product_uom_qty,
+                date=line.order_id.date_order,
+                pricelist=line.order_id.pricelist_id.id,
+                uom=line.product_uom.id)
+            line.name = line.get_sale_order_line_multiline_description_sale(product)
+
+    @api.depends('product_id')
+    def _compute_custom_attribute_values(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+            # remove the is_custom values that don't belong to this template
+            for pacv in line.product_custom_attribute_value_ids:
+                if pacv.custom_product_template_attribute_value_id not in valid_values:
+                    line.product_custom_attribute_value_ids -= pacv
+
+    @api.depends('product_id')
+    def _compute_no_variant_attribute_values(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+            # remove the no_variant attributes that don't belong to this template
+            for ptav in line.product_no_variant_attribute_value_ids:
+                if ptav._origin not in valid_values:
+                    line.product_no_variant_attribute_value_ids -= ptav
+
     @api.onchange('product_id')
     def product_id_change(self):
         if not self.product_id:
             return
-        valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
-        # remove the is_custom values that don't belong to this template
-        for pacv in self.product_custom_attribute_value_ids:
-            if pacv.custom_product_template_attribute_value_id not in valid_values:
-                self.product_custom_attribute_value_ids -= pacv
-
-        # remove the no_variant attributes that don't belong to this template
-        for ptav in self.product_no_variant_attribute_value_ids:
-            if ptav._origin not in valid_values:
-                self.product_no_variant_attribute_value_ids -= ptav
-
-        vals = {}
-        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
-            vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = self.product_uom_qty or 1.0
-
-        product = self.product_id.with_context(
-            lang=get_lang(self.env, self.order_id.partner_id.lang).code,
-            partner=self.order_id.partner_id,
-            quantity=vals.get('product_uom_qty') or self.product_uom_qty,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
-        )
-
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
-
-        if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
-        self.update(vals)
-
+        product = self.product_id
         if product.sale_line_warn != 'no-message':
             if product.sale_line_warn == 'block':
                 self.product_id = False
@@ -671,8 +680,8 @@ class SaleOrderLine(models.Model):
         'order_id.partner_id')
     def _compute_price_unit(self):
         for line in self:
+            line.price_unit = 0.0
             if not line.product_uom or not line.product_id:
-                line.price_unit = 0.0
                 continue
             if line.order_id.pricelist_id and line.order_id.partner_id:
                 product = line.product_id.with_context(

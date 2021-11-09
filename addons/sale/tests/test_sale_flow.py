@@ -69,8 +69,6 @@ class TestSaleFlow(TestSaleCommonBase):
                 }),
             ],
         })
-        for line in sale_order.order_line:
-            line.product_id_change()
 
         sale_order.action_confirm()
 

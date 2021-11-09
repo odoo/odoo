@@ -125,12 +125,18 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
-        super(SaleOrderLine, self.filtered(lambda l: not l.event_ticket_id))._compute_price_unit()
+        # We want to recompute the price if the product changes
+        # Not for other triggers like product_uom or product_uom_qty
+        # for event SOL
+        if self._origin.product_id != self.product_id:
+            super()._compute_price_unit()
+        else:
+            super(SaleOrderLine, self.filtered(lambda l: not l.event_ticket_id))._compute_price_unit()
 
-    @api.onchange('event_ticket_id')
-    def _onchange_event_ticket_id(self):
+    @api.depends('event_ticket_id')
+    def _compute_name(self):
         # we call this to force update the default name
-        self.product_id_change()
+        super()._compute_name()
 
     def unlink(self):
         self._unlink_associated_registrations()
@@ -159,6 +165,8 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
+            return self.event_ticket_id.with_context(
+                pricelist=self.order_id.pricelist_id.id,
+                uom=self.product_uom.id).price_reduce
         else:
             return super()._get_display_price(product)

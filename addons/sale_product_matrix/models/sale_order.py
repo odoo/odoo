@@ -116,16 +116,13 @@ class SaleOrder(models.Model):
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if product_ids:
-                res = False
                 if new_lines:
                     # Add new SO lines
                     self.update(dict(order_line=new_lines))
 
                 # Recompute prices for new/modified lines
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
-                    res = line.product_id_change() or res
                     line._onchange_discount()
-                return res
 
     def _get_matrix(self, product_template):
         """Return the matrix of the given product, updated with current SOLines quantities.
