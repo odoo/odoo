@@ -2774,5 +2774,69 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('comparison with two groupbys: rows from reference period should be displayed', async function (assert) {
+        assert.expect(3);
+
+        const context = {
+            timeRangeMenuData: {
+                timeRange: ["&",["date",">=","2021-01-01"],["date","<","2022-01-01"]],
+                timeRangeDescription: 'This Year',
+                comparisonTimeRange: ["&",["date",">=","2020-01-01"],["date","<","2021-01-01"]],
+                comparisonTimeRangeDescription: "Previous Period",
+            }
+        };
+
+        this.data.partner.records = [
+            { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+            { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+        ]
+        this.data.product.records = [
+            { id: 1, display_name: "A" },
+            { id: 2, display_name: "B" },
+        ]
+        this.data.customer.records = [
+            { id: 1, display_name: "P" },
+        ]
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot><field name="customer" type="row"/><field name="product_id" type="row"/></pivot>',
+            viewOptions: { context },
+        });
+
+        assert.strictEqual(
+            pivot.$('th').slice(0, 6).text(),
+            [
+                        "Total",
+                        "Count",
+                "This Year", "Previous Period", "Variation"
+            ].join(''),
+            "The col headers should be as expected"
+        );
+
+        assert.strictEqual(
+            pivot.$('th').slice(6).text(),
+            [
+                'Total',
+                    'P',
+                        'A',
+                        'B',
+            ].join(''),
+            "The row headers should be as expected"
+        );
+
+        const values = [
+            "1", "1", "0%",
+            "1", "1", "0%",
+            "1", "0", "100%",
+            "0", "1", "-100%",
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
+
+        pivot.destroy();
+    });
 });
 });
