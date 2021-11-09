@@ -110,6 +110,11 @@ class SaleOrder(models.Model):
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
             pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(product.id)
+                if order_line:
+                    price = self.env['account.tax']._fix_tax_included_price_company(price, product.taxes_id, order_line[0].tax_id, self.company_id)
+                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
             if pu != 0:
                 if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
@@ -121,6 +126,10 @@ class SaleOrder(models.Model):
                     # but we still want to use the price defined on the pricelist
                     discount = 0
                     pu = price
+            else:
+                # In case the price_unit equal 0 and therefore not able to calculate the discount,
+                # we fallback on the price defined on the pricelist.
+                pu = price
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:
@@ -261,12 +270,6 @@ class SaleOrder(models.Model):
                 })
             product_with_context = self.env['product.product'].with_context(product_context)
             product = product_with_context.browse(product_id)
-            values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                order_line._get_display_price(product),
-                order_line.product_id.taxes_id,
-                order_line.tax_id,
-                self.company_id
-            )
 
             order_line.write(values)
 

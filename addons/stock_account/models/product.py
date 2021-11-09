@@ -628,6 +628,8 @@ class ProductProduct(models.Model):
         qty_to_take_on_candidates = qty_to_invoice
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
+            if not candidate.quantity:
+                continue
             candidate_quantity = abs(candidate.quantity)
             if candidate.stock_move_id.id in returned_quantities:
                 candidate_quantity -= returned_quantities[candidate.stock_move_id.id]

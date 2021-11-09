@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+from datetime import datetime
 
 from odoo import fields
 from odoo.tests.common import TransactionCase, Form
@@ -216,6 +217,7 @@ class TestPoSCommon(TransactionCase):
         self.env['res.currency.rate'].create({
             'rate': 0.5,
             'currency_id': self.other_currency.id,
+            'name': datetime.today().date()
         })
         other_cash_journal = self.env['account.journal'].create({
             'name': 'Cash Other',

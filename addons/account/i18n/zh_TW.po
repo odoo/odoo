@@ -13,7 +13,7 @@
 # 曾逸民 <suncombo@gmail.com>, 2020
 # pofan lai <gasklath20312@gmail.com>, 2020
 # Gerard Chen <gerardpublico@gmail.com>, 2021
-# Benson White <Benson.Dr@Gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2021
 # Tom Liang <tom.liang@omniwaresoft.com.tw>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
@@ -9494,7 +9494,7 @@ msgstr "通過電子信件發送收據"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr ""
+msgstr "通過電子郵件發送收據"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10105,7 +10105,7 @@ msgstr "稅收鎖定日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr ""
+msgstr "稅收鎖定日期訊息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -10406,7 +10406,7 @@ msgstr "技術領域用於確定在何時進行核銷需要顯示在應收/應�
 msgid ""
 "Technical field used to display a message when the invoice's accounting date"
 " is prior of the tax lock date."
-msgstr ""
+msgstr "當應收憑單的會計日期早於稅收鎖定日期時，用於顯示消息的技術字段。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_has_matching_suspense_amount
@@ -10425,7 +10425,7 @@ msgstr "用於從表單視圖中的invoice_line_ids選項卡中排除某些行�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
-msgstr ""
+msgstr "用於適應郵件模板中的通用行為的技術欄位。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_filter_type_domain
@@ -10588,7 +10588,7 @@ msgstr "科目 %s (%s) 是廢棄的."
 msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
-msgstr ""
+msgstr "該帳戶已在“銷售”或“採購”日記帳中使用。這意味著帳戶的類型不能是“應收”或“應付”。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10596,7 +10596,7 @@ msgstr ""
 msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
-msgstr ""
+msgstr "在您的日記帳傳票中選擇的帳戶強制提供輔助貨幣。您應該刪除帳戶上的輔助貨幣。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10935,7 +10935,7 @@ msgid ""
 "The operation is refused as it would impact an already issued tax statement."
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
-msgstr ""
+msgstr "該操作被拒絕，因為它會影響已經發布的稅務報表。請更改在設置 (%s) 中設置的日記帳傳票日期或稅收鎖定日期以繼續。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_action_id
@@ -11171,7 +11171,7 @@ msgstr "用於浮點運算的搭配規則"
 msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
-msgstr ""
+msgstr "日計帳預設貸方/借方帳戶的類型不應為“應收”或“應付”。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -11244,7 +11244,7 @@ msgstr "沒有需要調節的."
 msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
-msgstr ""
+msgstr "該日記帳還沒有任何標記為數據不可更改的日記帳傳票。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -11387,7 +11387,7 @@ msgstr "這個日記帳已經包含明細帳，因此您不能更改它的簡稱
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "這個日計帳不是嚴格模式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -12281,7 +12281,7 @@ msgstr ""
 msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
-msgstr ""
+msgstr "您只能在供應商帳單的付款條件行上設置具有應付類型的帳戶。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12289,7 +12289,7 @@ msgstr ""
 msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
-msgstr ""
+msgstr "您只能為客戶應收憑單的付款號設置具有應收款類型的科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -12305,7 +12305,7 @@ msgstr "您可以在這裡設定預設通信，該通信將顯示在客戶應收
 msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
-msgstr ""
+msgstr "您不能更改您帳戶的公司，因為有一些日記帳項目與其相關聯。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12313,7 +12313,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
-msgstr ""
+msgstr "您無法更改日記帳的公司，因為有一些日記帳傳票與其相關聯。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12321,7 +12321,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
-msgstr ""
+msgstr "您無法更改納稅的公司,因為有一些日記帳專案連結到它。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12329,7 +12329,7 @@ msgstr ""
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
-msgstr ""
+msgstr "您不能在您的分析帳戶上設置不同的公司，因為有一些日記帳項目鏈接到它。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12337,7 +12337,7 @@ msgstr ""
 msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
-msgstr ""
+msgstr "你不能在你的分析標籤上設置不同的公司，因為有一些日記帳項目連結到它。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12394,7 +12394,7 @@ msgstr "您不能刪除曾經有過帳的會計分錄(依內控需求)。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "您不能刪除鏈接到已過帳傳票的項目。"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12421,14 +12421,14 @@ msgstr ""
 msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
-msgstr ""
+msgstr "由於在日記帳上激活了限制模式，您無法編輯以下字段：%s。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
-msgstr ""
+msgstr "如果已過帳一次，則不能編輯傳票上的日記帳。"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12466,7 +12466,7 @@ msgstr "您不能修改此日誌的已過帳條目,因為它處於限制模式�
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
-msgstr ""
+msgstr "您不能修改已具有會計傳票的日記帳的字段 %s。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12474,7 +12474,7 @@ msgstr ""
 msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
-msgstr ""
+msgstr "您不能修改與已過帳日記帳項目相關的稅費，您應該將日記帳傳票重置為草稿以這樣做。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12588,7 +12588,7 @@ msgstr "您無法驗證總金額為負的憑單。您應該創建一個貸項通
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "您沒有開立應收憑單的存取權。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12624,7 +12624,7 @@ msgstr "您必須首先定義一個打開動作。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "傳票 %s (id %s) 已過帳。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12858,7 +12858,7 @@ msgid ""
 "The chosen journal has a type that is not compatible with your invoice type."
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
-msgstr ""
+msgstr "所選日記帳的類型與您的應收憑單類型不兼容。銷售操作應該轉到“銷售”日記帳，而採購操作應該轉到“採購”日記帳。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
