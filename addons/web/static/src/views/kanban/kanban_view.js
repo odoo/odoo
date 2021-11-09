@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { combineAttributes, isAttr, XMLParser } from "@web/core/utils/xml";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
@@ -250,6 +251,7 @@ export class KanbanArchParser extends XMLParser {
 
 class KanbanView extends owl.Component {
     setup() {
+        this.action = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
         const { fields: activeFields, limit, defaultGroupBy } = this.archInfo;
@@ -267,6 +269,11 @@ class KanbanView extends owl.Component {
         useSetupView({
             /** TODO **/
         });
+    }
+
+    openRecord(record) {
+        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
+        this.action.switchView("form", { resId: record.resId, resIds });
     }
 }
 

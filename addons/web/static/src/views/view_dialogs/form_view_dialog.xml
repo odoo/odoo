@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.FormViewDialogBody" owl="1">
+    <FormRenderer class="o_form_view" record="props.record" fields="archInfo.fields" info="archInfo" readonly="props.readonly"/>
+  </t>
+
+  <t t-name="web.FormViewDialogFooter" owl="1">
+    <t t-if="props.readonly">
+        <button class="btn btn-secondary o_form_button_cancel" t-on-click="close">Close</button>
+    </t>
+    <t t-else="">
+        <button class="btn btn-primary" t-on-click="save">Save</button>
+        <button class="btn btn-secondary o_form_button_cancel" t-on-click="cancel">Cancel</button>
+    </t>
+  </t>
+
+</templates>
