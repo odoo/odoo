@@ -2844,9 +2844,6 @@ class BaseModel(metaclass=MetaModel):
         if self._auto:
             self._add_sql_constraints()
 
-        if must_create_table:
-            self._execute_sql()
-
         if parent_path_compute:
             self._parent_store_compute()
 
@@ -2887,11 +2884,6 @@ class BaseModel(metaclass=MetaModel):
                 self.pool.post_init(tools.add_constraint, cr, self._table, conname, definition)
             else:
                 self.pool.post_constraint(tools.add_constraint, cr, self._table, conname, definition)
-
-    def _execute_sql(self):
-        """ Execute the SQL code from the _sql attribute (if any)."""
-        if hasattr(self, "_sql"):
-            self._cr.execute(self._sql)
 
     #
     # Update objects that use this one to update their _inherits fields
