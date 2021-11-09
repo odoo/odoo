@@ -6,6 +6,7 @@
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}" />
             </t>
+            <t t-set-slot="control-panel-bottom-right"></t>
             <FormRenderer record="model.root" fields="props.fields" info="archInfo" readonly="!state.inEditMode" />
         </Layout>
     </t>
