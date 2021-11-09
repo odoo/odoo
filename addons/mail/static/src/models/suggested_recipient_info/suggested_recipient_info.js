@@ -78,6 +78,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             inverse: 'suggestedRecipientInfoList',
+            required: true,
         }),
     };
     SuggestedRecipientInfo.identifyingFields = ['id'];
