@@ -281,10 +281,6 @@ class TestSaleOrder(TestSaleCommon):
         self.sol_serv_order.write({'tax_id': [(4, tax_exclude.id)]})
         self.sol_product_deliver.write({'tax_id': [(4, tax_exclude.id)]})
 
-        # Trigger onchange to reset discount, unit price, subtotal, ...
-        for line in self.sale_order.order_line:
-            line._onchange_discount()
-
         for line in self.sale_order.order_line:
             if line.tax_id.price_include:
                 price = line.price_unit * line.product_uom_qty - line.price_tax
@@ -461,9 +457,6 @@ class TestSaleOrder(TestSaleCommon):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            # Create values autofill does not compute discount.
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -492,8 +485,6 @@ class TestSaleOrder(TestSaleCommon):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]

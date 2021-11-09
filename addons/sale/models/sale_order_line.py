@@ -238,7 +238,9 @@ class SaleOrderLine(models.Model):
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
-    discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
+    discount = fields.Float(
+        string='Discount (%)', digits='Discount',
+        compute='_compute_discount', store=True, readonly=False)
 
     product_id = fields.Many2one(
         'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -781,39 +783,49 @@ class SaleOrderLine(models.Model):
             'tax_id', 'analytic_tag_ids'
         ]
 
-    @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
-    def _onchange_discount(self):
-        if not (self.product_id and self.product_uom and
-                self.order_id.partner_id and self.order_id.pricelist_id and
-                self.order_id.pricelist_id.discount_policy == 'without_discount' and
-                self.env.user.has_group('product.group_discount_per_so_line')):
-            return
+    @api.depends('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
+    def _compute_discount(self):
+        for line in self:
+            if not (line.product_id and line.product_uom and
+                    line.order_id.partner_id and line.order_id.pricelist_id and
+                    line.order_id.pricelist_id.discount_policy == 'without_discount' and
+                    self.env.user.has_group('product.group_discount_per_so_line')):
+                continue
 
-        self.discount = 0.0
-        product = self.product_id.with_context(
-            lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id,
-            quantity=self.product_uom_qty,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id,
-            fiscal_position=self.env.context.get('fiscal_position')
-        )
+            line.discount = 0.0
+            product = line.product_id.with_context(
+                lang=line.order_id.partner_id.lang,
+                partner=line.order_id.partner_id,
+                quantity=line.product_uom_qty,
+                date=line.order_id.date_order,
+                pricelist=line.order_id.pricelist_id.id,
+                uom=line.product_uom.id,
+                fiscal_position=self.env.context.get('fiscal_position'))
 
-        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+            product_context = dict(
+                self.env.context,
+                partner_id=line.order_id.partner_id.id,
+                date=line.order_id.date_order,
+                uom=line.product_uom.id)
 
-        price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        new_list_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+            price, rule_id = line.order_id.pricelist_id.with_context(product_context).get_product_price_rule(
+                line.product_id,
+                line.product_uom_qty or 1.0,
+                line.order_id.partner_id)
+            new_list_price, currency = line.with_context(product_context)._get_real_price_currency(
+                product, rule_id, line.product_uom_qty,
+                line.product_uom, line.order_id.pricelist_id.id)
 
-        if new_list_price != 0:
-            if self.order_id.pricelist_id.currency_id != currency:
-                # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                new_list_price = currency._convert(
-                    new_list_price, self.order_id.pricelist_id.currency_id,
-                    self.order_id.company_id or self.env.company, self.order_id.date_order or fields.Date.today())
-            discount = (new_list_price - price) / new_list_price * 100
-            if (discount > 0 and new_list_price > 0) or (discount < 0 and new_list_price < 0):
-                self.discount = discount
+            if new_list_price != 0:
+                if line.order_id.pricelist_id.currency_id != currency:
+                    # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
+                    new_list_price = currency._convert(
+                        new_list_price, line.order_id.pricelist_id.currency_id,
+                        line.order_id.company_id or self.env.company,
+                        line.order_id.date_order or fields.Date.today())
+                discount = (new_list_price - price) / new_list_price * 100
+                if (discount > 0 and new_list_price > 0) or (discount < 0 and new_list_price < 0):
+                    line.discount = discount
 
     def _is_delivery(self):
         self.ensure_one()
