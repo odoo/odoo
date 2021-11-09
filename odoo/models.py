@@ -538,13 +538,6 @@ class BaseModel(metaclass=MetaModel):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
-    @api.model
-    def view_init(self, fields_list):
-        """ Override this method to do specific things when a form view is
-        opened. This method is invoked by :meth:`~default_get`.
-        """
-        pass
-
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'
@@ -1389,9 +1382,6 @@ class BaseModel(metaclass=MetaModel):
             Unrequested defaults won't be considered, there is no need to return a
             value for fields whose names are not in `fields_list`.
         """
-        # trigger view init hook
-        self.view_init(fields_list)
-
         defaults = {}
         parent_fields = defaultdict(list)
         ir_defaults = self.env['ir.default'].get_model_defaults(self._name)

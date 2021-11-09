@@ -12,13 +12,17 @@ class Lead2OpportunityPartner(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-
         """ Allow support of active_id / active_model instead of jut default_lead_id
         to ease window action definitions, and be backward compatible. """
         result = super(Lead2OpportunityPartner, self).default_get(fields)
 
         if not result.get('lead_id') and self.env.context.get('active_id'):
             result['lead_id'] = self.env.context.get('active_id')
+
+        if result.get('lead_id'):
+            if self.env['crm.lead'].browse(result['lead_id']).probability == 100:
+                raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
+
         return result
 
     name = fields.Selection([
@@ -104,15 +108,6 @@ class Lead2OpportunityPartner(models.TransientModel):
                 continue
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=None)
             convert.team_id = team.id
-
-    @api.model
-    def view_init(self, fields):
-        # JEM TDE FIXME: clean that brol
-        """ Check some preconditions before the wizard executes. """
-        for lead in self.env['crm.lead'].browse(self._context.get('active_ids', [])):
-            if lead.probability == 100:
-                raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
-        return False
 
     def action_apply(self):
         if self.name == 'merge':
