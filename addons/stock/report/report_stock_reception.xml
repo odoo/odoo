@@ -10,10 +10,11 @@
                 <t t-foreach="range(len(docs))" t-as="index">
                     <t t-set="move" t-value="docs[index]"/>
                     <t t-set="qty" t-value="qtys[index]"/>
+                    <t t-set="source" t-value="move._get_source_document()"/>
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
                             <div t-out="move.product_id.display_name"/>
-                            <div t-out="move._get_source_document().name"/>
+                            <div t-if="source" t-out="source.name"/>
                             <div class="address"
                                 t-if="move.picking_id and move.picking_id.partner_id"
                                 t-field="move.picking_id.partner_id"
