@@ -175,6 +175,8 @@ class AccountMove(models.Model):
         ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry", change_default=True)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
+    is_storno = fields.Boolean(compute='_compute_is_storno', store=True, copy=False, readonly=False,
+                               help='Utility field to express whether the journal entry is subject to storno accounting. That is when the company uses storno and the journal entry is a refund or a reversal.')
     to_check = fields.Boolean(string='To Check', default=False, tracking=True,
         help='If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
@@ -809,11 +811,12 @@ class AccountMove(models.Model):
                 self.company_id,
                 self.date or fields.Date.context_today(self),
             )
+            currency_id = taxes_map_entry['grouping_dict']['currency_id']
             to_write_on_line = {
                 'amount_currency': taxes_map_entry['amount'],
-                'currency_id': taxes_map_entry['grouping_dict']['currency_id'],
-                'debit': balance > 0.0 and balance or 0.0,
-                'credit': balance < 0.0 and -balance or 0.0,
+                'currency_id': currency_id,
+                'debit': self._get_debit_from_balance(balance, currency_id),
+                'credit': self._get_credit_from_balance(balance, currency_id),
                 'tax_base_amount': tax_base_amount,
             }
 
@@ -892,8 +895,8 @@ class AccountMove(models.Model):
             :return:                        The newly created rounding line.
             '''
             rounding_line_vals = {
-                'debit': diff_balance > 0.0 and diff_balance or 0.0,
-                'credit': diff_balance < 0.0 and -diff_balance or 0.0,
+                'debit': self._get_debit_from_balance(diff_balance, self.currency_id.id),
+                'credit': self._get_credit_from_balance(diff_balance, self.currency_id.id),
                 'quantity': 1.0,
                 'amount_currency': diff_amount_currency,
                 'partner_id': self.partner_id.id,
@@ -1062,16 +1065,16 @@ class AccountMove(models.Model):
                     candidate.update({
                         'date_maturity': date_maturity,
                         'amount_currency': -amount_currency,
-                        'debit': balance < 0.0 and -balance or 0.0,
-                        'credit': balance > 0.0 and balance or 0.0,
+                        'debit': self._get_debit_from_balance(-balance, currency.id),
+                        'credit': self._get_credit_from_balance(-balance, currency.id),
                     })
                 else:
                     # Create new line.
                     create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                     candidate = create_method({
                         'name': self.payment_reference or '',
-                        'debit': balance < 0.0 and -balance or 0.0,
-                        'credit': balance > 0.0 and balance or 0.0,
+                        'debit': self._get_debit_from_balance(-balance, currency.id),
+                        'credit': self._get_credit_from_balance(-balance, currency.id),
                         'quantity': 1.0,
                         'amount_currency': -amount_currency,
                         'date_maturity': date_maturity,
@@ -1161,6 +1164,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('move_type')
+    def _compute_is_storno(self):
+        for move in self:
+            move.is_storno = move.is_storno or (move.move_type in ('out_refund', 'in_refund') and move.company_id.account_storno)
 
     @api.depends('partner_id')
     def _compute_partner_shipping_id(self):
@@ -2054,22 +2062,40 @@ class AccountMove(models.Model):
         self.env['account.move.line'].flush(self.env['account.move.line']._fields)
         self.env['account.move'].flush(['journal_id'])
         self._cr.execute('''
-            SELECT line.move_id, ROUND(SUM(line.debit - line.credit), currency.decimal_places)
-            FROM account_move_line line
-            JOIN account_move move ON move.id = line.move_id
-            JOIN account_journal journal ON journal.id = move.journal_id
-            JOIN res_company company ON company.id = journal.company_id
-            JOIN res_currency currency ON currency.id = company.currency_id
-            WHERE line.move_id IN %s
-            GROUP BY line.move_id, currency.decimal_places
-            HAVING ROUND(SUM(line.debit - line.credit), currency.decimal_places) != 0.0;
+            WITH error_moves AS (
+                SELECT line.move_id,
+                       ROUND(SUM(line.debit - line.credit), currency.decimal_places) balance,
+                       bool_or((not is_storno) AND (credit + debit < 0)) negative_normal,
+                       bool_or((is_storno) AND (credit + debit > 0)) positive_storno
+                  FROM account_move_line line
+                  JOIN account_move move ON move.id = line.move_id
+                  JOIN account_journal journal ON journal.id = move.journal_id
+                  JOIN res_company company ON company.id = journal.company_id
+                  JOIN res_currency currency ON currency.id = company.currency_id
+                 WHERE line.move_id IN %s
+              GROUP BY line.move_id, currency.decimal_places
+            )
+            SELECT * 
+              FROM error_moves
+             WHERE balance !=0 
+                OR negative_normal 
+                OR positive_storno
         ''', [tuple(self.ids)])
 
         query_res = self._cr.fetchall()
         if query_res:
-            ids = [res[0] for res in query_res]
-            sums = [res[1] for res in query_res]
-            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
+            error_msg = _("There was a problem with the following move(s):\n")
+            for move in query_res:
+                id_, balance, negative_normal, positive_storno = move
+                error_msg += _("- Move with id %i\n", id_)
+                if balance != 0.0:
+                    error_msg += _("\tCannot create unbalanced journal entry. The balance is equal to %s\n",
+                                   format_amount(self.env, balance, self.currency_id))
+                if negative_normal:
+                    error_msg += _("\tThe debit and credit should be positive and only one can be set\n")
+                if positive_storno:
+                    error_msg += _("\tThe debit and credit should be negative and only one can be set\n")
+            raise UserError(error_msg)
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -2106,6 +2132,19 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
+    def _get_debit_from_balance(self, balance, currency_id):
+        currency = self.env['res.currency'].browse(currency_id)
+        compare_res = currency.compare_amounts(balance, 0.0)
+        if self.is_storno:
+            return balance if compare_res < 0.0 else 0.0
+        return balance if compare_res > 0.0 else 0.0
+
+    def _get_credit_from_balance(self, balance, currency_id):
+        currency = self.env['res.currency'].browse(currency_id)
+        compare_res = currency.compare_amounts(balance, 0.0)
+        if self.is_storno:
+            return -balance if compare_res > 0.0 else 0.0
+        return -balance if compare_res < 0.0 else 0.0
 
     def _move_autocomplete_invoice_lines_values(self):
         ''' This method recomputes dynamic lines on the current journal entry that include taxes, cash rounding
@@ -2626,6 +2665,11 @@ class AccountMove(models.Model):
 
         move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
 
+        is_storno_move = move_vals['move_type'] in ('entry', 'out_refund', 'in_refund') and self.company_id.account_storno
+        if is_storno_move:
+            move_vals['is_storno'] = True
+
+        tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
         is_refund = False
         if move_vals['move_type'] in ('out_refund', 'in_refund'):
             is_refund = True
@@ -2642,9 +2686,15 @@ class AccountMove(models.Model):
         for line_command in move_vals.get('line_ids', []):
             line_vals = line_command[2]  # (0, 0, {...})
 
-            # ==== Inverse debit / credit / amount_currency ====
+            # ==== Non-Storno: Inverse debit <-> credit and negate amount_currency ====
             amount_currency = -line_vals.get('amount_currency', 0.0)
-            balance = line_vals['credit'] - line_vals['debit']
+            debit = line_vals['credit']
+            credit = line_vals['debit']
+
+            # ==== Storno: Negate debit / credit / amount_currency in same column====
+            if is_storno_move:
+                debit = -line_vals['debit']
+                credit = -line_vals['credit']
 
             if 'tax_tag_invert' in line_vals:
                 # This is an editable computed field; we want to it recompute itself
@@ -2652,8 +2702,8 @@ class AccountMove(models.Model):
 
             line_vals.update({
                 'amount_currency': amount_currency,
-                'debit': balance > 0.0 and balance or 0.0,
-                'credit': balance < 0.0 and -balance or 0.0,
+                'debit': debit,
+                'credit': credit,
             })
 
             if not is_refund:
@@ -3192,10 +3242,8 @@ class AccountMove(models.Model):
                 # Inverse all invoice_line_ids
                 for cmd, virtualid, line_vals in new_invoice_line_ids:
                     line_vals.update({
-                        'quantity' : -line_vals['quantity'],
-                        'amount_currency' : -line_vals['amount_currency'],
-                        'debit' : line_vals['credit'],
-                        'credit' : line_vals['debit']
+                        'quantity': -line_vals['quantity'],
+                        'amount_currency': -line_vals['amount_currency'],
                     })
             move.write({
                 'move_type': move.move_type.replace('invoice', 'refund'),
@@ -3508,6 +3556,10 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
+    is_storno = fields.Boolean(
+        related='move_id.is_storno',
+        string='Company Storno Accounting',
+        help='Utility field to express whether the journal item is subject to storno accounting')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
@@ -3631,7 +3683,7 @@ class AccountMoveLine(models.Model):
     _sql_constraints = [
         (
             'check_credit_debit',
-            'CHECK(credit + debit>=0 AND credit * debit=0)',
+            'CHECK(credit * debit=0)',
             'Wrong credit or debit value in accounting entry !'
         ),
         (
@@ -3979,8 +4031,8 @@ class AccountMoveLine(models.Model):
         return {
             'amount_currency': amount_currency,
             'currency_id': currency.id,
-            'debit': balance > 0.0 and balance or 0.0,
-            'credit': balance < 0.0 and -balance or 0.0,
+            'debit': self.move_id._get_debit_from_balance(balance, company.currency_id.id),
+            'credit': self.move_id._get_credit_from_balance(balance, company.currency_id.id),
         }
 
     def _get_fields_onchange_balance(self, quantity=None, discount=None, amount_currency=None, move_type=None, currency=None, taxes=None, price_subtotal=None, force_computation=False):
@@ -4198,8 +4250,8 @@ class AccountMoveLine(models.Model):
         for line in self:
             company = line.move_id.company_id
             balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
-            line.debit = balance if balance > 0.0 else 0.0
-            line.credit = -balance if balance < 0.0 else 0.0
+            line.debit = line.move_id._get_debit_from_balance(balance, company.currency_id.id)
+            line.credit = line.move_id._get_credit_from_balance(balance, company.currency_id.id)
 
             if not line.move_id.is_invoice(include_receipts=True):
                 continue

@@ -145,6 +145,9 @@ class ResConfigSettings(models.TransientModel):
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
+    # Storno Accounting
+    account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
+
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 

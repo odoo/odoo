@@ -93,6 +93,7 @@ class AccountChartTemplate(models.Model):
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
     use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
+    use_storno_accounting = fields.Boolean(string="Use Storno accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
@@ -259,6 +260,7 @@ class AccountChartTemplate(models.Model):
 
         company.write({'currency_id': self.currency_id.id,
                        'anglo_saxon_accounting': self.use_anglo_saxon,
+                       'account_storno': self.use_storno_accounting,
                        'bank_account_code_prefix': self.bank_account_code_prefix,
                        'cash_account_code_prefix': self.cash_account_code_prefix,
                        'transfer_account_code_prefix': self.transfer_account_code_prefix,
