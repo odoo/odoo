@@ -133,7 +133,7 @@ class Location(models.Model):
 
     @api.depends('warehouse_view_ids')
     def _compute_warehouse_id(self):
-        warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
+        warehouses = self.env['stock.warehouse'].with_context(active_test=False).search([('view_location_id', 'parent_of', self.ids)])
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
         self.warehouse_id = False
         for loc in self:
