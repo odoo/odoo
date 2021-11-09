@@ -5693,9 +5693,8 @@ Fields:
 
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
-        for record in self:
-            for name, value in values.items():
-                record[name] = value
+        for name, value in values.items():
+            self[name] = value
 
     @api.model
     def flush(self, fnames=None, records=None):
@@ -6160,7 +6159,7 @@ Fields:
                     real_records = self - new_records
                     records = model.browse()
                     if real_records:
-                        records |= model.search([(key.name, 'in', real_records.ids)], order='id')
+                        records = model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
