@@ -23,9 +23,11 @@ class ProductTemplate(models.Model):
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Expenses',
-        default='no',
+        [('no', 'No'),
+         ('cost', 'At cost'),
+         ('sales_price', 'Sales price')
+        ], string='Re-Invoice Expenses', default='no',
+        compute='_compute_expense_policy', store=True, readonly=False,
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
     visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
@@ -49,16 +51,14 @@ class ProductTemplate(models.Model):
             product_template.visible_expense_policy = visibility
 
 
-    @api.onchange('sale_ok')
-    def _change_sale_ok(self):
-        if not self.sale_ok:
-            self.expense_policy = 'no'
+    @api.depends('sale_ok')
+    def _compute_expense_policy(self):
+        self.filtered(lambda t: not t.sale_ok).update({'expense_policy': 'no'})
 
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
-
 
     @api.constrains('company_id')
     def _check_sale_product_company(self):
