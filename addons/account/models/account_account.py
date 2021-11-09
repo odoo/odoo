@@ -447,6 +447,9 @@ class AccountAccount(models.Model):
             self.tax_ids = self.company_id.account_purchase_tax_id
 
     def name_get(self):
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        self._origin._read(['code', 'name'])
+
         result = []
         for account in self:
             name = account.code + ' ' + account.name
