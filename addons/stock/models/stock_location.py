@@ -218,7 +218,7 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
@@ -277,6 +277,9 @@ class Location(models.Model):
                         qty_by_location[values['location_dest_id'][0]] = qty_done
                     for values in quant_data:
                         qty_by_location[values['location_id'][0]] += values['quantity']
+            if additional_qty:
+                for location_id, qty in additional_qty.items():
+                    qty_by_location[location_id] += qty
             putaway_location = putaway_rules._get_putaway_location(product, quantity, package, packaging, qty_by_location)
 
         if not putaway_location:
